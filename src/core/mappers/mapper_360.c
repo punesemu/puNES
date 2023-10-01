@@ -32,23 +32,23 @@ void extcl_after_mapper_init_360(void) {
 	chr_fix_360();
 	mirroring_fix_360();
 }
-void extcl_cpu_wr_mem_360(UNUSED(WORD address), UNUSED(BYTE value)) {}
+void extcl_cpu_wr_mem_360(UNUSED(BYTE nidx), UNUSED(WORD address), UNUSED(BYTE value)) {}
 
 INLINE static void prg_fix_360(void) {
 	if (dipswitch.value < 2) {
-		memmap_auto_32k(MMCPU(0x8000), (dipswitch.value >> 1));
+		memmap_auto_32k(0, MMCPU(0x8000), (dipswitch.value >> 1));
 	} else {
-		memmap_auto_16k(MMCPU(0x8000), dipswitch.value);
-		memmap_auto_16k(MMCPU(0xC000), dipswitch.value);
+		memmap_auto_16k(0, MMCPU(0x8000), dipswitch.value);
+		memmap_auto_16k(0, MMCPU(0xC000), dipswitch.value);
 	}
 }
 INLINE static void chr_fix_360(void) {
-	memmap_auto_8k(MMPPU(0x0000), dipswitch.value);
+	memmap_auto_8k(0, MMPPU(0x0000), dipswitch.value);
 }
 INLINE static void mirroring_fix_360(void) {
 	if (dipswitch.value & 0x10) {
-		mirroring_H();
+		mirroring_H(0);
 	} else {
-		mirroring_V();
+		mirroring_V(0);
 	}
 }

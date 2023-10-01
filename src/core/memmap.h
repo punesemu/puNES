@@ -30,7 +30,7 @@
 #define prgrom_pnt_byte(byte) &prgrom.data.pnt[byte]
 #define prgrom_byte(byte) prgrom.data.pnt[(byte)]
 #define prgrom_mask() prgrom.data.mask
-#define prgrom_calc_chunk(address) ((address) / nes[idx].m.memmap.prg.info.chunk.size)
+#define prgrom_calc_chunk(idx, address) ((address) / nes[idx].m.memmap.prg.info.chunk.size)
 #define prgrom_chip(chip_rom) prgrom.chips.chunk[chip_rom].pnt
 #define prgrom_chip_size(chip_rom) prgrom.chips.chunk[chip_rom].size
 

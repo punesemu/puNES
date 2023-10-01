@@ -44,7 +44,7 @@ void map_init_333(void) {
 	mapper.internal_struct_size[1] = sizeof(mmc3);
 
 	if (info.reset >= HARD) {
-		memset(&irqA12, 0x00, sizeof(irqA12));
+		memset(&nes[0].irqA12, 0x00, sizeof(nes[0].irqA12));
 		memset(&m333, 0x00, sizeof(m333));
 	}
 
@@ -52,10 +52,10 @@ void map_init_333(void) {
 	MMC3_prg_swap = prg_swap_mmc3_333;
 	MMC3_chr_swap = chr_swap_mmc3_333;
 
-	irqA12.present = TRUE;
-	irqA12_delay = 1;
+	nes[0].irqA12.present = TRUE;
+	nes[0].irqA12.delay = 1;
 }
-void extcl_cpu_wr_mem_333(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_333(BYTE nidx, WORD address, BYTE value) {
 	switch (address & 0xF001) {
 		case 0x9000:
 		case 0x9001:
@@ -70,7 +70,7 @@ void extcl_cpu_wr_mem_333(WORD address, BYTE value) {
 			MMC3_chr_fix();
 			return;
 	}
-	extcl_cpu_wr_mem_MMC3(address, value);
+	extcl_cpu_wr_mem_MMC3(nidx, address, value);
 }
 BYTE extcl_save_mapper_333(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m333.reg);

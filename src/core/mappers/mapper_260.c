@@ -48,7 +48,7 @@ void map_init_260(void) {
 
 	memset(&m260, 0x00, sizeof(m260));
 	if (info.reset >= HARD) {
-		memset(&irqA12, 0x00, sizeof(irqA12));
+		memset(&nes[0].irqA12, 0x00, sizeof(nes[0].irqA12));
 
 		m260.mmc3[0] = 0;
 		m260.mmc3[1] = 2;
@@ -64,14 +64,14 @@ void map_init_260(void) {
 
 	info.mapper.extend_wr = TRUE;
 
-	irqA12.present = TRUE;
-	irqA12_delay = 1;
+	nes[0].irqA12.present = TRUE;
+	nes[0].irqA12.delay = 1;
 }
 void extcl_after_mapper_init_260(void) {
 	prg_fix_260();
 	chr_fix_260();
 }
-void extcl_cpu_wr_mem_260(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_260(BYTE nidx, WORD address, BYTE value) {
 	if (address < 0x8000) {
 		if ((address >= 0x5000) && (address <= 0x5FFF)) {
 			if (m260.cpu5xxx[0] & 0x80) {
@@ -120,16 +120,16 @@ void extcl_cpu_wr_mem_260(WORD address, BYTE value) {
 			case 0xC001:
 			case 0xE000:
 			case 0xE001:
-				extcl_cpu_wr_mem_MMC3(address, value);
+				extcl_cpu_wr_mem_MMC3(nidx, address, value);
 				break;
 		}
 	}
 }
-BYTE extcl_cpu_rd_mem_260(WORD address, BYTE openbus) {
+BYTE extcl_cpu_rd_mem_260(BYTE nidx, WORD address, BYTE openbus) {
 	if ((address >= 0x5000) && (address <= 0x5FFF)) {
 		return ((openbus & ~0x03) | (dipswitch.value & 0x03));
 	}
-	return (wram_rd(address));
+	return (wram_rd(nidx, address));
 }
 BYTE extcl_save_mapper_260(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m260.cpu5xxx);
@@ -137,7 +137,6 @@ BYTE extcl_save_mapper_260(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m260.cnrom_chr_reg);
 	save_slot_ele(mode, slot, m260.mmc3);
 	save_slot_ele(mode, slot, m260.prg_base);
-
 	return (EXIT_OK);
 }
 
@@ -152,20 +151,20 @@ INLINE static void prg_fix_260(void) {
 			WORD mask = m260.cpu5xxx[0] & 0x02 ? 0x0F : 0x1F;
 
 			base &= ~mask;
-			memmap_auto_8k(MMCPU(0x8000 ^ swap), (base | (m260.mmc3[6] & mask)));
-			memmap_auto_8k(MMCPU(0xA000), (base | (m260.mmc3[7] & mask)));
-			memmap_auto_8k(MMCPU(0xC000 ^ swap), (base | (0xFE & mask)));
-			memmap_auto_8k(MMCPU(0xE000), (base | (0xFF & mask)));
+			memmap_auto_8k(0, MMCPU(0x8000 ^ swap), (base | (m260.mmc3[6] & mask)));
+			memmap_auto_8k(0, MMCPU(0xA000), (base | (m260.mmc3[7] & mask)));
+			memmap_auto_8k(0, MMCPU(0xC000 ^ swap), (base | (0xFE & mask)));
+			memmap_auto_8k(0, MMCPU(0xE000), (base | (0xFF & mask)));
 			break;
 		}
 		case 4:
-			memmap_auto_16k(MMCPU(0x8000), m260.prg_base);
-			memmap_auto_16k(MMCPU(0xC000), m260.prg_base);
+			memmap_auto_16k(0, MMCPU(0x8000), m260.prg_base);
+			memmap_auto_16k(0, MMCPU(0xC000), m260.prg_base);
 			break;
 		case 5:
 		case 6:
 		case 7:
-			memmap_auto_32k(MMCPU(0x8000), (m260.prg_base >> 1));
+			memmap_auto_32k(0, MMCPU(0x8000), (m260.prg_base >> 1));
 			break;
 	}
 }
@@ -218,12 +217,12 @@ INLINE static void chr_fix_260(void) {
 			bank[7] = base | 7;
 			break;
 	}
-	memmap_auto_1k(MMPPU(0x0000 ^ swap), bank[0]);
-	memmap_auto_1k(MMPPU(0x0400 ^ swap), bank[1]);
-	memmap_auto_1k(MMPPU(0x0800 ^ swap), bank[2]);
-	memmap_auto_1k(MMPPU(0x0C00 ^ swap), bank[3]);
-	memmap_auto_1k(MMPPU(0x1000 ^ swap), bank[4]);
-	memmap_auto_1k(MMPPU(0x1400 ^ swap), bank[5]);
-	memmap_auto_1k(MMPPU(0x1800 ^ swap), bank[6]);
-	memmap_auto_1k(MMPPU(0x1C00 ^ swap), bank[7]);
+	memmap_auto_1k(0, MMPPU(0x0000 ^ swap), bank[0]);
+	memmap_auto_1k(0, MMPPU(0x0400 ^ swap), bank[1]);
+	memmap_auto_1k(0, MMPPU(0x0800 ^ swap), bank[2]);
+	memmap_auto_1k(0, MMPPU(0x0C00 ^ swap), bank[3]);
+	memmap_auto_1k(0, MMPPU(0x1000 ^ swap), bank[4]);
+	memmap_auto_1k(0, MMPPU(0x1400 ^ swap), bank[5]);
+	memmap_auto_1k(0, MMPPU(0x1800 ^ swap), bank[6]);
+	memmap_auto_1k(0, MMPPU(0x1C00 ^ swap), bank[7]);
 }

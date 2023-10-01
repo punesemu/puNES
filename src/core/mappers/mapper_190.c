@@ -43,7 +43,7 @@ void extcl_after_mapper_init_190(void) {
 	prg_fix_190();
 	chr_fix_190();
 }
-void extcl_cpu_wr_mem_190(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_190(UNUSED(BYTE nidx), WORD address, BYTE value) {
 	switch (address & 0xE000) {
 		case 0x8000:
 			m190.prg = value & 0x07;
@@ -62,17 +62,16 @@ void extcl_cpu_wr_mem_190(WORD address, BYTE value) {
 BYTE extcl_save_mapper_190(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m190.prg);
 	save_slot_ele(mode, slot, m190.chr);
-
 	return (EXIT_OK);
 }
 
 INLINE static void prg_fix_190(void) {
-	memmap_auto_16k(MMCPU(0x8000), m190.prg);
-	memmap_auto_16k(MMCPU(0xC000), 0);
+	memmap_auto_16k(0, MMCPU(0x8000), m190.prg);
+	memmap_auto_16k(0, MMCPU(0xC000), 0);
 }
 INLINE static void chr_fix_190(void) {
-	memmap_auto_2k(MMPPU(0x0000), m190.chr[0]);
-	memmap_auto_2k(MMPPU(0x0800), m190.chr[1]);
-	memmap_auto_2k(MMPPU(0x1000), m190.chr[2]);
-	memmap_auto_2k(MMPPU(0x1800), m190.chr[3]);
+	memmap_auto_2k(0, MMPPU(0x0000), m190.chr[0]);
+	memmap_auto_2k(0, MMPPU(0x0800), m190.chr[1]);
+	memmap_auto_2k(0, MMPPU(0x1000), m190.chr[2]);
+	memmap_auto_2k(0, MMPPU(0x1800), m190.chr[3]);
 }

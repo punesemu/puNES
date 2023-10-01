@@ -45,7 +45,7 @@ void map_init_370(void) {
 	mapper.internal_struct[1] = (BYTE *)&mmc3;
 	mapper.internal_struct_size[1] = sizeof(mmc3);
 
-	memset(&irqA12, 0x00, sizeof(irqA12));
+	memset(&nes[0].irqA12, 0x00, sizeof(nes[0].irqA12));
 	memset(&m370, 0x00, sizeof(m370));
 
 	init_MMC3(HARD);
@@ -55,24 +55,24 @@ void map_init_370(void) {
 
 	info.mapper.extend_wr = TRUE;
 
-	irqA12.present = TRUE;
-	irqA12_delay = 1;
+	nes[0].irqA12.present = TRUE;
+	nes[0].irqA12.delay = 1;
 }
-void extcl_cpu_wr_mem_370(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_370(BYTE nidx, WORD address, BYTE value) {
 	if ((address >= 0x5000) && (address <= 0x5FFF)) {
 		m370.reg = address & 0xFF;
 		MMC3_prg_fix();
 		MMC3_chr_fix();
 		return;
 	} else if (address >= 0x8000) {
-		extcl_cpu_wr_mem_MMC3(address, value);
+		extcl_cpu_wr_mem_MMC3(nidx, address, value);
 	}
 }
-BYTE extcl_cpu_rd_mem_370(WORD address, BYTE openbus) {
+BYTE extcl_cpu_rd_mem_370(BYTE nidx, WORD address, BYTE openbus) {
 	if ((address >= 0x5000) && (address <= 0x5FFF)) {
 		return ((dipswitch.value & 0x80) | (openbus & 0x7F));
 	}
-	return (wram_rd(address));
+	return (wram_rd(nidx, address));
 }
 BYTE extcl_save_mapper_370(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m370.reg);
@@ -94,25 +94,25 @@ void chr_swap_mmc3_370(WORD address, WORD value) {
 void mirroring_fix_mmc3_370(void) {
 	if ((m370.reg & 0x07) == 0x01) {
 		if (mmc3.bank_to_update & 0x80) {
-			memmap_nmt_1k(MMPPU(0x2000), ((mmc3.reg[2] >> 7) ^ 0x01));
-			memmap_nmt_1k(MMPPU(0x2400), ((mmc3.reg[3] >> 7) ^ 0x01));
-			memmap_nmt_1k(MMPPU(0x2800), ((mmc3.reg[4] >> 7) ^ 0x01));
-			memmap_nmt_1k(MMPPU(0x2C00), ((mmc3.reg[5] >> 7) ^ 0x01));
+			memmap_nmt_1k(0, MMPPU(0x2000), ((mmc3.reg[2] >> 7) ^ 0x01));
+			memmap_nmt_1k(0, MMPPU(0x2400), ((mmc3.reg[3] >> 7) ^ 0x01));
+			memmap_nmt_1k(0, MMPPU(0x2800), ((mmc3.reg[4] >> 7) ^ 0x01));
+			memmap_nmt_1k(0, MMPPU(0x2C00), ((mmc3.reg[5] >> 7) ^ 0x01));
 
-			memmap_nmt_1k(MMPPU(0x3000), ((mmc3.reg[2] >> 7) ^ 0x01));
-			memmap_nmt_1k(MMPPU(0x3400), ((mmc3.reg[3] >> 7) ^ 0x01));
-			memmap_nmt_1k(MMPPU(0x3800), ((mmc3.reg[4] >> 7) ^ 0x01));
-			memmap_nmt_1k(MMPPU(0x3C00), ((mmc3.reg[5] >> 7) ^ 0x01));
+			memmap_nmt_1k(0, MMPPU(0x3000), ((mmc3.reg[2] >> 7) ^ 0x01));
+			memmap_nmt_1k(0, MMPPU(0x3400), ((mmc3.reg[3] >> 7) ^ 0x01));
+			memmap_nmt_1k(0, MMPPU(0x3800), ((mmc3.reg[4] >> 7) ^ 0x01));
+			memmap_nmt_1k(0, MMPPU(0x3C00), ((mmc3.reg[5] >> 7) ^ 0x01));
 		} else {
-			memmap_nmt_1k(MMPPU(0x2000), ((mmc3.reg[0] >> 7) ^ 0x01));
-			memmap_nmt_1k(MMPPU(0x2400), ((mmc3.reg[0] >> 7) ^ 0x01));
-			memmap_nmt_1k(MMPPU(0x2800), ((mmc3.reg[1] >> 7) ^ 0x01));
-			memmap_nmt_1k(MMPPU(0x2C00), ((mmc3.reg[1] >> 7) ^ 0x01));
+			memmap_nmt_1k(0, MMPPU(0x2000), ((mmc3.reg[0] >> 7) ^ 0x01));
+			memmap_nmt_1k(0, MMPPU(0x2400), ((mmc3.reg[0] >> 7) ^ 0x01));
+			memmap_nmt_1k(0, MMPPU(0x2800), ((mmc3.reg[1] >> 7) ^ 0x01));
+			memmap_nmt_1k(0, MMPPU(0x2C00), ((mmc3.reg[1] >> 7) ^ 0x01));
 
-			memmap_nmt_1k(MMPPU(0x3000), ((mmc3.reg[0] >> 7) ^ 0x01));
-			memmap_nmt_1k(MMPPU(0x3400), ((mmc3.reg[0] >> 7) ^ 0x01));
-			memmap_nmt_1k(MMPPU(0x3800), ((mmc3.reg[1] >> 7) ^ 0x01));
-			memmap_nmt_1k(MMPPU(0x3C00), ((mmc3.reg[1] >> 7) ^ 0x01));
+			memmap_nmt_1k(0, MMPPU(0x3000), ((mmc3.reg[0] >> 7) ^ 0x01));
+			memmap_nmt_1k(0, MMPPU(0x3400), ((mmc3.reg[0] >> 7) ^ 0x01));
+			memmap_nmt_1k(0, MMPPU(0x3800), ((mmc3.reg[1] >> 7) ^ 0x01));
+			memmap_nmt_1k(0, MMPPU(0x3C00), ((mmc3.reg[1] >> 7) ^ 0x01));
 		}
 		return;
 	}

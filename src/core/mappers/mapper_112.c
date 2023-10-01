@@ -56,7 +56,7 @@ void extcl_after_mapper_init_112(void) {
 	chr_fix_112();
 	mirroring_fix_112();
 }
-void extcl_cpu_wr_mem_112(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_112(UNUSED(BYTE nidx), WORD address, BYTE value) {
 	switch (address & 0xE000) {
 		case 0x8000:
 			m112.index = value;
@@ -81,28 +81,27 @@ BYTE extcl_save_mapper_112(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m112.reg);
 	save_slot_ele(mode, slot, m112.chr_outer);
 	save_slot_ele(mode, slot, m112.mirroring);
-
 	return (EXIT_OK);
 }
 
 INLINE static void prg_fix_112(void) {
-	memmap_auto_8k(MMCPU(0x8000), m112.reg[0]);
-	memmap_auto_8k(MMCPU(0xA000), m112.reg[1]);
-	memmap_auto_8k(MMCPU(0xC000), 0xFE);
-	memmap_auto_8k(MMCPU(0xE000), 0xFF);
+	memmap_auto_8k(0, MMCPU(0x8000), m112.reg[0]);
+	memmap_auto_8k(0, MMCPU(0xA000), m112.reg[1]);
+	memmap_auto_8k(0, MMCPU(0xC000), 0xFE);
+	memmap_auto_8k(0, MMCPU(0xE000), 0xFF);
 }
 INLINE static void chr_fix_112(void) {
-	memmap_auto_2k(MMPPU(0x0000), (m112.reg[2] >> 1));
-	memmap_auto_2k(MMPPU(0x0800), (m112.reg[3] >> 1));
-	memmap_auto_1k(MMPPU(0x1000), (((m112.chr_outer & 0x10) << 4) | m112.reg[4]));
-	memmap_auto_1k(MMPPU(0x1400), (((m112.chr_outer & 0x20) << 3) | m112.reg[5]));
-	memmap_auto_1k(MMPPU(0x1800), (((m112.chr_outer & 0x40) << 2) | m112.reg[6]));
-	memmap_auto_1k(MMPPU(0x1C00), (((m112.chr_outer & 0x80) << 1) | m112.reg[7]));
+	memmap_auto_2k(0, MMPPU(0x0000), (m112.reg[2] >> 1));
+	memmap_auto_2k(0, MMPPU(0x0800), (m112.reg[3] >> 1));
+	memmap_auto_1k(0, MMPPU(0x1000), (((m112.chr_outer & 0x10) << 4) | m112.reg[4]));
+	memmap_auto_1k(0, MMPPU(0x1400), (((m112.chr_outer & 0x20) << 3) | m112.reg[5]));
+	memmap_auto_1k(0, MMPPU(0x1800), (((m112.chr_outer & 0x40) << 2) | m112.reg[6]));
+	memmap_auto_1k(0, MMPPU(0x1C00), (((m112.chr_outer & 0x80) << 1) | m112.reg[7]));
 }
 INLINE static void mirroring_fix_112(void) {
 	if (m112.mirroring & 0x01) {
-		mirroring_H();
+		mirroring_H(0);
 	} else {
-		mirroring_V();
+		mirroring_V(0);
 	}
 }

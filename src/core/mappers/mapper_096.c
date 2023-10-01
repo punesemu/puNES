@@ -45,19 +45,18 @@ void extcl_after_mapper_init_096(void) {
 	prg_fix_096();
 	chr_fix_096();
 }
-void extcl_cpu_wr_mem_096(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_096(BYTE nidx, WORD address, BYTE value) {
 	// bus conflict
-	m096.reg = value & prgrom_rd(address);
+	m096.reg = value & prgrom_rd(nidx, address);
 	prg_fix_096();
 	chr_fix_096();
 }
 BYTE extcl_save_mapper_096(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m096.reg);
 	save_slot_ele(mode, slot, m096.chr);
-
 	return (EXIT_OK);
 }
-void extcl_update_r2006_096(WORD new_r2006, UNUSED(WORD old_r2006)) {
+void extcl_update_r2006_096(UNUSED(BYTE nidx), WORD new_r2006, UNUSED(WORD old_r2006)) {
 	if ((new_r2006 >= 0x2000) && ((new_r2006 & 0x03FF) < 0x03C0)) {
 		BYTE value = (m096.chr & 0x04) | ((new_r2006 >> 8) & 0x03);
 
@@ -67,7 +66,7 @@ void extcl_update_r2006_096(WORD new_r2006, UNUSED(WORD old_r2006)) {
 		}
 	}
 }
-BYTE extcl_rd_nmt_096(WORD address) {
+BYTE extcl_rd_nmt_096(BYTE nidx, WORD address) {
 	if ((address & 0x03FF) < 0x03C0) {
 		BYTE value = (m096.chr & 0x04) | ((address >> 8) & 0x03);
 
@@ -76,13 +75,13 @@ BYTE extcl_rd_nmt_096(WORD address) {
 			chr_fix_096();
 		}
 	}
-	return (nmt_rd(address));
+	return (nmt_rd(nidx, address));
 }
 
 INLINE static void prg_fix_096(void) {
-	memmap_auto_32k(MMCPU(0x8000), (m096.reg & 0x03));
+	memmap_auto_32k(0, MMCPU(0x8000), (m096.reg & 0x03));
 }
 INLINE static void chr_fix_096(void) {
-	memmap_auto_4k(MMPPU(0x0000), ((m096.reg & 0x04) | (m096.chr & 0x03)));
-	memmap_auto_4k(MMPPU(0x1000), ((m096.reg & 0x04) | 0x03));
+	memmap_auto_4k(0, MMPPU(0x0000), ((m096.reg & 0x04) | (m096.chr & 0x03)));
+	memmap_auto_4k(0, MMPPU(0x1000), ((m096.reg & 0x04) | 0x03));
 }

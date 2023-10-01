@@ -44,7 +44,7 @@ void map_init_048(void) {
 	mapper.internal_struct[0] = (BYTE *)&m048;
 	mapper.internal_struct_size[0] = sizeof(m048);
 
-	memset(&irqA12, 0x00, sizeof(irqA12));
+	memset(&nes[0].irqA12, 0x00, sizeof(nes[0].irqA12));
 
 	if (info.reset >= HARD) {
 		memset(&m048, 0x00, sizeof(m048));
@@ -57,15 +57,15 @@ void map_init_048(void) {
 		m048.chr[5] = 0x07;
 	}
 
-	irqA12.present = TRUE;
-	irqA12_delay = 7;
+	nes[0].irqA12.present = TRUE;
+	nes[0].irqA12.delay = 7;
 }
 void extcl_after_mapper_init_048(void) {
 	prg_fix_048();
 	chr_fix_048();
 	mirroring_fix_048();
 }
-void extcl_cpu_wr_mem_048(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_048(BYTE nidx, WORD address, BYTE value) {
 	switch (address & 0xE003) {
 		case 0x8000:
 		case 0x8001:
@@ -85,18 +85,18 @@ void extcl_cpu_wr_mem_048(WORD address, BYTE value) {
 			chr_fix_048();
 			return;
 		case 0xC000:
-			irqA12.latch = value ^ 0xFF;
+			nes[nidx].irqA12.latch = value ^ 0xFF;
 			return;
 		case 0xC001:
-			irqA12.reload = TRUE;
-			irqA12.counter = 0;
+			nes[nidx].irqA12.reload = TRUE;
+			nes[nidx].irqA12.counter = 0;
 			return;
 		case 0xC002:
-			irqA12.enable = TRUE;
+			nes[nidx].irqA12.enable = TRUE;
 			return;
 		case 0xC003:
-			irqA12.enable = FALSE;
-			nes.c.irq.high &= ~EXT_IRQ;
+			nes[nidx].irqA12.enable = FALSE;
+			nes[nidx].c.irq.high &= ~EXT_IRQ;
 			return;
 		case 0xE000:
 		case 0xE001:
@@ -111,27 +111,26 @@ BYTE extcl_save_mapper_048(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m048.prg);
 	save_slot_ele(mode, slot, m048.chr);
 	save_slot_ele(mode, slot, m048.mirroring);
-
 	return (EXIT_OK);
 }
 
 INLINE static void prg_fix_048(void) {
-	memmap_auto_8k(MMCPU(0x8000), m048.prg[0]);
-	memmap_auto_8k(MMCPU(0xA000), m048.prg[1]);
-	memmap_auto_16k(MMCPU(0xC000), 0xFF);
+	memmap_auto_8k(0, MMCPU(0x8000), m048.prg[0]);
+	memmap_auto_8k(0, MMCPU(0xA000), m048.prg[1]);
+	memmap_auto_16k(0, MMCPU(0xC000), 0xFF);
 }
 INLINE static void chr_fix_048(void) {
-	memmap_auto_2k(MMPPU(0x0000), m048.chr[0]);
-	memmap_auto_2k(MMPPU(0x0800), m048.chr[1]);
-	memmap_auto_1k(MMPPU(0x1000), m048.chr[2]);
-	memmap_auto_1k(MMPPU(0x1400), m048.chr[3]);
-	memmap_auto_1k(MMPPU(0x1800), m048.chr[4]);
-	memmap_auto_1k(MMPPU(0x1C00), m048.chr[5]);
+	memmap_auto_2k(0, MMPPU(0x0000), m048.chr[0]);
+	memmap_auto_2k(0, MMPPU(0x0800), m048.chr[1]);
+	memmap_auto_1k(0, MMPPU(0x1000), m048.chr[2]);
+	memmap_auto_1k(0, MMPPU(0x1400), m048.chr[3]);
+	memmap_auto_1k(0, MMPPU(0x1800), m048.chr[4]);
+	memmap_auto_1k(0, MMPPU(0x1C00), m048.chr[5]);
 }
 INLINE static void mirroring_fix_048(void) {
 	if (m048.mirroring & 0x40) {
-		mirroring_H();
+		mirroring_H(0);
 	} else {
-		mirroring_V();
+		mirroring_V(0);
 	}
 }

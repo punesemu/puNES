@@ -154,7 +154,6 @@ BYTE extcl_save_mapper_284(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m284.channel[1].timer);
 	save_slot_ele(mode, slot, m284.channel[1].pos.read);
 	save_slot_ele(mode, slot, m284.channel[1].pos.write);
-
 	return (EXIT_OK);
 }
 BYTE extcl_rd_nmt_284(BYTE nidx, WORD address) {

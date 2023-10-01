@@ -42,7 +42,7 @@ void extcl_after_mapper_init_MMC2(void) {
 	MMC2_chr_fix();
 	MMC2_mirroring_fix();
 }
-void extcl_cpu_wr_mem_MMC2(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_MMC2(UNUSED(BYTE nidx), WORD address, BYTE value) {
 	switch (address & 0xF000) {
 		case 0xA000:
 			mmc2.prg = value;
@@ -66,10 +66,9 @@ BYTE extcl_save_mapper_MMC2(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, mmc2.chr);
 	save_slot_ele(mode, slot, mmc2.latch);
 	save_slot_ele(mode, slot, mmc2.mirroring);
-
 	return (EXIT_OK);
 }
-void extcl_after_rd_chr_MMC2(WORD address) {
+void extcl_after_rd_chr_MMC2(UNUSED(BYTE nidx), WORD address) {
 	switch (address & 0xFFF0) {
 		case 0x0FD0:
 			mmc2.latch[0] = 0;
@@ -88,8 +87,8 @@ void extcl_after_rd_chr_MMC2(WORD address) {
 	}
 	MMC2_chr_fix();
 }
-void extcl_update_r2006_MMC2(WORD new_r2006, UNUSED(WORD old_r2006)) {
-	extcl_after_rd_chr_MMC2(new_r2006);
+void extcl_update_r2006_MMC2(BYTE nidx, WORD new_r2006, UNUSED(WORD old_r2006)) {
+	extcl_after_rd_chr_MMC2(nidx, new_r2006);
 }
 
 void init_MMC2(BYTE reset) {
@@ -112,19 +111,19 @@ void prg_fix_MMC2_base(void) {
 	MMC2_prg_swap(0xE000, 0x0F);
 }
 void prg_swap_MMC2_base(WORD address, WORD value) {
-	memmap_auto_8k(MMCPU(address), value);
+	memmap_auto_8k(0, MMCPU(address), value);
 }
 void chr_fix_MMC2_base(void) {
 	MMC2_chr_swap(0x0000, mmc2.chr[mmc2.latch[0]]);
 	MMC2_chr_swap(0x1000, mmc2.chr[mmc2.latch[1]]);
 }
 void chr_swap_MMC2_base(WORD address, WORD value) {
-	memmap_auto_4k(MMPPU(address), value);
+	memmap_auto_4k(0, MMPPU(address), value);
 }
 void mirroring_fix_MMC2_base(void) {
 	if (mmc2.mirroring & 0x01) {
-		mirroring_H();
+		mirroring_H(0);
 	} else {
-		mirroring_V();
+		mirroring_V(0);
 	}
 }

@@ -44,7 +44,7 @@ void extcl_after_mapper_init_145(void) {
 	prg_fix_145();
 	chr_fix_145();
 }
-void extcl_cpu_wr_mem_145(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_145(UNUSED(BYTE nidx), WORD address, BYTE value) {
 	if ((address >= 0x4000) && (address <= 0x5000) && (address & 0x0100)) {
 		m145.reg = value;
 		chr_fix_145();
@@ -52,13 +52,12 @@ void extcl_cpu_wr_mem_145(WORD address, BYTE value) {
 }
 BYTE extcl_save_mapper_145(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m145.reg);
-
 	return (EXIT_OK);
 }
 
 INLINE static void prg_fix_145(void) {
-	memmap_auto_32k(MMCPU(0x8000), 0);
+	memmap_auto_32k(0, MMCPU(0x8000), 0);
 }
 INLINE static void chr_fix_145(void) {
-	memmap_auto_8k(MMPPU(0x0000), (m145.reg >> 7));
+	memmap_auto_8k(0, MMPPU(0x0000), (m145.reg >> 7));
 }

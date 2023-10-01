@@ -51,7 +51,7 @@ void map_init_195(void) {
 	mapper.internal_struct_size[1] = sizeof(mmc3);
 
 	if (info.reset >= HARD) {
-		memset(&irqA12, 0x00, sizeof(irqA12));
+		memset(&nes[0].irqA12, 0x00, sizeof(nes[0].irqA12));
 
 		m195.chr.mask = 0xFC;
 		m195.chr.compare = 0x00;
@@ -62,21 +62,21 @@ void map_init_195(void) {
 	MMC3_chr_swap = chr_swap_mmc3_195;
 	MMC3_wram_fix = wram_fix_mmc3_195;
 
-	irqA12.present = TRUE;
-	irqA12_delay = 1;
+	nes[0].irqA12.present = TRUE;
+	nes[0].irqA12.delay = 1;
 }
-void extcl_cpu_wr_mem_195(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_195(BYTE nidx, WORD address, BYTE value) {
 	if ((address & 0xE001) == 0xA001) {
 		return;
 	}
-	extcl_cpu_wr_mem_MMC3(address, value);
+	extcl_cpu_wr_mem_MMC3(nidx, address, value);
 }
 BYTE extcl_save_mapper_195(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m195.chr.mask);
 	save_slot_ele(mode, slot, m195.chr.compare);
 	return (extcl_save_mapper_MMC3(mode, slot, fp));
 }
-void extcl_wr_chr_195(WORD address, UNUSED(BYTE value)) {
+void extcl_wr_chr_195(BYTE nidx, WORD address, UNUSED(BYTE value)) {
 	const BYTE bank = chr_bank_mmc3(address);
 	static const BYTE masks[8] = {
 		/* $80 */ 0x28,
@@ -122,21 +122,21 @@ void extcl_wr_chr_195(WORD address, UNUSED(BYTE value)) {
 		}
 		MMC3_chr_fix();
 	}
-	chr_wr(address, value);
+	chr_wr(nidx, address, value);
 }
 
 void prg_swap_mmc3_195(WORD address, WORD value) {
 	prg_swap_MMC3_base(address, (value & 0x3F));
 }
 void chr_swap_mmc3_195(WORD address, WORD value) {
-	if (((value & m195.chr.mask) == m195.chr.compare) && vram_size()){
-		memmap_vram_1k(MMPPU(address), value);
+	if (((value & m195.chr.mask) == m195.chr.compare) && vram_size(0)){
+		memmap_vram_1k(0, MMPPU(address), value);
 	} else {
 		chr_swap_MMC3_base(address, value);
 	}
 }
 void wram_fix_mmc3_195(void) {
-	memmap_auto_4k(MMCPU(0x5000), 2);
+	memmap_auto_4k(0, MMCPU(0x5000), 2);
 	wram_fix_MMC3_base();
 }
 

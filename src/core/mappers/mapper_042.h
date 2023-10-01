@@ -24,16 +24,16 @@
 void map_init_042(void);
 
 void extcl_after_mapper_init_042_s1(void);
-void extcl_cpu_wr_mem_042_s1(WORD address, BYTE value);
+void extcl_cpu_wr_mem_042_s1(BYTE nidx, WORD address, BYTE value);
 BYTE extcl_save_mapper_042_s1(BYTE mode, BYTE slot, FILE *fp);
 
 void extcl_after_mapper_init_042_s2(void);
-void extcl_cpu_wr_mem_042_s2(WORD address, BYTE value);
+void extcl_cpu_wr_mem_042_s2(BYTE nidx, WORD address, BYTE value);
 BYTE extcl_save_mapper_042_s2(BYTE mode, BYTE slot, FILE *fp);
 
 void extcl_after_mapper_init_042_s3(void);
-void extcl_cpu_wr_mem_042_s3(WORD address, BYTE value);
+void extcl_cpu_wr_mem_042_s3(BYTE nidx, WORD address, BYTE value);
 BYTE extcl_save_mapper_042_s3(BYTE mode, BYTE slot, FILE *fp);
-void extcl_cpu_every_cycle_042_s3(void);
+void extcl_cpu_every_cycle_042_s3(BYTE nidx);
 
 #endif /* MAPPER_042_H_ */

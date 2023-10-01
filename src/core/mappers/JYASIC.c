@@ -32,7 +32,7 @@ void (*JYASIC_wram_swap)(WORD address, DBWORD value);
 void (*JYASIC_mirroring_fix)(void);
 void (*JYASIC_mirroring_swap)(WORD address, DBWORD value);
 
-INLINE static void irq_clock_prescaler_JYASIC(void);
+INLINE static void irq_clock_prescaler_JYASIC(BYTE nidx);
 INLINE static BYTE prg_reverse_JYASIC(BYTE value);
 
 _jyasic jyasic;
@@ -61,9 +61,9 @@ void extcl_after_mapper_init_JYASIC(void) {
 	JYASIC_wram_fix();
 	JYASIC_mirroring_fix();
 }
-void extcl_cpu_wr_mem_JYASIC(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_JYASIC(BYTE nidx, WORD address, BYTE value) {
 	if ((jyasic.irq.mode & 0x03) == 3) {
-		irq_clock_prescaler_JYASIC();
+		irq_clock_prescaler_JYASIC(nidx);
 	}
 	switch (address & 0xF000) {
 		case 0x5000:
@@ -124,7 +124,7 @@ void extcl_cpu_wr_mem_JYASIC(WORD address, BYTE value) {
 					jyasic.irq.active = value & 0x01;
 					if (!jyasic.irq.active) {
 						jyasic.irq.prescaler = 0;
-						nes.c.irq.high &= ~EXT_IRQ;
+						nes[nidx].c.irq.high &= ~EXT_IRQ;
 					}
 					break;
 				case 1:
@@ -138,7 +138,7 @@ void extcl_cpu_wr_mem_JYASIC(WORD address, BYTE value) {
 				case 2:
 					jyasic.irq.active = 0;
 					jyasic.irq.prescaler = 0;
-					nes.c.irq.high &= ~EXT_IRQ;
+					nes[nidx].c.irq.high &= ~EXT_IRQ;
 					break;
 				case 3:
 					jyasic.irq.active = 1;
@@ -183,7 +183,7 @@ void extcl_cpu_wr_mem_JYASIC(WORD address, BYTE value) {
 			return;
 	}
 }
-BYTE extcl_cpu_rd_mem_JYASIC(WORD address, BYTE openbus) {
+BYTE extcl_cpu_rd_mem_JYASIC(UNUSED(BYTE nidx), WORD address, BYTE openbus) {
 	if ((address >= 0x5000) && (address <= 0x5FFF)) {
 		if (!(address & 0x03FF) && (address != 0x5800)) {
 			return ((dipswitch.value & 0xC0) | (openbus & 0x3F));
@@ -223,25 +223,24 @@ BYTE extcl_save_mapper_JYASIC(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, jyasic.irq.xor_value);
 	save_slot_ele(mode, slot, jyasic.irq.pre_size);
 	save_slot_ele(mode, slot, jyasic.irq.premask);
-
 	return (EXIT_OK);
 }
-void extcl_cpu_every_cycle_JYASIC(void) {
+void extcl_cpu_every_cycle_JYASIC(BYTE nidx) {
 	if ((jyasic.irq.mode & 0x03) == 0) {
-		irq_clock_prescaler_JYASIC();
+		irq_clock_prescaler_JYASIC(nidx);
 	}
 }
-void extcl_rd_ppu_mem_JYASIC(UNUSED(WORD address)) {
+void extcl_rd_ppu_mem_JYASIC(BYTE nidx, UNUSED(WORD address)) {
 	if ((jyasic.irq.mode & 0x03) == 2) {
-		irq_clock_prescaler_JYASIC();
+		irq_clock_prescaler_JYASIC(nidx);
 	}
 }
-BYTE extcl_rd_chr_JYASIC(WORD address) {
+BYTE extcl_rd_chr_JYASIC(BYTE nidx, WORD address) {
 	if (jyasic.mode[3] & 0x80) {
 		switch (address & 0x0FF8) {
 			case 0x0FD8:
 			case 0x0FE8: {
-				BYTE last = chr_rd(address);
+				BYTE last = chr_rd(nidx, address);
 
 				jyasic.chr.latch[address >> 12] = (address >> 4) & (((address >> 10) & 0x04) | 0x02);
 				if ((jyasic.mode[0] & 0x18) == 0x08) {
@@ -251,50 +250,50 @@ BYTE extcl_rd_chr_JYASIC(WORD address) {
 			}
 		}
 	}
-	return (chr_rd(address));
+	return (chr_rd(nidx, address));
 }
-void extcl_ppu_000_to_255_JYASIC(void) {
-	if (nes.p.r2001.visible) {
-		extcl_ppu_320_to_34x_JYASIC();
+void extcl_ppu_000_to_255_JYASIC(BYTE nidx) {
+	if (nes[nidx].p.r2001.visible) {
+		extcl_ppu_320_to_34x_JYASIC(nidx);
 	}
 }
-void extcl_ppu_256_to_319_JYASIC(void) {
-	if ((nes.p.ppu.frame_x & 0x0007) != 0x0003) {
+void extcl_ppu_256_to_319_JYASIC(BYTE nidx) {
+	if ((nes[nidx].p.ppu.frame_x & 0x0007) != 0x0003) {
 		return;
 	}
 
-	if ((!nes.p.spr_ev.count_plus || (nes.p.spr_ev.tmp_spr_plus == nes.p.spr_ev.count_plus)) && (nes.p.r2000.size_spr == 16)) {
-		nes.p.ppu.spr_adr = nes.p.r2000.spt_adr;
+	if ((!nes[nidx].p.spr_ev.count_plus || (nes[nidx].p.spr_ev.tmp_spr_plus == nes[nidx].p.spr_ev.count_plus)) && (nes[nidx].p.r2000.size_spr == 16)) {
+		nes[nidx].p.ppu.spr_adr = nes[nidx].p.r2000.spt_adr;
 	} else {
-		ppu_spr_adr((nes.p.ppu.frame_x & 0x0038) >> 3);
+		ppu_spr_adr((nes[nidx].p.ppu.frame_x & 0x0038) >> 3);
 	}
-	if ((nes.p.ppu.spr_adr & 0x1000) > (nes.p.ppu.bck_adr & 0x1000)) {
+	if ((nes[nidx].p.ppu.spr_adr & 0x1000) > (nes[nidx].p.ppu.bck_adr & 0x1000)) {
 		if ((jyasic.irq.mode & 0x03) == 1) {
-			irq_clock_prescaler_JYASIC();
+			irq_clock_prescaler_JYASIC(nidx);
 		}
 	}
 }
-void extcl_ppu_320_to_34x_JYASIC(void) {
-	if ((nes.p.ppu.frame_x & 0x0007) != 0x0003) {
+void extcl_ppu_320_to_34x_JYASIC(BYTE nidx) {
+	if ((nes[nidx].p.ppu.frame_x & 0x0007) != 0x0003) {
 		return;
 	}
 
-	if (nes.p.ppu.frame_x == 323) {
+	if (nes[nidx].p.ppu.frame_x == 323) {
 		ppu_spr_adr(7);
 	}
 
-	ppu_bck_adr(nes.p.r2000.bpt_adr, nes.p.r2006.value);
+	ppu_bck_adr(nes[nidx].p.r2000.bpt_adr, nes[nidx].p.r2006.value);
 
-	if ((nes.p.ppu.bck_adr & 0x1000) > (nes.p.ppu.spr_adr & 0x1000)) {
+	if ((nes[nidx].p.ppu.bck_adr & 0x1000) > (nes[nidx].p.ppu.spr_adr & 0x1000)) {
 		if ((jyasic.irq.mode & 0x03) == 1) {
-			irq_clock_prescaler_JYASIC();
+			irq_clock_prescaler_JYASIC(nidx);
 		}
 	}
 }
-void extcl_update_r2006_JYASIC(WORD new_r2006, WORD old_r2006) {
+void extcl_update_r2006_JYASIC(BYTE nidx, WORD new_r2006, WORD old_r2006) {
 	if ((new_r2006 & 0x1000) > (old_r2006 & 0x1000)) {
 		if ((jyasic.irq.mode & 0x03) == 1) {
-			irq_clock_prescaler_JYASIC();
+			irq_clock_prescaler_JYASIC(nidx);
 		}
 	}
 }
@@ -307,7 +306,7 @@ void init_JYASIC(BYTE extended_mode, BYTE reset) {
 	jyasic.chr.latch[0] = 0;
 	jyasic.chr.latch[1] = 4;
 
-	nes.c.irq.high &= ~EXT_IRQ;
+	nes[0].c.irq.high &= ~EXT_IRQ;
 
 	info.mapper.extend_wr = TRUE;
 
@@ -359,7 +358,7 @@ void prg_fix_JYASIC_base(void) {
 	JYASIC_prg_swap(0xE000, bank[3]);
 }
 void prg_swap_JYASIC_base(WORD address, DBWORD value) {
-	memmap_auto_8k(MMCPU(address), value);
+	memmap_auto_8k(0, MMCPU(address), value);
 }
 void chr_fix_JYASIC_base(void) {
 	DBWORD bank[8];
@@ -418,7 +417,7 @@ void chr_fix_JYASIC_base(void) {
 void chr_swap_JYASIC_base(WORD address, DBWORD value) {
 	BYTE enabled = (jyasic.mode[2] & 0x40) >> 6;
 
-	memmap_auto_wp_1k(MMPPU(address), value, TRUE, enabled);
+	memmap_auto_wp_1k(0, MMPPU(address), value, TRUE, enabled);
 }
 void wram_fix_JYASIC_base(void) {
 	DBWORD bank = jyasic.prg[3];
@@ -439,12 +438,12 @@ void wram_fix_JYASIC_base(void) {
 	if (jyasic.mode[0] & 0x80) {
 		JYASIC_wram_swap(0x6000, bank);
 	} else {
-		memmap_wram_8k(MMCPU(0x6000), 0);
+		memmap_wram_8k(0, MMCPU(0x6000), 0);
 	}
 }
 // la uso solo per la swap nella PRGROM
 void wram_swap_JYASIC_base(WORD address, DBWORD value) {
-	memmap_prgrom_8k(MMCPU(address), value);
+	memmap_prgrom_8k(0, MMCPU(address), value);
 }
 void mirroring_fix_JYASIC_base(void) {
 	BYTE i = 0;
@@ -456,41 +455,41 @@ void mirroring_fix_JYASIC_base(void) {
 			if (((jyasic.mode[2] ^ jyasic.nmt.reg[i]) & 0x80) | (jyasic.mode[0] & 0x40)) {
 				JYASIC_mirroring_swap(address, jyasic.nmt.reg[i]);
 			} else {
-				memmap_nmt_1k(MMPPU(address), (jyasic.nmt.reg[i] & 0x01));
-				memmap_nmt_1k(MMPPU(address | 0x1000), (jyasic.nmt.reg[i] & 0x01));
+				memmap_nmt_1k(0, MMPPU(address), (jyasic.nmt.reg[i] & 0x01));
+				memmap_nmt_1k(0, MMPPU(address | 0x1000), (jyasic.nmt.reg[i] & 0x01));
 			}
 		}
 	} else if (jyasic.mode[1] & 0x08) {
 		for (i = 0; i < 4; i++) {
 			WORD address = 0x2000 | (i * 0x400);
 
-			memmap_nmt_1k(MMPPU(address), (jyasic.nmt.reg[i] & 0x01));
-			memmap_nmt_1k(MMPPU(address | 0x1000), (jyasic.nmt.reg[i] & 0x01));
+			memmap_nmt_1k(0, MMPPU(address), (jyasic.nmt.reg[i] & 0x01));
+			memmap_nmt_1k(0, MMPPU(address | 0x1000), (jyasic.nmt.reg[i] & 0x01));
 		}
 	} else {
 		switch (jyasic.mode[1] & 0x03) {
 			case 0:
-				mirroring_V();
+				mirroring_V(0);
 				break;
 			case 1:
-				mirroring_H();
+				mirroring_H(0);
 				break;
 			case 2:
-				mirroring_SCR0();
+				mirroring_SCR0(0);
 				break;
 			case 3:
-				mirroring_SCR1();
+				mirroring_SCR1(0);
 				break;
 		}
 	}
 }
 // la uso solo per la swap nella CHRROM
 void mirroring_swap_JYASIC_base(WORD address, DBWORD value) {
-	memmap_nmt_chrrom_1k(MMPPU(address), value);
-	memmap_nmt_chrrom_1k(MMPPU(address | 0x1000), value);
+	memmap_nmt_chrrom_1k(0, MMPPU(address), value);
+	memmap_nmt_chrrom_1k(0, MMPPU(address | 0x1000), value);
 }
 
-INLINE static void irq_clock_prescaler_JYASIC(void) {
+INLINE static void irq_clock_prescaler_JYASIC(BYTE nidx) {
 	BYTE type = 0;
 
 	if (!jyasic.irq.active) {
@@ -505,7 +504,7 @@ INLINE static void irq_clock_prescaler_JYASIC(void) {
 				jyasic.irq.count++;
 			}
 			if (jyasic.irq.count == 0x00) {
-				nes.c.irq.high |= EXT_IRQ;
+				nes[nidx].c.irq.high |= EXT_IRQ;
 			}
 		}
 	} else if (type == 2) {
@@ -514,7 +513,7 @@ INLINE static void irq_clock_prescaler_JYASIC(void) {
 				jyasic.irq.count--;
 			}
 			if (jyasic.irq.count == 0xFF) {
-				nes.c.irq.high |= EXT_IRQ;
+				nes[nidx].c.irq.high |= EXT_IRQ;
 			}
 		}
 	}

@@ -24,10 +24,10 @@
 void map_init_157(void);
 void extcl_after_mapper_init_157(void);
 void extcl_mapper_quit_157(void);
-void extcl_cpu_wr_mem_157(WORD address, BYTE value);
-BYTE extcl_cpu_rd_mem_157(WORD address, BYTE openbus);
+void extcl_cpu_wr_mem_157(BYTE nidx, WORD address, BYTE value);
+BYTE extcl_cpu_rd_mem_157(BYTE nidx, WORD address, BYTE openbus);
 BYTE extcl_save_mapper_157(BYTE mode, BYTE slot, FILE *fp);
-void extcl_cpu_every_cycle_157(void);
+void extcl_cpu_every_cycle_157(BYTE nidx);
 void extcl_battery_io_157(BYTE mode, FILE *fp);
 
 #endif /* MAPPER_157_H_ */

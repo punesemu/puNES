@@ -40,7 +40,7 @@ void extcl_after_mapper_init_265(void) {
 	prg_fix_265();
 	mirroring_fix_265();
 }
-void extcl_cpu_wr_mem_265(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_265(UNUSED(BYTE nidx), WORD address, BYTE value) {
 	if (!(m265.reg[0] & 0x2000)) {
 		m265.reg[0] = address;
 		mirroring_fix_265();
@@ -50,7 +50,6 @@ void extcl_cpu_wr_mem_265(WORD address, BYTE value) {
 }
 BYTE extcl_save_mapper_265(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m265.reg);
-
 	return (EXIT_OK);
 }
 
@@ -58,17 +57,17 @@ INLINE static void prg_fix_265(void) {
 	WORD bank = ((m265.reg[0] & 0x0060) >> 2) | ((m265.reg[0] & 0x0300) >> 3) | (m265.reg[1] & 0x07);
 
 	if (m265.reg[0] & 0x0080) {
-		memmap_auto_16k(MMCPU(0x8000), bank);
-		memmap_auto_16k(MMCPU(0xC000), bank);
+		memmap_auto_16k(0, MMCPU(0x8000), bank);
+		memmap_auto_16k(0, MMCPU(0xC000), bank);
 	} else {
-		memmap_auto_16k(MMCPU(0x8000), bank);
-		memmap_auto_16k(MMCPU(0xC000), (bank | 0x07));
+		memmap_auto_16k(0, MMCPU(0x8000), bank);
+		memmap_auto_16k(0, MMCPU(0xC000), (bank | 0x07));
 	}
 }
 INLINE static void mirroring_fix_265(void) {
 	if (m265.reg[0] & 0x02) {
-		mirroring_H();
+		mirroring_H(0);
 	} else {
-		mirroring_V();
+		mirroring_V(0);
 	}
 }

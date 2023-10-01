@@ -23,9 +23,9 @@
 
 void map_init_091(void);
 void extcl_after_mapper_init_091(void);
-void extcl_cpu_wr_mem_091(WORD address, BYTE value);
+void extcl_cpu_wr_mem_091(BYTE nidx, WORD address, BYTE value);
 BYTE extcl_save_mapper_091(BYTE mode, BYTE slot, FILE *fp);
-void extcl_ppu_256_to_319_091(void);
-void extcl_cpu_every_cycle_091(void);
+void extcl_ppu_256_to_319_091(BYTE nidx);
+void extcl_cpu_every_cycle_091(BYTE nidx);
 
 #endif /* MAPPER_091_H_ */

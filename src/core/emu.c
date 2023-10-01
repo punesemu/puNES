@@ -209,18 +209,18 @@ void emu_frame_debugger(void) {
 //	if (debugger.mode == DBG_GO) {
 //		// posso passare dal DBG_GO al DBG_STEP durante l'esecuzione di un frame intero
 //		while ((info.frame_status == FRAME_STARTED) && (debugger.mode == DBG_GO)) {
-//			if ((debugger.breakpoint == nes.c.cpu.PC.w) && !debugger.breakpoint_after_step) {
+//			if ((debugger.breakpoint == nes[nidx].c.cpu.PC.w) && !debugger.breakpoint_after_step) {
 //				debugger.mode = DBG_BREAKPOINT;
 //				//gui_dlgdebugger_click_step();
 //				break;
 //			} else {
 //				debugger.breakpoint_after_step = FALSE;
-//				info.CPU_PC_before = nes.c.cpu.PC.w;
+//				info.CPU_PC_before = nes[nidx].c.cpu.PC.w;
 //				cpu_exe_op();
 //			}
 //		}
 //	} else if (debugger.mode == DBG_STEP) {
-//		info.CPU_PC_before = nes.c.cpu.PC.w;
+//		info.CPU_PC_before = nes[nidx].c.cpu.PC.w;
 //		cpu_exe_op();
 //	}
 

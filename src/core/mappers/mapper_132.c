@@ -34,20 +34,20 @@ void map_init_132(void) {
 	TXC_prg_fix = prg_fix_txc_132;
 	TXC_chr_fix = chr_fix_txc_132;
 }
-void extcl_cpu_wr_mem_132(WORD address, BYTE value) {
-	extcl_cpu_wr_mem_TXC(address, (value & 0x0F));
+void extcl_cpu_wr_mem_132(BYTE nidx, WORD address, BYTE value) {
+	extcl_cpu_wr_mem_TXC(nidx, address, (value & 0x0F));
 }
-BYTE extcl_cpu_rd_mem_132(WORD address, BYTE openbus) {
+BYTE extcl_cpu_rd_mem_132(BYTE nidx, WORD address, BYTE openbus) {
 	if ((address > 0x4020) && (address <= 0x5FFF)) {
-		BYTE value = extcl_cpu_rd_mem_TXC(address, openbus);
+		BYTE value = extcl_cpu_rd_mem_TXC(nidx, address, openbus);
 
 		return (((openbus & 0xF0) | (value & 0x0F)));
 	}
-	return (wram_rd(address));
+	return (wram_rd(nidx, address));
 }
 
 void prg_fix_txc_132(void) {
-	memmap_auto_32k(MMCPU(0x8000), ((txc.output & 0x04) >> 2));
+	memmap_auto_32k(0, MMCPU(0x8000), ((txc.output & 0x04) >> 2));
 }
 void chr_fix_txc_132(void) {
 	if (info.crc32.total == 0x2A5F4C5A) {
@@ -56,8 +56,8 @@ void chr_fix_txc_132(void) {
 		// That ROM image is actually a mapper hack with the PRG-ROM code unmodified but the CHR-ROM banks rearranged to work
 		// as Mapper 132; the correct mapper is INES Mapper 173. That mapper hack only works on certain
 		// emulators' implementation of Mapper 132, not on the above implementation based on studying the circuit board.
-		memmap_auto_8k(MMPPU(0x0000), (txc.inverter | txc.staging));
+		memmap_auto_8k(0, MMPPU(0x0000), (txc.inverter | txc.staging));
 	} else {
-		memmap_auto_8k(MMPPU(0x0000), (txc.output & 0x03));
+		memmap_auto_8k(0, MMPPU(0x0000), (txc.output & 0x03));
 	}
 }

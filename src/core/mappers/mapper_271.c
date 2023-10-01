@@ -44,7 +44,7 @@ void extcl_after_mapper_init_271(void) {
 	chr_fix_271();
 	mirroring_fix_271();
 }
-void extcl_cpu_wr_mem_271(UNUSED(WORD address), BYTE value) {
+void extcl_cpu_wr_mem_271(UNUSED(BYTE nidx), UNUSED(WORD address), BYTE value) {
 	m271.reg = value;
 	prg_fix_271();
 	chr_fix_271();
@@ -52,20 +52,19 @@ void extcl_cpu_wr_mem_271(UNUSED(WORD address), BYTE value) {
 }
 BYTE extcl_save_mapper_271(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m271.reg);
-
 	return (EXIT_OK);
 }
 
 INLINE static void prg_fix_271(void) {
-	memmap_auto_32k(MMCPU(0x8000), (m271.reg >> 4));
+	memmap_auto_32k(0, MMCPU(0x8000), (m271.reg >> 4));
 }
 INLINE static void chr_fix_271(void) {
-	memmap_auto_8k(MMPPU(0x0000), (m271.reg & 0x0F));
+	memmap_auto_8k(0, MMPPU(0x0000), (m271.reg & 0x0F));
 }
 INLINE static void mirroring_fix_271(void) {
 	if (m271.reg & 0x20) {
-		mirroring_V();
+		mirroring_V(0);
 	} else {
-		mirroring_H();
+		mirroring_H(0);
 	}
 }

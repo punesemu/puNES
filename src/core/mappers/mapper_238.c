@@ -42,7 +42,7 @@ void map_init_238(void) {
 	mapper.internal_struct_size[1] = sizeof(mmc3);
 
 	if (info.reset >= HARD) {
-		memset(&irqA12, 0x00, sizeof(irqA12));
+		memset(&nes[0].irqA12, 0x00, sizeof(nes[0].irqA12));
 	}
 
 	memset(&m238, 0x00, sizeof(m238));
@@ -51,10 +51,10 @@ void map_init_238(void) {
 
 	info.mapper.extend_wr = TRUE;
 
-	irqA12.present = TRUE;
-	irqA12_delay = 1;
+	nes[0].irqA12.present = TRUE;
+	nes[0].irqA12.delay = 1;
 }
-void extcl_cpu_wr_mem_238(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_238(BYTE nidx, WORD address, BYTE value) {
 	if ((address >= 0x4020) && (address <= 0x7FFF)) {
 		static const BYTE m238_vlu[4] = { 0x00, 0x02, 0x02, 0x03 };
 
@@ -62,15 +62,15 @@ void extcl_cpu_wr_mem_238(WORD address, BYTE value) {
 		return;
 	}
 	if (address >= 0x8000) {
-		extcl_cpu_wr_mem_MMC3(address, value);
+		extcl_cpu_wr_mem_MMC3(nidx, address, value);
 		return;
 	}
 }
-BYTE extcl_cpu_rd_mem_238(WORD address, UNUSED(BYTE openbus)) {
+BYTE extcl_cpu_rd_mem_238(BYTE nidx, WORD address, UNUSED(BYTE openbus)) {
 	if ((address >= 0x4020) && (address <= 0x7FFF)) {
 		return (m238.reg);
 	}
-	return (wram_rd(address));
+	return (wram_rd(nidx, address));
 }
 BYTE extcl_save_mapper_238(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m238.reg);

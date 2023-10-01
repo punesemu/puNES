@@ -24,7 +24,7 @@
 void sst39sf040_init(BYTE *data, size_t size, BYTE manufacter_id, BYTE model_id, WORD adr1, WORD adr2, int sector_size);
 void sst39sf040_write(BYTE nidx, WORD address, BYTE value);
 BYTE sst39sf040_read(BYTE nidx, WORD address);
-void sst39sf040_tick(void);
+void sst39sf040_tick(BYTE nidx);
 BYTE sst39sf040_save_mapper(BYTE mode, BYTE slot, FILE *fp);
 
 #endif /* SST39SF040_H_ */

@@ -51,7 +51,7 @@ void extcl_after_mapper_init_368(void) {
 	prg_fix_368();
 	wram_fix_368();
 }
-void extcl_cpu_wr_mem_368(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_368(BYTE nidx, WORD address, BYTE value) {
 		switch (address & 0xF1FF)
 			case 0x4022: {
 				m368.reg[0] = value;
@@ -62,15 +62,15 @@ void extcl_cpu_wr_mem_368(WORD address, BYTE value) {
 				m368.irq.enable = value & 0x01;
 				if (!m368.irq.enable) {
 					m368.irq.counter = 0;
-					nes.c.irq.high &= ~EXT_IRQ;
+					nes[nidx].c.irq.high &= ~EXT_IRQ;
 				}
 				break;
 			default:
 				break;
 		}
 }
-BYTE extcl_cpu_rd_mem_368(WORD address, UNUSED(BYTE openbus)) {
-	return ((address & 0xF1FF) == 0x4122 ? 0x8A | (m368.reg[1] & 0x35) : wram_rd(address));
+BYTE extcl_cpu_rd_mem_368(BYTE nidx, WORD address, UNUSED(BYTE openbus)) {
+	return ((address & 0xF1FF) == 0x4122 ? 0x8A | (m368.reg[1] & 0x35) : wram_rd(nidx, address));
 }
 BYTE extcl_save_mapper_368(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m368.reg);
@@ -78,18 +78,18 @@ BYTE extcl_save_mapper_368(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m368.irq.counter);
 	return (EXIT_OK);
 }
-void extcl_cpu_every_cycle_368(void) {
+void extcl_cpu_every_cycle_368(BYTE nidx) {
 	if (m368.irq.enable) {
 		m368.irq.counter = (m368.irq.counter + 1) & 0x0FFF;
 		if (!m368.irq.counter) {
-			nes.c.irq.high |= EXT_IRQ;
+			nes[nidx].c.irq.high |= EXT_IRQ;
 		}
 	}
 }
 
 INLINE static void prg_fix_368(void) {
-	memmap_auto_8k(MMCPU(0x8000), 0x01);
-	memmap_auto_8k(MMCPU(0xA000), 0x00);
+	memmap_auto_8k(0, MMCPU(0x8000), 0x01);
+	memmap_auto_8k(0, MMCPU(0xA000), 0x00);
 	// Value  Bank#
 	// ------------
 	// 0      4
@@ -100,9 +100,9 @@ INLINE static void prg_fix_368(void) {
 	// 5      3
 	// 6      7
 	// 7      3
-	memmap_auto_8k(MMCPU(0xC000), (m368.reg[0] & 0x01 ? 3 : 4 | ((m368.reg[0] & 0x06) >> 1)));
-	memmap_auto_8k(MMCPU(0xE000), 0x08);
+	memmap_auto_8k(0, MMCPU(0xC000), (m368.reg[0] & 0x01 ? 3 : 4 | ((m368.reg[0] & 0x06) >> 1)));
+	memmap_auto_8k(0, MMCPU(0xE000), 0x08);
 }
 INLINE static void wram_fix_368(void) {
-	memmap_prgrom_8k(MMCPU(0x6000), 0x02);
+	memmap_prgrom_8k(0, MMCPU(0x6000), 0x02);
 }

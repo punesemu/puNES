@@ -48,9 +48,9 @@ void map_init_168(void) {
 	}
 
 	if (info.format != NES_2_0) {
-		if (vram_nvram_size() < S32K) {
-			vram_set_ram_size(0);
-			vram_set_nvram_size(S64K);
+		if (vram_nvram_size(0) < S32K) {
+			vram_set_ram_size(0, 0);
+			vram_set_nvram_size(0, S64K);
 		}
 	}
 }
@@ -58,7 +58,7 @@ void extcl_after_mapper_init_168(void) {
 	prg_fix_168();
 	chr_fix_168();
 }
-void extcl_cpu_wr_mem_168(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_168(BYTE nidx, WORD address, BYTE value) {
 	switch (address & 0xF000) {
 		case 0x8000:
 		case 0x9000:
@@ -78,7 +78,7 @@ void extcl_cpu_wr_mem_168(WORD address, BYTE value) {
 			}
 			m168.irq.disabled = address & 0x0080;
 			if (m168.irq.disabled) {
-				nes.c.irq.high &= ~EXT_IRQ;
+				nes[nidx].c.irq.high &= ~EXT_IRQ;
 			}
 			return;
 	}
@@ -88,31 +88,30 @@ BYTE extcl_save_mapper_168(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m168.chr_protect);
 	save_slot_ele(mode, slot, m168.irq.disabled);
 	save_slot_ele(mode, slot, m168.irq.counter);
-
 	return (EXIT_OK);
 }
-void extcl_cpu_every_cycle_168(void) {
+void extcl_cpu_every_cycle_168(BYTE nidx) {
 	if (m168.irq.disabled) {
 		m168.irq.counter = 0;
 	} else {
 		if (++m168.irq.counter & 1024) {
-			nes.c.irq.high |= EXT_IRQ;
+			nes[nidx].c.irq.high |= EXT_IRQ;
 			return;
 		}
-		nes.c.irq.high &= ~EXT_IRQ;
+		nes[nidx].c.irq.high &= ~EXT_IRQ;
 	}
 }
 
 INLINE static void prg_fix_168() {
-	memmap_auto_16k(MMCPU(0x8000), (m168.reg >> 6));
-	memmap_auto_16k(MMCPU(0xC000), 0xFF);
+	memmap_auto_16k(0, MMCPU(0x8000), (m168.reg >> 6));
+	memmap_auto_16k(0, MMCPU(0xC000), 0xFF);
 }
 INLINE static void chr_fix_168() {
-	if (vram_nvram_size() >= S64K) {
-		memmap_vram_wp_4k(MMPPU(0x0000), 0, !m168.chr_protect, !m168.chr_protect);
-		memmap_vram_wp_4k(MMPPU(0x1000), (m168.reg & 0xF) ^ 0x08, !m168.chr_protect, !m168.chr_protect);
+	if (vram_nvram_size(0) >= S64K) {
+		memmap_vram_wp_4k(0, MMPPU(0x0000), 0, !m168.chr_protect, !m168.chr_protect);
+		memmap_vram_wp_4k(0, MMPPU(0x1000), (m168.reg & 0xF) ^ 0x08, !m168.chr_protect, !m168.chr_protect);
 	} else {
-		memmap_vram_4k(MMPPU(0x0000), 0);
-		memmap_vram_wp_4k(MMPPU(0x1000), (m168.reg & 0xF) ^ 0x08, !m168.chr_protect, !m168.chr_protect);
+		memmap_vram_4k(0, MMPPU(0x0000), 0);
+		memmap_vram_wp_4k(0, MMPPU(0x1000), (m168.reg & 0xF) ^ 0x08, !m168.chr_protect, !m168.chr_protect);
 	}
 }

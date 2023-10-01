@@ -35,9 +35,9 @@ typedef struct _fcg {
 extern _fcg fcg;
 
 void extcl_after_mapper_init_FCG(void);
-void extcl_cpu_wr_mem_FCG(WORD address, BYTE value);
+void extcl_cpu_wr_mem_FCG(BYTE nidx, WORD address, BYTE value);
 BYTE extcl_save_mapper_FCG(BYTE mode, BYTE slot, FILE *fp);
-void extcl_cpu_every_cycle_FCG(void);
+void extcl_cpu_every_cycle_FCG(BYTE nidx);
 
 void init_FCG(BYTE reset);
 void prg_fix_FCG_base(void);

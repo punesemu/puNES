@@ -40,7 +40,7 @@ void map_init_210(void) {
 	mapper.internal_struct_size[0] = sizeof(m210);
 
 	if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
-		memmap_wram_region_init(S2K);
+		memmap_wram_region_init(0, S2K);
 	}
 
 	if (info.reset >= HARD) {
@@ -67,7 +67,7 @@ void extcl_after_mapper_init_210(void) {
 	wram_fix_210();
 	mirroring_fix_210();
 }
-void extcl_cpu_wr_mem_210(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_210(UNUSED(BYTE nidx), WORD address, BYTE value) {
 	switch (address & 0xF000) {
 		case 0x8000:
 		case 0x9000:
@@ -99,46 +99,45 @@ BYTE extcl_save_mapper_210(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m210.prg);
 	save_slot_ele(mode, slot, m210.chr);
 	save_slot_ele(mode, slot, m210.wram_protect);
-
 	return (EXIT_OK);
 }
 
 INLINE static void prg_fix_210(void) {
-	memmap_auto_8k(MMCPU(0x8000), (m210.prg[0] & 0x3F));
-	memmap_auto_8k(MMCPU(0xA000), (m210.prg[1] & 0x3F));
-	memmap_auto_8k(MMCPU(0xC000), (m210.prg[2] & 0x3F));
-	memmap_auto_8k(MMCPU(0xE000), (m210.prg[3] & 0x3F));
+	memmap_auto_8k(0, MMCPU(0x8000), (m210.prg[0] & 0x3F));
+	memmap_auto_8k(0, MMCPU(0xA000), (m210.prg[1] & 0x3F));
+	memmap_auto_8k(0, MMCPU(0xC000), (m210.prg[2] & 0x3F));
+	memmap_auto_8k(0, MMCPU(0xE000), (m210.prg[3] & 0x3F));
 }
 INLINE static void chr_fix_210(void) {
-	memmap_auto_1k(MMPPU(0x0000), m210.chr[0]);
-	memmap_auto_1k(MMPPU(0x0400), m210.chr[1]);
-	memmap_auto_1k(MMPPU(0x0800), m210.chr[2]);
-	memmap_auto_1k(MMPPU(0x0C00), m210.chr[3]);
-	memmap_auto_1k(MMPPU(0x1000), m210.chr[4]);
-	memmap_auto_1k(MMPPU(0x1400), m210.chr[5]);
-	memmap_auto_1k(MMPPU(0x1800), m210.chr[6]);
-	memmap_auto_1k(MMPPU(0x1C00), m210.chr[7]);
+	memmap_auto_1k(0, MMPPU(0x0000), m210.chr[0]);
+	memmap_auto_1k(0, MMPPU(0x0400), m210.chr[1]);
+	memmap_auto_1k(0, MMPPU(0x0800), m210.chr[2]);
+	memmap_auto_1k(0, MMPPU(0x0C00), m210.chr[3]);
+	memmap_auto_1k(0, MMPPU(0x1000), m210.chr[4]);
+	memmap_auto_1k(0, MMPPU(0x1400), m210.chr[5]);
+	memmap_auto_1k(0, MMPPU(0x1800), m210.chr[6]);
+	memmap_auto_1k(0, MMPPU(0x1C00), m210.chr[7]);
 }
 INLINE static void wram_fix_210(void) {
-	memmap_auto_wp_2k(MMCPU(0x6000), 0, TRUE, m210.wram_protect);
-	memmap_auto_wp_2k(MMCPU(0x6800), 0, TRUE, m210.wram_protect);
-	memmap_auto_wp_2k(MMCPU(0x7000), 0, TRUE, m210.wram_protect);
-	memmap_auto_wp_2k(MMCPU(0x7800), 0, TRUE, m210.wram_protect);
+	memmap_auto_wp_2k(0, MMCPU(0x6000), 0, TRUE, m210.wram_protect);
+	memmap_auto_wp_2k(0, MMCPU(0x6800), 0, TRUE, m210.wram_protect);
+	memmap_auto_wp_2k(0, MMCPU(0x7000), 0, TRUE, m210.wram_protect);
+	memmap_auto_wp_2k(0, MMCPU(0x7800), 0, TRUE, m210.wram_protect);
 }
 INLINE static void mirroring_fix_210(void) {
 	if (info.mapper.submapper != 1) {
 		switch (m210.prg[0] >> 6) {
 			case 0:
-				mirroring_SCR0();
+				mirroring_SCR0(0);
 				break;
 			case 1:
-				mirroring_V();
+				mirroring_V(0);
 				break;
 			case 2:
-				mirroring_H();
+				mirroring_H(0);
 				break;
 			case 3:
-				mirroring_SCR1();
+				mirroring_SCR1(0);
 				break;
 		}
 	}

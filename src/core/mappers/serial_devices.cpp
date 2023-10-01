@@ -41,7 +41,6 @@ BYTE serialDevice::saveMapper(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, clock);
 	save_slot_ele(mode, slot, data);
 	save_slot_ele(mode, slot, output);
-
 	return (EXIT_OK);
 }
 
@@ -116,7 +115,6 @@ void I2CDevice::receiveBit() {
 BYTE I2CDevice::saveMapper(BYTE mode, BYTE slot, FILE *fp) {
 	if (serialDevice::saveMapper(mode, slot, fp) == EXIT_ERROR) return (EXIT_ERROR);
 	save_slot_ele(mode, slot, readMode);
-
 	return (EXIT_OK);
 }
 
@@ -149,7 +147,6 @@ BYTE serialROM::saveMapper(BYTE mode, BYTE slot, FILE *fp) {
 	if (serialDevice::saveMapper(mode, slot, fp) == EXIT_ERROR) return (EXIT_ERROR);
 	save_slot_ele(mode, slot, bitPosition);
 	save_slot_ele(mode, slot, command);
-
 	return (EXIT_OK);
 }
 
@@ -192,7 +189,6 @@ BYTE inverterROM::saveMapper(BYTE mode, BYTE slot, FILE *fp) {
 	if (serialDevice::saveMapper(mode, slot, fp) == EXIT_ERROR) return (EXIT_ERROR);
 	save_slot_ele(mode, slot, command);
 	save_slot_ele(mode, slot, result);
-
 	return (EXIT_OK);
 }
 
@@ -254,7 +250,6 @@ BYTE GPIO_OneBus::saveMapper(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, mask);
 	save_slot_ele(mode, slot, latch);
 	save_slot_ele(mode, slot, state);
-
 	return (EXIT_OK);
 }
 
@@ -342,7 +337,6 @@ BYTE EEPROM_I2C::saveMapper(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, address);
 	save_slot_ele(mode, slot, bit);
 	save_slot_ele(mode, slot, latch);
-
 	return (EXIT_OK);
 }
 

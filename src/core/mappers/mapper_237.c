@@ -43,7 +43,7 @@ void extcl_after_mapper_init_237(void) {
 	prg_fix_237();
 	mirroring_fix_237();
 }
-void extcl_cpu_wr_mem_237(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_237(UNUSED(BYTE nidx), WORD address, BYTE value) {
 	if (m237.reg[0] & 0x02) {
 		m237.reg[1] = (m237.reg[1] & 0xF8) | (value & 0x07);
 	} else {
@@ -53,16 +53,15 @@ void extcl_cpu_wr_mem_237(WORD address, BYTE value) {
 	prg_fix_237();
 	mirroring_fix_237();
 }
-BYTE extcl_cpu_rd_mem_237(WORD address, UNUSED(BYTE openbus)) {
+BYTE extcl_cpu_rd_mem_237(BYTE nidx, WORD address, UNUSED(BYTE openbus)) {
 	if (address >= 0x8000) {
-		return (m237.reg[0] & 0x01 ? dipswitch.value : prgrom_rd(address));
+		return (m237.reg[0] & 0x01 ? dipswitch.value : prgrom_rd(nidx, address));
 	}
-	return (wram_rd(address));
+	return (wram_rd(nidx, address));
 }
 
 BYTE extcl_save_mapper_237(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m237.reg);
-
 	return (EXIT_OK);
 }
 
@@ -88,13 +87,13 @@ INLINE static void prg_fix_237(void) {
 			bank[1] = base | (m237.reg[1] & 0x06) | 0x01;
 			break;
 	}
-	memmap_auto_16k(MMCPU(0x8000), bank[0]);
-	memmap_auto_16k(MMCPU(0xC000), bank[1]);
+	memmap_auto_16k(0, MMCPU(0x8000), bank[0]);
+	memmap_auto_16k(0, MMCPU(0xC000), bank[1]);
 }
 INLINE static void mirroring_fix_237(void) {
 	if (m237.reg[1] & 0x20) {
-		mirroring_H();
+		mirroring_H(0);
 	} else {
-		mirroring_V();
+		mirroring_V(0);
 	}
 }

@@ -47,7 +47,7 @@ void extcl_after_mapper_init_138(void) {
 	chr_fix_138();
 	mirroring_fix_138();
 }
-void extcl_cpu_wr_mem_138(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_138(UNUSED(BYTE nidx), WORD address, BYTE value) {
 	if ((address & 0x4000) && (address & 0x0100)) {
 		if (address & 0x01) {
 			m138.reg[m138.index & 0x07] = value;
@@ -61,34 +61,33 @@ void extcl_cpu_wr_mem_138(WORD address, BYTE value) {
 }
 BYTE extcl_save_mapper_138(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m138.reg);
-
 	return (EXIT_OK);
 }
 
 INLINE static void prg_fix_138(void) {
-	memmap_auto_32k(MMCPU(0x8000), m138.reg[5]);
+	memmap_auto_32k(0, MMCPU(0x8000), m138.reg[5]);
 }
 INLINE static void chr_fix_138(void) {
 	WORD base = m138.reg[4] << 3;
 
-	memmap_auto_2k(MMPPU(0x0000), (base | (m138.reg[(m138.reg[7] & 0x01) ? 0 : 0] & 0x07)));
-	memmap_auto_2k(MMPPU(0x0800), (base | (m138.reg[(m138.reg[7] & 0x01) ? 0 : 1] & 0x07)));
-	memmap_auto_2k(MMPPU(0x1000), (base | (m138.reg[(m138.reg[7] & 0x01) ? 0 : 2] & 0x07)));
-	memmap_auto_2k(MMPPU(0x1800), (base | (m138.reg[(m138.reg[7] & 0x01) ? 0 : 3] & 0x07)));
+	memmap_auto_2k(0, MMPPU(0x0000), (base | (m138.reg[(m138.reg[7] & 0x01) ? 0 : 0] & 0x07)));
+	memmap_auto_2k(0, MMPPU(0x0800), (base | (m138.reg[(m138.reg[7] & 0x01) ? 0 : 1] & 0x07)));
+	memmap_auto_2k(0, MMPPU(0x1000), (base | (m138.reg[(m138.reg[7] & 0x01) ? 0 : 2] & 0x07)));
+	memmap_auto_2k(0, MMPPU(0x1800), (base | (m138.reg[(m138.reg[7] & 0x01) ? 0 : 3] & 0x07)));
 }
 INLINE static void mirroring_fix_138(void) {
 	switch (m138.reg[7] & 0x07) {
 		case 0:
-			mirroring_SCR0x3_SCR1x1();
+			mirroring_SCR0x3_SCR1x1(0);
 			break;
 		case 2:
-			mirroring_H();
+			mirroring_H(0);
 			break;
 		default:
-			mirroring_V();
+			mirroring_V(0);
 			break;
 		case 6:
-			mirroring_SCR0();
+			mirroring_SCR0(0);
 			break;
 	}
 }

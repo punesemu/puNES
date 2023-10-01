@@ -66,7 +66,7 @@ void extcl_after_mapper_init_091(void) {
 		mirroring_fix_091();
 	}
 }
-void extcl_cpu_wr_mem_091(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_091(BYTE nidx, WORD address, BYTE value) {
 	switch (address & 0xF000) {
 		case 0x6000:
 			if (info.mapper.submapper == 1) {
@@ -108,12 +108,12 @@ void extcl_cpu_wr_mem_091(WORD address, BYTE value) {
 				case 2:
 					m091.irq.enable = FALSE;
 					m091.irq.ppu.counter = 0;
-					nes.c.irq.high &= ~EXT_IRQ;
+					nes[nidx].c.irq.high &= ~EXT_IRQ;
 					return;
 				case 3:
 					m091.irq.enable = TRUE;
 					m091.irq.cpu.prescaler = 3;
-					nes.c.irq.high &= ~EXT_IRQ;
+					nes[nidx].c.irq.high &= ~EXT_IRQ;
 					return;
 			}
 			break;
@@ -133,26 +133,25 @@ BYTE extcl_save_mapper_091(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m091.irq.ppu.counter);
 	save_slot_ele(mode, slot, m091.irq.cpu.prescaler);
 	save_slot_ele(mode, slot, m091.irq.cpu.counter);
-
 	return (EXIT_OK);
 }
-void extcl_ppu_256_to_319_091(void) {
-	if (nes.p.ppu.frame_x != 319) {
+void extcl_ppu_256_to_319_091(BYTE nidx) {
+	if (nes[nidx].p.ppu.frame_x != 319) {
 		return;
 	}
 	if (m091.irq.enable && (m091.irq.ppu.counter < 8)) {
 		m091.irq.ppu.counter++;
 		if (m091.irq.ppu.counter >= 8) {
-			nes.c.irq.high |= EXT_IRQ;
+			nes[nidx].c.irq.high |= EXT_IRQ;
 		}
 	}
 }
-void extcl_cpu_every_cycle_091(void) {
+void extcl_cpu_every_cycle_091(BYTE nidx) {
 	m091.irq.cpu.prescaler = (m091.irq.cpu.prescaler + 1) & 0x03;
 	if (!m091.irq.cpu.prescaler) {
 		m091.irq.cpu.counter -= 5;
 		if ((m091.irq.cpu.counter <= 0) && m091.irq.enable) {
-			nes.c.irq.high |= EXT_IRQ;
+			nes[nidx].c.irq.high |= EXT_IRQ;
 		}
 	}
 }
@@ -161,23 +160,23 @@ INLINE static void prg_fix_091(void) {
 	WORD mask = 0x0F;
 	WORD base = (m091.reg << 3) & ~mask;
 
-	memmap_auto_8k(MMCPU(0x8000), (base | (m091.prg[0] & mask)));
-	memmap_auto_8k(MMCPU(0xA000), (base | (m091.prg[1] & mask)));
-	memmap_auto_8k(MMCPU(0xC000), (base | (0xFE & mask)));
-	memmap_auto_8k(MMCPU(0xE000), (base | (0xFF & mask)));
+	memmap_auto_8k(0, MMCPU(0x8000), (base | (m091.prg[0] & mask)));
+	memmap_auto_8k(0, MMCPU(0xA000), (base | (m091.prg[1] & mask)));
+	memmap_auto_8k(0, MMCPU(0xC000), (base | (0xFE & mask)));
+	memmap_auto_8k(0, MMCPU(0xE000), (base | (0xFF & mask)));
 }
 INLINE static void chr_fix_091(void) {
 	WORD base = (m091.reg & 0x01) << 8;
 
-	memmap_auto_2k(MMPPU(0x0000), (base | m091.chr[0]));
-	memmap_auto_2k(MMPPU(0x0800), (base | m091.chr[1]));
-	memmap_auto_2k(MMPPU(0x1000), (base | m091.chr[2]));
-	memmap_auto_2k(MMPPU(0x1800), (base | m091.chr[3]));
+	memmap_auto_2k(0, MMPPU(0x0000), (base | m091.chr[0]));
+	memmap_auto_2k(0, MMPPU(0x0800), (base | m091.chr[1]));
+	memmap_auto_2k(0, MMPPU(0x1000), (base | m091.chr[2]));
+	memmap_auto_2k(0, MMPPU(0x1800), (base | m091.chr[3]));
 }
 INLINE static void mirroring_fix_091(void) {
 	if (m091.mirroring) {
-		mirroring_H();
+		mirroring_H(0);
 	} else {
-		mirroring_V();
+		mirroring_V(0);
 	}
 }

@@ -44,39 +44,38 @@ void extcl_after_mapper_init_212(void) {
 	chr_fix_212();
 	mirroring_fix_212();
 }
-void extcl_cpu_wr_mem_212(WORD address, UNUSED(BYTE value)) {
+void extcl_cpu_wr_mem_212(UNUSED(BYTE nidx), WORD address, UNUSED(BYTE value)) {
 	m212.reg = address;
 	prg_fix_212();
 	chr_fix_212();
 	mirroring_fix_212();
 }
-BYTE extcl_cpu_rd_mem_212(WORD address, BYTE openbus) {
+BYTE extcl_cpu_rd_mem_212(BYTE nidx, WORD address, BYTE openbus) {
 	if ((address >= 0x6000) && (address <= 0x7FFF)) {
 		return (openbus | (address & 0x10 ? 0x00 : 0x80));
 	}
-	return (wram_rd(address));
+	return (wram_rd(nidx, address));
 }
 BYTE extcl_save_mapper_212(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m212.reg);
-
 	return (EXIT_OK);
 }
 
 INLINE static void prg_fix_212(void) {
 	if (m212.reg & 0x4000) {
-		memmap_auto_32k(MMCPU(0x8000), (m212.reg >> 1));
+		memmap_auto_32k(0, MMCPU(0x8000), (m212.reg >> 1));
 	} else {
-		memmap_auto_16k(MMCPU(0x8000), m212.reg);
-		memmap_auto_16k(MMCPU(0xC000), m212.reg);
+		memmap_auto_16k(0, MMCPU(0x8000), m212.reg);
+		memmap_auto_16k(0, MMCPU(0xC000), m212.reg);
 	}
 }
 INLINE static void chr_fix_212(void) {
-	memmap_auto_8k(MMPPU(0x0000), m212.reg);
+	memmap_auto_8k(0, MMPPU(0x0000), m212.reg);
 }
 INLINE static void mirroring_fix_212(void) {
 	if (m212.reg & 0x08) {
-		mirroring_H();
+		mirroring_H(0);
 	} else {
-		mirroring_V();
+		mirroring_V(0);
 	}
 }

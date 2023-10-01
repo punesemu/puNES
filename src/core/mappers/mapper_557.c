@@ -52,8 +52,8 @@ void chr_swap_n118_557(WORD address, WORD value) {
 
 INLINE static void mirroring_fix_557(void) {
 	if (n118.reg[5] & 0x20) {
-		mirroring_H();
+		mirroring_H(0);
 	} else {
-		mirroring_V();
+		mirroring_V(0);
 	}
 }

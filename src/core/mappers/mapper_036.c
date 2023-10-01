@@ -43,19 +43,19 @@ void map_init_036(void) {
 	TXC_prg_fix = prg_fix_txc_036;
 	TXC_chr_fix = chr_fix_txc_036;
 }
-void extcl_cpu_wr_mem_036(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_036(BYTE nidx, WORD address, BYTE value) {
 	if ((address >= 0x4000) && (address <= 0x4FFF) && (address & 0x200)) {
 		m036.reg = value;
 	}
-	extcl_cpu_wr_mem_TXC(address, (value & 0x0F));
+	extcl_cpu_wr_mem_TXC(nidx, address, (value & 0x0F));
 }
-BYTE extcl_cpu_rd_mem_036(WORD address, BYTE openbus) {
+BYTE extcl_cpu_rd_mem_036(BYTE nidx, WORD address, BYTE openbus) {
 	if ((address >= 0x4020) && (address <= 0x5FFF)) {
-		BYTE value = extcl_cpu_rd_mem_TXC(address, openbus);
+		BYTE value = extcl_cpu_rd_mem_TXC(nidx, address, openbus);
 
 		return (((openbus & 0xCF) | ((value & 0x03) << 4)));
 	}
-	return (wram_rd(address));
+	return (wram_rd(nidx, address));
 }
 BYTE extcl_save_mapper_036(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m036.reg);
@@ -63,8 +63,8 @@ BYTE extcl_save_mapper_036(BYTE mode, BYTE slot, FILE *fp) {
 }
 
 void prg_fix_txc_036(void) {
-	memmap_auto_32k(MMCPU(0x8000), (txc.output & 0x03));
+	memmap_auto_32k(0, MMCPU(0x8000), (txc.output & 0x03));
 }
 void chr_fix_txc_036(void) {
-	memmap_auto_8k(MMPPU(0x0000), m036.reg);
+	memmap_auto_8k(0, MMPPU(0x0000), m036.reg);
 }

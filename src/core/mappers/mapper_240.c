@@ -44,7 +44,7 @@ void extcl_after_mapper_init_240(void) {
 	prg_fix_240();
 	chr_fix_240();
 }
-void extcl_cpu_wr_mem_240(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_240(UNUSED(BYTE nidx), WORD address, BYTE value) {
 	if ((address >= 0x4020) && (address <= 0x4FFF)) {
 		m240.reg = value;
 	}
@@ -53,13 +53,12 @@ void extcl_cpu_wr_mem_240(WORD address, BYTE value) {
 }
 BYTE extcl_save_mapper_240(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m240.reg);
-
 	return (EXIT_OK);
 }
 
 INLINE static void prg_fix_240(void) {
-	memmap_auto_32k(MMCPU(0x8000), (m240.reg >> 4));
+	memmap_auto_32k(0, MMCPU(0x8000), (m240.reg >> 4));
 }
 INLINE static void chr_fix_240(void) {
-	memmap_auto_8k(MMPPU(0x0000), (m240.reg & 0x0F));
+	memmap_auto_8k(0, MMPPU(0x0000), (m240.reg & 0x0F));
 }

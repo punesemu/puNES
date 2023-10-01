@@ -145,7 +145,6 @@ BYTE extcl_save_mapper_MMC3(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, mmc3.reg);
 	save_slot_ele(mode, slot, mmc3.mirroring);
 	save_slot_ele(mode, slot, mmc3.wram_protect);
-
 	return (EXIT_OK);
 }
 void extcl_cpu_every_cycle_MMC3(BYTE nidx) {

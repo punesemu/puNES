@@ -46,7 +46,7 @@ void extcl_after_mapper_init_113(void) {
 	chr_fix_113();
 	mirroring_fix_113();
 }
-void extcl_cpu_wr_mem_113(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_113(UNUSED(BYTE nidx), WORD address, BYTE value) {
 	if ((address >= 0x4000) && (address <= 0x5FFF)) {
 		if (address & 0x100) {
 			m113.reg = value;
@@ -58,20 +58,19 @@ void extcl_cpu_wr_mem_113(WORD address, BYTE value) {
 }
 BYTE extcl_save_mapper_113(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m113.reg);
-
 	return (EXIT_OK);
 }
 
 INLINE static void prg_fix_113(void) {
-	memmap_auto_32k(MMCPU(0x8000), ((m113.reg & 0x38) >> 3));
+	memmap_auto_32k(0, MMCPU(0x8000), ((m113.reg & 0x38) >> 3));
 }
 INLINE static void chr_fix_113(void) {
-	memmap_auto_8k(MMPPU(0x0000), (((m113.reg & 0x40) >> 3) | (m113.reg & 0x07)));
+	memmap_auto_8k(0, MMPPU(0x0000), (((m113.reg & 0x40) >> 3) | (m113.reg & 0x07)));
 }
 INLINE static void mirroring_fix_113(void) {
 	if (m113.reg & 0x80) {
-		mirroring_V();
+		mirroring_V(0);
 	} else {
-		mirroring_H();
+		mirroring_H(0);
 	}
 }

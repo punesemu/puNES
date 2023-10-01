@@ -22,6 +22,6 @@
 #include "common.h"
 
 void map_init_325(void);
-void extcl_cpu_wr_mem_325(WORD address, BYTE value);
+void extcl_cpu_wr_mem_325(BYTE nidx, WORD address, BYTE value);
 
 #endif /* MAPPER_325_H_ */

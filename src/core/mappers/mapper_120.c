@@ -44,7 +44,7 @@ void extcl_after_mapper_init_120(void) {
 	prg_fix_120();
 	wram_fix_120();
 }
-void extcl_cpu_wr_mem_120(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_120(UNUSED(BYTE nidx), WORD address, BYTE value) {
 	if ((address >= 0x4000) && (address < 0x5FFF)) {
 		if ((address & 0xFFF) == 0x01FF) {
 			m120.reg = value;
@@ -58,8 +58,8 @@ BYTE extcl_save_mapper_120(BYTE mode, BYTE slot, FILE *fp) {
 }
 
 INLINE static void prg_fix_120(void) {
-	memmap_auto_32k(MMCPU(0x8000), 2);
+	memmap_auto_32k(0, MMCPU(0x8000), 2);
 }
 INLINE static void wram_fix_120(void) {
-	memmap_prgrom_8k(MMCPU(0x6000), m120.reg);
+	memmap_prgrom_8k(0, MMCPU(0x6000), m120.reg);
 }

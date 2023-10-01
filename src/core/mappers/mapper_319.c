@@ -50,7 +50,7 @@ void extcl_after_mapper_init_319(void) {
 	chr_fix_319();
 	mirroring_fix_319();
 }
-void extcl_cpu_wr_mem_319(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_319(UNUSED(BYTE nidx), WORD address, BYTE value) {
 	if ((address >= 0x6000) && (address <= 0x7FFF)) {
 		switch (address & 0x04) {
 			case 0x00:
@@ -69,15 +69,14 @@ void extcl_cpu_wr_mem_319(WORD address, BYTE value) {
 		return;
 	}
 }
-BYTE extcl_cpu_rd_mem_319(WORD address, UNUSED(BYTE openbus)) {
+BYTE extcl_cpu_rd_mem_319(BYTE nidx, WORD address, UNUSED(BYTE openbus)) {
 	if ((address >= 0x5000) && (address <= 0x5FFF)) {
 		return (dipswitch.value);
 	}
-	return (wram_rd(address));
+	return (wram_rd(nidx, address));
 }
 BYTE extcl_save_mapper_319(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m319.reg);
-
 	return (EXIT_OK);
 }
 
@@ -92,18 +91,18 @@ INLINE static void prg_fix_319(void) {
 		? (m319.reg[1] & 0x40) >> 4
 		: (m319.reg[1] & 0x40) >> 6;
 
-	memmap_auto_16k(MMCPU(0x8000), (bank & ~mask));
-	memmap_auto_16k(MMCPU(0xC000), (bank | mask));
+	memmap_auto_16k(0, MMCPU(0x8000), (bank & ~mask));
+	memmap_auto_16k(0, MMCPU(0xC000), (bank | mask));
 }
 INLINE static void chr_fix_319(void) {
 	WORD mask = (m319.reg[0] & 0x01) << 2;
 
-	memmap_auto_8k(MMPPU(0x0000), (((m319.reg[0] >> 4) & ~mask) | ((m319.reg[2] << 2) & mask)));
+	memmap_auto_8k(0, MMPPU(0x0000), (((m319.reg[0] >> 4) & ~mask) | ((m319.reg[2] << 2) & mask)));
 }
 INLINE static void mirroring_fix_319(void) {
 	if (m319.reg[1] & 0x80) {
-		mirroring_V();
+		mirroring_V(0);
 	} else {
-		mirroring_H();
+		mirroring_H(0);
 	}
 }

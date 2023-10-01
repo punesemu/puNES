@@ -44,14 +44,14 @@ void map_init_153(void) {
 	LZ93D50_prg_swap = prg_swap_lz93d50_153;
 	LZ93D50_chr_fix = chr_fix_lz93d50_153;
 }
-void extcl_cpu_wr_mem_153(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_153(BYTE nidx, WORD address, BYTE value) {
 	if (address >= 0x8000) {
 		if ((address & 0x0F) <= 0x03) {
 			m153.outer = value;
 			LZ93D50_prg_fix();
 		}
 	}
-	extcl_cpu_wr_mem_LZ93D50(address, value);
+	extcl_cpu_wr_mem_LZ93D50(nidx, address, value);
 }
 BYTE extcl_save_mapper_153(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m153.outer);
@@ -62,5 +62,5 @@ void prg_swap_lz93d50_153(WORD address, WORD value) {
 	prg_swap_LZ93D50_base(address, ((m153.outer << 4) | (value & 0x0F)));
 }
 void chr_fix_lz93d50_153(void) {
-	memmap_auto_8k(MMPPU(0x0000), 0);
+	memmap_auto_8k(0, MMPPU(0x0000), 0);
 }

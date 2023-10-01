@@ -42,8 +42,8 @@ void extcl_after_mapper_init_144(void) {
 	prg_fix_144();
 	chr_fix_144();
 }
-void extcl_cpu_wr_mem_144(WORD address, BYTE value) {
-	BYTE rd = prgrom_rd(address);
+void extcl_cpu_wr_mem_144(BYTE nidx, WORD address, BYTE value) {
+	BYTE rd = prgrom_rd(nidx, address);
 
 	// bus conflict
 	m144.reg = rd & ((value & rd) | 0x01);
@@ -52,13 +52,12 @@ void extcl_cpu_wr_mem_144(WORD address, BYTE value) {
 }
 BYTE extcl_save_mapper_144(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m144.reg);
-
 	return (EXIT_OK);
 }
 
 INLINE static void prg_fix_144(void) {
-	memmap_auto_32k(MMCPU(0x8000), (m144.reg & 0x03));
+	memmap_auto_32k(0, MMCPU(0x8000), (m144.reg & 0x03));
 }
 INLINE static void chr_fix_144(void) {
-	memmap_auto_8k(MMPPU(0x0000), ((m144.reg & 0xF0) >> 4));
+	memmap_auto_8k(0, MMPPU(0x0000), ((m144.reg & 0xF0) >> 4));
 }

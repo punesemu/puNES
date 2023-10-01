@@ -42,7 +42,7 @@ void extcl_after_mapper_init_433(void) {
 	chr_fix_433();
 	mirroring_fix_433();
 }
-void extcl_cpu_wr_mem_433(UNUSED(WORD address), BYTE value) {
+void extcl_cpu_wr_mem_433(UNUSED(BYTE nidx), UNUSED(WORD address), BYTE value) {
 	m433.reg = value;
 	prg_fix_433();
 	chr_fix_433();
@@ -50,7 +50,6 @@ void extcl_cpu_wr_mem_433(UNUSED(WORD address), BYTE value) {
 }
 BYTE extcl_save_mapper_433(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m433.reg);
-
 	return (EXIT_OK);
 }
 
@@ -59,19 +58,19 @@ INLINE static void prg_fix_433(void) {
 
 	if (!(m433.reg & 0x20)) {
 		bank >>= 1;
-		memmap_auto_32k(MMCPU(0x8000), bank);
+		memmap_auto_32k(0, MMCPU(0x8000), bank);
 	} else {
-		memmap_auto_16k(MMCPU(0x8000), bank);
-		memmap_auto_16k(MMCPU(0xC000), bank);
+		memmap_auto_16k(0, MMCPU(0x8000), bank);
+		memmap_auto_16k(0, MMCPU(0xC000), bank);
 	}
 }
 INLINE static void chr_fix_433(void) {
-	memmap_vram_wp_8k(MMPPU(0x0000), 0, TRUE, (m433.reg & 0x80));
+	memmap_vram_wp_8k(0, MMPPU(0x0000), 0, TRUE, (m433.reg & 0x80));
 }
 INLINE static void mirroring_fix_433(void) {
 	if (m433.reg & 0x40) {
-		mirroring_H();
+		mirroring_H(0);
 	} else {
-		mirroring_V();
+		mirroring_V(0);
 	}
 }

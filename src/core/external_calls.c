@@ -36,12 +36,12 @@ void (*extcl_cpu_wr_r4016)(BYTE nidx, BYTE value);
 // PPU
 // viene chiamata sempre, ad ogni ciclo della PPU
 void (*extcl_ppu_000_to_34x)(BYTE nidx);
-// viene chiamata se (!nes.p.ppu.vblank && (nes.p.ppu.screen_y < SCR_ROWS))
+// viene chiamata se (!nes[nidx].p.ppu.vblank && (nes[nidx].p.ppu.screen_y < SCR_ROWS))
 // quindi per essere sicuri di essere durante il rendering della PPU
-// nella funzione devo controllare anche se nes.p.r2001.visible non e' a zero.
+// nella funzione devo controllare anche se nes[nidx].p.r2001.visible non e' a zero.
 void (*extcl_ppu_000_to_255)(BYTE nidx);
 // vengono chiamate solo se la PPU e' in fase di rendering
-// (!nes.p.ppu.vblank && nes.p.r2001.visible && (nes.p.ppu.screen_y < SCR_ROWS))
+// (!nes[nidx].p.ppu.vblank && nes[nidx].p.r2001.visible && (nes[nidx].p.ppu.screen_y < SCR_ROWS))
 void (*extcl_ppu_256_to_319)(BYTE nidx);
 void (*extcl_ppu_320_to_34x)(BYTE nidx);
 // viene chiamata dopo ogni cambiamento del $2006 in cpu_inline.h

@@ -50,13 +50,13 @@ void chr_swap_vrc2and4_527(WORD address, WORD value) {
 	chr_swap_VRC2and4_base(address, (value & 0xFFF));
 }
 void mirroring_fix_vrc2and4_527(void) {
-	memmap_nmt_1k(MMPPU(0x2000), (vrc2and4.chr[0] >> 7));
-	memmap_nmt_1k(MMPPU(0x2400), (vrc2and4.chr[0] >> 7));
-	memmap_nmt_1k(MMPPU(0x2800), (vrc2and4.chr[1] >> 7));
-	memmap_nmt_1k(MMPPU(0x2C00), (vrc2and4.chr[1] >> 7));
+	memmap_nmt_1k(0, MMPPU(0x2000), (vrc2and4.chr[0] >> 7));
+	memmap_nmt_1k(0, MMPPU(0x2400), (vrc2and4.chr[0] >> 7));
+	memmap_nmt_1k(0, MMPPU(0x2800), (vrc2and4.chr[1] >> 7));
+	memmap_nmt_1k(0, MMPPU(0x2C00), (vrc2and4.chr[1] >> 7));
 
-	memmap_nmt_1k(MMPPU(0x3000), (vrc2and4.chr[0] >> 7));
-	memmap_nmt_1k(MMPPU(0x3400), (vrc2and4.chr[0] >> 7));
-	memmap_nmt_1k(MMPPU(0x3800), (vrc2and4.chr[1] >> 7));
-	memmap_nmt_1k(MMPPU(0x3C00), (vrc2and4.chr[1] >> 7));
+	memmap_nmt_1k(0, MMPPU(0x3000), (vrc2and4.chr[0] >> 7));
+	memmap_nmt_1k(0, MMPPU(0x3400), (vrc2and4.chr[0] >> 7));
+	memmap_nmt_1k(0, MMPPU(0x3800), (vrc2and4.chr[1] >> 7));
+	memmap_nmt_1k(0, MMPPU(0x3C00), (vrc2and4.chr[1] >> 7));
 }

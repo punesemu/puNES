@@ -47,7 +47,7 @@ void extcl_after_mapper_init_137(void) {
 	chr_fix_137();
 	mirroring_fix_137();
 }
-void extcl_cpu_wr_mem_137(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_137(UNUSED(BYTE nidx), WORD address, BYTE value) {
 	if ((address & 0x4000) && (address & 0x0100)) {
 		if (address & 0x01) {
 			m137.reg[m137.index & 0x07] = value;
@@ -61,33 +61,32 @@ void extcl_cpu_wr_mem_137(WORD address, BYTE value) {
 }
 BYTE extcl_save_mapper_137(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m137.reg);
-
 	return (EXIT_OK);
 }
 
 INLINE static void prg_fix_137(void) {
-	memmap_auto_32k(MMCPU(0x8000), m137.reg[5]);
+	memmap_auto_32k(0, MMCPU(0x8000), m137.reg[5]);
 }
 INLINE static void chr_fix_137(void) {
-	memmap_auto_1k(MMPPU(0x0000), (m137.reg[(m137.reg[7] & 0x01) ? 0 : 0] & 0x07));
-	memmap_auto_1k(MMPPU(0x0400), (((m137.reg[4] & 0x01) << 4) | (m137.reg[(m137.reg[7] & 0x01) ? 0 : 1] & 0x07)));
-	memmap_auto_1k(MMPPU(0x0800), (((m137.reg[4] & 0x02) << 3) | (m137.reg[(m137.reg[7] & 0x01) ? 0 : 2] & 0x07)));
-	memmap_auto_1k(MMPPU(0x0C00), (((m137.reg[4] & 0x04) << 2) | (((m137.reg[6] & 0x01) << 3)) | (m137.reg[(m137.reg[7] & 0x01) ? 0 : 3] & 0x07)));
-	memmap_auto_4k(MMPPU(0x1000), 0xFF);
+	memmap_auto_1k(0, MMPPU(0x0000), (m137.reg[(m137.reg[7] & 0x01) ? 0 : 0] & 0x07));
+	memmap_auto_1k(0, MMPPU(0x0400), (((m137.reg[4] & 0x01) << 4) | (m137.reg[(m137.reg[7] & 0x01) ? 0 : 1] & 0x07)));
+	memmap_auto_1k(0, MMPPU(0x0800), (((m137.reg[4] & 0x02) << 3) | (m137.reg[(m137.reg[7] & 0x01) ? 0 : 2] & 0x07)));
+	memmap_auto_1k(0, MMPPU(0x0C00), (((m137.reg[4] & 0x04) << 2) | (((m137.reg[6] & 0x01) << 3)) | (m137.reg[(m137.reg[7] & 0x01) ? 0 : 3] & 0x07)));
+	memmap_auto_4k(0, MMPPU(0x1000), 0xFF);
 }
 INLINE static void mirroring_fix_137(void) {
 	switch (m137.reg[7] & 0x07) {
 		default:
-			mirroring_H();
+			mirroring_H(0);
 			break;
 		case 2:
-			mirroring_V();
+			mirroring_V(0);
 			break;
 		case 4:
-			mirroring_SCR0x3_SCR1x1();
+			mirroring_SCR0x3_SCR1x1(0);
 			break;
 		case 6:
-			mirroring_SCR0();
+			mirroring_SCR0(0);
 			break;
 	}
 }

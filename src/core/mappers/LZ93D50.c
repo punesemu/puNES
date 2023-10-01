@@ -85,7 +85,7 @@ void extcl_after_mapper_init_LZ93D50(void) {
 	LZ93D50_chr_fix();
 	LZ93D50_mirroring_fix();
 }
-void extcl_cpu_wr_mem_LZ93D50(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_LZ93D50(BYTE nidx, WORD address, BYTE value) {
 	if ((address >= lz93d50tmp.start) && (address <= lz93d50tmp.end)) {
 		switch (address & 0x0F) {
 			case 0x00:
@@ -113,7 +113,7 @@ void extcl_cpu_wr_mem_LZ93D50(WORD address, BYTE value) {
 				if (lz93d50.irq.enabled && !lz93d50.irq.count) {
 					lz93d50.irq.delay = 1;
 				} else {
-					nes.c.irq.high &= ~EXT_IRQ;
+					nes[nidx].c.irq.high &= ~EXT_IRQ;
 				}
 				return;
 			case 0x0B:
@@ -134,7 +134,7 @@ void extcl_cpu_wr_mem_LZ93D50(WORD address, BYTE value) {
 		}
 	}
 }
-BYTE extcl_cpu_rd_mem_LZ93D50(WORD address, BYTE openbus) {
+BYTE extcl_cpu_rd_mem_LZ93D50(UNUSED(BYTE nidx), WORD address, BYTE openbus) {
 	if ((address >= 0x6000) && (address <= 0x7FFF) && lz93d50tmp.eeprom) {
 		return (eeprom_i2c_get_data(lz93d50tmp.eeprom) * 0x10) | (openbus & 0xEF);
 	}
@@ -151,9 +151,9 @@ BYTE extcl_save_mapper_LZ93D50(BYTE mode, BYTE slot, FILE *fp) {
 		? eeprom_i2c_save_mapper(lz93d50tmp.eeprom, mode, slot, fp)
 		: EXIT_OK);
 }
-void extcl_cpu_every_cycle_LZ93D50(void) {
+void extcl_cpu_every_cycle_LZ93D50(BYTE nidx) {
 	if (lz93d50.irq.delay && !(--lz93d50.irq.delay)) {
-		nes.c.irq.high |= EXT_IRQ;
+		nes[nidx].c.irq.high |= EXT_IRQ;
 	}
 	if (lz93d50.irq.enabled) {
 		if (lz93d50.irq.count && !(--lz93d50.irq.count)) {
@@ -167,7 +167,7 @@ void prg_fix_LZ93D50_base(void) {
 	LZ93D50_prg_swap(0xC000, 0xFF);
 }
 void prg_swap_LZ93D50_base(WORD address, WORD value) {
-	memmap_auto_16k(MMCPU(address), value);
+	memmap_auto_16k(0, MMCPU(address), value);
 }
 void chr_fix_LZ93D50_base(void) {
 	LZ93D50_chr_swap(0x0000, lz93d50.chr[0]);
@@ -180,26 +180,26 @@ void chr_fix_LZ93D50_base(void) {
 	LZ93D50_chr_swap(0x1C00, lz93d50.chr[7]);
 }
 void chr_swap_LZ93D50_base(WORD address, WORD value) {
-	memmap_auto_1k(MMPPU(address), value);
+	memmap_auto_1k(0, MMPPU(address), value);
 }
 void wram_fix_LZ93D50_base(void) {
 	BYTE enable = lz93d50.wram_enabled || miscrom_size();
 
-	memmap_auto_wp_8k(MMCPU(0x6000), 0, enable, enable);
+	memmap_auto_wp_8k(0, MMCPU(0x6000), 0, enable, enable);
 }
 void mirroring_fix_LZ93D50_base(void) {
 	switch (lz93d50.mirroring & 0x03) {
 		case 0:
-			mirroring_V();
+			mirroring_V(0);
 			break;
 		case 1:
-			mirroring_H();
+			mirroring_H(0);
 			break;
 		case 2:
-			mirroring_SCR0();
+			mirroring_SCR0(0);
 			break;
 		case 3:
-			mirroring_SCR1();
+			mirroring_SCR1(0);
 			break;
 	}
 }

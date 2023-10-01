@@ -53,15 +53,14 @@ void map_init_105(void) {
 }
 BYTE extcl_save_mapper_105(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m105.count);
-
 	return (EXIT_OK);
 }
-void extcl_cpu_every_cycle_105(void) {
+void extcl_cpu_every_cycle_105(BYTE nidx) {
 	if (mmc1.reg[1] & 0x10) {
 		m105.count = 0;
-		nes.c.irq.high &= ~EXT_IRQ;
+		nes[nidx].c.irq.high &= ~EXT_IRQ;
 	} else if (++m105.count == m105tmp.counter_must_reach) {
-		nes.c.irq.high |= EXT_IRQ;
+		nes[nidx].c.irq.high |= EXT_IRQ;
 	}
 }
 
@@ -70,7 +69,7 @@ void prg_fix_mmc1_105(void) {
 		prg_fix_MMC1_base();
 		return;
 	}
-	memmap_auto_32k(MMCPU(0x8000), ((mmc1.reg[1] & 0x06) >> 1));
+	memmap_auto_32k(0, MMCPU(0x8000), ((mmc1.reg[1] & 0x06) >> 1));
 }
 void prg_swap_mmc1_105(WORD address, WORD value) {
 	prg_swap_MMC1_base(address, (0x08 | (value & 0x07)));

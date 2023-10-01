@@ -32,7 +32,7 @@ void map_init_530(void) {
 	VRC2and4_prg_swap = prg_swap_vrc2and4_530;
 	VRC2and4_chr_swap = chr_swap_vrc2and4_530;
 }
-void extcl_cpu_wr_mem_530(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_530(BYTE nidx, WORD address, BYTE value) {
 	address |= ((address & 0x0008) << 9);
 
 	switch (address & 0xF001) {
@@ -40,16 +40,16 @@ void extcl_cpu_wr_mem_530(WORD address, BYTE value) {
 		case 0x8001:
 		case 0xA000:
 		case 0xA001:
-			extcl_cpu_wr_mem_VRC2and4(address, ((value & 0x02) << 2) | ((value & 0x08) >> 2) | (value & 0x05));
+			extcl_cpu_wr_mem_VRC2and4(nidx, address, ((value & 0x02) << 2) | ((value & 0x08) >> 2) | (value & 0x05));
 			return;
 		case 0xB001:
 		case 0xC001:
 		case 0xD001:
 		case 0xE001:
-			extcl_cpu_wr_mem_VRC2and4(address, ((value & 0x04) >> 1) | ((value & 0x02) << 1) | (value & 0x09));
+			extcl_cpu_wr_mem_VRC2and4(nidx, address, ((value & 0x04) >> 1) | ((value & 0x02) << 1) | (value & 0x09));
 			return;
 		default:
-			extcl_cpu_wr_mem_VRC2and4(address, value);
+			extcl_cpu_wr_mem_VRC2and4(nidx, address, value);
 	}
 }
 

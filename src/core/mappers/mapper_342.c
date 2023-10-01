@@ -45,59 +45,59 @@ INLINE static void wram_fix_342(void);
 INLINE static void mirroring_fix_342(void);
 INLINE static void flash_write_342(WORD address, BYTE value);
 
-INLINE static void mapper00_cpu_wr_low(WORD address, BYTE value);
-INLINE static void mapper06_cpu_wr_low(WORD address, BYTE value);
-INLINE static void mapper12_cpu_wr_low(WORD address, BYTE value);
-INLINE static void mapper15_cpu_wr_low(WORD address, BYTE value);
-INLINE static void mapper20_cpu_wr_low(WORD address, BYTE value);
-INLINE static void mapper27_cpu_wr_low(WORD address, BYTE value);
-INLINE static void mapper28_cpu_wr_low(WORD address, BYTE value);
-INLINE static void mapper31_cpu_wr_low(WORD address, BYTE value);
-INLINE static void mapper32_cpu_wr_low(WORD address, BYTE value);
+INLINE static void mapper00_cpu_wr_low(BYTE nidx, WORD address, BYTE value);
+INLINE static void mapper06_cpu_wr_low(BYTE nidx, WORD address, BYTE value);
+INLINE static void mapper12_cpu_wr_low(BYTE nidx, WORD address, BYTE value);
+INLINE static void mapper15_cpu_wr_low(BYTE nidx, WORD address, BYTE value);
+INLINE static void mapper20_cpu_wr_low(BYTE nidx, WORD address, BYTE value);
+INLINE static void mapper27_cpu_wr_low(BYTE nidx, WORD address, BYTE value);
+INLINE static void mapper28_cpu_wr_low(BYTE nidx, WORD address, BYTE value);
+INLINE static void mapper31_cpu_wr_low(BYTE nidx, WORD address, BYTE value);
+INLINE static void mapper32_cpu_wr_low(BYTE nidx, WORD address, BYTE value);
 
-INLINE static void mapper01_cpu_wr_high(WORD address, BYTE value);
-INLINE static void mapper02_cpu_wr_high(BYTE value);
-INLINE static void mapper03_cpu_wr_high(BYTE value);
-INLINE static void mapper04_cpu_wr_high(BYTE value);
-INLINE static void mapper05_cpu_wr_high(BYTE value);
-INLINE static void mapper07_cpu_wr_high(WORD address, BYTE value);
-INLINE static void mapper08_cpu_wr_high(BYTE value);
-INLINE static void mapper09_cpu_wr_high(WORD address, BYTE value);
-INLINE static void mapper10_cpu_wr_high(BYTE value);
-INLINE static void mapper11_cpu_wr_high(BYTE value);
-INLINE static void mapper13_cpu_wr_high(WORD address, BYTE value);
-INLINE static void mapper14_cpu_wr_high(WORD address, BYTE value);
-INLINE static void mapper16_cpu_wr_high(WORD address, BYTE value);
-INLINE static void mapper17_cpu_wr_high(WORD address, BYTE value);
-INLINE static void mapper18_cpu_wr_high(BYTE value);
-INLINE static void mapper19_cpu_wr_high(WORD address, BYTE value);
-INLINE static void mapper20_cpu_wr_high(WORD address, BYTE value);
-INLINE static void mapper21_cpu_wr_high(WORD address, BYTE value);
-INLINE static void mapper22_cpu_wr_high(WORD address, BYTE value);
-INLINE static void mapper23_cpu_wr_high(WORD address, BYTE value);
-INLINE static void mapper24_cpu_wr_high(WORD address, BYTE value);
-INLINE static void mapper25_cpu_wr_high(WORD address, BYTE value);
-INLINE static void mapper26_cpu_wr_high(WORD address, BYTE value);
-INLINE static void mapper29_cpu_wr_high(WORD address, BYTE value);
-INLINE static void mapper30_cpu_wr_high(BYTE value);
-INLINE static void mapper34_cpu_wr_high(WORD address, BYTE value);
-INLINE static void mapper35_cpu_wr_high(WORD address, BYTE value);
-INLINE static void mapper36_cpu_wr_high(WORD address, BYTE value);
-INLINE static void mapper37_cpu_wr_high(BYTE value);
+INLINE static void mapper01_cpu_wr_high(BYTE nidx, WORD address, BYTE value);
+INLINE static void mapper02_cpu_wr_high(BYTE nidx, BYTE value);
+INLINE static void mapper03_cpu_wr_high(BYTE nidx, BYTE value);
+INLINE static void mapper04_cpu_wr_high(BYTE nidx, BYTE value);
+INLINE static void mapper05_cpu_wr_high(BYTE nidx, BYTE value);
+INLINE static void mapper07_cpu_wr_high(BYTE nidx, WORD address, BYTE value);
+INLINE static void mapper08_cpu_wr_high(BYTE nidx, BYTE value);
+INLINE static void mapper09_cpu_wr_high(BYTE nidx, WORD address, BYTE value);
+INLINE static void mapper10_cpu_wr_high(BYTE nidx, BYTE value);
+INLINE static void mapper11_cpu_wr_high(BYTE nidx, BYTE value);
+INLINE static void mapper13_cpu_wr_high(BYTE nidx, WORD address, BYTE value);
+INLINE static void mapper14_cpu_wr_high(BYTE nidx, WORD address, BYTE value);
+INLINE static void mapper16_cpu_wr_high(BYTE nidx, WORD address, BYTE value);
+INLINE static void mapper17_cpu_wr_high(BYTE nidx, WORD address, BYTE value);
+INLINE static void mapper18_cpu_wr_high(BYTE nidx, BYTE value);
+INLINE static void mapper19_cpu_wr_high(BYTE nidx, WORD address, BYTE value);
+INLINE static void mapper20_cpu_wr_high(BYTE nidx, WORD address, BYTE value);
+INLINE static void mapper21_cpu_wr_high(BYTE nidx, WORD address, BYTE value);
+INLINE static void mapper22_cpu_wr_high(BYTE nidx, WORD address, BYTE value);
+INLINE static void mapper23_cpu_wr_high(BYTE nidx, WORD address, BYTE value);
+INLINE static void mapper24_cpu_wr_high(BYTE nidx, WORD address, BYTE value);
+INLINE static void mapper25_cpu_wr_high(BYTE nidx, WORD address, BYTE value);
+INLINE static void mapper26_cpu_wr_high(BYTE nidx, WORD address, BYTE value);
+INLINE static void mapper29_cpu_wr_high(BYTE nidx, WORD address, BYTE value);
+INLINE static void mapper30_cpu_wr_high(BYTE nidx, BYTE value);
+INLINE static void mapper34_cpu_wr_high(BYTE nidx, WORD address, BYTE value);
+INLINE static void mapper35_cpu_wr_high(BYTE nidx, WORD address, BYTE value);
+INLINE static void mapper36_cpu_wr_high(BYTE nidx, WORD address, BYTE value);
+INLINE static void mapper37_cpu_wr_high(BYTE nidx, BYTE value);
 
-INLINE static BYTE mapper06_cpu_rd(WORD address, BYTE openbus);
-INLINE static BYTE mapper13_cpu_rd(WORD address, BYTE openbus);
-INLINE static BYTE mapper15_cpu_rd(WORD address, BYTE openbus);
-INLINE static BYTE mapper35_cpu_rd(void);
+INLINE static BYTE mapper06_cpu_rd(BYTE nidx, WORD address, BYTE openbus);
+INLINE static BYTE mapper13_cpu_rd(BYTE nidx, WORD address, BYTE openbus);
+INLINE static BYTE mapper15_cpu_rd(BYTE nidx, WORD address, BYTE openbus);
+INLINE static BYTE mapper35_cpu_rd(BYTE nidx);
 
-INLINE static void mapper07_cpu_every_cycle(void);
-INLINE static void mapper14_cpu_every_cycle(void);
-INLINE static void mapper19_cpu_every_cycle(void);
-INLINE static void mapper23_cpu_every_cycle(void);
-INLINE static void mapper24_cpu_every_cycle(void);
-INLINE static void mapper25_cpu_every_cycle(void);
-INLINE static void mapper35_cpu_every_cycle(void);
-INLINE static void mapper36_cpu_every_cycle(void);
+INLINE static void mapper07_cpu_every_cycle(BYTE nidx);
+INLINE static void mapper14_cpu_every_cycle(BYTE nidx);
+INLINE static void mapper19_cpu_every_cycle(BYTE nidx);
+INLINE static void mapper23_cpu_every_cycle(BYTE nidx);
+INLINE static void mapper24_cpu_every_cycle(BYTE nidx);
+INLINE static void mapper25_cpu_every_cycle(BYTE nidx);
+INLINE static void mapper35_cpu_every_cycle(BYTE nidx);
+INLINE static void mapper36_cpu_every_cycle(BYTE nidx);
 
 const BYTE cfi_data[] = {
 	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
@@ -341,17 +341,17 @@ void extcl_mapper_quit_342(void) {
 		m342tmp.cfi = NULL;
 	}
 }
-void extcl_cpu_wr_mem_342(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_342(UNUSED(BYTE nidx), WORD address, BYTE value) {
 	if (address < 0x8000) {
 		if ((address >= 0x5000) && (address < 0x5FFF) && !m342.lock) {
-			mapper00_cpu_wr_low(address, value);
+			mapper00_cpu_wr_low(nidx, address, value);
 		}
 		switch (m342.mapper) {
 			case 6:
-				mapper06_cpu_wr_low(address, value);
+				mapper06_cpu_wr_low(nidx, address, value);
 				break;
 			case 12:
-				mapper12_cpu_wr_low(address, value);
+				mapper12_cpu_wr_low(nidx, address, value);
 				break;
 			case 13:
 				// Mapper #90 - JY
@@ -367,22 +367,22 @@ void extcl_cpu_wr_mem_342(WORD address, BYTE value) {
 				*/
 				break;
 			case 15:
-				mapper15_cpu_wr_low(address, value);
+				mapper15_cpu_wr_low(nidx, address, value);
 				break;
 			case 20:
-				mapper20_cpu_wr_low(address, value);
+				mapper20_cpu_wr_low(nidx, address, value);
 				break;
 			case 27:
-				mapper27_cpu_wr_low(address, value);
+				mapper27_cpu_wr_low(nidx, address, value);
 				break;
 			case 28:
-				mapper28_cpu_wr_low(address, value);
+				mapper28_cpu_wr_low(nidx, address, value);
 				break;
 			case 31:
-				mapper31_cpu_wr_low(address, value);
+				mapper31_cpu_wr_low(nidx, address, value);
 				break;
 			case 32:
-				mapper32_cpu_wr_low(address, value);
+				mapper32_cpu_wr_low(nidx, address, value);
 				break;
 		}
 		state_fix_342();
@@ -397,96 +397,96 @@ void extcl_cpu_wr_mem_342(WORD address, BYTE value) {
 
 	switch (m342.mapper) {
 		case 1:
-			mapper01_cpu_wr_high(address, value);
+			mapper01_cpu_wr_high(nidx, address, value);
 			break;
 		case 2:
-			mapper02_cpu_wr_high(value);
+			mapper02_cpu_wr_high(nidx, value);
 			break;
 		case 3:
-			mapper03_cpu_wr_high(value);
+			mapper03_cpu_wr_high(nidx, value);
 			break;
 		case 4:
-			mapper04_cpu_wr_high(value);
+			mapper04_cpu_wr_high(nidx, value);
 			break;
 		case 5:
-			mapper05_cpu_wr_high(value);
+			mapper05_cpu_wr_high(nidx, value);
 			break;
 		case 7:
-			mapper07_cpu_wr_high(address, value);
+			mapper07_cpu_wr_high(nidx, address, value);
 			break;
 		case 8:
-			mapper08_cpu_wr_high(value);
+			mapper08_cpu_wr_high(nidx, value);
 			break;
 		case 9:
-			mapper09_cpu_wr_high(address, value);
+			mapper09_cpu_wr_high(nidx, address, value);
 			break;
 		case 10:
-			mapper10_cpu_wr_high(value);
+			mapper10_cpu_wr_high(nidx, value);
 			break;
 		case 11:
-			mapper11_cpu_wr_high(value);
+			mapper11_cpu_wr_high(nidx, value);
 			break;
 		case 13:
-			mapper13_cpu_wr_high(address, value);
+			mapper13_cpu_wr_high(nidx, address, value);
 			break;
 		case 14:
-			mapper14_cpu_wr_high(address, value);
+			mapper14_cpu_wr_high(nidx, address, value);
 			break;
 		case 16:
-			mapper16_cpu_wr_high(address, value);
+			mapper16_cpu_wr_high(nidx, address, value);
 			break;
 		case 17:
-			mapper17_cpu_wr_high(address, value);
+			mapper17_cpu_wr_high(nidx, address, value);
 			break;
 		case 18:
-			mapper18_cpu_wr_high(value);
+			mapper18_cpu_wr_high(nidx, value);
 			break;
 		case 19:
-			mapper19_cpu_wr_high(address, value);
+			mapper19_cpu_wr_high(nidx, address, value);
 			break;
 		case 20:
-			mapper20_cpu_wr_high(address, value);
+			mapper20_cpu_wr_high(nidx, address, value);
 			break;
 		case 21:
-			mapper21_cpu_wr_high(address, value);
+			mapper21_cpu_wr_high(nidx, address, value);
 			break;
 		case 22:
-			mapper22_cpu_wr_high(address, value);
+			mapper22_cpu_wr_high(nidx, address, value);
 			break;
 		case 23:
-			mapper23_cpu_wr_high(address, value);
+			mapper23_cpu_wr_high(nidx, address, value);
 			break;
 		case 24:
-			mapper24_cpu_wr_high(address, value);
+			mapper24_cpu_wr_high(nidx, address, value);
 			break;
 		case 25:
-			mapper25_cpu_wr_high(address, value);
+			mapper25_cpu_wr_high(nidx, address, value);
 			break;
 		case 26:
-			mapper26_cpu_wr_high(address, value);
+			mapper26_cpu_wr_high(nidx, address, value);
 			break;
 		case 29:
-			mapper29_cpu_wr_high(address, value);
+			mapper29_cpu_wr_high(nidx, address, value);
 			break;
 		case 30:
-			mapper30_cpu_wr_high(value);
+			mapper30_cpu_wr_high(nidx, value);
 			break;
 		case 34:
-			mapper34_cpu_wr_high(address, value);
+			mapper34_cpu_wr_high(nidx, address, value);
 			break;
 		case 35:
-			mapper35_cpu_wr_high(address, value);
+			mapper35_cpu_wr_high(nidx, address, value);
 			break;
 		case 36:
-			mapper36_cpu_wr_high(address, value);
+			mapper36_cpu_wr_high(nidx, address, value);
 			break;
 		case 37:
-			mapper37_cpu_wr_high(value);
+			mapper37_cpu_wr_high(nidx, value);
 			break;
 	}
 	state_fix_342();
 }
-BYTE extcl_cpu_rd_mem_342(WORD address, BYTE openbus) {
+BYTE extcl_cpu_rd_mem_342(BYTE nidx, WORD address, BYTE openbus) {
 	// Mapper #36 is assigned to TXC's PCB 01-22000-400
 	if ((m342.mapper == 29) && ((address & 0xE100) == 0x4100)) {
 		return ((m342.prg.a & 0x0C) << 2);
@@ -497,13 +497,13 @@ BYTE extcl_cpu_rd_mem_342(WORD address, BYTE openbus) {
 				case 0:
 					return (0);
 				case 6:
-					return (mapper06_cpu_rd(address, openbus));
+					return (mapper06_cpu_rd(nidx, address, openbus));
 				case 13:
-					return (mapper13_cpu_rd(address, openbus));
+					return (mapper13_cpu_rd(nidx, address, openbus));
 				case 15:
-					return (mapper15_cpu_rd(address, openbus));
+					return (mapper15_cpu_rd(nidx, address, openbus));
 				case 35:
-					return (mapper35_cpu_rd());
+					return (mapper35_cpu_rd(nidx));
 			}
 			break;
 		case 0x8000:
@@ -517,9 +517,9 @@ BYTE extcl_cpu_rd_mem_342(WORD address, BYTE openbus) {
 			if (m342.cfi_mode) {
 				return (m342tmp.cfi[address & 0x7FFF]);
 			}
-			return (prgrom_rd(address));
+			return (prgrom_rd(nidx, address));
 	}
-	return (wram_rd(address));
+	return (wram_rd(nidx, address));
 }
 BYTE extcl_save_mapper_342(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m342.mapper);
@@ -628,7 +628,6 @@ BYTE extcl_save_mapper_342(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m342.mapper67.irq.enabled);
 	save_slot_ele(mode, slot, m342.mapper67.irq.latch);
 	save_slot_ele(mode, slot, m342.mapper67.irq.counter);
-
 	return (EXIT_OK);
 }
 void extcl_battery_io_342(BYTE mode, FILE *fp) {
@@ -642,39 +641,39 @@ void extcl_battery_io_342(BYTE mode, FILE *fp) {
 		}
 	}
 }
-void extcl_cpu_every_cycle_342(void) {
+void extcl_cpu_every_cycle_342(BYTE nidx) {
 	switch (m342.mapper) {
 		case 07:
-			mapper07_cpu_every_cycle();
+			mapper07_cpu_every_cycle(nidx);
 			break;
 		case 14:
-			mapper14_cpu_every_cycle();
+			mapper14_cpu_every_cycle(nidx);
 			break;
 		case 19:
-			mapper19_cpu_every_cycle();
+			mapper19_cpu_every_cycle(nidx);
 			break;
 		case 24:
-			mapper24_cpu_every_cycle();
+			mapper24_cpu_every_cycle(nidx);
 			break;
 		case 23:
-			mapper23_cpu_every_cycle();
+			mapper23_cpu_every_cycle(nidx);
 			break;
 		case 25:
-			mapper25_cpu_every_cycle();
+			mapper25_cpu_every_cycle(nidx);
 			break;
 		case 35:
-			mapper35_cpu_every_cycle();
+			mapper35_cpu_every_cycle(nidx);
 			break;
 		case 36:
-			mapper36_cpu_every_cycle();
+			mapper36_cpu_every_cycle(nidx);
 			break;
 	}
 }
-void extcl_ppu_000_to_34x_342(void) {
-	m342.mmc5.ppu.rendering = !nes.p.ppu.vblank && nes.p.r2001.visible && (nes.p.ppu.screen_y < SCR_ROWS);
-	m342.mmc5.ppu.scanline = nes.p.ppu.screen_y;
+void extcl_ppu_000_to_34x_342(BYTE nidx) {
+	m342.mmc5.ppu.rendering = !nes[nidx].p.ppu.vblank && nes[nidx].p.r2001.visible && (nes[nidx].p.ppu.screen_y < SCR_ROWS);
+	m342.mmc5.ppu.scanline = nes[nidx].p.ppu.screen_y;
 
-	if ((nes.p.ppu.frame_x == 260) && m342.mmc5.ppu.rendering) {
+	if ((nes[nidx].p.ppu.frame_x == 260) && m342.mmc5.ppu.rendering) {
 		// for MMC3 and MMC3-based
 		if (m342.mmc3.irq.reload || !m342.mmc3.irq.counter) {
 			m342.mmc3.irq.counter = m342.mmc3.irq.latch;
@@ -683,28 +682,28 @@ void extcl_ppu_000_to_34x_342(void) {
 			m342.mmc3.irq.counter--;
 		}
 		if (!m342.mmc3.irq.counter && m342.mmc3.irq.enabled) {
-			nes.c.irq.high |= EXT_IRQ;
+			nes[nidx].c.irq.high |= EXT_IRQ;
 		}
 
 		// for MMC5
-		if ((m342.mmc5.irq.line == (nes.p.ppu.screen_y + 1)) && m342.mmc5.irq.enabled) {
+		if ((m342.mmc5.irq.line == (nes[nidx].p.ppu.screen_y + 1)) && m342.mmc5.irq.enabled) {
 			m342.mmc5.irq.out = 1;
-			nes.c.irq.high |= EXT_IRQ;
+			nes[nidx].c.irq.high |= EXT_IRQ;
 		}
 
 		// for mapper #163
 		if (m342.mapper == 6) {
-			if (nes.p.ppu.screen_y == 239) {
+			if (nes[nidx].p.ppu.screen_y == 239) {
 				m342.mapper163.latch = 0;
 				chr_fix_342();
-			} else if (nes.p.ppu.screen_y == 127) {
+			} else if (nes[nidx].p.ppu.screen_y == 127) {
 				m342.mapper163.latch = 1;
 				chr_fix_342();
 			}
 		}
 	}
 }
-void extcl_after_rd_chr_342(WORD address) {
+void extcl_after_rd_chr_342(UNUSED(BYTE nidx), WORD address) {
 	if (m342.mapper == 17) {
 		switch (address & 0xFFF0) {
 			case 0x0FD0:
@@ -728,8 +727,8 @@ void extcl_after_rd_chr_342(WORD address) {
 		}
 	}
 }
-void extcl_update_r2006_342(WORD new_r2006, UNUSED(WORD old_r2006)) {
-	extcl_after_rd_chr_342(new_r2006);
+void extcl_update_r2006_342(BYTE nidx, WORD new_r2006, UNUSED(WORD old_r2006)) {
+	extcl_after_rd_chr_342(nidx, new_r2006);
 }
 
 INLINE static void state_fix_342(void) {
@@ -805,23 +804,23 @@ INLINE static BYTE prg_mapped_is_flash_342(DBWORD mapped) {
 }
 INLINE static void prg_swap_8k_342(BYTE flash, WORD address, DBWORD value) {
 	if (flash) {
-		memmap_other_8k(MMCPU(address), value, m342tmp.save_flash, SAVE_FLASH_SIZE, TRUE, FALSE);
+		memmap_other_8k(0, MMCPU(address), value, m342tmp.save_flash, SAVE_FLASH_SIZE, TRUE, FALSE);
 	} else {
-		memmap_auto_8k(MMCPU(address), value);
+		memmap_auto_8k(0, MMCPU(address), value);
 	}
 }
 INLINE static void prg_swap_16k_342(BYTE flash, WORD address, DBWORD value) {
 	if (flash) {
-		memmap_other_16k(MMCPU(address), value, m342tmp.save_flash, SAVE_FLASH_SIZE, TRUE, FALSE);
+		memmap_other_16k(0, MMCPU(address), value, m342tmp.save_flash, SAVE_FLASH_SIZE, TRUE, FALSE);
 	} else {
-		memmap_auto_16k(MMCPU(address), value);
+		memmap_auto_16k(0, MMCPU(address), value);
 	}
 }
 INLINE static void prg_swap_32k_342(BYTE flash, DBWORD value) {
 	if (flash) {
-		memmap_other_32k(MMCPU(0x8000), value, m342tmp.save_flash, SAVE_FLASH_SIZE, TRUE, FALSE);
+		memmap_other_32k(0, MMCPU(0x8000), value, m342tmp.save_flash, SAVE_FLASH_SIZE, TRUE, FALSE);
 	} else {
-		memmap_auto_32k(MMCPU(0x8000), value);
+		memmap_auto_32k(0, MMCPU(0x8000), value);
 	}
 }
 INLINE static void chr_fix_342(void) {
@@ -931,43 +930,43 @@ INLINE static void chr_fix_342(void) {
 			bank[7] = (m342.chr.h >> chr_shift) & mask;
 			break;
 	}
-	memmap_vram_wp_1k(MMPPU(0x0000), bank[0], TRUE, m342.chr.can_write);
-	memmap_vram_wp_1k(MMPPU(0x0400), bank[1], TRUE, m342.chr.can_write);
-	memmap_vram_wp_1k(MMPPU(0x0800), bank[2], TRUE, m342.chr.can_write);
-	memmap_vram_wp_1k(MMPPU(0x0C00), bank[3], TRUE, m342.chr.can_write);
-	memmap_vram_wp_1k(MMPPU(0x1000), bank[4], TRUE, m342.chr.can_write);
-	memmap_vram_wp_1k(MMPPU(0x1400), bank[5], TRUE, m342.chr.can_write);
-	memmap_vram_wp_1k(MMPPU(0x1800), bank[6], TRUE, m342.chr.can_write);
-	memmap_vram_wp_1k(MMPPU(0x1C00), bank[7], TRUE, m342.chr.can_write);
+	memmap_vram_wp_1k(0, MMPPU(0x0000), bank[0], TRUE, m342.chr.can_write);
+	memmap_vram_wp_1k(0, MMPPU(0x0400), bank[1], TRUE, m342.chr.can_write);
+	memmap_vram_wp_1k(0, MMPPU(0x0800), bank[2], TRUE, m342.chr.can_write);
+	memmap_vram_wp_1k(0, MMPPU(0x0C00), bank[3], TRUE, m342.chr.can_write);
+	memmap_vram_wp_1k(0, MMPPU(0x1000), bank[4], TRUE, m342.chr.can_write);
+	memmap_vram_wp_1k(0, MMPPU(0x1400), bank[5], TRUE, m342.chr.can_write);
+	memmap_vram_wp_1k(0, MMPPU(0x1800), bank[6], TRUE, m342.chr.can_write);
+	memmap_vram_wp_1k(0, MMPPU(0x1C00), bank[7], TRUE, m342.chr.can_write);
 }
 INLINE static void wram_fix_342(void) {
 	m342.prg.b6000_mapped = prg_mapped_342(m342.prg.b6000);
 
 	if (m342.map_rom_on_6000) {
-		memmap_prgrom_8k(MMCPU(0x6000), m342.prg.b6000_mapped);
+		memmap_prgrom_8k(0, MMCPU(0x6000), m342.prg.b6000_mapped);
 	} else if (m342.wram.enabled) {
-		memmap_auto_8k(MMCPU(0x6000), m342.wram.page);
+		memmap_auto_8k(0, MMCPU(0x6000), m342.wram.page);
 	}
 }
 
 INLINE static void mirroring_fix_342(void) {
 	if (m342.fscreen) {
-		mirroring_FSCR();
+		mirroring_FSCR(0);
 	} else  {
 		// Mapper #189?
 		if (!((m342.mapper == 20) && (m342.flags & 0x01))) {
 			switch (m342.mirroring) {
 				case 0:
-					mirroring_V();
+					mirroring_V(0);
 					break;
 				case 1:
-					mirroring_H();
+					mirroring_H(0);
 					break;
 				case 2:
-					mirroring_SCR0();
+					mirroring_SCR0(0);
 					break;
 				case 3:
-					mirroring_SCR1();
+					mirroring_SCR1(0);
 					break;
 			}
 		}
@@ -1031,7 +1030,7 @@ INLINE static void flash_write_342(WORD address, BYTE value) {
 	}
 }
 
-INLINE static void mapper00_cpu_wr_low(WORD address, BYTE value) {
+INLINE static void mapper00_cpu_wr_low(UNUSED(BYTE nidx), WORD address, BYTE value) {
 	// Mapper #342 - 342
 	switch (address & 0x0007) {
 		case 0:
@@ -1086,7 +1085,7 @@ INLINE static void mapper00_cpu_wr_low(WORD address, BYTE value) {
 			break;
 	}
 }
-INLINE static void mapper06_cpu_wr_low(WORD address, BYTE value) {
+INLINE static void mapper06_cpu_wr_low(UNUSED(BYTE nidx), WORD address, BYTE value) {
 	// Mapper #163
 	if (address == 0x5101) {
 		if (m342.mapper163.r4 && !value) {
@@ -1120,13 +1119,13 @@ INLINE static void mapper06_cpu_wr_low(WORD address, BYTE value) {
 		}
 	}
 }
-INLINE static void mapper12_cpu_wr_low(WORD address, BYTE value) {
+INLINE static void mapper12_cpu_wr_low(UNUSED(BYTE nidx), WORD address, BYTE value) {
 	// Mapper #87
 	if ((address & 0x6000) == 0x6000) {
 		m342.chr.a = (m342.chr.a & 0xE7) | ((value & 0x01) << 4) | ((value & 0x02) << 2);
 	}
 }
-INLINE static void mapper15_cpu_wr_low(WORD address, BYTE value) {
+INLINE static void mapper15_cpu_wr_low(BYTE nidx, WORD address, BYTE value) {
 	// MMC5 (not really)
 	switch (address) {
 		case 0x5105:
@@ -1185,12 +1184,12 @@ INLINE static void mapper15_cpu_wr_low(WORD address, BYTE value) {
 			m342.chr.h = value;
 			break;
 		case 0x5203:
-			nes.c.irq.high &= ~EXT_IRQ;
+			nes[nidx].c.irq.high &= ~EXT_IRQ;
 			m342.mmc5.irq.out = 0;
 			m342.mmc5.irq.line = value;
 			break;
 		case 0x5204:
-			nes.c.irq.high &= ~EXT_IRQ;
+			nes[nidx].c.irq.high &= ~EXT_IRQ;
 			m342.mmc5.irq.out = 0;
 			m342.mmc5.irq.enabled = (value & 0x80) >> 7;
 			break;
@@ -1198,34 +1197,34 @@ INLINE static void mapper15_cpu_wr_low(WORD address, BYTE value) {
 			break;
 	}
 }
-INLINE static void mapper20_cpu_wr_low(WORD address, BYTE value) {
+INLINE static void mapper20_cpu_wr_low(UNUSED(BYTE nidx), WORD address, BYTE value) {
 	// Mapper #189
 	if ((m342.flags & 0x02) &&  (address >= 0x4120)) {
 		m342.prg.a = (m342.prg.a & 0xC3) | ((value & 0x0F) << 2) | ((value & 0xF0) >> 2);
 	}
 }
-INLINE static void mapper27_cpu_wr_low(WORD address, BYTE value) {
+INLINE static void mapper27_cpu_wr_low(UNUSED(BYTE nidx), WORD address, BYTE value) {
 	// Mappers #79 and #146 - NINA-03/06 and Sachen 3015: (flag0 = 1)
 	if ((address & 0x6100) == 0x4100) {
 		m342.chr.a = (m342.chr.a & 0xC7) | ((value & 0x07) << 3);
 		m342.prg.a = (m342.prg.a & 0xFB) | ((value & 0x08) >> 1);
 	}
 }
-INLINE static void mapper28_cpu_wr_low(WORD address, BYTE value) {
+INLINE static void mapper28_cpu_wr_low(UNUSED(BYTE nidx), WORD address, BYTE value) {
 	// Mapper #133
 	if ((address & 0x6100) == 0x4100) {
 		m342.chr.a = (m342.chr.a & 0xE7) | ((value & 0x03) << 3);
 		m342.prg.a = (m342.prg.a & 0xFB) | (value & 0x04);
 	}
 }
-INLINE static void mapper31_cpu_wr_low(WORD address, BYTE value) {
+INLINE static void mapper31_cpu_wr_low(UNUSED(BYTE nidx), WORD address, BYTE value) {
 	// Mapper #184
 	if ((address & 0x6000) == 0x6000) {
 		m342.chr.a = (m342.chr.a & 0xE3) | ((value & 0x07) << 2);
 		m342.chr.e = (m342.chr.e & 0xE3) | ((value & 0x30) >> 2) | 0x10;
 	}
 }
-INLINE static void mapper32_cpu_wr_low(WORD address, BYTE value) {
+INLINE static void mapper32_cpu_wr_low(UNUSED(BYTE nidx), WORD address, BYTE value) {
 	// Mapper #38
 	if ((address & 0x7000) == 0x7000) {
 		m342.prg.a = (m342.prg.a & 0xF7) | ((value & 0x03) << 2);
@@ -1233,7 +1232,7 @@ INLINE static void mapper32_cpu_wr_low(WORD address, BYTE value) {
 	}
 }
 
-INLINE static void mapper01_cpu_wr_high(WORD address, BYTE value) {
+INLINE static void mapper01_cpu_wr_high(UNUSED(BYTE nidx), WORD address, BYTE value) {
 	// Mapper #2 - UxROM
 	// flag0 - mapper #71 - for Fire Hawk only.
 	// other mapper-#71 games are UxROM
@@ -1247,27 +1246,27 @@ INLINE static void mapper01_cpu_wr_high(WORD address, BYTE value) {
 		m342.mirroring = 0x02 | ((value >> 4) & 0x01);
 	}
 }
-INLINE static void mapper02_cpu_wr_high(BYTE value) {
+INLINE static void mapper02_cpu_wr_high(UNUSED(BYTE nidx), BYTE value) {
 	// Mapper #3 - CNROM
 	m342.chr.a = (m342.chr.a & 0x07) | ((value & 0x1F) << 3);
 }
-INLINE static void mapper03_cpu_wr_high(BYTE value) {
+INLINE static void mapper03_cpu_wr_high(UNUSED(BYTE nidx), BYTE value) {
 	// Mapper #78 - Holy Diver
 	m342.prg.a = (m342.prg.a & 0xF1) | ((value & 0x07) << 1);
 	m342.chr.a = (m342.chr.a & 0x87) | ((value & 0xF0) >> 1);
 	m342.mirroring = ((value >> 3) & 0x01) ^ 1;
 }
-INLINE static void mapper04_cpu_wr_high(BYTE value) {
+INLINE static void mapper04_cpu_wr_high(UNUSED(BYTE nidx), BYTE value) {
 	// Mapper #97 - Irem's TAM-S1
 	m342.prg.a = (m342.prg.a & 0xC1) | ((value & 0x1F) << 1);
 	m342.mirroring = (value >> 7) ^ 0x01;
 }
-INLINE static void mapper05_cpu_wr_high(BYTE value) {
+INLINE static void mapper05_cpu_wr_high(UNUSED(BYTE nidx), BYTE value) {
 	// Mapper #93 - Sunsoft-2
 	m342.prg.a = (m342.prg.a & 0xF1) | ((value & 0x70) >> 3);
 	m342.chr.can_write = value & 0x01;
 }
-INLINE static void mapper07_cpu_wr_high(WORD address, BYTE value) {
+INLINE static void mapper07_cpu_wr_high(UNUSED(BYTE nidx), WORD address, BYTE value) {
 	// Mapper #18
 	switch (((address & 0x7000) >> 10) | (address & 0x03)) {
 		case 0:
@@ -1354,11 +1353,11 @@ INLINE static void mapper07_cpu_wr_high(WORD address, BYTE value) {
 			break;
 		case 28:
 			m342.mapper18.irq.value = m342.mapper18.irq.latch;
-			nes.c.irq.high &= ~EXT_IRQ;
+			nes[nidx].c.irq.high &= ~EXT_IRQ;
 			break;
 		case 29:
 			m342.mapper18.irq.control = value & 0x0F;
-			nes.c.irq.high &= ~EXT_IRQ;
+			nes[nidx].c.irq.high &= ~EXT_IRQ;
 			break;
 		case 30:
 			switch (value & 0x03) {
@@ -1380,30 +1379,30 @@ INLINE static void mapper07_cpu_wr_high(WORD address, BYTE value) {
 			break;
 	}
 }
-INLINE static void mapper08_cpu_wr_high(BYTE value) {
+INLINE static void mapper08_cpu_wr_high(UNUSED(BYTE nidx), BYTE value) {
 	// Mapper #7 - AxROM, mapper #241 - BNROM
 	m342.prg.a = (m342.prg.a & 0xC3) | ((value & 0xF) << 2);
 	if (!(m342.flags & 0x01)) {
 		m342.mirroring = 0x02 | ((value >> 4) & 0x01);
 	}
 }
-INLINE static void mapper09_cpu_wr_high(WORD address, BYTE value) {
+INLINE static void mapper09_cpu_wr_high(UNUSED(BYTE nidx), WORD address, BYTE value) {
 	// Mapper #228 - Cheetahmen II
 	m342.prg.a = (m342.prg.a & 0xC3) | ((address & 0x0780) >> 5);
 	m342.chr.a = (m342.chr.a & 0x07) | ((address & 0x0007) << 5) | ((value & 0x03) << 3);
 	m342.mirroring = (address >> 13) & 0x01;
 }
-INLINE static void mapper10_cpu_wr_high(BYTE value) {
+INLINE static void mapper10_cpu_wr_high(UNUSED(BYTE nidx), BYTE value) {
 	// Mapper #11 - ColorDreams
 	m342.prg.a = (m342.prg.a & 0xF3) | ((value & 0x03) << 2);
 	m342.chr.a = (m342.chr.a & 0x87) | ((value & 0xF0) >> 1);
 }
-INLINE static void mapper11_cpu_wr_high(BYTE value) {
+INLINE static void mapper11_cpu_wr_high(UNUSED(BYTE nidx), BYTE value) {
 	// Mapper #66 - GxROM
 	m342.prg.a = (m342.prg.a & 0xF3) | ((value & 0x30) >> 2);
 	m342.chr.a = (m342.chr.a & 0xE7) | ((value & 0x03) << 3);
 }
-INLINE static void mapper13_cpu_wr_high(WORD address, BYTE value) {
+INLINE static void mapper13_cpu_wr_high(BYTE nidx, WORD address, BYTE value) {
 	// Mapper #90 - JY
 	switch (address & 0xF000) {
 		case 0x8000:
@@ -1457,14 +1456,14 @@ INLINE static void mapper13_cpu_wr_high(WORD address, BYTE value) {
 						m342.mmc3.irq.enabled = 1;
 					} else {
 						m342.mmc3.irq.enabled = 0;
-						nes.c.irq.high &= ~EXT_IRQ;
+						nes[nidx].c.irq.high &= ~EXT_IRQ;
 					}
 					break;
 				case 1:
 					break;
 				case 2:
 					m342.mmc3.irq.enabled = 0;
-					nes.c.irq.high &= ~EXT_IRQ;
+					nes[nidx].c.irq.high &= ~EXT_IRQ;
 					break;
 				case 3:
 					m342.mmc3.irq.enabled = 1;
@@ -1490,7 +1489,7 @@ INLINE static void mapper13_cpu_wr_high(WORD address, BYTE value) {
 	}
 
 }
-INLINE static void mapper14_cpu_wr_high(WORD address, BYTE value) {
+INLINE static void mapper14_cpu_wr_high(BYTE nidx, WORD address, BYTE value) {
 	// Mapper #65 - Irem's H3001
 	switch (((address & 0x7000) >> 9) | (address & 0x0007)) {
 		case 0:
@@ -1501,11 +1500,11 @@ INLINE static void mapper14_cpu_wr_high(WORD address, BYTE value) {
 			break;
 		case 11:
 			m342.mapper65.irq.enabled = value >> 7;
-			nes.c.irq.high &= ~EXT_IRQ;
+			nes[nidx].c.irq.high &= ~EXT_IRQ;
 			break;
 		case 12:
 			m342.mapper65.irq.value = m342.mapper65.irq.latch;
-			nes.c.irq.high &= ~EXT_IRQ;
+			nes[nidx].c.irq.high &= ~EXT_IRQ;
 			break;
 		case 13:
 			m342.mapper65.irq.latch = (m342.mapper65.irq.latch & 0x00FF) | (value << 8);
@@ -1545,7 +1544,7 @@ INLINE static void mapper14_cpu_wr_high(WORD address, BYTE value) {
 			break;
 	}
 }
-INLINE static void mapper16_cpu_wr_high(WORD address, BYTE value) {
+INLINE static void mapper16_cpu_wr_high(UNUSED(BYTE nidx), WORD address, BYTE value) {
 	// Mapper #1 - MMC1
 	// flag0 - 16KB of SRAM (SOROM)
 	if (value & 0x80) {
@@ -1592,7 +1591,7 @@ INLINE static void mapper16_cpu_wr_high(WORD address, BYTE value) {
 		}
 	}
 }
-INLINE static void mapper17_cpu_wr_high(WORD address, BYTE value) {
+INLINE static void mapper17_cpu_wr_high(UNUSED(BYTE nidx), WORD address, BYTE value) {
 	// Mapper #9 and #10 - MMC2 and MMC4
 	// flag0 - 0=MMC2, 1=MMC4
 	switch ((address >> 12) & 0x0007) {
@@ -1622,13 +1621,13 @@ INLINE static void mapper17_cpu_wr_high(WORD address, BYTE value) {
 			break;
 	}
 }
-INLINE static void mapper18_cpu_wr_high(BYTE value) {
+INLINE static void mapper18_cpu_wr_high(UNUSED(BYTE nidx), BYTE value) {
 	// Mapper #152
 	m342.chr.a = (m342.chr.a & 0x87) | ((value & 0x0F) << 3);
 	m342.prg.a = (m342.prg.a & 0xF1) | ((value & 0x70) >> 3);
 	m342.mirroring = 0x02 | (value >> 7);
 }
-INLINE static void mapper19_cpu_wr_high(WORD address, BYTE value) {
+INLINE static void mapper19_cpu_wr_high(BYTE nidx, WORD address, BYTE value) {
 	// Mapper #73 - VRC3
 	switch (address & 0x7000) {
 		case 0x0000:
@@ -1648,18 +1647,18 @@ INLINE static void mapper19_cpu_wr_high(WORD address, BYTE value) {
 			if (m342.vrc3.irq.control & 0x02) {
 				m342.vrc3.irq.value = m342.vrc3.irq.latch;
 			}
-			nes.c.irq.high &= ~EXT_IRQ;
+			nes[nidx].c.irq.high &= ~EXT_IRQ;
 			break;
 		case 0x5000:
 			m342.vrc3.irq.control = (m342.vrc3.irq.control & 0xFD) | (m342.vrc3.irq.control & 0x01) << 1;
-			nes.c.irq.high &= ~EXT_IRQ;
+			nes[nidx].c.irq.high &= ~EXT_IRQ;
 			break;
 		case 0x7000:
 			m342.prg.a = (m342.prg.a & 0xF1) | ((value & 0x07) << 1);
 			break;
 	}
 }
-INLINE static void mapper20_cpu_wr_high(WORD address, BYTE value) {
+INLINE static void mapper20_cpu_wr_high(BYTE nidx, WORD address, BYTE value) {
 	// Mapper #4 - MMC3/MMC6
 	// flag0 - TxSROM
 	// flag1 - mapper #189
@@ -1712,11 +1711,11 @@ INLINE static void mapper20_cpu_wr_high(WORD address, BYTE value) {
 						if (m342.chr.mode == 2) {
 							WORD adr = 0x2000 | ((m342.mmc3.internal & 0x07) << 11);
 
-							memmap_nmt_1k(MMPPU(adr | 0x0000), ((value >> 7) ^ 0x01));
-							memmap_nmt_1k(MMPPU(adr | 0x0400), ((value >> 7) ^ 0x01));
+							memmap_nmt_1k(0, MMPPU(adr | 0x0000), ((value >> 7) ^ 0x01));
+							memmap_nmt_1k(0, MMPPU(adr | 0x0400), ((value >> 7) ^ 0x01));
 
-							memmap_nmt_1k(MMPPU(0x1000 | adr | 0x0000), ((value >> 7) ^ 0x01));
-							memmap_nmt_1k(MMPPU(0x1000 | adr | 0x0400), ((value >> 7) ^ 0x01));
+							memmap_nmt_1k(0, MMPPU(0x1000 | adr | 0x0000), ((value >> 7) ^ 0x01));
+							memmap_nmt_1k(0, MMPPU(0x1000 | adr | 0x0400), ((value >> 7) ^ 0x01));
 						}
 						break;
 					case 2:
@@ -1726,8 +1725,8 @@ INLINE static void mapper20_cpu_wr_high(WORD address, BYTE value) {
 						if (m342.chr.mode == 3) {
 							WORD adr = 0x2000 | (((m342.mmc3.internal & 0x07) - 2) << 10);
 
-							memmap_nmt_1k(MMPPU(adr), ((value >> 7) ^ 0x01));
-							memmap_nmt_1k(MMPPU(0x1000 | adr), ((value >> 7) ^ 0x01));
+							memmap_nmt_1k(0, MMPPU(adr), ((value >> 7) ^ 0x01));
+							memmap_nmt_1k(0, MMPPU(0x1000 | adr), ((value >> 7) ^ 0x01));
 						}
 						break;
 				}
@@ -1748,14 +1747,14 @@ INLINE static void mapper20_cpu_wr_high(WORD address, BYTE value) {
 			break;
 		case 6:
 			m342.mmc3.irq.enabled = 0;
-			nes.c.irq.high &= ~EXT_IRQ;
+			nes[nidx].c.irq.high &= ~EXT_IRQ;
 			break;
 		case 7:
 			m342.mmc3.irq.enabled = 1;
 			break;
 	}
 }
-INLINE static void mapper21_cpu_wr_high(WORD address, BYTE value) {
+INLINE static void mapper21_cpu_wr_high(UNUSED(BYTE nidx), WORD address, BYTE value) {
 	// Mapper #112
 	switch (address & 0xE000) {
 		case 0x8000:
@@ -1796,7 +1795,7 @@ INLINE static void mapper21_cpu_wr_high(WORD address, BYTE value) {
 			break;
 	}
 }
-INLINE static void mapper22_cpu_wr_high(WORD address, BYTE value) {
+INLINE static void mapper22_cpu_wr_high(BYTE nidx, WORD address, BYTE value) {
 	// Mappers #33 + #48 - Taito
 	// flag0=0 - #33, flag0=1 - #48
 	switch (((address & 0x6000) >> 11) | (address & 0x0003)) {
@@ -1843,11 +1842,11 @@ INLINE static void mapper22_cpu_wr_high(WORD address, BYTE value) {
 			break;
 		case 11:
 			m342.mmc3.irq.enabled = 0;
-			nes.c.irq.high &= ~EXT_IRQ;
+			nes[nidx].c.irq.high &= ~EXT_IRQ;
 			break;
 	}
 }
-INLINE static void mapper23_cpu_wr_high(WORD address, BYTE value) {
+INLINE static void mapper23_cpu_wr_high(BYTE nidx, WORD address, BYTE value) {
 	// Mapper #42
 	switch (((address >> 12) & 0x0004) | (address & 0x0003)) {
 		case 0:
@@ -1863,12 +1862,12 @@ INLINE static void mapper23_cpu_wr_high(WORD address, BYTE value) {
 			m342.mapper42.irq.enabled = (value & 0x02) >> 1;
 			if (!m342.mapper42.irq.enabled) {
 				m342.mapper42.irq.value = 0;
-				nes.c.irq.high &= ~EXT_IRQ;
+				nes[nidx].c.irq.high &= ~EXT_IRQ;
 			}
 			break;
 	}
 }
-INLINE static void mapper24_cpu_wr_high(WORD address, BYTE value) {
+INLINE static void mapper24_cpu_wr_high(BYTE nidx, WORD address, BYTE value) {
 	// Mapper #23 - VRC2/4
 	// flag0 - switches A0 and A1 lines. 0=A0,A1 like VRC2b (mapper #23), 1=A1,A0 like VRC2a(#22), VRC2c(#25)
 	// flag1 - divides CHR bank select by two (mapper #22, VRC2a)
@@ -1966,16 +1965,16 @@ INLINE static void mapper24_cpu_wr_high(WORD address, BYTE value) {
 					m342.vrc4.irq.prescaler = 0;
 					m342.vrc4.irq.value = m342.vrc4.irq.latch;
 				}
-				nes.c.irq.high &= ~EXT_IRQ;
+				nes[nidx].c.irq.high &= ~EXT_IRQ;
 				break;
 			case 3:
 				m342.vrc4.irq.control = (m342.vrc4.irq.control & 0xFD) | (m342.vrc4.irq.control & 0x01) << 1;
-				nes.c.irq.high &= ~EXT_IRQ;
+				nes[nidx].c.irq.high &= ~EXT_IRQ;
 				break;
 		}
 	}
 }
-INLINE static void mapper25_cpu_wr_high(WORD address, BYTE value) {
+INLINE static void mapper25_cpu_wr_high(BYTE nidx, WORD address, BYTE value) {
 	// Mapper #69 - Sunsoft FME-7
 	BYTE bank = (address & 0x6000) >> 13;
 
@@ -2027,7 +2026,7 @@ INLINE static void mapper25_cpu_wr_high(WORD address, BYTE value) {
 			case 13:
 				m342.mapper69.irq.counter_enabled = value >> 7;
 				m342.mapper69.irq.enabled = value & 0x01;
-				nes.c.irq.high &= ~EXT_IRQ;
+				nes[nidx].c.irq.high &= ~EXT_IRQ;
 				break;
 			case 14:
 				m342.mapper69.irq.value = (m342.mapper69.irq.value & 0xFF00) | value;
@@ -2038,7 +2037,7 @@ INLINE static void mapper25_cpu_wr_high(WORD address, BYTE value) {
 		}
 	}
 }
-INLINE static void mapper26_cpu_wr_high(WORD address, BYTE value) {
+INLINE static void mapper26_cpu_wr_high(UNUSED(BYTE nidx), WORD address, BYTE value) {
 	// Mapper #32 - Irem's G-101
 	switch (address & 0xF000) {
 		case 0x8000:
@@ -2081,19 +2080,19 @@ INLINE static void mapper26_cpu_wr_high(WORD address, BYTE value) {
 			break;
 	}
 }
-INLINE static void mapper29_cpu_wr_high(WORD address, BYTE value) {
+INLINE static void mapper29_cpu_wr_high(UNUSED(BYTE nidx), WORD address, BYTE value) {
 	// Mapper #36 is assigned to TXC's PCB 01-22000-400
 	if ((address & 0x7FFE) == 0x7FFE) {
 		m342.prg.a = (m342.prg.a & 0xC3) | ((value & 0xF0) >> 2);
 		m342.chr.a = (m342.chr.a & 0x87) | ((value & 0x0F) << 3);
 	}
 }
-INLINE static void mapper30_cpu_wr_high(BYTE value) {
+INLINE static void mapper30_cpu_wr_high(UNUSED(BYTE nidx), BYTE value) {
 	// Mapper #70
 	m342.prg.a = (m342.prg.a & 0xE1) | ((value & 0xF0) >> 3);
 	m342.chr.a = (m342.chr.a & 0x87) | ((value & 0x0F) << 3);
 }
-INLINE static void mapper34_cpu_wr_high(WORD address, BYTE value) {
+INLINE static void mapper34_cpu_wr_high(UNUSED(BYTE nidx), WORD address, BYTE value) {
 	// Mapper #75 - VRC1
 	switch (address & 0x7000) {
 		case 0x0000:
@@ -2118,7 +2117,7 @@ INLINE static void mapper34_cpu_wr_high(WORD address, BYTE value) {
 			break;
 	}
 }
-INLINE static void mapper35_cpu_wr_high(WORD address, BYTE value) {
+INLINE static void mapper35_cpu_wr_high(BYTE nidx, WORD address, BYTE value) {
 	// Mapper #83 - Cony/Yoko
 	switch (address & 0x0300) {
 		case 0x0100:
@@ -2128,7 +2127,7 @@ INLINE static void mapper35_cpu_wr_high(WORD address, BYTE value) {
 		case 0x0200:
 			if (!(address & 0x0001)) {
 				m342.mapper83.irq.counter = (m342.mapper83.irq.counter & 0xFF00) | value;
-				nes.c.irq.high &= ~EXT_IRQ;
+				nes[nidx].c.irq.high &= ~EXT_IRQ;
 			} else {
 				m342.mapper83.irq.enabled = m342.mapper83.irq.enabled_latch;
 				m342.mapper83.irq.counter = (m342.mapper83.irq.counter & 0x00FF) | (value << 8);
@@ -2182,7 +2181,7 @@ INLINE static void mapper35_cpu_wr_high(WORD address, BYTE value) {
 		break;
 	}
 }
-INLINE static void mapper36_cpu_wr_high(WORD address, BYTE value) {
+INLINE static void mapper36_cpu_wr_high(BYTE nidx, WORD address, BYTE value) {
 	// Mapper #67 - Sunsoft-3
 	if (address & 0x0800) {
 		switch (address & 0x7000) {
@@ -2219,17 +2218,17 @@ INLINE static void mapper36_cpu_wr_high(WORD address, BYTE value) {
 		}
 	} else {
 		// Interrupt Acknowledge ($8000)
-		nes.c.irq.high &= ~EXT_IRQ;
+		nes[nidx].c.irq.high &= ~EXT_IRQ;
 	}
 }
-INLINE static void mapper37_cpu_wr_high(BYTE value) {
+INLINE static void mapper37_cpu_wr_high(UNUSED(BYTE nidx), BYTE value) {
 	// Mapper #89 - Sunsoft-2 chip on the Sunsoft-3 board
 	m342.prg.a = (m342.prg.a & 0xF1) | ((value & 0x70) >> 3);
 	m342.chr.a = (m342.chr.a & 0x87) | ((value & 0x80) >> 1) | ((value & 0x07) << 3);
 	m342.mirroring = 0x02 | ((value & 0x08) >> 3);
 }
 
-INLINE static BYTE mapper06_cpu_rd(WORD address, BYTE openbus) {
+INLINE static BYTE mapper06_cpu_rd(UNUSED(BYTE nidx), WORD address, BYTE openbus) {
 	// Mapper #163
 	if ((address & 0x7700) == 0x5100) {
 		return (m342.mapper163.r2 | m342.mapper163.r0 | m342.mapper163.r1 | ~m342.mapper163.r3);
@@ -2239,7 +2238,7 @@ INLINE static BYTE mapper06_cpu_rd(WORD address, BYTE openbus) {
 	}
 	return (openbus);
 }
-INLINE static BYTE mapper13_cpu_rd(WORD address, BYTE openbus) {
+INLINE static BYTE mapper13_cpu_rd(UNUSED(BYTE nidx), WORD address, BYTE openbus) {
 	// Mapper #90 - JY
 	if (address == 0x5800) {
 		return (m342.mapper90.mul1 * m342.mapper90.mul2) & 0xFF;
@@ -2249,23 +2248,23 @@ INLINE static BYTE mapper13_cpu_rd(WORD address, BYTE openbus) {
 	}
 	return (openbus);
 }
-INLINE static BYTE mapper15_cpu_rd(WORD address, BYTE openbus) {
+INLINE static BYTE mapper15_cpu_rd(UNUSED(BYTE nidx), WORD address, BYTE openbus) {
 	// MMC5
 	if (address == 0x0204) {
 		BYTE value = (m342.mmc5.irq.out << 7) |
 			(!m342.mmc5.ppu.rendering || ((m342.mmc5.ppu.scanline + 1) >= 241) ? 0 : 0x40);
 
 		m342.mmc5.irq.out = 0;
-		nes.c.irq.high &= ~EXT_IRQ;
+		nes[nidx].c.irq.high &= ~EXT_IRQ;
 		return (value);
 	}
 	return (openbus);
 }
-INLINE static BYTE mapper35_cpu_rd(void) {
+INLINE static BYTE mapper35_cpu_rd(UNUSED(BYTE nidx)) {
 	return (m342.flags & 0x03);
 }
 
-INLINE static void mapper07_cpu_every_cycle(void) {
+INLINE static void mapper07_cpu_every_cycle(BYTE nidx) {
 	// Mapper #18
 	if (m342.mapper18.irq.control & 0x01) {
 		BYTE carry = carry = (m342.mapper18.irq.value & 0x0F) - 1;
@@ -2289,40 +2288,40 @@ INLINE static void mapper07_cpu_every_cycle(void) {
 			carry = (carry >> 4) & 0x01;
 		}
 		if (carry) {
-			nes.c.irq.high |= EXT_IRQ;
+			nes[nidx].c.irq.high |= EXT_IRQ;
 		}
 	}
 }
-INLINE static void mapper14_cpu_every_cycle(void) {
+INLINE static void mapper14_cpu_every_cycle(BYTE nidx) {
 	// Mapper #65 - Irem's H3001
 	if (m342.mapper65.irq.enabled) {
 		if (m342.mapper65.irq.value != 0) {
 			m342.mapper65.irq.value--;
 			if (!m342.mapper65.irq.value) {
-				nes.c.irq.high |= EXT_IRQ;
+				nes[nidx].c.irq.high |= EXT_IRQ;
 			}
 		}
 	}
 }
-INLINE static void mapper19_cpu_every_cycle(void) {
+INLINE static void mapper19_cpu_every_cycle(BYTE nidx) {
 	// Mapper #73 - VRC3
 	if (m342.vrc3.irq.control & 0x02) {
 		if (m342.vrc3.irq.control & 0x04) {  // 8-bit mode
 			m342.vrc3.irq.value = (m342.vrc3.irq.value & 0xFF00) | ((m342.vrc3.irq.value + 1) & 0xFF);
 			if ((m342.vrc3.irq.value & 0xFF) == 0) {
 				m342.vrc3.irq.value = (m342.vrc3.irq.value & 0xFF00) | (m342.vrc3.irq.latch & 0xFF);
-				nes.c.irq.high |= EXT_IRQ;
+				nes[nidx].c.irq.high |= EXT_IRQ;
 			}
 		} else { // 16-bit
 			m342.vrc3.irq.value += 1;
 			if (m342.vrc3.irq.value == 0) {
 				m342.vrc3.irq.value = m342.vrc3.irq.latch;
-				nes.c.irq.high |= EXT_IRQ;
+				nes[nidx].c.irq.high |= EXT_IRQ;
 			}
 		}
 	}
 }
-INLINE static void mapper23_cpu_every_cycle(void) {
+INLINE static void mapper23_cpu_every_cycle(BYTE nidx) {
 	// Mapper #42
 	if (m342.mapper42.irq.enabled) {
 		m342.mapper42.irq.value++;
@@ -2330,20 +2329,20 @@ INLINE static void mapper23_cpu_every_cycle(void) {
 			m342.mapper42.irq.value = 0;
 		}
 		if (((m342.mapper42.irq.value >> 13) & 0x03) == 0x03) {
-			nes.c.irq.high |= EXT_IRQ;
+			nes[nidx].c.irq.high |= EXT_IRQ;
 		} else {
-			nes.c.irq.high &= ~EXT_IRQ;
+			nes[nidx].c.irq.high &= ~EXT_IRQ;
 		}
 	}
 }
-INLINE static void mapper24_cpu_every_cycle(void) {
+INLINE static void mapper24_cpu_every_cycle(BYTE nidx) {
 	// Mapper #23 - VRC2/4
 	if (m342.vrc4.irq.control & 0x02) {
 		if (m342.vrc4.irq.control & 0x04) {
 			m342.vrc4.irq.value++;
 			if (m342.vrc4.irq.value == 0) {
 				m342.vrc4.irq.value = m342.vrc4.irq.latch;
-				nes.c.irq.high |= EXT_IRQ;
+				nes[nidx].c.irq.high |= EXT_IRQ;
 			}
 		} else {
 			m342.vrc4.irq.prescaler++;
@@ -2357,36 +2356,36 @@ INLINE static void mapper24_cpu_every_cycle(void) {
 				m342.vrc4.irq.value++;
 				if (m342.vrc4.irq.value == 0) {
 					m342.vrc4.irq.value = m342.vrc4.irq.latch;
-					nes.c.irq.high |= EXT_IRQ;
+					nes[nidx].c.irq.high |= EXT_IRQ;
 				}
 			}
 		}
 	}
 }
-INLINE static void mapper25_cpu_every_cycle(void) {
+INLINE static void mapper25_cpu_every_cycle(BYTE nidx) {
 	// Mapper #69 - Sunsoft FME-7
 	if (m342.mapper69.irq.counter_enabled) {
 		m342.mapper69.irq.value--;
 		if (m342.mapper69.irq.value == 0xFFFF) {
-			nes.c.irq.high |= EXT_IRQ;
+			nes[nidx].c.irq.high |= EXT_IRQ;
 		}
 	}
 }
-INLINE static void mapper35_cpu_every_cycle(void) {
+INLINE static void mapper35_cpu_every_cycle(BYTE nidx) {
 	// Mapper #83 - Cony/Yoko
 	if (m342.mapper83.irq.enabled) {
 		if (m342.mapper83.irq.counter == 0) {
-			nes.c.irq.high |= EXT_IRQ;
+			nes[nidx].c.irq.high |= EXT_IRQ;
 		}
 		m342.mapper83.irq.counter--;
 	}
 }
-INLINE static void mapper36_cpu_every_cycle(void) {
+INLINE static void mapper36_cpu_every_cycle(BYTE nidx) {
 	// Mapper #67 - Sunsoft-3
 	if (m342.mapper67.irq.enabled) {
 		m342.mapper67.irq.counter--;
 		if (m342.mapper67.irq.counter == 0xFFFF) {
-			nes.c.irq.high |= EXT_IRQ;
+			nes[nidx].c.irq.high |= EXT_IRQ;
 			m342.mapper67.irq.enabled = 0;
 		}
 	}

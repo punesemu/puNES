@@ -42,23 +42,22 @@ void extcl_after_mapper_init_214(void) {
 	prg_fix_214();
 	chr_fix_214();
 }
-void extcl_cpu_wr_mem_214(WORD address, UNUSED(BYTE value)) {
+void extcl_cpu_wr_mem_214(UNUSED(BYTE nidx), WORD address, UNUSED(BYTE value)) {
 	m214.reg = address;
 	prg_fix_214();
 	chr_fix_214();
 }
 BYTE extcl_save_mapper_214(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m214.reg);
-
 	return (EXIT_OK);
 }
 
 INLINE static void prg_fix_214(void) {
 	WORD bank = m214.reg >> 2;
 
-	memmap_auto_16k(MMCPU(0x8000), bank);
-	memmap_auto_16k(MMCPU(0xC000), bank);
+	memmap_auto_16k(0, MMCPU(0x8000), bank);
+	memmap_auto_16k(0, MMCPU(0xC000), bank);
 }
 INLINE static void chr_fix_214(void) {
-	memmap_auto_8k(MMPPU(0x0000), (m214.reg >> 2));
+	memmap_auto_8k(0, MMPPU(0x0000), (m214.reg >> 2));
 }

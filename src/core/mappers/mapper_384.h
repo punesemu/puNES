@@ -22,8 +22,8 @@
 #include "common.h"
 
 void map_init_384(void);
-void extcl_cpu_wr_mem_384(WORD address, BYTE value);
+void extcl_cpu_wr_mem_384(BYTE nidx, WORD address, BYTE value);
 BYTE extcl_save_mapper_384(BYTE mode, BYTE slot, FILE *fp);
-void extcl_cpu_every_cycle_384(void);
+void extcl_cpu_every_cycle_384(BYTE nidx);
 
 #endif /* MAPPER_384_H_ */

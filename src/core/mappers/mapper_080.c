@@ -39,7 +39,7 @@ void map_init_080(void) {
 	mapper.internal_struct_size[0] = sizeof(m080);
 
 	if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
-		memmap_wram_region_init(S128B);
+		memmap_wram_region_init(0, S128B);
 		if ((info.format != NES_2_0) && info.mapper.battery) {
 			wram_set_ram_size(0);
 			wram_set_nvram_size(S128B);
@@ -61,7 +61,7 @@ void extcl_after_mapper_init_080(void) {
 	wram_fix_080();
 	mirroring_fix_080();
 }
-void extcl_cpu_wr_mem_080(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_080(UNUSED(BYTE nidx), WORD address, BYTE value) {
 	if ((address >= 0x7EF0) && (address <= 0x7EFF)) {
 		switch (address) {
 			case 0x7EF0:
@@ -99,43 +99,42 @@ BYTE extcl_save_mapper_080(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m080.prg);
 	save_slot_ele(mode, slot, m080.chr);
 	save_slot_ele(mode, slot, m080.mirroring);
-
 	return (EXIT_OK);
 }
 
 INLINE static void prg_fix_080(void) {
-	memmap_auto_8k(MMCPU(0x8000), m080.prg[0]);
-	memmap_auto_8k(MMCPU(0xA000), m080.prg[1]);
-	memmap_auto_8k(MMCPU(0xC000), m080.prg[2]);
-	memmap_auto_8k(MMCPU(0xE000), 0xFF);
+	memmap_auto_8k(0, MMCPU(0x8000), m080.prg[0]);
+	memmap_auto_8k(0, MMCPU(0xA000), m080.prg[1]);
+	memmap_auto_8k(0, MMCPU(0xC000), m080.prg[2]);
+	memmap_auto_8k(0, MMCPU(0xE000), 0xFF);
 }
 INLINE static void chr_fix_080(void) {
-	memmap_auto_2k(MMPPU(0x0000), (m080.chr[0] >> 1));
-	memmap_auto_2k(MMPPU(0x0800), (m080.chr[1] >> 1));
-	memmap_auto_1k(MMPPU(0x1000), m080.chr[2]);
-	memmap_auto_1k(MMPPU(0x1400), m080.chr[3]);
-	memmap_auto_1k(MMPPU(0x1800), m080.chr[4]);
-	memmap_auto_1k(MMPPU(0x1C00), m080.chr[5]);
+	memmap_auto_2k(0, MMPPU(0x0000), (m080.chr[0] >> 1));
+	memmap_auto_2k(0, MMPPU(0x0800), (m080.chr[1] >> 1));
+	memmap_auto_1k(0, MMPPU(0x1000), m080.chr[2]);
+	memmap_auto_1k(0, MMPPU(0x1400), m080.chr[3]);
+	memmap_auto_1k(0, MMPPU(0x1800), m080.chr[4]);
+	memmap_auto_1k(0, MMPPU(0x1C00), m080.chr[5]);
 }
 INLINE static void wram_fix_080(void) {
-	memmap_disable_8k(MMCPU(0x6000));
-	memmap_auto_128b(MMCPU(0x7F00), 0);
-	memmap_auto_128b(MMCPU(0x7F80), 0);
+	memmap_disable_8k(0, MMCPU(0x6000));
+	memmap_auto_128b(0, MMCPU(0x7F00), 0);
+	memmap_auto_128b(0, MMCPU(0x7F80), 0);
 }
 INLINE static void mirroring_fix_080(void) {
 	if (info.mapper.id == 207) {
-		memmap_auto_1k(MMPPU(0x2000), (m080.chr[0] >> 7));
-		memmap_auto_1k(MMPPU(0x2400), (m080.chr[0] >> 7));
-		memmap_auto_1k(MMPPU(0x2800), (m080.chr[1] >> 7));
-		memmap_auto_1k(MMPPU(0x2C00), (m080.chr[1] >> 7));
+		memmap_auto_1k(0, MMPPU(0x2000), (m080.chr[0] >> 7));
+		memmap_auto_1k(0, MMPPU(0x2400), (m080.chr[0] >> 7));
+		memmap_auto_1k(0, MMPPU(0x2800), (m080.chr[1] >> 7));
+		memmap_auto_1k(0, MMPPU(0x2C00), (m080.chr[1] >> 7));
 
-		memmap_auto_1k(MMPPU(0x3000), (m080.chr[0] >> 7));
-		memmap_auto_1k(MMPPU(0x3400), (m080.chr[0] >> 7));
-		memmap_auto_1k(MMPPU(0x3800), (m080.chr[1] >> 7));
-		memmap_auto_1k(MMPPU(0x3C00), (m080.chr[1] >> 7));
+		memmap_auto_1k(0, MMPPU(0x3000), (m080.chr[0] >> 7));
+		memmap_auto_1k(0, MMPPU(0x3400), (m080.chr[0] >> 7));
+		memmap_auto_1k(0, MMPPU(0x3800), (m080.chr[1] >> 7));
+		memmap_auto_1k(0, MMPPU(0x3C00), (m080.chr[1] >> 7));
 	} else if (m080.mirroring & 0x01) {
-		mirroring_V();
+		mirroring_V(0);
 	} else {
-		mirroring_H();
+		mirroring_H(0);
 	}
 }

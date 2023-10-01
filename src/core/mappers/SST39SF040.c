@@ -110,7 +110,7 @@ BYTE sst39sf040_read(BYTE nidx, WORD address) {
 	}
 	return (sst39sf040tmp.data[rd_address_sst39sf040(nidx, address)]);
 }
-void sst39sf040_tick(void) {
+void sst39sf040_tick(UNUSED(BYTE nidx)) {
 	if (sst39sf040.time_out && !--sst39sf040.time_out) {
 		sst39sf040.sequence = 0;
 	}
@@ -118,7 +118,6 @@ void sst39sf040_tick(void) {
 BYTE sst39sf040_save_mapper(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, sst39sf040.sequence);
 	save_slot_ele(mode, slot, sst39sf040.time_out);
-
 	return (EXIT_OK);
 }
 

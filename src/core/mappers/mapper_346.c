@@ -40,7 +40,7 @@ void map_init_346(void) {
 void extcl_after_mapper_init_346(void) {
 	prg_fix_346();
 }
-void extcl_cpu_wr_mem_346(WORD address, UNUSED(BYTE value)) {
+void extcl_cpu_wr_mem_346(UNUSED(BYTE nidx), WORD address, UNUSED(BYTE value)) {
 	switch (address) {
 		case 0xE0A0:
 			m346.reg = 0;
@@ -54,10 +54,9 @@ void extcl_cpu_wr_mem_346(WORD address, UNUSED(BYTE value)) {
 }
 BYTE extcl_save_mapper_346(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m346.reg);
-
 	return (EXIT_OK);
 }
 
 INLINE static void prg_fix_346(void) {
-	memmap_auto_32k(MMCPU(0x8000), m346.reg);
+	memmap_auto_32k(0, MMCPU(0x8000), m346.reg);
 }

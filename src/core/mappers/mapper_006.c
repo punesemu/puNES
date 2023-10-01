@@ -661,7 +661,6 @@ BYTE extcl_save_mapper_006(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m006.fds.control);
 	save_slot_ele(mode, slot, m006.fds.counter);
 	save_slot_ele(mode, slot, m006.scratch);
-
 	return (EXIT_OK);
 }
 void extcl_wr_chr_006(BYTE nidx, WORD address, BYTE value) {

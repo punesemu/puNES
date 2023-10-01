@@ -47,7 +47,7 @@ void map_init_100(void) {
 	mapper.internal_struct_size[1] = sizeof(mmc3);
 
 	if (info.reset >= HARD) {
-		memset(&irqA12, 0x00, sizeof(irqA12));
+		memset(&nes[0].irqA12, 0x00, sizeof(nes[0].irqA12));
 	}
 
 	memset(&m100, 0x00, sizeof(m100));
@@ -68,25 +68,25 @@ void map_init_100(void) {
 	m100.chr[6] = 6;
 	m100.chr[7] = 7;
 
-	irqA12.present = TRUE;
-	irqA12_delay = 1;
+	nes[0].irqA12.present = TRUE;
+	nes[0].irqA12.delay = 1;
 }
 void extcl_after_mapper_init_100(void) {
 	extcl_after_mapper_init_MMC3();
 	prg_fix_100();
 	chr_fix_100();
 }
-void extcl_cpu_init_pc_100(void) {
+void extcl_cpu_init_pc_100(BYTE nidx) {
 	if (info.reset >= HARD) {
 		// trainer
 		if (miscrom.trainer.in_use && wram_size()) {
 			if (miscrom_byte(0) == 0x4C) {
-				nes.c.cpu.PC.w = 0x7000;
+				nes[nidx].c.cpu.PC.w = 0x7000;
 			}
 		}
 	}
 }
-void extcl_cpu_wr_mem_100(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_100(BYTE nidx, WORD address, BYTE value) {
 	switch (address & 0xE001) {
 		case 0x8000:
 			m100.reg = value;
@@ -151,7 +151,7 @@ void extcl_cpu_wr_mem_100(WORD address, BYTE value) {
 			return;
 		}
 	}
-	extcl_cpu_wr_mem_MMC3(address, value);
+	extcl_cpu_wr_mem_MMC3(nidx, address, value);
 }
 BYTE extcl_save_mapper_100(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m100.reg);
@@ -161,18 +161,18 @@ BYTE extcl_save_mapper_100(BYTE mode, BYTE slot, FILE *fp) {
 }
 
 INLINE static void prg_fix_100(void) {
-	memmap_auto_8k(MMCPU(0x8000), m100.prg[0]);
-	memmap_auto_8k(MMCPU(0xA000), m100.prg[1]);
-	memmap_auto_8k(MMCPU(0xC000), m100.prg[2]);
-	memmap_auto_8k(MMCPU(0xE000), m100.prg[3]);
+	memmap_auto_8k(0, MMCPU(0x8000), m100.prg[0]);
+	memmap_auto_8k(0, MMCPU(0xA000), m100.prg[1]);
+	memmap_auto_8k(0, MMCPU(0xC000), m100.prg[2]);
+	memmap_auto_8k(0, MMCPU(0xE000), m100.prg[3]);
 }
 INLINE static void chr_fix_100(void) {
-	memmap_auto_1k(MMPPU(0x0000), m100.chr[0]);
-	memmap_auto_1k(MMPPU(0x0400), m100.chr[1]);
-	memmap_auto_1k(MMPPU(0x0800), m100.chr[2]);
-	memmap_auto_1k(MMPPU(0x0C00), m100.chr[3]);
-	memmap_auto_1k(MMPPU(0x1000), m100.chr[4]);
-	memmap_auto_1k(MMPPU(0x1400), m100.chr[5]);
-	memmap_auto_1k(MMPPU(0x1800), m100.chr[6]);
-	memmap_auto_1k(MMPPU(0x1C00), m100.chr[7]);
+	memmap_auto_1k(0, MMPPU(0x0000), m100.chr[0]);
+	memmap_auto_1k(0, MMPPU(0x0400), m100.chr[1]);
+	memmap_auto_1k(0, MMPPU(0x0800), m100.chr[2]);
+	memmap_auto_1k(0, MMPPU(0x0C00), m100.chr[3]);
+	memmap_auto_1k(0, MMPPU(0x1000), m100.chr[4]);
+	memmap_auto_1k(0, MMPPU(0x1400), m100.chr[5]);
+	memmap_auto_1k(0, MMPPU(0x1800), m100.chr[6]);
+	memmap_auto_1k(0, MMPPU(0x1C00), m100.chr[7]);
 }

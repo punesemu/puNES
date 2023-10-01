@@ -52,7 +52,7 @@ void extcl_after_mapper_init_106(void) {
 	chr_fix_106();
 	mirroring_fix_106();
 }
-void extcl_cpu_wr_mem_106(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_106(BYTE nidx, WORD address, BYTE value) {
 	switch (address & 0x000F) {
 		case 0:
 		case 1:
@@ -80,7 +80,7 @@ void extcl_cpu_wr_mem_106(WORD address, BYTE value) {
 		case 13:
 			m106.irq.enabled = FALSE;
 			m106.irq.counter = 0;
-			nes.c.irq.high &= ~EXT_IRQ;
+			nes[nidx].c.irq.high &= ~EXT_IRQ;
 			break;
 		case 14:
 			m106.irq.counter = (m106.irq.counter & 0xFF00) | value;
@@ -97,38 +97,37 @@ BYTE extcl_save_mapper_106(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m106.mirroring);
 	save_slot_ele(mode, slot, m106.irq.enabled);
 	save_slot_ele(mode, slot, m106.irq.counter);
-
 	return (EXIT_OK);
 }
-void extcl_cpu_every_cycle_106(void) {
+void extcl_cpu_every_cycle_106(BYTE nidx) {
 	if (m106.irq.counter != 0xFFFF) {
 		m106.irq.counter++;
 		if ((m106.irq.counter == 0xFFFF) && m106.irq.enabled) {
-			nes.c.irq.high |= EXT_IRQ;
+			nes[nidx].c.irq.high |= EXT_IRQ;
 		}
 	}
 }
 
 INLINE static void prg_fix_106(void) {
-	memmap_auto_8k(MMCPU(0x8000), (m106.prg[0] | 0x010));
-	memmap_auto_8k(MMCPU(0xA000), m106.prg[1]);
-	memmap_auto_8k(MMCPU(0xC000), m106.prg[2]);
-	memmap_auto_8k(MMCPU(0xE000), (m106.prg[3] | 0x010));
+	memmap_auto_8k(0, MMCPU(0x8000), (m106.prg[0] | 0x010));
+	memmap_auto_8k(0, MMCPU(0xA000), m106.prg[1]);
+	memmap_auto_8k(0, MMCPU(0xC000), m106.prg[2]);
+	memmap_auto_8k(0, MMCPU(0xE000), (m106.prg[3] | 0x010));
 }
 INLINE static void chr_fix_106(void) {
-	memmap_auto_1k(MMPPU(0x0000), m106.chr[0]);
-	memmap_auto_1k(MMPPU(0x0400), m106.chr[1]);
-	memmap_auto_1k(MMPPU(0x0800), m106.chr[2]);
-	memmap_auto_1k(MMPPU(0x0C00), m106.chr[3]);
-	memmap_auto_1k(MMPPU(0x1000), m106.chr[4]);
-	memmap_auto_1k(MMPPU(0x1400), m106.chr[5]);
-	memmap_auto_1k(MMPPU(0x1800), m106.chr[6]);
-	memmap_auto_1k(MMPPU(0x1C00), m106.chr[7]);
+	memmap_auto_1k(0, MMPPU(0x0000), m106.chr[0]);
+	memmap_auto_1k(0, MMPPU(0x0400), m106.chr[1]);
+	memmap_auto_1k(0, MMPPU(0x0800), m106.chr[2]);
+	memmap_auto_1k(0, MMPPU(0x0C00), m106.chr[3]);
+	memmap_auto_1k(0, MMPPU(0x1000), m106.chr[4]);
+	memmap_auto_1k(0, MMPPU(0x1400), m106.chr[5]);
+	memmap_auto_1k(0, MMPPU(0x1800), m106.chr[6]);
+	memmap_auto_1k(0, MMPPU(0x1C00), m106.chr[7]);
 }
 INLINE static void mirroring_fix_106(void) {
 	if (m106.mirroring & 0x01) {
-		mirroring_H();
+		mirroring_H(0);
 	} else {
-		mirroring_V();
+		mirroring_V(0);
 	}
 }

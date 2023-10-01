@@ -60,7 +60,7 @@ BYTE extcl_save_mapper_252(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m252.compare);
 	return (extcl_save_mapper_VRC2and4(mode, slot, fp));
 }
-void extcl_wr_chr_252(WORD address, UNUSED(BYTE value)) {
+void extcl_wr_chr_252(BYTE nidx, WORD address, UNUSED(BYTE value)) {
 	switch (vrc2and4.chr[address >> 10]) {
 		case 0x88:
 			m252.mask = 0xFC;
@@ -75,15 +75,15 @@ void extcl_wr_chr_252(WORD address, UNUSED(BYTE value)) {
 			m252.compare = 0x04;
 			break;
 	}
-	chr_wr(address, value);
+	chr_wr(nidx, address, value);
 }
 
 void prg_swap_vrc2and4_252(WORD address, WORD value) {
 	prg_swap_VRC2and4_base(address, (value & 0x1F));
 }
 void chr_swap_vrc2and4_252(WORD address, WORD value) {
-	if (((value & m252.mask) == m252.compare) && vram_size()) {
-		memmap_vram_1k(MMPPU(address), value);
+	if (((value & m252.mask) == m252.compare) && vram_size(0)) {
+		memmap_vram_1k(0, MMPPU(address), value);
 	} else {
 		chr_swap_VRC2and4_base(address, value);
 	}

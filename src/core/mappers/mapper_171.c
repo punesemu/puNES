@@ -40,20 +40,19 @@ void extcl_after_mapper_init_171(void) {
 	prg_fix_171();
 	chr_fix_171();
 }
-void extcl_cpu_wr_mem_171(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_171(UNUSED(BYTE nidx), WORD address, BYTE value) {
 	m171.reg[address & 0x01] = value;
 	chr_fix_171();
 }
 BYTE extcl_save_mapper_171(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m171.reg);
-
 	return (EXIT_OK);
 }
 
 INLINE static void prg_fix_171(void) {
-	memmap_auto_32k(MMCPU(0x8000), 0);
+	memmap_auto_32k(0, MMCPU(0x8000), 0);
 }
 INLINE static void chr_fix_171(void) {
-	memmap_auto_4k(MMPPU(0x0000), m171.reg[0]);
-	memmap_auto_4k(MMPPU(0x1000), m171.reg[1]);
+	memmap_auto_4k(0, MMPPU(0x0000), m171.reg[0]);
+	memmap_auto_4k(0, MMPPU(0x1000), m171.reg[1]);
 }

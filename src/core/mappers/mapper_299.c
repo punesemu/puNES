@@ -42,7 +42,7 @@ void extcl_after_mapper_init_299(void) {
 	chr_fix_299();
 	mirroring_fix_299();
 }
-void extcl_cpu_wr_mem_299(UNUSED(WORD address), BYTE value) {
+void extcl_cpu_wr_mem_299(UNUSED(BYTE nidx), UNUSED(WORD address), BYTE value) {
 	m299.reg = value;
 	prg_fix_299();
 	chr_fix_299();
@@ -50,20 +50,19 @@ void extcl_cpu_wr_mem_299(UNUSED(WORD address), BYTE value) {
 }
 BYTE extcl_save_mapper_299(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m299.reg);
-
 	return (EXIT_OK);
 }
 
 INLINE static void prg_fix_299(void) {
-	memmap_auto_32k(MMCPU(0x8000), ((m299.reg & 0x70) >> 4));
+	memmap_auto_32k(0, MMCPU(0x8000), ((m299.reg & 0x70) >> 4));
 }
 INLINE static void chr_fix_299(void) {
-	memmap_auto_8k(MMPPU(0x0000), (((m299.reg & 0x70) >> 2) | (m299.reg & 0x03)));
+	memmap_auto_8k(0, MMPPU(0x0000), (((m299.reg & 0x70) >> 2) | (m299.reg & 0x03)));
 }
 INLINE static void mirroring_fix_299(void) {
 	if (m299.reg & 0x80) {
-		mirroring_V();
+		mirroring_V(0);
 	} else {
-		mirroring_H();
+		mirroring_H(0);
 	}
 }

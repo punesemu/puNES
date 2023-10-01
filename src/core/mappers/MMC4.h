@@ -31,10 +31,10 @@ typedef struct _mmc4 {
 extern _mmc4 mmc4;
 
 void extcl_after_mapper_init_MMC4(void);
-void extcl_cpu_wr_mem_MMC4(WORD address, BYTE value);
+void extcl_cpu_wr_mem_MMC4(BYTE nidx, WORD address, BYTE value);
 BYTE extcl_save_mapper_MMC4(BYTE mode, BYTE slot, FILE *fp);
-void extcl_after_rd_chr_MMC4(WORD address);
-void extcl_update_r2006_MMC4(WORD new_r2006, WORD old_r2006);
+void extcl_after_rd_chr_MMC4(BYTE nidx, WORD address);
+void extcl_update_r2006_MMC4(BYTE nidx, WORD new_r2006, WORD old_r2006);
 
 void init_MMC4(BYTE reset);
 void prg_fix_MMC4_base(void);

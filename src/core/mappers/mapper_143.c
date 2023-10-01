@@ -29,8 +29,8 @@ void map_init_143(void) {
 void extcl_after_mapper_init_143(void) {
 	prg_fix_143();
 }
-void extcl_cpu_wr_mem_143(UNUSED(WORD address), UNUSED(BYTE value)) {}
-BYTE extcl_cpu_rd_mem_143(WORD address, BYTE openbus) {
+void extcl_cpu_wr_mem_143(UNUSED(BYTE nidx), UNUSED(WORD address), UNUSED(BYTE value)) {}
+BYTE extcl_cpu_rd_mem_143(BYTE nidx, WORD address, BYTE openbus) {
 	if ((address >= 0x4100) && (address <= 0x5FFF)) {
 		if (address & 0x0100) {
 			return ((~address & 0x003F) | (openbus & 0xC0));
@@ -38,9 +38,9 @@ BYTE extcl_cpu_rd_mem_143(WORD address, BYTE openbus) {
 			return (0xFF);
 		}
 	}
-	return (wram_rd(address));
+	return (wram_rd(nidx, address));
 }
 
 INLINE static void prg_fix_143(void) {
-	memmap_auto_32k(MMCPU(0x8000), 0);
+	memmap_auto_32k(0, MMCPU(0x8000), 0);
 }

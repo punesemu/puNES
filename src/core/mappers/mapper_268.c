@@ -51,7 +51,7 @@ void map_init_268(void) {
 	mapper.internal_struct[1] = (BYTE *)&mmc3;
 	mapper.internal_struct_size[1] = sizeof(mmc3);
 
-	memset(&irqA12, 0x00, sizeof(irqA12));
+	memset(&nes[0].irqA12, 0x00, sizeof(nes[0].irqA12));
 	memset(&m268, 0x00, sizeof(m268));
 
 	init_MMC3(HARD);
@@ -69,10 +69,10 @@ void map_init_268(void) {
 
 	info.mapper.extend_wr = TRUE;
 
-	irqA12.present = TRUE;
-	irqA12_delay = 1;
+	nes[0].irqA12.present = TRUE;
+	nes[0].irqA12.delay = 1;
 }
-void extcl_cpu_wr_mem_268(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_268(BYTE nidx, WORD address, BYTE value) {
 	if ((address >= m268tmp.rstart) && (address <= m268tmp.rstop)) {
 		if (!(m268.reg[3] & 0x80) || ((address & 0x07) == 2)) {
 			if  ((address & 0x07) == 2) {
@@ -88,7 +88,7 @@ void extcl_cpu_wr_mem_268(WORD address, BYTE value) {
 		return;
 	}
 	if (address >= 0x8000) {
-		extcl_cpu_wr_mem_MMC3(address, value);
+		extcl_cpu_wr_mem_MMC3(nidx, address, value);
 	}
 }
 BYTE extcl_save_mapper_268(BYTE mode, BYTE slot, FILE *fp) {
@@ -191,18 +191,18 @@ void chr_swap_mmc3_268(WORD address, WORD value) {
 				break;
 		}
 		slot = (address >> 10) & 0x03;
-		is_vram = vram_size() != 0;
+		is_vram = vram_size(0) != 0;
 	} else {
 		slot = (address >> 10) & 0x07;
-		is_vram = (m268.reg[4] & 0x01) && ((value & 0xFE) == (m268.reg[4] & 0xFE)) && vram_size();
+		is_vram = (m268.reg[4] & 0x01) && ((value & 0xFE) == (m268.reg[4] & 0xFE)) && vram_size(0);
 	}
 
 	bank = (value & mask_mmc3) | masked_offset | (slot & mask_gnrom);
 
 	if (is_vram) {
-		memmap_vram_wp_1k(MMPPU(address), bank, TRUE, enabled);
+		memmap_vram_wp_1k(0, MMPPU(address), bank, TRUE, enabled);
 	} else {
-		memmap_auto_wp_1k(MMPPU(address), bank, TRUE, enabled);
+		memmap_auto_wp_1k(0, MMPPU(address), bank, TRUE, enabled);
 	}
 }
 void wram_fix_mmc3_268(void) {

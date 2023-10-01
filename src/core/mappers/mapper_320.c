@@ -38,7 +38,7 @@ void map_init_320(void) {
 void extcl_after_mapper_init_320(void) {
 	prg_fix_320();
 }
-void extcl_cpu_wr_mem_320(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_320(UNUSED(BYTE nidx), WORD address, BYTE value) {
 	if ((address & 0xFFE0) == 0xF0E0) {
 		m320.reg[0] = address;
 	}
@@ -47,7 +47,6 @@ void extcl_cpu_wr_mem_320(WORD address, BYTE value) {
 }
 BYTE extcl_save_mapper_320(BYTE mode, BYTE slot, UNUSED(FILE *fp)) {
 	save_slot_ele(mode, slot, m320.reg);
-
 	return (EXIT_OK);
 }
 
@@ -56,6 +55,6 @@ INLINE static void prg_fix_320(void) {
 	WORD mask = 0x0F >> ((m320.reg[0] & 0x10) >> 4);
 	WORD bank = base | (m320.reg[1] & mask);
 
-	memmap_auto_16k(MMCPU(0x8000), bank);
-	memmap_auto_16k(MMCPU(0xC000), (bank | (!(m320.reg[0] & 0x10) << 3) | 0x07));
+	memmap_auto_16k(0, MMCPU(0x8000), bank);
+	memmap_auto_16k(0, MMCPU(0xC000), (bank | (!(m320.reg[0] & 0x10) << 3) | 0x07));
 }

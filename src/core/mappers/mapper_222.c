@@ -48,15 +48,15 @@ void map_init_222(void) {
 	VRC2and4_prg_swap = prg_swap_vrc2and4_222;
 	VRC2and4_chr_swap = chr_swap_vrc2and4_222;
 }
-void extcl_cpu_wr_mem_222(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_222(BYTE nidx, WORD address, BYTE value) {
 	switch (address & 0xF000) {
 		case 0xB000:
 		case 0xC000:
 		case 0xD000:
 		case 0xE000:
 			if (!(address & 0x0001)) {
-				extcl_cpu_wr_mem_VRC2and4(address, value);
-				extcl_cpu_wr_mem_VRC2and4(address | 0x0001, value >> 4);
+				extcl_cpu_wr_mem_VRC2and4(nidx, address, value);
+				extcl_cpu_wr_mem_VRC2and4(nidx, address | 0x0001, value >> 4);
 			}
 			return;
 		case 0xF000:
@@ -77,7 +77,7 @@ void extcl_cpu_wr_mem_222(WORD address, BYTE value) {
 			}
 			return;
 		default:
-			extcl_cpu_wr_mem_VRC2and4(address, value);
+			extcl_cpu_wr_mem_VRC2and4(nidx, address, value);
 			return;
 	}
 }
@@ -88,7 +88,7 @@ BYTE extcl_save_mapper_222(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m222.pending);
 	return (extcl_save_mapper_VRC2and4(mode, slot, fp));
 }
-void extcl_cpu_every_cycle_222(void) {
+void extcl_cpu_every_cycle_222(BYTE nidx) {
 	BYTE save = m222.prescaler;
 
 	m222.prescaler = m222.pending ? 0 : m222.prescaler + 1;
@@ -100,9 +100,9 @@ void extcl_cpu_every_cycle_222(void) {
 		m222.count[1] &= 0x0F;
 	}
 	if (m222.pending) {
-		nes.c.irq.high |= EXT_IRQ;
+		nes[nidx].c.irq.high |= EXT_IRQ;
 	} else {
-		nes.c.irq.high &= ~EXT_IRQ;
+		nes[nidx].c.irq.high &= ~EXT_IRQ;
 	}
 }
 

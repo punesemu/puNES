@@ -31,10 +31,10 @@ typedef struct _mmc2 {
 extern _mmc2 mmc2;
 
 void extcl_after_mapper_init_MMC2(void);
-void extcl_cpu_wr_mem_MMC2(WORD address, BYTE value);
+void extcl_cpu_wr_mem_MMC2(BYTE nidx, WORD address, BYTE value);
 BYTE extcl_save_mapper_MMC2(BYTE mode, BYTE slot, FILE *fp);
-void extcl_after_rd_chr_MMC2(WORD address);
-void extcl_update_r2006_MMC2(WORD new_r2006, WORD old_r2006);
+void extcl_after_rd_chr_MMC2(BYTE nidx, WORD address);
+void extcl_update_r2006_MMC2(BYTE nidx, WORD new_r2006, WORD old_r2006);
 
 void init_MMC2(BYTE reset);
 void prg_fix_MMC2_base(void);

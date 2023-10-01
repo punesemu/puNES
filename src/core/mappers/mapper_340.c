@@ -42,7 +42,7 @@ void extcl_after_mapper_init_340(void) {
 	chr_fix_340();
 	mirroring_fix_340();
 }
-void extcl_cpu_wr_mem_340(WORD address, UNUSED(BYTE value)) {
+void extcl_cpu_wr_mem_340(UNUSED(BYTE nidx), WORD address, UNUSED(BYTE value)) {
 	m340.reg = address;
 	prg_fix_340();
 	chr_fix_340();
@@ -50,7 +50,6 @@ void extcl_cpu_wr_mem_340(WORD address, UNUSED(BYTE value)) {
 }
 BYTE extcl_save_mapper_340(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m340.reg);
-
 	return (EXIT_OK);
 }
 
@@ -59,23 +58,23 @@ INLINE static void prg_fix_340(void) {
 
 	if (m340.reg & 0x20) {
 		if (!(m340.reg & 0x01)) {
-			memmap_auto_32k(MMCPU(0x8000), (((m340.reg & 0x80) >> 3) | ((m340.reg & 0x1E) >> 1)));
+			memmap_auto_32k(0, MMCPU(0x8000), (((m340.reg & 0x80) >> 3) | ((m340.reg & 0x1E) >> 1)));
 		} else {
-			memmap_auto_16k(MMCPU(0x8000), bank);
-			memmap_auto_16k(MMCPU(0xC000), bank);
+			memmap_auto_16k(0, MMCPU(0x8000), bank);
+			memmap_auto_16k(0, MMCPU(0xC000), bank);
 		}
 	} else {
-		memmap_auto_16k(MMCPU(0x8000), bank);
-		memmap_auto_16k(MMCPU(0xC000), (bank | 0x07));
+		memmap_auto_16k(0, MMCPU(0x8000), bank);
+		memmap_auto_16k(0, MMCPU(0xC000), (bank | 0x07));
 	}
 }
 INLINE static void chr_fix_340(void) {
-	memmap_vram_wp_8k(MMPPU(0x0000), 0, TRUE, !(m340.reg & 0x20));
+	memmap_vram_wp_8k(0, MMPPU(0x0000), 0, TRUE, !(m340.reg & 0x20));
 }
 INLINE static void mirroring_fix_340(void) {
 	if (((m340.reg & 0x25) == 0x25) || (m340.reg & 0x40)) {
-		mirroring_H();
+		mirroring_H(0);
 	} else {
-		mirroring_V();
+		mirroring_V(0);
 	}
 }

@@ -42,19 +42,18 @@ void extcl_after_mapper_init_149(void) {
 	prg_fix_149();
 	chr_fix_149();
 }
-void extcl_cpu_wr_mem_149(UNUSED(WORD address), BYTE value) {
+void extcl_cpu_wr_mem_149(UNUSED(BYTE nidx), UNUSED(WORD address), BYTE value) {
 	m149.reg = value;
 	chr_fix_149();
 }
 BYTE extcl_save_mapper_149(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m149.reg);
-
 	return (EXIT_OK);
 }
 
 INLINE static void prg_fix_149(void) {
-	memmap_auto_32k(MMCPU(0x8000), 0);
+	memmap_auto_32k(0, MMCPU(0x8000), 0);
 }
 INLINE static void chr_fix_149(void) {
-	memmap_auto_8k(MMPPU(0x0000), ((m149.reg & 0x80) >> 7));
+	memmap_auto_8k(0, MMPPU(0x0000), ((m149.reg & 0x80) >> 7));
 }

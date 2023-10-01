@@ -44,7 +44,7 @@ void extcl_after_mapper_init_059(void) {
 	chr_fix_059();
 	mirroring_fix_059();
 }
-void extcl_cpu_wr_mem_059(WORD address, UNUSED(BYTE value)) {
+void extcl_cpu_wr_mem_059(UNUSED(BYTE nidx), WORD address, UNUSED(BYTE value)) {
 	if (!(m059.reg & 0x0200)) {
 		m059.reg = address;
 		prg_fix_059();
@@ -52,33 +52,32 @@ void extcl_cpu_wr_mem_059(WORD address, UNUSED(BYTE value)) {
 		mirroring_fix_059();
 	}
 }
-BYTE extcl_cpu_rd_mem_059(WORD address, BYTE openbus) {
+BYTE extcl_cpu_rd_mem_059(BYTE nidx, WORD address, BYTE openbus) {
 	if (address >= 0x8000) {
-		return (m059.reg & 0x0100 ? (openbus & 0xFC) | dipswitch.value : prgrom_rd(address));
+		return (m059.reg & 0x0100 ? (openbus & 0xFC) | dipswitch.value : prgrom_rd(nidx, address));
 	}
-	return (wram_rd(address));
+	return (wram_rd(nidx, address));
 }
 BYTE extcl_save_mapper_059(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m059.reg);
-
 	return (EXIT_OK);
 }
 
 INLINE static void prg_fix_059(void) {
 	if (m059.reg & 0x80) {
-		memmap_auto_16k(MMCPU(0x8000), ((m059.reg & 0xF0) >> 4));
-		memmap_auto_16k(MMCPU(0xC000), ((m059.reg & 0xF0) >> 4));
+		memmap_auto_16k(0, MMCPU(0x8000), ((m059.reg & 0xF0) >> 4));
+		memmap_auto_16k(0, MMCPU(0xC000), ((m059.reg & 0xF0) >> 4));
 	} else {
-		memmap_auto_32k(MMCPU(0x8000), ((m059.reg & 0xF0) >> 5));
+		memmap_auto_32k(0, MMCPU(0x8000), ((m059.reg & 0xF0) >> 5));
 	}
 }
 INLINE static void chr_fix_059(void) {
-	memmap_auto_8k(MMPPU(0x0000), (m059.reg & 0x0F));
+	memmap_auto_8k(0, MMPPU(0x0000), (m059.reg & 0x0F));
 }
 INLINE static void mirroring_fix_059(void) {
 	if (m059.reg & 0x08) {
-		mirroring_H();
+		mirroring_H(0);
 	} else {
-		mirroring_V();
+		mirroring_V(0);
 	}
 }

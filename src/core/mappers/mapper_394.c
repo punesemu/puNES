@@ -55,7 +55,7 @@ void map_init_394(void) {
 	mapper.internal_struct_size[2] = sizeof(mmc3);
 
 	if (info.reset >= HARD) {
-		memset(&irqA12, 0x00, sizeof(irqA12));
+		memset(&nes[0].irqA12, 0x00, sizeof(nes[0].irqA12));
 		memset(&m394, 0x00, sizeof(m394));
 
 		m394.reg[1] = 0x0F;
@@ -72,8 +72,8 @@ void map_init_394(void) {
 	MMC3_prg_swap = prg_swap_mmc3_394;
 	MMC3_chr_swap = chr_swap_mmc3_394;
 
-	irqA12.present = TRUE;
-	irqA12_delay = 1;
+	nes[0].irqA12.present = TRUE;
+	nes[0].irqA12.delay = 1;
 }
 void extcl_after_mapper_init_394(void) {
 	if (m394.reg[1] & 0x10) {
@@ -82,77 +82,77 @@ void extcl_after_mapper_init_394(void) {
 		extcl_after_mapper_init_MMC3();
 	}
 }
-void extcl_cpu_wr_mem_394(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_394(BYTE nidx, WORD address, BYTE value) {
 	if ((address >= 0x5000) && (address <= 0x5FFF)) {
 		m394.reg[address & 0x03] = value;
 		extcl_after_mapper_init_394();
 	}
 	if (m394.reg[1] & 0x10) {
-		extcl_cpu_wr_mem_JYASIC(address, value);
+		extcl_cpu_wr_mem_JYASIC(nidx, address, value);
 	} else {
-		extcl_cpu_wr_mem_MMC3(address, value);
+		extcl_cpu_wr_mem_MMC3(nidx, address, value);
 	}
 }
-BYTE extcl_cpu_rd_mem_394(WORD address, BYTE openbus) {
+BYTE extcl_cpu_rd_mem_394(BYTE nidx, WORD address, BYTE openbus) {
 	if (m394.reg[1] & 0x10) {
-		return (extcl_cpu_rd_mem_JYASIC(address, openbus));
+		return (extcl_cpu_rd_mem_JYASIC(nidx, address, openbus));
 	}
-	return (wram_rd(address));
+	return (wram_rd(nidx, address));
 }
 BYTE extcl_save_mapper_394(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m394.reg);
 	if (extcl_save_mapper_MMC3(mode, slot, fp) == EXIT_ERROR) return (EXIT_ERROR);
 	return (extcl_save_mapper_JYASIC(mode, slot, fp));
 }
-void extcl_cpu_every_cycle_394(void) {
+void extcl_cpu_every_cycle_394(BYTE nidx) {
 	if (m394.reg[1] & 0x10) {
-		extcl_cpu_every_cycle_JYASIC();
+		extcl_cpu_every_cycle_JYASIC(nidx);
 	} else {
-		extcl_cpu_every_cycle_MMC3();
+		extcl_cpu_every_cycle_MMC3(nidx);
 	}
 }
-void extcl_rd_ppu_mem_394(WORD address) {
+void extcl_rd_ppu_mem_394(BYTE nidx, WORD address) {
 	if (m394.reg[1] & 0x10) {
-		extcl_rd_ppu_mem_JYASIC(address);
+		extcl_rd_ppu_mem_JYASIC(nidx, address);
 	}
 }
-BYTE extcl_rd_chr_394(WORD address) {
+BYTE extcl_rd_chr_394(BYTE nidx, WORD address) {
 	if (m394.reg[1] & 0x10) {
-		return (extcl_rd_chr_JYASIC(address));
+		return (extcl_rd_chr_JYASIC(nidx, address));
 	}
-	return (chr_rd(address));
+	return (chr_rd(nidx, address));
 }
-void extcl_ppu_000_to_34x_394(void) {
+void extcl_ppu_000_to_34x_394(BYTE nidx) {
 	if (!(m394.reg[1] & 0x10)) {
-		extcl_ppu_000_to_34x_MMC3();
+		extcl_ppu_000_to_34x_MMC3(nidx);
 	}
 }
-void extcl_ppu_000_to_255_394(void) {
+void extcl_ppu_000_to_255_394(BYTE nidx) {
 	if (m394.reg[1] & 0x10) {
-		extcl_ppu_000_to_255_JYASIC();
+		extcl_ppu_000_to_255_JYASIC(nidx);
 	} else {
-		extcl_ppu_000_to_255_MMC3();
+		extcl_ppu_000_to_255_MMC3(nidx);
 	}
 }
-void extcl_ppu_256_to_319_394(void) {
+void extcl_ppu_256_to_319_394(BYTE nidx) {
 	if (m394.reg[1] & 0x10) {
-		extcl_ppu_256_to_319_JYASIC();
+		extcl_ppu_256_to_319_JYASIC(nidx);
 	} else {
-		extcl_ppu_256_to_319_MMC3();
+		extcl_ppu_256_to_319_MMC3(nidx);
 	}
 }
-void extcl_ppu_320_to_34x_394(void) {
+void extcl_ppu_320_to_34x_394(BYTE nidx) {
 	if (m394.reg[1] & 0x10) {
-		extcl_ppu_320_to_34x_JYASIC();
+		extcl_ppu_320_to_34x_JYASIC(nidx);
 	} else {
-		extcl_ppu_320_to_34x_MMC3();
+		extcl_ppu_320_to_34x_MMC3(nidx);
 	}
 }
-void extcl_update_r2006_394(WORD new_r2006, WORD old_r2006) {
+void extcl_update_r2006_394(BYTE nidx, WORD new_r2006, WORD old_r2006) {
 	if (m394.reg[1] & 0x10) {
-		extcl_update_r2006_JYASIC(new_r2006, old_r2006);
+		extcl_update_r2006_JYASIC(nidx, new_r2006, old_r2006);
 	} else {
-		extcl_update_r2006_MMC3(new_r2006, old_r2006);
+		extcl_update_r2006_MMC3(nidx, new_r2006, old_r2006);
 	}
 }
 

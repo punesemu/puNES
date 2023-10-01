@@ -23,9 +23,9 @@
 
 void map_init_304(void);
 void extcl_after_mapper_init_304(void);
-void extcl_cpu_wr_mem_304(WORD address, BYTE value);
-BYTE extcl_cpu_rd_mem_304(WORD address, BYTE openbus);
+void extcl_cpu_wr_mem_304(BYTE nidx, WORD address, BYTE value);
+BYTE extcl_cpu_rd_mem_304(BYTE nidx, WORD address, BYTE openbus);
 BYTE extcl_save_mapper_304(BYTE mode, BYTE slot, FILE *fp);
-void extcl_cpu_every_cycle_304(void);
+void extcl_cpu_every_cycle_304(BYTE nidx);
 
 #endif /* MAPPER_304_H_ */

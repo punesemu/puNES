@@ -59,7 +59,7 @@ void extcl_after_mapper_init_150(void) {
 	chr_fix_150();
 	mirroring_fix_150();
 }
-void extcl_cpu_wr_mem_150(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_150(UNUSED(BYTE nidx), WORD address, BYTE value) {
 	if ((address >= 0x4000) && (address <= 0x5FFF)) {
 		if (address & 0x100) {
 			value = dipswitch.value | (value & 0x07);
@@ -74,23 +74,22 @@ void extcl_cpu_wr_mem_150(WORD address, BYTE value) {
 		}
 	}
 }
-BYTE extcl_cpu_rd_mem_150(WORD address, BYTE openbus) {
+BYTE extcl_cpu_rd_mem_150(BYTE nidx, WORD address, BYTE openbus) {
 	if ((address >= 0x4000) && (address <= 0x5FFF)) {
 		if ((address & 0x101) == 0x101) {
 			return ((m150.reg[m150.index] & (~dipswitch.value & 0x07)) | (openbus & ~(~dipswitch.value & 0x07)));
 		}
 	}
-	return (wram_rd(address));
+	return (wram_rd(nidx, address));
 }
 BYTE extcl_save_mapper_150(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m150.index);
 	save_slot_ele(mode, slot, m150.reg);
-
 	return (EXIT_OK);
 }
 
 INLINE static void prg_fix_150(void) {
-	memmap_auto_32k(MMCPU(0x8000), (m150.reg[5] | (m150.reg[2] & 0x01)));
+	memmap_auto_32k(0, MMCPU(0x8000), (m150.reg[5] | (m150.reg[2] & 0x01)));
 }
 INLINE static void chr_fix_150(void) {
 	WORD bank = info.mapper.id == 243
@@ -99,22 +98,22 @@ INLINE static void chr_fix_150(void) {
 			: (m150.reg[6] << 2) | ((m150.reg[4] & 0x01) << 1) | (m150.reg[2] & 0x01)
 		: (m150.reg[2] << 3) | ((m150.reg[4] & 0x01) << 2) | (m150.reg[6] & 0x03);
 
-	memmap_auto_8k(MMPPU(0x0000), bank);
+	memmap_auto_8k(0, MMPPU(0x0000), bank);
 }
 INLINE static void mirroring_fix_150(void) {
 	switch ((m150.reg[7] & 0x06) >> 1) {
 		default:
 		case 0:
-			mirroring_SCR0x3_SCR1x1();
+			mirroring_SCR0x3_SCR1x1(0);
 			break;
 		case 1:
-			mirroring_H();
+			mirroring_H(0);
 			break;
 		case 2:
-			mirroring_V();
+			mirroring_V(0);
 			break;
 		case 3:
-			mirroring_SCR1();
+			mirroring_SCR1(0);
 			break;
 	}
 }

@@ -75,7 +75,6 @@ BYTE extcl_save_mapper_003(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m003.snd.speech);
 	save_slot_ele(mode, slot, m003.snd.playing);
 	save_slot_ele(mode, slot, m003.snd.out);
-
 	return (EXIT_OK);
 }
 void extcl_cpu_every_cycle_003(UNUSED(BYTE nidx)) {

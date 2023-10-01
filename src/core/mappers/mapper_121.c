@@ -45,7 +45,7 @@ void map_init_121(void) {
 	mapper.internal_struct_size[1] = sizeof(mmc3);
 
 	if (info.reset >= HARD) {
-		memset(&irqA12, 0x00, sizeof(irqA12));
+		memset(&nes[0].irqA12, 0x00, sizeof(nes[0].irqA12));
 		memset(&m121, 0x00, sizeof(m121));
 	}
 
@@ -55,10 +55,10 @@ void map_init_121(void) {
 
 	info.mapper.extend_wr = TRUE;
 
-	irqA12.present = TRUE;
-	irqA12_delay = 1;
+	nes[0].irqA12.present = TRUE;
+	nes[0].irqA12.delay = 1;
 }
-void extcl_cpu_wr_mem_121(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_121(BYTE nidx, WORD address, BYTE value) {
 	if ((address >= 0x5000) && (address <= 0x5FFF)) {
 		static const BYTE vlu121[] = { 0x83, 0x83, 0x42, 0x00, 0x00, 0x02, 0x02, 0x03 };
 
@@ -89,14 +89,14 @@ void extcl_cpu_wr_mem_121(WORD address, BYTE value) {
 			MMC3_chr_fix();
 			return;
 		}
-		extcl_cpu_wr_mem_MMC3(address, value);
+		extcl_cpu_wr_mem_MMC3(nidx, address, value);
 	}
 }
-BYTE extcl_cpu_rd_mem_121(WORD address, UNUSED(BYTE openbus)) {
+BYTE extcl_cpu_rd_mem_121(BYTE nidx, WORD address, UNUSED(BYTE openbus)) {
 	if ((address >= 0x5000) && (address <= 0x5FFF)) {
 		return (m121.reg[4]);
 	}
-	return (wram_rd(address));
+	return (wram_rd(nidx, address));
 }
 BYTE extcl_save_mapper_121(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m121.reg);
@@ -112,7 +112,7 @@ void prg_swap_mmc3_121(WORD address, WORD value) {
 		value = m121.reg[slot - 1];
 		mask = 0xFF;
 	}
-	memmap_auto_8k(MMCPU(address), (base | (value & mask)));
+	memmap_auto_8k(0, MMCPU(address), (base | (value & mask)));
 }
 void chr_swap_mmc3_121(WORD address, WORD value) {
 	const BYTE slot = address >> 10;

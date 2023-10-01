@@ -22,8 +22,8 @@
 #include "common.h"
 
 void map_init_524(void);
-void extcl_cpu_wr_mem_524(WORD address, BYTE value);
+void extcl_cpu_wr_mem_524(BYTE nidx, WORD address, BYTE value);
 BYTE extcl_save_mapper_524(BYTE mode, BYTE slot, FILE *fp);
-void extcl_cpu_every_cycle_524(void);
+void extcl_cpu_every_cycle_524(BYTE nidx);
 
 #endif /* MAPPER_524_H_ */

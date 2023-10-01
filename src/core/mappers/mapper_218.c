@@ -35,16 +35,16 @@ void extcl_after_mapper_init_218(void) {
 }
 
 INLINE static void prg_fix_218(void) {
-	memmap_auto_32k(MMCPU(0x8000), 0);
+	memmap_auto_32k(0, MMCPU(0x8000), 0);
 }
 INLINE static void chr_fix_218(void) {
 	for (int i = 0; i < 8; i++) {
-		memmap_chrrom_nmt_1k(MMPPU(0x0000 | (i * S1K)), ((i >> va10()) & 0x01));
+		memmap_chrrom_nmt_1k(0, MMPPU(0x0000 | (i * S1K)), ((i >> va10()) & 0x01));
 	}
 }
 INLINE static void mirroring_fix_218(void) {
 	for (int i = 0; i < 8; i++) {
-		memmap_nmt_1k(MMPPU(0x2000 | (i * S1K)), (((i | 0x08) >> va10()) & 0x01));
+		memmap_nmt_1k(0, MMPPU(0x2000 | (i * S1K)), (((i | 0x08) >> va10()) & 0x01));
 	}
 }
 

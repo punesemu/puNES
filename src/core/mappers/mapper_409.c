@@ -40,7 +40,7 @@ void map_init_409(void) {
 void extcl_after_mapper_init_409(void) {
 	prg_fix_409();
 }
-void extcl_cpu_wr_mem_409(WORD address, UNUSED(BYTE value)) {
+void extcl_cpu_wr_mem_409(UNUSED(BYTE nidx), WORD address, UNUSED(BYTE value)) {
 	if ((address >= 0xC000) && (address <= 0xCFFF)) {
 		m409.reg = address;
 		prg_fix_409();
@@ -48,11 +48,10 @@ void extcl_cpu_wr_mem_409(WORD address, UNUSED(BYTE value)) {
 }
 BYTE extcl_save_mapper_409(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m409.reg);
-
 	return (EXIT_OK);
 }
 
 INLINE static void prg_fix_409(void) {
-	memmap_auto_16k(MMCPU(0x8000), m409.reg);
-	memmap_auto_16k(MMCPU(0xC000), 0xFFFF);
+	memmap_auto_16k(0, MMCPU(0x8000), m409.reg);
+	memmap_auto_16k(0, MMCPU(0xC000), 0xFFFF);
 }

@@ -34,27 +34,27 @@ void map_init_173(void) {
 	TXC_prg_fix = prg_fix_txc_173;
 	TXC_chr_fix = chr_fix_txc_173;
 }
-void extcl_cpu_wr_mem_173(WORD address, BYTE value) {
-	extcl_cpu_wr_mem_TXC(address, (value & 0x0F));
+void extcl_cpu_wr_mem_173(BYTE nidx, WORD address, BYTE value) {
+	extcl_cpu_wr_mem_TXC(nidx, address, (value & 0x0F));
 }
-BYTE extcl_cpu_rd_mem_173(WORD address, BYTE openbus) {
+BYTE extcl_cpu_rd_mem_173(BYTE nidx, WORD address, BYTE openbus) {
 	if ((address > 0x4020) && (address <= 0x5FFF)) {
-		BYTE value = extcl_cpu_rd_mem_TXC(address, openbus);
+		BYTE value = extcl_cpu_rd_mem_TXC(nidx, address, openbus);
 
 		return (((openbus & 0xF0) | (value & 0x0F)));
 	}
-	return (wram_rd(address));
+	return (wram_rd(nidx, address));
 }
 
 void prg_fix_txc_173(void) {
-	memmap_auto_32k(MMCPU(0x8000), 0);
+	memmap_auto_32k(0, MMCPU(0x8000), 0);
 }
 void chr_fix_txc_173(void) {
 	if (chrrom_size() >= S16K) {
-		memmap_auto_8k(MMPPU(0x0000), (((txc.output & 0x02) << 1) | (txc.Y << 1) | (txc.output & 0x01)));
+		memmap_auto_8k(0, MMPPU(0x0000), (((txc.output & 0x02) << 1) | (txc.Y << 1) | (txc.output & 0x01)));
 	} else if (txc.Y) {
-		memmap_auto_8k(MMPPU(0x0000), 0);
+		memmap_auto_8k(0, MMPPU(0x0000), 0);
 	} else {
-		memmap_disable_8k(MMPPU(0x0000));
+		memmap_disable_8k(0, MMPPU(0x0000));
 	}
 }

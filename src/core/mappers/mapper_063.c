@@ -42,7 +42,7 @@ void extcl_after_mapper_init_063(void) {
 	chr_fix_063();
 	mirroring_fix_063();
 }
-void extcl_cpu_wr_mem_063(WORD address, UNUSED(BYTE value)) {
+void extcl_cpu_wr_mem_063(UNUSED(BYTE nidx), WORD address, UNUSED(BYTE value)) {
 	m063.reg = address;
 	prg_fix_063();
 	chr_fix_063();
@@ -50,7 +50,6 @@ void extcl_cpu_wr_mem_063(WORD address, UNUSED(BYTE value)) {
 }
 BYTE extcl_save_mapper_063(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m063.reg);
-
 	return (EXIT_OK);
 }
 
@@ -58,22 +57,22 @@ INLINE static void prg_fix_063(void) {
 	WORD bank = (m063.reg >> 2) & (info.mapper.submapper == 1 ? 0x7F : 0xFF);
 
 	if (m063.reg & 0x0002) {
-		memmap_auto_32k(MMCPU(0x8000), (bank >> 1));
+		memmap_auto_32k(0, MMCPU(0x8000), (bank >> 1));
 	} else {
-		memmap_auto_16k(MMCPU(0x8000), bank);
-		memmap_auto_16k(MMCPU(0xC000), bank);
+		memmap_auto_16k(0, MMCPU(0x8000), bank);
+		memmap_auto_16k(0, MMCPU(0xC000), bank);
 	}
 }
 INLINE static void chr_fix_063(void) {
 	BYTE enabled = !(((info.mapper.submapper == 0) && (m063.reg & 0x0400)) ||
 		((info.mapper.submapper == 1) && (m063.reg & 0x0200)));
 
-	memmap_auto_wp_8k(MMPPU(0x0000), 0, TRUE, enabled);
+	memmap_auto_wp_8k(0, MMPPU(0x0000), 0, TRUE, enabled);
 }
 INLINE static void mirroring_fix_063(void) {
 	if (m063.reg & 0x0001) {
-		mirroring_H();
+		mirroring_H(0);
 	} else {
-		mirroring_V();
+		mirroring_V(0);
 	}
 }

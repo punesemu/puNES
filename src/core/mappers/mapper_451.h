@@ -24,10 +24,10 @@
 void map_init_451(void);
 void extcl_after_mapper_init_451(void);
 void extcl_mapper_quit_451(void);
-void extcl_cpu_wr_mem_451(WORD address, BYTE value);
-BYTE extcl_cpu_rd_mem_451(WORD address, BYTE openbus);
+void extcl_cpu_wr_mem_451(BYTE nidx, WORD address, BYTE value);
+BYTE extcl_cpu_rd_mem_451(BYTE nidx, WORD address, BYTE openbus);
 BYTE extcl_save_mapper_451(BYTE mode, BYTE slot, FILE *fp);
-void extcl_cpu_every_cycle_451(void);
+void extcl_cpu_every_cycle_451(BYTE nidx);
 void extcl_battery_io_451(BYTE mode, FILE *fp);
 
 #endif /* MAPPER_451_H_ */

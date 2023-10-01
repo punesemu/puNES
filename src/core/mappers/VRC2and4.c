@@ -172,7 +172,6 @@ BYTE extcl_save_mapper_VRC2and4(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, vrc2and4.irq.acknowledge);
 	save_slot_ele(mode, slot, vrc2and4.irq.count);
 	save_slot_ele(mode, slot, vrc2and4.irq.prescaler);
-
 	return (EXIT_OK);
 }
 void extcl_cpu_every_cycle_VRC2and4(BYTE nidx) {

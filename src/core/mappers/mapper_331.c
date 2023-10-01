@@ -44,7 +44,7 @@ void extcl_after_mapper_init_331(void) {
 	chr_fix_331();
 	mirroring_fix_331();
 }
-void extcl_cpu_wr_mem_331(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_331(UNUSED(BYTE nidx), WORD address, BYTE value) {
 	switch (address & 0xE000) {
 		case 0xA000:
 			m331.reg[0] = value;
@@ -64,7 +64,6 @@ void extcl_cpu_wr_mem_331(WORD address, BYTE value) {
 }
 BYTE extcl_save_mapper_331(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m331.reg);
-
 	return (EXIT_OK);
 }
 
@@ -79,19 +78,19 @@ INLINE static void prg_fix_331(void) {
 		bank[0] = base | (m331.reg[0] & 0x07);
 		bank[1] = base | 0x07;
 	}
-	memmap_auto_16k(MMCPU(0x8000), bank[0]);
-	memmap_auto_16k(MMCPU(0xC000), bank[1]);
+	memmap_auto_16k(0, MMCPU(0x8000), bank[0]);
+	memmap_auto_16k(0, MMCPU(0xC000), bank[1]);
 }
 INLINE static void chr_fix_331(void) {
 	WORD base = (m331.reg[2] & 0x03) << 5;
 
-	memmap_auto_4k(MMPPU(0x0000), (base | (m331.reg[0] >> 3)));
-	memmap_auto_4k(MMPPU(0x1000), (base | (m331.reg[1] >> 3)));
+	memmap_auto_4k(0, MMPPU(0x0000), (base | (m331.reg[0] >> 3)));
+	memmap_auto_4k(0, MMPPU(0x1000), (base | (m331.reg[1] >> 3)));
 }
 INLINE static void mirroring_fix_331(void) {
 	if (m331.reg[2] & 0x04) {
-		mirroring_H();
+		mirroring_H(0);
 	} else  {
-		mirroring_V();
+		mirroring_V(0);
 	}
 }

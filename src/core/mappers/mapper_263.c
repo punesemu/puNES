@@ -35,15 +35,15 @@ void map_init_263(void) {
 	mapper.internal_struct_size[1] = sizeof(mmc3);
 
 	if (info.reset >= HARD) {
-		memset(&irqA12, 0x00, sizeof(irqA12));
+		memset(&nes[0].irqA12, 0x00, sizeof(nes[0].irqA12));
 	}
 
 	init_MMC3(info.reset);
 
-	irqA12.present = TRUE;
-	irqA12_delay = 1;
+	nes[0].irqA12.present = TRUE;
+	nes[0].irqA12.delay = 1;
 }
-void extcl_cpu_wr_mem_263(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_263(BYTE nidx, WORD address, BYTE value) {
 #define kof97_fix_value() value = (value & 0xD8) | ((value & 0x20) >> 4) |\
 	((value & 0x04) << 3) | ((value & 0x02) >> 1) | ((value & 0x01) << 2)
 
@@ -69,10 +69,10 @@ void extcl_cpu_wr_mem_263(WORD address, BYTE value) {
 		case 0xE000:
 		case 0xE001:
 			kof97_fix_value();
-			extcl_cpu_wr_mem_MMC3(address, value);
+			extcl_cpu_wr_mem_MMC3(nidx, address, value);
 			return;
 		default:
-			extcl_cpu_wr_mem_MMC3(address, value);
+			extcl_cpu_wr_mem_MMC3(nidx, address, value);
 			return;
 	}
 

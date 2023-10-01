@@ -50,7 +50,7 @@ void map_init_524(void) {
 	VRC2and4_prg_swap = prg_swap_vrc2and4_524;
 	VRC2and4_chr_swap = chr_swap_vrc2and4_524;
 }
-void extcl_cpu_wr_mem_524(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_524(BYTE nidx, WORD address, BYTE value) {
 	switch (address & 0xF00C) {
 		case 0xF008:
 			m524.irq.enabled = TRUE;
@@ -58,10 +58,10 @@ void extcl_cpu_wr_mem_524(WORD address, BYTE value) {
 		case 0xF00C :
 			m524.irq.enabled = FALSE;
 			m524.irq.counter = 0;
-			nes.c.irq.high &= ~EXT_IRQ;
+			nes[nidx].c.irq.high &= ~EXT_IRQ;
 			return;
 		default:
-			extcl_cpu_wr_mem_VRC2and4(address, value);
+			extcl_cpu_wr_mem_VRC2and4(nidx, address, value);
 			return;
 	}
 }
@@ -70,9 +70,9 @@ BYTE extcl_save_mapper_524(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m524.irq.counter);
 	return (extcl_save_mapper_VRC2and4(mode, slot, fp));
 }
-void extcl_cpu_every_cycle_524(void) {
+void extcl_cpu_every_cycle_524(BYTE nidx) {
 	if (m524.irq.enabled && (++m524.irq.counter & 0x400)) {
-		nes.c.irq.high |= EXT_IRQ;
+		nes[nidx].c.irq.high |= EXT_IRQ;
 	}
 }
 

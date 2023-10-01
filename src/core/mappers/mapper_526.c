@@ -64,7 +64,7 @@ void extcl_after_mapper_init_526(void) {
 	chr_fix_526();
 	mirroring_fix_526();
 }
-void extcl_cpu_wr_mem_526(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_526(BYTE nidx, WORD address, BYTE value) {
 	switch (address & 0xE00F) {
 		case 0x8000:
 		case 0x8001:
@@ -88,7 +88,7 @@ void extcl_cpu_wr_mem_526(WORD address, BYTE value) {
 			m526.irq.counter = 0;
 			return;
 		case 0x800F:
-			nes.c.irq.high &= ~EXT_IRQ;
+			nes[nidx].c.irq.high &= ~EXT_IRQ;
 			return;
 	}
 }
@@ -96,31 +96,30 @@ BYTE extcl_save_mapper_526(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m526.prg);
 	save_slot_ele(mode, slot, m526.chr);
 	save_slot_ele(mode, slot, m526.irq.counter);
-
 	return (EXIT_OK);
 }
-void extcl_cpu_every_cycle_526(void) {
+void extcl_cpu_every_cycle_526(BYTE nidx) {
 	if (++m526.irq.counter & 0x1000) {
-		nes.c.irq.high |= EXT_IRQ;
+		nes[nidx].c.irq.high |= EXT_IRQ;
 	}
 }
 
 INLINE static void prg_fix_526(void) {
-	memmap_auto_8k(MMCPU(0x8000), m526.prg[0]);
-	memmap_auto_8k(MMCPU(0xA000), m526.prg[1]);
-	memmap_auto_8k(MMCPU(0xC000), m526.prg[2]);
-	memmap_auto_8k(MMCPU(0xE000), m526.prg[3]);
+	memmap_auto_8k(0, MMCPU(0x8000), m526.prg[0]);
+	memmap_auto_8k(0, MMCPU(0xA000), m526.prg[1]);
+	memmap_auto_8k(0, MMCPU(0xC000), m526.prg[2]);
+	memmap_auto_8k(0, MMCPU(0xE000), m526.prg[3]);
 }
 INLINE static void chr_fix_526(void) {
-	memmap_auto_1k(MMPPU(0x0000), m526.chr[0]);
-	memmap_auto_1k(MMPPU(0x0400), m526.chr[1]);
-	memmap_auto_1k(MMPPU(0x0800), m526.chr[2]);
-	memmap_auto_1k(MMPPU(0x0C00), m526.chr[3]);
-	memmap_auto_1k(MMPPU(0x1000), m526.chr[4]);
-	memmap_auto_1k(MMPPU(0x1400), m526.chr[5]);
-	memmap_auto_1k(MMPPU(0x1800), m526.chr[6]);
-	memmap_auto_1k(MMPPU(0x1C00), m526.chr[7]);
+	memmap_auto_1k(0, MMPPU(0x0000), m526.chr[0]);
+	memmap_auto_1k(0, MMPPU(0x0400), m526.chr[1]);
+	memmap_auto_1k(0, MMPPU(0x0800), m526.chr[2]);
+	memmap_auto_1k(0, MMPPU(0x0C00), m526.chr[3]);
+	memmap_auto_1k(0, MMPPU(0x1000), m526.chr[4]);
+	memmap_auto_1k(0, MMPPU(0x1400), m526.chr[5]);
+	memmap_auto_1k(0, MMPPU(0x1800), m526.chr[6]);
+	memmap_auto_1k(0, MMPPU(0x1C00), m526.chr[7]);
 }
 INLINE static void mirroring_fix_526(void) {
-	mirroring_V();
+	mirroring_V(0);
 }

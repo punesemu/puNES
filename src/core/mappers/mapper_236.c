@@ -45,24 +45,23 @@ void extcl_after_mapper_init_236(void) {
 	chr_fix_236();
 	mirroring_fix_236();
 }
-void extcl_cpu_wr_mem_236(WORD address, UNUSED(BYTE value)) {
+void extcl_cpu_wr_mem_236(UNUSED(BYTE nidx), WORD address, UNUSED(BYTE value)) {
 	m236.reg[(address >> 14) & 0x01] = address & 0xFF;
 	prg_fix_236();
 	chr_fix_236();
 	mirroring_fix_236();
 }
-BYTE extcl_cpu_rd_mem_236(WORD address, UNUSED(BYTE openbus)) {
+BYTE extcl_cpu_rd_mem_236(BYTE nidx, WORD address, UNUSED(BYTE openbus)) {
 	if (address >= 0x8000) {
 		if (m236.reg[1] == 0x10) {
 			address = (address & 0xFFF0) | dipswitch.value;
 		}
-		return (prgrom_rd(address));
+		return (prgrom_rd(nidx, address));
 	}
-	return (wram_rd(address));
+	return (wram_rd(nidx, address));
 }
 BYTE extcl_save_mapper_236(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m236.reg);
-
 	return (EXIT_OK);
 }
 
@@ -72,25 +71,25 @@ INLINE static void prg_fix_236(void) {
 	switch(m236.reg[1] & 0x30) {
 		case 0x00:
 		case 0x10:
-			memmap_auto_16k(MMCPU(0x8000), bank);
-			memmap_auto_16k(MMCPU(0xC000), (bank | 0x07));
+			memmap_auto_16k(0, MMCPU(0x8000), bank);
+			memmap_auto_16k(0, MMCPU(0xC000), (bank | 0x07));
 			return;
 		case 0x20:
-			memmap_auto_32k(MMCPU(0x8000), (bank >> 1));
+			memmap_auto_32k(0, MMCPU(0x8000), (bank >> 1));
 			return;
 		case 0x30:
-			memmap_auto_16k(MMCPU(0x8000), bank);
-			memmap_auto_16k(MMCPU(0xC000), bank);
+			memmap_auto_16k(0, MMCPU(0x8000), bank);
+			memmap_auto_16k(0, MMCPU(0xC000), bank);
 			return;
 	}
 }
 INLINE static void chr_fix_236(void) {
-	memmap_auto_8k(MMPPU(0x0000), (chrrom_size() ? (m236.reg[0] &0x0F) : 0));
+	memmap_auto_8k(0, MMPPU(0x0000), (chrrom_size() ? (m236.reg[0] &0x0F) : 0));
 }
 INLINE static void mirroring_fix_236(void) {
 	if (m236.reg[0] & 0x20) {
-		mirroring_H();
+		mirroring_H(0);
 	} else  {
-		mirroring_V();
+		mirroring_V(0);
 	}
 }

@@ -48,7 +48,7 @@ void extcl_after_mapper_init_103(void) {
 	wram_fix_103();
 	mirroring_fix_103();
 }
-void extcl_cpu_wr_mem_103(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_103(UNUSED(BYTE nidx), WORD address, BYTE value) {
 	switch (address & 0xF000) {
 		case 0x6000:
 		case 0x7000:
@@ -83,36 +83,35 @@ void extcl_cpu_wr_mem_103(WORD address, BYTE value) {
 			return;
 	}
 }
-BYTE extcl_cpu_rd_mem_103(WORD address, BYTE openbus) {
+BYTE extcl_cpu_rd_mem_103(BYTE nidx, WORD address, BYTE openbus) {
 	if (address >= 0x8000) {
-		openbus = prgrom_rd(address);
+		openbus = prgrom_rd(nidx, address);
 		if ((address >= 0xB800) && (address <= 0xD7FF) && !(m103.reg[2] & 0x10)) {
 			return (wram_direct_rd(0x2000 + (address - 0xB800), openbus));
 		}
 		return (openbus);
 	}
-	return (wram_rd(address));
+	return (wram_rd(nidx, address));
 }
 BYTE extcl_save_mapper_103(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m103.reg);
-
 	return (EXIT_OK);
 }
 
 INLINE static void prg_fix_103(void) {
-	memmap_auto_32k(MMCPU(0x8000), 3);
+	memmap_auto_32k(0, MMCPU(0x8000), 3);
 }
 INLINE static void wram_fix_103(void) {
 	if (m103.reg[2] & 0x10) {
-		memmap_prgrom_8k(MMCPU(0x6000), m103.reg[0]);
+		memmap_prgrom_8k(0, MMCPU(0x6000), m103.reg[0]);
 	} else {
-		memmap_auto_8k(MMCPU(0x6000), 0);
+		memmap_auto_8k(0, MMCPU(0x6000), 0);
 	}
 }
 INLINE static void mirroring_fix_103(void) {
 	if (m103.reg[1] & 0x08) {
-		mirroring_H();
+		mirroring_H(0);
 	} else {
-		mirroring_V();
+		mirroring_V(0);
 	}
 }

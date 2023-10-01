@@ -29,16 +29,16 @@ extern _m394 m394;
 
 void map_init_394(void);
 void extcl_after_mapper_init_394(void);
-void extcl_cpu_wr_mem_394(WORD address, BYTE value);
-BYTE extcl_cpu_rd_mem_394(WORD address, BYTE openbus);
+void extcl_cpu_wr_mem_394(BYTE nidx, WORD address, BYTE value);
+BYTE extcl_cpu_rd_mem_394(BYTE nidx, WORD address, BYTE openbus);
 BYTE extcl_save_mapper_394(BYTE mode, BYTE slot, FILE *fp);
-void extcl_cpu_every_cycle_394(void);
-void extcl_rd_ppu_mem_394(WORD address);
-BYTE extcl_rd_chr_394(WORD address);
-void extcl_ppu_000_to_34x_394(void);
-void extcl_ppu_000_to_255_394(void);
-void extcl_ppu_256_to_319_394(void);
-void extcl_ppu_320_to_34x_394(void);
-void extcl_update_r2006_394(WORD new_r2006, WORD old_r2006);
+void extcl_cpu_every_cycle_394(BYTE nidx);
+void extcl_rd_ppu_mem_394(BYTE nidx, WORD address);
+BYTE extcl_rd_chr_394(BYTE nidx, WORD address);
+void extcl_ppu_000_to_34x_394(BYTE nidx);
+void extcl_ppu_000_to_255_394(BYTE nidx);
+void extcl_ppu_256_to_319_394(BYTE nidx);
+void extcl_ppu_320_to_34x_394(BYTE nidx);
+void extcl_update_r2006_394(BYTE nidx, WORD new_r2006, WORD old_r2006);
 
 #endif /* MAPPER_394_H_ */

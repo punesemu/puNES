@@ -37,14 +37,14 @@ void extcl_after_mapper_init_283(void) {
 	prg_fix_283();
 	wram_fix_283();
 }
-void extcl_cpu_wr_mem_283(UNUSED(WORD address), BYTE value) {
+void extcl_cpu_wr_mem_283(UNUSED(BYTE nidx), UNUSED(WORD address), BYTE value) {
 	m283.reg = value;
 	prg_fix_283();
 }
 
 INLINE static void prg_fix_283(void) {
-	memmap_auto_32k(MMCPU(0x8000), m283.reg);
+	memmap_auto_32k(0, MMCPU(0x8000), m283.reg);
 }
 INLINE static void wram_fix_283(void) {
-	memmap_prgrom_8k(MMCPU(0x6000), (prgrom_size() & 0x6000 ? 0x20 : 0x1F));
+	memmap_prgrom_8k(0, MMCPU(0x6000), (prgrom_size() & 0x6000 ? 0x20 : 0x1F));
 }

@@ -72,7 +72,6 @@ BYTE extcl_save_mapper_075(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m075.prg);
 	save_slot_ele(mode, slot, m075.chr);
 	save_slot_ele(mode, slot, m075.other);
-
 	return (EXIT_OK);
 }
 

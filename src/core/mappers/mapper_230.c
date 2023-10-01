@@ -46,7 +46,7 @@ void extcl_after_mapper_init_230(void) {
 	prg_fix_230();
 	mirroring_fix_230();
 }
-void extcl_cpu_wr_mem_230(UNUSED(WORD address), BYTE value) {
+void extcl_cpu_wr_mem_230(UNUSED(BYTE nidx), UNUSED(WORD address), BYTE value) {
 	m230.reg = value;
 	prg_fix_230();
 	mirroring_fix_230();
@@ -54,33 +54,32 @@ void extcl_cpu_wr_mem_230(UNUSED(WORD address), BYTE value) {
 BYTE extcl_save_mapper_230(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m230.reg);
 	save_slot_ele(mode, slot, m230.mode);
-
 	return (EXIT_OK);
 }
 
 INLINE static void prg_fix_230(void) {
 	if (!m230.mode) {
-		memmap_auto_16k(MMCPU(0x8000), (m230.reg & 0x07));
-		memmap_auto_16k(MMCPU(0xC000), 0x07);
+		memmap_auto_16k(0, MMCPU(0x8000), (m230.reg & 0x07));
+		memmap_auto_16k(0, MMCPU(0xC000), 0x07);
 	} else {
 		WORD bank = (m230.reg & 0x1F) + 0x08;
 
 		if (m230.reg & 0x20) {
-			memmap_auto_16k(MMCPU(0x8000), bank);
-			memmap_auto_16k(MMCPU(0xC000), bank);
+			memmap_auto_16k(0, MMCPU(0x8000), bank);
+			memmap_auto_16k(0, MMCPU(0xC000), bank);
 		} else {
-			memmap_auto_32k(MMCPU(0x8000), (bank >> 1));
+			memmap_auto_32k(0, MMCPU(0x8000), (bank >> 1));
 		}
 	}
 }
 INLINE static void mirroring_fix_230(void) {
 	if (!m230.mode) {
-		mirroring_V();
+		mirroring_V(0);
 	} else {
 		if (m230.reg & 0x40) {
-			mirroring_V();
+			mirroring_V(0);
 		} else {
-			mirroring_H();
+			mirroring_H(0);
 		}
 	}
 }

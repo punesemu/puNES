@@ -30,9 +30,9 @@ void extcl_after_mapper_init_055(void) {
 }
 
 INLINE static void prg_fix_055(void) {
-	memmap_auto_32k(MMCPU(0x8000), 0);
+	memmap_auto_32k(0, MMCPU(0x8000), 0);
 }
 INLINE static void wram_fix_055(void) {
-	memmap_prgrom_4k(MMCPU(0x6000), 8);
-	memmap_auto_4k(MMCPU(0x7000), 0);
+	memmap_prgrom_4k(0, MMCPU(0x6000), 8);
+	memmap_auto_4k(0, MMCPU(0x7000), 0);
 }

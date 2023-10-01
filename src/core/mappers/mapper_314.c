@@ -50,7 +50,7 @@ void extcl_after_mapper_init_314(void) {
 	chr_fix_314();
 	mirroring_fix_314();
 }
-void extcl_cpu_wr_mem_314(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_314(BYTE nidx, WORD address, BYTE value) {
 	if ((address >= 0x5000) && (address <= 0x5FFF)) {
 		m314.reg[address & 0x03] = value;
 		prg_fix_314();
@@ -58,13 +58,12 @@ void extcl_cpu_wr_mem_314(WORD address, BYTE value) {
 		mirroring_fix_314();
 	} else if (address >= 0x8000) {
 		// bus conflict
-		m314.reg[4] = value & prgrom_rd(address);
+		m314.reg[4] = value & prgrom_rd(nidx, address);
 		prg_fix_314();
 	}
 }
 BYTE extcl_save_mapper_314(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m314.reg);
-
 	return (EXIT_OK);
 }
 
@@ -74,26 +73,26 @@ INLINE static void prg_fix_314(void) {
 	if (m314.reg[0] & 0x80) {
 		if (m314.reg[1] & 0x80) {
 			bank = (m314.reg[1] & 0x3F);
-			memmap_auto_32k(MMCPU(0x8000), bank);
+			memmap_auto_32k(0, MMCPU(0x8000), bank);
 		} else {
 			bank = ((m314.reg[1] & 0x3F) << 1) | ((m314.reg[1] & 0x40) >> 6);
-			memmap_auto_16k(MMCPU(0x8000), bank);
-			memmap_auto_16k(MMCPU(0xC000), bank);
+			memmap_auto_16k(0, MMCPU(0x8000), bank);
+			memmap_auto_16k(0, MMCPU(0xC000), bank);
 		}
 	} else {
 		bank = ((m314.reg[1] & 0x7C) << 1) | (m314.reg[3] & 0x07);
-		memmap_auto_16k(MMCPU(0x8000), bank);
+		memmap_auto_16k(0, MMCPU(0x8000), bank);
 		bank = (m314.reg[1] << 1) | 0x07;
-		memmap_auto_16k(MMCPU(0xC000), bank);
+		memmap_auto_16k(0, MMCPU(0xC000), bank);
 	}
 }
 INLINE static void chr_fix_314(void) {
-	memmap_auto_8k(MMPPU(0x0000), ((m314.reg[2] << 2) | ((m314.reg[0] & 0x06) >> 1)));
+	memmap_auto_8k(0, MMPPU(0x0000), ((m314.reg[2] << 2) | ((m314.reg[0] & 0x06) >> 1)));
 }
 INLINE static void mirroring_fix_314(void) {
 	if (m314.reg[0] & 0x20) {
-		mirroring_H();
+		mirroring_H(0);
 	} else {
-		mirroring_V();
+		mirroring_V(0);
 	}
 }

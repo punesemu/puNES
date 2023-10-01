@@ -102,7 +102,6 @@ BYTE extcl_save_mapper_067(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m067.irq.toggle);
 	save_slot_ele(mode, slot, m067.irq.count);
 	save_slot_ele(mode, slot, m067.irq.delay);
-
 	return (EXIT_OK);
 }
 void extcl_cpu_every_cycle_067(BYTE nidx) {

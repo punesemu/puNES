@@ -88,7 +88,7 @@ void extcl_mapper_quit_157(void) {
 		m157tmp.e1 = NULL;
 	}
 }
-void extcl_cpu_wr_mem_157(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_157(BYTE nidx, WORD address, BYTE value) {
 	if (address >= 0x8000) {
 		switch (address & 0x0F) {
 			case 0x00:
@@ -113,12 +113,12 @@ void extcl_cpu_wr_mem_157(WORD address, BYTE value) {
 				}
 				return;
 			default:
-				extcl_cpu_wr_mem_LZ93D50(address, value);
+				extcl_cpu_wr_mem_LZ93D50(nidx, address, value);
 				return;
 		}
 	}
 }
-BYTE extcl_cpu_rd_mem_157(WORD address, BYTE openbus) {
+BYTE extcl_cpu_rd_mem_157(BYTE nidx, WORD address, BYTE openbus) {
 	if ((address >= 0x6000) && (address <= 0x7FFF)) {
 		BYTE value = 0x10;
 
@@ -132,7 +132,7 @@ BYTE extcl_cpu_rd_mem_157(WORD address, BYTE openbus) {
 		value |= (openbus & 0xE7);
 		return (value);
 	}
-	return (wram_rd(address));
+	return (wram_rd(nidx, address));
 }
 BYTE extcl_save_mapper_157(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m157.e0_data);
@@ -145,8 +145,8 @@ BYTE extcl_save_mapper_157(BYTE mode, BYTE slot, FILE *fp) {
 	if (eeprom_i2c_save_mapper(m157tmp.e1, mode, slot, fp) == EXIT_ERROR) return (EXIT_ERROR);
 	return (extcl_save_mapper_LZ93D50(mode, slot, fp));
 }
-void extcl_cpu_every_cycle_157(void) {
-	extcl_cpu_every_cycle_LZ93D50();
+void extcl_cpu_every_cycle_157(BYTE nidx) {
+	extcl_cpu_every_cycle_LZ93D50(nidx);
 	m157.barcode.count++;
 	if (m157.barcode.count >= 1000) {
 		m157.barcode.count -= 1000;
@@ -173,5 +173,5 @@ void prg_swap_lz93d50_157(WORD address, WORD value) {
 	prg_swap_LZ93D50_base(address, (value & 0x0F));
 }
 void chr_fix_lz93d50_157(void) {
-	memmap_auto_8k(MMPPU(0x0000), 0);
+	memmap_auto_8k(0, MMPPU(0x0000), 0);
 }

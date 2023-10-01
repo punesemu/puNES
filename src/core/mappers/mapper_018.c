@@ -148,7 +148,6 @@ BYTE extcl_save_mapper_018(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m018.irq.reload);
 	save_slot_ele(mode, slot, m018.irq.count);
 	save_slot_ele(mode, slot, m018.irq.delay);
-
 	return (EXIT_OK);
 }
 void extcl_cpu_every_cycle_018(BYTE nidx) {

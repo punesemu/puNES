@@ -23,8 +23,8 @@
 
 void map_init_100(void);
 void extcl_after_mapper_init_100(void);
-void extcl_cpu_init_pc_100(void);
-void extcl_cpu_wr_mem_100(WORD address, BYTE value);
+void extcl_cpu_init_pc_100(BYTE nidx);
+void extcl_cpu_wr_mem_100(BYTE nidx, WORD address, BYTE value);
 BYTE extcl_save_mapper_100(BYTE mode, BYTE slot, FILE *fp);
 
 #endif /* MAPPER_100_H_ */

@@ -39,7 +39,7 @@ void extcl_after_mapper_init_KS202(void) {
 	KS202_prg_fix();
 	KS202_wram_fix();
 }
-void extcl_cpu_wr_mem_KS202(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_KS202(BYTE nidx, WORD address, BYTE value) {
 	switch (address & 0xF000) {
 		case 0x8000:
 			ks202.irq.reload = (ks202.irq.reload & 0xFFF0) | (value & 0x0F);
@@ -58,10 +58,10 @@ void extcl_cpu_wr_mem_KS202(WORD address, BYTE value) {
 			if (ks202.irq.enabled) {
 				ks202.irq.count = ks202.irq.reload;
 			}
-			nes.c.irq.high &= ~EXT_IRQ;
+			nes[nidx].c.irq.high &= ~EXT_IRQ;
 			return;
 		case 0xD000:
-			nes.c.irq.high &= ~EXT_IRQ;
+			nes[nidx].c.irq.high &= ~EXT_IRQ;
 			return;
 		case 0xE000:
 			ks202.index = value;
@@ -98,14 +98,14 @@ BYTE extcl_save_mapper_KS202(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, ks202.irq.reload);
 	return (EXIT_OK);
 }
-void extcl_cpu_every_cycle_KS202(void) {
+void extcl_cpu_every_cycle_KS202(BYTE nidx) {
 	if (!ks202.irq.enabled) {
 		return;
 	}
 	if (++ks202.irq.count == 0xFFFF) {
 		ks202.irq.count = ks202.irq.reload;
-		nes.c.irq.delay = TRUE;
-		nes.c.irq.high |= EXT_IRQ;
+		nes[nidx].c.irq.delay = TRUE;
+		nes[nidx].c.irq.high |= EXT_IRQ;
 	}
 }
 
@@ -119,7 +119,7 @@ void init_KS202(BYTE reset) {
 		ks202.reg[3] = 3;
 	}
 
-	nes.c.irq.high &= ~EXT_IRQ;
+	nes[0].c.irq.high &= ~EXT_IRQ;
 
 	KS202_prg_fix = prg_fix_KS202_base;
 	KS202_prg_swap = prg_swap_KS202_base;
@@ -133,16 +133,16 @@ void prg_fix_KS202_base(void) {
 	KS202_prg_swap(0xE000, 0xFF);
 }
 void prg_swap_KS202_base(WORD address, WORD value) {
-	memmap_auto_8k(MMCPU(address), value);
+	memmap_auto_8k(0, MMCPU(address), value);
 }
 void wram_fix_KS202_base(void) {
 	KS202_wram_swap(0x6000, ks202.reg[4] ? ks202.reg[3] : 0);
 }
 void wram_swap_KS202_base(WORD address, WORD value) {
 	if (ks202.reg[4]) {
-		memmap_prgrom_8k(MMCPU(address), value);
+		memmap_prgrom_8k(0, MMCPU(address), value);
 	} else {
-		memmap_auto_8k(MMCPU(address), value);
+		memmap_auto_8k(0, MMCPU(address), value);
 	}
 
 }

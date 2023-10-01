@@ -48,7 +48,7 @@ void map_init_165(void) {
 	mapper.internal_struct_size[1] = sizeof(mmc3);
 
 	if (info.reset >= HARD) {
-		memset(&irqA12, 0x00, sizeof(irqA12));
+		memset(&nes[0].irqA12, 0x00, sizeof(nes[0].irqA12));
 	}
 
 	memset(&m165, 0x00, sizeof(m165));
@@ -63,10 +63,10 @@ void map_init_165(void) {
 	mmc3.reg[2] = 0;
 	mmc3.reg[4] = 0;
 
-	irqA12.present = TRUE;
-	irqA12_delay = 1;
+	nes[0].irqA12.present = TRUE;
+	nes[0].irqA12.delay = 1;
 }
-void extcl_cpu_wr_mem_165(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_165(BYTE nidx, WORD address, BYTE value) {
 	if (address >= 0x8000) {
 		if ((address & 0xE001) == 0x8001) {
 			switch (mmc3.bank_to_update & 0x07) {
@@ -80,24 +80,24 @@ void extcl_cpu_wr_mem_165(WORD address, BYTE value) {
 					MMC3_chr_fix();
 					return;
 				default:
-					extcl_cpu_wr_mem_MMC3(address, value);
+					extcl_cpu_wr_mem_MMC3(nidx, address, value);
 					return;
 			}
 		}
-		extcl_cpu_wr_mem_MMC3(address, value);
+		extcl_cpu_wr_mem_MMC3(nidx, address, value);
 	}
 }
 BYTE extcl_save_mapper_165(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m165.reg);
 	return (extcl_save_mapper_MMC3(mode, slot, fp));
 }
-void extcl_after_rd_chr_165(WORD address) {
+void extcl_after_rd_chr_165(UNUSED(BYTE nidx), WORD address) {
 	if (chr_control_165(address)) {
 		MMC3_chr_fix();
 	}
 }
-void extcl_update_r2006_165(WORD new_r2006, WORD old_r2006) {
-	extcl_update_r2006_MMC3(new_r2006, old_r2006);
+void extcl_update_r2006_165(BYTE nidx, WORD new_r2006, WORD old_r2006) {
+	extcl_update_r2006_MMC3(nidx, new_r2006, old_r2006);
 	if ((new_r2006 < 0x2000) && chr_control_165(new_r2006)) {
 		MMC3_chr_fix();
 	}
@@ -130,8 +130,8 @@ void chr_fix_mmc3_165(void) {
 	chr_swap_mmc3_165(0x1C00, bank[1] | 0x03);
 }
 void chr_swap_mmc3_165(WORD address, WORD value) {
-	if (!(value & ~3) && vram_size()) {
-		memmap_vram_1k(MMPPU(address), value);
+	if (!(value & ~3) && vram_size(0)) {
+		memmap_vram_1k(0, MMPPU(address), value);
 	} else {
 		chr_swap_MMC3_base(address, value);
 	}

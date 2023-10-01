@@ -44,7 +44,7 @@ void extcl_after_mapper_init_300(void) {
 	chr_fix_300();
 	mirroring_fix_300();
 }
-void extcl_cpu_wr_mem_300(WORD address, UNUSED(BYTE value)) {
+void extcl_cpu_wr_mem_300(UNUSED(BYTE nidx), WORD address, UNUSED(BYTE value)) {
 	m300.reg = address;
 	prg_fix_300();
 	chr_fix_300();
@@ -52,23 +52,22 @@ void extcl_cpu_wr_mem_300(WORD address, UNUSED(BYTE value)) {
 }
 BYTE extcl_save_mapper_300(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m300.reg);
-
 	return (EXIT_OK);
 }
 
 INLINE static void prg_fix_300(void) {
 	WORD bank = (m300.reg & 0x1C) >> 2;
 
-	memmap_auto_16k(MMCPU(0x8000), bank);
-	memmap_auto_16k(MMCPU(0xC000), bank);
+	memmap_auto_16k(0, MMCPU(0x8000), bank);
+	memmap_auto_16k(0, MMCPU(0xC000), bank);
 }
 INLINE static void chr_fix_300(void) {
-	memmap_auto_8k(MMPPU(0x0000), ((m300.reg & 0x1C) >> 2));
+	memmap_auto_8k(0, MMPPU(0x0000), ((m300.reg & 0x1C) >> 2));
 }
 INLINE static void mirroring_fix_300(void) {
 	if (m300.reg & 0x01) {
-		mirroring_H();
+		mirroring_H(0);
 	} else {
-		mirroring_V();
+		mirroring_V(0);
 	}
 }

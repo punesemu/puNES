@@ -50,14 +50,14 @@ void extcl_after_mapper_init_558(void) {
 	prg_fix_558();
 	wram_fix_558();
 }
-void extcl_cpu_init_pc_558(void) {
+void extcl_cpu_init_pc_558(UNUSED(BYTE nidx)) {
 	if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
 		if (m558tmp.cc93c66) {
 			ee93cx6_init(wram_nvram_pnt(), wram_nvram_size(), 8);
 		}
 	}
 }
-void extcl_cpu_wr_mem_558(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_558(UNUSED(BYTE nidx), WORD address, BYTE value) {
 	switch (address & 0xFF00) {
 		case 0x5000:
 			// CPU D0 and D1 are connected in reverse to the mapper blob compared to other circuit boards using this ASIC.
@@ -100,7 +100,7 @@ void extcl_cpu_wr_mem_558(WORD address, BYTE value) {
 			return;
 	}
 }
-BYTE extcl_cpu_rd_mem_558(WORD address, UNUSED(BYTE openbus)) {
+BYTE extcl_cpu_rd_mem_558(BYTE nidx, WORD address, UNUSED(BYTE openbus)) {
 	switch (address & 0xF000) {
 		case 0x5000:
 			if (m558tmp.cc93c66) {
@@ -108,12 +108,11 @@ BYTE extcl_cpu_rd_mem_558(WORD address, UNUSED(BYTE openbus)) {
 			}
 			return (m558.reg[2] & 0x04);
 		default:
-			return (address >= 0x8000 ? prgrom_rd(address) : wram_rd(address));
+			return (address >= 0x8000 ? prgrom_rd(nidx, address) : wram_rd(nidx, address));
 	}
 }
 BYTE extcl_save_mapper_558(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m558.reg);
-
 	return (EXIT_OK);
 }
 
@@ -122,16 +121,16 @@ INLINE static void prg_fix_558(void) {
 	WORD low = (m558.reg[0] & 0x0F) | (m558.reg[3] & 0x04? 0x00: 0x03);
 	WORD bank = high | low;
 
-	memmap_auto_32k(MMCPU(0x8000), bank);
+	memmap_auto_32k(0, MMCPU(0x8000), bank);
 }
 INLINE static void wram_fix_558(void) {
 	if (m558tmp.cc93c66) {
 		if (wram_ram_size()) {
-			memmap_wram_ram_wp_8k(MMCPU(0x6000), 0, TRUE, TRUE);
+			memmap_wram_ram_wp_8k(0, MMCPU(0x6000), 0, TRUE, TRUE);
 		} else {
-			memmap_disable_8k(MMCPU(0x6000));
+			memmap_disable_8k(0, MMCPU(0x6000));
 		}
 	} else {
-		memmap_auto_8k(MMCPU(0x6000), 0);
+		memmap_auto_8k(0, MMCPU(0x6000), 0);
 	}
 }

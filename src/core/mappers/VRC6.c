@@ -168,7 +168,6 @@ BYTE extcl_save_mapper_VRC6(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, vrc6.saw.timer);
 	save_slot_ele(mode, slot, vrc6.saw.frequency);
 	save_slot_ele(mode, slot, vrc6.saw.output);
-
 	return (EXIT_OK);
 }
 void extcl_cpu_every_cycle_VRC6(BYTE nidx) {
@@ -373,19 +372,19 @@ void mirroring_fix_VRC6_base(void) {
 				bank &= ~1;
 				switch (mirroring ^ (mode & 0x01)) {
 					case 0:
-						// mirroring_H();
+						// mirroring_H(0);
 						bank |= (nmt & 0x01) ? 1 : 0;
 						break;
 					case 1:
-						// mirroring_V();
+						// mirroring_V(0);
 						bank |= (nmt & 0x02) ? 1 : 0;
 						break;
 					case 2:
-						// mirroring_SCR0();
+						// mirroring_SCR0(0);
 						bank |= 0;
 						break;
 					case 3:
-						// mirroring_SCR1();
+						// mirroring_SCR1(0);
 						bank |= 1;
 						break;
 					default:

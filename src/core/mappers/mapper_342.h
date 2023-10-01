@@ -24,13 +24,13 @@
 void map_init_342(void);
 void extcl_after_mapper_init_342(void);
 void extcl_mapper_quit_342(void);
-void extcl_cpu_wr_mem_342(WORD address, BYTE value);
-BYTE extcl_cpu_rd_mem_342(WORD address, BYTE openbus);
+void extcl_cpu_wr_mem_342(BYTE nidx, WORD address, BYTE value);
+BYTE extcl_cpu_rd_mem_342(BYTE nidx, WORD address, BYTE openbus);
 BYTE extcl_save_mapper_342(BYTE mode, BYTE slot, FILE *fp);
 void extcl_battery_io_342(BYTE mode, FILE *fp);
-void extcl_cpu_every_cycle_342(void);
-void extcl_ppu_000_to_34x_342(void);
-void extcl_after_rd_chr_342(WORD address);
-void extcl_update_r2006_342(WORD new_r2006, WORD old_r2006);
+void extcl_cpu_every_cycle_342(BYTE nidx);
+void extcl_ppu_000_to_34x_342(BYTE nidx);
+void extcl_after_rd_chr_342(BYTE nidx, WORD address);
+void extcl_update_r2006_342(BYTE nidx, WORD new_r2006, WORD old_r2006);
 
 #endif /* MAPPER_342_H_ */

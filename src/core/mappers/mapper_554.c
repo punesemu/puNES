@@ -45,8 +45,8 @@ void extcl_after_mapper_init_554(void) {
 	chr_fix_554();
 	wram_fix_554();
 }
-void extcl_cpu_wr_mem_554(UNUSED(WORD address), UNUSED(BYTE value)) {}
-BYTE extcl_cpu_rd_mem_554(WORD address, UNUSED(BYTE openbus)) {
+void extcl_cpu_wr_mem_554(UNUSED(BYTE nidx), UNUSED(WORD address), UNUSED(BYTE value)) {}
+BYTE extcl_cpu_rd_mem_554(BYTE nidx, WORD address, UNUSED(BYTE openbus)) {
 	WORD adr = address;
 
 	switch (address & 0xF000) {
@@ -56,7 +56,7 @@ BYTE extcl_cpu_rd_mem_554(WORD address, UNUSED(BYTE openbus)) {
 				chr_fix_554();
 				wram_fix_554();
 			}
-			return (prgrom_rd(address));
+			return (prgrom_rd(nidx, address));
 		case 0xE000:
 			adr &= 0xFFFE;
 			if ((adr == 0xEBE2) || (adr == 0xEE32)) {
@@ -64,7 +64,7 @@ BYTE extcl_cpu_rd_mem_554(WORD address, UNUSED(BYTE openbus)) {
 				chr_fix_554();
 				wram_fix_554();
 			}
-			return (prgrom_rd(address));
+			return (prgrom_rd(nidx, address));
 		case 0xF000:
 			adr &= 0xFFFE;
 			if (adr == 0xFFFC) {
@@ -72,25 +72,24 @@ BYTE extcl_cpu_rd_mem_554(WORD address, UNUSED(BYTE openbus)) {
 				chr_fix_554();
 				wram_fix_554();
 			}
-			return (prgrom_rd(address));
+			return (prgrom_rd(nidx, address));
 	}
-	return (address >= 0x8000 ? prgrom_rd(address) : wram_rd(address));
+	return (address >= 0x8000 ? prgrom_rd(nidx, address) : wram_rd(nidx, address));
 }
 BYTE extcl_save_mapper_554(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m554.reg);
-
 	return (EXIT_OK);
 }
 
 INLINE static void prg_fix_554(void) {
-	memmap_auto_8k(MMCPU(0x8000), 0x0A);
-	memmap_auto_8k(MMCPU(0xA000), 0x0B);
-	memmap_auto_8k(MMCPU(0xC000), 0x06);
-	memmap_auto_8k(MMCPU(0xE000), 0x07);
+	memmap_auto_8k(0, MMCPU(0x8000), 0x0A);
+	memmap_auto_8k(0, MMCPU(0xA000), 0x0B);
+	memmap_auto_8k(0, MMCPU(0xC000), 0x06);
+	memmap_auto_8k(0, MMCPU(0xE000), 0x07);
 }
 INLINE static void chr_fix_554(void) {
-	memmap_auto_8k(MMPPU(0x0000), m554.reg);
+	memmap_auto_8k(0, MMPPU(0x0000), m554.reg);
 }
 INLINE static void wram_fix_554(void) {
-	memmap_prgrom_8k(MMCPU(0x6000), m554.reg);
+	memmap_prgrom_8k(0, MMCPU(0x6000), m554.reg);
 }

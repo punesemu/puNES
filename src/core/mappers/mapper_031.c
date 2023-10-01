@@ -33,7 +33,7 @@ void map_init_031(void) {
 	mapper.internal_struct_size[0] = sizeof(m031);
 
 	if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
-		memmap_prg_region_init(S4K);
+		memmap_prg_region_init(0, S4K);
 	}
 
 	if (info.reset >= HARD) {
@@ -52,7 +52,7 @@ void map_init_031(void) {
 void extcl_after_mapper_init_031(void) {
 	prg_fix_031();
 }
-void extcl_cpu_wr_mem_031(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_031(UNUSED(BYTE nidx), WORD address, BYTE value) {
 	if ((address >= 0x5000) && (address <= 0x5FFF)) {
 		m031.reg[address & 0x07] = value;
 		prg_fix_031();
@@ -60,17 +60,16 @@ void extcl_cpu_wr_mem_031(WORD address, BYTE value) {
 }
 BYTE extcl_save_mapper_031(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m031.reg);
-
 	return (EXIT_OK);
 }
 
 INLINE static void prg_fix_031(void) {
-	memmap_auto_4k(MMCPU(0x8000), m031.reg[0]);
-	memmap_auto_4k(MMCPU(0x9000), m031.reg[1]);
-	memmap_auto_4k(MMCPU(0xA000), m031.reg[2]);
-	memmap_auto_4k(MMCPU(0xB000), m031.reg[3]);
-	memmap_auto_4k(MMCPU(0xC000), m031.reg[4]);
-	memmap_auto_4k(MMCPU(0xD000), m031.reg[5]);
-	memmap_auto_4k(MMCPU(0xE000), m031.reg[6]);
-	memmap_auto_4k(MMCPU(0xF000), m031.reg[7]);
+	memmap_auto_4k(0, MMCPU(0x8000), m031.reg[0]);
+	memmap_auto_4k(0, MMCPU(0x9000), m031.reg[1]);
+	memmap_auto_4k(0, MMCPU(0xA000), m031.reg[2]);
+	memmap_auto_4k(0, MMCPU(0xB000), m031.reg[3]);
+	memmap_auto_4k(0, MMCPU(0xC000), m031.reg[4]);
+	memmap_auto_4k(0, MMCPU(0xD000), m031.reg[5]);
+	memmap_auto_4k(0, MMCPU(0xE000), m031.reg[6]);
+	memmap_auto_4k(0, MMCPU(0xF000), m031.reg[7]);
 }

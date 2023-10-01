@@ -34,21 +34,21 @@ void map_init_136(void) {
 	JV001_prg_fix = prg_fix_jv001_136;
 	JV001_chr_fix = chr_fix_jv001_136;
 }
-void extcl_cpu_wr_mem_136(WORD address, BYTE value) {
-	extcl_cpu_wr_mem_JV001(address, (value & 0x3F));
+void extcl_cpu_wr_mem_136(BYTE nidx, WORD address, BYTE value) {
+	extcl_cpu_wr_mem_JV001(nidx, address, (value & 0x3F));
 }
-BYTE extcl_cpu_rd_mem_136(WORD address, BYTE openbus) {
+BYTE extcl_cpu_rd_mem_136(BYTE nidx, WORD address, BYTE openbus) {
 	if ((address >= 0x4020) && (address <= 0x5FFF)) {
-		BYTE value = extcl_cpu_rd_mem_JV001(address, openbus);
+		BYTE value = extcl_cpu_rd_mem_JV001(nidx, address, openbus);
 
 		return (((openbus & 0xC0) | (value & 0x3F)));
 	}
-	return (wram_rd(address));
+	return (wram_rd(nidx, address));
 }
 
 void prg_fix_jv001_136(void) {
-	memmap_auto_32k(MMCPU(0x8000), (jv001.output >> 4));
+	memmap_auto_32k(0, MMCPU(0x8000), (jv001.output >> 4));
 }
 void chr_fix_jv001_136(void) {
-	memmap_auto_8k(MMPPU(0x0000), jv001.output);
+	memmap_auto_8k(0, MMPPU(0x0000), jv001.output);
 }

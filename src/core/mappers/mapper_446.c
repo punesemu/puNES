@@ -157,8 +157,8 @@ void map_init_446(void) {
 	info.mapper.extend_wr = TRUE;
 	info.mapper.extend_rd = TRUE;
 
-	irqA12.present = TRUE;
-	irqA12_delay = 1;
+	nes[0].irqA12.present = TRUE;
+	nes[0].irqA12.delay = 1;
 }
 void extcl_after_mapper_init_446(void) {
 	switch_mode();
@@ -170,7 +170,7 @@ void extcl_mapper_quit_446(void) {
 		m446tmp.sst39sf040 = NULL;
 	}
 }
-void extcl_cpu_wr_mem_446(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_446(BYTE nidx, WORD address, BYTE value) {
 	switch (address & 0xF000) {
 		case 0x5000:
 			if (!(m446.reg[0] & 0x80)) {
@@ -211,40 +211,40 @@ void extcl_cpu_wr_mem_446(WORD address, BYTE value) {
 						return;
 					case M446_SLROM:
 					case M446_SNROM:
-						extcl_cpu_wr_mem_MMC1(address, value);
+						extcl_cpu_wr_mem_MMC1(nidx, address, value);
 						return;
 					case M446_189:
 					case M446_MMC3:
 					case M446_TLSROM:
-						extcl_cpu_wr_mem_MMC3(address, value);
+						extcl_cpu_wr_mem_MMC3(nidx, address, value);
 						return;
 					case M446_VRC2_22:
 					case M446_VRC4_23:
 					case M446_VRC4_25:
-						extcl_cpu_wr_mem_VRC2and4(address, value);
+						extcl_cpu_wr_mem_VRC2and4(nidx, address, value);
 						return;
 					case M446_VRC6:
-						extcl_cpu_wr_mem_VRC6(address, value);
+						extcl_cpu_wr_mem_VRC6(nidx, address, value);
 						return;
 					default:
 						return;
 				}
 			} else {
-				sst39sf040_write(address, value);
+				sst39sf040_write(nidx, address, value);
 			}
 			return;
 		default:
 			return;
 	}
 }
-BYTE extcl_cpu_rd_mem_446(WORD address, UNUSED(BYTE openbus)) {
+BYTE extcl_cpu_rd_mem_446(BYTE nidx, WORD address, UNUSED(BYTE openbus)) {
 	switch (address & 0xF000) {
 		default:
-			return (wram_rd(address));
+			return (wram_rd(nidx, address));
 		case 0x6000:
 			return ((m446.reg[0] & 0x80) && (m446.mapper == M446_VRC2_22)
-				? extcl_cpu_rd_mem_VRC2and4(address, wram_rd(address))
-				: wram_rd(address));
+				? extcl_cpu_rd_mem_VRC2and4(nidx, address, wram_rd(nidx, address))
+				: wram_rd(nidx, address));
 		case 0x8000:
 		case 0x9000:
 		case 0xA000:
@@ -253,7 +253,7 @@ BYTE extcl_cpu_rd_mem_446(WORD address, UNUSED(BYTE openbus)) {
 		case 0xD000:
 		case 0xE000:
 		case 0xF000:
-			return (sst39sf040_read(address));
+			return (sst39sf040_read(nidx, address));
 	}
 }
 BYTE extcl_save_mapper_446(BYTE mode, BYTE slot, FILE *fp) {
@@ -267,87 +267,87 @@ BYTE extcl_save_mapper_446(BYTE mode, BYTE slot, FILE *fp) {
 	if (extcl_save_mapper_VRC6(mode, slot, fp) == EXIT_ERROR) return (EXIT_ERROR);
 	return (sst39sf040_save_mapper(mode, slot, fp));
 }
-void extcl_cpu_every_cycle_446(void) {
-	sst39sf040_tick();
+void extcl_cpu_every_cycle_446(BYTE nidx) {
+	sst39sf040_tick(nidx);
 	if (m446.reg[0] & 0x80) {
 		switch (m446.mapper) {
 			case M446_189:
 			case M446_MMC3:
 			case M446_TLSROM:
-				extcl_cpu_every_cycle_MMC3();
+				extcl_cpu_every_cycle_MMC3(nidx);
 				return;
 			case M446_VRC2_22:
 			case M446_VRC4_23:
 			case M446_VRC4_25:
-				extcl_cpu_every_cycle_VRC2and4();
+				extcl_cpu_every_cycle_VRC2and4(nidx);
 				return;
 			case M446_VRC6:
-				extcl_cpu_every_cycle_VRC6();
+				extcl_cpu_every_cycle_VRC6(nidx);
 				return;
 			default:
 				return;
 		}
 	}
 }
-void extcl_ppu_000_to_34x_446(void) {
+void extcl_ppu_000_to_34x_446(BYTE nidx) {
 	if (m446.reg[0] & 0x80) {
 		switch (m446.mapper) {
 			case M446_189:
 			case M446_MMC3:
 			case M446_TLSROM:
-				extcl_ppu_000_to_34x_MMC3();
+				extcl_ppu_000_to_34x_MMC3(nidx);
 				return;
 			default:
 				return;
 		}
 	}
 }
-void extcl_ppu_000_to_255_446(void) {
+void extcl_ppu_000_to_255_446(BYTE nidx) {
 	if (m446.reg[0] & 0x80) {
 		switch (m446.mapper) {
 			case M446_189:
 			case M446_MMC3:
 			case M446_TLSROM:
-				extcl_ppu_000_to_255_MMC3();
+				extcl_ppu_000_to_255_MMC3(nidx);
 				return;
 			default:
 				return;
 		}
 	}
 }
-void extcl_ppu_256_to_319_446(void) {
+void extcl_ppu_256_to_319_446(BYTE nidx) {
 	if (m446.reg[0] & 0x80) {
 		switch (m446.mapper) {
 			case M446_189:
 			case M446_MMC3:
 			case M446_TLSROM:
-				extcl_ppu_256_to_319_MMC3();
+				extcl_ppu_256_to_319_MMC3(nidx);
 				return;
 			default:
 				return;
 		}
 	}
 }
-void extcl_ppu_320_to_34x_446(void) {
+void extcl_ppu_320_to_34x_446(BYTE nidx) {
 	if (m446.reg[0] & 0x80) {
 		switch (m446.mapper) {
 			case M446_189:
 			case M446_MMC3:
 			case M446_TLSROM:
-				extcl_ppu_320_to_34x_MMC3();
+				extcl_ppu_320_to_34x_MMC3(nidx);
 				return;
 			default:
 				return;
 		}
 	}
 }
-void extcl_update_r2006_446(WORD new_r2006, WORD old_r2006) {
+void extcl_update_r2006_446(BYTE nidx, WORD new_r2006, WORD old_r2006) {
 	if (m446.reg[0] & 0x80) {
 		switch (m446.mapper) {
 			case M446_189:
 			case M446_MMC3:
 			case M446_TLSROM:
-				extcl_update_r2006_MMC3(new_r2006, old_r2006);
+				extcl_update_r2006_MMC3(nidx, new_r2006, old_r2006);
 				return;
 			default:
 				return;
@@ -384,19 +384,19 @@ INLINE static void switch_mode(void) {
 				MMC1_chr_swap = chr_swap_mmc1_446;
 				break;
 			case M446_MMC3:
-				memset(&irqA12, 0x00, sizeof(irqA12));
+				memset(&nes[0].irqA12, 0x00, sizeof(nes[0].irqA12));
 				init_MMC3(HARD);
 				MMC3_prg_swap = prg_swap_mmc3_446;
 				MMC3_chr_swap = chr_swap_mmc3_446;
 				break;
 			case M446_TLSROM:
-				memset(&irqA12, 0x00, sizeof(irqA12));
+				memset(&nes[0].irqA12, 0x00, sizeof(nes[0].irqA12));
 				init_MMC3(HARD);
 				MMC3_prg_swap = prg_swap_mmc3_tlsrom_446;
 				MMC3_chr_swap = chr_swap_mmc3_tlsrom_446;
 				break;
 			case M446_189:
-				memset(&irqA12, 0x00, sizeof(irqA12));
+				memset(&nes[0].irqA12, 0x00, sizeof(nes[0].irqA12));
 				init_MMC3(HARD);
 				MMC3_prg_swap = prg_swap_mmc3_m189_446;
 				MMC3_chr_swap = chr_swap_mmc3_m189_446;
@@ -503,7 +503,7 @@ INLINE static void fix_all(void) {
 		mirroring_fix_no_mapper_446();
 	}
 	if (m446.reg[5] & 0x04) {
-		chr_disable_write();
+		chr_disable_write(0);
 	}
 }
 INLINE static WORD prg_base(void) {
@@ -517,20 +517,20 @@ INLINE static WORD chr_base(void) {
 }
 
 INLINE static void prg_fix_no_mapper_446(void) {
-	memmap_auto_8k(MMCPU(0x8000), prg_base());
-	memmap_auto_8k(MMCPU(0xA000), 0x3D);
-	memmap_auto_8k(MMCPU(0xC000), 0x3E);
-	memmap_auto_8k(MMCPU(0xE000), 0x3F);
+	memmap_auto_8k(0, MMCPU(0x8000), prg_base());
+	memmap_auto_8k(0, MMCPU(0xA000), 0x3D);
+	memmap_auto_8k(0, MMCPU(0xC000), 0x3E);
+	memmap_auto_8k(0, MMCPU(0xE000), 0x3F);
 }
 INLINE static void chr_fix_no_mapper_446(void) {
-	memmap_auto_8k(MMPPU(0x0000), chr_base());
+	memmap_auto_8k(0, MMPPU(0x0000), chr_base());
 }
 INLINE static void wram_fix_no_mapper_446(void) {}
 INLINE static void mirroring_fix_no_mapper_446(void) {
 	if (m446.reg[4] & 0x01) {
-		mirroring_V();
+		mirroring_V(0);
 	} else {
-		mirroring_H();
+		mirroring_H(0);
 	}
 }
 
@@ -538,22 +538,22 @@ INLINE static void prg_fix_nrom_446(void) {
 	WORD base = prg_base();
 	WORD mask = prg_mask();
 
-	memmap_auto_8k(MMCPU(0x8000), (base | (0x00 & mask)));
-	memmap_auto_8k(MMCPU(0xA000), (base | (0x01 & mask)));
-	memmap_auto_8k(MMCPU(0xC000), (base | (0x02 & mask)));
-	memmap_auto_8k(MMCPU(0xE000), (base | (0x03 & mask)));
+	memmap_auto_8k(0, MMCPU(0x8000), (base | (0x00 & mask)));
+	memmap_auto_8k(0, MMCPU(0xA000), (base | (0x01 & mask)));
+	memmap_auto_8k(0, MMCPU(0xC000), (base | (0x02 & mask)));
+	memmap_auto_8k(0, MMCPU(0xE000), (base | (0x03 & mask)));
 }
 INLINE static void chr_fix_nrom_446(void) {
-	memmap_auto_8k(MMPPU(0x0000), chr_base());
+	memmap_auto_8k(0, MMPPU(0x0000), chr_base());
 }
 INLINE static void wram_fix_nrom_446(void) {
-	memmap_disable_8k(MMCPU(0x6000));
+	memmap_disable_8k(0, MMCPU(0x6000));
 }
 INLINE static void mirroring_fix_nrom_446(void) {
 	if (m446.reg[4] & 0x01) {
-		mirroring_V();
+		mirroring_V(0);
 	} else {
-		mirroring_H();
+		mirroring_H(0);
 	}
 }
 
@@ -561,22 +561,22 @@ INLINE static void prg_fix_cnrom_446(void) {
 	WORD base = prg_base();
 	WORD mask = prg_mask();
 
-	memmap_auto_8k(MMCPU(0x8000), (base | (0x00 & mask)));
-	memmap_auto_8k(MMCPU(0xA000), (base | (0x01 & mask)));
-	memmap_auto_8k(MMCPU(0xC000), (base | (0x02 & mask)));
-	memmap_auto_8k(MMCPU(0xE000), (base | (0x03 & mask)));
+	memmap_auto_8k(0, MMCPU(0x8000), (base | (0x00 & mask)));
+	memmap_auto_8k(0, MMCPU(0xA000), (base | (0x01 & mask)));
+	memmap_auto_8k(0, MMCPU(0xC000), (base | (0x02 & mask)));
+	memmap_auto_8k(0, MMCPU(0xE000), (base | (0x03 & mask)));
 }
 INLINE static void chr_fix_cnrom_446(void) {
-	memmap_auto_8k(MMPPU(0x0000), (m446.latch & 0x03));
+	memmap_auto_8k(0, MMPPU(0x0000), (m446.latch & 0x03));
 }
 INLINE static void wram_fix_cnrom_446(void) {
-	memmap_disable_8k(MMCPU(0x6000));
+	memmap_disable_8k(0, MMCPU(0x6000));
 }
 INLINE static void mirroring_fix_cnrom_446(void) {
 	if (m446.reg[4] & 0x01) {
-		mirroring_V();
+		mirroring_V(0);
 	} else {
-		mirroring_H();
+		mirroring_H(0);
 	}
 }
 
@@ -585,20 +585,20 @@ INLINE static void prg_fix_unrom_446(void) {
 	WORD mask = prg_mask() >> 1;
 	WORD bank = m446.latch;
 
-	memmap_auto_16k(MMCPU(0x8000), (base | (bank & mask)));
-	memmap_auto_16k(MMCPU(0xC000), (base | (0x1F & mask)));
+	memmap_auto_16k(0, MMCPU(0x8000), (base | (bank & mask)));
+	memmap_auto_16k(0, MMCPU(0xC000), (base | (0x1F & mask)));
 }
 INLINE static void chr_fix_unrom_446(void) {
-	memmap_auto_8k(MMPPU(0x0000), chr_base());
+	memmap_auto_8k(0, MMPPU(0x0000), chr_base());
 }
 INLINE static void wram_fix_unrom_446(void) {
-	memmap_disable_8k(MMCPU(0x6000));
+	memmap_disable_8k(0, MMCPU(0x6000));
 }
 INLINE static void mirroring_fix_unrom_446(void) {
 	if (m446.reg[4] & 0x01) {
-		mirroring_V();
+		mirroring_V(0);
 	} else {
-		mirroring_H();
+		mirroring_H(0);
 	}
 }
 
@@ -607,20 +607,20 @@ INLINE static void prg_fix_bandai_446(void) {
 	WORD mask = prg_mask() >> 1;
 	WORD bank = m446.latch >> 4;
 
-	memmap_auto_16k(MMCPU(0x8000), (base | (bank & mask)));
-	memmap_auto_16k(MMCPU(0xC000), (base | (0xFF & mask)));
+	memmap_auto_16k(0, MMCPU(0x8000), (base | (bank & mask)));
+	memmap_auto_16k(0, MMCPU(0xC000), (base | (0xFF & mask)));
 }
 INLINE static void chr_fix_bandai_446(void) {
-	memmap_auto_8k(MMPPU(0x0000), (m446.latch & 0x0F));
+	memmap_auto_8k(0, MMPPU(0x0000), (m446.latch & 0x0F));
 }
 INLINE static void wram_fix_bandai_446(void) {
-	memmap_disable_8k(MMCPU(0x6000));
+	memmap_disable_8k(0, MMCPU(0x6000));
 }
 INLINE static void mirroring_fix_bandai_446(void) {
 	if (m446.latch & 0x10) {
-		mirroring_SCR1();
+		mirroring_SCR1(0);
 	} else {
-		mirroring_SCR0();
+		mirroring_SCR0(0);
 	}
 }
 
@@ -629,19 +629,19 @@ INLINE static void prg_fix_anrom_446(void) {
 	WORD mask = prg_mask() >> 2;
 	WORD bank = m446.latch;
 
-	memmap_auto_32k(MMCPU(0x8000), (base | (bank & mask)));
+	memmap_auto_32k(0, MMCPU(0x8000), (base | (bank & mask)));
 }
 INLINE static void chr_fix_anrom_446(void) {
-	memmap_auto_8k(MMPPU(0x0000), (m446.latch & 0x03));
+	memmap_auto_8k(0, MMPPU(0x0000), (m446.latch & 0x03));
 }
 INLINE static void wram_fix_anrom_446(void) {
-	memmap_disable_8k(MMCPU(0x6000));
+	memmap_disable_8k(0, MMCPU(0x6000));
 }
 INLINE static void mirroring_fix_anrom_446(void) {
 	if (m446.reg[4] & 0x01) {
-		mirroring_V();
+		mirroring_V(0);
 	} else {
-		mirroring_H();
+		mirroring_H(0);
 	}
 }
 
@@ -650,19 +650,19 @@ INLINE static void prg_fix_gnrom_446(void) {
 	WORD mask = prg_mask() >> 2;
 	WORD bank = m446.latch >> 4;
 
-	memmap_auto_32k(MMCPU(0x8000), (base | (bank & mask)));
+	memmap_auto_32k(0, MMCPU(0x8000), (base | (bank & mask)));
 }
 INLINE static void chr_fix_gnrom_446(void) {
-	memmap_auto_8k(MMPPU(0x0000), (m446.latch & 0x03));
+	memmap_auto_8k(0, MMPPU(0x0000), (m446.latch & 0x03));
 }
 INLINE static void wram_fix_gnrom_446(void) {
-	memmap_disable_8k(MMCPU(0x6000));
+	memmap_disable_8k(0, MMCPU(0x6000));
 }
 INLINE static void mirroring_fix_gnrom_446(void) {
 	if (m446.reg[4] & 0x01) {
-		mirroring_V();
+		mirroring_V(0);
 	} else {
-		mirroring_H();
+		mirroring_H(0);
 	}
 }
 

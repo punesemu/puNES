@@ -23,6 +23,6 @@
 
 void map_init_360(void);
 void extcl_after_mapper_init_360(void);
-void extcl_cpu_wr_mem_360(WORD address, BYTE value);
+void extcl_cpu_wr_mem_360(BYTE nidx, WORD address, BYTE value);
 
 #endif /* MAPPER_360_H_ */

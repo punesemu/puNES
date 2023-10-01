@@ -93,7 +93,7 @@ void extcl_after_mapper_init_034_s1(void) {
 	prg_fix_034_s1();
 	chr_fix_034_s1();
 }
-void extcl_cpu_wr_mem_034_s1(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_034_s1(UNUSED(BYTE nidx), WORD address, BYTE value) {
 	if ((address >= 0x7FFD) && (address <= 0x7FFF)) {
 		m034.reg[address - 0x7FFD] = value;
 		prg_fix_034_s1();
@@ -102,16 +102,15 @@ void extcl_cpu_wr_mem_034_s1(WORD address, BYTE value) {
 }
 BYTE extcl_save_mapper_034_s1(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m034.reg);
-
 	return (EXIT_OK);
 }
 
 INLINE static void prg_fix_034_s1(void) {
-	memmap_auto_32k(MMCPU(0x8000), m034.reg[0]);
+	memmap_auto_32k(0, MMCPU(0x8000), m034.reg[0]);
 }
 INLINE static void chr_fix_034_s1(void) {
-	memmap_auto_4k(MMPPU(0x0000), m034.reg[1]);
-	memmap_auto_4k(MMPPU(0x1000), m034.reg[2]);
+	memmap_auto_4k(0, MMPPU(0x0000), m034.reg[1]);
+	memmap_auto_4k(0, MMPPU(0x1000), m034.reg[2]);
 }
 
 // submapper 2 -----------------------------------------------------------------
@@ -119,19 +118,18 @@ INLINE static void chr_fix_034_s1(void) {
 void extcl_after_mapper_init_034_s2(void) {
 	prg_fix_034_s2();
 }
-void extcl_cpu_wr_mem_034_s2(UNUSED(WORD address), BYTE value) {
+void extcl_cpu_wr_mem_034_s2(BYTE nidx, UNUSED(WORD address), BYTE value) {
 	// bus conflict
-	m034.reg[0] = value & prgrom_rd(address);
+	m034.reg[0] = value & prgrom_rd(nidx, address);
 	prg_fix_034_s2();
 }
 BYTE extcl_save_mapper_034_s2(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m034.reg);
-
 	return (EXIT_OK);
 }
 
 INLINE static void prg_fix_034_s2(void) {
-	memmap_auto_32k(MMCPU(0x8000), m034.reg[0]);
+	memmap_auto_32k(0, MMCPU(0x8000), m034.reg[0]);
 }
 
 // nesticle --------------------------------------------------------------------
@@ -140,7 +138,7 @@ void extcl_after_mapper_init_034_nstcl(void) {
 	prg_fix_034_nstcl();
 	chr_fix_034_nstcl();
 }
-void extcl_cpu_wr_mem_034_nstcl(UNUSED(WORD address), BYTE value) {
+void extcl_cpu_wr_mem_034_nstcl(UNUSED(BYTE nidx), UNUSED(WORD address), BYTE value) {
 	if ((address >= 0x7FFD) && (address <= 0x7FFF)) {
 		m034.reg[address - 0x7FFD] = value;
 		prg_fix_034_nstcl();
@@ -154,14 +152,13 @@ void extcl_cpu_wr_mem_034_nstcl(UNUSED(WORD address), BYTE value) {
 }
 BYTE extcl_save_mapper_034_nstcl(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m034.reg);
-
 	return (EXIT_OK);
 }
 
 INLINE static void prg_fix_034_nstcl(void) {
-	memmap_auto_32k(MMCPU(0x8000), m034.reg[0]);
+	memmap_auto_32k(0, MMCPU(0x8000), m034.reg[0]);
 }
 INLINE static void chr_fix_034_nstcl(void) {
-	memmap_auto_4k(MMPPU(0x0000), m034.reg[1]);
-	memmap_auto_4k(MMPPU(0x1000), m034.reg[2]);
+	memmap_auto_4k(0, MMPPU(0x0000), m034.reg[1]);
+	memmap_auto_4k(0, MMPPU(0x1000), m034.reg[2]);
 }

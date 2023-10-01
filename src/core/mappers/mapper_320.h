@@ -23,7 +23,7 @@
 
 void map_init_320(void);
 void extcl_after_mapper_init_320(void);
-void extcl_cpu_wr_mem_320(WORD address, BYTE value);
+void extcl_cpu_wr_mem_320(BYTE nidx, WORD address, BYTE value);
 BYTE extcl_save_mapper_320(BYTE mode, BYTE slot, FILE *fp);
 
 #endif /* MAPPER_320_H_ */

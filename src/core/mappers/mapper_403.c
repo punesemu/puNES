@@ -49,7 +49,7 @@ void extcl_after_mapper_init_403(void) {
 	chr_fix_403();
 	mirroring_fix_403();
 }
-void extcl_cpu_wr_mem_403(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_403(UNUSED(BYTE nidx), WORD address, BYTE value) {
 	switch (address & 0xE000) {
 		case 0x4000:
 			if (address & 0x0100) {
@@ -72,7 +72,6 @@ void extcl_cpu_wr_mem_403(WORD address, BYTE value) {
 }
 BYTE extcl_save_mapper_403(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m403.reg);
-
 	return (EXIT_OK);
 }
 
@@ -80,19 +79,19 @@ INLINE static void prg_fix_403(void) {
 	WORD bank = ((m403.reg[0] & 0x7E) >> 1);
 
 	if (m403.reg[2] & 0x01) {
-		memmap_auto_16k(MMCPU(0x8000), bank);
-		memmap_auto_16k(MMCPU(0xC000), bank);
+		memmap_auto_16k(0, MMCPU(0x8000), bank);
+		memmap_auto_16k(0, MMCPU(0xC000), bank);
 	} else {
-		memmap_auto_32k(MMCPU(0x8000), (bank >> 1));
+		memmap_auto_32k(0, MMCPU(0x8000), (bank >> 1));
 	}
 }
 INLINE static void chr_fix_403(void) {
-	memmap_auto_8k(MMPPU(0x0000), (m403.reg[1] & 0x03));
+	memmap_auto_8k(0, MMPPU(0x0000), (m403.reg[1] & 0x03));
 }
 INLINE static void mirroring_fix_403(void) {
 	if (m403.reg[2] & 0x10) {
-		mirroring_H();
+		mirroring_H(0);
 	} else {
-		mirroring_V();
+		mirroring_V(0);
 	}
 }

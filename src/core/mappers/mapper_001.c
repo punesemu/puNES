@@ -50,11 +50,11 @@ void map_init_001(void) {
 	MMC1_wram_fix = wram_fix_mmc1_001;
 	MMC1_mirroring_fix = mirroring_fix_mmc1_001;
 }
-BYTE extcl_cpu_rd_ram_001(WORD address, UNUSED(BYTE openbus)) {
+BYTE extcl_cpu_rd_ram_001(BYTE nidx, WORD address, UNUSED(BYTE openbus)) {
 	if (dipswitch.used && (address >= 0x1000) && (address <= 0x1FFF)) {
 		return (dipswitch.value);
 	}
-	return (ram_rd(address));
+	return (ram_rd(nidx, address));
 }
 
 void prg_swap_mmc1_001(WORD address, WORD value) {

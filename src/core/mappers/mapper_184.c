@@ -43,7 +43,7 @@ void extcl_after_mapper_init_184(void) {
 	prg_fix_184();
 	chr_fix_184();
 }
-void extcl_cpu_wr_mem_184(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_184(UNUSED(BYTE nidx), WORD address, BYTE value) {
 	if ((address >= 0x6000) && (address <= 0x7FFF)) {
 		m184.reg = value;
 		prg_fix_184();
@@ -53,14 +53,13 @@ void extcl_cpu_wr_mem_184(WORD address, BYTE value) {
 }
 BYTE extcl_save_mapper_184(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m184.reg);
-
 	return (EXIT_OK);
 }
 
 INLINE static void prg_fix_184(void) {
-	memmap_auto_32k(MMCPU(0x8000), 0);
+	memmap_auto_32k(0, MMCPU(0x8000), 0);
 }
 INLINE static void chr_fix_184(void) {
-	memmap_auto_4k(MMPPU(0x0000), (m184.reg & 0x0F));
-	memmap_auto_4k(MMPPU(0x1000), (m184.reg >> 4));
+	memmap_auto_4k(0, MMPPU(0x0000), (m184.reg & 0x0F));
+	memmap_auto_4k(0, MMPPU(0x1000), (m184.reg >> 4));
 }

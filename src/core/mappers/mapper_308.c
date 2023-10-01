@@ -48,12 +48,12 @@ void map_init_308(void) {
 	VRC2and4_prg_swap = prg_swap_vrc2and4_308;
 	VRC2and4_chr_swap = chr_swap_vrc2and4_308;
 }
-void extcl_cpu_wr_mem_308(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_308(BYTE nidx, WORD address, BYTE value) {
 	switch (address & 0xF003) {
 		case 0xF000:
 			m308.irq.enabled = FALSE;
 			m308.irq.l_counter = 0;
-			nes.c.irq.high &= ~EXT_IRQ;
+			nes[nidx].c.irq.high &= ~EXT_IRQ;
 			return;
 		case 0xF001 :
 			m308.irq.enabled = TRUE;
@@ -62,7 +62,7 @@ void extcl_cpu_wr_mem_308(WORD address, BYTE value) {
 			m308.irq.h_counter = value >> 4;
 			return;
 		default:
-			extcl_cpu_wr_mem_VRC2and4(address, value);
+			extcl_cpu_wr_mem_VRC2and4(nidx, address, value);
 			return;
 	}
 }
@@ -72,14 +72,14 @@ BYTE extcl_save_mapper_308(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m308.irq.l_counter);
 	return (extcl_save_mapper_VRC2and4(mode, slot, fp));
 }
-void extcl_cpu_every_cycle_308(void) {
+void extcl_cpu_every_cycle_308(BYTE nidx) {
 	if (m308.irq.enabled) {
 		m308.irq.l_counter = (m308.irq.l_counter + 1) & 0x0FFF;
 		if (m308.irq.l_counter == 0x800) {
 			m308.irq.h_counter--;
 		}
 		if (!m308.irq.h_counter && (m308.irq.l_counter < 0x800)) {
-			nes.c.irq.high |= EXT_IRQ;
+			nes[nidx].c.irq.high |= EXT_IRQ;
 		}
 	}
 }

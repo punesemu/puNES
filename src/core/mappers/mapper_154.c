@@ -51,9 +51,9 @@ void extcl_after_mapper_init_154(void) {
 	extcl_after_mapper_init_N118();
 	mirroring_fix_154();
 }
-void extcl_cpu_wr_mem_154(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_154(BYTE nidx, WORD address, BYTE value) {
 	if (address <= 0x9FFF) {
-		extcl_cpu_wr_mem_N118(address, value);
+		extcl_cpu_wr_mem_N118(nidx, address, value);
 	}
 	m154.reg = value;
 	mirroring_fix_154();
@@ -67,18 +67,18 @@ void prg_swap_n118_154(WORD address, WORD value) {
 	prg_swap_N118_base(address, (value & 0x0F));
 }
 void chr_fix_n118_154(void) {
-	memmap_auto_2k(MMPPU(0x0000), ((n118.reg[0] & 0x3E) >> 1));
-	memmap_auto_2k(MMPPU(0x0800), ((n118.reg[1] & 0x3E) >> 1));
-	memmap_auto_1k(MMPPU(0x1000), (0x40 | n118.reg[2]));
-	memmap_auto_1k(MMPPU(0x1400), (0x40 | n118.reg[3]));
-	memmap_auto_1k(MMPPU(0x1800), (0x40 | n118.reg[4]));
-	memmap_auto_1k(MMPPU(0x1C00), (0x40 | n118.reg[5]));
+	memmap_auto_2k(0, MMPPU(0x0000), ((n118.reg[0] & 0x3E) >> 1));
+	memmap_auto_2k(0, MMPPU(0x0800), ((n118.reg[1] & 0x3E) >> 1));
+	memmap_auto_1k(0, MMPPU(0x1000), (0x40 | n118.reg[2]));
+	memmap_auto_1k(0, MMPPU(0x1400), (0x40 | n118.reg[3]));
+	memmap_auto_1k(0, MMPPU(0x1800), (0x40 | n118.reg[4]));
+	memmap_auto_1k(0, MMPPU(0x1C00), (0x40 | n118.reg[5]));
 }
 
 INLINE static void mirroring_fix_154(void) {
 	if (m154.reg & 0x40) {
-		mirroring_SCR1();
+		mirroring_SCR1(0);
 	} else {
-		mirroring_SCR0();
+		mirroring_SCR0(0);
 	}
 }

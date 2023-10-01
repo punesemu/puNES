@@ -23,8 +23,8 @@
 
 void map_init_150(void);
 void extcl_after_mapper_init_150(void);
-void extcl_cpu_wr_mem_150(WORD address, BYTE value);
-BYTE extcl_cpu_rd_mem_150(WORD address, BYTE openbus);
+void extcl_cpu_wr_mem_150(BYTE nidx, WORD address, BYTE value);
+BYTE extcl_cpu_rd_mem_150(BYTE nidx, WORD address, BYTE openbus);
 BYTE extcl_save_mapper_150(BYTE mode, BYTE slot, FILE *fp);
 
 #endif /* MAPPER_150_H_ */

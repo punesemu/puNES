@@ -44,7 +44,7 @@ void map_init_550(void) {
 
 	info.mapper.extend_wr = TRUE;
 }
-void extcl_cpu_wr_mem_550(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_550(BYTE nidx, WORD address, BYTE value) {
 	if ((address >= 0x7000) && (address <= 0x7FFF)) {
 		if (!(m550.reg[0] & 0x08)) {
 			m550.reg[0] = address & 0x0F;
@@ -57,7 +57,7 @@ void extcl_cpu_wr_mem_550(WORD address, BYTE value) {
 	if (address >= 0x8000) {
 		m550.reg[1] = value;
 		if ((m550.reg[0] & 0x06) == 0x06) {
-			extcl_cpu_wr_mem_MMC1(address, value);
+			extcl_cpu_wr_mem_MMC1(nidx, address, value);
 			return;
 		}
 		MMC1_prg_fix();

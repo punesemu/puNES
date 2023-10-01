@@ -43,7 +43,7 @@ void extcl_after_mapper_init_125(void) {
 	prg_fix_125();
 	wram_fix_125();
 }
-void extcl_cpu_wr_mem_125(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_125(UNUSED(BYTE nidx), WORD address, BYTE value) {
 	if ((address >= 0x6000) && (address <= 0x6FFF)) {
 		m125.reg = value;
 		wram_fix_125();
@@ -52,16 +52,15 @@ void extcl_cpu_wr_mem_125(WORD address, BYTE value) {
 }
 BYTE extcl_save_mapper_125(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m125.reg);
-
 	return (EXIT_OK);
 }
 
 INLINE static void prg_fix_125(void) {
-	memmap_auto_8k(MMCPU(0x8000), 0xFC);
-	memmap_auto_8k(MMCPU(0xA000), 0xFD);
-	memmap_wram_8k(MMCPU(0xC000), 0);
-	memmap_auto_8k(MMCPU(0xE000), 0xFF);
+	memmap_auto_8k(0, MMCPU(0x8000), 0xFC);
+	memmap_auto_8k(0, MMCPU(0xA000), 0xFD);
+	memmap_wram_8k(0, MMCPU(0xC000), 0);
+	memmap_auto_8k(0, MMCPU(0xE000), 0xFF);
 }
 INLINE static void wram_fix_125(void) {
-	memmap_prgrom_8k(MMCPU(0x6000), m125.reg);
+	memmap_prgrom_8k(0, MMCPU(0x6000), m125.reg);
 }

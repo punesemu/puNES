@@ -46,7 +46,7 @@ void extcl_after_mapper_init_193(void) {
 	chr_fix_193();
 	mirroring_fix_193();
 }
-void extcl_cpu_wr_mem_193(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_193(UNUSED(BYTE nidx), WORD address, BYTE value) {
 	if ((address >= 0x6000) && (address <= 0x7FFF)) {
 		m193.reg[address & 0x07] = value;
 		prg_fix_193();
@@ -56,25 +56,24 @@ void extcl_cpu_wr_mem_193(WORD address, BYTE value) {
 }
 BYTE extcl_save_mapper_193(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m193.reg);
-
 	return (EXIT_OK);
 }
 
 INLINE static void prg_fix_193(void) {
-	memmap_auto_8k(MMCPU(0x8000), m193.reg[3]);
-	memmap_auto_8k(MMCPU(0xA000), 0xFD);
-	memmap_auto_8k(MMCPU(0xC000), 0xFE);
-	memmap_auto_8k(MMCPU(0xE000), 0xFF);
+	memmap_auto_8k(0, MMCPU(0x8000), m193.reg[3]);
+	memmap_auto_8k(0, MMCPU(0xA000), 0xFD);
+	memmap_auto_8k(0, MMCPU(0xC000), 0xFE);
+	memmap_auto_8k(0, MMCPU(0xE000), 0xFF);
 }
 INLINE static void chr_fix_193(void) {
-	memmap_auto_4k(MMPPU(0x0000), (m193.reg[0] >> 2));
-	memmap_auto_2k(MMPPU(0x1000), (m193.reg[1] >> 1));
-	memmap_auto_2k(MMPPU(0x1800), (m193.reg[2] >> 1));
+	memmap_auto_4k(0, MMPPU(0x0000), (m193.reg[0] >> 2));
+	memmap_auto_2k(0, MMPPU(0x1000), (m193.reg[1] >> 1));
+	memmap_auto_2k(0, MMPPU(0x1800), (m193.reg[2] >> 1));
 }
 INLINE static void mirroring_fix_193(void) {
 	if (m193.reg[4] & 0x01) {
-		mirroring_H();
+		mirroring_H(0);
 	} else {
-		mirroring_V();
+		mirroring_V(0);
 	}
 }

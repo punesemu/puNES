@@ -35,13 +35,13 @@ void map_init_302(void) {
 
 	info.mapper.extend_rd = TRUE;
 }
-BYTE extcl_cpu_rd_mem_302(WORD address, UNUSED(BYTE openbus)) {
+BYTE extcl_cpu_rd_mem_302(BYTE nidx, WORD address, UNUSED(BYTE openbus)) {
 	if ((address >= 0x6000) && (address <= 0x9FFF)) {
 		BYTE reg = ((((address >> 12) - 0x06) << 1) | ((address & 0x0800) >> 11)) ^ 0x04;
 
 		return (prgrom_byte((vrc2and4.chr[reg] << 11) | (address & 0x07FF)));
 	}
-	return (address >= 0x8000 ? prgrom_rd(address) : wram_rd(address));
+	return (address >= 0x8000 ? prgrom_rd(nidx, address) : wram_rd(nidx, address));
 }
 
 void prg_swap_vrc2and4_302(WORD address, WORD value) {

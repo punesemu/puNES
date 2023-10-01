@@ -43,7 +43,7 @@ void map_init_104(void) {
 void extcl_after_mapper_init_104(void) {
 	prg_fix_104();
 }
-void extcl_cpu_wr_mem_104(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_104(UNUSED(BYTE nidx), WORD address, BYTE value) {
 	switch (address & 0xF000) {
 		case 0x8000:
 		case 0x9000:
@@ -71,10 +71,9 @@ void extcl_cpu_wr_mem_104(WORD address, BYTE value) {
 BYTE extcl_save_mapper_104(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m104.reg);
 	save_slot_ele(mode, slot, m104.cycles);
-
 	return (EXIT_OK);
 }
-void extcl_cpu_every_cycle_104(void) {
+void extcl_cpu_every_cycle_104(UNUSED(BYTE nidx)) {
 	if (m104.cycles < 110000) {
 		m104.cycles++;
 	}
@@ -83,6 +82,6 @@ void extcl_cpu_every_cycle_104(void) {
 INLINE static void prg_fix_104(void) {
 	DBWORD base = (m104.reg[0] << 4);
 
-	memmap_auto_16k(MMCPU(0x8000), (base | (m104.reg[1] & 0x0F)));
-	memmap_auto_16k(MMCPU(0xC000), (base | 0x0F));
+	memmap_auto_16k(0, MMCPU(0x8000), (base | (m104.reg[1] & 0x0F)));
+	memmap_auto_16k(0, MMCPU(0xC000), (base | 0x0F));
 }

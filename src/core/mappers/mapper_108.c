@@ -68,7 +68,7 @@ void extcl_after_mapper_init_108(void) {
 	chr_fix_108();
 	wram_fix_108();
 }
-void extcl_cpu_wr_mem_108(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_108(UNUSED(BYTE nidx), WORD address, BYTE value) {
 	if (address >= m108tmp.start) {
 		m108.reg = value;
 		prg_fix_108();
@@ -82,13 +82,13 @@ BYTE extcl_save_mapper_108(BYTE mode, BYTE slot, FILE *fp) {
 }
 
 INLINE static void prg_fix_108(void) {
-	memmap_prgrom_32k(MMCPU(0x8000), 0xFF);
+	memmap_prgrom_32k(0, MMCPU(0x8000), 0xFF);
 }
 INLINE static void chr_fix_108(void) {
 	if (chrrom_size()) {
-		memmap_auto_8k(MMPPU(0x0000), m108.reg);
+		memmap_auto_8k(0, MMPPU(0x0000), m108.reg);
 	}
 }
 INLINE static void wram_fix_108(void) {
-	memmap_prgrom_8k(MMCPU(0x6000), info.mapper.submapper == 4 ? 0xFF : m108.reg);
+	memmap_prgrom_8k(0, MMCPU(0x6000), info.mapper.submapper == 4 ? 0xFF : m108.reg);
 }

@@ -64,7 +64,7 @@ void extcl_after_mapper_init_053(void) {
 	wram_fix_053();
 	mirroring_fix_053();
 }
-void extcl_cpu_wr_mem_053(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_053(UNUSED(BYTE nidx), WORD address, BYTE value) {
 	if ((address >= 0x6000) && (address <= 0x7FFF)) {
 		if (!(m053.reg[0] & 0x10)) {
 			m053.reg[0] = value;
@@ -88,19 +88,19 @@ INLINE static void prg_fix_053(void) {
 	if (m053.reg[0] & 0x10) {
 		WORD base = m053.reg[0] << 3;
 
-		memmap_auto_16k(MMCPU(0x8000), (base | (m053.reg[1] & 0x07)));
-		memmap_auto_16k(MMCPU(0xC000), (base | 0x07));
+		memmap_auto_16k(0, MMCPU(0x8000), (base | (m053.reg[1] & 0x07)));
+		memmap_auto_16k(0, MMCPU(0xC000), (base | 0x07));
 	} else {
-		memmap_other_32k(MMCPU(0x8000), 0, miscrom_pnt(), miscrom_size(), TRUE, FALSE);
+		memmap_other_32k(0, MMCPU(0x8000), 0, miscrom_pnt(), miscrom_size(), TRUE, FALSE);
 	}
 }
 INLINE static void wram_fix_053(void) {
-	memmap_prgrom_8k(MMCPU(0x6000), ((m053.reg[0] << 4) | 0x0F));
+	memmap_prgrom_8k(0, MMCPU(0x6000), ((m053.reg[0] << 4) | 0x0F));
 }
 INLINE static void mirroring_fix_053(void) {
 	if (m053.reg[0] & 0x20) {
-		mirroring_H();
+		mirroring_H(0);
 	} else  {
-		mirroring_V();
+		mirroring_V(0);
 	}
 }

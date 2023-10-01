@@ -78,7 +78,6 @@ BYTE extcl_save_mapper_518(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m518.dac.out);
 	save_slot_ele(mode, slot, m518.dac.status);
 	save_slot_ele(mode, slot, m518.dac.count);
-
 	return (EXIT_OK);
 }
 BYTE extcl_rd_chr_518(BYTE nidx, WORD address) {

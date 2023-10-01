@@ -28,7 +28,7 @@ INLINE static void chr_fix_117(void);
 INLINE static void wram_fix_117(void);
 INLINE static void mirroring_fix_117(void);
 
-INLINE static void irq_clock_117(void);
+INLINE static void irq_clock_117(BYTE nidx);
 
 struct _m117 {
 	BYTE prg[4];
@@ -82,7 +82,7 @@ void extcl_after_mapper_init_117(void) {
 	wram_fix_117();
 	mirroring_fix_117();
 }
-void extcl_cpu_wr_mem_117(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_117(BYTE nidx, WORD address, BYTE value) {
 	switch (address & 0xF000) {
 		case 0x8000:
 			m117.prg[address & 0x03] = value;
@@ -110,7 +110,7 @@ void extcl_cpu_wr_mem_117(WORD address, BYTE value) {
 					m117.irq.enable = TRUE;
 					break;
 			}
-			nes.c.irq.high &= ~EXT_IRQ;
+			nes[nidx].c.irq.high &= ~EXT_IRQ;
 			return;
 		case 0xD000:
 			m117.mirroring = value;
@@ -132,95 +132,94 @@ BYTE extcl_save_mapper_117(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m117.irq.reload);
 	save_slot_ele(mode, slot, m117.irq.a12_filter);
 	save_slot_ele(mode, slot, m117.irq.counter.w);
-
 	return (EXIT_OK);
 }
-void extcl_ppu_000_to_255_117(void) {
-	if (nes.p.r2001.visible) {
-		extcl_ppu_320_to_34x_117();
+void extcl_ppu_000_to_255_117(BYTE nidx) {
+	if (nes[nidx].p.r2001.visible) {
+		extcl_ppu_320_to_34x_117(nidx);
 	}
 }
-void extcl_ppu_256_to_319_117(void) {
-	if ((nes.p.ppu.frame_x & 0x0007) != 0x0003) {
+void extcl_ppu_256_to_319_117(BYTE nidx) {
+	if ((nes[nidx].p.ppu.frame_x & 0x0007) != 0x0003) {
 		return;
 	}
 
-	if ((!nes.p.spr_ev.count_plus || (nes.p.spr_ev.tmp_spr_plus == nes.p.spr_ev.count_plus)) && (nes.p.r2000.size_spr == 16)) {
-		nes.p.ppu.spr_adr = nes.p.r2000.spt_adr;
+	if ((!nes[nidx].p.spr_ev.count_plus || (nes[nidx].p.spr_ev.tmp_spr_plus == nes[nidx].p.spr_ev.count_plus)) && (nes[nidx].p.r2000.size_spr == 16)) {
+		nes[nidx].p.ppu.spr_adr = nes[nidx].p.r2000.spt_adr;
 	} else {
-		ppu_spr_adr((nes.p.ppu.frame_x & 0x0038) >> 3);
+		ppu_spr_adr((nes[nidx].p.ppu.frame_x & 0x0038) >> 3);
 	}
 
-	if ((nes.p.ppu.spr_adr & 0x1000) > (nes.p.ppu.bck_adr & 0x1000)) {
-		irq_clock_117();
+	if ((nes[nidx].p.ppu.spr_adr & 0x1000) > (nes[nidx].p.ppu.bck_adr & 0x1000)) {
+		irq_clock_117(nidx);
 	}
 }
-void extcl_ppu_320_to_34x_117(void) {
-	if ((nes.p.ppu.frame_x & 0x0007) != 0x0003) {
+void extcl_ppu_320_to_34x_117(BYTE nidx) {
+	if ((nes[nidx].p.ppu.frame_x & 0x0007) != 0x0003) {
 		return;
 	}
 
-	if (nes.p.ppu.frame_x == 323) {
+	if (nes[nidx].p.ppu.frame_x == 323) {
 		ppu_spr_adr(7);
 	}
 
-	ppu_bck_adr(nes.p.r2000.bpt_adr, nes.p.r2006.value);
+	ppu_bck_adr(nes[nidx].p.r2000.bpt_adr, nes[nidx].p.r2006.value);
 
-	if ((nes.p.ppu.bck_adr & 0x1000) > (nes.p.ppu.spr_adr & 0x1000)) {
-		irq_clock_117();
+	if ((nes[nidx].p.ppu.bck_adr & 0x1000) > (nes[nidx].p.ppu.spr_adr & 0x1000)) {
+		irq_clock_117(nidx);
 	}
 }
-void extcl_update_r2006_117(WORD new_r2006, UNUSED(WORD old_r2006)) {
+void extcl_update_r2006_117(BYTE nidx, WORD new_r2006, UNUSED(WORD old_r2006)) {
 	if ((new_r2006 & 0x1000) > (old_r2006 & 0x1000)) {
-		irq_clock_117();
+		irq_clock_117(nidx);
 	}
 }
-void extcl_cpu_every_cycle_117(void) {
+void extcl_cpu_every_cycle_117(BYTE nidx) {
 	if (m117.irq.a12_filter) {
 		m117.irq.a12_filter--;
 	}
 	if (m117.irq.enable && !(m117.irq.mode & 0x02) && m117.irq.counter.w[0] && !--m117.irq.counter.w[0]){
-		nes.c.irq.high |= EXT_IRQ;
+		nes[nidx].c.irq.high |= EXT_IRQ;
 	}
 }
 
 INLINE static void prg_fix_117(void) {
-	memmap_auto_8k(MMCPU(0x8000), m117.prg[0]);
-	memmap_auto_8k(MMCPU(0xA000), m117.prg[1]);
-	memmap_auto_8k(MMCPU(0xC000), m117.prg[2]);
-	memmap_auto_8k(MMCPU(0xE000), 0xFF);
+	memmap_auto_8k(0, MMCPU(0x8000), m117.prg[0]);
+	memmap_auto_8k(0, MMCPU(0xA000), m117.prg[1]);
+	memmap_auto_8k(0, MMCPU(0xC000), m117.prg[2]);
+	memmap_auto_8k(0, MMCPU(0xE000), 0xFF);
 }
 INLINE static void chr_fix_117(void) {
-	memmap_auto_1k(MMPPU(0x0000), m117.chr[0]);
-	memmap_auto_1k(MMPPU(0x0400), m117.chr[1]);
-	memmap_auto_1k(MMPPU(0x0800), m117.chr[2]);
-	memmap_auto_1k(MMPPU(0x0C00), m117.chr[3]);
-	memmap_auto_1k(MMPPU(0x1000), m117.chr[4]);
-	memmap_auto_1k(MMPPU(0x1400), m117.chr[5]);
-	memmap_auto_1k(MMPPU(0x1800), m117.chr[6]);
-	memmap_auto_1k(MMPPU(0x1C00), m117.chr[7]);
+	memmap_auto_1k(0, MMPPU(0x0000), m117.chr[0]);
+	memmap_auto_1k(0, MMPPU(0x0400), m117.chr[1]);
+	memmap_auto_1k(0, MMPPU(0x0800), m117.chr[2]);
+	memmap_auto_1k(0, MMPPU(0x0C00), m117.chr[3]);
+	memmap_auto_1k(0, MMPPU(0x1000), m117.chr[4]);
+	memmap_auto_1k(0, MMPPU(0x1400), m117.chr[5]);
+	memmap_auto_1k(0, MMPPU(0x1800), m117.chr[6]);
+	memmap_auto_1k(0, MMPPU(0x1C00), m117.chr[7]);
 }
 INLINE static void wram_fix_117(void) {
-	memmap_prgrom_8k(MMCPU(0x6000), m117.prg[3]);
+	memmap_prgrom_8k(0, MMCPU(0x6000), m117.prg[3]);
 }
 INLINE static void mirroring_fix_117(void) {
 	switch (m117.mirroring & 0x03) {
 		case 0:
-			mirroring_V();
+			mirroring_V(0);
 			return;
 		case 1:
-			mirroring_H();
+			mirroring_H(0);
 			return;
 		case 2:
-			mirroring_SCR0();
+			mirroring_SCR0(0);
 			return;
 		case 3:
-			mirroring_SCR1();
+			mirroring_SCR1(0);
 			return;
 	}
 }
 
-INLINE static void irq_clock_117(void) {
+INLINE static void irq_clock_117(BYTE nidx) {
 	if (m117.irq.mode & 0x01) {
 		if (!m117.irq.a12_filter && (m117.irq.mode & 0x02)) {
 			if (!m117.irq.counter.b[0] || m117.irq.reload) {
@@ -229,7 +228,7 @@ INLINE static void irq_clock_117(void) {
 				m117.irq.counter.b[0]--;
 			}
 			if (!m117.irq.counter.b[0] && m117.irq.enable) {
-				nes.c.irq.high |= EXT_IRQ;
+				nes[nidx].c.irq.high |= EXT_IRQ;
 			}
 			m117.irq.reload = FALSE;
 		}

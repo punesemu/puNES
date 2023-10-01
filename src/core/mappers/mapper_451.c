@@ -53,7 +53,7 @@ void map_init_451(void) {
 	mapper.internal_struct_size[1] = sizeof(mmc3);
 
 	if (info.reset >= HARD) {
-		memset(&irqA12, 0x00, sizeof(irqA12));
+		memset(&nes[0].irqA12, 0x00, sizeof(nes[0].irqA12));
 	}
 
 	memset(&m451, 0x00, sizeof(m451));
@@ -70,8 +70,8 @@ void map_init_451(void) {
 	info.mapper.force_battery_io = TRUE;
 	info.mapper.extend_rd = TRUE;
 
-	irqA12.present = TRUE;
-	irqA12_delay = 1;
+	nes[0].irqA12.present = TRUE;
+	nes[0].irqA12.delay = 1;
 }
 void extcl_after_mapper_init_451(void) {
 	prg_fix_451();
@@ -83,18 +83,18 @@ void extcl_mapper_quit_451(void) {
 		m451tmp.sst39sf040 = NULL;
 	}
 }
-void extcl_cpu_wr_mem_451(WORD address, BYTE value) {
-	sst39sf040_write(address, value);
+void extcl_cpu_wr_mem_451(BYTE nidx, WORD address, BYTE value) {
+	sst39sf040_write(nidx, address, value);
 	switch (address & 0xE000) {
 		case 0xA000:
-			extcl_cpu_wr_mem_MMC3(0xA000, address & 0x01);
+			extcl_cpu_wr_mem_MMC3(nidx, 0xA000, address & 0x01);
 			break;
 		case 0xC000: {
 			BYTE tmp = address & 0xFF;
 
-			extcl_cpu_wr_mem_MMC3(0xC000, tmp - 1);
-			extcl_cpu_wr_mem_MMC3(0xC001, 0);
-			extcl_cpu_wr_mem_MMC3(tmp == 0xFF ? 0xE000 : 0xE001, 0);
+			extcl_cpu_wr_mem_MMC3(nidx, 0xC000, tmp - 1);
+			extcl_cpu_wr_mem_MMC3(nidx, 0xC001, 0);
+			extcl_cpu_wr_mem_MMC3(nidx, tmp == 0xFF ? 0xE000 : 0xE001, 0);
 			break;
 		}
 		case 0xE000:
@@ -104,20 +104,20 @@ void extcl_cpu_wr_mem_451(WORD address, BYTE value) {
 			break;
 	}
 }
-BYTE extcl_cpu_rd_mem_451(WORD address, UNUSED(BYTE openbus)) {
+BYTE extcl_cpu_rd_mem_451(BYTE nidx, WORD address, UNUSED(BYTE openbus)) {
 	if (address >= 0x8000) {
-		return (sst39sf040_read(address));
+		return (sst39sf040_read(nidx, address));
 	}
-	return (wram_rd(address));
+	return (wram_rd(nidx, address));
 }
 BYTE extcl_save_mapper_451(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m451.reg);
 	if (extcl_save_mapper_MMC3(mode, slot, fp) == EXIT_ERROR) return EXIT_ERROR;
 	return (sst39sf040_save_mapper(mode, slot, fp));
 }
-void extcl_cpu_every_cycle_451(void) {
-	sst39sf040_tick();
-	extcl_cpu_every_cycle_MMC3();
+void extcl_cpu_every_cycle_451(BYTE nidx) {
+	sst39sf040_tick(nidx);
+	extcl_cpu_every_cycle_MMC3(nidx);
 }
 void extcl_battery_io_451(BYTE mode, FILE *fp) {
 	if (mode == WR_BAT) {
@@ -134,17 +134,17 @@ void extcl_battery_io_451(BYTE mode, FILE *fp) {
 INLINE static void prg_fix_451(void) {
 	WORD bank = 0;
 
-	memmap_auto_8k(MMCPU(0x8000), bank);
+	memmap_auto_8k(0, MMCPU(0x8000), bank);
 
 	bank = 0x10 + (m451.reg & 1) + ((m451.reg & 2) << 2);
-	memmap_auto_8k(MMCPU(0xA000), bank);
+	memmap_auto_8k(0, MMCPU(0xA000), bank);
 
 	bank = 0x20 + (m451.reg & 1) + ((m451.reg & 2) << 2);
-	memmap_auto_8k(MMCPU(0xC000), bank);
+	memmap_auto_8k(0, MMCPU(0xC000), bank);
 
 	bank = 0x30;
-	memmap_auto_8k(MMCPU(0xE000), 0x30);
+	memmap_auto_8k(0, MMCPU(0xE000), 0x30);
 }
 INLINE static void chr_fix_451(void) {
-	memmap_auto_8k(MMPPU(0x0000), (m451.reg & 0x01));
+	memmap_auto_8k(0, MMPPU(0x0000), (m451.reg & 0x01));
 }

@@ -49,7 +49,7 @@ void map_init_406(void) {
 	mapper.internal_struct_size[0] = sizeof(mmc3);
 
 	if (info.reset >= HARD) {
-		memset(&irqA12, 0x00, sizeof(irqA12));
+		memset(&nes[0].irqA12, 0x00, sizeof(nes[0].irqA12));
 	}
 
 	init_MMC3(info.reset);
@@ -66,8 +66,8 @@ void map_init_406(void) {
 	info.mapper.force_battery_io = TRUE;
 	info.mapper.extend_rd = TRUE;
 
-	irqA12.present = TRUE;
-	irqA12_delay = 1;
+	nes[0].irqA12.present = TRUE;
+	nes[0].irqA12.delay = 1;
 }
 void extcl_mapper_quit_406(void) {
 	if (m406tmp.sst39sf040) {
@@ -75,28 +75,28 @@ void extcl_mapper_quit_406(void) {
 		m406tmp.sst39sf040 = NULL;
 	}
 }
-void extcl_cpu_wr_mem_406(WORD address, BYTE value) {
-	sst39sf040_write(address, value);
+void extcl_cpu_wr_mem_406(BYTE nidx, WORD address, BYTE value) {
+	sst39sf040_write(nidx, address, value);
 	if (info.mapper.submapper == 0) {
 		address = (address & 0xFFFC) | ((address & 0x0001) << 1) | ((address & 0x0002) >> 1);
 	} else if ((address <= 0x9000) || (address >= 0xE000)) {
 		address ^= 0x6000;
 	}
-	extcl_cpu_wr_mem_MMC3(address, value);
+	extcl_cpu_wr_mem_MMC3(nidx, address, value);
 }
-BYTE extcl_cpu_rd_mem_406(WORD address, UNUSED(BYTE openbus)) {
+BYTE extcl_cpu_rd_mem_406(BYTE nidx, WORD address, UNUSED(BYTE openbus)) {
 	if (address >= 0x8000) {
-		return (sst39sf040_read(address));
+		return (sst39sf040_read(nidx, address));
 	}
-	return (wram_rd(address));
+	return (wram_rd(nidx, address));
 }
 BYTE extcl_save_mapper_406(BYTE mode, BYTE slot, FILE *fp) {
 	if (extcl_save_mapper_MMC3(mode, slot, fp) == EXIT_ERROR) return (EXIT_ERROR);
 	return (sst39sf040_save_mapper(mode, slot, fp));
 }
-void extcl_cpu_every_cycle_406(void) {
-	sst39sf040_tick();
-	extcl_cpu_every_cycle_MMC3();
+void extcl_cpu_every_cycle_406(BYTE nidx) {
+	sst39sf040_tick(nidx);
+	extcl_cpu_every_cycle_MMC3(nidx);
 }
 void extcl_battery_io_406(BYTE mode, FILE *fp) {
 	if (mode == WR_BAT) {
@@ -109,7 +109,7 @@ void extcl_battery_io_406(BYTE mode, FILE *fp) {
 		}
 	}
 }
-void extcl_irq_A12_clock_406(void) {
+void extcl_irq_A12_clock_406(BYTE nidx) {
 	irqA12_clock()
 }
 
@@ -118,5 +118,5 @@ void prg_swap_mmc3_406(WORD address, WORD value) {
 }
 void wram_fix_mmc3_406(void) {
 	// Nessuna WRAM
-	memmap_disable_8k(MMCPU(0x6000));
+	memmap_disable_8k(0, MMCPU(0x6000));
 }

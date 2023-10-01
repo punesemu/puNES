@@ -25,7 +25,7 @@
 INLINE static void prg_fix_471(void);
 INLINE static void chr_fix_471(void);
 
-INLINE static void irq_clock_471(void);
+INLINE static void irq_clock_471(BYTE nidx);
 
 struct m471 {
 	WORD reg;
@@ -50,64 +50,63 @@ void extcl_after_mapper_init_471(void) {
 	prg_fix_471();
 	chr_fix_471();
 }
-void extcl_cpu_wr_mem_471(WORD address, UNUSED(BYTE value)) {
+void extcl_cpu_wr_mem_471(BYTE nidx, WORD address, UNUSED(BYTE value)) {
 	m471.reg = address;
-	nes.c.irq.high &= ~EXT_IRQ;
+	nes[nidx].c.irq.high &= ~EXT_IRQ;
 	prg_fix_471();
 	chr_fix_471();
 }
 BYTE extcl_save_mapper_471(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m471.reg);
-
 	return (EXIT_OK);
 }
-void extcl_ppu_000_to_255_471(void) {
-	if (nes.p.r2001.visible) {
-		extcl_ppu_320_to_34x_471();
+void extcl_ppu_000_to_255_471(BYTE nidx) {
+	if (nes[nidx].p.r2001.visible) {
+		extcl_ppu_320_to_34x_471(nidx);
 	}
 }
-void extcl_ppu_256_to_319_471(void) {
-	if ((nes.p.ppu.frame_x & 0x0007) != 0x0003) {
+void extcl_ppu_256_to_319_471(BYTE nidx) {
+	if ((nes[nidx].p.ppu.frame_x & 0x0007) != 0x0003) {
 		return;
 	}
 
-	if ((!nes.p.spr_ev.count_plus || (nes.p.spr_ev.tmp_spr_plus == nes.p.spr_ev.count_plus)) && (nes.p.r2000.size_spr == 16)) {
-		nes.p.ppu.spr_adr = nes.p.r2000.spt_adr;
+	if ((!nes[nidx].p.spr_ev.count_plus || (nes[nidx].p.spr_ev.tmp_spr_plus == nes[nidx].p.spr_ev.count_plus)) && (nes[nidx].p.r2000.size_spr == 16)) {
+		nes[nidx].p.ppu.spr_adr = nes[nidx].p.r2000.spt_adr;
 	} else {
-		ppu_spr_adr((nes.p.ppu.frame_x & 0x0038) >> 3);
+		ppu_spr_adr((nes[nidx].p.ppu.frame_x & 0x0038) >> 3);
 	}
-	if ((nes.p.ppu.spr_adr & 0x1000) > (nes.p.ppu.bck_adr & 0x1000)) {
-		irq_clock_471();
+	if ((nes[nidx].p.ppu.spr_adr & 0x1000) > (nes[nidx].p.ppu.bck_adr & 0x1000)) {
+		irq_clock_471(nidx);
 	}
 }
-void extcl_ppu_320_to_34x_471(void) {
-	if ((nes.p.ppu.frame_x & 0x0007) != 0x0003) {
+void extcl_ppu_320_to_34x_471(BYTE nidx) {
+	if ((nes[nidx].p.ppu.frame_x & 0x0007) != 0x0003) {
 		return;
 	}
 
-	if (nes.p.ppu.frame_x == 323) {
+	if (nes[nidx].p.ppu.frame_x == 323) {
 		ppu_spr_adr(7);
 	}
 
-	ppu_bck_adr(nes.p.r2000.bpt_adr, nes.p.r2006.value);
+	ppu_bck_adr(nes[nidx].p.r2000.bpt_adr, nes[nidx].p.r2006.value);
 
-	if ((nes.p.ppu.bck_adr & 0x1000) > (nes.p.ppu.spr_adr & 0x1000)) {
-		irq_clock_471();
+	if ((nes[nidx].p.ppu.bck_adr & 0x1000) > (nes[nidx].p.ppu.spr_adr & 0x1000)) {
+		irq_clock_471(nidx);
 	}
 }
-void extcl_update_r2006_471(WORD new_r2006, WORD old_r2006) {
+void extcl_update_r2006_471(BYTE nidx, WORD new_r2006, WORD old_r2006) {
 	if ((new_r2006 & 0x1000) > (old_r2006 & 0x1000)) {
-		irq_clock_471();
+		irq_clock_471(nidx);
 	}
 }
 
 INLINE static void prg_fix_471(void) {
-	memmap_auto_32k(MMCPU(0x8000), (m471.reg & 0xFF));
+	memmap_auto_32k(0, MMCPU(0x8000), (m471.reg & 0xFF));
 }
 INLINE static void chr_fix_471(void) {
-	memmap_auto_8k(MMPPU(0x0000), (m471.reg & 0xFF));
+	memmap_auto_8k(0, MMPPU(0x0000), (m471.reg & 0xFF));
 }
 
-INLINE static void irq_clock_471(void) {
-	nes.c.irq.high |= EXT_IRQ;
+INLINE static void irq_clock_471(BYTE nidx) {
+	nes[nidx].c.irq.high |= EXT_IRQ;
 }

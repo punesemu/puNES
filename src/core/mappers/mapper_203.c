@@ -40,23 +40,22 @@ void extcl_after_mapper_init_203(void) {
 	prg_fix_203();
 	chr_fix_203();
 }
-void extcl_cpu_wr_mem_203(UNUSED(WORD address), BYTE value) {
+void extcl_cpu_wr_mem_203(UNUSED(BYTE nidx), UNUSED(WORD address), BYTE value) {
 	m203.reg = value;
 	prg_fix_203();
 	chr_fix_203();
 }
 BYTE extcl_save_mapper_203(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m203.reg);
-
 	return (EXIT_OK);
 }
 
 INLINE static void prg_fix_203(void) {
 	WORD bank = m203.reg >> 2;
 
-	memmap_auto_16k(MMCPU(0x8000), bank);
-	memmap_auto_16k(MMCPU(0xC000), bank);
+	memmap_auto_16k(0, MMCPU(0x8000), bank);
+	memmap_auto_16k(0, MMCPU(0xC000), bank);
 }
 INLINE static void chr_fix_203(void) {
-	memmap_auto_8k(MMPPU(0x0000), (m203.reg & 0x03));
+	memmap_auto_8k(0, MMPPU(0x0000), (m203.reg & 0x03));
 }

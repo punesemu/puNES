@@ -22,9 +22,9 @@
 #include "common.h"
 
 void map_init_165(void);
-void extcl_cpu_wr_mem_165(WORD address, BYTE value);
+void extcl_cpu_wr_mem_165(BYTE nidx, WORD address, BYTE value);
 BYTE extcl_save_mapper_165(BYTE mode, BYTE slot, FILE *fp);
-void extcl_after_rd_chr_165(WORD address);
-void extcl_update_r2006_165(WORD new_r2006, WORD old_r2006);
+void extcl_after_rd_chr_165(BYTE nidx, WORD address);
+void extcl_update_r2006_165(BYTE nidx, WORD new_r2006, WORD old_r2006);
 
 #endif /* MAPPER_165_H_ */

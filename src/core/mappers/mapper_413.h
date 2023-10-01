@@ -23,9 +23,9 @@
 
 void map_init_413(void);
 void extcl_after_mapper_init_413(void);
-void extcl_cpu_wr_mem_413(WORD address, BYTE value);
-BYTE extcl_cpu_rd_mem_413(WORD address, BYTE openbus);
+void extcl_cpu_wr_mem_413(BYTE nidx, WORD address, BYTE value);
+BYTE extcl_cpu_rd_mem_413(BYTE nidx, WORD address, BYTE openbus);
 BYTE extcl_save_mapper_413(BYTE mode, BYTE slot, FILE *fp);
-void extcl_irq_A12_clock_413(void);
+void extcl_irq_A12_clock_413(BYTE nidx);
 
 #endif /* MAPPER_413_H_ */

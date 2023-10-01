@@ -44,7 +44,7 @@ void extcl_after_mapper_init_350(void) {
 	wram_fix_350();
 	mirroring_fix_350();
 }
-void extcl_cpu_wr_mem_350(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_350(UNUSED(BYTE nidx), WORD address, BYTE value) {
 	switch (address & 0xE000) {
 		case 0x8000:
 		case 0xA000:
@@ -61,7 +61,6 @@ void extcl_cpu_wr_mem_350(WORD address, BYTE value) {
 }
 BYTE extcl_save_mapper_350(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, bmc350.reg);
-
 	return (EXIT_OK);
 }
 
@@ -71,11 +70,11 @@ INLINE static void prg_fix_350(void) {
 
 	switch ((bmc350.reg[0] >> 5) & 0x03) {
 		case 0:
-			memmap_auto_16k(MMCPU(0x8000), bank);
-			memmap_auto_16k(MMCPU(0xC000), bank);
+			memmap_auto_16k(0, MMCPU(0x8000), bank);
+			memmap_auto_16k(0, MMCPU(0xC000), bank);
 			return;
 		case 1:
-			memmap_auto_32k(MMCPU(0x8000), bank >> 1);
+			memmap_auto_32k(0, MMCPU(0x8000), bank >> 1);
 			return;
 		case 2:
 		case 3:
@@ -84,18 +83,18 @@ INLINE static void prg_fix_350(void) {
 				bank &= 0x07;
 			}
 			base = (bmc350.reg[0] & 0x20);
-			memmap_auto_16k(MMCPU(0x8000), (base | bank));
-			memmap_auto_16k(MMCPU(0xC000), (base | bank | 0x07));
+			memmap_auto_16k(0, MMCPU(0x8000), (base | bank));
+			memmap_auto_16k(0, MMCPU(0xC000), (base | bank | 0x07));
 			return;
 	}
 }
 INLINE static void wram_fix_350(void) {
-	memmap_prgrom_8k(MMCPU(0x6000), 1);
+	memmap_prgrom_8k(0, MMCPU(0x6000), 1);
 }
 INLINE static void mirroring_fix_350(void) {
 	if (bmc350.reg[0] & 0x80) {
-		mirroring_H();
+		mirroring_H(0);
 	} else {
-		mirroring_V();
+		mirroring_V(0);
 	}
 }
