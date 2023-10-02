@@ -37,7 +37,7 @@ extern _mmc1 mmc1;
 extern _mmc1tmp mmc1tmp;
 
 void extcl_after_mapper_init_MMC1(void);
-void extcl_cpu_wr_mem_MMC1(WORD address, BYTE value);
+void extcl_cpu_wr_mem_MMC1(BYTE nidx, WORD address, BYTE value);
 BYTE extcl_save_mapper_MMC1(BYTE mode, BYTE slot, FILE *fp);
 
 void init_MMC1(BYTE type, BYTE reset);

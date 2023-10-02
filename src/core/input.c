@@ -21,6 +21,7 @@
 #include "video/gfx.h"
 #include "gui.h"
 #include "info.h"
+#include "nes.h"
 #include "conf.h"
 #include "vs_system.h"
 #include "nsf.h"
@@ -49,20 +50,21 @@ INLINE static void input_init_generic_keyboard(void);
 #define SET_DECODE_EVENT(id, funct) port_funct[id].input_decode_event = funct
 #define SET_ADD_EVENT(id, funct) port_funct[id].input_add_event = funct
 
-_r4016 r4016;
 _port port[PORT_MAX];
 _port_funct port_funct[PORT_MAX];
 _nes_keyboard nes_keyboard;
 _generic_keyboard generic_keyboard;
 _mic mic;
 
-BYTE (*input_wr_reg)(BYTE value);
-BYTE (*input_rd_reg[2])(BYTE openbus, BYTE nport);
+BYTE (*input_wr_reg)(BYTE nidx, BYTE value);
+BYTE (*input_rd_reg[2])(BYTE nidx, BYTE openbus, BYTE nport);
 
 void input_init(BYTE set_cursor) {
-	int a;
+	int a = 0;
 
-	r4016.value = 0;
+	for (int nesidx = 0; nesidx < info.number_of_nes; nesidx++) {
+		nes[nesidx].c.input.r4016 = 0;
+	}
 
 	info.zapper_is_present = FALSE;
 
@@ -126,14 +128,9 @@ void input_init(BYTE set_cursor) {
 			}
 		// VS SYSTEM
 		} else if (vs_system.enabled) {
-			if (info.extra_from_db & VSZAPPER) {
+			if (info.mapper.expansion == EXP_VS_ZAPPER) {
 				switch (a) {
 					case PORT1:
-						SET_WR(a, input_wr_standard_controller);
-						SET_RD(a, input_rd_standard_controller);
-						SET_DECODE_EVENT(a, input_decode_event_standard_controller);
-						SET_ADD_EVENT(a, input_add_event_standard_controller);
-						break;
 					case PORT2:
 						SET_WR(a, input_wr_standard_controller);
 						SET_RD(a, input_rd_zapper_vs);
@@ -147,7 +144,7 @@ void input_init(BYTE set_cursor) {
 					case PORT1:
 					case PORT2:
 						SET_WR(a, input_wr_standard_controller);
-						SET_RD(a, input_rd_standard_controller);
+						SET_RD(a, input_rd_standard_controller_vs);
 						SET_DECODE_EVENT(a, input_decode_event_standard_controller);
 						SET_ADD_EVENT(a, input_add_event_standard_controller);
 						break;
@@ -199,17 +196,18 @@ void input_init(BYTE set_cursor) {
 			}
 		}
 
-		port[a].index = 0;
+		for (int nesidx = 0; nesidx < NES_CHIPS_MAX; nesidx++) {
+			nes[nesidx].c.input.pindex[a] = 0;
+		}
 
 		{
 			BYTE state = RELEASED;
-			int b;
 
 			if (((port[a].type_pad == CTRL_PAD_AUTO) && (machine.type != DENDY)) || (port[a].type_pad == CTRL_PAD_ORIGINAL)) {
 				state = PRESSED;
 			}
 
-			for (b = 0; b < (int)LENGTH(port[a].data); b++) {
+			for (unsigned int b = 0; b < LENGTH(port[a].data); b++) {
 				if (b < 8) {
 					if (info.reset >= HARD) {
 						port[a].data[b] = RELEASED;
@@ -279,14 +277,14 @@ void input_init(BYTE set_cursor) {
 	gui_overlay_update();
 }
 
-void input_wr_disabled(UNUSED(const BYTE *value), UNUSED(BYTE nport)) {}
-void input_rd_disabled(UNUSED(BYTE *value), UNUSED(BYTE nport),	UNUSED(BYTE shift)) {}
+void input_wr_disabled(UNUSED(BYTE nidx), UNUSED(const BYTE *value), UNUSED(BYTE nport)) {}
+void input_rd_disabled(UNUSED(BYTE nidx), UNUSED(BYTE *value), UNUSED(BYTE nport),	UNUSED(BYTE shift)) {}
 
 BYTE input_draw_target(void) {
-	int i;
+	int i = 0;
 
 	if (vs_system.enabled) {
-		if ((info.extra_from_db & VSZAPPER) && !cfg->input.hide_zapper_cursor) {
+		if ((info.mapper.expansion == EXP_VS_ZAPPER) && !cfg->input.hide_zapper_cursor) {
 			return (TRUE);
 		}
 		return (FALSE);

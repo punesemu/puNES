@@ -23,7 +23,7 @@
 #include "conf.h"
 #include "settings.h"
 
-_dp_internal dp;
+extern _dp_internal dp;
 
 dlgDipswitch::dlgDipswitch(QWidget *parent) : QDialog(parent) {
 	setupUi(this);

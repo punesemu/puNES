@@ -44,7 +44,7 @@ void extcl_after_mapper_init_221(void) {
 	chr_fix_221();
 	mirroring_fix_221();
 }
-void extcl_cpu_wr_mem_221(WORD address, UNUSED(BYTE value)) {
+void extcl_cpu_wr_mem_221(UNUSED(BYTE nidx), WORD address, UNUSED(BYTE value)) {
 	switch (address & 0xF000) {
 		case 0x8000:
 		case 0x9000:
@@ -90,7 +90,6 @@ void extcl_cpu_wr_mem_221(WORD address, UNUSED(BYTE value)) {
 }
 BYTE extcl_save_mapper_221(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m221.reg);
-
 	return (EXIT_OK);
 }
 
@@ -101,28 +100,28 @@ INLINE static void prg_fix_221(void) {
 
 	if (!(m221.reg[0] & 0x02)) {
 		bank = outer | inner;
-		memmap_auto_16k(MMCPU(0x8000), bank);
-		memmap_auto_16k(MMCPU(0xC000), bank);
+		memmap_auto_16k(0, MMCPU(0x8000), bank);
+		memmap_auto_16k(0, MMCPU(0xC000), bank);
 	} else {
 		if (m221.reg[0] & 0x100) {
 			bank = outer | inner;
-			memmap_auto_16k(MMCPU(0x8000), bank);
+			memmap_auto_16k(0, MMCPU(0x8000), bank);
 
 			bank = outer | 0x07;
-			memmap_auto_16k(MMCPU(0xC000), bank);
+			memmap_auto_16k(0, MMCPU(0xC000), bank);
 		} else {
 			bank = (outer | inner) >> 1;
-			memmap_auto_32k(MMCPU(0x8000), bank);
+			memmap_auto_32k(0, MMCPU(0x8000), bank);
 		}
 	}
 }
 INLINE static void chr_fix_221(void) {
-	memmap_vram_wp_8k(MMPPU(0x0000), 0, TRUE, !(m221.reg[1] & 0x08));
+	memmap_vram_wp_8k(0, MMPPU(0x0000), 0, TRUE, !(m221.reg[1] & 0x08));
 }
 INLINE static void mirroring_fix_221(void) {
 	if (m221.reg[0] & 0x01) {
-		mirroring_H();
+		mirroring_H(0);
 	} else {
-		mirroring_V();
+		mirroring_V(0);
 	}
 }

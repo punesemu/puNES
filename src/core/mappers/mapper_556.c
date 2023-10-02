@@ -56,7 +56,7 @@ void map_init_556(void) {
 	mapper.internal_struct_size[2] = sizeof(vrc2and4);
 
 	if (info.reset >= HARD) {
-		memset(&irqA12, 0x00, sizeof(irqA12));
+		memset(&nes[0].irqA12, 0x00, sizeof(nes[0].irqA12));
 	}
 
 	memset(&m556, 0x00, sizeof(m556));
@@ -72,13 +72,13 @@ void map_init_556(void) {
 
 	info.mapper.extend_wr = TRUE;
 
-	irqA12.present = TRUE;
-	irqA12_delay = 1;
+	nes[0].irqA12.present = TRUE;
+	nes[0].irqA12.delay = 1;
 }
 void extcl_after_mapper_init_556(void) {
 	fix_all();
 }
-void extcl_cpu_wr_mem_556(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_556(BYTE nidx, WORD address, BYTE value) {
 	if ((address >= 0x5000) && (address <= 0x5FFF)) {
 		if (!(m556.reg[3] & 0x80)) {
 			m556.reg[m556.index] = value;
@@ -91,9 +91,9 @@ void extcl_cpu_wr_mem_556(WORD address, BYTE value) {
 		if (address & 0x0800) {
 			address = (address & 0xFFF3) | ((address & 0x0004) << 1) | ((address & 0x0008) >> 1);
 		}
-		extcl_cpu_wr_mem_VRC2and4(address, value);
+		extcl_cpu_wr_mem_VRC2and4(nidx, address, value);
 	} else {
-		extcl_cpu_wr_mem_MMC3(address, value);
+		extcl_cpu_wr_mem_MMC3(nidx, address, value);
 	}
 }
 BYTE extcl_save_mapper_556(BYTE mode, BYTE slot, FILE *fp) {
@@ -102,36 +102,36 @@ BYTE extcl_save_mapper_556(BYTE mode, BYTE slot, FILE *fp) {
 	if (extcl_save_mapper_MMC3(mode, slot, fp) == EXIT_ERROR) return (EXIT_ERROR);
 	return (extcl_save_mapper_VRC2and4(mode, slot, fp));
 }
-void extcl_cpu_every_cycle_556(void) {
+void extcl_cpu_every_cycle_556(BYTE nidx) {
 	if (m556.reg[2] & 0x80) {
-		extcl_cpu_every_cycle_VRC2and4();
+		extcl_cpu_every_cycle_VRC2and4(nidx);
 	} else {
-		extcl_cpu_every_cycle_MMC3();
+		extcl_cpu_every_cycle_MMC3(nidx);
 	}
 }
-void extcl_ppu_000_to_34x_556(void) {
+void extcl_ppu_000_to_34x_556(BYTE nidx) {
 	if (!(m556.reg[2] & 0x80)) {
-		extcl_ppu_000_to_34x_MMC3();
+		extcl_ppu_000_to_34x_MMC3(nidx);
 	}
 }
-void extcl_ppu_000_to_255_556(void) {
+void extcl_ppu_000_to_255_556(BYTE nidx) {
 	if (!(m556.reg[2] & 0x80)) {
-		extcl_ppu_000_to_255_MMC3();
+		extcl_ppu_000_to_255_MMC3(nidx);
 	}
 }
-void extcl_ppu_256_to_319_556(void) {
+void extcl_ppu_256_to_319_556(BYTE nidx) {
 	if (!(m556.reg[2] & 0x80)) {
-		extcl_ppu_256_to_319_MMC3();
+		extcl_ppu_256_to_319_MMC3(nidx);
 	}
 }
-void extcl_ppu_320_to_34x_556(void) {
+void extcl_ppu_320_to_34x_556(BYTE nidx) {
 	if (!(m556.reg[2] & 0x80)) {
-		extcl_ppu_320_to_34x_MMC3();
+		extcl_ppu_320_to_34x_MMC3(nidx);
 	}
 }
-void extcl_update_r2006_556(WORD new_r2006, WORD old_r2006) {
+void extcl_update_r2006_556(BYTE nidx, WORD new_r2006, WORD old_r2006) {
 	if (!(m556.reg[2] & 0x80)) {
-		extcl_update_r2006_MMC3(new_r2006, old_r2006);
+		extcl_update_r2006_MMC3(nidx, new_r2006, old_r2006);
 	}
 }
 

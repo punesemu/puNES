@@ -438,9 +438,14 @@ INLINE static void rewind_execute_frame(void) {
 		info.frame_status = FRAME_STARTED;
 	}
 
-	while (info.frame_status == FRAME_STARTED) {
-		cpu_exe_op();
+	for (int nesidx = 0; nesidx < info.number_of_nes; nesidx++) {
+		info.exec_cpu_op.b[nesidx] = TRUE;
 	}
+	while (info.exec_cpu_op.w) {
+		if (info.exec_cpu_op.b[0]) cpu_exe_op(0);
+		if (info.exec_cpu_op.b[1]) cpu_exe_op(1);
+	}
+	info.frame_status = FRAME_FINISHED;
 
 	info.lag_frame.actual = info.lag_frame.next;
 }

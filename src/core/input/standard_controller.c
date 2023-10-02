@@ -17,26 +17,30 @@
  */
 
 #include "input/standard_controller.h"
+#include "info.h"
 #include "conf.h"
+#include "nes.h"
 #include "gui.h"
+#include "vs_system.h"
 #include "video/gfx.h"
 #include "tas.h"
 
 INLINE static void input_turbo_buttons_standard_controller(_port *prt);
+INLINE static void input_reverse_button_standard_controller(BYTE *b0, BYTE *b1);
 
-void input_wr_standard_controller(const BYTE *value, BYTE nport) {
-	if ((r4016.value & 0x01) || ((*value) & 0x01)) {
-		port[nport].index = 0;
+void input_wr_standard_controller(BYTE nidx, const BYTE *value, BYTE nport) {
+	if ((nes[nidx].c.input.r4016 & 0x01) || ((*value) & 0x01)) {
+		nes[nidx].c.input.pindex[nport] = 0;
 	}
 }
-void input_rd_standard_controller(BYTE *value, BYTE nport, BYTE shift) {
-	(*value) = port[nport].data[port[nport].index] << shift;
+void input_rd_standard_controller(BYTE nidx, BYTE *value, BYTE nport, BYTE shift) {
+	(*value) = port[nport].data[nes[nidx].c.input.pindex[nport]] << shift;
 
 	// Se $4016 e' a 1 leggo solo lo stato del primo pulsante
 	// del controller. Quando verra' scritto 0 nel $4016
 	// riprendero' a leggere lo stato di tutti i pulsanti.
-	if (!(r4016.value & 0x01) && (++port[nport].index >= sizeof(port[nport].data))) {
-		port[nport].index = 0;
+	if (!(nes[nidx].c.input.r4016 & 0x01) && (++nes[nidx].c.input.pindex[nport] >= sizeof(port[nport].data))) {
+		nes[nidx].c.input.pindex[nport] = 0;
 	}
 }
 
@@ -47,51 +51,44 @@ void input_add_event_standard_controller(BYTE index) {
 BYTE input_decode_event_standard_controller(BYTE mode, UNUSED(BYTE autorepeat), DBWORD event, BYTE type, _port *prt) {
 	BYTE *left = &prt->data[LEFT], *right = &prt->data[RIGHT];
 	BYTE *up = &prt->data[UP], *down = &prt->data[DOWN];
+	BYTE *select = &prt->data[SELECT], *start = &prt->data[START];
 
 	if (tas.type) {
 		return (EXIT_OK);
 	}
+
+//	if (vs_system.enabled) {
+//		input_reverse_button_standard_controller(select, start);
+//		input_reverse_button_standard_controller(left, right);
+//		input_reverse_button_standard_controller(up, down);
+//	}
 
 	if ((cfg->screen_rotation | cfg->hflip_screen) && cfg->input_rotation) {
 		switch (cfg->screen_rotation) {
 			default:
 			case ROTATE_0:
 				if (cfg->hflip_screen) {
-					left = &prt->data[RIGHT];
-					right = &prt->data[LEFT];
+					input_reverse_button_standard_controller(left, right);
 				}
 				break;
 			case ROTATE_90:
-				left = &prt->data[DOWN];
-				right = &prt->data[UP];
-				if (cfg->hflip_screen) {
-					up = &prt->data[RIGHT];
-					down = &prt->data[LEFT];
-				} else {
-					up = &prt->data[LEFT];
-					down = &prt->data[RIGHT];
+				input_reverse_button_standard_controller(left, down);
+				input_reverse_button_standard_controller(right, up);
+				if (!cfg->hflip_screen) {
+					input_reverse_button_standard_controller(up, down);
 				}
 				break;
 			case ROTATE_180:
-				if (cfg->hflip_screen) {
-					left = &prt->data[LEFT];
-					right = &prt->data[RIGHT];
-				} else {
-					left = &prt->data[RIGHT];
-					right = &prt->data[LEFT];
+				input_reverse_button_standard_controller(up, down);
+				if (!cfg->hflip_screen) {
+					input_reverse_button_standard_controller(left, right);
 				}
-				up = &prt->data[DOWN];
-				down = &prt->data[UP];
 				break;
 			case ROTATE_270:
-				left = &prt->data[UP];
-				right = &prt->data[DOWN];
-				if (cfg->hflip_screen) {
-					up = &prt->data[LEFT];
-					down = &prt->data[RIGHT];
-				} else {
-					up = &prt->data[RIGHT];
-					down = &prt->data[LEFT];
+				input_reverse_button_standard_controller(left, up);
+				input_reverse_button_standard_controller(right, down);
+				if (!cfg->hflip_screen) {
+					input_reverse_button_standard_controller(up, down);
 				}
 				break;
 		}
@@ -108,10 +105,10 @@ BYTE input_decode_event_standard_controller(BYTE mode, UNUSED(BYTE autorepeat), 
 		}
 		return (EXIT_OK);
 	} else if (event == prt->input[type][SELECT]) {
-		prt->data[SELECT] = mode;
+		(*select) = mode;
 		return (EXIT_OK);
 	} else if (event == prt->input[type][START]) {
-		prt->data[START] = mode;
+		(*start) = mode;
 		return (EXIT_OK);
 	} else if (event == prt->input[type][UP]) {
 		(*up) = mode;
@@ -157,6 +154,29 @@ BYTE input_decode_event_standard_controller(BYTE mode, UNUSED(BYTE autorepeat), 
 	return (EXIT_ERROR);
 }
 
+void input_rd_standard_controller_vs(BYTE nidx, BYTE *value, BYTE nport, BYTE shift) {
+	BYTE index = nes[nidx].c.input.pindex[nport];
+	BYTE protection = FALSE;
+	BYTE np = nport;
+
+	if (index == START) {
+		index = SELECT;
+		protection = vs_system.special_mode.type == VS_SM_Ice_Climber;
+	} else if (index == SELECT) {
+		index = START;
+	} else if (info.mapper.expansion == EXP_VS_1P_R4017) {
+		np ^= 0x01;
+	}
+	(*value) = (protection ? PRESSED : port[np].data[index]) << shift;
+
+	// Se $4016 e' a 1 leggo solo lo stato del primo pulsante
+	// del controller. Quando verra' scritto 0 nel $4016
+	// riprendero' a leggere lo stato di tutti i pulsanti.
+	if (!(nes[nidx].c.input.r4016 & 0x01) && (++nes[nidx].c.input.pindex[nport] >= sizeof(port[nport].data))) {
+		nes[nidx].c.input.pindex[nport] = 0;
+	}
+}
+
 INLINE static void input_turbo_buttons_standard_controller(_port *prt) {
 	if ((prt->turbo[TURBOA].mode == PRESSED) || prt->turbo[TURBOA].active) {
 		if (++prt->turbo[TURBOA].counter == prt->turbo[TURBOA].frequency) {
@@ -178,4 +198,10 @@ INLINE static void input_turbo_buttons_standard_controller(_port *prt) {
 			prt->turbo[TURBOB].counter = 0;
 		}
 	}
+}
+INLINE static void input_reverse_button_standard_controller(BYTE *b0, BYTE *b1) {
+	BYTE *tmp = b0;
+
+	b0 = b1;
+	b1 = tmp;
 }

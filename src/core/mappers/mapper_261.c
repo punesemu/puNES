@@ -40,14 +40,13 @@ void extcl_after_mapper_init_261(void) {
 	prg_fix_261();
 	chr_fix_261();
 }
-void extcl_cpu_wr_mem_261(WORD address, UNUSED(BYTE value)) {
+void extcl_cpu_wr_mem_261(UNUSED(BYTE nidx), WORD address, UNUSED(BYTE value)) {
 	m261.reg = address;
 	prg_fix_261();
 	chr_fix_261();
 }
 BYTE extcl_save_mapper_261(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m261.reg);
-
 	return (EXIT_OK);
 }
 
@@ -55,13 +54,13 @@ INLINE static void prg_fix_261(void) {
 	WORD bank = m261.reg >> 7;
 
 	if (m261.reg & 0x0040) {
-		memmap_auto_32k(MMCPU(0x8000), bank);
+		memmap_auto_32k(0, MMCPU(0x8000), bank);
 	} else {
 		bank = (bank << 1) | ((m261.reg & 0x0020) >> 5);
-		memmap_auto_16k(MMCPU(0x8000), bank);
-		memmap_auto_16k(MMCPU(0xC000), bank);
+		memmap_auto_16k(0, MMCPU(0x8000), bank);
+		memmap_auto_16k(0, MMCPU(0xC000), bank);
 	}
 }
 INLINE static void chr_fix_261(void) {
-	memmap_auto_8k(MMPPU(0x0000), (m261.reg & 0x0F));
+	memmap_auto_8k(0, MMPPU(0x0000), (m261.reg & 0x0F));
 }

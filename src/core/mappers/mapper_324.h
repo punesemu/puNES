@@ -23,7 +23,7 @@
 
 void map_init_324(void);
 void extcl_after_mapper_init_324(void);
-void extcl_cpu_wr_mem_324(WORD address, BYTE value);
+void extcl_cpu_wr_mem_324(BYTE nidx, WORD address, BYTE value);
 BYTE extcl_save_mapper_324(BYTE mode, BYTE slot, FILE *fp);
 
 #endif /* MAPPER_324_H_ */

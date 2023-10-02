@@ -22,8 +22,8 @@
 #include "common.h"
 
 void map_init_308(void);
-void extcl_cpu_wr_mem_308(WORD address, BYTE value);
+void extcl_cpu_wr_mem_308(BYTE nidx, WORD address, BYTE value);
 BYTE extcl_save_mapper_308(BYTE mode, BYTE slot, FILE *fp);
-void extcl_cpu_every_cycle_308(void);
+void extcl_cpu_every_cycle_308(BYTE nidx);
 
 #endif /* MAPPER_308_H_ */

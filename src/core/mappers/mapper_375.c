@@ -42,7 +42,7 @@ void extcl_after_mapper_init_375(void) {
 	chr_fix_375();
 	mirroring_fix_375();
 }
-void extcl_cpu_wr_mem_375(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_375(UNUSED(BYTE nidx), WORD address, BYTE value) {
 	if (!(m375.reg[0] & 0x0800)) {
 		m375.reg[0] = address;
 		chr_fix_375();
@@ -53,7 +53,6 @@ void extcl_cpu_wr_mem_375(WORD address, BYTE value) {
 }
 BYTE extcl_save_mapper_375(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m375.reg);
-
 	return (EXIT_OK);
 }
 
@@ -64,16 +63,16 @@ INLINE static void prg_fix_375(void) {
 	WORD bit9 = (m375.reg[0] & 0x0200) >> 9;
 	WORD bit11 = (m375.reg[0] & 0x0800) >> 11;
 
-	memmap_auto_16k(MMCPU(0x8000), (((bank & ~bit0) & ~(bit11 * 7)) | (bit11 * m375.reg[1])));
-	memmap_auto_16k(MMCPU(0xC000), (((bank |  bit0) & ~(!bit7 * !bit9 * 7)) | (bit7 * bit9 * 7)));
+	memmap_auto_16k(0, MMCPU(0x8000), (((bank & ~bit0) & ~(bit11 * 7)) | (bit11 * m375.reg[1])));
+	memmap_auto_16k(0, MMCPU(0xC000), (((bank |  bit0) & ~(!bit7 * !bit9 * 7)) | (bit7 * bit9 * 7)));
 }
 INLINE static void chr_fix_375(void) {
-	memmap_vram_wp_8k(MMPPU(0x0000), 0, TRUE, !(m375.reg[0] & 0x80));
+	memmap_vram_wp_8k(0, MMPPU(0x0000), 0, TRUE, !(m375.reg[0] & 0x80));
 }
 INLINE static void mirroring_fix_375(void) {
 	if (m375.reg[0] & 0x02) {
-		mirroring_H();
+		mirroring_H(0);
 	} else {
-		mirroring_V();
+		mirroring_V(0);
 	}
 }

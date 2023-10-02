@@ -178,6 +178,7 @@ set(core_srcs
 	core/mappers/mapper_095.c
 	core/mappers/mapper_096.c
 	core/mappers/mapper_097.c
+	core/mappers/mapper_099.c
 	core/mappers/mapper_100.c
 	core/mappers/mapper_101.c
 	core/mappers/mapper_103.c
@@ -472,7 +473,6 @@ set(core_srcs
 	core/mappers/mapper_FDS.c
 	core/mappers/mapper_GameGenie.c
 	core/mappers/mapper_NSF.c
-	core/mappers/mapper_Vs.c
 
 	core/mappers/butterworth.cpp
 	core/mappers/butterworth_interface.cpp
@@ -522,6 +522,7 @@ set(core_srcs
 	core/jstick.c
 	core/main.c
 	core/mappers.c
+	core/nes.c
 	core/nsf.c
 	core/nsfe.c
 	core/overscan.c

@@ -45,26 +45,25 @@ void extcl_after_mapper_init_288(void) {
 	prg_fix_288();
 	chr_fix_288();
 }
-void extcl_cpu_wr_mem_288(WORD address, UNUSED(BYTE value)) {
+void extcl_cpu_wr_mem_288(UNUSED(BYTE nidx), WORD address, UNUSED(BYTE value)) {
 	m288.reg = address;
 	prg_fix_288();
 	chr_fix_288();
 }
-BYTE extcl_cpu_rd_mem_288(WORD address, UNUSED(BYTE openbus)) {
+BYTE extcl_cpu_rd_mem_288(BYTE nidx, WORD address, UNUSED(BYTE openbus)) {
 	if (address >= 0x8000) {
-		return (m288.reg & 0x0020 ? prgrom_rd((address | dipswitch.value)) : prgrom_rd(address));
+		return (m288.reg & 0x0020 ? prgrom_rd(nidx, (address | dipswitch.value)) : prgrom_rd(nidx, address));
 	}
-	return (wram_rd(address));
+	return (wram_rd(nidx, address));
 }
 BYTE extcl_save_mapper_288(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m288.reg);
-
 	return (EXIT_OK);
 }
 
 INLINE static void prg_fix_288(void) {
-	memmap_auto_32k(MMCPU(0x8000), (m288.reg >> 3));
+	memmap_auto_32k(0, MMCPU(0x8000), (m288.reg >> 3));
 }
 INLINE static void chr_fix_288(void) {
-	memmap_auto_8k(MMPPU(0x0000), (m288.reg & 0x07));
+	memmap_auto_8k(0, MMPPU(0x0000), (m288.reg & 0x07));
 }

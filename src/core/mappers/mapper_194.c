@@ -38,23 +38,23 @@ void map_init_194(void) {
 	mapper.internal_struct_size[0] = sizeof(mmc3);
 
 	if (info.reset >= HARD) {
-		memset(&irqA12, 0x00, sizeof(irqA12));
+		memset(&nes[0].irqA12, 0x00, sizeof(nes[0].irqA12));
 	}
 
 	init_MMC3(info.reset);
 	MMC3_prg_swap = prg_swap_mmc3_194;
 	MMC3_chr_swap = chr_swap_mmc3_194;
 
-	irqA12.present = TRUE;
-	irqA12_delay = 1;
+	nes[0].irqA12.present = TRUE;
+	nes[0].irqA12.delay = 1;
 }
 
 void prg_swap_mmc3_194(WORD address, WORD value) {
 	prg_swap_MMC3_base(address, (value & 0x3F));
 }
 void chr_swap_mmc3_194(WORD address, WORD value) {
-	if (!(value & 0xFE) && vram_size()) {
-		memmap_vram_1k(MMPPU(address), (value & 0x01));
+	if (!(value & 0xFE) && vram_size(0)) {
+		memmap_vram_1k(0, MMPPU(address), (value & 0x01));
 	} else {
 		chr_swap_MMC3_base(address, value);
 	}

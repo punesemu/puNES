@@ -49,7 +49,7 @@ void map_init_432(void) {
 	mapper.internal_struct_size[1] = sizeof(mmc3);
 
 	if (info.reset >= HARD) {
-		memset(&irqA12, 0x00, sizeof(irqA12));
+		memset(&nes[0].irqA12, 0x00, sizeof(nes[0].irqA12));
 	}
 
 	memset(&m432, 0x00, sizeof(m432));
@@ -63,12 +63,12 @@ void map_init_432(void) {
 	info.mapper.extend_wr = TRUE;
 	info.mapper.extend_rd = TRUE;
 
-	irqA12.present = TRUE;
-	irqA12_delay = 1;
+	nes[0].irqA12.present = TRUE;
+	nes[0].irqA12.delay = 1;
 }
-void extcl_cpu_wr_mem_432(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_432(BYTE nidx, WORD address, BYTE value) {
 	if ((address >= 0x6000) && (address <= 0x7FFF)) {
-		if (memmap_adr_is_writable(MMCPU(address))) {
+		if (memmap_adr_is_writable(nidx, MMCPU(address))) {
 			m432.reg[address & 0x01] = value;
 			if (m432tmp.less1024 && !(address & 0x0001) && !(value & 0x01)) {
 				m432.reg[1] &= ~0x20;
@@ -79,14 +79,14 @@ void extcl_cpu_wr_mem_432(WORD address, BYTE value) {
 		}
 		return;
 	} else if (address >= 0x8000) {
-		extcl_cpu_wr_mem_MMC3(address, value);
+		extcl_cpu_wr_mem_MMC3(nidx, address, value);
 	}
 }
-BYTE extcl_cpu_rd_mem_432(WORD address, UNUSED(BYTE openbus)) {
+BYTE extcl_cpu_rd_mem_432(BYTE nidx, WORD address, UNUSED(BYTE openbus)) {
 	if (address >= 0x8000) {
-		return (m432tmp.read_dp ? dipswitch.value : prgrom_rd(address));
+		return (m432tmp.read_dp ? dipswitch.value : prgrom_rd(nidx, address));
 	}
-	return (wram_rd(address));
+	return (wram_rd(nidx, address));
 }
 BYTE extcl_save_mapper_432(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m432.reg);

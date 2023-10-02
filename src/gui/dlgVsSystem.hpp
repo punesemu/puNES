@@ -26,9 +26,6 @@ class dlgVsSystem : public QDialog, public Ui::dlgVsSystem {
 	Q_OBJECT
 
 	public:
-		bool in_update;
-
-	public:
 		explicit dlgVsSystem(QWidget *parent = nullptr);
 		~dlgVsSystem() override;
 
@@ -43,8 +40,10 @@ class dlgVsSystem : public QDialog, public Ui::dlgVsSystem {
 
 	private slots:
 		void s_coins_clicked(bool checked);
+		void s_monitor_clicked(bool checked);
 		void s_ds_changed(int state);
-		void s_defaults_clicked(bool checked);
+		void s_ds_clicked(bool checked);
+		void s_ds_defaults_clicked(bool checked);
 		void s_x_clicked(bool checked);
 };
 

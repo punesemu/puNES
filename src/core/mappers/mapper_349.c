@@ -42,14 +42,13 @@ void extcl_after_mapper_init_349(void) {
 	prg_fix_349();
 	mirroring_fix_349();
 }
-void extcl_cpu_wr_mem_349(WORD address, UNUSED(BYTE value)) {
+void extcl_cpu_wr_mem_349(UNUSED(BYTE nidx), WORD address, UNUSED(BYTE value)) {
 	m349.reg = address;
 	prg_fix_349();
 	mirroring_fix_349();
 }
 BYTE extcl_save_mapper_349(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m349.reg);
-
 	return (EXIT_OK);
 }
 
@@ -57,19 +56,19 @@ INLINE static void prg_fix_349(void) {
 	WORD bank = m349.reg & 0x1F;
 
 	if (m349.reg & 0x0800) {
-		memmap_auto_16k(MMCPU(0x8000), (bank | (m349.reg & (m349.reg & 0x40) >> 6)));
-		memmap_auto_16k(MMCPU(0xC000), (bank | 0x07));
+		memmap_auto_16k(0, MMCPU(0x8000), (bank | (m349.reg & (m349.reg & 0x40) >> 6)));
+		memmap_auto_16k(0, MMCPU(0xC000), (bank | 0x07));
 	} else if (m349.reg & 0x40) {
-		memmap_auto_16k(MMCPU(0x8000), bank);
-		memmap_auto_16k(MMCPU(0xC000), bank);
+		memmap_auto_16k(0, MMCPU(0x8000), bank);
+		memmap_auto_16k(0, MMCPU(0xC000), bank);
 	} else {
-		memmap_auto_32k(MMCPU(0x8000), (bank >> 1));
+		memmap_auto_32k(0, MMCPU(0x8000), (bank >> 1));
 	}
 }
 INLINE static void mirroring_fix_349(void) {
 	if (m349.reg & 0x80) {
-		mirroring_H();
+		mirroring_H(0);
 	} else {
-		mirroring_V();
+		mirroring_V(0);
 	}
 }

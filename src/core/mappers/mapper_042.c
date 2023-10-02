@@ -113,7 +113,7 @@ void extcl_after_mapper_init_042_s1(void) {
 	chr_fix_042_s1();
 	wram_fix_042_s1();
 }
-void extcl_cpu_wr_mem_042_s1(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_042_s1(UNUSED(BYTE nidx), WORD address, BYTE value) {
 	switch (address & 0xE000) {
 		case 0x8000:
 			m042.chr = value;
@@ -130,18 +130,17 @@ void extcl_cpu_wr_mem_042_s1(WORD address, BYTE value) {
 BYTE extcl_save_mapper_042_s1(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m042.prg);
 	save_slot_ele(mode, slot, m042.chr);
-
 	return (EXIT_OK);
 }
 
 INLINE static void prg_fix_042_s1(void) {
-	memmap_auto_32k(MMCPU(0x8000),  0xFF);
+	memmap_auto_32k(0, MMCPU(0x8000),  0xFF);
 }
 INLINE static void chr_fix_042_s1(void) {
-	memmap_auto_8k(MMPPU(0x0000), m042.chr);
+	memmap_auto_8k(0, MMPPU(0x0000), m042.chr);
 }
 INLINE static void wram_fix_042_s1(void) {
-	memmap_prgrom_8k(MMCPU(0x6000),  m042.prg);
+	memmap_prgrom_8k(0, MMCPU(0x6000),  m042.prg);
 }
 
 // submapper 2 -----------------------------------------------------------------
@@ -150,7 +149,7 @@ void extcl_after_mapper_init_042_s2(void) {
 	extcl_after_mapper_init_N118();
 	mirroring_fix_042_s2();
 }
-void extcl_cpu_wr_mem_042_s2(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_042_s2(BYTE nidx, WORD address, BYTE value) {
 	switch (address & 0xF000) {
 		case 0x4000:
 			if (address == 0x4025) {
@@ -159,7 +158,7 @@ void extcl_cpu_wr_mem_042_s2(WORD address, BYTE value) {
 			}
 			return;
 		default:
-			extcl_cpu_wr_mem_N118(address, value);
+			extcl_cpu_wr_mem_N118(nidx, address, value);
 			return;
 	}
 }
@@ -169,18 +168,18 @@ BYTE extcl_save_mapper_042_s2(BYTE mode, BYTE slot, FILE *fp) {
 }
 
 void prg_fix_n118_042_s2(void) {
-	memmap_prgrom_32k(MMCPU(0x8000),  (prgrom_banks(S16K) & 0x0F ? 4 : 7));
+	memmap_prgrom_32k(0, MMCPU(0x8000), (prgrom_banks(S16K) & 0x0F ? 4 : 7));
 	wram_fix_042_s2();
 }
 
 INLINE static void wram_fix_042_s2(void) {
-	memmap_prgrom_8k(MMCPU(0x6000),  ((n118.reg[5] & 0x1E) >> 1));
+	memmap_prgrom_8k(0, MMCPU(0x6000),  ((n118.reg[5] & 0x1E) >> 1));
 }
 INLINE static void mirroring_fix_042_s2(void) {
 	if (m042.mirroring & 0x08) {
-		mirroring_H();
+		mirroring_H(0);
 	} else {
-		mirroring_V();
+		mirroring_V(0);
 	}
 }
 
@@ -191,7 +190,7 @@ void extcl_after_mapper_init_042_s3(void) {
 	wram_fix_042_s3();
 	mirroring_fix_042_s3();
 }
-void extcl_cpu_wr_mem_042_s3(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_042_s3(UNUSED(BYTE nidx), WORD address, BYTE value) {
 	switch (address & 0xE003) {
 		case 0xE000:
 			m042.prg = value;
@@ -208,15 +207,15 @@ void extcl_cpu_wr_mem_042_s3(WORD address, BYTE value) {
 			return;
 	}
 }
-void extcl_cpu_every_cycle_042_s3(void) {
+void extcl_cpu_every_cycle_042_s3(BYTE nidx) {
 	if (m042.irq.reg & 0x02) {
 		if ((++m042.irq.count & 0x6000) == 0x6000) {
-			irq.high |= EXT_IRQ;
+			nes[nidx].c.irq.high |= EXT_IRQ;
 		} else {
-			irq.high &= ~EXT_IRQ;
+			nes[nidx].c.irq.high &= ~EXT_IRQ;
 		}
 	} else {
-		irq.high &= ~EXT_IRQ;
+		nes[nidx].c.irq.high &= ~EXT_IRQ;
 		m042.irq.count = 0;
 	}
 }
@@ -225,20 +224,19 @@ BYTE extcl_save_mapper_042_s3(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m042.mirroring);
 	save_slot_ele(mode, slot, m042.irq.reg);
 	save_slot_ele(mode, slot, m042.irq.count);
-
 	return (EXIT_OK);
 }
 
 INLINE static void prg_fix_042_s3(void) {
-	memmap_prgrom_32k(MMCPU(0x8000),  0xFF);
+	memmap_prgrom_32k(0, MMCPU(0x8000),  0xFF);
 }
 INLINE static void wram_fix_042_s3(void) {
-	memmap_prgrom_8k(MMCPU(0x6000),  m042.prg);
+	memmap_prgrom_8k(0, MMCPU(0x6000),  m042.prg);
 }
 INLINE static void mirroring_fix_042_s3(void) {
 	if (m042.mirroring & 0x08) {
-		mirroring_H();
+		mirroring_H(0);
 	} else {
-		mirroring_V();
+		mirroring_V(0);
 	}
 }

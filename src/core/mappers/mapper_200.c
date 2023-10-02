@@ -45,42 +45,41 @@ void extcl_after_mapper_init_200(void) {
 	chr_fix_200();
 	mirroring_fix_200();
 }
-void extcl_cpu_wr_mem_200(WORD address, UNUSED(BYTE value)) {
+void extcl_cpu_wr_mem_200(UNUSED(BYTE nidx), WORD address, UNUSED(BYTE value)) {
 	m200.reg = address;
 	prg_fix_200();
 	chr_fix_200();
 	mirroring_fix_200();
 }
-BYTE extcl_cpu_rd_mem_200(WORD address, UNUSED(BYTE openbus)) {
+BYTE extcl_cpu_rd_mem_200(BYTE nidx, WORD address, UNUSED(BYTE openbus)) {
 	if (address >= 0x8000) {
 		switch (m200.reg & 0xFF0F) {
 			case 0xF004:
-				return (prgrom_size() <= S64K ? dipswitch.value & 0x00FF : prgrom_rd(address));
+				return (prgrom_size() <= S64K ? dipswitch.value & 0x00FF : prgrom_rd(nidx, address));
 			case 0xF008:
 				return ((dipswitch.value & 0xFF00) >> 8);
 			default:
-				return (prgrom_rd(address));
+				return (prgrom_rd(nidx, address));
 		}
 	}
-	return (wram_rd(address));
+	return (wram_rd(nidx, address));
 }
 BYTE extcl_save_mapper_200(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m200.reg);
-
 	return (EXIT_OK);
 }
 
 INLINE static void prg_fix_200(void) {
-	memmap_auto_16k(MMCPU(0x8000), m200.reg);
-	memmap_auto_16k(MMCPU(0xC000), m200.reg);
+	memmap_auto_16k(0, MMCPU(0x8000), m200.reg);
+	memmap_auto_16k(0, MMCPU(0xC000), m200.reg);
 }
 INLINE static void chr_fix_200(void) {
-	memmap_auto_8k(MMPPU(0x0000), m200.reg);
+	memmap_auto_8k(0, MMPPU(0x0000), m200.reg);
 }
 INLINE static void mirroring_fix_200(void) {
 	if (m200.reg & (info.mapper.submapper == 1 ? 0x04 : 0x08)) {
-		mirroring_H();
+		mirroring_H(0);
 	} else {
-		mirroring_V();
+		mirroring_V(0);
 	}
 }

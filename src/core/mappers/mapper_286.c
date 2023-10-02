@@ -51,7 +51,7 @@ void extcl_after_mapper_init_286(void) {
 	chr_fix_286();
 	mirroring_fix_286();
 }
-void extcl_cpu_wr_mem_286(WORD address, UNUSED(BYTE value)) {
+void extcl_cpu_wr_mem_286(UNUSED(BYTE nidx), WORD address, UNUSED(BYTE value)) {
 	switch (address & 0xF000) {
 		case 0x8000:
 		case 0x9000:
@@ -75,26 +75,25 @@ BYTE extcl_save_mapper_286(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m286.prg);
 	save_slot_ele(mode, slot, m286.chr);
 	save_slot_ele(mode, slot, m286.mirroring);
-
 	return (EXIT_OK);
 }
 
 INLINE static void prg_fix_286(void) {
-	memmap_auto_8k(MMCPU(0x8000), m286.prg[0]);
-	memmap_auto_8k(MMCPU(0xA000), m286.prg[1]);
-	memmap_auto_8k(MMCPU(0xC000), m286.prg[2]);
-	memmap_auto_8k(MMCPU(0xE000), m286.prg[3]);
+	memmap_auto_8k(0, MMCPU(0x8000), m286.prg[0]);
+	memmap_auto_8k(0, MMCPU(0xA000), m286.prg[1]);
+	memmap_auto_8k(0, MMCPU(0xC000), m286.prg[2]);
+	memmap_auto_8k(0, MMCPU(0xE000), m286.prg[3]);
 }
 INLINE static void chr_fix_286(void) {
-	memmap_auto_2k(MMPPU(0x0000), m286.chr[0]);
-	memmap_auto_2k(MMPPU(0x0800), m286.chr[1]);
-	memmap_auto_2k(MMPPU(0x1000), m286.chr[2]);
-	memmap_auto_2k(MMPPU(0x1800), m286.chr[3]);
+	memmap_auto_2k(0, MMPPU(0x0000), m286.chr[0]);
+	memmap_auto_2k(0, MMPPU(0x0800), m286.chr[1]);
+	memmap_auto_2k(0, MMPPU(0x1000), m286.chr[2]);
+	memmap_auto_2k(0, MMPPU(0x1800), m286.chr[3]);
 }
 INLINE static void mirroring_fix_286(void) {
 	if (m286.mirroring) {
-		mirroring_H();
+		mirroring_H(0);
 	} else {
-		mirroring_V();
+		mirroring_V(0);
 	}
 }

@@ -17,79 +17,73 @@
  */
 
 #include "input/vs.h"
-#include "info.h"
+#include "input/nes_001.h"
+#include "input/four_score.h"
 #include "conf.h"
 #include "vs_system.h"
-#include "clock.h"
+#include "cpu.h"
 
-INLINE static void _input_rd_reg_vs(BYTE *value, BYTE nport);
-
-BYTE input_wr_reg_vs(BYTE value) {
-	vs_system.shared_mem = value & 0x02;
-
-	// in caso di strobe azzero l'indice
-	port_funct[PORT1].input_wr(&value, PORT1);
-	port_funct[PORT2].input_wr(&value, PORT2);
-
-	// restituisco il nuovo valore del $4016
-	return (value);
+BYTE input_wr_reg_vs(BYTE nidx, BYTE value) {
+	if (vs_system.special_mode.type < VS_DS_Normal) {
+		vs_system.shared_mem = !(value & 0x02);
+		return (input_wr_reg_nes_001(nidx, value));
+	} else {
+		if (nidx == 0) {
+			vs_system.shared_mem = !(value & 0x02);
+		}
+		if (!(value & 0x02)) {
+			nes[!nidx].c.irq.high |= EXT_IRQ;
+		} else {
+			nes[!nidx].c.irq.high &= ~EXT_IRQ;
+		}
+		return (input_wr_reg_four_score(nidx, value));
+	}
 }
-BYTE input_rd_reg_vs_r4016(UNUSED(BYTE openbus), BYTE nport) {
+BYTE input_rd_reg_vs_r4016(BYTE nidx, UNUSED(BYTE openbus), BYTE nport) {
 	BYTE value = 0;
-
-	_input_rd_reg_vs(&value, !nport);
 
 	// port $4016
 	// 7  bit  0
 	// ---- ----
-	// xCCD DSxB
-	//  ||| || |
-	//  ||| || +- Buttons for player 2 (A, B, 1, 3, Up, Down, Left, Right)
-	//  ||| |+--- Service button (commonly inserts a credit)
-	//  ||+-+---- DIP switches "2" and "1", respectively
-	//  ++------- Coin inserted (read below)
-	return ((vs_system.coins.right ? 0x40 : 0x00) |
-			(vs_system.coins.left ? 0x20 : 0x00) |
-			((cfg->dipswitch_vs & 0x03) << 3) |
-			(vs_system.coins.service ? 0x04 : 0x00) |
-			(value & 0x01));
+	// PCCD DS0B
+	// |||| ||||
+	// |||| |||+- Buttons for right stick (A, B, 1, 3, Up, Down, Left, Right)
+	// |||| ||+-- always 0 (from floating input on 74LS240)
+	// |||| |+--- Service button (commonly inserts a credit)
+	// |||+-+---- DIP switches "2" and "1", respectively
+	// |++------- Coin inserted (read below)
+	// +--------- 0: Game is running on the primary CPU (it controls which CPU has access to shared RAM)
+	//            1: Game is running on the secondary CPU (it must prevent watchdog timer timeout)
+	if (vs_system.special_mode.type < VS_DS_Normal) {
+		value = input_rd_reg_nes_001(nidx, 0x00, nport);
+		value |= (vs_system.coins.right ? 0x40 : 0x00);
+		value |= (vs_system.coins.left ? 0x20 : 0x00);
+	} else {
+		value = input_rd_reg_four_score_vs(nidx, 0x00, nport);
+		value |= (nidx == 1 ? vs_system.coins.right ? 0x40 : 0x00 : 0x00);
+		value |= (nidx == 0 ? vs_system.coins.left ? 0x20 : 0x00 : 0x00);
+	}
+	return ((nidx << 7) |
+		(((cfg->dipswitch >> (nidx << 3)) & 0x03) << 3) |
+		(vs_system.coins.service ? 0x04 : 0x00) |
+		(value & 0x61));
 }
-BYTE input_rd_reg_vs_r4017(UNUSED(BYTE openbus), BYTE nport) {
+BYTE input_rd_reg_vs_r4017(BYTE nidx, UNUSED(BYTE openbus), BYTE nport) {
 	BYTE value = 0;
 
 	vs_system.watchdog.timer = 0;
-	_input_rd_reg_vs(&value, !nport);
-
 	// port $4017
 	// 7  bit  0
 	// ---- ----
-	// DDDD DDxB
-	// |||| || |
-	// |||| || +- Buttons for player 1 (A, B, 2, 4, Up, Down, Left, Right)
-	// ++++-++--- More DIP switches (7 down to 2)
-	return ((cfg->dipswitch_vs & 0xFC) | (value & 0x01));
-}
-
-INLINE static void _input_rd_reg_vs(BYTE *value, BYTE nport) {
-	port_funct[nport].input_rd(value, nport, 0);
-
-	// se avviene un DMA del DMC all'inizio
-	// dell'istruzione di lettura del registro,
-	// avverranno due letture.
-	// Aggiornamento da https://www.nesdev.org/wiki/Controller_reading :
-	// DPCM conflict
-	// Using DPCM sample playback while trying to read the controller can cause
-	// problems because of a bug in its hardware implementation.
-	// If the DMC DMA is running, and happens to start a read in the same cycle that the CPU
-	// is trying to read from $4016 or $4017, the values read will become invalid. Since the address
-	// bus will change for one cycle, the shift register will see an extra rising clock edge (a "double clock"),
-	// and the shift register will drop a bit out. The program will see this as a bit deletion from the serial
-	// data. Not correcting for this results in spurious presses. On the standard controller this is most
-	// often seen as a right-press as a trailing 1 bit takes the place of the 8th bit of the report (right).
-	// This glitch is fixed in the 2A07 CPU used in the PAL NES.
-	// This detail is poorly represented in emulators.[2] Because it is not normally a compatibility issue,
-	// many emulators do not simulate this glitch at all.
-	if ((machine.type == NTSC) && !info.r4016_dmc_double_read_disabled && (DMC.dma_cycle == 2)) {
-		port_funct[nport].input_rd(value, nport, 0);
+	// DDDD DD0B
+	// |||| ||||
+	// |||| |||+- Buttons for left stick (A, B, 2, 4, Up, Down, Left, Right)
+	// |||| ||+-- always 0 (from floating input on 74LS240)
+	// ++++-++--- More DIP switches ("8" down to "3")
+	if (vs_system.special_mode.type < VS_DS_Normal) {
+		value = input_rd_reg_nes_001(nidx, 0x00, nport);
+	} else {
+		value = input_rd_reg_four_score_vs(nidx, 0x00, nport);
 	}
+	return (((cfg->dipswitch >> (nidx << 3)) & 0xFC) | (value & 0x01));
 }

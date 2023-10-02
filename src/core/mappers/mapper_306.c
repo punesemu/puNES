@@ -42,7 +42,7 @@ void extcl_after_mapper_init_306(void) {
 	prg_fix_306();
 	wram_fix_306();
 }
-void extcl_cpu_wr_mem_306(WORD address, UNUSED(BYTE value)) {
+void extcl_cpu_wr_mem_306(UNUSED(BYTE nidx), WORD address, UNUSED(BYTE value)) {
 	if ((address & 0xD903) == 0xD903) {
 		m306.reg = (address & 0x40) ? (address >> 2) & 0x0F : 0x08 | ((address >> 2) & 0x03);
 
@@ -55,8 +55,8 @@ BYTE extcl_save_mapper_306(BYTE mode, BYTE slot, FILE *fp) {
 }
 
 INLINE static void prg_fix_306(void) {
-	memmap_auto_32k(MMCPU(0x8000), 3);
+	memmap_auto_32k(0, MMCPU(0x8000), 3);
 }
 INLINE static void wram_fix_306(void) {
-	memmap_prgrom_8k(MMCPU(0x6000), m306.reg);
+	memmap_prgrom_8k(0, MMCPU(0x6000), m306.reg);
 }

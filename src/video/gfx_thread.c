@@ -97,17 +97,18 @@ static thread_funct(gfx_thread_loop, UNUSED(void *arg)) {
 			gui_sleep(1);
 			continue;
 		}
+		BYTE nidx = emu_active_nidx();
 
 		gfx_thread.in_run = TH_TRUE;
 
-		if (!ppu_screen.rd->ready) {
+		if (!nes[nidx].p.ppu_screen.rd || !nes[nidx].p.ppu_screen.rd->ready) {
 			gui_sleep(1);
 			continue;
 		}
 
 		gfx_thread_public.filtering = TRUE;
-		ppu_screen.rd->ready = FALSE;
-		gfx_apply_filter();
+		nes[nidx].p.ppu_screen.rd->ready = FALSE;
+		gfx_apply_filter(nidx);
 		gfx_thread_public.filtering = FALSE;
 	}
 

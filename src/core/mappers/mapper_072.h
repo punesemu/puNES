@@ -37,8 +37,8 @@ extern _m072 m072;
 void map_init_072(void);
 void extcl_after_mapper_init_072(void);
 void extcl_mapper_quit_072(void);
-void extcl_cpu_wr_mem_072(WORD address, BYTE value);
+void extcl_cpu_wr_mem_072(BYTE nidx, WORD address, BYTE value);
 BYTE extcl_save_mapper_072(BYTE mode, BYTE slot, FILE *fp);
-void extcl_cpu_every_cycle_072(void);
+void extcl_cpu_every_cycle_072(BYTE nidx);
 
 #endif /* MAPPER_072_H_ */

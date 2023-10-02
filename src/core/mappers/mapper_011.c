@@ -42,20 +42,19 @@ void extcl_after_mapper_init_011(void) {
 	prg_fix_011();
 	chr_fix_011();
 }
-void extcl_cpu_wr_mem_011(UNUSED(WORD address), BYTE value) {
+void extcl_cpu_wr_mem_011(UNUSED(BYTE nidx), UNUSED(WORD address), BYTE value) {
 	m011.reg = value;
 	prg_fix_011();
 	chr_fix_011();
 }
 BYTE extcl_save_mapper_011(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m011.reg);
-
 	return (EXIT_OK);
 }
 
 INLINE static void prg_fix_011(void) {
-	memmap_auto_32k(MMCPU(0x8000), m011.reg);
+	memmap_auto_32k(0, MMCPU(0x8000), m011.reg);
 }
 INLINE static void chr_fix_011(void) {
-	memmap_auto_8k(MMPPU(0x0000), (m011.reg >> 4));
+	memmap_auto_8k(0, MMPPU(0x0000), (m011.reg >> 4));
 }

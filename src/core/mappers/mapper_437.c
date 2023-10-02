@@ -44,33 +44,32 @@ void extcl_after_mapper_init_437(void) {
 	prg_fix_437();
 	mirroring_fix_437();
 }
-void extcl_cpu_wr_mem_437(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_437(BYTE nidx, WORD address, BYTE value) {
 	if ((address >= 0x5000) && (address <= 0x5FFF)) {
 		m437.reg[0] = address;
 		prg_fix_437();
 		mirroring_fix_437();
 	} else if (address >= 0x8000) {
 		// bus conflict
-		m437.reg[1] = value & prgrom_rd(address);
+		m437.reg[1] = value & prgrom_rd(nidx, address);
 		prg_fix_437();
 	}
 }
 BYTE extcl_save_mapper_437(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m437.reg);
-
 	return (EXIT_OK);
 }
 
 INLINE static void prg_fix_437(void) {
 	WORD base = (m437.reg[0] & 0x0F) << 3;
 
-	memmap_auto_16k(MMCPU(0x8000), (base | (m437.reg[1] & 0x07)));
-	memmap_auto_16k(MMCPU(0xC000), (base | 0x07));
+	memmap_auto_16k(0, MMCPU(0x8000), (base | (m437.reg[1] & 0x07)));
+	memmap_auto_16k(0, MMCPU(0xC000), (base | 0x07));
 }
 INLINE static void mirroring_fix_437(void) {
 	if (m437.reg[0] & 0x08) {
-		mirroring_H();
+		mirroring_H(0);
 	} else {
-		mirroring_V();
+		mirroring_V(0);
 	}
 }

@@ -45,7 +45,7 @@ void map_init_401(void) {
 	mapper.internal_struct_size[1] = sizeof(mmc3);
 
 	if (info.reset >= HARD) {
-		memset(&irqA12, 0x00, sizeof(irqA12));
+		memset(&nes[0].irqA12, 0x00, sizeof(nes[0].irqA12));
 	}
 
 	memset(&m401, 0x00, sizeof(m401));
@@ -58,12 +58,12 @@ void map_init_401(void) {
 
 	info.mapper.extend_wr = TRUE;
 
-	irqA12.present = TRUE;
-	irqA12_delay = 1;
+	nes[0].irqA12.present = TRUE;
+	nes[0].irqA12.delay = 1;
 }
-void extcl_cpu_wr_mem_401(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_401(BYTE nidx, WORD address, BYTE value) {
 	if ((address >= 0x6000) && (address <= 0x7FFF)) {
-		if (!(m401.reg[3] & 0x40) && memmap_adr_is_writable(MMCPU(address))) {
+		if (!(m401.reg[3] & 0x40) && memmap_adr_is_writable(nidx, MMCPU(address))) {
 			m401.reg[m401.index] = value;
 			m401.index = (m401.index + 1) & 0x03;
 			MMC3_prg_fix();
@@ -71,7 +71,7 @@ void extcl_cpu_wr_mem_401(WORD address, BYTE value) {
 		}
 		return;
 	} else if (address >= 0x8000) {
-		extcl_cpu_wr_mem_MMC3(address, value);
+		extcl_cpu_wr_mem_MMC3(nidx, address, value);
 	}
 }
 BYTE extcl_save_mapper_401(BYTE mode, BYTE slot, FILE *fp) {
@@ -82,7 +82,7 @@ BYTE extcl_save_mapper_401(BYTE mode, BYTE slot, FILE *fp) {
 
 void prg_swap_mmc3_401(WORD address, WORD value) {
 	if ((dipswitch.value & 0x01) && (m401.reg[1] & 0x80)) {
-		memmap_disable_8k(MMCPU(address));
+		memmap_disable_8k(0, MMCPU(address));
 	} else {
 		WORD base = (m401.reg[1] & 0x1F) | (m401.reg[2] & 0x80) |
 			(dipswitch.value & 0x02 ? m401.reg[2] & 0x20 : (m401.reg[1] & 0x40) >> 1) |

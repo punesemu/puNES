@@ -22,25 +22,20 @@
 #include "external_calls.h"
 #include "memmap.h"
 
-INLINE static BYTE ppu_rd_mem(WORD address);
+INLINE static BYTE ppu_rd_mem(BYTE nidx, WORD address);
 
-INLINE static BYTE ppu_rd_mem(WORD address) {
+INLINE static BYTE ppu_rd_mem(BYTE nidx, WORD address) {
 	if (extcl_rd_ppu_mem) {
-		/*
-		 * utilizzato dalle mappers :
-		 * 394
-		 * JYASIC
-		 */
-		extcl_rd_ppu_mem(address);
+		extcl_rd_ppu_mem(nidx, address);
 	}
 	address &= 0x3FFF;
 	if (address < 0x2000) {
-		return (extcl_rd_chr ? extcl_rd_chr(address) : chr_rd(address));
+		return (extcl_rd_chr ? extcl_rd_chr(nidx, address) : chr_rd(nidx, address));
 	}
 	if (address < 0x3F00) {
-		return (extcl_rd_nmt ? extcl_rd_nmt(address) : nmt_rd(address));
+		return (extcl_rd_nmt ? extcl_rd_nmt(nidx, address) : nmt_rd(nidx, address));
 	}
-	return (memmap_palette.color[address & 0x1F]);
+	return (nes[nidx].m.memmap_palette.color[address & 0x1F]);
 }
 
 #endif /* PPU_INLINE_H_ */

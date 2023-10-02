@@ -23,14 +23,14 @@
 
 void map_init_163(void);
 void extcl_after_mapper_init_163(void);
-void extcl_cpu_wr_mem_163(WORD address, BYTE value);
-BYTE extcl_cpu_rd_mem_163(WORD address, BYTE openbus);
+void extcl_cpu_wr_mem_163(BYTE nidx, WORD address, BYTE value);
+BYTE extcl_cpu_rd_mem_163(BYTE nidx, WORD address, BYTE openbus);
 BYTE extcl_save_mapper_163(BYTE mode, BYTE slot, FILE *fp);
-void extcl_wr_chr_163(WORD address, BYTE value);
-BYTE extcl_rd_chr_163(WORD address);
-void extcl_wr_nmt_163(WORD address, BYTE value);
-void extcl_ppu_000_to_255_163(void);
-void extcl_ppu_256_to_319_163(void);
-void extcl_ppu_320_to_34x_163(void);
+void extcl_wr_chr_163(BYTE nidx, WORD address, BYTE value);
+BYTE extcl_rd_chr_163(BYTE nidx, WORD address);
+void extcl_wr_nmt_163(BYTE nidx, WORD address, BYTE value);
+void extcl_ppu_000_to_255_163(BYTE nidx);
+void extcl_ppu_256_to_319_163(BYTE nidx);
+void extcl_ppu_320_to_34x_163(BYTE nidx);
 
 #endif /* MAPPER_163_H_ */

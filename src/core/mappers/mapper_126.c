@@ -44,7 +44,7 @@ void map_init_126(void) {
 	mapper.internal_struct[1] = (BYTE *)&mmc3;
 	mapper.internal_struct_size[1] = sizeof(mmc3);
 
-	memset(&irqA12, 0x00, sizeof(irqA12));
+	memset(&nes[0].irqA12, 0x00, sizeof(nes[0].irqA12));
 	memset(&m126, 0x00, sizeof(m126));
 
 	init_MMC3(HARD);
@@ -54,10 +54,10 @@ void map_init_126(void) {
 	info.mapper.extend_wr = TRUE;
 	info.mapper.extend_rd = TRUE;
 
-	irqA12.present = TRUE;
+	nes[0].irqA12.present = TRUE;
 	irqA12_delay = (info.mapper.id == 534) ? 2: 1;
 }
-void extcl_cpu_wr_mem_126(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_126(BYTE nidx, WORD address, BYTE value) {
 	if ((address >= 0x6000) && (address <= 0x7FFF)) {
 		const BYTE reg = address & 0x03;
 
@@ -81,16 +81,16 @@ void extcl_cpu_wr_mem_126(WORD address, BYTE value) {
 				}
 				break;
 		}
-		extcl_cpu_wr_mem_MMC3(address, value);
+		extcl_cpu_wr_mem_MMC3(nidx, address, value);
 	}
 }
-BYTE extcl_cpu_rd_mem_126(WORD address, UNUSED(BYTE openbus)) {
+BYTE extcl_cpu_rd_mem_126(BYTE nidx, WORD address, UNUSED(BYTE openbus)) {
 	if (address >= 0x8000) {
 		return (m126.reg[1] & 0x01
-			? (prgrom_rd(address) & 0xFC) | dipswitch.value
-			: prgrom_rd(address));
+			? (prgrom_rd(nidx, address) & 0xFC) | dipswitch.value
+			: prgrom_rd(nidx, address));
 	}
-	return (wram_rd(address));
+	return (wram_rd(nidx, address));
 }
 BYTE extcl_save_mapper_126(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m126.reg);

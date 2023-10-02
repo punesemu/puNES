@@ -45,7 +45,7 @@ void map_init_512(void) {
 	mapper.internal_struct_size[1] = sizeof(mmc3);
 
 	if (info.reset >= HARD) {
-		memset(&irqA12, 0x00, sizeof(irqA12));
+		memset(&nes[0].irqA12, 0x00, sizeof(nes[0].irqA12));
 	}
 
 	memset(&m512, 0x00, sizeof(m512));
@@ -57,10 +57,10 @@ void map_init_512(void) {
 
 	info.mapper.extend_wr = TRUE;
 
-	irqA12.present = TRUE;
-	irqA12_delay = 1;
+	nes[0].irqA12.present = TRUE;
+	nes[0].irqA12.delay = 1;
 }
-void extcl_cpu_wr_mem_512(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_512(BYTE nidx, WORD address, BYTE value) {
 	if ((address >= 0x4000) && (address <= 0x4FFF)) {
 		if (address & 0x100) {
 			m512.reg = value & 0x03;
@@ -69,7 +69,7 @@ void extcl_cpu_wr_mem_512(WORD address, BYTE value) {
 		return;
 	}
 	if (address >= 0x8000) {
-		extcl_cpu_wr_mem_MMC3(address, value);
+		extcl_cpu_wr_mem_MMC3(nidx, address, value);
 	}
 }
 BYTE extcl_save_mapper_512(BYTE mode, BYTE slot, FILE *fp) {
@@ -78,19 +78,19 @@ BYTE extcl_save_mapper_512(BYTE mode, BYTE slot, FILE *fp) {
 }
 
 void chr_swap_mmc3_512(WORD address, WORD value) {
-	if ((m512.reg & 2) && vram_size()) {
-		memmap_vram_1k(MMPPU(address), (value & 0x03));
+	if ((m512.reg & 2) && vram_size(0)) {
+		memmap_vram_1k(0, MMPPU(address), (value & 0x03));
 	} else {
 		chr_swap_MMC3_base(address, value);
 	}
 }
 void wram_swap_mmc3_512(WORD address, WORD value) {
-	memmap_auto_8k(MMCPU(address), value);
+	memmap_auto_8k(0, MMCPU(address), value);
 }
 void mirroring_fix_mmc3_512(void) {
-	if ((m512.reg == 1) && vram_size()) {
-		memmap_nmt_vram_4k(MMPPU(0x2000), 1);
-		memmap_nmt_vram_4k(MMPPU(0x3000), 1);
+	if ((m512.reg == 1) && vram_size(0)) {
+		memmap_nmt_vram_4k(0, MMPPU(0x2000), 1);
+		memmap_nmt_vram_4k(0, MMPPU(0x3000), 1);
 	} else {
 		mirroring_fix_MMC3_base();
 	}

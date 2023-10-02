@@ -21,8 +21,8 @@
 
 #include "input.h"
 
-BYTE input_wr_reg_famicom(BYTE value);
-BYTE input_rd_reg_famicom_r4016(BYTE openbus, BYTE nport);
-BYTE input_rd_reg_famicom_r4017(BYTE openbus, BYTE nport);
+BYTE input_wr_reg_famicom(BYTE nidx, BYTE value);
+BYTE input_rd_reg_famicom_r4016(BYTE nidx, BYTE openbus, BYTE nport);
+BYTE input_rd_reg_famicom_r4017(BYTE nidx, BYTE openbus, BYTE nport);
 
 #endif /* INPUT_FAMICON_H_ */

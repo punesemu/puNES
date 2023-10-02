@@ -50,7 +50,7 @@ void map_init_073(void) {
 void extcl_after_mapper_init_073(void) {
 	prg_fix_073();
 }
-void extcl_cpu_wr_mem_073(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_073(BYTE nidx, WORD address, BYTE value) {
 	switch (address & 0xF000) {
 		case 0x8000:
 			m073.irq.reload = (m073.irq.reload & 0xFFF0) | (value & 0x0F);
@@ -75,11 +75,11 @@ void extcl_cpu_wr_mem_073(WORD address, BYTE value) {
 			if (m073.irq.enabled) {
 				m073.irq.count = m073.irq.reload;
 			}
-			irq.high &= ~EXT_IRQ;
+			nes[nidx].c.irq.high &= ~EXT_IRQ;
 			return;
 		case 0xD000:
 			m073.irq.enabled = m073.irq.acknowledge;
-			irq.high &= ~EXT_IRQ;
+			nes[nidx].c.irq.high &= ~EXT_IRQ;
 			return;
 		case 0xF000:
 			m073.prg = value;
@@ -97,21 +97,20 @@ BYTE extcl_save_mapper_073(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m073.irq.acknowledge);
 	save_slot_ele(mode, slot, m073.irq.mask);
 	save_slot_ele(mode, slot, m073.irq.count);
-
 	return (EXIT_OK);
 }
 
 INLINE static void prg_fix_073(void) {
-	memmap_auto_16k(MMCPU(0x8000), m073.prg);
-	memmap_auto_16k(MMCPU(0xC000), 0xFF);
+	memmap_auto_16k(0, MMCPU(0x8000), m073.prg);
+	memmap_auto_16k(0, MMCPU(0xC000), 0xFF);
 }
-void extcl_cpu_every_cycle_073(void) {
+void extcl_cpu_every_cycle_073(BYTE nidx) {
 	if (!m073.irq.enabled) {
 		return;
 	}
 	if (!(++m073.irq.count & m073.irq.mask)) {
 		m073.irq.count = m073.irq.reload;
-		irq.delay = TRUE;
-		irq.high |= EXT_IRQ;
+		nes[nidx].c.irq.delay = TRUE;
+		nes[nidx].c.irq.high |= EXT_IRQ;
 	}
 }

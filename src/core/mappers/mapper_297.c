@@ -55,7 +55,7 @@ void extcl_after_mapper_init_297(void) {
 	chr_fix_297();
 	mirroring_fix_297();
 }
-void extcl_cpu_wr_mem_297(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_297(BYTE nidx, WORD address, BYTE value) {
 	switch (address & 0xF000) {
 		case 0x4000:
 		case 0x5000:
@@ -75,7 +75,7 @@ void extcl_cpu_wr_mem_297(WORD address, BYTE value) {
 		case 0xE000:
 		case 0xF000:
 			if (m297.reg[0] & 0x01) {
-				extcl_cpu_wr_mem_MMC1(address, value);
+				extcl_cpu_wr_mem_MMC1(nidx, address, value);
 			} else {
 				m297.reg[1] = value;
 				prg_fix_297();
@@ -101,21 +101,21 @@ INLINE static void prg_fix_297(void) {
 	if (m297.reg[0] & 0x01) {
 		MMC1_prg_fix();
 	} else {
-		memmap_auto_16k(MMCPU(0x8000), (((m297.reg[0] & 0x02) << 1) | ((m297.reg[1] & 0x30) >> 4)));
-		memmap_auto_16k(MMCPU(0xC000), (((m297.reg[0] & 0x02) << 1) | 0x03));
+		memmap_auto_16k(0, MMCPU(0x8000), (((m297.reg[0] & 0x02) << 1) | ((m297.reg[1] & 0x30) >> 4)));
+		memmap_auto_16k(0, MMCPU(0xC000), (((m297.reg[0] & 0x02) << 1) | 0x03));
 	}
 }
 INLINE static void chr_fix_297(void) {
 	if (m297.reg[0] & 0x01) {
 		MMC1_chr_fix();
 	} else {
-		memmap_auto_8k(MMPPU(0x0000), (m297.reg[1] & 0x0F));
+		memmap_auto_8k(0, MMPPU(0x0000), (m297.reg[1] & 0x0F));
 	}
 }
 INLINE static void mirroring_fix_297(void) {
 	if (m297.reg[0] & 0x01) {
 		MMC1_mirroring_fix();
 	} else {
-		mirroring_V();
+		mirroring_V(0);
 	}
 }

@@ -39,7 +39,7 @@ void map_init_NSF(void) {
 	internal_struct++;
 
 	if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
-		memmap_prg_region_init(S4K);
+		memmap_prg_region_init(0, S4K);
 	}
 
 	nsf.made_tick = FALSE;

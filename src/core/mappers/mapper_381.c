@@ -45,18 +45,17 @@ void map_init_381(void) {
 void extcl_after_mapper_init_381(void) {
 	prg_fix_381();
 }
-void extcl_cpu_wr_mem_381(UNUSED(WORD address), BYTE value) {
+void extcl_cpu_wr_mem_381(UNUSED(BYTE nidx), UNUSED(WORD address), BYTE value) {
 	m381.reg = value;
 	prg_fix_381();
 }
 BYTE extcl_save_mapper_381(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m381.index);
 	save_slot_ele(mode, slot, m381.reg);
-
 	return (EXIT_OK);
 }
 
 INLINE static void prg_fix_381(void) {
-	memmap_auto_16k(MMCPU(0x8000), ((((m381.reg << 1) | (m381.reg >> 4)) & 0x0F) | (m381.index << 4)));
-	memmap_auto_16k(MMCPU(0xC000), ((m381.index << 4) | 0x0F));
+	memmap_auto_16k(0, MMCPU(0x8000), ((((m381.reg << 1) | (m381.reg >> 4)) & 0x0F) | (m381.index << 4)));
+	memmap_auto_16k(0, MMCPU(0xC000), ((m381.index << 4) | 0x0F));
 }

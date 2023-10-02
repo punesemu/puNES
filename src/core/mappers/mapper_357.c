@@ -53,7 +53,7 @@ void extcl_after_mapper_init_357(void) {
 	wram_fix_357();
 	mirroring_fix_357();
 }
-void extcl_cpu_wr_mem_357(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_357(BYTE nidx, WORD address, BYTE value) {
 	if (address >= 0x4000) {
 		if (address & 0x8000) {
 			m357.reg[0] = value & 0x07;
@@ -70,7 +70,7 @@ void extcl_cpu_wr_mem_357(WORD address, BYTE value) {
 		if ((address & 0xF1FF) == 0x4122) {
 			m357.irq.enable = value & 0x01;
 			m357.irq.counter = 0;
-			irq.high &= ~EXT_IRQ;
+			nes[nidx].c.irq.high &= ~EXT_IRQ;
 		}
 	}
 }
@@ -80,12 +80,12 @@ BYTE extcl_save_mapper_357(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m357.irq.counter);
 	return (EXIT_OK);
 }
-void extcl_cpu_every_cycle_357(void) {
+void extcl_cpu_every_cycle_357(BYTE nidx) {
 	if (m357.irq.enable) {
 		m357.irq.counter++;
 		if (m357.irq.counter == 0x1000) {
 			m357.irq.counter = 0;
-			irq.high |= EXT_IRQ;
+			nes[nidx].c.irq.high |= EXT_IRQ;
 		}
 	}
 }
@@ -97,24 +97,24 @@ INLINE static void prg_fix_357(void) {
 				{ 1, 1, 5, 1, 4, 1, 5, 1 }
 		};
 
-		memmap_auto_8k(MMCPU(0x8000), (m357.reg[2] ? 0 : 1));
-		memmap_auto_8k(MMCPU(0xA000), 0);
-		memmap_auto_8k(MMCPU(0xC000), banks[m357.reg[2]][m357.reg[1]]);
-		memmap_auto_8k(MMCPU(0xE000), (m357.reg[2] ? 8 : 10));
+		memmap_auto_8k(0, MMCPU(0x8000), (m357.reg[2] ? 0 : 1));
+		memmap_auto_8k(0, MMCPU(0xA000), 0);
+		memmap_auto_8k(0, MMCPU(0xC000), banks[m357.reg[2]][m357.reg[1]]);
+		memmap_auto_8k(0, MMCPU(0xE000), (m357.reg[2] ? 8 : 10));
 	} else {
-		memmap_auto_16k(MMCPU(0x8000), (dipswitch.value | m357.reg[0]));
-		memmap_auto_16k(MMCPU(0xC000), (dipswitch.value | 0x07));
+		memmap_auto_16k(0, MMCPU(0x8000), (dipswitch.value | m357.reg[0]));
+		memmap_auto_16k(0, MMCPU(0xC000), (dipswitch.value | 0x07));
 	}
 }
 INLINE static void wram_fix_357(void) {
 	if (!dipswitch.value) {
-		memmap_prgrom_8k(MMCPU(0x6000), m357.reg[2] ? 0 : 2);
+		memmap_prgrom_8k(0, MMCPU(0x6000), m357.reg[2] ? 0 : 2);
 	}
 }
 INLINE static void mirroring_fix_357(void) {
 	if (dipswitch.value == 0x18) {
-		mirroring_H();
+		mirroring_H(0);
 	} else {
-		mirroring_V();
+		mirroring_V(0);
 	}
 }

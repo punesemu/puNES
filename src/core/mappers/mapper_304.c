@@ -51,21 +51,21 @@ void extcl_after_mapper_init_304(void) {
 	prg_fix_304();
 	wram_fix_304();
 }
-void extcl_cpu_wr_mem_304(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_304(BYTE nidx, WORD address, BYTE value) {
 	if (address == 0x4027) {
 		m304.reg = value & 0x01;
 		wram_fix_304();
 	} else if (address == 0x4068) {
 		m304.irq.active = value & 0x01;
 		m304.irq.count = 0;
-		irq.high &= ~EXT_IRQ;
+		nes[nidx].c.irq.high &= ~EXT_IRQ;
 	}
 }
-BYTE extcl_cpu_rd_mem_304(WORD address, UNUSED(BYTE openbus)) {
+BYTE extcl_cpu_rd_mem_304(BYTE nidx, WORD address, UNUSED(BYTE openbus)) {
 	if ((address >= 0x4020) && (address <= 0x4FFF)) {
 		return (0xFF);
 	}
-	return (wram_rd(address));
+	return (wram_rd(nidx, address));
 }
 BYTE extcl_save_mapper_304(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m304.reg);
@@ -73,20 +73,20 @@ BYTE extcl_save_mapper_304(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m304.irq.count);
 	return (EXIT_OK);
 }
-void extcl_cpu_every_cycle_304(void) {
+void extcl_cpu_every_cycle_304(BYTE nidx) {
 	if (m304.irq.active) {
 		if (m304.irq.count < 5750) {
 			m304.irq.count++;
 		} else {
-			irq.high |= EXT_IRQ;
+			nes[nidx].c.irq.high |= EXT_IRQ;
 			m304.irq.active = 0;
 		}
 	}
 }
 
 INLINE static void prg_fix_304(void) {
-	memmap_auto_32k(MMCPU(0x8000), 0);
+	memmap_auto_32k(0, MMCPU(0x8000), 0);
 }
 INLINE static void wram_fix_304(void) {
-	memmap_prgrom_8k(MMCPU(0x6000), (m304.reg | 0x04));
+	memmap_prgrom_8k(0, MMCPU(0x6000), (m304.reg | 0x04));
 }

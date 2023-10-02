@@ -22,8 +22,8 @@
 #include "common.h"
 
 void map_init_362(void);
-void extcl_cpu_wr_mem_362(WORD address, BYTE value);
+void extcl_cpu_wr_mem_362(BYTE nidx, WORD address, BYTE value);
 BYTE extcl_save_mapper_362(BYTE mode, BYTE slot, FILE *fp);
-BYTE extcl_rd_chr_362(WORD address);
+BYTE extcl_rd_chr_362(BYTE nidx, WORD address);
 
 #endif /* MAPPER_362_H_ */

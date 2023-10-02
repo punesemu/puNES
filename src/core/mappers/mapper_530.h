@@ -22,6 +22,6 @@
 #include "common.h"
 
 void map_init_530(void);
-void extcl_cpu_wr_mem_530(WORD address, BYTE value);
+void extcl_cpu_wr_mem_530(BYTE nidx, WORD address, BYTE value);
 
 #endif /* MAPPER_530_H_ */

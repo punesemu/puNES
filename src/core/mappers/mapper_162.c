@@ -52,7 +52,7 @@ void map_init_162(void) {
 void extcl_after_mapper_init_162(void) {
 	prg_fix_162();
 }
-void extcl_cpu_wr_mem_162(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_162(UNUSED(BYTE nidx), WORD address, BYTE value) {
 	switch (address & 0xFF00) {
 		case 0x5000:
 			m162.reg[0] = value;
@@ -72,63 +72,62 @@ void extcl_cpu_wr_mem_162(WORD address, BYTE value) {
 			return;
 	}
 }
-BYTE extcl_cpu_rd_mem_162(WORD address, UNUSED(BYTE openbus)) {
+BYTE extcl_cpu_rd_mem_162(BYTE nidx, WORD address, UNUSED(BYTE openbus)) {
 	if ((address >= 0x5000) && (address <= 0x5FFF)) {
 		return (0x00);
 	}
-	return (wram_rd(address));
+	return (wram_rd(nidx, address));
 }
 BYTE extcl_save_mapper_162(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m162.reg);
 	save_slot_ele(mode, slot, m162.pa9);
 	save_slot_ele(mode, slot, m162.pa13);
-
 	return (EXIT_OK);
 }
-BYTE extcl_rd_chr_162(WORD address) {
+BYTE extcl_rd_chr_162(BYTE nidx, WORD address) {
 	if ((m162.reg[0] & 0x80) && !m162.pa13) {
 		address = (m162.pa9 << 12) | (address & 0x0FFF);
 	}
-	return (chr_rd(address));
+	return (chr_rd(nidx, address));
 }
-void extcl_wr_nmt_162(WORD address, UNUSED(BYTE value)) {
+void extcl_wr_nmt_162(BYTE nidx, WORD address, UNUSED(BYTE value)) {
 	mode1_bpp(address);
-	nmt_wr(address, value);
+	nmt_wr(nidx, address, value);
 }
-void extcl_wr_chr_162(WORD address, UNUSED(BYTE value)) {
+void extcl_wr_chr_162(BYTE nidx, WORD address, UNUSED(BYTE value)) {
 	mode1_bpp(address);
-	chr_wr(address, value);
+	chr_wr(nidx, address, value);
 }
-void extcl_ppu_000_to_255_162(void) {
-	if (r2001.visible) {
-		extcl_ppu_320_to_34x_162();
+void extcl_ppu_000_to_255_162(BYTE nidx) {
+	if (nes[nidx].p.r2001.visible) {
+		extcl_ppu_320_to_34x_162(nidx);
 	}
 }
-void extcl_ppu_256_to_319_162(void) {
-	if ((ppu.frame_x & 0x0007) != 0x0003) {
+void extcl_ppu_256_to_319_162(BYTE nidx) {
+	if ((nes[nidx].p.ppu.frame_x & 0x0007) != 0x0003) {
 		return;
 	}
 
-	if ((!spr_ev.count_plus || (spr_ev.tmp_spr_plus == spr_ev.count_plus)) && (r2000.size_spr == 16)) {
-		ppu.spr_adr = r2000.spt_adr;
+	if ((!nes[nidx].p.spr_ev.count_plus || (nes[nidx].p.spr_ev.tmp_spr_plus == nes[nidx].p.spr_ev.count_plus)) && (nes[nidx].p.r2000.size_spr == 16)) {
+		nes[nidx].p.ppu.spr_adr = nes[nidx].p.r2000.spt_adr;
 	} else {
-		ppu_spr_adr((ppu.frame_x & 0x0038) >> 3);
+		ppu_spr_adr((nes[nidx].p.ppu.frame_x & 0x0038) >> 3);
 	}
-	mode1_bpp(ppu.spr_adr);
+	mode1_bpp(nes[nidx].p.ppu.spr_adr);
 }
-void extcl_ppu_320_to_34x_162(void) {
-	if ((ppu.frame_x & 0x0007) != 0x0003) {
+void extcl_ppu_320_to_34x_162(BYTE nidx) {
+	if ((nes[nidx].p.ppu.frame_x & 0x0007) != 0x0003) {
 		return;
 	}
 
-	if (ppu.frame_x == 323) {
+	if (nes[nidx].p.ppu.frame_x == 323) {
 		ppu_spr_adr(7);
 	}
 
-	ppu_bck_adr(r2000.bpt_adr, r2006.value);
+	ppu_bck_adr(nes[nidx].p.r2000.bpt_adr, nes[nidx].p.r2006.value);
 
-	mode1_bpp(0x2000 | (r2006.value & 0x0FFF));
-	mode1_bpp(ppu.bck_adr);
+	mode1_bpp(0x2000 | (nes[nidx].p.r2006.value & 0x0FFF));
+	mode1_bpp(nes[nidx].p.ppu.bck_adr);
 }
 
 INLINE static void prg_fix_162(void) {
@@ -158,7 +157,7 @@ INLINE static void prg_fix_162(void) {
 			bank |= (m162.reg[0] & 0x03);
 			break;
 	}
-	memmap_auto_32k(MMCPU(0x8000), bank);
+	memmap_auto_32k(0, MMCPU(0x8000), bank);
 }
 INLINE static void mode1_bpp(WORD address) {
 	BYTE pa13 = (address & 0x2000) >> 13;

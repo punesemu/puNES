@@ -44,17 +44,16 @@ void extcl_after_mapper_init_414(void) {
 	chr_fix_414();
 	mirroring_fix_414();
 }
-void extcl_cpu_wr_mem_414(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_414(BYTE nidx, WORD address, BYTE value) {
 	m414.reg[0] = address;
 	// bus conflict
-	m414.reg[1] = value & prgrom_rd(address);
+	m414.reg[1] = value & prgrom_rd(nidx, address);
 	prg_fix_414();
 	chr_fix_414();
 	mirroring_fix_414();
 }
 BYTE extcl_save_mapper_414(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m414.reg);
-
 	return (EXIT_OK);
 }
 
@@ -62,21 +61,21 @@ INLINE static void prg_fix_414(void) {
 	WORD bank = m414.reg[0] >> 1;
 
 	if (!(m414.reg[0] & 0x0100) && (m414.reg[0] & dipswitch.value)) {
-		memmap_disable_16k(MMCPU(0xC000));
+		memmap_disable_16k(0, MMCPU(0xC000));
 	} else if (m414.reg[0] & 0x2000) {
-		memmap_auto_32k(MMCPU(0x8000), (bank >> 1));
+		memmap_auto_32k(0, MMCPU(0x8000), (bank >> 1));
 	} else {
-		memmap_auto_16k(MMCPU(0x8000), bank);
-		memmap_auto_16k(MMCPU(0xC000), bank);
+		memmap_auto_16k(0, MMCPU(0x8000), bank);
+		memmap_auto_16k(0, MMCPU(0xC000), bank);
 	}
 }
 INLINE static void chr_fix_414(void) {
-	memmap_auto_8k(MMPPU(0x0000), m414.reg[1]);
+	memmap_auto_8k(0, MMPPU(0x0000), m414.reg[1]);
 }
 INLINE static void mirroring_fix_414(void) {
 	if (m414.reg[0] & 0x01) {
-		mirroring_H();
+		mirroring_H(0);
 	} else {
-		mirroring_V();
+		mirroring_V(0);
 	}
 }

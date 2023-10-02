@@ -19,6 +19,7 @@
 #ifndef INFO_H_
 #define INFO_H_
 
+#include <stddef.h>
 #include "common.h"
 
 enum frame_status_modes {
@@ -55,13 +56,16 @@ typedef struct _info {
 		WORD id;
 		BYTE submapper_nes20;
 		BYTE submapper;
+		size_t prgrom_size;
 		DBWORD prgrom_banks_16k;
+		size_t chrrom_size;
 		DBWORD chrrom_banks_8k;
 		BYTE extend_wr;
 		BYTE extend_rd;
 		BYTE battery;
 		BYTE force_battery_io;
 		BYTE ext_console_type;
+		BYTE expansion;
 		BYTE mirroring;
 		BYTE supported;
 		struct _info_mapper_nes20db {
@@ -72,7 +76,9 @@ typedef struct _info {
 		BYTE format;
 		WORD mapper;
 		BYTE submapper;
+		size_t prgrom_size;
 		DBWORD prgrom;
+		size_t chrrom_size;
 		DBWORD chrrom;
 		DBWORD prgram;
 		DBWORD prgnvram;
@@ -86,6 +92,7 @@ typedef struct _info {
 		BYTE cpu_timing;
 		BYTE vs_hardware;
 		BYTE vs_ppu;
+		BYTE expansion;
 	} header;
 	struct _info_crc32 {
 		uint32_t prg;
@@ -128,8 +135,6 @@ typedef struct _info {
 	BYTE r2002_race_condition_disabled;
 	BYTE r4014_precise_timing_disabled;
 	BYTE r2002_jump_first_vblank;
-	WORD default_dipswitches;
-	WORD extra_from_db;
 	DBWORD bat_ram_frames;
 	DBWORD bat_ram_frames_snap;
 	BYTE doublebuffer;
@@ -143,6 +148,11 @@ typedef struct _info {
 	BYTE old_machine_type;
 #endif
 	BYTE decimal_mode;
+	BYTE number_of_nes;
+	union _exec_nes_op {
+		BYTE b[2];
+		WORD w;
+	} exec_cpu_op;
 
 #if !defined (RELEASE)
 	BYTE snd_info;

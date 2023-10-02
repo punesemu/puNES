@@ -42,7 +42,7 @@ void extcl_after_mapper_init_MMC4(void) {
 	MMC4_chr_fix();
 	MMC4_mirroring_fix();
 }
-void extcl_cpu_wr_mem_MMC4(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_MMC4(UNUSED(BYTE nidx), WORD address, BYTE value) {
 	switch (address & 0xF000) {
 		case 0xA000:
 			mmc4.prg = value;
@@ -66,10 +66,9 @@ BYTE extcl_save_mapper_MMC4(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, mmc4.chr);
 	save_slot_ele(mode, slot, mmc4.latch);
 	save_slot_ele(mode, slot, mmc4.mirroring);
-
 	return (EXIT_OK);
 }
-void extcl_after_rd_chr_MMC4(WORD address) {
+void extcl_after_rd_chr_MMC4(UNUSED(BYTE nidx), WORD address) {
 	switch (address & 0xFFF0) {
 		case 0x0FD0:
 			mmc4.latch[0] = 0;
@@ -88,8 +87,8 @@ void extcl_after_rd_chr_MMC4(WORD address) {
 	}
 	MMC4_chr_fix();
 }
-void extcl_update_r2006_MMC4(WORD new_r2006, UNUSED(WORD old_r2006)) {
-	extcl_after_rd_chr_MMC4(new_r2006);
+void extcl_update_r2006_MMC4(BYTE nidx, WORD new_r2006, UNUSED(WORD old_r2006)) {
+	extcl_after_rd_chr_MMC4(nidx, new_r2006);
 }
 
 void init_MMC4(BYTE reset) {
@@ -110,19 +109,19 @@ void prg_fix_MMC4_base(void) {
 	MMC4_prg_swap(0xC000, 0xFF);
 }
 void prg_swap_MMC4_base(WORD address, WORD value) {
-	memmap_auto_16k(MMCPU(address), value);
+	memmap_auto_16k(0, MMCPU(address), value);
 }
 void chr_fix_MMC4_base(void) {
 	MMC4_chr_swap(0x0000, mmc4.chr[mmc4.latch[0]]);
 	MMC4_chr_swap(0x1000, mmc4.chr[mmc4.latch[1]]);
 }
 void chr_swap_MMC4_base(WORD address, WORD value) {
-	memmap_auto_4k(MMPPU(address), value);
+	memmap_auto_4k(0, MMPPU(address), value);
 }
 void mirroring_fix_MMC4_base(void) {
 	if (mmc4.mirroring & 0x01) {
-		mirroring_H();
+		mirroring_H(0);
 	} else {
-		mirroring_V();
+		mirroring_V(0);
 	}
 }

@@ -37,7 +37,7 @@ extern _ines ines;
 
 EXTERNC BYTE ines_load_rom(void);
 
-EXTERNC void nes20_prg_chr_size(DBWORD *reg, double divider);
+EXTERNC size_t nes20_prg_chr_size(DBWORD *reg, double divider);
 
 #undef EXTERNC
 

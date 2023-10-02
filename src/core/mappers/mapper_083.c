@@ -101,7 +101,7 @@ void extcl_after_mapper_init_083(void) {
 	wram_fix_083();
 	mirroring_fix_083();
 }
-void extcl_cpu_wr_mem_083(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_083(BYTE nidx, WORD address, BYTE value) {
 	if ((address >= 0x5000) && (address <= 0x5FFF)) {
 		m083.low[address & 0x03] = value;
 	} else if (address >= 0x8000) {
@@ -126,7 +126,7 @@ void extcl_cpu_wr_mem_083(WORD address, BYTE value) {
 					m083.irq.count = (m083.irq.count & 0x00FF) | (value << 8);
 				} else {
 					m083.irq.count = (m083.irq.count & 0xFF00) | value;
-					irq.high &= ~EXT_IRQ;
+					nes[nidx].c.irq.high &= ~EXT_IRQ;
 				}
 				return;
 			case 0x0300: {
@@ -145,11 +145,11 @@ void extcl_cpu_wr_mem_083(WORD address, BYTE value) {
 		}
 	}
 }
-BYTE extcl_cpu_rd_mem_083(WORD address, UNUSED(BYTE openbus)) {
+BYTE extcl_cpu_rd_mem_083(BYTE nidx, WORD address, UNUSED(BYTE openbus)) {
 	if ((address >= 0x5000) && (address <= 0x5FFF)) {
 		return (address & m083tmp.dip_mask ? m083.low[address & 0x03] : dipswitch.value);
 	}
-	return (wram_rd(address));
+	return (wram_rd(nidx, address));
 }
 BYTE extcl_save_mapper_083(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m083.mode);
@@ -159,14 +159,13 @@ BYTE extcl_save_mapper_083(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m083.chr);
 	save_slot_ele(mode, slot, m083.irq.active);
 	save_slot_ele(mode, slot, m083.irq.count);
-
 	return (EXIT_OK);
 }
-void extcl_cpu_every_cycle_083(void) {
+void extcl_cpu_every_cycle_083(BYTE nidx) {
 	if (m083.irq.active && m083.irq.count) {
 		m083.irq.count = (m083.mode & 0x40 ? m083.irq.count - 1 : m083.irq.count + 1);
 		if (!m083.irq.count) {
-			irq.high |= EXT_IRQ;
+			nes[nidx].c.irq.high |= EXT_IRQ;
 			m083.irq.active = FALSE;
 		}
 	}
@@ -175,19 +174,19 @@ void extcl_cpu_every_cycle_083(void) {
 INLINE static void prg_fix_083(void) {
 	switch (m083.mode & 0x18) {
 		case 0x00:
-			memmap_auto_16k(MMCPU(0x8000), m083.outer);
-			memmap_auto_16k(MMCPU(0xC000), (m083.outer | (m083tmp.prg_mask >> 1)));
+			memmap_auto_16k(0, MMCPU(0x8000), m083.outer);
+			memmap_auto_16k(0, MMCPU(0xC000), (m083.outer | (m083tmp.prg_mask >> 1)));
 			return;
 		case 0x08:
-			memmap_auto_32k(MMCPU(0x8000), (m083.outer >> 1));
+			memmap_auto_32k(0, MMCPU(0x8000), (m083.outer >> 1));
 			return;
 		default: {
 			WORD base = (m083.outer << 1) & ~m083tmp.prg_mask;
 
-			memmap_auto_8k(MMCPU(0x8000), (base | (m083.prg[0] & m083tmp.prg_mask)));
-			memmap_auto_8k(MMCPU(0xA000), (base | (m083.prg[1] & m083tmp.prg_mask)));
-			memmap_auto_8k(MMCPU(0xC000), (base | (m083.prg[2] & m083tmp.prg_mask)));
-			memmap_auto_8k(MMCPU(0xE000), (base | (0x1F & m083tmp.prg_mask)));
+			memmap_auto_8k(0, MMCPU(0x8000), (base | (m083.prg[0] & m083tmp.prg_mask)));
+			memmap_auto_8k(0, MMCPU(0xA000), (base | (m083.prg[1] & m083tmp.prg_mask)));
+			memmap_auto_8k(0, MMCPU(0xC000), (base | (m083.prg[2] & m083tmp.prg_mask)));
+			memmap_auto_8k(0, MMCPU(0xE000), (base | (0x1F & m083tmp.prg_mask)));
 			return;
 		}
 	}
@@ -195,58 +194,58 @@ INLINE static void prg_fix_083(void) {
 INLINE static void chr_fix_083(void) {
 	switch (m083tmp.chr_mode) {
 		default:
-			memmap_chrrom_1k(MMPPU(0x0000), m083.chr[0]);
-			memmap_chrrom_1k(MMPPU(0x0400), m083.chr[1]);
-			memmap_chrrom_1k(MMPPU(0x0800), m083.chr[2]);
-			memmap_chrrom_1k(MMPPU(0x0C00), m083.chr[3]);
-			memmap_chrrom_1k(MMPPU(0x1000), m083.chr[4]);
-			memmap_chrrom_1k(MMPPU(0x1400), m083.chr[5]);
-			memmap_chrrom_1k(MMPPU(0x1800), m083.chr[6]);
-			memmap_chrrom_1k(MMPPU(0x1C00), m083.chr[7]);
+			memmap_chrrom_1k(0, MMPPU(0x0000), m083.chr[0]);
+			memmap_chrrom_1k(0, MMPPU(0x0400), m083.chr[1]);
+			memmap_chrrom_1k(0, MMPPU(0x0800), m083.chr[2]);
+			memmap_chrrom_1k(0, MMPPU(0x0C00), m083.chr[3]);
+			memmap_chrrom_1k(0, MMPPU(0x1000), m083.chr[4]);
+			memmap_chrrom_1k(0, MMPPU(0x1400), m083.chr[5]);
+			memmap_chrrom_1k(0, MMPPU(0x1800), m083.chr[6]);
+			memmap_chrrom_1k(0, MMPPU(0x1C00), m083.chr[7]);
 			return;
 		case 1:
-			memmap_chrrom_2k(MMPPU(0x0000), m083.chr[0]);
-			memmap_chrrom_2k(MMPPU(0x0800), m083.chr[1]);
-			memmap_chrrom_2k(MMPPU(0x1000), m083.chr[6]);
-			memmap_chrrom_2k(MMPPU(0x1800), m083.chr[7]);
+			memmap_chrrom_2k(0, MMPPU(0x0000), m083.chr[0]);
+			memmap_chrrom_2k(0, MMPPU(0x0800), m083.chr[1]);
+			memmap_chrrom_2k(0, MMPPU(0x1000), m083.chr[6]);
+			memmap_chrrom_2k(0, MMPPU(0x1800), m083.chr[7]);
 			return;
 		case 2: {
 			WORD base = (m083.outer & 0x30) << 4;
 
-			memmap_chrrom_1k(MMPPU(0x0000), (base | m083.chr[0]));
-			memmap_chrrom_1k(MMPPU(0x0400), (base | m083.chr[1]));
-			memmap_chrrom_1k(MMPPU(0x0800), (base | m083.chr[2]));
-			memmap_chrrom_1k(MMPPU(0x0C00), (base | m083.chr[3]));
-			memmap_chrrom_1k(MMPPU(0x1000), (base | m083.chr[4]));
-			memmap_chrrom_1k(MMPPU(0x1400), (base | m083.chr[5]));
-			memmap_chrrom_1k(MMPPU(0x1800), (base | m083.chr[6]));
-			memmap_chrrom_1k(MMPPU(0x1C00), (base | m083.chr[7]));
+			memmap_chrrom_1k(0, MMPPU(0x0000), (base | m083.chr[0]));
+			memmap_chrrom_1k(0, MMPPU(0x0400), (base | m083.chr[1]));
+			memmap_chrrom_1k(0, MMPPU(0x0800), (base | m083.chr[2]));
+			memmap_chrrom_1k(0, MMPPU(0x0C00), (base | m083.chr[3]));
+			memmap_chrrom_1k(0, MMPPU(0x1000), (base | m083.chr[4]));
+			memmap_chrrom_1k(0, MMPPU(0x1400), (base | m083.chr[5]));
+			memmap_chrrom_1k(0, MMPPU(0x1800), (base | m083.chr[6]));
+			memmap_chrrom_1k(0, MMPPU(0x1C00), (base | m083.chr[7]));
 			return;
 		}
 	}
 }
 INLINE static void wram_fix_083(void) {
 	if (m083tmp.use_wram) {
-		memmap_wram_8k(MMCPU(0x6000), (m083tmp.prg_mask >> 6));
+		memmap_wram_8k(0, MMCPU(0x6000), (m083tmp.prg_mask >> 6));
 	} else if (m083.mode & 0x20) {
-		memmap_prgrom_8k(MMCPU(0x6000), m083.prg[3]);
+		memmap_prgrom_8k(0, MMCPU(0x6000), m083.prg[3]);
 	} else {
-		memmap_disable_8k(MMCPU(0x6000));
+		memmap_disable_8k(0, MMCPU(0x6000));
 	}
 }
 INLINE static void mirroring_fix_083(void) {
 	switch (m083.mode & 0x03) {
 		case 0:
-			mirroring_V();
+			mirroring_V(0);
 			break;
 		case 1:
-			mirroring_H();
+			mirroring_H(0);
 			break;
 		case 2:
-			mirroring_SCR0();
+			mirroring_SCR0(0);
 			break;
 		case 3:
-			mirroring_SCR1();
+			mirroring_SCR1(0);
 			break;
 	}
 }

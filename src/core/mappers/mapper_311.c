@@ -51,7 +51,7 @@ void extcl_after_mapper_init_311(void) {
 	prg_fix_311();
 	wram_fix_311();
 }
-void extcl_cpu_wr_mem_311(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_311(BYTE nidx, WORD address, BYTE value) {
 	switch (address) {
 		case 0x4022:
 			m311.reg = value & 0x01;
@@ -61,17 +61,17 @@ void extcl_cpu_wr_mem_311(WORD address, BYTE value) {
 		case 0x4122:
 			m311.irq.enabled = value & 0x01;
 			m311.irq.count = 0;
-			irq.high &= ~EXT_IRQ;
+			nes[nidx].c.irq.high &= ~EXT_IRQ;
 			return;
 		default:
 			return;
 	}
 }
-BYTE extcl_cpu_rd_mem_311(WORD address, UNUSED(BYTE openbus)) {
+BYTE extcl_cpu_rd_mem_311(BYTE nidx, WORD address, UNUSED(BYTE openbus)) {
 	if ((address >= 0x4042) && (address <= 0x4055)) {
 		return (0xFF);
 	}
-	return (wram_rd(address));
+	return (wram_rd(nidx, address));
 }
 BYTE extcl_save_mapper_311(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m311.reg);
@@ -79,21 +79,21 @@ BYTE extcl_save_mapper_311(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m311.irq.count);
 	return (EXIT_OK);
 }
-void extcl_cpu_every_cycle_311(void) {
+void extcl_cpu_every_cycle_311(BYTE nidx) {
 	if (m311.irq.enabled) {
 		if (m311.irq.count < 4096) {
 			m311.irq.count++;
 		} else {
 			m311.irq.count++;
-			irq.high |= EXT_IRQ;
+			nes[nidx].c.irq.high |= EXT_IRQ;
 		}
 	}
 }
 
 INLINE static void prg_fix_311(void) {
-	memmap_prgrom_32k(MMCPU(0x8000), m311.reg);
+	memmap_prgrom_32k(0, MMCPU(0x8000), m311.reg);
 }
 INLINE static void wram_fix_311(void) {
-	memmap_prgrom_4k(MMCPU(0x5000), 17);
-	memmap_prgrom_8k(MMCPU(0x6000), 9);
+	memmap_prgrom_4k(0, MMCPU(0x5000), 17);
+	memmap_prgrom_8k(0, MMCPU(0x6000), 9);
 }

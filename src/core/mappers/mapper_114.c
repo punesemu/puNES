@@ -43,7 +43,7 @@ void map_init_114(void) {
 	mapper.internal_struct_size[1] = sizeof(mmc3);
 
 	if (info.reset >= HARD) {
-		memset(&irqA12, 0x00, sizeof(irqA12));
+		memset(&nes[0].irqA12, 0x00, sizeof(nes[0].irqA12));
 	}
 
 	memset(&m114, 0x00, sizeof(m114));
@@ -54,10 +54,10 @@ void map_init_114(void) {
 
 	info.mapper.extend_wr = TRUE;
 
-	irqA12.present = TRUE;
-	irqA12_delay = 1;
+	nes[0].irqA12.present = TRUE;
+	nes[0].irqA12.delay = 1;
 }
-void extcl_cpu_wr_mem_114(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_114(BYTE nidx, WORD address, BYTE value) {
 	if ((address >= 0x6000) && (address <= 0x7FFF)) {
 //		if !(m114.reg[1] & 0x01) {
 			m114.reg[address & 0x01] = value;
@@ -76,17 +76,17 @@ void extcl_cpu_wr_mem_114(WORD address, BYTE value) {
 		};
 		WORD mmc_address = m114_mmc3_adr[info.mapper.submapper][((address & 0x6000) >> 12) | (address & 0x01)];
 
-		extcl_cpu_wr_mem_MMC3(mmc_address, value);
+		extcl_cpu_wr_mem_MMC3(nidx, mmc_address, value);
 		if (mmc_address == 0x8000) {
 			mmc3.bank_to_update = (value & 0xF8) | m114_r8000_idx[info.mapper.submapper][value & 0x07];
 		}
 	}
 }
-BYTE extcl_cpu_rd_mem_114(WORD address, BYTE openbus) {
+BYTE extcl_cpu_rd_mem_114(BYTE nidx, WORD address, BYTE openbus) {
 	if ((address >= 0x6000) && (address <= 0x7FFF)) {
 		return ((address & 0x03) == 2 ? (dipswitch.value & 0x07) | (openbus & 0xF8) : openbus);
 	}
-	return (wram_rd(address));
+	return (wram_rd(nidx, address));
 }
 BYTE extcl_save_mapper_114(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m114.reg);

@@ -23,9 +23,9 @@
 
 void map_init_303(void);
 void extcl_after_mapper_init_303(void);
-void extcl_cpu_wr_mem_303(WORD address, BYTE value);
-BYTE extcl_cpu_rd_mem_303(WORD address, BYTE openbus);
+void extcl_cpu_wr_mem_303(BYTE nidx, WORD address, BYTE value);
+BYTE extcl_cpu_rd_mem_303(BYTE nidx, WORD address, BYTE openbus);
 BYTE extcl_save_mapper_303(BYTE mode, BYTE slot, FILE *fp);
-void extcl_cpu_every_cycle_303(void);
+void extcl_cpu_every_cycle_303(BYTE nidx);
 
 #endif /* MAPPER_303_H_ */

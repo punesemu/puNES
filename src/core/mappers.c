@@ -20,25 +20,25 @@
 #include "mappers.h"
 #include "info.h"
 #include "irqA12.h"
-#include "irql2f.h"
 #include "gui.h"
 #include "vs_system.h"
 #include "nes20db.h"
+#include "conf.h"
 
 _mapper mapper;
 
 BYTE map_init(void) {
-	unsigned int i = 0;
-
 	// di default la routine di salvataggio
 	// di una possibile struttura interna
 	// di dati della mapper e' NULL.
-	for (i = 0; i < LENGTH(mapper.internal_struct); i++) {
+	for (unsigned int i = 0; i < LENGTH(mapper.internal_struct); i++) {
 		mapper.internal_struct[i] = 0;
 	}
 	// disabilito gli accessori
-	irqA12.present = FALSE;
-	irql2f.present = FALSE;
+	for (int nesidx = 0; nesidx < NES_CHIPS_MAX; nesidx++) {
+		nes[nesidx].irqA12.present = FALSE;
+		nes[nesidx].irql2f.present = FALSE;
+	}
 	// disabilito tutte le chiamate relative alle mappers
 	extcl_init();
 
@@ -46,6 +46,9 @@ BYTE map_init(void) {
 		dipswitch_search();
 		gui_update();
 		gui_dipswitch_dialog();
+		if (vs_system.enabled && (cfg->dipswitch == -1)) {
+			cfg->dipswitch = 0;
+		}
 	}
 
 	info.mapper.supported = TRUE;
@@ -337,7 +340,7 @@ BYTE map_init(void) {
 			map_init_097();
 			break;
 		case 99:
-			map_init_Vs();
+			map_init_099();
 			break;
 		case 100:
 			map_init_100();
@@ -1336,6 +1339,8 @@ void map_quit(void) {
 
 	memset(&info.mapper, 0x00, sizeof(info.mapper));
 	memset(&info.sha1sum, 0x00, sizeof(info.sha1sum));
+	memset(&info.crc32, 0x00, sizeof(info.crc32));
+	memset(&vs_system, 0x00, sizeof(vs_system));
 
 	nes20db_reset();
 
@@ -1346,8 +1351,7 @@ void map_quit(void) {
 	// faccio un reset
 	memmap_init();
 
-	vs_system.ppu = vs_system.special_mode.type = 0;
-	info.mapper.ext_console_type = 0;
+	info.number_of_nes = 1;
 	info.decimal_mode = FALSE;
 
 	if (extcl_mapper_quit) {

@@ -41,7 +41,7 @@ void extcl_after_mapper_init_JV001(void) {
 	JV001_wram_fix();
 	JV001_mirroring_fix();
 }
-void extcl_cpu_wr_mem_JV001(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_JV001(UNUSED(BYTE nidx), WORD address, BYTE value) {
 	switch (address & 0xE000) {
 		case 0x4000:
 		case 0x6000:
@@ -76,7 +76,7 @@ void extcl_cpu_wr_mem_JV001(WORD address, BYTE value) {
 	JV001_wram_fix();
 	JV001_mirroring_fix();
 }
-BYTE extcl_cpu_rd_mem_JV001(WORD address, BYTE openbus) {
+BYTE extcl_cpu_rd_mem_JV001(UNUSED(BYTE nidx), WORD address, BYTE openbus) {
 	if ((address & 0x0103) == 0x0100) {
 		openbus = ((jv001.inverter ^ jv001.invert) & 0xF0) | (jv001.accumulator & 0x0F);
 		JV001_prg_fix();
@@ -96,7 +96,6 @@ BYTE extcl_save_mapper_JV001(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, jv001.A);
 	save_slot_ele(mode, slot, jv001.B);
 	save_slot_ele(mode, slot, jv001.X);
-
 	return (EXIT_OK);
 }
 

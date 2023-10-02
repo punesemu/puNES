@@ -193,7 +193,7 @@ void opengl_quit(void) {
 	}
 }
 BYTE opengl_context_create(void) {
-	GLuint i, w, h;
+	GLuint i = 0, w = 0, h = 0;
 
 	gfx_thread_lock();
 
@@ -221,7 +221,8 @@ BYTE opengl_context_create(void) {
 
 #if defined (WITH_OPENGL_CG)
 	if (shader_effect.type == MS_CGP) {
-		if ((opengl.cg.ctx = cgCreateContext()) == NULL) {
+		opengl.cg.ctx = cgCreateContext();
+		if (opengl.cg.ctx == NULL) {
 			gfx_thread_unlock();
 			return (EXIT_ERROR);
 		}
@@ -259,7 +260,8 @@ BYTE opengl_context_create(void) {
 		opengl.surface.h = (GLint)h;
 		opengl.surface.pitch = (GLint)(w * sizeof(uint32_t));
 
-		if ((opengl.surface.pixels = malloc(opengl.surface.pitch * h)) == NULL) {
+		opengl.surface.pixels = malloc(opengl.surface.pitch * h);
+		if (opengl.surface.pixels == NULL) {
 			opengl_context_delete(FALSE);
 			gfx_thread_unlock();
 			return (EXIT_ERROR);
@@ -319,8 +321,8 @@ BYTE opengl_context_create(void) {
 			if (overscan.enabled && !cfg->oscan_black_borders_fscr) {
 				float left = cfg->hflip_screen ? (float)overscan.borders->right : (float)overscan.borders->left;
 				float right = cfg->hflip_screen ? (float)overscan.borders->left : (float)overscan.borders->right;
-				float brd_l_x, brd_r_x, brd_u_y, brd_d_y;
-				float ratio_x, ratio_y;
+				float brd_l_x = 0, brd_r_x = 0, brd_u_y = 0, brd_d_y = 0;
+				float ratio_x = 0, ratio_y = 0;
 
 				ratio_x = vp->w / mw;
 				ratio_y = vp->h / mh;
@@ -398,7 +400,7 @@ BYTE opengl_context_create(void) {
 
 	// creo le restanti texture/fbo
 	for (i = 0; i < shader_effect.pass; i++) {
-		int rc;
+		int rc = 0;
 
 		log_info(uL("opengl;setting pass %d"), i);
 
@@ -430,7 +432,7 @@ BYTE opengl_context_create(void) {
 	// PREV (calcolo il numero di screen da utilizzare)
 	// deve essere fatto dopo il opengl_shader_xxx_init().
 	for (i = 0; i < shader_effect.pass; i++) {
-		GLuint a;
+		GLuint a = 0;
 
 		for (a = 0; a < LENGTH(opengl.texture[i].shader.glslp.uni.prev); a++) {
 			if (opengl.texture[i].shader.type == MS_CGP) {
@@ -472,12 +474,12 @@ BYTE opengl_context_create(void) {
 	{
 		_shader *shd = &opengl.overlay.shader;
 		BYTE rotate = FALSE;
-		float ow, oh;
+		float ow = 0, oh = 0;
 		float vmw = (float)gfx.w[VIDEO_MODE];
 		float vmh = (float)gfx.h[VIDEO_MODE];
 
 		if (cfg->fullscreen) {
-			float div;
+			float div = 0;
 
 			if (!gfx.is_wayland && !cfg->fullscreen_in_window) {
 				vmw *= gfx.device_pixel_ratio;
@@ -553,7 +555,7 @@ BYTE opengl_context_create(void) {
 		_texture *texture = &opengl.texture[i];
 		_shader *shd = &texture->shader;
 		_texture_rect *prev = NULL;
-		GLuint a, b;
+		GLuint a = 0, b = 0;
 
 		if (i == 0) {
 			prev = &opengl.screen.tex[0].rect;
@@ -611,10 +613,10 @@ void opengl_draw_scene(void) {
 #if defined (WITH_OPENGL_CG)
 	static GLuint prev_type = MS_MEM;
 #endif
-	const _texture_simple *scrtex;
+	const _texture_simple *scrtex = NULL;
 	GLint offset_x = 0, offset_y = 0;
 	GLuint w = opengl.surface.w, h = opengl.surface.h;
-	GLuint sindex, i;
+	GLuint sindex = 0, i = 0;
 
 	if (!gui.start || (gfx.frame.in_draw == gfx.frame.filtered)) {
 		return;
@@ -655,7 +657,7 @@ void opengl_draw_scene(void) {
 	for (i = 0; i < shader_effect.pass; i++) {
 		const _texture *texture = &opengl.texture[i];
 		const _shader_pass *sp = &shader_effect.sp[i];
-		GLuint id, fbo = texture->fbo, mag, min;
+		GLuint id = 0, fbo = texture->fbo, mag = 0, min = 0;
 
 		shader_effect.running_pass = i;
 
@@ -696,12 +698,12 @@ void opengl_draw_scene(void) {
 				cgGLEnableProfile(opengl.cg.profile.f);
 				cgGLEnableProfile(opengl.cg.profile.v);
 
-				opengl_shader_cg_params_set(texture, sindex, sp->frame_count_mod, ppu.frames);
+				opengl_shader_cg_params_set(texture, sindex, sp->frame_count_mod, nes[emu_active_nidx()].p.ppu.frames);
 			}
 #endif
 		} else {
 			glUseProgram(texture->shader.glslp.prg);
-			opengl_shader_glsl_params_set(&texture->shader, sindex, sp->frame_count_mod, ppu.frames);
+			opengl_shader_glsl_params_set(&texture->shader, sindex, sp->frame_count_mod, nes[emu_active_nidx()].p.ppu.frames);
 		}
 
 		if (i == shader_effect.last_pass) {
@@ -750,7 +752,7 @@ void opengl_draw_scene(void) {
 		float vpy = (gfx.h[VIDEO_MODE] < gfx.h[FSCR_RESIZE]) ? (float)(gfx.h[FSCR_RESIZE] - gfx.h[VIDEO_MODE]) * gfx.device_pixel_ratio : 0;
 		float vpw = (float)opengl.video_mode.w * gfx.device_pixel_ratio;
 		float vph = (float)opengl.video_mode.h * gfx.device_pixel_ratio;
-		GLuint mag, min;
+		GLuint mag = 0, min = 0;
 
 		glViewport((GLint)vpx, (GLint)vpy, (GLsizei)vpw, (GLsizei)vph);
 		glBindTexture(GL_TEXTURE_2D, opengl.overlay.id);
@@ -782,7 +784,7 @@ void opengl_draw_scene(void) {
 }
 
 static void opengl_context_delete(BYTE lock) {
-	GLuint i;
+	GLuint i = 0;
 
 	if (lock) {
 		gfx_thread_lock();
@@ -887,19 +889,20 @@ static void opengl_context_delete(BYTE lock) {
 	}
 }
 INLINE static void opengl_read_front_buffer(void) {
-	int w, h;
+	int w = 0, h = 0;
 
 	if (info.screenshot == SCRSH_ORIGINAL_SIZE) {
-		void *buffer;
-		int stride;
+		void *buffer = NULL;
+		int stride = 0;
 
 		w = SCR_COLUMNS;
 		h = SCR_ROWS;
 		stride = w * (int)sizeof(uint32_t);
 
-		if ((buffer = malloc(stride * h))) {
+		buffer = malloc((size_t)stride * h);
+		if (buffer) {
 			emu_thread_pause();
-			scale_surface_screenshoot_1x(stride, buffer);
+			scale_surface_screenshoot_1x(emu_active_nidx(), stride, buffer);
 			gui_save_screenshot(w, h, stride, buffer, FALSE);
 			free(buffer);
 			emu_thread_continue();
@@ -924,13 +927,15 @@ INLINE static void opengl_read_front_buffer(void) {
 			opengl.screenshot.w = w;
 			opengl.screenshot.h = h;
 
-			if ((opengl.screenshot.walign32 = w) % 32) {
+			opengl.screenshot.walign32 = w;
+			if (opengl.screenshot.walign32 % 32) {
 				opengl.screenshot.walign32 = (w / 32) + 1;
 				opengl.screenshot.walign32 *= 32;
 			}
 			opengl.screenshot.stride = opengl.screenshot.walign32 * (int)sizeof(uint32_t);
 
-			if ((opengl.screenshot.rgb = malloc(opengl.screenshot.stride * h)) == NULL) {
+			opengl.screenshot.rgb = malloc(opengl.screenshot.stride * h);
+			if (opengl.screenshot.rgb == NULL) {
 				info.screenshot = SCRSH_NONE;
 				opengl.screenshot.rgb = NULL;
 				return;
@@ -958,11 +963,12 @@ INLINE static void opengl_read_front_buffer(void) {
 	}
 }
 static BYTE opengl_glew_init(void) {
-	GLenum err;
+	GLenum err = 0;
 
 	glewExperimental = GL_TRUE;
 
-	if ((err = glewContextInit()) != GLEW_OK) {
+	err = glewContextInit();
+	if (err != GLEW_OK) {
 		log_error(uL("opengl; %s"), glewGetErrorString(err));
 	} else {
 		log_info(uL("opengl;GPU %s (%s, %s)"),
@@ -1001,10 +1007,10 @@ static BYTE opengl_texture_create(_texture *texture, GLuint index) {
 	_shader_scale *sc = &sp->sc;
 	const _shader_pass *next = &shader_effect.sp[index + 1];
 	const _vertex_buffer *vb = vb_upright;
-	const _texture_rect *prev;
+	const _texture_rect *prev = NULL;
 	_texture_rect *rect = &texture->rect;
 	_viewport *vp = &texture->vp;
-	GLint wrap;
+	GLint wrap = 0;
 
 	if (index == 0) {
 		prev = &opengl.screen.tex[0].rect;
@@ -1207,7 +1213,7 @@ static void opengl_texture_simple_create(_texture_simple *texture, GLuint w, GLu
 		GLuint size = rect->w * rect->h * sizeof(uint32_t);
 		GLubyte *empty = malloc(size);
 		uint32_t clean_color = (cfg->palette == PALETTE_RAW) && !overlay ? 0x00FF0000 : 0x00;
-		int i;
+		int i = 0;
 
 		for (i = 0; i < (rect->w * rect->h); i++) {
 			(*((uint32_t *)empty + i)) = clean_color;
@@ -1220,8 +1226,8 @@ static void opengl_texture_simple_create(_texture_simple *texture, GLuint w, GLu
 }
 static BYTE opengl_texture_lut_create(_lut *lut, GLuint index) {
 	_lut_pass *lp = &shader_effect.lp[index];
-	GLuint mag, min;
-	GLint wrap;
+	GLuint mag = 0, min = 0;
+	GLint wrap = 0;
 
 	glGenTextures(1, &lut->id);
 	glBindTexture(GL_TEXTURE_2D, lut->id);
@@ -1348,8 +1354,8 @@ static void opengl_shader_uni_texture(_shader_uniforms_tex *sut, GLuint prg, GLc
 	}
 }
 static GLint opengl_shader_get_uni(GLuint prog, const char *param) {
-	GLuint i;
-	GLint loc;
+	GLuint i = 0;
+	GLint loc = 0;
 	char buff[200];
 
 	for (i = 0; i < LENGTH(uni_prefixes); i++) {
@@ -1363,8 +1369,8 @@ static GLint opengl_shader_get_uni(GLuint prog, const char *param) {
 	return (-1);
 }
 static GLint opengl_shader_get_atr(GLuint prog, const char *param) {
-	GLuint i;
-	GLint loc;
+	GLuint i = 0;
+	GLint loc = 0;
 	char buff[200];
 
 	for (i = 0; i < LENGTH(uni_prefixes); i++) {
@@ -1392,7 +1398,7 @@ static GLint opengl_integer_get(GLenum penum) {
 	return (result);
 }
 static void opengl_matrix_4x4_identity(_math_matrix_4x4 *mat) {
-	int i;
+	int i = 0;
 
 	memset(mat, 0, sizeof(*mat));
 
@@ -1402,7 +1408,7 @@ static void opengl_matrix_4x4_identity(_math_matrix_4x4 *mat) {
 }
 static void opengl_matrix_4x4_ortho(_math_matrix_4x4 *mat, GLfloat left, GLfloat right,
 	GLfloat bottom, GLfloat top, GLfloat znear, GLfloat zfar) {
-	float tx, ty, tz;
+	float tx = 0, ty = 0, tz = 0;
 
 	opengl_matrix_4x4_identity(mat);
 
@@ -1493,7 +1499,7 @@ static BYTE opengl_shader_glsl_init(GLuint pass, _shader *shd, GLchar *code, con
 	const GLchar *src[4];
 	char alias_define[MAX_PASS * 128];
 	char version[128];
-	GLuint i, vrt, frg;
+	GLuint i = 0, vrt = 0, frg = 0;
 	GLint success = 0;
 
 	if ((code == NULL) && ((path == NULL) || !path[0])) {
@@ -1503,7 +1509,7 @@ static BYTE opengl_shader_glsl_init(GLuint pass, _shader *shd, GLchar *code, con
 	memset(version, 0x00, sizeof(version));
 
 	if (path && path[0]) {
-		char *ptr;
+		char *ptr = NULL;
 
 		code = emu_file2string(path);
 
@@ -1677,7 +1683,7 @@ static BYTE opengl_shader_glsl_init(GLuint pass, _shader *shd, GLchar *code, con
 	return (EXIT_OK);
 }
 INLINE static void opengl_shader_glsl_params_set(const _shader *shd, GLuint sindex, GLuint fcountmod, GLuint fcount) {
-	GLuint i, buffer_index = 0;
+	GLuint i = 0, buffer_index = 0;
 	GLint texture_index = 1;
 
 	if (shd->glslp.uni.mvp >= 0) {
@@ -1861,7 +1867,7 @@ INLINE static void opengl_shader_glsl_params_set(const _shader *shd, GLuint sind
 	}
 }
 INLINE static void opengl_shader_glsl_disable_attrib(void) {
-	GLuint i;
+	GLuint i = 0;
 
 	for (i = 0; i < opengl.attribs.count; i++) {
 		glDisableVertexAttribArray(opengl.attribs.attrib[i]);
@@ -1886,12 +1892,12 @@ static void opengl_shader_cg_error_handler(UNUSED(CGcontext ctx), CGerror error,
 }
 #endif
 static BYTE opengl_shader_cg_init(GLuint pass, _shader *shd, GLchar *code, const uTCHAR *path) {
-	const char *list;
+	const char *list = NULL;
 	const char *argv[64];
 	char alias[MAX_PASS][128];
 	uTCHAR base[LENGTH_FILE_NAME_MID];
 	uTCHAR dname[LENGTH_FILE_NAME_MID];
-	GLuint i, argc;
+	GLuint i = 0, argc = 0;
 #if defined (_WIN32)
 	char bname[LENGTH_FILE_NAME_MID];
 
@@ -2014,7 +2020,8 @@ static BYTE opengl_shader_cg_init(GLuint pass, _shader *shd, GLchar *code, const
 				continue;
 			}
 
-			if (!(semantic = cgGetParameterSemantic(param))) {
+			semantic = cgGetParameterSemantic(param);
+			if (!semantic) {
 				continue;
 			}
 
@@ -2142,7 +2149,7 @@ static void opengl_shader_cg_uni_texture_clear(_shader_uniforms_tex_cg *sut) {
 	sut->v.tex_coord = NULL;
 }
 static void opengl_shader_cg_uni_texture(_shader_uniforms_tex_cg *sut, _shader_prg_cg *prg, char *fmt, ...) {
-	CGparameter param;
+	CGparameter param = 0;
 	char type[50], buff[100];
 	va_list ap;
 
@@ -2179,7 +2186,7 @@ static void opengl_shader_cg_uni_texture(_shader_uniforms_tex_cg *sut, _shader_p
 	}
 }
 INLINE static void opengl_shader_cg_params_set(const _texture *texture, GLuint sindex, GLuint fcountmod, GLuint fcount) {
-	GLuint i, buffer_index = 0;
+	GLuint i = 0, buffer_index = 0;
 	const _shader *shd = &texture->shader;
 
 	if (shd->cgp.uni.mvp) {
@@ -2467,7 +2474,7 @@ INLINE static void opengl_shader_cg_params_set(const _texture *texture, GLuint s
 	buffer_index += (MAX_PASS * 2);
 }
 INLINE static void opengl_shader_cg_disable_stpm(void) {
-	GLuint i;
+	GLuint i = 0;
 
 	for (i = 0; i < opengl.cg.states.count; i++) {
 		cgGLDisableClientState(opengl.cg.states.state[i]);

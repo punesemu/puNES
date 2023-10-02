@@ -23,8 +23,8 @@
 
 void map_init_200(void);
 void extcl_after_mapper_init_200(void);
-void extcl_cpu_wr_mem_200(WORD address, BYTE value);
-BYTE extcl_cpu_rd_mem_200(WORD address, BYTE openbus);
+void extcl_cpu_wr_mem_200(BYTE nidx, WORD address, BYTE value);
+BYTE extcl_cpu_rd_mem_200(BYTE nidx, WORD address, BYTE openbus);
 BYTE extcl_save_mapper_200(BYTE mode, BYTE slot, FILE *fp);
 
 #endif /* MAPPER_200_H_ */

@@ -47,7 +47,7 @@ void extcl_after_mapper_init_525(void) {
 	chr_fix_525();
 	mirroring_fix_525();
 }
-void extcl_cpu_wr_mem_525(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_525(UNUSED(BYTE nidx), WORD address, BYTE value) {
 	switch (address & 0xF000) {
 		case 0x8000:
 			m525.prg = value;
@@ -67,28 +67,27 @@ BYTE extcl_save_mapper_525(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m525.prg);
 	save_slot_ele(mode, slot, m525.chr);
 	save_slot_ele(mode, slot, m525.mirroring);
-
 	return (EXIT_OK);
 }
 
 INLINE static void prg_fix_525(void) {
-	memmap_auto_16k(MMCPU(0x8000), (m525.prg >> 1));
-	memmap_auto_16k(MMCPU(0xC000), 0xFF);
+	memmap_auto_16k(0, MMCPU(0x8000), (m525.prg >> 1));
+	memmap_auto_16k(0, MMCPU(0xC000), 0xFF);
 }
 INLINE static void chr_fix_525(void) {
-	memmap_auto_1k(MMPPU(0x0000), m525.chr[0]);
-	memmap_auto_1k(MMPPU(0x0400), m525.chr[1]);
-	memmap_auto_1k(MMPPU(0x0800), m525.chr[2]);
-	memmap_auto_1k(MMPPU(0x0C00), m525.chr[3]);
-	memmap_auto_1k(MMPPU(0x1000), m525.chr[4]);
-	memmap_auto_1k(MMPPU(0x1400), m525.chr[5]);
-	memmap_auto_1k(MMPPU(0x1800), m525.chr[6]);
-	memmap_auto_1k(MMPPU(0x1C00), m525.chr[7]);
+	memmap_auto_1k(0, MMPPU(0x0000), m525.chr[0]);
+	memmap_auto_1k(0, MMPPU(0x0400), m525.chr[1]);
+	memmap_auto_1k(0, MMPPU(0x0800), m525.chr[2]);
+	memmap_auto_1k(0, MMPPU(0x0C00), m525.chr[3]);
+	memmap_auto_1k(0, MMPPU(0x1000), m525.chr[4]);
+	memmap_auto_1k(0, MMPPU(0x1400), m525.chr[5]);
+	memmap_auto_1k(0, MMPPU(0x1800), m525.chr[6]);
+	memmap_auto_1k(0, MMPPU(0x1C00), m525.chr[7]);
 }
 INLINE static void mirroring_fix_525(void) {
 	if (m525.mirroring & 0x01) {
-		mirroring_H();
+		mirroring_H(0);
 	} else {
-		mirroring_V();
+		mirroring_V(0);
 	}
 }

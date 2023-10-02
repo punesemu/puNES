@@ -23,7 +23,7 @@
 
 void map_init_409(void);
 void extcl_after_mapper_init_409(void);
-void extcl_cpu_wr_mem_409(WORD address, BYTE value);
+void extcl_cpu_wr_mem_409(BYTE nidx, WORD address, BYTE value);
 BYTE extcl_save_mapper_409(BYTE mode, BYTE slot, FILE *fp);
 
 #endif /* MAPPER_409_H_ */

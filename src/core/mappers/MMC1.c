@@ -38,7 +38,7 @@ void extcl_after_mapper_init_MMC1(void) {
 	MMC1_wram_fix();
 	MMC1_mirroring_fix();
 }
-void extcl_cpu_wr_mem_MMC1(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_MMC1(BYTE nidx, WORD address, BYTE value) {
 	if (address >= 0x8000) {
 		// se nel tick precedente e' stato fatto un reset e
 		// sono in presenza di una doppia scrittura da parte
@@ -51,7 +51,7 @@ void extcl_cpu_wr_mem_MMC1(WORD address, BYTE value) {
 			// azzero il flag
 			mmc1.reset = FALSE;
 			// esco se necessario
-			if (cpu.double_wr) {
+			if (nes[nidx].c.cpu.double_wr) {
 				return;
 			}
 		}
@@ -86,7 +86,6 @@ BYTE extcl_save_mapper_MMC1(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, mmc1.accumulator);
 	save_slot_ele(mode, slot, mmc1.shift);
 	save_slot_ele(mode, slot, mmc1.reset);
-
 	return (EXIT_OK);
 }
 
@@ -111,14 +110,14 @@ void prg_fix_MMC1_base(void) {
 	MMC1_prg_swap(0xC000, prg_bank_MMC1(1));
 }
 void prg_swap_MMC1_base(WORD address, WORD value) {
-	memmap_auto_16k(MMCPU(address), value);
+	memmap_auto_16k(0, MMCPU(address), value);
 }
 void chr_fix_MMC1_base(void) {
 	MMC1_chr_swap(0x0000, chr_bank_MMC1(0));
 	MMC1_chr_swap(0x1000, chr_bank_MMC1(1));
 }
 void chr_swap_MMC1_base(WORD address, WORD value) {
-	memmap_auto_4k(MMPPU(address), value);
+	memmap_auto_4k(0, MMPPU(address), value);
 }
 void wram_fix_MMC1_base(void) {
 	MMC1_wram_swap(0x6000, 0);
@@ -130,21 +129,21 @@ void wram_swap_MMC1_base(WORD address, WORD value) {
 			: mmc1.reg[3] & 0x10 ? FALSE : TRUE)
 		: TRUE;
 
-	memmap_auto_wp_8k(MMCPU(address), value, wram_enabled, wram_enabled);
+	memmap_auto_wp_8k(0, MMCPU(address), value, wram_enabled, wram_enabled);
 }
 void mirroring_fix_MMC1_base(void) {
 	switch (mmc1.reg[0] & 0x03) {
 		case 0x00:
-			mirroring_SCR0();
+			mirroring_SCR0(0);
 			break;
 		case 0x01:
-			mirroring_SCR1();
+			mirroring_SCR1(0);
 			break;
 		case 0x02:
-			mirroring_V();
+			mirroring_V(0);
 			break;
 		case 0x03:
-			mirroring_H();
+			mirroring_H(0);
 			break;
 	}
 }

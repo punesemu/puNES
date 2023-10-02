@@ -36,8 +36,8 @@ typedef struct _jv001 {
 extern _jv001 jv001;
 
 void extcl_after_mapper_init_JV001(void);
-void extcl_cpu_wr_mem_JV001(WORD address, BYTE value);
-BYTE extcl_cpu_rd_mem_JV001(WORD address, BYTE openbus);
+void extcl_cpu_wr_mem_JV001(BYTE nidx, WORD address, BYTE value);
+BYTE extcl_cpu_rd_mem_JV001(BYTE nidx, WORD address, BYTE openbus);
 BYTE extcl_save_mapper_JV001(BYTE mode, BYTE slot, FILE *fp);
 
 void init_JV001(BYTE reset);

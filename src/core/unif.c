@@ -122,12 +122,13 @@ BYTE unif_load_rom(void) {
 	}
 
 	// setto i defaults
+	info.number_of_nes = 1;
 	info.machine[HEADER] = info.machine[DATABASE] = NTSC;
 	info.mapper.submapper = 0;
 	info.mapper.mirroring = MIRRORING_HORIZONTAL;
 	info.mapper.battery = FALSE;
+	info.mapper.expansion = 0;
 	info.mirroring_db = DEFAULT;
-	info.extra_from_db = 0;
 	info.mapper.chrrom_banks_8k = 0;
 	vs_system.enabled = FALSE;
 
@@ -162,6 +163,7 @@ BYTE unif_load_rom(void) {
 						return (EXIT_ERROR);
 					}
 					prgrom_chip(0) = prgrom_pnt();
+					info.mapper.prgrom_size = prgrom_size();
 					info.mapper.prgrom_banks_16k = prgrom_size() / S16K;
 				}
 
@@ -179,6 +181,7 @@ BYTE unif_load_rom(void) {
 							return (EXIT_ERROR);
 						}
 						chrrom_chip(0) = chrrom_pnt();
+						info.mapper.chrrom_size = chrrom_size();
 						info.mapper.chrrom_banks_8k = chrrom_size() / S8K;
 					}
 				}
@@ -289,10 +292,10 @@ BYTE unif_load_rom(void) {
 
 		find_board();
 
-		ram_set_size(S2K);
+		ram_set_size(0, S2K);
 		ram_init();
 
-		nmt_set_size(S4K);
+		nmt_set_size(0, S4K);
 		nmt_init();
 
 		// nes20db non ha trovato la rom
@@ -303,9 +306,9 @@ BYTE unif_load_rom(void) {
 			wram_set_nvram_size(wram_ram_size());
 			wram_set_ram_size(0);
 		}
-		if (!vram_size()) {
+		if (!vram_size(0)) {
 			if ((info.mapper.id != 256) && (info.mapper.id != 270) && (info.mapper.id != 296)) {
-				vram_set_ram_size(chrrom_size() ? 0 : S8K);
+				vram_set_ram_size(0, chrrom_size() ? 0 : S8K);
 			}
 		}
 
@@ -315,19 +318,19 @@ BYTE unif_load_rom(void) {
 		switch (info.mapper.mirroring) {
 			default:
 			case MIRRORING_HORIZONTAL:
-				mirroring_H();
+				mirroring_H(0);
 				break;
 			case MIRRORING_VERTICAL:
-				mirroring_V();
+				mirroring_V(0);
 				break;
 			case MIRRORING_FOURSCR:
-				mirroring_FSCR();
+				mirroring_FSCR(0);
 				break;
 			case MIRRORING_SINGLE_SCR0:
-				mirroring_SCR0();
+				mirroring_SCR0(0);
 				break;
 			case MIRRORING_SINGLE_SCR1:
-				mirroring_SCR1();
+				mirroring_SCR1(0);
 				break;
 		}
 
@@ -601,7 +604,6 @@ void find_board(void) {
 	unif.finded = FALSE;
 	info.mapper.id = DEFAULT;
 	info.mapper.submapper = 0;
-	info.extra_from_db = DEFAULT;
 
 	if (!strncasecmp("NROM", unif.stripped_board, strlen(unif.stripped_board)) ||
 		!strncasecmp("NROM-128", unif.stripped_board, strlen(unif.stripped_board)) ||
@@ -828,7 +830,7 @@ void find_board(void) {
 	}
 	if (!strncasecmp("Super24in1SC03", unif.stripped_board, strlen(unif.stripped_board))) {
 		info.mapper.id = 176;
-		vram_set_ram_size(S8K);
+		vram_set_ram_size(0, S8K);
 		unif.finded = TRUE;
 		return;
 	}
@@ -843,9 +845,9 @@ void find_board(void) {
 		!strncasecmp("FK23CA", unif.stripped_board, strlen(unif.stripped_board))) {
 		info.mapper.id = 176;
 		if ((prgrom_size() == S2M) || (prgrom_size() == S16M)) {
-			vram_set_ram_size(S128K);
+			vram_set_ram_size(0, S128K);
 		} else if (prgrom_size() == S8M) {
-			vram_set_ram_size(S256K);
+			vram_set_ram_size(0, S256K);
 		}
 		unif.finded = TRUE;
 		return;
@@ -953,7 +955,7 @@ void find_board(void) {
 	if (!strncasecmp("SHERO", unif.stripped_board, strlen(unif.stripped_board))) {
 		info.mapper.id = 262;
 		info.mapper.mirroring = MIRRORING_FOURSCR;
-		vram_set_ram_size(S8K);
+		vram_set_ram_size(0, S8K);
 		unif.finded = TRUE;
 		return;
 	}
@@ -980,7 +982,7 @@ void find_board(void) {
 	if (!strncasecmp("COOLBOY", unif.stripped_board, strlen(unif.stripped_board))) {
 		info.mapper.id = 268;
 		wram_set_ram_size(S8K);
-		vram_set_ram_size(S256K);
+		vram_set_ram_size(0, S256K);
 		unif.finded = TRUE;
 		return;
 	}
@@ -988,7 +990,7 @@ void find_board(void) {
 		info.mapper.id = 224;
 		info.mapper.submapper = 1;
 		wram_set_ram_size(S8K);
-		vram_set_ram_size(S256K);
+		vram_set_ram_size(0, S256K);
 		unif.finded = TRUE;
 		return;
 	}
@@ -999,7 +1001,7 @@ void find_board(void) {
 	}
 	if (!strncasecmp("80013-B", unif.stripped_board, strlen(unif.stripped_board))) {
 		info.mapper.id = 274;
-		vram_set_ram_size(S8K);
+		vram_set_ram_size(0, S8K);
 		unif.finded = TRUE;
 		return;
 	}
@@ -1017,7 +1019,7 @@ void find_board(void) {
 	}
 	if (!strncasecmp("A65AS", unif.stripped_board, strlen(unif.stripped_board))) {
 		info.mapper.id = 285;
-		vram_set_ram_size(S8K);
+		vram_set_ram_size(0, S8K);
 		unif.finded = TRUE;
 		return;
 	}
@@ -1166,7 +1168,7 @@ void find_board(void) {
 	}
 	if (!strncasecmp("FARID_UNROM_8-IN-1", unif.stripped_board, strlen(unif.stripped_board))) {
 		info.mapper.id = 324;
-		vram_set_ram_size(S8K);
+		vram_set_ram_size(0, S8K);
 		unif.finded = TRUE;
 		return;
 	}
@@ -1178,7 +1180,7 @@ void find_board(void) {
 	if (!strncasecmp("10-24-C-A1", unif.stripped_board, strlen(unif.stripped_board))) {
 		info.mapper.id = 327;
 		wram_set_ram_size(S8K);
-		vram_set_ram_size(S8K);
+		vram_set_ram_size(0, S8K);
 		unif.finded = TRUE;
 		return;
 	}
@@ -1247,7 +1249,7 @@ void find_board(void) {
 	if (!strncasecmp("COOLGIRL", unif.stripped_board, strlen(unif.stripped_board))) {
 		info.mapper.id = 342;
 		wram_set_ram_size(S32K);
-		vram_set_ram_size(S256K);
+		vram_set_ram_size(0, S256K);
 		unif.finded = TRUE;
 		return;
 	}
@@ -1359,7 +1361,7 @@ void find_board(void) {
 	}
 	if (!strncasecmp("SA-9602B", unif.stripped_board, strlen(unif.stripped_board))) {
 		info.mapper.id = 513;
-		vram_set_ram_size(S32K);
+		vram_set_ram_size(0, S32K);
 		unif.finded = TRUE;
 		return;
 	}
@@ -1436,7 +1438,7 @@ void find_board(void) {
 		info.mapper.id = 547;
 		wram_set_ram_size(S8K);
 		wram_set_nvram_size(S8K);
-		vram_set_ram_size(S8K);
+		vram_set_ram_size(0, S8K);
 		unif.finded = TRUE;
 		return;
 	}

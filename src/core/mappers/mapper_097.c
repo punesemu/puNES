@@ -42,26 +42,25 @@ void extcl_after_mapper_init_097(void) {
 	prg_fix_097();
 	mirroring_fix_097();
 }
-void extcl_cpu_wr_mem_097(UNUSED(WORD address), BYTE value) {
+void extcl_cpu_wr_mem_097(UNUSED(BYTE nidx), UNUSED(WORD address), BYTE value) {
 	m097.reg = value;
 	prg_fix_097();
 	mirroring_fix_097();
 }
 BYTE extcl_save_mapper_097(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m097.reg);
-
 	return (EXIT_OK);
 }
 
 INLINE static void prg_fix_097(void) {
-	memmap_auto_16k(MMCPU(0x8000), 0xFF);
-	memmap_auto_16k(MMCPU(0xC000), m097.reg);
+	memmap_auto_16k(0, MMCPU(0x8000), 0xFF);
+	memmap_auto_16k(0, MMCPU(0xC000), m097.reg);
 }
 INLINE static void mirroring_fix_097(void) {
 	if (m097.reg & 0x80) {
-		mirroring_V();
+		mirroring_V(0);
 	} else {
-		mirroring_H();
+		mirroring_H(0);
 	}
 }
 

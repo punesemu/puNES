@@ -23,8 +23,8 @@
 
 void map_init_106(void);
 void extcl_after_mapper_init_106(void);
-void extcl_cpu_wr_mem_106(WORD address, BYTE value);
+void extcl_cpu_wr_mem_106(BYTE nidx, WORD address, BYTE value);
 BYTE extcl_save_mapper_106(BYTE mode, BYTE slot, FILE *fp);
-void extcl_cpu_every_cycle_106(void);
+void extcl_cpu_every_cycle_106(BYTE nidx);
 
 #endif /* MAPPER_106_H_ */

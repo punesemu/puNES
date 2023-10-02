@@ -108,14 +108,17 @@ BYTE ines_load_rom(void) {
 		(rom.data[rom.position++] == 'S') &&
 		(rom.data[rom.position++] == '\32')) {
 
+		info.number_of_nes = 1;
 		info.mapper.prgrom_banks_16k = rom.data[rom.position++];
 		info.mapper.chrrom_banks_8k = rom.data[rom.position++];
 
 		wram_set_ram_size(0);
 		wram_set_nvram_size(0);
 
-		vram_set_ram_size(0);
-		vram_set_nvram_size(0);
+		for (int nesidx = 0; nesidx < NES_CHIPS_MAX; nesidx++) {
+			vram_set_ram_size(nesidx, 0);
+			vram_set_nvram_size(nesidx, 0);
+		}
 
 		if (rom_mem_ctrl_memcpy(&ines.flags[0], &rom, TOTAL_FL) == EXIT_ERROR) {
 			free(rom.data);
@@ -129,7 +132,7 @@ BYTE ines_load_rom(void) {
 			// visto che con il NES_2_0 non eseguo la ricerca nel
 			// database inizializzo queste variabili.
 			info.mirroring_db = DEFAULT;
-			info.extra_from_db = 0;
+			info.mapper.expansion = 0;
 
 			info.mapper.id = ((ines.flags[FL8] & 0x0F) << 8) | (ines.flags[FL7] & 0xF0) | (ines.flags[FL6] >> 4);
 			info.mapper.submapper_nes20 = (ines.flags[FL8] & 0xF0) >> 4;
@@ -137,11 +140,11 @@ BYTE ines_load_rom(void) {
 
 			// PRGROM
 			info.mapper.prgrom_banks_16k |= ((ines.flags[FL9] & 0x0F) << 8);
-			nes20_prg_chr_size(&info.mapper.prgrom_banks_16k, S16K);
+			info.mapper.prgrom_size = nes20_prg_chr_size(&info.mapper.prgrom_banks_16k, S16K);
 
 			// CHROM
 			info.mapper.chrrom_banks_8k |= ((ines.flags[FL9] & 0xF0) << 4);
-			nes20_prg_chr_size(&info.mapper.chrrom_banks_8k, S8K);
+			info.mapper.chrrom_size = nes20_prg_chr_size(&info.mapper.chrrom_banks_8k, S8K);
 
 			// WRAM
 			if (ines.flags[FL10] & 0x0F) {
@@ -153,17 +156,17 @@ BYTE ines_load_rom(void) {
 
 			// VRAM
 			if (ines.flags[FL11] & 0x0F) {
-				vram_set_ram_size(64 << (ines.flags[FL11] & 0x0F));
+				vram_set_ram_size(0, 64 << (ines.flags[FL11] & 0x0F));
 			}
 			if (ines.flags[FL11] & 0xF0) {
-				vram_set_nvram_size(64 << ((ines.flags[FL11] & 0xF0) >> 4));
+				vram_set_nvram_size(0, 64 << ((ines.flags[FL11] & 0xF0) >> 4));
 			}
 
 			info.mapper.battery = (ines.flags[FL6] & 0x02) >> 1;
 
 			cpu_timing = ines.flags[FL12] & 0x03;
 
-			vs_system.ppu = vs_system.special_mode.type = 0;
+			vs_system.ppu = 0;
 			vs_system.special_mode.type = 0;
 			info.decimal_mode = FALSE;
 
@@ -192,9 +195,13 @@ BYTE ines_load_rom(void) {
 			}
 
 			miscrom.chips = ines.flags[FL14] & 0x03;
+			info.mapper.expansion = ines.flags[FL15];
 		} else {
 			// iNES 1.0
 			info.format = iNES_1_0;
+
+			info.mapper.prgrom_size = (size_t)info.mapper.prgrom_banks_16k *  S16K;
+			info.mapper.chrrom_size = (size_t)info.mapper.chrrom_banks_8k * S8K;
 
 			// Older versions of the iNES emulator ignored bytes 7-15, and several ROM management tools
 			// wrote messages in there. Commonly, these will be filled with "DiskDude!", which results
@@ -214,10 +221,11 @@ BYTE ines_load_rom(void) {
 			info.mapper.battery = (ines.flags[FL6] & 0x02) >> 1;
 
 			wram_set_ram_size(S8K);
-			vram_set_ram_size(S8K);
+			vram_set_ram_size(0, S8K);
 
-			vs_system.ppu = vs_system.special_mode.type = 0;
+			vs_system.ppu = 0;
 			vs_system.special_mode.type = 0;
+			info.mapper.expansion = 0;
 			info.decimal_mode = FALSE;
 		}
 
@@ -267,78 +275,88 @@ BYTE ines_load_rom(void) {
 
 		nes20db_search();
 
-		ram_set_size(S2K);
-		ram_init();
-
-		nmt_set_size(S4K);
-		nmt_init();
-
 		// gestione Vs. System
-//		if ((info.mapper.id != 99) && !vs_system.ppu && !vs_system.special_mode.type) {
-//			vs_system.enabled = FALSE;
-//			vs_system.special_mode.r5e0x = NULL;
-//			vs_system.special_mode.index = 0;
-//			vs_system.rc2c05.enabled = FALSE;
-//		} else {
-//			vs_system.enabled = TRUE;
-//
-//			switch (vs_system.ppu) {
-//				case RP2C03B:
-//				case RP2C03G:
-//				case RP2C04:
-//				case RP2C04_0002:
-//				case RP2C04_0003:
-//				case RP2C04_0004:
-//				case RC2C03B:
-//				case RC2C03C:
-//				default:
-//					vs_system.rc2c05.enabled = FALSE;
-//					vs_system.rc2c05.r2002 = 0x00;
-//					break;
-//				case RC2C05_01:
-//					vs_system.rc2c05.enabled = TRUE;
-//					vs_system.rc2c05.r2002 = 0x1B;
-//					break;
-//				case RC2C05_02:
-//					vs_system.rc2c05.enabled = TRUE;
-//					vs_system.rc2c05.r2002 = 0x3D;
-//					break;
-//				case RC2C05_03:
-//					vs_system.rc2c05.enabled = TRUE;
-//					vs_system.rc2c05.r2002 = 0x1C;
-//					break;
-//				case RC2C05_04:
-//					vs_system.rc2c05.enabled = TRUE;
-//					vs_system.rc2c05.r2002 = 0x1B;
-//					break;
-//				case RC2C05_05:
-//					vs_system.rc2c05.enabled = TRUE;
-//					vs_system.rc2c05.r2002 = 0x00;
-//					break;
-//			}
-//
-//			switch (vs_system.special_mode.type) {
-//				case VS_SM_Normal:
-//				default:
-//					vs_system.special_mode.r5e0x = NULL;
-//					break;
-//				case VS_SM_RBI_Baseball:
-//					vs_system.special_mode.r5e0x = (BYTE *)&vs_protection_data[1][0];
-//					break;
-//				case VS_SM_TKO_Boxing:
-//					vs_system.special_mode.r5e0x = (BYTE *)&vs_protection_data[0][0];
-//					break;
-//				case VS_SM_Super_Xevious:
-//					vs_system.special_mode.r5e0x = NULL;
-//					break;
-//			}
-//
-//			vs_system.special_mode.index = 0;
-//
-//			if (wram_size() < 0x800) {
-//				wram_set_ram_size(0x800);
-//			}
-//		}
+		if ((info.mapper.id != 99) && !vs_system.ppu && !vs_system.special_mode.type) {
+			vs_system.enabled = FALSE;
+			vs_system.special_mode.r5e0x = NULL;
+			vs_system.special_mode.index = 0;
+			vs_system.rc2c05.enabled = FALSE;
+		} else {
+			vs_system.enabled = TRUE;
+
+			switch (vs_system.ppu) {
+				case RP2C03B:
+				case RP2C03G:
+				case RP2C04:
+				case RP2C04_0002:
+				case RP2C04_0003:
+				case RP2C04_0004:
+				case RC2C03B:
+				case RC2C03C:
+				default:
+					vs_system.rc2c05.enabled = FALSE;
+					vs_system.rc2c05.r2002 = 0x00;
+					break;
+				case RC2C05_01:
+					vs_system.rc2c05.enabled = TRUE;
+					vs_system.rc2c05.r2002 = 0x1B;
+					break;
+				case RC2C05_02:
+					vs_system.rc2c05.enabled = TRUE;
+					vs_system.rc2c05.r2002 = 0x3D;
+					break;
+				case RC2C05_03:
+					vs_system.rc2c05.enabled = TRUE;
+					vs_system.rc2c05.r2002 = 0x1C;
+					break;
+				case RC2C05_04:
+					vs_system.rc2c05.enabled = TRUE;
+					vs_system.rc2c05.r2002 = 0x1B;
+					break;
+				case RC2C05_05:
+					vs_system.rc2c05.enabled = TRUE;
+					vs_system.rc2c05.r2002 = 0x00;
+					break;
+			}
+
+			switch (vs_system.special_mode.type) {
+				default:
+					vs_system.special_mode.type = VS_SM_Normal;
+					vs_system.special_mode.r5e0x = NULL;
+					break;
+				case VS_SM_Normal:
+				case VS_SM_Super_Xevious:
+				case VS_SM_Ice_Climber:
+					vs_system.special_mode.r5e0x = NULL;
+					break;
+				case VS_SM_RBI_Baseball:
+					vs_system.special_mode.r5e0x = (BYTE *)&vs_protection_data[1][0];
+					break;
+				case VS_SM_TKO_Boxing:
+					vs_system.special_mode.r5e0x = (BYTE *)&vs_protection_data[0][0];
+					break;
+				case VS_DS_Normal:
+				case VS_DS_Bungeling:
+					info.number_of_nes = 2;
+					break;
+			}
+
+			vs_system.special_mode.index = 0;
+
+			if (wram_size() < S2K) {
+				wram_set_ram_size(S2K);
+			}
+			for (int nesidx = 0; nesidx < info.number_of_nes; nesidx++) {
+				memmap_wram_region_init(nesidx, S2K);
+			}
+		}
+
+		for (int nesidx = 0; nesidx < info.number_of_nes; nesidx++) {
+			ram_set_size(nesidx, S2K);
+			nmt_set_size(nesidx, S4K);
+		}
+		ram_init();
+		nmt_init();
 
 		if (miscrom.trainer.in_use) {
 			miscrom.chips = 0;
@@ -350,7 +368,11 @@ BYTE ines_load_rom(void) {
 			}
 		}
 
-		info.mapper.prgrom_banks_16k = !info.mapper.prgrom_banks_16k ? 1 : info.mapper.prgrom_banks_16k;
+		info.mapper.prgrom_banks_16k = !info.mapper.prgrom_banks_16k? 1 : info.mapper.prgrom_banks_16k;
+		info.mapper.prgrom_size = !info.mapper.prgrom_size ||
+			(info.mapper.prgrom_size > info.mapper.prgrom_banks_16k * S16K)
+			? info.mapper.prgrom_banks_16k * S16K
+			: info.mapper.prgrom_size;
 
 		// alloco e carico la PRG Rom
 		prgrom_set_size(info.mapper.prgrom_banks_16k * S16K);
@@ -360,7 +382,7 @@ BYTE ines_load_rom(void) {
 			return (EXIT_ERROR);
 		}
 
-		if (rom_mem_ctrl_memcpy_truncated(prgrom_pnt(), &rom, prgrom_size()) == EXIT_ERROR) {
+		if (rom_mem_ctrl_memcpy_truncated(prgrom_pnt(), &rom, info.mapper.prgrom_size) == EXIT_ERROR) {
 			info.prg_truncated = TRUE;
 		}
 
@@ -372,7 +394,7 @@ BYTE ines_load_rom(void) {
 				free(rom.data);
 				return (EXIT_ERROR);
 			}
-			if (rom_mem_ctrl_memcpy_truncated(chrrom_pnt(), &rom, chrrom_size()) == EXIT_ERROR) {
+			if (rom_mem_ctrl_memcpy_truncated(chrrom_pnt(), &rom, info.mapper.chrrom_size) == EXIT_ERROR) {
 				info.chr_truncated = TRUE;
 			}
 		}
@@ -398,8 +420,10 @@ BYTE ines_load_rom(void) {
 			wram_set_nvram_size(wram_ram_size());
 			wram_set_ram_size(0);
 		}
-		if (!chrrom_size() && !vram_size()) {
-			vram_set_ram_size(S8K);
+		for (int nesidx = 0; nesidx < info.number_of_nes; nesidx++) {
+			if (!chrrom_size() && !vram_size(nesidx)) {
+				vram_set_ram_size(nesidx, S8K);
+			}
 		}
 
 		free(rom.data);
@@ -413,13 +437,15 @@ BYTE ines_load_rom(void) {
 	return (EXIT_ERROR);
 }
 
-void nes20_prg_chr_size(DBWORD *reg, double divider) {
+size_t nes20_prg_chr_size(DBWORD *reg, double divider) {
 	if (((*reg) & 0x0F00) == 0x0F00) {
 		unsigned int exponent = ((*reg) & 0x00FC) >> 2;
 		double len = pow(2, exponent) * ((((*reg) & 0x0003) * 2) + 1);
 
 		(*reg) = (int)ceil(len / divider);
+		return((int)len);
 	}
+	return((int)((*reg) * divider));
 }
 
 void calculate_checksums_from_rom(void *rom_mem) {
@@ -455,6 +481,10 @@ void calculate_checksums_from_rom(void *rom_mem) {
 	{
 		len = !info.mapper.prgrom_banks_16k ? S8K : (size_t)info.mapper.prgrom_banks_16k * S16K;
 		difference = !info.mapper.prgrom_banks_16k ? S8K : 0;
+		if (len > info.mapper.prgrom_size) {
+			len = !info.mapper.prgrom_size ? S8K : info.mapper.prgrom_size;
+			difference = !info.mapper.prgrom_size ? S8K : 0;
+		}
 		if ((position + len) > rom->size) {
 			DBWORD banks = ((rom->size - position) / S16K) + ((rom->size - position) % S16K ? 1: 0);
 
@@ -469,7 +499,6 @@ void calculate_checksums_from_rom(void *rom_mem) {
 		info.crc32.total = emu_crc32_continue((void *)&rom->data[position], len, info.crc32.total);
 		position += len;
 	}
-
 	if (info.mapper.chrrom_banks_8k) {
 		len = (size_t)info.mapper.chrrom_banks_8k * S8K;
 		difference = 0;
@@ -512,8 +541,7 @@ void search_in_database(void) {
 			info.mirroring_db = dblist[i].mirroring;
 			vs_system.ppu = dblist[i].vs_ppu;
 			vs_system.special_mode.type = dblist[i].vs_sm;
-			info.default_dipswitches = dblist[i].dipswitches;
-			info.extra_from_db = dblist[i].extra;
+			info.mapper.expansion = dblist[i].extra;
 			switch (info.mapper.id) {
 				case 235:
 					if (!info.mapper.prgrom_banks_16k) {
@@ -537,14 +565,14 @@ BYTE ines10_search_in_database(void) {
 	// setto i default prima della ricerca
 	info.machine[DATABASE] = info.mirroring_db = DEFAULT;
 	info.mapper.submapper = 0;
-	info.extra_from_db = 0;
 	vs_system.ppu = vs_system.special_mode.type = DEFAULT;
 
 	// cerco nel database
 	search_in_database();
 
 	if ((vs_system.ppu == DEFAULT) && (vs_system.special_mode.type == DEFAULT)) {
-		vs_system.ppu = vs_system.special_mode.type = 0;
+		vs_system.ppu = 0;
+		vs_system.special_mode.type = 0;
 	}
 
 	return (EXIT_OK);

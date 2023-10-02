@@ -43,7 +43,7 @@ void map_init_521(void) {
 void extcl_after_mapper_init_521(void) {
 	prg_fix_521();
 }
-void extcl_cpu_wr_mem_521(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_521(UNUSED(BYTE nidx), WORD address, BYTE value) {
 	if ((address >= 0x5000) && (address <= 0x5FFF)) {
 		m521.reg = value;
 		prg_fix_521();
@@ -51,11 +51,10 @@ void extcl_cpu_wr_mem_521(WORD address, BYTE value) {
 }
 BYTE extcl_save_mapper_521(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m521.reg);
-
 	return (EXIT_OK);
 }
 
 INLINE static void prg_fix_521(void) {
-	memmap_auto_16k(MMCPU(0x8000), m521.reg);
-	memmap_auto_16k(MMCPU(0xC000), 0x08);
+	memmap_auto_16k(0, MMCPU(0x8000), m521.reg);
+	memmap_auto_16k(0, MMCPU(0xC000), 0x08);
 }

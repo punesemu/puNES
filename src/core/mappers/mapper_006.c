@@ -29,7 +29,7 @@ INLINE static void chr_fix_006(void);
 INLINE static void wram_fix_006(void);
 INLINE static void mirroring_fix_006(void);
 
-INLINE static void irq_clock_006(void);
+INLINE static void irq_clock_006(BYTE nidx);
 
 const BYTE initial_state[0x1000] = {
 	0x20, 0x03, 0x70, 0x6C, 0xFC, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
@@ -356,8 +356,8 @@ void map_init_006(void) {
 	if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
 		if (chrrom_size()) {
 			if (info.mapper.id != 12) {
-				if (vram_size() < chrrom_size()) {
-					vram_set_ram_size(chrrom_size());
+				if (vram_size(0) < chrrom_size()) {
+					vram_set_ram_size(0, chrrom_size());
 					m006tmp.chr = chrrom_pnt();
 				}
 			} else {
@@ -371,7 +371,7 @@ void map_init_006(void) {
 					(chrrom_size() < (S512K - S256K) ? chrrom_size() : S512K - S256K));
 			}
 		} else if (info.format != NES_2_0) {
-			vram_set_ram_size(S256K);
+			vram_set_ram_size(0, S256K);
 		}
 	}
 
@@ -436,24 +436,24 @@ void extcl_after_mapper_init_006(void) {
 	wram_fix_006();
 	mirroring_fix_006();
 }
-void extcl_cpu_init_pc_006(void) {
+void extcl_cpu_init_pc_006(BYTE nidx) {
 	if (info.reset >= HARD) {
 		WORD nmi_handler = 0;
 
-		nmi_handler = prgrom_rd(0xFFFA) | (prgrom_rd(0xFFFB) << 8);
+		nmi_handler = prgrom_rd(nidx, 0xFFFA) | (prgrom_rd(nidx, 0xFFFB) << 8);
 		if (nmi_handler == 0x5032) {
-			prgrom_wr(0xFFFA, m006.scratch[0x4F]);
-			prgrom_wr(0xFFFB, m006.scratch[0x50]);
+			prgrom_wr(nidx, 0xFFFA, m006.scratch[0x4F]);
+			prgrom_wr(nidx, 0xFFFB, m006.scratch[0x50]);
 		}
 		memcpy(&m006.scratch[0], &initial_state, sizeof(m006.scratch));
-		m006.scratch[0x4F] = prgrom_rd(0xFFFA);
-		m006.scratch[0x50] = prgrom_rd(0xFFFB);
+		m006.scratch[0x4F] = prgrom_rd(nidx, 0xFFFA);
+		m006.scratch[0x50] = prgrom_rd(nidx, 0xFFFB);
 		if (info.mapper.id == 17) {
-			prgrom_wr(0xFFFA, 0x32);
-			prgrom_wr(0xFFFB, 0x50);
+			prgrom_wr(nidx, 0xFFFA, 0x32);
+			prgrom_wr(nidx, 0xFFFB, 0x50);
 		}
 		if (m006tmp.chr) {
-			memcpy(vram_pnt(), m006tmp.chr, chrrom_size());
+			memcpy(vram_pnt(nidx), m006tmp.chr, chrrom_size());
 		}
 		// trainer
 		if (miscrom.trainer.in_use && wram_size()) {
@@ -464,11 +464,11 @@ void extcl_cpu_init_pc_006(void) {
 			miscrom_trainer_dst() = (address < 0x6000)
 				? &m006.scratch[address & 0xF00]
 				: wram_pnt_byte(address & 0x1FFF);
-			cpu.PC.w = info.mapper.id == 17 ? address : 0x5000;
+			nes[nidx].c.cpu.PC.w = info.mapper.id == 17 ? address : 0x5000;
 		}
 	}
 }
-void extcl_cpu_wr_mem_006(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_006(BYTE nidx, WORD address, BYTE value) {
 	switch (address & 0xF000) {
 		case 0x4000:
 			switch (address) {
@@ -478,7 +478,7 @@ void extcl_cpu_wr_mem_006(WORD address, BYTE value) {
 					// attached to it. Because the Magic Card 1M and 2M, the predecessors to the Super Magic Card, had
 					// no IRQ counter of its own, a few games abuse the FDS Disk Data IRQ for frame timing and write any
 					// value to this register to acknowledge a pending IRQ.
-					irq.high &= ~EXT_IRQ;
+					nes[nidx].c.irq.high &= ~EXT_IRQ;
 					return;
 				case 0x4025:
 					// FDS Control ($4025)
@@ -487,7 +487,7 @@ void extcl_cpu_wr_mem_006(WORD address, BYTE value) {
 					// no IRQ counter of its own, a few games abuse the FDS Disk Data IRQ for frame timing. If bit 7 is
 					// set, the FDS RAM adapter will generate IRQs every 1,792 cycles of the 21.4772 MHz master clock,
 					// or after every 149+1/3 CPU cycles.
-					irq.high &= ~EXT_IRQ;
+					nes[nidx].c.irq.high &= ~EXT_IRQ;
 					if (!m006.irq.enable) {
 						m006.fds.control = value;
 						if (value & 0x42) {
@@ -576,16 +576,16 @@ void extcl_cpu_wr_mem_006(WORD address, BYTE value) {
 					return;
 				case 0x4501:
 					m006.irq.enable = FALSE;
-					irq.high &= ~EXT_IRQ;
+					nes[nidx].c.irq.high &= ~EXT_IRQ;
 					return;
 				case 0x4502:
 					m006.irq.counter = (m006.irq.counter & 0xFF00) | value;
-					irq.high &= ~EXT_IRQ;
+					nes[nidx].c.irq.high &= ~EXT_IRQ;
 					return;
 				case 0x4503:
 					m006.irq.counter = (m006.irq.counter & 0x00FF) | (value << 8);
 					m006.irq.enable = TRUE;
-					irq.high &= ~EXT_IRQ;
+					nes[nidx].c.irq.high &= ~EXT_IRQ;
 					return;
 				case 0x4504:
 				case 0x4505:
@@ -644,8 +644,8 @@ void extcl_cpu_wr_mem_006(WORD address, BYTE value) {
 			return;
 	}
 }
-BYTE extcl_cpu_rd_mem_006(WORD address, UNUSED(BYTE openbus)) {
-	return (address == 0x4500 ? m006.mode.smc : wram_rd(address));
+BYTE extcl_cpu_rd_mem_006(BYTE nidx, WORD address, UNUSED(BYTE openbus)) {
+	return (address == 0x4500 ? m006.mode.smc : wram_rd(nidx, address));
 }
 BYTE extcl_save_mapper_006(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m006.prg);
@@ -661,21 +661,20 @@ BYTE extcl_save_mapper_006(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m006.fds.control);
 	save_slot_ele(mode, slot, m006.fds.counter);
 	save_slot_ele(mode, slot, m006.scratch);
-
 	return (EXIT_OK);
 }
-void extcl_wr_chr_006(WORD address, BYTE value) {
+void extcl_wr_chr_006(BYTE nidx, WORD address, BYTE value) {
 	if ((m006.mode.m1 >= 0xA0) && !(m006.mode.m1 & 0x01)) {
 		m006.chr.lock = (m006.mode.m1 & 0x10) != 0;
 	}
-	chr_wr(address, value);
+	chr_wr(nidx, address, value);
 }
-BYTE extcl_rd_chr_006(WORD address) {
+BYTE extcl_rd_chr_006(BYTE nidx, WORD address) {
 	if ((m006.mode.smc & 0x05) == 0x01) {
 		switch (address & 0x0FF8) {
 			case 0x0FD8:
 			case 0x0FE8: {
-				BYTE last = chr_rd(address);
+				BYTE last = chr_rd(nidx, address);
 				BYTE value = (address >> 4) & 0x02;
 				BYTE reg = address >> 12;
 
@@ -687,60 +686,60 @@ BYTE extcl_rd_chr_006(WORD address) {
 			}
 		}
 	}
-	return (chr_rd(address));
+	return (chr_rd(nidx, address));
 }
-void extcl_cpu_every_cycle_006(void) {
+void extcl_cpu_every_cycle_006(BYTE nidx) {
 	m006.fds.counter += 3;
 	while ((m006.fds.counter >= 448) && (m006.fds.control & 0x80)) {
-		irq.high |= EXT_IRQ;
+		nes[nidx].c.irq.high |= EXT_IRQ;
 		m006.fds.counter -= 448;
 	}
 	if (!(m006.mode.smc & 0x08)) {
-		irq_clock_006();
+		irq_clock_006(nidx);
 	}
 }
-void extcl_ppu_000_to_255_006(void) {
-	if (r2001.visible) {
-		extcl_ppu_320_to_34x_006();
+void extcl_ppu_000_to_255_006(BYTE nidx) {
+	if (nes[nidx].p.r2001.visible) {
+		extcl_ppu_320_to_34x_006(nidx);
 	}
 }
-void extcl_ppu_256_to_319_006(void) {
-	if ((ppu.frame_x & 0x0007) != 0x0003) {
+void extcl_ppu_256_to_319_006(BYTE nidx) {
+	if ((nes[nidx].p.ppu.frame_x & 0x0007) != 0x0003) {
 		return;
 	}
 
-	if ((!spr_ev.count_plus || (spr_ev.tmp_spr_plus == spr_ev.count_plus)) && (r2000.size_spr == 16)) {
-		ppu.spr_adr = r2000.spt_adr;
+	if ((!nes[nidx].p.spr_ev.count_plus || (nes[nidx].p.spr_ev.tmp_spr_plus == nes[nidx].p.spr_ev.count_plus)) && (nes[nidx].p.r2000.size_spr == 16)) {
+		nes[nidx].p.ppu.spr_adr = nes[nidx].p.r2000.spt_adr;
 	} else {
-		ppu_spr_adr((ppu.frame_x & 0x0038) >> 3);
+		ppu_spr_adr((nes[nidx].p.ppu.frame_x & 0x0038) >> 3);
 	}
-	if ((ppu.spr_adr & 0x1000) > (ppu.bck_adr & 0x1000)) {
+	if ((nes[nidx].p.ppu.spr_adr & 0x1000) > (nes[nidx].p.ppu.bck_adr & 0x1000)) {
 		if (m006.mode.smc & 0x08) {
-			irq_clock_006();
+			irq_clock_006(nidx);
 		}
 	}
 }
-void extcl_ppu_320_to_34x_006(void) {
-	if ((ppu.frame_x & 0x0007) != 0x0003) {
+void extcl_ppu_320_to_34x_006(BYTE nidx) {
+	if ((nes[nidx].p.ppu.frame_x & 0x0007) != 0x0003) {
 		return;
 	}
 
-	if (ppu.frame_x == 323) {
+	if (nes[nidx].p.ppu.frame_x == 323) {
 		ppu_spr_adr(7);
 	}
 
-	ppu_bck_adr(r2000.bpt_adr, r2006.value);
+	ppu_bck_adr(nes[nidx].p.r2000.bpt_adr, nes[nidx].p.r2006.value);
 
-	if ((ppu.bck_adr & 0x1000) > (ppu.spr_adr & 0x1000)) {
+	if ((nes[nidx].p.ppu.bck_adr & 0x1000) > (nes[nidx].p.ppu.spr_adr & 0x1000)) {
 		if (m006.mode.smc & 0x08) {
-			irq_clock_006();
+			irq_clock_006(nidx);
 		}
 	}
 }
-void extcl_update_r2006_006(WORD new_r2006, WORD old_r2006) {
+void extcl_update_r2006_006(BYTE nidx, WORD new_r2006, WORD old_r2006) {
 	if ((new_r2006 & 0x1000) > (old_r2006 & 0x1000)) {
 		if (m006.mode.smc & 0x08) {
-			irq_clock_006();
+			irq_clock_006(nidx);
 		}
 	}
 }
@@ -751,35 +750,35 @@ INLINE static void prg_fix_006(void) {
 	if (m006.mode.m2m4 & 0x01) {
 		switch (m006.mode.m1 & 0xE0) {
 			case 0x00:
-				memmap_auto_wp_16k(MMCPU(0x8000), (m006.latch & 0x07), TRUE, enabled);
-				memmap_auto_wp_16k(MMCPU(0xC000), 0x07, TRUE, enabled);
+				memmap_auto_wp_16k(0, MMCPU(0x8000), (m006.latch & 0x07), TRUE, enabled);
+				memmap_auto_wp_16k(0, MMCPU(0xC000), 0x07, TRUE, enabled);
 				break;
 			case 0x20:
-				memmap_auto_wp_16k(MMCPU(0x8000), ((m006.latch & 0x3C) >> 2), TRUE, enabled);
-				memmap_auto_wp_16k(MMCPU(0xC000), 0x07, TRUE, enabled);
+				memmap_auto_wp_16k(0, MMCPU(0x8000), ((m006.latch & 0x3C) >> 2), TRUE, enabled);
+				memmap_auto_wp_16k(0, MMCPU(0xC000), 0x07, TRUE, enabled);
 				break;
 			case 0x40:
-				memmap_auto_wp_16k(MMCPU(0x8000), (m006.latch & 0x0F), TRUE, enabled);
-				memmap_auto_wp_16k(MMCPU(0xC000), 0x0F, TRUE, enabled);
+				memmap_auto_wp_16k(0, MMCPU(0x8000), (m006.latch & 0x0F), TRUE, enabled);
+				memmap_auto_wp_16k(0, MMCPU(0xC000), 0x0F, TRUE, enabled);
 				break;
 			case 0x60:
-				memmap_auto_wp_16k(MMCPU(0x8000), 0x0F, TRUE, enabled);
-				memmap_auto_wp_16k(MMCPU(0xC000), (m006.latch & 0x0F), TRUE, enabled);
+				memmap_auto_wp_16k(0, MMCPU(0x8000), 0x0F, TRUE, enabled);
+				memmap_auto_wp_16k(0, MMCPU(0xC000), (m006.latch & 0x0F), TRUE, enabled);
 				break;
 			case 0x80:
-				memmap_auto_wp_32k(MMCPU(0x8000), ((m006.latch & 0x30) >> 4), TRUE, enabled);
+				memmap_auto_wp_32k(0, MMCPU(0x8000), ((m006.latch & 0x30) >> 4), TRUE, enabled);
 				break;
 			case 0xA0:
 			case 0xC0:
 			case 0xE0:
-				memmap_auto_wp_32k(MMCPU(0x8000), 0x03, TRUE, enabled);
+				memmap_auto_wp_32k(0, MMCPU(0x8000), 0x03, TRUE, enabled);
 				break;
 		}
 	} else {
-		memmap_auto_wp_16k(MMCPU(0x8000), m006.prg[0], TRUE, enabled);
-		memmap_auto_wp_16k(MMCPU(0xA000), m006.prg[1], TRUE, enabled);
-		memmap_auto_wp_16k(MMCPU(0xC000), m006.prg[2], TRUE, enabled);
-		memmap_auto_wp_16k(MMCPU(0xE000), m006.prg[3], TRUE, enabled);
+		memmap_auto_wp_8k(0, MMCPU(0x8000), m006.prg[0], TRUE, enabled);
+		memmap_auto_wp_8k(0, MMCPU(0xA000), m006.prg[1], TRUE, enabled);
+		memmap_auto_wp_8k(0, MMCPU(0xC000), m006.prg[2], TRUE, enabled);
+		memmap_auto_wp_8k(0, MMCPU(0xE000), m006.prg[3], TRUE, enabled);
 	}
 }
 INLINE static void chr_fix_006(void) {
@@ -839,57 +838,57 @@ INLINE static void chr_fix_006(void) {
 	{
 		BYTE enabled = !(((m006.mode.m1 & 0xE1) >= 0x81) || m006.chr.lock);
 
-		memmap_vram_wp_1k(MMPPU(0x0000), bank[0], TRUE, enabled);
-		memmap_vram_wp_1k(MMPPU(0x0400), bank[1], TRUE, enabled);
-		memmap_vram_wp_1k(MMPPU(0x0800), bank[2], TRUE, enabled);
-		memmap_vram_wp_1k(MMPPU(0x0C00), bank[3], TRUE, enabled);
-		memmap_vram_wp_1k(MMPPU(0x1000), bank[4], TRUE, enabled);
-		memmap_vram_wp_1k(MMPPU(0x1400), bank[5], TRUE, enabled);
-		memmap_vram_wp_1k(MMPPU(0x1800), bank[6], TRUE, enabled);
-		memmap_vram_wp_1k(MMPPU(0x1C00), bank[7], TRUE, enabled);
+		memmap_vram_wp_1k(0, MMPPU(0x0000), bank[0], TRUE, enabled);
+		memmap_vram_wp_1k(0, MMPPU(0x0400), bank[1], TRUE, enabled);
+		memmap_vram_wp_1k(0, MMPPU(0x0800), bank[2], TRUE, enabled);
+		memmap_vram_wp_1k(0, MMPPU(0x0C00), bank[3], TRUE, enabled);
+		memmap_vram_wp_1k(0, MMPPU(0x1000), bank[4], TRUE, enabled);
+		memmap_vram_wp_1k(0, MMPPU(0x1400), bank[5], TRUE, enabled);
+		memmap_vram_wp_1k(0, MMPPU(0x1800), bank[6], TRUE, enabled);
+		memmap_vram_wp_1k(0, MMPPU(0x1C00), bank[7], TRUE, enabled);
 	}
 }
 INLINE static void wram_fix_006(void) {
-	memmap_other_4k(MMCPU(0x5000), 0, &m006.scratch[0], sizeof(m006.scratch), TRUE, TRUE);
+	memmap_other_4k(0, MMCPU(0x5000), 0, &m006.scratch[0], sizeof(m006.scratch), TRUE, TRUE);
 }
 INLINE static void mirroring_fix_006(void) {
 	if (m006.mode.smc & 0x02) {
 		switch (m006.mode.m1 & 0x11) {
 			case 0x00:
-				mirroring_SCR0();
+				mirroring_SCR0(0);
 				return;
 			case 0x10:
-				mirroring_SCR1();
+				mirroring_SCR1(0);
 				return;
 			case 0x01:
-				mirroring_V();
+				mirroring_V(0);
 				return;
 			case 0x11:
-				mirroring_H();
+				mirroring_H(0);
 				return;
 		}
 	} else {
-		memmap_nmt_chrrom_1k(MMPPU(0x2000), m006.chr.reg[8]);
-		memmap_nmt_chrrom_1k(MMPPU(0x3000), m006.chr.reg[8]);
+		memmap_nmt_chrrom_1k(0, MMPPU(0x2000), m006.chr.reg[8]);
+		memmap_nmt_chrrom_1k(0, MMPPU(0x3000), m006.chr.reg[8]);
 
-		memmap_nmt_chrrom_1k(MMPPU(0x2400), m006.chr.reg[9]);
-		memmap_nmt_chrrom_1k(MMPPU(0x3400), m006.chr.reg[9]);
+		memmap_nmt_chrrom_1k(0, MMPPU(0x2400), m006.chr.reg[9]);
+		memmap_nmt_chrrom_1k(0, MMPPU(0x3400), m006.chr.reg[9]);
 
-		memmap_nmt_chrrom_1k(MMPPU(0x2800), m006.chr.reg[10]);
-		memmap_nmt_chrrom_1k(MMPPU(0x3800), m006.chr.reg[10]);
+		memmap_nmt_chrrom_1k(0, MMPPU(0x2800), m006.chr.reg[10]);
+		memmap_nmt_chrrom_1k(0, MMPPU(0x3800), m006.chr.reg[10]);
 
-		memmap_nmt_chrrom_1k(MMPPU(0x2C00), m006.chr.reg[11]);
-		memmap_nmt_chrrom_1k(MMPPU(0x3C00), m006.chr.reg[11]);
+		memmap_nmt_chrrom_1k(0, MMPPU(0x2C00), m006.chr.reg[11]);
+		memmap_nmt_chrrom_1k(0, MMPPU(0x3C00), m006.chr.reg[11]);
 	}
 }
 
-INLINE static void irq_clock_006(void) {
+INLINE static void irq_clock_006(BYTE nidx) {
 	if (m006.irq.enable) {
 		m006.irq.counter++;
 		if (m006.irq.counter >= 0x10000) {
 			m006.irq.counter = 0;
 			m006.irq.enable = FALSE;
-			irq.high |= EXT_IRQ;
+			nes[nidx].c.irq.high |= EXT_IRQ;
 		}
 	}
 }

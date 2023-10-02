@@ -48,7 +48,7 @@ void extcl_after_mapper_init_233(void) {
 	prg_fix_233();
 	mirroring_fix_233();
 }
-void extcl_cpu_wr_mem_233(UNUSED(WORD address), BYTE value) {
+void extcl_cpu_wr_mem_233(UNUSED(BYTE nidx), UNUSED(WORD address), BYTE value) {
 	m233.reg = value;
 	prg_fix_233();
 	mirroring_fix_233();
@@ -56,7 +56,6 @@ void extcl_cpu_wr_mem_233(UNUSED(WORD address), BYTE value) {
 BYTE extcl_save_mapper_233(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m233.reg);
 	save_slot_ele(mode, slot, m233.reset);
-
 	return (EXIT_OK);
 }
 
@@ -64,26 +63,26 @@ INLINE static void prg_fix_233(void) {
 	WORD bank = (m233.reg & 0x1F) | m233.reset;
 
 	if (m233.reg & 0x20) {
-		memmap_auto_16k(MMCPU(0x8000), bank);
-		memmap_auto_16k(MMCPU(0xC000), bank);
+		memmap_auto_16k(0, MMCPU(0x8000), bank);
+		memmap_auto_16k(0, MMCPU(0xC000), bank);
 	} else {
 		bank >>= 1;
-		memmap_auto_32k(MMCPU(0x8000), bank);
+		memmap_auto_32k(0, MMCPU(0x8000), bank);
 	}
 }
 INLINE static void mirroring_fix_233(void) {
 	switch (m233.reg >> 6) {
 		case 0:
-			mirroring_SCR0();
+			mirroring_SCR0(0);
 			return;
 		case 1:
-			mirroring_V();
+			mirroring_V(0);
 			return;
 		case 2:
-			mirroring_H();
+			mirroring_H(0);
 			return;
 		case 3:
-			mirroring_SCR1();
+			mirroring_SCR1(0);
 			return;
 	}
 }

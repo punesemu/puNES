@@ -60,7 +60,7 @@ void extcl_after_mapper_init_VRC2and4(void) {
 	VRC2and4_wram_fix();
 	VRC2and4_mirroring_fix();
 }
-void extcl_cpu_wr_mem_VRC2and4(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_VRC2and4(BYTE nidx, WORD address, BYTE value) {
 	WORD bank = address & 0xF000;
 	int index = 0;
 
@@ -134,13 +134,13 @@ void extcl_cpu_wr_mem_VRC2and4(WORD address, BYTE value) {
 							vrc2and4.irq.prescaler = 0;
 							vrc2and4.irq.count = vrc2and4.irq.reload;
 						}
-						irq.high &= ~EXT_IRQ;
+						nes[nidx].c.irq.high &= ~EXT_IRQ;
 						return;
 					case 3:
 						if (vrc2and4tmp.irq_repeated) {
 							vrc2and4.irq.enabled = vrc2and4.irq.acknowledge;
 						}
-						irq.high &= ~EXT_IRQ;
+						nes[nidx].c.irq.high &= ~EXT_IRQ;
 						return;
 					default:
 						break;
@@ -151,7 +151,7 @@ void extcl_cpu_wr_mem_VRC2and4(WORD address, BYTE value) {
 			return;
 	}
 }
-BYTE extcl_cpu_rd_mem_VRC2and4(WORD address, BYTE openbus) {
+BYTE extcl_cpu_rd_mem_VRC2and4(UNUSED(BYTE nidx), WORD address, BYTE openbus) {
 	switch (address & 0xF000) {
 		case 0x6000:
 			return (vrc2and4tmp.prg6000_wired ? (openbus & 0xFE) | ((vrc2and4.wired & 0x08) >> 3) : openbus);
@@ -172,10 +172,9 @@ BYTE extcl_save_mapper_VRC2and4(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, vrc2and4.irq.acknowledge);
 	save_slot_ele(mode, slot, vrc2and4.irq.count);
 	save_slot_ele(mode, slot, vrc2and4.irq.prescaler);
-
 	return (EXIT_OK);
 }
-void extcl_cpu_every_cycle_VRC2and4(void) {
+void extcl_cpu_every_cycle_VRC2and4(BYTE nidx) {
 	if (!vrc2and4.irq.enabled) {
 		return;
 	}
@@ -194,8 +193,8 @@ void extcl_cpu_every_cycle_VRC2and4(void) {
 	}
 
 	vrc2and4.irq.count = vrc2and4.irq.reload;
-	irq.delay = TRUE;
-	irq.high |= EXT_IRQ;
+	nes[nidx].c.irq.delay = TRUE;
+	nes[nidx].c.irq.high |= EXT_IRQ;
 }
 
 void init_VRC2and4(BYTE type, WORD A0, WORD A1, BYTE irq_repeated, BYTE reset) {
@@ -224,7 +223,7 @@ void init_VRC2and4(BYTE type, WORD A0, WORD A1, BYTE irq_repeated, BYTE reset) {
 
 	vrc2and4.wram_protect = ((info.format == NES_2_0) && (info.mapper.submapper > 1));
 
-	irq.high &= ~EXT_IRQ;
+	nes[0].c.irq.high &= ~EXT_IRQ;
 
 	vrc2and4tmp.type = type;
 	vrc2and4tmp.A0 = A0;
@@ -253,7 +252,7 @@ void prg_fix_VRC2and4_base(void) {
 	VRC2and4_prg_swap(0xE000, ~0);
 }
 void prg_swap_VRC2and4_base(WORD address, WORD value) {
-	memmap_auto_8k(MMCPU(address), value);
+	memmap_auto_8k(0, MMCPU(address), value);
 }
 void chr_fix_VRC2and4_base(void) {
 	VRC2and4_chr_swap(0x0000, vrc2and4.chr[0]);
@@ -266,25 +265,25 @@ void chr_fix_VRC2and4_base(void) {
 	VRC2and4_chr_swap(0x1C00, vrc2and4.chr[7]);
 }
 void chr_swap_VRC2and4_base(WORD address, WORD value) {
-	memmap_auto_1k(MMPPU(address), value);
+	memmap_auto_1k(0, MMPPU(address), value);
 }
 void wram_fix_VRC2and4_base(void) {
-	memmap_auto_wp_8k(MMCPU(0x6000), 0, !vrc2and4.wram_protect, !vrc2and4.wram_protect);
+	memmap_auto_wp_8k(0, MMCPU(0x6000), 0, !vrc2and4.wram_protect, !vrc2and4.wram_protect);
 }
 void mirroring_fix_VRC2and4_base(void) {
 	switch (vrc2and4.mirroring & (vrc2and4tmp.type == VRC24_VRC4 ? 0x03 : 0x01)) {
 		default:
 		case 0:
-			mirroring_V();
+			mirroring_V(0);
 			return;
 		case 1:
-			mirroring_H();
+			mirroring_H(0);
 			return;
 		case 2:
-			mirroring_SCR0();
+			mirroring_SCR0(0);
 			return;
 		case 3:
-			mirroring_SCR1();
+			mirroring_SCR1(0);
 			return;
 	}
 }

@@ -32,9 +32,9 @@ struct _zapper {
 void input_init_zapper(void) {
 	memset(&zapper, 0x00, sizeof(zapper));
 }
-void input_rd_zapper(BYTE *value, BYTE nport, UNUSED(BYTE shift)) {
+void input_rd_zapper(BYTE nidx, BYTE *value, BYTE nport, UNUSED(BYTE shift)) {
 	int x_zapper = -1, y_zapper = -1;
-	int x_rect, y_rect;
+	int x_rect = 0, y_rect = 0;
 	int count = 0;
 
 	zapper[nport].data &= ~0x10;
@@ -58,15 +58,16 @@ void input_rd_zapper(BYTE *value, BYTE nport, UNUSED(BYTE shift)) {
 		return;
 	}
 
-	if (!ppu.vblank && r2001.visible && (ppu.frame_y > ppu_sclines.vint) && (ppu.screen_y < SCR_ROWS)) {
+	if (!nes[nidx].p.ppu.vblank && nes[nidx].p.r2001.visible &&
+		(nes[nidx].p.ppu.frame_y > nes[nidx].p.ppu_sclines.vint) && (nes[nidx].p.ppu.screen_y < SCR_ROWS)) {
 		for (y_rect = (y_zapper - 8); y_rect < (y_zapper + 8); y_rect++) {
 			if (y_rect < 0) {
 				continue;
 			}
-			if (y_rect <= (ppu.screen_y - 18)) {
+			if (y_rect <= (nes[nidx].p.ppu.screen_y - 18)) {
 				continue;
 			}
-			if (y_rect > ppu.screen_y) {
+			if (y_rect > nes[nidx].p.ppu.screen_y) {
 				break;
 			}
 
@@ -78,8 +79,8 @@ void input_rd_zapper(BYTE *value, BYTE nport, UNUSED(BYTE shift)) {
 					break;
 				}
 				{
-					int brightness;
-					_color_RGB color = palette_RGB.in_use[ppu_screen.wr->line[y_rect][x_rect]];
+					int brightness = 0;
+					_color_RGB color = palette_RGB.in_use[nes[nidx].p.ppu_screen.wr->line[y_rect][x_rect]];
 
 					brightness = (int)((color.r * 0.299) + (color.g * 0.587) + (color.b * 0.114));
 					if (brightness > 0x80) {
@@ -99,9 +100,9 @@ void input_rd_zapper(BYTE *value, BYTE nport, UNUSED(BYTE shift)) {
 	(*value) |= zapper[nport].data;
 }
 
-void input_rd_zapper_vs(BYTE *value, BYTE nport, UNUSED(BYTE shift)) {
+void input_rd_zapper_vs(BYTE nidx, BYTE *value, BYTE nport, UNUSED(BYTE shift)) {
 	int x_zapper = -1, y_zapper = -1;
-	int x_rect, y_rect;
+	int x_rect = 0, y_rect = 0;
 	int count = 0;
 	BYTE trigger = 0, light = 1;
 
@@ -119,15 +120,16 @@ void input_rd_zapper_vs(BYTE *value, BYTE nport, UNUSED(BYTE shift)) {
 	}
 
 	if ((x_zapper > 0) && (x_zapper < SCR_COLUMNS) && (y_zapper > 0) && (y_zapper < SCR_ROWS)) {
-		if (!ppu.vblank && r2001.visible && (ppu.frame_y > ppu_sclines.vint) && (ppu.screen_y < SCR_ROWS)) {
+		if (!nes[nidx].p.ppu.vblank && nes[nidx].p.r2001.visible &&
+			(nes[nidx].p.ppu.frame_y > nes[nidx].p.ppu_sclines.vint) && (nes[nidx].p.ppu.screen_y < SCR_ROWS)) {
 			for (y_rect = (y_zapper - 8); y_rect < (y_zapper + 8); y_rect++) {
 				if (y_rect < 0) {
 					continue;
 				}
-				if (y_rect <= (ppu.screen_y - 18)) {
+				if (y_rect <= (nes[nidx].p.ppu.screen_y - 18)) {
 					continue;
 				}
-				if (y_rect > ppu.screen_y) {
+				if (y_rect > nes[nidx].p.ppu.screen_y) {
 					break;
 				}
 				for (x_rect = (x_zapper - 8); x_rect < (x_zapper + 8); x_rect++) {
@@ -138,8 +140,8 @@ void input_rd_zapper_vs(BYTE *value, BYTE nport, UNUSED(BYTE shift)) {
 						break;
 					}
 					{
-						int brightness;
-						_color_RGB color = palette_RGB.in_use[ppu_screen.wr->line[y_rect][x_rect]];
+						int brightness = 0;
+						_color_RGB color = palette_RGB.in_use[nes[nidx].p.ppu_screen.wr->line[y_rect][x_rect]];
 
 						brightness = (int)((color.r * 0.299) + (color.g * 0.587) + (color.b * 0.114));
 						if (brightness > 0x80) {
@@ -162,7 +164,7 @@ void input_rd_zapper_vs(BYTE *value, BYTE nport, UNUSED(BYTE shift)) {
 	// pressed.
 	// Unlike the NES/Famicom Zapper, the Vs. Zapper's "light sense" is 1 when detecting
 	// and 0 when not detecting.
-	switch (port[nport].index) {
+	switch (nes[nidx].c.input.pindex[nport]) {
 		case 0:
 		case 1:
 		case 2:
@@ -176,17 +178,15 @@ void input_rd_zapper_vs(BYTE *value, BYTE nport, UNUSED(BYTE shift)) {
 			break;
 		case 6:
 			(*value) = light;
-			//printf("LIGHT : %d %d\n", nport, count);
 			break;
 		case 7:
 			(*value) = trigger;
-			//printf("TRIGG : %d %d\n", nport, (*value));
 			break;
 	}
 
-	if (!(r4016.value & 0x01)) {
-		if (++port[nport].index >= 8) {
-			port[nport].index = 0;
+	if (!(nes[nidx].c.input.r4016 & 0x01)) {
+		if (++nes[nidx].c.input.pindex[nport] >= 8) {
+			nes[nidx].c.input.pindex[nport] = 0;
 		}
 	}
 }

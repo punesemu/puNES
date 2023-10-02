@@ -58,7 +58,7 @@ void extcl_after_mapper_init_416(void) {
 	wram_fix_416();
 	mirroring_fix_416();
 }
-void extcl_cpu_wr_mem_416(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_416(UNUSED(BYTE nidx), WORD address, BYTE value) {
 	switch (address & 0xF000) {
 		case 0x4000:
 		case 0x5000:
@@ -86,13 +86,13 @@ BYTE extcl_save_mapper_416(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m416.irq.counter);
 	return (EXIT_OK);
 }
-void extcl_cpu_every_cycle_416(void) {
+void extcl_cpu_every_cycle_416(BYTE nidx) {
 	if (m416.irq.enable && (++m416.irq.counter == 0x1000)) {
-		irq.high |= EXT_IRQ;
+		nes[nidx].c.irq.high |= EXT_IRQ;
 		return;
 	}
 	m416.irq.counter = 0;
-	irq.high &= ~EXT_IRQ;
+	nes[nidx].c.irq.high &= ~EXT_IRQ;
 }
 
 INLINE static void prg_fix_416(void) {
@@ -101,35 +101,35 @@ INLINE static void prg_fix_416(void) {
 	if (m416.reg[1] & 0x08) {
 		bank = ((m416.reg[1] & 0x08) >> 1) | ((m416.reg[1] & 0x80) >> 6) | ((m416.reg[1] & 0x20) >> 5);
 		if (m416.reg[1] & 0x80) {
-			memmap_auto_32k(MMCPU(0x8000), (bank >> 1));
+			memmap_auto_32k(0, MMCPU(0x8000), (bank >> 1));
 		} else if (m416.reg[1] & 0x40) {
-			memmap_auto_16k(MMCPU(0x8000), bank);
-			memmap_auto_16k(MMCPU(0xC000), bank);
+			memmap_auto_16k(0, MMCPU(0x8000), bank);
+			memmap_auto_16k(0, MMCPU(0xC000), bank);
 		} else {
 			bank <<= 1;
-			memmap_auto_8k(MMCPU(0x8000), bank);
-			memmap_auto_8k(MMCPU(0xA000), bank);
-			memmap_auto_8k(MMCPU(0xC000), bank);
-			memmap_auto_8k(MMCPU(0xE000), bank);
+			memmap_auto_8k(0, MMCPU(0x8000), bank);
+			memmap_auto_8k(0, MMCPU(0xA000), bank);
+			memmap_auto_8k(0, MMCPU(0xC000), bank);
+			memmap_auto_8k(0, MMCPU(0xE000), bank);
 		}
 	} else {
 		bank = (m416.reg[0] & 0x08) | ((m416.reg[0] & 0x01) << 2) | ((m416.reg[0] & 0x06) >> 1);
-		memmap_auto_8k(MMCPU(0x8000), 0);
-		memmap_auto_8k(MMCPU(0xA000), 1);
-		memmap_auto_8k(MMCPU(0xC000), bank);
-		memmap_auto_8k(MMCPU(0xE000), 3);
+		memmap_auto_8k(0, MMCPU(0x8000), 0);
+		memmap_auto_8k(0, MMCPU(0xA000), 1);
+		memmap_auto_8k(0, MMCPU(0xC000), bank);
+		memmap_auto_8k(0, MMCPU(0xE000), 3);
 	}
 }
 INLINE static void wram_fix_416(void) {
-	memmap_prgrom_8k(MMCPU(0x6000), 0x07);
+	memmap_prgrom_8k(0, MMCPU(0x6000), 0x07);
 }
 INLINE static void chr_fix_416(void) {
-	memmap_auto_8k(MMPPU(0x0000), ((m416.reg[1] & 0x06) >> 1));
+	memmap_auto_8k(0, MMPPU(0x0000), ((m416.reg[1] & 0x06) >> 1));
 }
 INLINE static void mirroring_fix_416(void) {
 	if (m416.reg[1] & 0x04) {
-		mirroring_H();
+		mirroring_H(0);
 	} else {
-		mirroring_V();
+		mirroring_V(0);
 	}
 }

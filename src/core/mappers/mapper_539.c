@@ -36,8 +36,8 @@ void map_init_539(void) {
 	mapper.internal_struct_size[0] = sizeof(m539);
 
 	if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
-		memmap_prg_region_init(S256B);
-		memmap_wram_region_init(S256B);
+		memmap_prg_region_init(0, S256B);
+		memmap_wram_region_init(0, S256B);
 	}
 
 	if (info.reset >= HARD) {
@@ -48,9 +48,9 @@ void map_init_539(void) {
 }
 void extcl_after_mapper_init_539(void) {
 	if (info.reset >= HARD) {
-		if (vram_size()) {
-			for (size_t i = 0; i < vram_size(); i++) {
-				vram_byte(i) = (i & 0x02 ? 0xFF : 0x00);
+		if (vram_size(0)) {
+			for (size_t i = 0; i < vram_size(0); i++) {
+				vram_byte(0, i) = (i & 0x02 ? 0xFF : 0x00);
 			}
 		}
 	}
@@ -58,7 +58,7 @@ void extcl_after_mapper_init_539(void) {
 	wram_fix_539();
 	mirroring_fix_539();
 }
-void extcl_cpu_wr_mem_539(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_539(UNUSED(BYTE nidx), WORD address, BYTE value) {
 	switch (address & 0xFF00) {
 		case 0xA000: case 0xA100: case 0xA200: case 0xA300: case 0xA400: case 0xA500: case 0xA600: case 0xA700:
 		case 0xA800: case 0xA900: case 0xAA00: case 0xAB00: case 0xAC00: case 0xAD00: case 0xAE00: case 0xAF00:
@@ -76,19 +76,18 @@ void extcl_cpu_wr_mem_539(WORD address, BYTE value) {
 }
 BYTE extcl_save_mapper_539(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m539.reg);
-
 	return (EXIT_OK);
 }
 
 INLINE static void prg_fix_539(void) {
-	memmap_auto_8k(MMCPU(0x8000), 0x0C);
-	memmap_auto_8k(MMCPU(0xA000), (m539.reg[0] & 0x0F));
-	memmap_auto_8k(MMCPU(0xC000), 0x0E);
-	memmap_auto_8k(MMCPU(0xE000), 0x0F);
+	memmap_auto_8k(0, MMCPU(0x8000), 0x0C);
+	memmap_auto_8k(0, MMCPU(0xA000), (m539.reg[0] & 0x0F));
+	memmap_auto_8k(0, MMCPU(0xC000), 0x0E);
+	memmap_auto_8k(0, MMCPU(0xE000), 0x0F);
 
-	memmap_wram_256b(MMCPU(0x8200), 0x12);
-	memmap_wram_custom_size(MMCPU(0xC000), 0, (size_t)(0x100 * 18));
-	memmap_wram_256b(MMCPU(0xDF00), 0x1F);
+	memmap_wram_256b(0, MMCPU(0x8200), 0x12);
+	memmap_wram_custom_size(0, MMCPU(0xC000), 0, (size_t)(0x100 * 18));
+	memmap_wram_256b(0, MMCPU(0xDF00), 0x1F);
 }
 INLINE static void wram_fix_539(void) {
 	// CPU $6000-$7FFF: 8 KiB fixed PRG-ROM bank $D
@@ -100,16 +99,16 @@ INLINE static void wram_fix_539(void) {
 	// CPU $8200-$82FF
 	// CPU $C000-$D1FF
 	// CPU $DF00-$DFFF
-	memmap_prgrom_8k(MMCPU(0x6000), 0x0D);
+	memmap_prgrom_8k(0, MMCPU(0x6000), 0x0D);
 
-	memmap_auto_256b(MMCPU(0x6000), 0x18);
-	memmap_auto_256b(MMCPU(0x6200), 0x1A);
-	memmap_auto_custom_size(MMCPU(0x6400), 0x1C, (size_t)(0x100 * 2));
+	memmap_auto_256b(0, MMCPU(0x6000), 0x18);
+	memmap_auto_256b(0, MMCPU(0x6200), 0x1A);
+	memmap_auto_custom_size(0, MMCPU(0x6400), 0x1C, (size_t)(0x100 * 2));
 }
 INLINE static void mirroring_fix_539(void) {
 	if (m539.reg[1] & 0x08) {
-		mirroring_H();
+		mirroring_H(0);
 	} else {
-		mirroring_V();
+		mirroring_V(0);
 	}
 }

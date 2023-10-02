@@ -22,13 +22,13 @@
 #include "common.h"
 
 void map_init_369(void);
-void extcl_cpu_wr_mem_369(WORD address, BYTE value);
+void extcl_cpu_wr_mem_369(BYTE nidx, WORD address, BYTE value);
 BYTE extcl_save_mapper_369(BYTE mode, BYTE slot, FILE *fp);
-void extcl_cpu_every_cycle_369(void);
-void extcl_ppu_000_to_34x_369(void);
-void extcl_ppu_000_to_255_369(void);
-void extcl_ppu_256_to_319_369(void);
-void extcl_ppu_320_to_34x_369(void);
-void extcl_update_r2006_369(WORD new_r2006, WORD old_r2006);
+void extcl_cpu_every_cycle_369(BYTE nidx);
+void extcl_ppu_000_to_34x_369(BYTE nidx);
+void extcl_ppu_000_to_255_369(BYTE nidx);
+void extcl_ppu_256_to_319_369(BYTE nidx);
+void extcl_ppu_320_to_34x_369(BYTE nidx);
+void extcl_update_r2006_369(BYTE nidx, WORD new_r2006, WORD old_r2006);
 
 #endif /* MAPPER_369_H_ */

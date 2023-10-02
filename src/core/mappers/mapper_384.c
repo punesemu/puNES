@@ -43,16 +43,16 @@ void map_init_384(void) {
 	VRC2and4_prg_swap = prg_swap_vrc2and4_384;
 	VRC2and4_chr_swap = chr_swap_vrc2and4_384;
 }
-void extcl_cpu_wr_mem_384(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_384(BYTE nidx, WORD address, BYTE value) {
 	if ((address >= 0x6800) && (address <= 0x6FFF)) {
-		if (!(m384.reg & 0x08) && memmap_adr_is_writable(MMCPU(address))) {
+		if (!(m384.reg & 0x08) && memmap_adr_is_writable(nidx, MMCPU(address))) {
 			m384.reg = value;
 			VRC2and4_prg_fix();
 			VRC2and4_chr_fix();
 		}
 		return;
 	}
-	extcl_cpu_wr_mem_VRC2and4(address, value);
+	extcl_cpu_wr_mem_VRC2and4(nidx, address, value);
 }
 BYTE extcl_save_mapper_384(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m384.reg);

@@ -16,13 +16,12 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#ifndef MAPPER_VS_H_
-#define MAPPER_VS_H_
+#include "nes.h"
 
-#include "common.h"
-
-void map_init_Vs(void);
-void extcl_cpu_wr_mem_Vs(WORD address, BYTE value);
-void extcl_cpu_wr_r4016_Vs(BYTE value);
-
-#endif /* MAPPER_VS_H_ */
+//_nes __attribute__((aligned(64))) nes;
+_nes nes[NES_CHIPS_MAX];
+_ppu_alignment ppu_alignment;
+_prgrom prgrom;
+_chrrom chrrom;
+_wram wram;
+_miscrom miscrom;

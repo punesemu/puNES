@@ -39,17 +39,16 @@ void extcl_after_mapper_init_060(void) {
 	prg_fix_060();
 	chr_fix_060();
 }
-void extcl_cpu_wr_mem_060(UNUSED(WORD address), UNUSED(BYTE value)) {}
+void extcl_cpu_wr_mem_060(UNUSED(BYTE nidx), UNUSED(WORD address), UNUSED(BYTE value)) {}
 BYTE extcl_save_mapper_060(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m060.index);
-
 	return (EXIT_OK);
 }
 
 INLINE static void prg_fix_060(void) {
-	memmap_auto_16k(MMCPU(0x8000), m060.index);
-	memmap_auto_16k(MMCPU(0xC000), m060.index);
+	memmap_auto_16k(0, MMCPU(0x8000), m060.index);
+	memmap_auto_16k(0, MMCPU(0xC000), m060.index);
 }
 INLINE static void chr_fix_060(void) {
-	memmap_auto_8k(MMPPU(0x0000), m060.index);
+	memmap_auto_8k(0, MMPPU(0x0000), m060.index);
 }

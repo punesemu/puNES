@@ -44,7 +44,7 @@ void extcl_after_mapper_init_289(void) {
 	chr_fix_289();
 	mirroring_fix_289();
 }
-void extcl_cpu_wr_mem_289(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_289(UNUSED(BYTE nidx), WORD address, BYTE value) {
 	switch (address & 0xE289) {
 		case 0x6000:
 		case 0x6001:
@@ -69,15 +69,14 @@ void extcl_cpu_wr_mem_289(WORD address, BYTE value) {
 			break;
 	}
 }
-BYTE extcl_cpu_rd_mem_289(WORD address, BYTE openbus) {
+BYTE extcl_cpu_rd_mem_289(BYTE nidx, WORD address, BYTE openbus) {
 	if ((address >= 0x6000) && (address <= 0x7FFF)) {
 		return ((openbus & 0xFC) | (dipswitch.value & 0x03));
 	}
-	return (wram_rd(address));
+	return (wram_rd(nidx, address));
 }
 BYTE extcl_save_mapper_289(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m289.reg);
-
 	return (EXIT_OK);
 }
 
@@ -91,16 +90,16 @@ INLINE static void prg_fix_289(void) {
 		bank[0] = m289.reg[1] & ~(m289.reg[0] & 0x01);
 		bank[1] = m289.reg[1] | (m289.reg[0] & 0x01);
 	}
-	memmap_auto_16k(MMCPU(0x8000), bank[0]);
-	memmap_auto_16k(MMCPU(0xC000), bank[1]);
+	memmap_auto_16k(0, MMCPU(0x8000), bank[0]);
+	memmap_auto_16k(0, MMCPU(0xC000), bank[1]);
 }
 INLINE static void chr_fix_289(void) {
-	memmap_vram_wp_8k(MMPPU(0x0000), 0, TRUE, !(m289.reg[0] & 0x04));
+	memmap_vram_wp_8k(0, MMPPU(0x0000), 0, TRUE, !(m289.reg[0] & 0x04));
 }
 INLINE static void mirroring_fix_289(void) {
 	if (m289.reg[0] & 0x08) {
-		mirroring_H();
+		mirroring_H(0);
 	} else {
-		mirroring_V();
+		mirroring_V(0);
 	}
 }

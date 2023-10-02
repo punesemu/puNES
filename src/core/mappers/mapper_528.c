@@ -53,7 +53,7 @@ void map_init_528(void) {
 	FME7_wram_fix = wram_fix_fme7_528;
 	FME7_wram_swap = wram_swap_fme7_528;
 }
-void extcl_cpu_wr_mem_528(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_528(BYTE nidx, WORD address, BYTE value) {
 	WORD bank = address & 0xF000;
 
 	switch (bank) {
@@ -65,17 +65,17 @@ void extcl_cpu_wr_mem_528(WORD address, BYTE value) {
 				case 0x0B:
 					break;
 				case 0x0D:
-					extcl_cpu_wr_mem_VRC7(0xF000, value);
+					extcl_cpu_wr_mem_VRC7(nidx, 0xF000, value);
 					break;
 				case 0x0E:
-					extcl_cpu_wr_mem_VRC7(0xF001, value);
+					extcl_cpu_wr_mem_VRC7(nidx, 0xF001, value);
 					break;
 				case 0x0F:
-					extcl_cpu_wr_mem_VRC7(0xE001, value);
+					extcl_cpu_wr_mem_VRC7(nidx, 0xE001, value);
 					break;
 				default:
-					extcl_cpu_wr_mem_FME7(0x8000, index);
-					extcl_cpu_wr_mem_FME7(0xA000, value);
+					extcl_cpu_wr_mem_FME7(nidx, 0x8000, index);
+					extcl_cpu_wr_mem_FME7(nidx, 0xA000, value);
 					break;
 			}
 			m528.reg = (bank & 0x4000) >> 10;
@@ -114,8 +114,8 @@ void wram_fix_fme7_528(void) {
 }
 void wram_swap_fme7_528(WORD value) {
 	if (fme7.prg[0] == 0x01) {
-		memmap_auto_8k(MMCPU(0x6000), 0);
+		memmap_auto_8k(0, MMCPU(0x6000), 0);
 	} else {
-		memmap_prgrom_8k(MMCPU(0x6000), value);
+		memmap_prgrom_8k(0, MMCPU(0x6000), value);
 	}
 }

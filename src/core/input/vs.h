@@ -21,8 +21,8 @@
 
 #include "input.h"
 
-BYTE input_wr_reg_vs(BYTE value);
-BYTE input_rd_reg_vs_r4016(BYTE openbus, BYTE nport);
-BYTE input_rd_reg_vs_r4017(BYTE openbus, BYTE nport);
+BYTE input_wr_reg_vs(BYTE nidx, BYTE value);
+BYTE input_rd_reg_vs_r4016(BYTE nidx, BYTE openbus, BYTE nport);
+BYTE input_rd_reg_vs_r4017(BYTE nidx, BYTE openbus, BYTE nport);
 
 #endif /* INPUT_VS_H */

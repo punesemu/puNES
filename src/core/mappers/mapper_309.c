@@ -42,7 +42,7 @@ void extcl_after_mapper_init_309(void) {
 	prg_fix_309();
 	mirroring_fix_309();
 }
-void extcl_cpu_wr_mem_309(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_309(UNUSED(BYTE nidx), WORD address, BYTE value) {
 	switch (address & 0xF000) {
 		case 0x8000:
 			m309.reg[0] = value;
@@ -56,20 +56,19 @@ void extcl_cpu_wr_mem_309(WORD address, BYTE value) {
 }
 BYTE extcl_save_mapper_309(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m309.reg);
-
 	return (EXIT_OK);
 }
 
 INLINE static void prg_fix_309(void) {
-	memmap_auto_8k(MMCPU(0x8000), m309.reg[0]);
-	memmap_auto_8k(MMCPU(0xA000), 0xFD);
-	memmap_auto_8k(MMCPU(0xC000), 0xFE);
-	memmap_auto_8k(MMCPU(0xE000), 0xFF);
+	memmap_auto_8k(0, MMCPU(0x8000), m309.reg[0]);
+	memmap_auto_8k(0, MMCPU(0xA000), 0xFD);
+	memmap_auto_8k(0, MMCPU(0xC000), 0xFE);
+	memmap_auto_8k(0, MMCPU(0xE000), 0xFF);
 }
 INLINE static void mirroring_fix_309(void) {
 	if (m309.reg[1] & 0x08) {
-		mirroring_H();
+		mirroring_H(0);
 	} else {
-		mirroring_V();
+		mirroring_V(0);
 	}
 }

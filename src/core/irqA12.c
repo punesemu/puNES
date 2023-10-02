@@ -19,109 +19,90 @@
 #include "ppu_inline.h"
 #include "irqA12.h"
 
-_irqA12 irqA12;
 BYTE irqA12_delay;
 
-void irqA12_IO(WORD value, WORD value_old) {
+void irqA12_IO(BYTE nidx, WORD value, WORD value_old) {
 	if (!(value_old & 0x1000) && (value & 0x1000)) {
-		if (irqA12.cycles > irqA12_min_cpu_cycles_prev_rising_edge) {
-			irqA12.cycles = 0;
+		if (nes[nidx].irqA12.cycles > irqA12_min_cpu_cycles_prev_rising_edge) {
+			nes[nidx].irqA12.cycles = 0;
 			if (!extcl_irq_A12_clock) {
-				if (!irqA12.counter) {
-					irqA12.counter = irqA12.latch;
-					if (!irqA12.counter && irqA12.reload) {
-						irqA12.save_counter = 1;
+				if (!nes[nidx].irqA12.counter) {
+					nes[nidx].irqA12.counter = nes[nidx].irqA12.latch;
+					if (!nes[nidx].irqA12.counter && nes[nidx].irqA12.reload) {
+						nes[nidx].irqA12.save_counter = 1;
 					}
-					irqA12.reload = FALSE;
+					nes[nidx].irqA12.reload = FALSE;
 				} else {
-					irqA12.counter--;
+					nes[nidx].irqA12.counter--;
 				}
-				if (!irqA12.counter && irqA12.save_counter && irqA12.enable) {
-					irq.high |= EXT_IRQ;
+				if (!nes[nidx].irqA12.counter && nes[nidx].irqA12.save_counter && nes[nidx].irqA12.enable) {
+					nes[nidx].c.irq.high |= EXT_IRQ;
 				}
-				irqA12.save_counter = irqA12.counter;
+				nes[nidx].irqA12.save_counter = nes[nidx].irqA12.counter;
 			} else {
-				/*
-				 * utilizzato dalle mappers :
-				 * mapper222
-				 * Futuremedia
-				 * Tengen
-				 */
-				extcl_irq_A12_clock();
+				extcl_irq_A12_clock(nidx);
 			}
 		}
 	}
 }
-void irqA12_BS(void) {
+void irqA12_BS(BYTE nidx) {
 	BYTE n_spr;
 
-	if (irqA12.a12BS || ((ppu.frame_x & 0x0007) != 0x0003)) {
+	if (nes[nidx].irqA12.a12BS || ((nes[nidx].p.ppu.frame_x & 0x0007) != 0x0003)) {
 		return;
 	}
 
-	n_spr = (ppu.frame_x & 0x0038) >> 3;
+	n_spr = (nes[nidx].p.ppu.frame_x & 0x0038) >> 3;
 
 	if (!n_spr) {
-		irqA12.s_adr_old = ppu.bck_adr;
+		nes[nidx].irqA12.s_adr_old = nes[nidx].p.ppu.bck_adr;
 	}
 
-	if ((!spr_ev.count_plus) && (r2000.size_spr == 16)) {
-		ppu.spr_adr = 0x1000;
+	if ((!nes[nidx].p.spr_ev.count_plus) && (nes[nidx].p.r2000.size_spr == 16)) {
+		nes[nidx].p.ppu.spr_adr = 0x1000;
 	} else {
 		ppu_spr_adr(n_spr)
 	}
 
-	if (!(irqA12.s_adr_old & 0x1000) && (ppu.spr_adr & 0x1000)) {
+	if (!(nes[nidx].irqA12.s_adr_old & 0x1000) && (nes[nidx].p.ppu.spr_adr & 0x1000)) {
 		if (!extcl_irq_A12_clock) {
 			irqA12_clock()
 		} else {
-			/*
-			 * utilizzato dalle mappers :
-			 * mapper222
-			 * Futuremedia
-			 * Tengen
-			 */
-			extcl_irq_A12_clock();
+			extcl_irq_A12_clock(nidx);
 		}
-		irqA12.a12BS = TRUE;
+		nes[nidx].irqA12.a12BS = TRUE;
 	}
-	irqA12.s_adr_old = ppu.spr_adr;
+	nes[nidx].irqA12.s_adr_old = nes[nidx].p.ppu.spr_adr;
 }
-void irqA12_SB(void) {
-	if (irqA12.a12SB || ((ppu.frame_x & 0x0007) != 0x0003)) {
+void irqA12_SB(BYTE nidx) {
+	if (nes[nidx].irqA12.a12SB || ((nes[nidx].p.ppu.frame_x & 0x0007) != 0x0003)) {
 		return;
 	}
 
-	if (ppu.frame_x == 323) {
+	if (nes[nidx].p.ppu.frame_x == 323) {
 		ppu_spr_adr(7)
-		irqA12.b_adr_old = ppu.spr_adr;
+		nes[nidx].irqA12.b_adr_old = nes[nidx].p.ppu.spr_adr;
 	}
 
-	ppu_bck_adr(r2000.bpt_adr, r2006.value);
+	ppu_bck_adr(nes[nidx].p.r2000.bpt_adr, nes[nidx].p.r2006.value);
 
-	if (!(irqA12.b_adr_old & 0x1000) && (ppu.bck_adr & 0x1000)) {
+	if (!(nes[nidx].irqA12.b_adr_old & 0x1000) && (nes[nidx].p.ppu.bck_adr & 0x1000)) {
 		if (!extcl_irq_A12_clock) {
 			irqA12_clock()
 		} else {
-			/*
-			 * utilizzato dalle mappers :
-			 * mapper222
-			 * Futuremedia
-			 * Tengen
-			 */
-			extcl_irq_A12_clock();
+			extcl_irq_A12_clock(nidx);
 		}
-		irqA12.a12SB = TRUE;
+		nes[nidx].irqA12.a12SB = TRUE;
 	}
-	irqA12.b_adr_old = ppu.bck_adr;
+	nes[nidx].irqA12.b_adr_old = nes[nidx].p.ppu.bck_adr;
 }
-void irqA12_RS(void) {
-	if (ppu.frame_x == 256) {
-		irqA12.a12BS = FALSE;
+void irqA12_RS(BYTE nidx) {
+	if (nes[nidx].p.ppu.frame_x == 256) {
+		nes[nidx].irqA12.a12BS = FALSE;
 		return;
 	}
-	if (ppu.frame_x == 323) {
-		irqA12.a12SB = FALSE;
+	if (nes[nidx].p.ppu.frame_x == 323) {
+		nes[nidx].irqA12.a12SB = FALSE;
 		return;
 	}
 }

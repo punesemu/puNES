@@ -219,17 +219,17 @@ enum apu_mode { APU_60HZ, APU_48HZ };
 				tick = 1;\
 				break;\
 		}\
-		DMC.buffer = prgrom_rd(DMC.address);\
+		DMC.buffer = prgrom_rd(0, DMC.address);\
 		if (!fds.info.enabled && info.mapper.extend_rd) {\
-			DMC.buffer = extcl_cpu_rd_mem(DMC.address, DMC.buffer);\
+			DMC.buffer = extcl_cpu_rd_mem(0, DMC.address, DMC.buffer);\
 		}\
 		if (cfg->reverse_bits_dpcm) DMC.buffer = dmc_reverse_buffer_bits[DMC.buffer];\
 		/* incremento gli hwtick da compiere */\
 		if (hwtick) { hwtick[0] += tick; }\
 		/* e naturalmente incremento anche quelli eseguiti dall'opcode */\
-		cpu.cycles += tick;\
+		nes[0].c.cpu.cycles += tick;\
 		/* salvo a che ciclo dell'istruzione avviene il dma */\
-		DMC.dma_cycle = cpu.opcode_cycle;\
+		DMC.dma_cycle = nes[0].c.cpu.opcode_cycle;\
 		/* il DMC non e' vuoto */\
 		DMC.empty = FALSE;\
 		if (++DMC.address > 0xFFFF) {\
@@ -241,7 +241,7 @@ enum apu_mode { APU_60HZ, APU_48HZ };
 				DMC.address = DMC.address_start;\
 			} else if (DMC.irq_enabled) {\
 				r4015.value |= 0x80;\
-				irq.high |= DMC_IRQ;\
+				nes[0].c.irq.high |= DMC_IRQ;\
 			}\
 		}\
 	}
@@ -271,7 +271,7 @@ enum apu_mode { APU_60HZ, APU_48HZ };
 		/* azzero il bit 6 del $4015 */\
 		r4015.value &= 0xBF;\
 		/* disabilito l'IRQ del frame counter */\
-		irq.high &= ~APU_IRQ;\
+		nes[0].c.irq.high &= ~APU_IRQ;\
 	}
 #define r4017_reset_frame()\
 	if (r4017.reset_frame_delay && (--r4017.reset_frame_delay == 0)) {\

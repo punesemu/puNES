@@ -45,14 +45,14 @@ void map_init_529(void) {
 
 	m529tmp.cc93c56 = wram_nvram_size() == S256B;
 }
-void extcl_cpu_init_pc_529(void) {
+void extcl_cpu_init_pc_529(UNUSED(BYTE nidx)) {
 	if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
 		if (m529tmp.cc93c56) {
 			ee93cx6_init(wram_nvram_pnt(), wram_nvram_size(), 8);
 		}
 	}
 }
-void extcl_cpu_wr_mem_529(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_529(BYTE nidx, WORD address, BYTE value) {
 	if ((address & 0x0800) && m529tmp.cc93c56) {
 		// D~[.... .ECD]
 		//          ||+- Serial Data Input to 93C56 EEPROM
@@ -61,20 +61,20 @@ void extcl_cpu_wr_mem_529(WORD address, BYTE value) {
 		ee93cx6_write((value & 0x04) >> 2, (value & 0x02) >> 1, value & 0x01);
 		return;
 	}
-	extcl_cpu_wr_mem_VRC2and4(address, value);
+	extcl_cpu_wr_mem_VRC2and4(nidx, address, value);
 }
-BYTE extcl_cpu_rd_mem_529(WORD address, UNUSED(BYTE openbus)) {
+BYTE extcl_cpu_rd_mem_529(BYTE nidx, WORD address, UNUSED(BYTE openbus)) {
 	switch (address & 0xF000) {
 		case 0x5000:
 			return (m529tmp.cc93c56 ? ee93cx6_read() ? 0x01 : 0x00 : 0x01);
 		default:
-			return (wram_rd(address));
+			return (wram_rd(nidx, address));
 	}
 }
 
 void prg_fix_vrc2and4_529(void) {
-	memmap_auto_16k(MMCPU(0x8000), vrc2and4.prg[1]);
-	memmap_auto_16k(MMCPU(0xC000), 0xFF);
+	memmap_auto_16k(0, MMCPU(0x8000), vrc2and4.prg[1]);
+	memmap_auto_16k(0, MMCPU(0xC000), 0xFF);
 }
 void chr_swap_vrc2and4_529(WORD address, WORD value) {
 	chr_swap_VRC2and4_base(address, (value & 0x1FF));
@@ -82,9 +82,9 @@ void chr_swap_vrc2and4_529(WORD address, WORD value) {
 void wram_fix_vrc2and4_529(void) {
 	if (m529tmp.cc93c56) {
 		if (wram_ram_size()) {
-			memmap_wram_ram_wp_8k(MMCPU(0x6000), 0, !vrc2and4.wram_protect, !vrc2and4.wram_protect);
+			memmap_wram_ram_wp_8k(0, MMCPU(0x6000), 0, !vrc2and4.wram_protect, !vrc2and4.wram_protect);
 		} else {
-			memmap_disable_8k(MMCPU(0x6000));
+			memmap_disable_8k(0, MMCPU(0x6000));
 		}
 	} else {
 		wram_fix_VRC2and4_base();

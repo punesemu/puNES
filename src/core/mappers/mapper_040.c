@@ -47,12 +47,12 @@ void extcl_after_mapper_init_040(void) {
 	wram_fix_040();
 	mirroring_fix_040();
 }
-void extcl_cpu_wr_mem_040(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_040(BYTE nidx, WORD address, BYTE value) {
 	switch (address & 0xE000) {
 		case 0x8000:
 			m040.enabled = FALSE;
 			m040.count = 0;
-			irq.high &= ~EXT_IRQ;
+			nes[nidx].c.irq.high &= ~EXT_IRQ;
 			return;
 		case 0xC000:
 			if (info.mapper.submapper == 1) {
@@ -74,14 +74,12 @@ BYTE extcl_save_mapper_040(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m040.enabled);
 	save_slot_ele(mode, slot, m040.count);
 	save_slot_ele(mode, slot, m040.delay);
-
 	return (EXIT_OK);
 }
-void extcl_cpu_every_cycle_040(void) {
+void extcl_cpu_every_cycle_040(BYTE nidx) {
 	if (m040.delay && !(--m040.delay)) {
-		irq.high |= EXT_IRQ;
+		nes[nidx].c.irq.high |= EXT_IRQ;
 	}
-
 	if (m040.enabled && (++m040.count == 0x1000)) {
 		m040.delay = 1;
 	}
@@ -90,25 +88,25 @@ void extcl_cpu_every_cycle_040(void) {
 INLINE static void prg_fix_040(void) {
 	if (m040.reg[1] & 0x08) {
 		if (m040.reg[1] & 0x10)
-			memmap_auto_32k(MMCPU(0x8000), 2 | (m040.reg[1] >> 6));
+			memmap_auto_32k(0, MMCPU(0x8000), 2 | (m040.reg[1] >> 6));
 		else {
-			memmap_auto_16k(MMCPU(0x8000), 4 | (m040.reg[1] >> 5));
-			memmap_auto_16k(MMCPU(0xC000), 4 | (m040.reg[1] >> 5));
+			memmap_auto_16k(0, MMCPU(0x8000), 4 | (m040.reg[1] >> 5));
+			memmap_auto_16k(0, MMCPU(0xC000), 4 | (m040.reg[1] >> 5));
 		}
 	} else {
-		memmap_auto_8k(MMCPU(0x8000), 4);
-		memmap_auto_8k(MMCPU(0xA000), 5);
-		memmap_auto_8k(MMCPU(0xC000), m040.reg[0] & 0x07);
-		memmap_auto_8k(MMCPU(0xE000), 7);
+		memmap_auto_8k(0, MMCPU(0x8000), 4);
+		memmap_auto_8k(0, MMCPU(0xA000), 5);
+		memmap_auto_8k(0, MMCPU(0xC000), m040.reg[0] & 0x07);
+		memmap_auto_8k(0, MMCPU(0xE000), 7);
 	}
 }
 INLINE static void wram_fix_040(void) {
-	memmap_prgrom_8k(MMCPU(0x6000), 6);
+	memmap_prgrom_8k(0, MMCPU(0x6000), 6);
 }
 INLINE static void mirroring_fix_040(void) {
 	if (m040.reg[1] & 0x01) {
-		mirroring_H();
+		mirroring_H(0);
 	} else {
-		mirroring_V();
+		mirroring_V(0);
 	}
 }

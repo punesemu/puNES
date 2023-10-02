@@ -22,8 +22,8 @@
 #include "common.h"
 
 void map_init_529(void);
-void extcl_cpu_init_pc_529(void);
-void extcl_cpu_wr_mem_529(WORD address, BYTE value);
-BYTE extcl_cpu_rd_mem_529(WORD address, BYTE openbus);
+void extcl_cpu_init_pc_529(BYTE nidx);
+void extcl_cpu_wr_mem_529(BYTE nidx, WORD address, BYTE value);
+BYTE extcl_cpu_rd_mem_529(BYTE nidx, WORD address, BYTE openbus);
 
 #endif /* MAPPER_529_H_ */

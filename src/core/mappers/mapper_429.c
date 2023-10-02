@@ -39,20 +39,19 @@ void extcl_after_mapper_init_429(void) {
 	prg_fix_429();
 	chr_fix_429();
 }
-void extcl_cpu_wr_mem_429(UNUSED(WORD address), BYTE value) {
+void extcl_cpu_wr_mem_429(UNUSED(BYTE nidx), UNUSED(WORD address), BYTE value) {
 	m429.reg = value;
 	prg_fix_429();
 	chr_fix_429();
 }
 BYTE extcl_save_mapper_429(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m429.reg);
-
 	return (EXIT_OK);
 }
 
 INLINE static void prg_fix_429(void) {
-	memmap_auto_32k(MMCPU(0x8000), ((m429.reg & 0x3C) >> 2));
+	memmap_auto_32k(0, MMCPU(0x8000), ((m429.reg & 0x3C) >> 2));
 }
 INLINE static void chr_fix_429(void) {
-	memmap_auto_8k(MMPPU(0x0000), (m429.reg & 0x03));
+	memmap_auto_8k(0, MMPPU(0x0000), (m429.reg & 0x03));
 }

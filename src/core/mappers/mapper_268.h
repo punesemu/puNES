@@ -22,7 +22,7 @@
 #include "common.h"
 
 void map_init_268(void);
-void extcl_cpu_wr_mem_268(WORD address, BYTE value);
+void extcl_cpu_wr_mem_268(BYTE nidx, WORD address, BYTE value);
 BYTE extcl_save_mapper_268(BYTE mode, BYTE slot, FILE *fp);
 
 #endif /* MAPPER_268_H_ */

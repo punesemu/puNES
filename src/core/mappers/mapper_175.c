@@ -46,7 +46,7 @@ void extcl_after_mapper_init_175(void) {
 	chr_fix_175();
 	mirroring_fix_175();
 }
-void extcl_cpu_wr_mem_175(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_175(UNUSED(BYTE nidx), WORD address, BYTE value) {
 	switch (address & 0xF000) {
 		case 0x8000:
 			m175.mirroring = value;
@@ -57,35 +57,34 @@ void extcl_cpu_wr_mem_175(WORD address, BYTE value) {
 			return;
 	}
 }
-BYTE extcl_cpu_rd_mem_175(WORD address, UNUSED(BYTE openbus)) {
+BYTE extcl_cpu_rd_mem_175(BYTE nidx, WORD address, UNUSED(BYTE openbus)) {
 	if (address >= 0x8000) {
 		if ((address >= 0xF000) && (m175.reg[0] != m175.reg[1])) {
 			m175.reg[0] = m175.reg[1];
 			prg_fix_175();
 			chr_fix_175();
 		}
-		return (prgrom_rd(address));
+		return (prgrom_rd(nidx, address));
 	}
-	return (wram_rd(address));
+	return (wram_rd(nidx, address));
 }
 BYTE extcl_save_mapper_175(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m175.reg);
 	save_slot_ele(mode, slot, m175.mirroring);
-
 	return (EXIT_OK);
 }
 
 INLINE static void prg_fix_175(void) {
-	memmap_auto_16k(MMCPU(0x8000), m175.reg[0]);
-	memmap_auto_16k(MMCPU(0xC000), m175.reg[0]);
+	memmap_auto_16k(0, MMCPU(0x8000), m175.reg[0]);
+	memmap_auto_16k(0, MMCPU(0xC000), m175.reg[0]);
 }
 INLINE static void chr_fix_175(void) {
-	memmap_auto_8k(MMPPU(0x0000), m175.reg[0]);
+	memmap_auto_8k(0, MMPPU(0x0000), m175.reg[0]);
 }
 INLINE static void mirroring_fix_175(void) {
 	if (m175.mirroring & 0x04) {
-		mirroring_H();
+		mirroring_H(0);
 	} else {
-		mirroring_V();
+		mirroring_V(0);
 	}
 }

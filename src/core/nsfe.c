@@ -125,6 +125,7 @@ BYTE nsfe_load_rom(void) {
 
 		info.format = NSFE_FORMAT;
 
+		info.number_of_nes = 1;
 		info.machine[DATABASE] = DEFAULT;
 
 		nsf.info.name = &nsf_default_label[0];
@@ -242,7 +243,7 @@ BYTE nsfe_load_rom(void) {
 			}
 		}
 
-		ram_set_size(S2K);
+		ram_set_size(0, S2K);
 		ram_init();
 
 		wram_set_ram_size(nsf.sound_chips.fds ? 0xA000 : 0x2000);

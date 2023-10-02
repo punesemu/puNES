@@ -49,7 +49,7 @@ struct _dp_read {
 	bool finded;
 } dp_read;
 _dipswitch dipswitch;
-extern _dp_internal dp;
+_dp_internal dp;
 
 void dipswitch_reset(void) {
 	::memset((void *)&dipswitch, 0x00, sizeof(dipswitch));
@@ -96,6 +96,9 @@ void dipswitch_update_value(void) {
 			}
 		}
 	}
+}
+int dipswitch_type_length(void) {
+	return (dp.types.length());
 }
 
 void search_in_cfg(QFile &file) {
@@ -158,6 +161,7 @@ void search_in_cfg(QFile &file) {
 					}
 				}
 			}
+			dipswitch.def = dipswitch.value;
 			if (cfg->dipswitch != -1) {
 				dipswitch.value = cfg->dipswitch;
 			}

@@ -45,7 +45,7 @@ void extcl_after_mapper_init_332(void) {
 	chr_fix_332();
 	mirroring_fix_332();
 }
-void extcl_cpu_wr_mem_332(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_332(UNUSED(BYTE nidx), WORD address, BYTE value) {
 	if ((address >= 0x6000) && (address <= 0x7FFF)) {
 		if (!(m332.reg[0] & 0x20)) {
 			m332.reg[address & 0x01] = value;
@@ -60,7 +60,6 @@ void extcl_cpu_wr_mem_332(WORD address, BYTE value) {
 }
 BYTE extcl_save_mapper_332(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m332.reg);
-
 	return (EXIT_OK);
 }
 
@@ -69,19 +68,19 @@ INLINE static void prg_fix_332(void) {
 	WORD bank = ((m332.reg[0] & 0x40) >> 3) | (m332.reg[0] & 0x07);
 	WORD nrom = !(m332.reg[0] & 0x08);
 
-	memmap_auto_wp_16k(MMCPU(0x8000), (bank & ~nrom), enabled, enabled);
-	memmap_auto_wp_16k(MMCPU(0xC000), (bank |  nrom), enabled, enabled);
+	memmap_auto_wp_16k(0, MMCPU(0x8000), (bank & ~nrom), enabled, enabled);
+	memmap_auto_wp_16k(0, MMCPU(0xC000), (bank |  nrom), enabled, enabled);
 }
 INLINE static void chr_fix_332(void) {
 	WORD base = ((m332.reg[0] & 0x40) >> 3) | (m332.reg[1] & 0x07);
 	WORD mask = m332.reg[1] & 0x10 ? 0 : m332.reg[1] & 0x20 ? 1 : 3;
 
-	memmap_auto_8k(MMPPU(0x0000), ((base & ~mask) | (m332.reg[2] & mask)));
+	memmap_auto_8k(0, MMPPU(0x0000), ((base & ~mask) | (m332.reg[2] & mask)));
 }
 INLINE static void mirroring_fix_332(void) {
 	if (m332.reg[0] & 0x10) {
-		mirroring_H();
+		mirroring_H(0);
 	} else {
-		mirroring_V();
+		mirroring_V(0);
 	}
 }

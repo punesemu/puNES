@@ -40,7 +40,7 @@ void extcl_after_mapper_init_541(void) {
 	prg_fix_541();
 	mirroring_fix_541();
 }
-void extcl_cpu_wr_mem_541(WORD address, UNUSED(BYTE value)) {
+void extcl_cpu_wr_mem_541(UNUSED(BYTE nidx), WORD address, UNUSED(BYTE value)) {
 	if (address >= 0xC000) {
 		m541.reg = address;
 		prg_fix_541();
@@ -49,7 +49,6 @@ void extcl_cpu_wr_mem_541(WORD address, UNUSED(BYTE value)) {
 }
 BYTE extcl_save_mapper_541(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m541.reg);
-
 	return (EXIT_OK);
 }
 
@@ -57,16 +56,16 @@ INLINE static void prg_fix_541(void) {
 	if (m541.reg & 0x02) {
 		WORD bank  = (m541.reg & 0xFF) >> 2;
 
-		memmap_auto_16k(MMCPU(0x8000), bank);
-		memmap_auto_16k(MMCPU(0xC000), bank);
+		memmap_auto_16k(0, MMCPU(0x8000), bank);
+		memmap_auto_16k(0, MMCPU(0xC000), bank);
 	} else {
-		memmap_auto_32k(MMCPU(0x8000), ((m541.reg & 0xFF) >> 3));
+		memmap_auto_32k(0, MMCPU(0x8000), ((m541.reg & 0xFF) >> 3));
 	}
 }
 INLINE static void mirroring_fix_541(void) {
 	if (m541.reg & 0x01) {
-		mirroring_V();
+		mirroring_V(0);
 	} else {
-		mirroring_H();
+		mirroring_H(0);
 	}
 }

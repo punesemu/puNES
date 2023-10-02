@@ -36,7 +36,7 @@ void map_init_186(void) {
 	mapper.internal_struct_size[0] = sizeof(m186);
 
 	if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
-		memmap_wram_region_init(S1K);
+		memmap_wram_region_init(0, S1K);
 	}
 
 	if (info.reset >= HARD) {
@@ -49,14 +49,14 @@ void extcl_after_mapper_init_186(void) {
 	prg_fix_186();
 	wram_fix_186();
 }
-void extcl_cpu_wr_mem_186(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_186(UNUSED(BYTE nidx), WORD address, BYTE value) {
 	if ((address >= 0x4200) && (address <= 0x4203)) {
 		m186.reg[address & 0x03] = value;
 		prg_fix_186();
 		wram_fix_186();
 	}
 }
-BYTE extcl_cpu_rd_mem_186(WORD address, UNUSED(BYTE openbus)) {
+BYTE extcl_cpu_rd_mem_186(BYTE nidx, WORD address, UNUSED(BYTE openbus)) {
 	switch (address) {
 		case 0x4200:
 		case 0x4201:
@@ -65,20 +65,19 @@ BYTE extcl_cpu_rd_mem_186(WORD address, UNUSED(BYTE openbus)) {
 		case 0x4202:
 			return (0x40);
 		default:
-			return (wram_rd(address));
+			return (wram_rd(nidx, address));
 	}
 }
 BYTE extcl_save_mapper_186(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m186.reg);
-
 	return (EXIT_OK);
 }
 
 INLINE static void prg_fix_186(void) {
-	memmap_auto_16k(MMCPU(0x8000), m186.reg[1]);
-	memmap_auto_16k(MMCPU(0xC000), 0);
+	memmap_auto_16k(0, MMCPU(0x8000), m186.reg[1]);
+	memmap_auto_16k(0, MMCPU(0xC000), 0);
 }
 INLINE static void wram_fix_186(void) {
-	memmap_auto_custom_size(MMCPU(0x4400), 0, (size_t)(0x400 * 3));
-	memmap_auto_8k(MMCPU(0x6000), m186.reg[0] >> 6);
+	memmap_auto_custom_size(0, MMCPU(0x4400), 0, (size_t)(0x400 * 3));
+	memmap_auto_8k(0, MMCPU(0x6000), m186.reg[0] >> 6);
 }

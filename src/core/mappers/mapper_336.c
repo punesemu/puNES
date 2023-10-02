@@ -39,17 +39,16 @@ void map_init_336(void) {
 void extcl_after_mapper_init_336(void) {
 	prg_fix_336();
 }
-void extcl_cpu_wr_mem_336(UNUSED(WORD address), BYTE value) {
-	m336.reg = value | prgrom_rd(address);
+void extcl_cpu_wr_mem_336(BYTE nidx, UNUSED(WORD address), BYTE value) {
+	m336.reg = value | prgrom_rd(nidx, address);
 	prg_fix_336();
 }
 BYTE extcl_save_mapper_336(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m336.reg);
-
 	return (EXIT_OK);
 }
 
 INLINE static void prg_fix_336(void) {
-	memmap_auto_16k(MMCPU(0x8000), m336.reg);
-	memmap_auto_16k(MMCPU(0xC000), (m336.reg | 0x07));
+	memmap_auto_16k(0, MMCPU(0x8000), m336.reg);
+	memmap_auto_16k(0, MMCPU(0xC000), (m336.reg | 0x07));
 }

@@ -53,7 +53,7 @@ void map_init_313(void) {
 	mapper.internal_struct[1] = (BYTE *)&mmc3;
 	mapper.internal_struct_size[1] = sizeof(mmc3);
 
-	memset(&irqA12, 0x00, sizeof(irqA12));
+	memset(&nes[0].irqA12, 0x00, sizeof(nes[0].irqA12));
 
 	init_MMC3(HARD);
 	MMC3_prg_swap = prg_swap_mmc3_313;
@@ -101,8 +101,8 @@ void map_init_313(void) {
 			break;
 	}
 
-	irqA12.present = TRUE;
-	irqA12_delay = 1;
+	nes[0].irqA12.present = TRUE;
+	nes[0].irqA12.delay = 1;
 }
 BYTE extcl_save_mapper_313(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m313.reg);

@@ -23,16 +23,16 @@
 
 void map_init_406(void);
 void extcl_mapper_quit_406(void);
-void extcl_cpu_wr_mem_406(WORD address, BYTE value);
-BYTE extcl_cpu_rd_mem_406(WORD address, BYTE openbus);
+void extcl_cpu_wr_mem_406(BYTE nidx, WORD address, BYTE value);
+BYTE extcl_cpu_rd_mem_406(BYTE nidx, WORD address, BYTE openbus);
 BYTE extcl_save_mapper_406(BYTE mode, BYTE slot, FILE *fp);
 void extcl_battery_io_406(BYTE mode, FILE *fp);
 
 
-void extcl_cpu_every_cycle_406(void);
+void extcl_cpu_every_cycle_406(BYTE nidx);
 
 
-void extcl_irq_A12_clock_406(void);
+void extcl_irq_A12_clock_406(BYTE nidx);
 
 
 #endif /* MAPPER_406 */

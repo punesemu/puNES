@@ -50,17 +50,17 @@ void map_init_362(void) {
 		m362.game ^= 1;
 	}
 }
-void extcl_cpu_wr_mem_362(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_362(BYTE nidx, WORD address, BYTE value) {
 	switch (address & 0xF000) {
 		case 0xB000:
 		case 0xC000:
 		case 0xD000:
 		case 0xE000:
-			extcl_cpu_wr_mem_VRC2and4(address, value);
+			extcl_cpu_wr_mem_VRC2and4(nidx, address, value);
 			VRC2and4_prg_fix();
 			return;
 		default:
-			extcl_cpu_wr_mem_VRC2and4(address, value);
+			extcl_cpu_wr_mem_VRC2and4(nidx, address, value);
 			return;
 	}
 }
@@ -69,7 +69,7 @@ BYTE extcl_save_mapper_362(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m362.game);
 	return (extcl_save_mapper_VRC2and4(mode, slot, fp));
 }
-BYTE extcl_rd_chr_362(WORD address) {
+BYTE extcl_rd_chr_362(BYTE nidx, WORD address) {
 	BYTE reg = address >> 10;
 
 	if (m362.reg != reg) {
@@ -77,7 +77,7 @@ BYTE extcl_rd_chr_362(WORD address) {
 		VRC2and4_prg_fix();
 		VRC2and4_chr_fix();
 	}
-	return (chr_rd(address));
+	return (chr_rd(nidx, address));
 }
 
 void prg_swap_vrc2and4_362(WORD address, WORD value) {

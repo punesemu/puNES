@@ -44,7 +44,7 @@ void extcl_after_mapper_init_337(void) {
 	wram_fix_337();
 	mirroring_fix_337();
 }
-void extcl_cpu_wr_mem_337(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_337(UNUSED(BYTE nidx), WORD address, BYTE value) {
 	switch (address & 0xE000) {
 		case 0x8000:
 		case 0xA000:
@@ -68,26 +68,26 @@ BYTE extcl_save_mapper_337(BYTE mode, BYTE slot, FILE *fp) {
 INLINE static void prg_fix_337(void) {
 	switch ((m337.reg >> 6) & 0x03) {
 		case 0:
-			memmap_auto_16k(MMCPU(0x8000), m337.reg);
-			memmap_auto_16k(MMCPU(0xC000), m337.reg);
+			memmap_auto_16k(0, MMCPU(0x8000), m337.reg);
+			memmap_auto_16k(0, MMCPU(0xC000), m337.reg);
 			return;
 		case 1:
-			memmap_auto_32k(MMCPU(0x8000), (m337.reg >> 1));
+			memmap_auto_32k(0, MMCPU(0x8000), (m337.reg >> 1));
 			return;
 		case 2:
 		case 3:
-			memmap_auto_16k(MMCPU(0x8000), m337.reg);
-			memmap_auto_16k(MMCPU(0xC000), (m337.reg | 0x07));
+			memmap_auto_16k(0, MMCPU(0x8000), m337.reg);
+			memmap_auto_16k(0, MMCPU(0xC000), (m337.reg | 0x07));
 			return;
 	}
 }
 INLINE static void wram_fix_337(void) {
-	memmap_prgrom_8k(MMCPU(0x6000), 1);
+	memmap_prgrom_8k(0, MMCPU(0x6000), 1);
 }
 INLINE static void mirroring_fix_337(void) {
 	if (m337.reg & 0x20) {
-		mirroring_H();
+		mirroring_H(0);
 	} else {
-		mirroring_V();
+		mirroring_V(0);
 	}
 }

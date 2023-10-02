@@ -43,8 +43,8 @@ extern _m018 m018;
 void map_init_018(void);
 void extcl_after_mapper_init_018(void);
 void extcl_mapper_quit_018(void);
-void extcl_cpu_wr_mem_018(WORD address, BYTE value);
+void extcl_cpu_wr_mem_018(BYTE nidx, WORD address, BYTE value);
 BYTE extcl_save_mapper_018(BYTE mode, BYTE slot, FILE *fp);
-void extcl_cpu_every_cycle_018(void);
+void extcl_cpu_every_cycle_018(BYTE nidx);
 
 #endif /* MAPPER_018_H_ */

@@ -47,38 +47,36 @@ void map_init_413(void) {
 	EXTCL_IRQ_A12_CLOCK(413);
 	mapper.internal_struct[0] = (BYTE *)&m413;
 	mapper.internal_struct_size[0] = sizeof(m413);
-	mapper.internal_struct[1] = (BYTE *)&irqA12;
-	mapper.internal_struct_size[1] = sizeof(irqA12);
 
 	if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
-		memmap_prg_region_init(S4K);
+		memmap_prg_region_init(0, S4K);
 	}
 
-	memset(&irqA12, 0x00, sizeof(irqA12));
+	memset(&nes[0].irqA12, 0x00, sizeof(nes[0].irqA12));
 	memset(&m413, 0x00, sizeof(m413));
 
 	info.mapper.extend_rd = TRUE;
 
-	irqA12.present = TRUE;
+	nes[0].irqA12.present = TRUE;
 }
 void extcl_after_mapper_init_413(void) {
 	prg_fix_413();
 	wram_fix_413();
 	chr_fix_413();
 }
-void extcl_cpu_wr_mem_413(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_413(BYTE nidx, WORD address, BYTE value) {
 	switch (address & 0xF000) {
 		case 0x8000:
-			irqA12.latch = value;
+			nes[nidx].irqA12.latch = value;
 			break;
 		case 0x9000:
-			irqA12.counter = 0;
+			nes[nidx].irqA12.counter = 0;
 			break;
 		case 0xA000:
 		case 0xB000:
-			irqA12.enable = (address & 0x1000) != 0;
-			if (!irqA12.enable) {
-				irq.high &= ~EXT_IRQ;
+			nes[nidx].irqA12.enable = (address & 0x1000) != 0;
+			if (!nes[nidx].irqA12.enable) {
+				nes[nidx].c.irq.high &= ~EXT_IRQ;
 			}
 			break;
 		case 0xC000:
@@ -96,7 +94,7 @@ void extcl_cpu_wr_mem_413(WORD address, BYTE value) {
 			break;
 	}
 }
-BYTE extcl_cpu_rd_mem_413(WORD address, UNUSED(BYTE openbus)) {
+BYTE extcl_cpu_rd_mem_413(BYTE nidx, WORD address, UNUSED(BYTE openbus)) {
 	switch (address & 0xF800) {
 		case 0x4800:
 		case 0xC000:
@@ -107,35 +105,34 @@ BYTE extcl_cpu_rd_mem_413(WORD address, UNUSED(BYTE openbus)) {
 				return (miscrom_byte(m413.serial.address & (miscrom_size() - 1)));
 			}
 		default:
-			return (address >= 0x8000 ? prgrom_rd(address) : wram_rd(address));
+			return (address >= 0x8000 ? prgrom_rd(nidx, address) : wram_rd(nidx, address));
 	}
 }
 BYTE extcl_save_mapper_413(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m413.reg);
 	save_slot_ele(mode, slot, m413.serial.address);
 	save_slot_ele(mode, slot, m413.serial.control);
-
 	return (EXIT_OK);
 }
-void extcl_irq_A12_clock_413(void) {
-	irqA12.counter = !irqA12.counter ? irqA12.latch : irqA12.counter - 1;
-	if (!irqA12.counter && irqA12.enable) {
-		irq.high |= EXT_IRQ;
+void extcl_irq_A12_clock_413(BYTE nidx) {
+	nes[nidx].irqA12.counter = !nes[nidx].irqA12.counter ? nes[nidx].irqA12.latch : nes[nidx].irqA12.counter - 1;
+	if (!nes[nidx].irqA12.counter && nes[nidx].irqA12.enable) {
+		nes[nidx].c.irq.high |= EXT_IRQ;
 	}
 }
 
 INLINE static void prg_fix_413(void) {
-	memmap_auto_8k(MMCPU(0x8000), m413.reg[1]);
-	memmap_auto_8k(MMCPU(0xA000), m413.reg[2]);
-	memmap_disable_4k(MMCPU(0xC000));
-	memmap_auto_4k(MMCPU(0xD000), 7);
-	memmap_auto_8k(MMCPU(0xE000), 4);
+	memmap_auto_8k(0, MMCPU(0x8000), m413.reg[1]);
+	memmap_auto_8k(0, MMCPU(0xA000), m413.reg[2]);
+	memmap_disable_4k(0, MMCPU(0xC000));
+	memmap_auto_4k(0, MMCPU(0xD000), 7);
+	memmap_auto_8k(0, MMCPU(0xE000), 4);
 }
 INLINE static void wram_fix_413(void) {
-	memmap_prgrom_4k(MMCPU(0x5000), 1);
-	memmap_prgrom_8k(MMCPU(0x6000), m413.reg[0]);
+	memmap_prgrom_4k(0, MMCPU(0x5000), 1);
+	memmap_prgrom_8k(0, MMCPU(0x6000), m413.reg[0]);
 }
 INLINE static void chr_fix_413(void) {
-	memmap_auto_4k(MMPPU(0x0000), m413.reg[3]);
-	memmap_auto_4k(MMPPU(0x1000), 0xFD);
+	memmap_auto_4k(0, MMPPU(0x0000), m413.reg[3]);
+	memmap_auto_4k(0, MMPPU(0x1000), 0xFD);
 }

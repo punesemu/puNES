@@ -23,11 +23,11 @@
 
 void map_init_471(void);
 void extcl_after_mapper_init_471(void);
-void extcl_cpu_wr_mem_471(WORD address, BYTE value);
+void extcl_cpu_wr_mem_471(BYTE nidx, WORD address, BYTE value);
 BYTE extcl_save_mapper_471(BYTE mode, BYTE slot, FILE *fp);
-void extcl_ppu_000_to_255_471(void);
-void extcl_ppu_256_to_319_471(void);
-void extcl_ppu_320_to_34x_471(void);
-void extcl_update_r2006_471(WORD new_r2006, WORD old_r2006);
+void extcl_ppu_000_to_255_471(BYTE nidx);
+void extcl_ppu_256_to_319_471(BYTE nidx);
+void extcl_ppu_320_to_34x_471(BYTE nidx);
+void extcl_update_r2006_471(BYTE nidx, WORD new_r2006, WORD old_r2006);
 
 #endif /* MAPPER_471_H_ */

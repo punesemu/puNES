@@ -44,7 +44,7 @@ void map_init_215(void) {
 	mapper.internal_struct[1] = (BYTE *)&mmc3;
 	mapper.internal_struct_size[1] = sizeof(mmc3);
 
-	memset(&irqA12, 0x00, sizeof(irqA12));
+	memset(&nes[0].irqA12, 0x00, sizeof(nes[0].irqA12));
 	memset(&m215, 0x00, sizeof(m215));
 
 	init_MMC3(HARD);
@@ -61,10 +61,10 @@ void map_init_215(void) {
 
 	info.mapper.extend_wr = TRUE;
 
-	irqA12.present = TRUE;
-	irqA12_delay = 1;
+	nes[0].irqA12.present = TRUE;
+	nes[0].irqA12.delay = 1;
 }
-void extcl_cpu_wr_mem_215(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_215(BYTE nidx, WORD address, BYTE value) {
 	if ((address >= 0x5000) && (address <= 0x5FFF)) {
 		switch (address & 0x0007) {
 			case 0:
@@ -114,10 +114,10 @@ void extcl_cpu_wr_mem_215(WORD address, BYTE value) {
 		if (address == 0x8000) {
 			value = (value & 0xC0) | m215_reg[m215.reg[3]][value & 0x07];
 		}
-		extcl_cpu_wr_mem_MMC3(address, value);
+		extcl_cpu_wr_mem_MMC3(nidx, address, value);
 	}
 }
-BYTE extcl_cpu_rd_mem_215(WORD address, BYTE openbus) {
+BYTE extcl_cpu_rd_mem_215(BYTE nidx, WORD address, BYTE openbus) {
 	static const BYTE arrayLUT[8][8] = {
 		{ 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }, // 0 Super Hang-On
 		{ 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x03, 0x00 }, // 1 Monkey King
@@ -132,7 +132,7 @@ BYTE extcl_cpu_rd_mem_215(WORD address, BYTE openbus) {
 	if ((address >= 0x5000) && (address <= 0x5FFF)) {
 		return ((openbus & 0xF0) | (arrayLUT[m215.reg[2]][address & 0x07] & 0x0F));
 	}
-	return (wram_rd(address));
+	return (wram_rd(nidx, address));
 }
 BYTE extcl_save_mapper_215(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m215.reg);

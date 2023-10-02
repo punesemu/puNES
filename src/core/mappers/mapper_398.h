@@ -22,8 +22,8 @@
 #include "common.h"
 
 void map_init_398(void);
-void extcl_cpu_wr_mem_398(WORD address, BYTE value);
+void extcl_cpu_wr_mem_398(BYTE nidx, WORD address, BYTE value);
 BYTE extcl_save_mapper_398(BYTE mode, BYTE slot, FILE *fp);
-BYTE extcl_rd_chr_398(WORD address);
+BYTE extcl_rd_chr_398(BYTE nidx, WORD address);
 
 #endif /* MAPPER_398_H_ */

@@ -44,7 +44,7 @@ void extcl_after_mapper_init_415(void) {
 	wram_fix_415();
 	mirroring_fix_415();
 }
-void extcl_cpu_wr_mem_415(UNUSED(WORD address), BYTE value) {
+void extcl_cpu_wr_mem_415(UNUSED(BYTE nidx), UNUSED(WORD address), BYTE value) {
 	m415.reg = value;
 	prg_fix_415();
 	wram_fix_415();
@@ -56,15 +56,15 @@ BYTE extcl_save_mapper_415(BYTE mode, BYTE slot, FILE *fp) {
 }
 
 INLINE static void prg_fix_415(void) {
-	memmap_auto_32k(MMCPU(0x8000), 0xFF);
+	memmap_auto_32k(0, MMCPU(0x8000), 0xFF);
 }
 INLINE static void wram_fix_415(void) {
-	memmap_prgrom_8k(MMCPU(0x6000), (m415.reg & 0x0F));
+	memmap_prgrom_8k(0, MMCPU(0x6000), (m415.reg & 0x0F));
 }
 INLINE static void mirroring_fix_415(void) {
 	if (m415.reg & 0x10) {
-		mirroring_H();
+		mirroring_H(0);
 	} else {
-		mirroring_V();
+		mirroring_V(0);
 	}
 }

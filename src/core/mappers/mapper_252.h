@@ -23,9 +23,9 @@
 
 void map_init_252(void);
 void extcl_after_mapper_init_252(void);
-void extcl_cpu_wr_mem_252(WORD address, BYTE value);
+void extcl_cpu_wr_mem_252(BYTE nidx, WORD address, BYTE value);
 BYTE extcl_save_mapper_252(BYTE mode, BYTE slot, FILE *fp);
-void extcl_wr_chr_252(WORD address, BYTE value);
-void extcl_cpu_every_cycle_252(void);
+void extcl_wr_chr_252(BYTE nidx, WORD address, BYTE value);
+void extcl_cpu_every_cycle_252(BYTE nidx);
 
 #endif /* MAPPER_252_H_ */

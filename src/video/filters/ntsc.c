@@ -199,7 +199,7 @@ void ntsc_filter_parameter_mv_default(void) {
 	ntsc_filter.format[cfg->ntsc_format].merge_fields = format->merge_fields;
 	ntsc_filter.format[cfg->ntsc_format].vertical_blend = format->vertical_blend;
 }
-void ntsc_surface(void) {
+void ntsc_surface(BYTE nidx) {
 	static int burst_count = 0, burst_phase = 0;
 	int y;
 
@@ -207,8 +207,8 @@ void ntsc_surface(void) {
 		gfx.filter.data.palette = (void *)ntsc_filter.ntsc;
 	}
 
-	nes_ntsc_blit((nes_ntsc_t *)gfx.filter.data.palette, ppu_screen.rd->data, SCR_COLUMNS, burst_phase, SCR_COLUMNS, SCR_ROWS,
-		gfx.filter.data.pix, (long)gfx.filter.data.pitch);
+	nes_ntsc_blit((nes_ntsc_t *)gfx.filter.data.palette, nes[nidx].p.ppu_screen.rd->data, SCR_COLUMNS, burst_phase,
+		SCR_COLUMNS, SCR_ROWS, gfx.filter.data.pix, (long)gfx.filter.data.pitch);
 
 	if (ntsc_filter.format[cfg->ntsc_format].merge_fields) {
 		burst_count = 0;

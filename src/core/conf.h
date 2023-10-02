@@ -83,7 +83,6 @@ typedef struct _config {
 #endif
 	BYTE bck_pause;
 	WORD language;
-	WORD dipswitch_vs;
 	int dipswitch;
 	BYTE ppu_overclock;
 	BYTE ppu_overclock_dmc_control_disabled;
@@ -100,6 +99,7 @@ typedef struct _config {
 	int fullscreen_res_w;
 	int fullscreen_res_h;
 #endif
+	BYTE vs_monitor;
 
 	_config_input input;
 	_config_apu apu;

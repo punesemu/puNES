@@ -47,7 +47,7 @@ void extcl_after_mapper_init_235(void) {
 	chr_fix_235();
 	mirroring_fix_235();
 }
-void extcl_cpu_wr_mem_235(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_235(UNUSED(BYTE nidx), WORD address, BYTE value) {
 	m235.reg[0] = address;
 	m235.reg[1] = value;
 	prg_fix_235();
@@ -57,7 +57,6 @@ void extcl_cpu_wr_mem_235(WORD address, BYTE value) {
 BYTE extcl_save_mapper_235(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m235.reg);
 	save_slot_ele(mode, slot, m235.mode);
-
 	return (EXIT_OK);
 }
 
@@ -66,36 +65,36 @@ INLINE static void prg_fix_235(void) {
 
 	if (m235.mode) {
 		bank = prgrom_banks(S16K) & 0xC0;
-		memmap_auto_16k(MMCPU(0x8000), (bank | (m235.reg[1] & 0x07)));
-		memmap_auto_16k(MMCPU(0xC000), (bank | 0x07));
+		memmap_auto_16k(0, MMCPU(0x8000), (bank | (m235.reg[1] & 0x07)));
+		memmap_auto_16k(0, MMCPU(0xC000), (bank | 0x07));
 	} else {
 		bank = ((m235.reg[0] & 0x300) >> 3) | (m235.reg[0] & 0x1F);
 		if (bank >= prgrom_banks(S32K)) {
-			memmap_disable_32k(MMCPU(0x8000));
+			memmap_disable_32k(0, MMCPU(0x8000));
 		} else if (m235.reg[0] & 0x0800) {
 			bank = (bank << 1) | ((m235.reg[0] & 0x1000) >> 12);
-			memmap_auto_16k(MMCPU(0x8000), bank);
-			memmap_auto_16k(MMCPU(0xC000), bank);
+			memmap_auto_16k(0, MMCPU(0x8000), bank);
+			memmap_auto_16k(0, MMCPU(0xC000), bank);
 		} else {
-			memmap_auto_32k(MMCPU(0x8000), bank);
+			memmap_auto_32k(0, MMCPU(0x8000), bank);
 		}
 	}
 }
 INLINE static void chr_fix_235(void) {
-	memmap_auto_8k(MMPPU(0x0000), 0);
+	memmap_auto_8k(0, MMPPU(0x0000), 0);
 }
 INLINE static void mirroring_fix_235(void) {
 	if (m235.mode) {
-		mirroring_V();
+		mirroring_V(0);
 	} else {
 		if (m235.reg[0] & 0x0400) {
-			mirroring_SCR0();
+			mirroring_SCR0(0);
 		} else if (m235.reg[0] & 0x2000) {
 			// Horizontal mirroring also protects CHR-RAM as a side effect
-			memmap_auto_wp_8k(MMPPU(0x0000), 0, TRUE, FALSE);
-			mirroring_H();
+			memmap_auto_wp_8k(0, MMPPU(0x0000), 0, TRUE, FALSE);
+			mirroring_H(0);
 		} else {
-			mirroring_V();
+			mirroring_V(0);
 		}
 	}
 }

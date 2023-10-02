@@ -23,15 +23,15 @@
 
 void map_init_111(void);
 
-void extcl_cpu_wr_mem_111_MMC1(WORD address, BYTE value);
+void extcl_cpu_wr_mem_111_MMC1(BYTE nidx, WORD address, BYTE value);
 BYTE extcl_save_mapper_111_MMC1(BYTE mode, BYTE slot, FILE *fp);
 
 void extcl_after_mapper_init_111_GTROM(void);
 void extcl_mapper_quit_111_GTROM(void);
-void extcl_cpu_wr_mem_111_GTROM(WORD address, BYTE value);
-BYTE extcl_cpu_rd_mem_111_GTROM(WORD address, BYTE openbus);
+void extcl_cpu_wr_mem_111_GTROM(BYTE nidx, WORD address, BYTE value);
+BYTE extcl_cpu_rd_mem_111_GTROM(BYTE nidx, WORD address, BYTE openbus);
 BYTE extcl_save_mapper_111_GTROM(BYTE mode, BYTE slot, FILE *fp);
-void extcl_cpu_every_cycle_111_GTROM(void);
+void extcl_cpu_every_cycle_111_GTROM(BYTE nidx);
 void extcl_battery_io_111_GTROM(BYTE mode, FILE *fp);
 
 #endif /* MAPPER_111_H_ */

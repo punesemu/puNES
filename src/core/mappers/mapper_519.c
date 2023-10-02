@@ -49,7 +49,7 @@ void extcl_after_mapper_init_519(void) {
 	chr_fix_519();
 	mirroring_fix_519();
 }
-void extcl_cpu_wr_mem_519(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_519(UNUSED(BYTE nidx), WORD address, BYTE value) {
 	if ((address >= 0x5000) && (address <= 0x5FFF)) {
 		if (address & 0x0800) {
 			m519.read5xxx[address & 0x03] = value & 0x0F;
@@ -66,40 +66,39 @@ void extcl_cpu_wr_mem_519(WORD address, BYTE value) {
 		chr_fix_519();
 	}
 }
-BYTE extcl_cpu_rd_mem_519(WORD address, BYTE openbus) {
+BYTE extcl_cpu_rd_mem_519(BYTE nidx, WORD address, BYTE openbus) {
 	if ((address >= 0x5000) && (address <= 0x5FFF)) {
 		return (address & 0x800 ? m519.read5xxx[address & 0x03] : openbus);
 	} else if (address >= 0x8000) {
 		return (m519.reg[0] & 0x0040
-			? prgrom_rd(((address & 0xFFF0) | dipswitch.value))
-			: prgrom_rd(address));
+			? prgrom_rd(nidx, ((address & 0xFFF0) | dipswitch.value))
+			: prgrom_rd(nidx, address));
 	}
-	return (wram_rd(address));
+	return (wram_rd(nidx, address));
 }
 BYTE extcl_save_mapper_519(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m519.reg);
 	save_slot_ele(mode, slot, m519.lock);
 	save_slot_ele(mode, slot, m519.chr_outer);
 	save_slot_ele(mode, slot, m519.read5xxx);
-
 	return (EXIT_OK);
 }
 
 INLINE static void prg_fix_519(void) {
 	if (m519.reg[0] & 0x80) {
-		memmap_auto_16k(MMCPU(0x8000), m519.reg[0]);
-		memmap_auto_16k(MMCPU(0xC000), m519.reg[0]);
+		memmap_auto_16k(0, MMCPU(0x8000), m519.reg[0]);
+		memmap_auto_16k(0, MMCPU(0xC000), m519.reg[0]);
 	} else {
-		memmap_auto_32k(MMCPU(0x8000), (m519.reg[0] >> 1));
+		memmap_auto_32k(0, MMCPU(0x8000), (m519.reg[0] >> 1));
 	}
 }
 INLINE static void chr_fix_519(void) {
-	memmap_auto_8k(MMPPU(0x0000), (m519.chr_outer | (m519.reg[1] & 0x03)));
+	memmap_auto_8k(0, MMPPU(0x0000), (m519.chr_outer | (m519.reg[1] & 0x03)));
 }
 INLINE static void mirroring_fix_519(void) {
 	if (m519.reg[1] & 0x80) {
-		mirroring_H();
+		mirroring_H(0);
 	} else {
-		mirroring_V();
+		mirroring_V(0);
 	}
 }

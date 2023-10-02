@@ -54,12 +54,12 @@ void map_init_FDS(void) {
 		}
 	}
 
-	cpu.SP = 0xFF;
-	cpu.SR = 0x30;
+	nes[0].c.cpu.SP = 0xFF;
+	nes[0].c.cpu.SR = 0x30;
 	/* disassemblo il Processor Status Register */
-	disassemble_SR();
+	disassemble_SR(0);
 	/* setto il flag di disabilitazione dell'irq */
-	irq.inhibit = cpu.im;
+	nes[0].c.irq.inhibit = nes[0].c.cpu.im;
 }
 void map_init_NSF_FDS(void) {
 	memset(&fds, 0x00, sizeof(fds));
@@ -70,17 +70,17 @@ void map_init_NSF_FDS(void) {
 	fds.drive.enabled_snd_reg = 0x02;
 }
 void extcl_after_mapper_init_FDS(void) {
-	memmap_wram_8k(MMCPU(0x6000), 0);
-	memmap_wram_8k(MMCPU(0x8000), 1);
-	memmap_wram_8k(MMCPU(0xA000), 2);
-	memmap_wram_8k(MMCPU(0xC000), 3);
-	memmap_prgrom_8k(MMCPU(0xE000), 0);
+	memmap_wram_8k(0, MMCPU(0x6000), 0);
+	memmap_wram_8k(0, MMCPU(0x8000), 1);
+	memmap_wram_8k(0, MMCPU(0xA000), 2);
+	memmap_wram_8k(0, MMCPU(0xC000), 3);
+	memmap_prgrom_8k(0, MMCPU(0xE000), 0);
 }
-BYTE extcl_cpu_rd_mem_FDS(WORD address, UNUSED(BYTE openbus)) {
+BYTE extcl_cpu_rd_mem_FDS(BYTE nidx, WORD address, UNUSED(BYTE openbus)) {
 	// 0xE18B : NMI entry point
 	// [$0100]: PC action on NMI. set to $C0 on reset
 	// When NMI occurs while $100 & $C0 != 0, it typically means that the game is starting.
-	if ((address == 0xE18B) & !fds.auto_insert.in_game & ((cpu_rd_mem_dbg(0x100) & 0xC0) != 0)) {
+	if ((address == 0xE18B) & !fds.auto_insert.in_game & ((cpu_rd_mem_dbg(nidx, 0x100) & 0xC0) != 0)) {
 		fds.auto_insert.in_game = TRUE;
 	} else if (address == 0xE445) {
 		// Address          : 0xE445
@@ -93,7 +93,7 @@ BYTE extcl_cpu_rd_mem_FDS(WORD address, UNUSED(BYTE openbus)) {
 		if (fds_auto_insert_enabled() & !fds.auto_insert.rE445.in_run) {
 			// i primi due passaggi sono del bios e li ignoro
 			if (fds.auto_insert.rE445.count > 1) {
-				WORD adr = cpu_rd_mem_dbg(0) | (cpu_rd_mem_dbg(1) << 8);
+				WORD adr = cpu_rd_mem_dbg(nidx, 0) | (cpu_rd_mem_dbg(nidx, 1) << 8);
 				BYTE string[10], side = 0xFF;
 				uint32_t position = 0;
 				unsigned int a, count = 0;
@@ -103,7 +103,7 @@ BYTE extcl_cpu_rd_mem_FDS(WORD address, UNUSED(BYTE openbus)) {
 						string[a] = 0;
 						continue;
 					}
-					string[a] = cpu_rd_mem_dbg(adr + a);
+					string[a] = cpu_rd_mem_dbg(nidx, adr + a);
 				}
 				for (a = 0; a < fds.info.total_sides; a++) {
 					BYTE finded = TRUE;
@@ -116,7 +116,7 @@ BYTE extcl_cpu_rd_mem_FDS(WORD address, UNUSED(BYTE openbus)) {
 					if ((position + DISK_SIDE_SIZE) > fds.info.total_size) {
 						finded = FALSE;
 					} else {
-						unsigned int b;
+						unsigned int b = 0;
 
 						for (b = 0; b < 10; b++) {
 							// To bypass the checking of any byte, a -1 (0xFF) can be placed
@@ -159,9 +159,9 @@ BYTE extcl_cpu_rd_mem_FDS(WORD address, UNUSED(BYTE openbus)) {
 			}
 		}
 	}
-	return (prgrom_rd(address));
+	return (prgrom_rd(nidx, address));
 }
-void extcl_cpu_every_cycle_FDS(void) {
+void extcl_cpu_every_cycle_FDS(BYTE nidx) {
 	BYTE max_speed = cfg->fds_fast_forward &
 		((fds.drive.scan & (info.lag_frame.consecutive > MIN_LAG_FRAMES)) | !fds.auto_insert.in_game);
 	WORD data = 0;
@@ -219,7 +219,7 @@ void extcl_cpu_every_cycle_FDS(void) {
 				fds.drive.irq_timer_enabled = FALSE;
 			}
 			fds.drive.irq_timer_high = 0x01;
-			irq.high |= FDS_TIMER_IRQ;
+			nes[nidx].c.irq.high |= FDS_TIMER_IRQ;
 		}
 	}
 
@@ -286,7 +286,7 @@ void extcl_cpu_every_cycle_FDS(void) {
 	if (fds.drive.gap_ended) {
 		if (fds.drive.irq_disk_enabled) {
 			fds.drive.irq_disk_high = 0x02;
-			irq.high |= FDS_DISK_IRQ;
+			nes[nidx].c.irq.high |= FDS_DISK_IRQ;
 		}
 
 		if (!fds.drive.read_mode) {
@@ -381,7 +381,8 @@ void extcl_apu_tick_FDS(void) {
 
 	// modulation unit
 	if (!fds.snd.modulation.disabled && fds.snd.modulation.frequency) {
-		if ((fds.snd.modulation.counter -= fds.snd.modulation.frequency) < 0) {
+		fds.snd.modulation.counter -= fds.snd.modulation.frequency;
+		if (fds.snd.modulation.counter < 0) {
 			SBYTE adj = modulation_table[fds.snd.modulation.data[fds.snd.modulation.index]];
 
 			fds.snd.modulation.counter += 65536;
@@ -462,7 +463,8 @@ void extcl_apu_tick_FDS(void) {
 	}
 
 	if ((freq > 0) && !fds.snd.wave.writable) {
-		if ((fds.snd.wave.counter -= freq) < 0) {
+		fds.snd.wave.counter -= freq;
+		if (fds.snd.wave.counter < 0) {
 			WORD level = (fds.snd.volume.gain < 32 ? fds.snd.volume.gain : 32) * volume_wave[fds.snd.wave.volume];
 
 			/* valore massimo dell'output (63 * (39 * 32)) = 78624 */

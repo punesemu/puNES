@@ -22,7 +22,7 @@
 #include "common.h"
 
 void map_init_411(void);
-void extcl_cpu_wr_mem_411(WORD address, BYTE value);
+void extcl_cpu_wr_mem_411(BYTE nidx, WORD address, BYTE value);
 BYTE extcl_save_mapper_411(BYTE mode, BYTE slot, FILE *fp);
 
 #endif /* MAPPER_411_H_ */

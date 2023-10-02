@@ -23,8 +23,8 @@
 
 void map_init_526(void);
 void extcl_after_mapper_init_526(void);
-void extcl_cpu_wr_mem_526(WORD address, BYTE value);
+void extcl_cpu_wr_mem_526(BYTE nidx, WORD address, BYTE value);
 BYTE extcl_save_mapper_526(BYTE mode, BYTE slot, FILE *fp);
-void extcl_cpu_every_cycle_526(void);
+void extcl_cpu_every_cycle_526(BYTE nidx);
 
 #endif /* MAPPER_526_H_ */

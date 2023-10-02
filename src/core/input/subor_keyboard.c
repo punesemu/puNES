@@ -22,8 +22,8 @@
 #include "conf.h"
 #include "gui.h"
 
-void input_wr_subor_keyboard(const BYTE *value, UNUSED(BYTE nport)) {
-	BYTE column;
+void input_wr_subor_keyboard(UNUSED(BYTE nidx), const BYTE *value, UNUSED(BYTE nport)) {
+	BYTE column = 0;
 
 	generic_keyboard.enable = (*value) & 0x04;
 	column = ((*value) & 0x02) >> 1;
@@ -38,9 +38,9 @@ void input_wr_subor_keyboard(const BYTE *value, UNUSED(BYTE nport)) {
 	}
 	tape_data_recorder.in = ((*value) & 0x02) >> 1;
 }
-void input_rd_subor_keyboard(BYTE *value, BYTE nport, UNUSED(BYTE shift)) {
+void input_rd_subor_keyboard(UNUSED(BYTE nidx), BYTE *value, BYTE nport, UNUSED(BYTE shift)) {
 	if (nport & 0x01) {
-		BYTE state;
+		BYTE state = 0;
 
 		if (generic_keyboard.column) {
 			state = (generic_keyboard.data[generic_keyboard.row] & 0xF0) >> 3;
@@ -54,7 +54,7 @@ void input_rd_subor_keyboard(BYTE *value, BYTE nport, UNUSED(BYTE shift)) {
 }
 
 void input_add_event_subor_keyboard(UNUSED(BYTE index)) {
-	WORD a, b;
+	WORD a = 0, b = 0;
 
 	for (a = 0; a < nes_keyboard.rows; a++) {
 		generic_keyboard.data[a] = 0;

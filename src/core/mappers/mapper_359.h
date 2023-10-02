@@ -23,12 +23,12 @@
 
 void map_init_359(void);
 void extcl_after_mapper_init_359(void);
-void extcl_cpu_wr_mem_359(WORD address, BYTE value);
+void extcl_cpu_wr_mem_359(BYTE nidx, WORD address, BYTE value);
 BYTE extcl_save_mapper_359(BYTE mode, BYTE slot, FILE *fp);
-void extcl_ppu_000_to_255_359(void);
-void extcl_ppu_256_to_319_359(void);
-void extcl_ppu_320_to_34x_359(void);
-void extcl_update_r2006_359(WORD new_r2006, WORD old_r2006);
-void extcl_cpu_every_cycle_359(void);
+void extcl_ppu_000_to_255_359(BYTE nidx);
+void extcl_ppu_256_to_319_359(BYTE nidx);
+void extcl_ppu_320_to_34x_359(BYTE nidx);
+void extcl_update_r2006_359(BYTE nidx, WORD new_r2006, WORD old_r2006);
+void extcl_cpu_every_cycle_359(BYTE nidx);
 
 #endif /* MAPPER_359_H_ */

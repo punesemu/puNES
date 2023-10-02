@@ -46,7 +46,7 @@ void map_init_398(void) {
 	VRC2and4_prg_swap = prg_swap_vrc2and4_398;
 	VRC2and4_chr_swap = chr_swap_vrc2and4_398;
 }
-void extcl_cpu_wr_mem_398(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_398(BYTE nidx, WORD address, BYTE value) {
 	BYTE reg0 = address & 0xFF;
 
 	if (reg0 != m398.reg[0]) {
@@ -54,13 +54,13 @@ void extcl_cpu_wr_mem_398(WORD address, BYTE value) {
 		VRC2and4_prg_fix();
 		VRC2and4_chr_fix();
 	}
-	extcl_cpu_wr_mem_VRC2and4(address, value);
+	extcl_cpu_wr_mem_VRC2and4(nidx, address, value);
 }
 BYTE extcl_save_mapper_398(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m398.reg);
 	return (extcl_save_mapper_VRC2and4(mode, slot, fp));
 }
-BYTE extcl_rd_chr_398(WORD address) {
+BYTE extcl_rd_chr_398(BYTE nidx, WORD address) {
 	BYTE reg1 = address >> 10;
 
 	if (reg1 != m398.reg[1]) {
@@ -68,7 +68,7 @@ BYTE extcl_rd_chr_398(WORD address) {
 		VRC2and4_prg_fix();
 		VRC2and4_chr_fix();
 	}
-	return (chr_rd(address));
+	return (chr_rd(nidx, address));
 }
 
 void prg_swap_vrc2and4_398(WORD address, WORD value) {

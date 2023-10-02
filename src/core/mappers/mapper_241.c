@@ -38,16 +38,15 @@ void map_init_241(void) {
 void extcl_after_mapper_init_241(void) {
 	prg_fix_241();
 }
-void extcl_cpu_wr_mem_241(UNUSED(WORD address), BYTE value) {
+void extcl_cpu_wr_mem_241(UNUSED(BYTE nidx), UNUSED(WORD address), BYTE value) {
 	m241.reg = value;
 	prg_fix_241();
 }
 BYTE extcl_save_mapper_241(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m241.reg);
-
 	return (EXIT_OK);
 }
 
 INLINE static void prg_fix_241(void) {
-	memmap_auto_32k(MMCPU(0x8000), m241.reg);
+	memmap_auto_32k(0, MMCPU(0x8000), m241.reg);
 }

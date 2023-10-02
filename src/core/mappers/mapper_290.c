@@ -43,7 +43,7 @@ void extcl_after_mapper_init_290(void) {
 	chr_fix_290();
 	mirroring_fix_290();
 }
-void extcl_cpu_wr_mem_290(WORD address, UNUSED(BYTE value)) {
+void extcl_cpu_wr_mem_290(UNUSED(BYTE nidx), WORD address, UNUSED(BYTE value)) {
 	m290.reg = address;
 	prg_fix_290();
 	chr_fix_290();
@@ -51,7 +51,6 @@ void extcl_cpu_wr_mem_290(WORD address, UNUSED(BYTE value)) {
 }
 BYTE extcl_save_mapper_290(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m290.reg);
-
 	return (EXIT_OK);
 }
 
@@ -61,19 +60,19 @@ INLINE static void prg_fix_290(void) {
 	if (m290.reg & 0x80) {
 		WORD bank = base | ((m290.reg & 0x40) >> 6);
 
-		memmap_auto_16k(MMCPU(0x8000), bank);
-		memmap_auto_16k(MMCPU(0xC000), bank);
+		memmap_auto_16k(0, MMCPU(0x8000), bank);
+		memmap_auto_16k(0, MMCPU(0xC000), bank);
 	} else {
-		memmap_auto_32k(MMCPU(0x8000), (base >> 1));
+		memmap_auto_32k(0, MMCPU(0x8000), (base >> 1));
 	}
 }
 INLINE static void chr_fix_290(void) {
-	memmap_auto_8k(MMPPU(0x0000), ((m290.reg & 0x0300) >> 5) | (m290.reg & 0x07));
+	memmap_auto_8k(0, MMPPU(0x0000), ((m290.reg & 0x0300) >> 5) | (m290.reg & 0x07));
 }
 INLINE static void mirroring_fix_290(void) {
 	if (m290.reg & 0x400) {
-		mirroring_H();
+		mirroring_H(0);
 	} else {
-		mirroring_V();
+		mirroring_V(0);
 	}
 }

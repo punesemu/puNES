@@ -42,7 +42,7 @@ void extcl_after_mapper_init_538(void) {
 	prg_fix_538();
 	wram_fix_538();
 }
-void extcl_cpu_wr_mem_538(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_538(UNUSED(BYTE nidx), WORD address, BYTE value) {
 	if ((address >= 0xC000) && (address <= 0xDFFF)) {
 		m538.reg = value;
 		prg_fix_538();
@@ -55,11 +55,11 @@ BYTE extcl_save_mapper_538(BYTE mode, BYTE slot, FILE *fp) {
 }
 
 INLINE static void prg_fix_538(void) {
-	memmap_auto_8k(MMCPU(0x8000), ((m538.reg & 0x01) && (~m538.reg & 0x08) ? 0x0A : m538.reg & 0xFE));
-	memmap_auto_8k(MMCPU(0xA000), 0x0D);
-	memmap_auto_8k(MMCPU(0xC000), 0x0E);
-	memmap_auto_8k(MMCPU(0xE000), 0x0F);
+	memmap_auto_8k(0, MMCPU(0x8000), ((m538.reg & 0x01) && (~m538.reg & 0x08) ? 0x0A : m538.reg & 0xFE));
+	memmap_auto_8k(0, MMCPU(0xA000), 0x0D);
+	memmap_auto_8k(0, MMCPU(0xC000), 0x0E);
+	memmap_auto_8k(0, MMCPU(0xE000), 0x0F);
 }
 INLINE static void wram_fix_538(void) {
-	memmap_prgrom_8k(MMCPU(0x6000), (m538.reg | 0x01));
+	memmap_prgrom_8k(0, MMCPU(0x6000), (m538.reg | 0x01));
 }

@@ -63,7 +63,7 @@ void extcl_after_mapper_init_FCG(void) {
 	FCG_chr_fix();
 	FCG_mirroring_fix();
 }
-void extcl_cpu_wr_mem_FCG(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_FCG(BYTE nidx, WORD address, BYTE value) {
 	if ((address >= 0x6000) && (address <= 0x7FFF)) {
 		switch (address & 0x0F) {
 			case 0x00:
@@ -90,7 +90,7 @@ void extcl_cpu_wr_mem_FCG(WORD address, BYTE value) {
 				if (fcg.irq.enabled && !fcg.irq.count) {
 					fcg.irq.delay = 1;
 				} else {
-					irq.high &= ~EXT_IRQ;
+					nes[nidx].c.irq.high &= ~EXT_IRQ;
 				}
 				return;
 			case 0x0B:
@@ -111,12 +111,11 @@ BYTE extcl_save_mapper_FCG(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, fcg.irq.enabled);
 	save_slot_ele(mode, slot, fcg.irq.count);
 	save_slot_ele(mode, slot, fcg.irq.delay);
-
 	return (EXIT_OK);
 }
-void extcl_cpu_every_cycle_FCG(void) {
+void extcl_cpu_every_cycle_FCG(BYTE nidx) {
 	if (fcg.irq.delay && !(--fcg.irq.delay)) {
-		irq.high |= EXT_IRQ;
+		nes[nidx].c.irq.high |= EXT_IRQ;
 	}
 	if (fcg.irq.enabled && !(--fcg.irq.count)) {
 		fcg.irq.delay = 1;
@@ -128,7 +127,7 @@ void prg_fix_FCG_base(void) {
 	FCG_prg_swap(0xC000, 0xFF);
 }
 void prg_swap_FCG_base(WORD address, WORD value) {
-	memmap_auto_16k(MMCPU(address), value);
+	memmap_auto_16k(0, MMCPU(address), value);
 }
 void chr_fix_FCG_base(void) {
 	FCG_chr_swap(0x0000, fcg.chr[0]);
@@ -141,21 +140,21 @@ void chr_fix_FCG_base(void) {
 	FCG_chr_swap(0x1C00, fcg.chr[7]);
 }
 void chr_swap_FCG_base(WORD address, WORD value) {
-	memmap_auto_1k(MMPPU(address), value);
+	memmap_auto_1k(0, MMPPU(address), value);
 }
 void mirroring_fix_FCG_base(void) {
 	switch (fcg.mirroring & 0x03) {
 		case 0:
-			mirroring_V();
+			mirroring_V(0);
 			break;
 		case 1:
-			mirroring_H();
+			mirroring_H(0);
 			break;
 		case 2:
-			mirroring_SCR0();
+			mirroring_SCR0(0);
 			break;
 		case 3:
-			mirroring_SCR1();
+			mirroring_SCR1(0);
 			break;
 	}
 }

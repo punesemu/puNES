@@ -20,8 +20,8 @@
 #include "mappers.h"
 #include "save_slot.h"
 
-INLINE static size_t wr_address_sst39sf040(WORD address);
-INLINE static size_t rd_address_sst39sf040(WORD address);
+INLINE static size_t wr_address_sst39sf040(BYTE nidx, WORD address);
+INLINE static size_t rd_address_sst39sf040(BYTE nidx, WORD address);
 
 struct _sst39sf040 {
 	BYTE sequence;
@@ -48,8 +48,8 @@ void sst39sf040_init(BYTE *data, size_t size, BYTE manufacter_id, BYTE model_id,
 	sst39sf040tmp.address2 = adr2;
 	sst39sf040tmp.sector_size = sector_size;
 }
-void sst39sf040_write(WORD address, BYTE value) {
-	size_t i = 0, chip_address = wr_address_sst39sf040(address);
+void sst39sf040_write(BYTE nidx, WORD address, BYTE value) {
+	size_t i = 0, chip_address = wr_address_sst39sf040(nidx, address);
 	WORD cmd = chip_address & 0x7FFF;
 
 	switch (sst39sf040.sequence) {
@@ -102,15 +102,15 @@ void sst39sf040_write(WORD address, BYTE value) {
 			break;
 	}
 }
-BYTE sst39sf040_read(WORD address) {
+BYTE sst39sf040_read(BYTE nidx, WORD address) {
 	if (sst39sf040.sequence == 0x90) {
 		return (address & 0x0001 ? sst39sf040tmp.model_id : sst39sf040tmp.manufacturer_id);
 	} else if (sst39sf040.time_out) {
-		return ((sst39sf040tmp.data[rd_address_sst39sf040(address)] ^ ((sst39sf040.time_out & 0x01) << 6)) & 0x77);
+		return ((sst39sf040tmp.data[rd_address_sst39sf040(nidx, address)] ^ ((sst39sf040.time_out & 0x01) << 6)) & 0x77);
 	}
-	return (sst39sf040tmp.data[rd_address_sst39sf040(address)]);
+	return (sst39sf040tmp.data[rd_address_sst39sf040(nidx, address)]);
 }
-void sst39sf040_tick(void) {
+void sst39sf040_tick(UNUSED(BYTE nidx)) {
 	if (sst39sf040.time_out && !--sst39sf040.time_out) {
 		sst39sf040.sequence = 0;
 	}
@@ -118,13 +118,12 @@ void sst39sf040_tick(void) {
 BYTE sst39sf040_save_mapper(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, sst39sf040.sequence);
 	save_slot_ele(mode, slot, sst39sf040.time_out);
-
 	return (EXIT_OK);
 }
 
-INLINE static size_t wr_address_sst39sf040(WORD address) {
-	return (prgrom_region_address(address));
+INLINE static size_t wr_address_sst39sf040(BYTE nidx, WORD address) {
+	return (prgrom_region_address(nidx, address));
 }
-INLINE static size_t rd_address_sst39sf040(WORD address) {
-	return (prgrom_region_address(address));
+INLINE static size_t rd_address_sst39sf040(BYTE nidx, WORD address) {
+	return (prgrom_region_address(nidx, address));
 }

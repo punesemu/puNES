@@ -38,10 +38,10 @@ typedef struct _lz93d50 {
 extern _lz93d50 lz93d50;
 
 void extcl_after_mapper_init_LZ93D50(void);
-void extcl_cpu_wr_mem_LZ93D50(WORD address, BYTE value);
-BYTE extcl_cpu_rd_mem_LZ93D50(WORD address, BYTE openbus);
+void extcl_cpu_wr_mem_LZ93D50(BYTE nidx, WORD address, BYTE value);
+BYTE extcl_cpu_rd_mem_LZ93D50(BYTE nidx, WORD address, BYTE openbus);
 BYTE extcl_save_mapper_LZ93D50(BYTE mode, BYTE slot, FILE *fp);
-void extcl_cpu_every_cycle_LZ93D50(void);
+void extcl_cpu_every_cycle_LZ93D50(BYTE nidx);
 
 void init_LZ93D50(BYTE include_wram, BYTE reset);
 void init_eeprom_LZ93D50(heeprom_i2c *eeprom);

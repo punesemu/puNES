@@ -60,9 +60,9 @@ void extcl_mapper_quit_266(void) {
 		m266tmp.filter = NULL;
 	}
 }
-void extcl_cpu_wr_mem_266(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_266(BYTE nidx, WORD address, BYTE value) {
 	address = (address & 0x9FFF) | ((address & 0x2000) << 1) | ((address & 0x4000) >> 1);
-	extcl_cpu_wr_mem_VRC2and4(address, value);
+	extcl_cpu_wr_mem_VRC2and4(nidx, address, value);
 }
 BYTE extcl_save_mapper_266(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m266.reg);
@@ -70,9 +70,9 @@ BYTE extcl_save_mapper_266(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m266.snd.out);
 	return (extcl_save_mapper_VRC2and4(mode, slot, fp));
 }
-void extcl_cpu_every_cycle_266(void) {
+void extcl_cpu_every_cycle_266(BYTE nidx) {
 	m266.snd.out = (SWORD)((int)butterworth_output(m266tmp.filter, ((m266.pcm - 7) * 4096 + 1e-15)) >> 7);
-	extcl_cpu_every_cycle_VRC2and4();
+	extcl_cpu_every_cycle_VRC2and4(nidx);
 }
 
 void prg_swap_vrc2and4_266(WORD address, WORD value) {

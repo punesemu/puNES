@@ -41,7 +41,7 @@ void extcl_after_mapper_init_522(void) {
 	prg_fix_522();
 	wram_fix_522();
 }
-void extcl_cpu_wr_mem_522(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_522(UNUSED(BYTE nidx), WORD address, BYTE value) {
 	switch (address & 0xF001) {
 		case 0x8000:
 		case 0x9000:
@@ -72,11 +72,11 @@ BYTE extcl_save_mapper_522(BYTE mode, BYTE slot, FILE *fp) {
 }
 
 INLINE static void prg_fix_522(void) {
-	memmap_auto_8k(MMCPU(0x8000), m522.reg[6]);
-	memmap_auto_8k(MMCPU(0xA000), m522.reg[7]);
-	memmap_wram_8k(MMCPU(0xC000), 0);
-	memmap_auto_8k(MMCPU(0xE000), 0xFF);
+	memmap_auto_8k(0, MMCPU(0x8000), m522.reg[6]);
+	memmap_auto_8k(0, MMCPU(0xA000), m522.reg[7]);
+	memmap_wram_8k(0, MMCPU(0xC000), 0);
+	memmap_auto_8k(0, MMCPU(0xE000), 0xFF);
 }
 INLINE static void wram_fix_522(void) {
-	memmap_prgrom_8k(MMCPU(0x6000), 0xFE);
+	memmap_prgrom_8k(0, MMCPU(0x6000), 0xFE);
 }

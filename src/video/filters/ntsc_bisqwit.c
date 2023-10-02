@@ -26,6 +26,7 @@
 #include "thread_def.h"
 #include "ppu.h"
 #include "clock.h"
+#include "info.h"
 
 #define NTSC_BISQWIT_NUM_SLICE 4
 
@@ -108,17 +109,17 @@ void ntsc_bisqwit_init(void) {
 		_signal_high[i] = q;
 	}
 }
-void ntsc_bisqwit_surface(void) {
+void ntsc_bisqwit_surface(BYTE nidx) {
 	_ntsc_bisqwit_thread param[NTSC_BISQWIT_NUM_SLICE];
 	thread_t thread[NTSC_BISQWIT_NUM_SLICE];
 	int height = (SCR_ROWS / NTSC_BISQWIT_NUM_SLICE);
-	unsigned int i, max = machine.type != NTSC ? 2 : 3;
+	unsigned int i = 0, max = machine.type != NTSC ? 2 : 3;
 
 	burst_count = nes_ntsc_bisqwit.merge_fields ? 1 : (burst_count + 1) % max;
 
 	for (i = 0; i < NTSC_BISQWIT_NUM_SLICE; i++) {
 		param[i].factor = gfx.filter.factor;
-		param[i].src = ppu_screen.rd->data;
+		param[i].src = nes[nidx].p.ppu_screen.rd->data;
 		param[i].dst = (uint32_t *)gfx.filter.data.pix;
 		param[i].palette = (uint32_t *)gfx.filter.data.palette;
 		param[i].start_row = height * i;
@@ -126,7 +127,6 @@ void ntsc_bisqwit_surface(void) {
 		param[i].start_phase = (!burst_count ? 8 : 0) + ((param[i].start_row * SCR_COLUMNS) * 8);
 		thread_create(thread[i], ntsc_bisqwit_mt, &param[i]);
 	}
-
 	for (i = 0; i < NTSC_BISQWIT_NUM_SLICE; i++) {
 		thread_join(thread[i]);
 		thread_free(thread[i]);

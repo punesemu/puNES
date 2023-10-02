@@ -44,7 +44,7 @@ void map_init_513(void) {
 	mapper.internal_struct_size[1] = sizeof(mmc3);
 
 	if (info.reset >= HARD) {
-		memset(&irqA12, 0x00, sizeof(irqA12));
+		memset(&nes[0].irqA12, 0x00, sizeof(nes[0].irqA12));
 	}
 
 	memset(&m513, 0x00, sizeof(m513));
@@ -53,10 +53,10 @@ void map_init_513(void) {
 	MMC3_prg_fix = prg_fix_mmc3_513;
 	MMC3_chr_swap = chr_swap_mmc3_513;
 
-	irqA12.present = TRUE;
-	irqA12_delay = 1;
+	nes[0].irqA12.present = TRUE;
+	nes[0].irqA12.delay = 1;
 }
-void extcl_cpu_wr_mem_513(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_513(BYTE nidx, WORD address, BYTE value) {
 	if ((address & 0xE001) == 0x8001) {
 		switch (mmc3.bank_to_update & 0x07) {
 			case 0:
@@ -66,7 +66,7 @@ void extcl_cpu_wr_mem_513(WORD address, BYTE value) {
 			case 4:
 			case 5:
 				m513.reg = value;
-				extcl_cpu_wr_mem_MMC3(address, value);
+				extcl_cpu_wr_mem_MMC3(nidx, address, value);
 				break;
 			default:
 				mmc3.reg[mmc3.bank_to_update & 0x07] = value;
@@ -75,7 +75,7 @@ void extcl_cpu_wr_mem_513(WORD address, BYTE value) {
 		MMC3_prg_fix();
 		return;
 	}
-	extcl_cpu_wr_mem_MMC3(address, value);
+	extcl_cpu_wr_mem_MMC3(nidx, address, value);
 }
 BYTE extcl_save_mapper_513(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m513.reg);

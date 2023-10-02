@@ -43,20 +43,19 @@ void extcl_after_mapper_init_107(void) {
 	prg_fix_107();
 	chr_fix_107();
 }
-void extcl_cpu_wr_mem_107(WORD address, UNUSED(BYTE value)) {
+void extcl_cpu_wr_mem_107(UNUSED(BYTE nidx), WORD address, UNUSED(BYTE value)) {
 	m107.reg = address;
 	prg_fix_107();
 	chr_fix_107();
 }
 BYTE extcl_save_mapper_107(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m107.reg);
-
 	return (EXIT_OK);
 }
 
 INLINE static void prg_fix_107(void) {
-	memmap_auto_32k(MMCPU(0x8000), (m107.reg >> 1));
+	memmap_auto_32k(0, MMCPU(0x8000), (m107.reg >> 1));
 }
 INLINE static void chr_fix_107(void) {
-	memmap_auto_8k(MMPPU(0x0000), m107.reg);
+	memmap_auto_8k(0, MMPPU(0x0000), m107.reg);
 }

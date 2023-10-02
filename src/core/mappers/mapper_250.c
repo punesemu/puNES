@@ -35,16 +35,16 @@ void map_init_250(void) {
 	mapper.internal_struct_size[0] = sizeof(mmc3);
 
 	if (info.reset >= HARD) {
-		memset(&irqA12, 0x00, sizeof(irqA12));
+		memset(&nes[0].irqA12, 0x00, sizeof(nes[0].irqA12));
 	}
 
 	init_MMC3(info.reset);
 
-	irqA12.present = TRUE;
-	irqA12_delay = 1;
+	nes[0].irqA12.present = TRUE;
+	nes[0].irqA12.delay = 1;
 }
-void extcl_cpu_wr_mem_250(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_250(BYTE nidx, WORD address, BYTE value) {
 	value = address & 0xFF;
 	address = (address & 0xE000) | ((address & 0x400) >> 10);
-	extcl_cpu_wr_mem_MMC3(address, value);
+	extcl_cpu_wr_mem_MMC3(nidx, address, value);
 }

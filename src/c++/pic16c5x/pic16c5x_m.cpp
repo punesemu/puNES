@@ -980,6 +980,5 @@ BYTE PIC16C5X::save_mapper(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m_count_pending);
 	save_slot_ele(mode, slot, m_inst_cycles);
 	save_slot_ele(mode, slot, m_clock2cycle);
-
 	return (EXIT_OK);
 }

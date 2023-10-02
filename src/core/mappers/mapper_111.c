@@ -39,7 +39,7 @@ struct _gtromtmp {
 } gtromtmp;
 
 void map_init_111(void) {
-	if (!vram_size()) {
+	if (!vram_size(0)) {
 		EXTCL_AFTER_MAPPER_INIT(MMC1);
 		EXTCL_CPU_WR_MEM(111_MMC1);
 		EXTCL_SAVE_MAPPER(111_MMC1);
@@ -77,7 +77,7 @@ void map_init_111(void) {
 		}
 
 		if (info.format != NES_2_0) {
-			vram_set_ram_size(S32K);
+			vram_set_ram_size(0, S32K);
 		}
 
 		info.mapper.force_battery_io = TRUE;
@@ -86,7 +86,7 @@ void map_init_111(void) {
 	}
 }
 
-void extcl_cpu_wr_mem_111_MMC1(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_111_MMC1(UNUSED(BYTE nidx), WORD address, BYTE value) {
 	mmc1.reg[(address >> 13) & 0x03] = value;
 	MMC1_prg_fix();
 	MMC1_chr_fix();
@@ -109,7 +109,7 @@ void extcl_mapper_quit_111_GTROM(void) {
 		gtromtmp.sst39sf040 = NULL;
 	}
 }
-void extcl_cpu_wr_mem_111_GTROM(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_111_GTROM(BYTE nidx, WORD address, BYTE value) {
 	switch (address & 0xF000) {
 		case 0x5000:
 		case 0x7000:
@@ -126,14 +126,14 @@ void extcl_cpu_wr_mem_111_GTROM(WORD address, BYTE value) {
 		case 0xD000:
 		case 0xE000:
 		case 0xF000:
-			sst39sf040_write(address, value);
+			sst39sf040_write(nidx, address, value);
 			break;
 	}
 }
-BYTE extcl_cpu_rd_mem_111_GTROM(WORD address, BYTE openbus) {
+BYTE extcl_cpu_rd_mem_111_GTROM(BYTE nidx, WORD address, BYTE openbus) {
 	switch (address & 0xF000) {
 		default:
-			return (wram_rd(address));
+			return (wram_rd(nidx, address));
 		case 0x5000:
 		case 0x7000:
 			m111.reg = openbus;
@@ -149,15 +149,15 @@ BYTE extcl_cpu_rd_mem_111_GTROM(WORD address, BYTE openbus) {
 		case 0xD000:
 		case 0xE000:
 		case 0xF000:
-			return (sst39sf040_read(address));
+			return (sst39sf040_read(nidx, address));
 	}
 }
 BYTE extcl_save_mapper_111_GTROM(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m111.reg);
 	return (sst39sf040_save_mapper(mode, slot, fp));
 }
-void extcl_cpu_every_cycle_111_GTROM(void) {
-	sst39sf040_tick();
+void extcl_cpu_every_cycle_111_GTROM(BYTE nidx) {
+	sst39sf040_tick(nidx);
 }
 void extcl_battery_io_111_GTROM(BYTE mode, FILE *fp) {
 	if (mode == WR_BAT) {
@@ -179,11 +179,11 @@ void chr_swap_mmc1_111(WORD address, WORD value) {
 }
 
 INLINE static void prg_fix_gtrom_111(void) {
-	memmap_auto_32k(MMCPU(0x8000), (m111.reg & 0x0F));
+	memmap_auto_32k(0, MMCPU(0x8000), (m111.reg & 0x0F));
 }
 INLINE static void chr_fix_gtrom_111(void) {
-	memmap_vram_8k(MMPPU(0x0000), ((m111.reg & 0x10) >> 4));
+	memmap_vram_8k(0, MMPPU(0x0000), ((m111.reg & 0x10) >> 4));
 }
 INLINE static void mirroring_fix_gtrom_111(void) {
-	memmap_nmt_vram_8k(MMPPU(0x2000), (0x02 | ((m111.reg & 0x20) >> 5)));
+	memmap_nmt_vram_8k(0, MMPPU(0x2000), (0x02 | ((m111.reg & 0x20) >> 5)));
 }

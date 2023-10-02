@@ -40,7 +40,7 @@ void extcl_after_mapper_init_396(void) {
 	prg_fix_396();
 	mirroring_fix_396();
 }
-void extcl_cpu_wr_mem_396(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_396(UNUSED(BYTE nidx), WORD address, BYTE value) {
 	if ((address >= 0xA000) && (address <= 0xBFFF)) {
 		m396.reg[1] = value;
 	} else {
@@ -51,20 +51,19 @@ void extcl_cpu_wr_mem_396(WORD address, BYTE value) {
 }
 BYTE extcl_save_mapper_396(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m396.reg);
-
 	return (EXIT_OK);
 }
 
 INLINE static void prg_fix_396(void) {
 	WORD base = (m396.reg[1] & 0x0F) << 3;
 
-	memmap_auto_16k(MMCPU(0x8000), (base | (m396.reg[0] & 0x07)));
-	memmap_auto_16k(MMCPU(0xC000), (base | 0x07));
+	memmap_auto_16k(0, MMCPU(0x8000), (base | (m396.reg[0] & 0x07)));
+	memmap_auto_16k(0, MMCPU(0xC000), (base | 0x07));
 }
 INLINE static void mirroring_fix_396(void) {
 	if (m396.reg[1] & 0x60) {
-		mirroring_H();
+		mirroring_H(0);
 	} else {
-		mirroring_V();
+		mirroring_V(0);
 	}
 }

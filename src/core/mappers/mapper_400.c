@@ -47,7 +47,7 @@ void extcl_after_mapper_init_400(void) {
 	chr_fix_400();
 	mirroring_fix_400();
 }
-void extcl_cpu_wr_mem_400(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_400(BYTE nidx, WORD address, BYTE value) {
 	switch (address & 0xF000) {
 		case 0x7000:
 			if (address & 0x0800) {
@@ -65,7 +65,7 @@ void extcl_cpu_wr_mem_400(WORD address, BYTE value) {
 		case 0xE000:
 		case 0xF000:
 			// bus conflict
-			m400.reg[1] = value & prgrom_rd(address);
+			m400.reg[1] = value & prgrom_rd(nidx, address);
 			break;
 		default:
 			return;
@@ -77,31 +77,30 @@ void extcl_cpu_wr_mem_400(WORD address, BYTE value) {
 BYTE extcl_save_mapper_400(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m400.reg);
 	save_slot_ele(mode, slot, m400.led);
-
 	return (EXIT_OK);
 }
 
 INLINE static void prg_fix_400(void) {
-	memmap_auto_16k(MMCPU(0x8000), ((m400.reg[0] & 0xF8) | (m400.reg[1] & 0x07)));
-	memmap_auto_16k(MMCPU(0xC000), ((m400.reg[0] & 0xF8) | 0x07));
+	memmap_auto_16k(0, MMCPU(0x8000), ((m400.reg[0] & 0xF8) | (m400.reg[1] & 0x07)));
+	memmap_auto_16k(0, MMCPU(0xC000), ((m400.reg[0] & 0xF8) | 0x07));
 }
 INLINE static void chr_fix_400(void) {
-	memmap_auto_8k(MMPPU(0x0000), (m400.reg[1] >> 5));
+	memmap_auto_8k(0, MMPPU(0x0000), (m400.reg[1] >> 5));
 }
 INLINE static void mirroring_fix_400(void) {
 	if (m400.reg[0] == 0x80) {
 		if (ines.flags[FL6] & 0x08) {
-			mirroring_FSCR();
+			mirroring_FSCR(0);
 		} else {
 			if (ines.flags[FL6] & 0x01) {
-				mirroring_V();
+				mirroring_V(0);
 			} else {
-				mirroring_H();
+				mirroring_H(0);
 			}
 		}
 	} else if (m400.reg[0] & 0x20) {
-		mirroring_H();
+		mirroring_H(0);
 	} else {
-		mirroring_V();
+		mirroring_V(0);
 	}
 }

@@ -43,7 +43,7 @@ void map_init_189(void) {
 	mapper.internal_struct_size[1] = sizeof(mmc3);
 
 	if (info.reset >= HARD) {
-		memset(&irqA12, 0x00, sizeof(irqA12));
+		memset(&nes[0].irqA12, 0x00, sizeof(nes[0].irqA12));
 		memset(&m189, 0x00, sizeof(m189));
 	}
 
@@ -52,10 +52,10 @@ void map_init_189(void) {
 
 	info.mapper.extend_wr = TRUE;
 
-	irqA12.present = TRUE;
-	irqA12_delay = 1;
+	nes[0].irqA12.present = TRUE;
+	nes[0].irqA12.delay = 1;
 }
-void extcl_cpu_wr_mem_189(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_189(BYTE nidx, WORD address, BYTE value) {
 	switch (address & 0xF000) {
 		case 0x4000:
 		case 0x5000:
@@ -67,14 +67,14 @@ void extcl_cpu_wr_mem_189(WORD address, BYTE value) {
 			return;
 		case 0x6000:
 		case 0x7000:
-			if (memmap_adr_is_writable(MMCPU(address))) {
+			if (memmap_adr_is_writable(nidx, MMCPU(address))) {
 				m189.reg = value;
 				MMC3_prg_fix();
 				MMC3_chr_fix();
 			}
 			return;
 		default:
-			extcl_cpu_wr_mem_MMC3(address, value);
+			extcl_cpu_wr_mem_MMC3(nidx, address, value);
 			return;
 	}
 }

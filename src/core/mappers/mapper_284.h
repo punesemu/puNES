@@ -52,10 +52,10 @@ extern _m284 m284;
 
 void map_init_284(void);
 void extcl_after_mapper_init_284(void);
-void extcl_cpu_wr_mem_284(WORD address, BYTE value);
-BYTE extcl_cpu_rd_mem_284(WORD address, BYTE openbus);
+void extcl_cpu_wr_mem_284(BYTE nidx, WORD address, BYTE value);
+BYTE extcl_cpu_rd_mem_284(BYTE nidx, WORD address, BYTE openbus);
 BYTE extcl_save_mapper_284(BYTE mode, BYTE slot, FILE *fp);
-BYTE extcl_rd_nmt_284(WORD address);
-void extcl_cpu_every_cycle_284(void);
+BYTE extcl_rd_nmt_284(BYTE nidx, WORD address);
+void extcl_cpu_every_cycle_284(BYTE nidx);
 
 #endif /* MAPPER_284_H_ */

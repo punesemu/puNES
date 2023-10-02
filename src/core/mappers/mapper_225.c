@@ -48,7 +48,7 @@ void extcl_after_mapper_init_225(void) {
 	chr_fix_225();
 	mirroring_fix_225();
 }
-void extcl_cpu_wr_mem_225(WORD address, UNUSED(BYTE value)) {
+void extcl_cpu_wr_mem_225(UNUSED(BYTE nidx), WORD address, UNUSED(BYTE value)) {
 	if ((address >= 0x5000) && (address <= 0x5FFF) && (address & 0x0800)) {
 		m225.scratch[address & 0x03] = value;
 	} else if (address >= 0x8000) {
@@ -58,16 +58,15 @@ void extcl_cpu_wr_mem_225(WORD address, UNUSED(BYTE value)) {
 		mirroring_fix_225();
 	}
 }
-BYTE extcl_cpu_rd_mem_225(WORD address, BYTE openbus) {
+BYTE extcl_cpu_rd_mem_225(BYTE nidx, WORD address, BYTE openbus) {
 	if ((address >= 0x5000) && (address <= 0x5FFF)) {
 		return (address & 0x800 ? m225.scratch[address & 0x03] : openbus);
 	}
-	return (wram_rd(address));
+	return (wram_rd(nidx, address));
 }
 BYTE extcl_save_mapper_225(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m225.reg);
 	save_slot_ele(mode, slot, m225.scratch);
-
 	return (EXIT_OK);
 }
 
@@ -75,19 +74,19 @@ INLINE static void prg_fix_225(void) {
 	WORD bank = ((m225.reg & 0x4000) >> 8) | ((m225.reg & 0xFC0) >> 6);
 
 	if (m225.reg & 0x1000) {
-		memmap_auto_16k(MMCPU(0x8000), bank);
-		memmap_auto_16k(MMCPU(0xC000), bank);
+		memmap_auto_16k(0, MMCPU(0x8000), bank);
+		memmap_auto_16k(0, MMCPU(0xC000), bank);
 	} else {
-		memmap_auto_32k(MMCPU(0x8000), (bank >> 1));
+		memmap_auto_32k(0, MMCPU(0x8000), (bank >> 1));
 	}
 }
 INLINE static void chr_fix_225(void) {
-	memmap_auto_8k(MMPPU(0x0000), (((m225.reg & 0x4000) >> 8) | (m225.reg & 0x3F)));
+	memmap_auto_8k(0, MMPPU(0x0000), (((m225.reg & 0x4000) >> 8) | (m225.reg & 0x3F)));
 }
 INLINE static void mirroring_fix_225(void) {
 	if (m225.reg & 0x2000) {
-		mirroring_H();
+		mirroring_H(0);
 	} else {
-		mirroring_V();
+		mirroring_V(0);
 	}
 }

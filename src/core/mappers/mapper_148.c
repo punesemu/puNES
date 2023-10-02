@@ -42,22 +42,21 @@ void extcl_after_mapper_init_148(void) {
 	prg_fix_148();
 	chr_fix_148();
 }
-void extcl_cpu_wr_mem_148(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_148(BYTE nidx, WORD address, BYTE value) {
 	// bus conflict
-	m148.reg = value & prgrom_rd(address);
+	m148.reg = value & prgrom_rd(nidx, address);
 	chr_fix_148();
 }
 BYTE extcl_save_mapper_148(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m148.reg);
-
 	return (EXIT_OK);
 }
 
 INLINE static void prg_fix_148(void) {
-	memmap_auto_32k(MMCPU(0x8000), (m148.reg >> 3));
+	memmap_auto_32k(0, MMCPU(0x8000), (m148.reg >> 3));
 }
 INLINE static void chr_fix_148(void) {
-	memmap_auto_8k(MMPPU(0x0000), (m148.reg & 0x07));
+	memmap_auto_8k(0, MMPPU(0x0000), (m148.reg & 0x07));
 }
 
 

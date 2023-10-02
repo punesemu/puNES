@@ -38,7 +38,7 @@ void map_init_246(void) {
 	mapper.internal_struct_size[0] = sizeof(m246);
 
 	if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
-		memmap_wram_region_init(S2K);
+		memmap_wram_region_init(0, S2K);
 		if (wram_nvram_size() != S2K) {
 			if (info.mapper.battery) {
 				wram_set_ram_size(0);
@@ -66,7 +66,7 @@ void extcl_after_mapper_init_246(void) {
 	chr_fix_246();
 	wram_fix_246();
 }
-void extcl_cpu_wr_mem_246(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_246(UNUSED(BYTE nidx), WORD address, BYTE value) {
 	if ((address >= 0x6000) && (address <= 0x67FF)) {
 		if (address & 0x04) {
 			m246.chr[address & 0x03] = value;
@@ -78,37 +78,36 @@ void extcl_cpu_wr_mem_246(WORD address, BYTE value) {
 		return;
 	}
 }
-BYTE extcl_cpu_rd_mem_246(WORD address, UNUSED(BYTE openbus)) {
+BYTE extcl_cpu_rd_mem_246(BYTE nidx, WORD address, UNUSED(BYTE openbus)) {
 	if (address >= 0x8000) {
 		if ((address > 0xFF00) && (address & 0xFFE4) == 0xFFE4) {
 			size_t adr = (((m246.prg[3] | 0x10) << 13) | 0x1000 | (address & 0x0FFF)) & 0x7FFFF;
 
 			return (prgrom_byte(adr));
 		}
-		return (prgrom_rd(address));
+		return (prgrom_rd(nidx, address));
 	}
-	return (wram_rd(address));
+	return (wram_rd(nidx, address));
 }
 BYTE extcl_save_mapper_246(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m246.prg);
 	save_slot_ele(mode, slot, m246.chr);
-
 	return (EXIT_OK);
 }
 
 INLINE static void prg_fix_246(void) {
-	memmap_auto_8k(MMCPU(0x8000), m246.prg[0]);
-	memmap_auto_8k(MMCPU(0xA000), m246.prg[1]);
-	memmap_auto_8k(MMCPU(0xC000), m246.prg[2]);
-	memmap_auto_8k(MMCPU(0xE000), m246.prg[3]);
+	memmap_auto_8k(0, MMCPU(0x8000), m246.prg[0]);
+	memmap_auto_8k(0, MMCPU(0xA000), m246.prg[1]);
+	memmap_auto_8k(0, MMCPU(0xC000), m246.prg[2]);
+	memmap_auto_8k(0, MMCPU(0xE000), m246.prg[3]);
 }
 INLINE static void chr_fix_246(void) {
-	memmap_auto_2k(MMPPU(0x0000), m246.chr[0]);
-	memmap_auto_2k(MMPPU(0x0800), m246.chr[1]);
-	memmap_auto_2k(MMPPU(0x1000), m246.chr[2]);
-	memmap_auto_2k(MMPPU(0x1800), m246.chr[3]);
+	memmap_auto_2k(0, MMPPU(0x0000), m246.chr[0]);
+	memmap_auto_2k(0, MMPPU(0x0800), m246.chr[1]);
+	memmap_auto_2k(0, MMPPU(0x1000), m246.chr[2]);
+	memmap_auto_2k(0, MMPPU(0x1800), m246.chr[3]);
 }
 INLINE static void wram_fix_246(void) {
-	memmap_disable_8k(MMCPU(0x6000));
-	memmap_auto_wp_2k(MMCPU(0x6800), 0, TRUE, TRUE);
+	memmap_disable_8k(0, MMCPU(0x6000));
+	memmap_auto_wp_2k(0, MMCPU(0x6800), 0, TRUE, TRUE);
 }

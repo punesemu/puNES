@@ -42,7 +42,7 @@ void extcl_after_mapper_init_244(void) {
 	prg_fix_244();
 	chr_fix_244();
 }
-void extcl_cpu_wr_mem_244(UNUSED(WORD address), BYTE value) {
+void extcl_cpu_wr_mem_244(UNUSED(BYTE nidx), UNUSED(WORD address), BYTE value) {
 	if (value & 0x08) {
 		static const BYTE chr_bank[8][8] ={
 			{ 0, 1, 2, 3, 4, 5, 6, 7, },
@@ -73,13 +73,12 @@ void extcl_cpu_wr_mem_244(UNUSED(WORD address), BYTE value) {
 }
 BYTE extcl_save_mapper_244(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m244.reg);
-
 	return (EXIT_OK);
 }
 
 INLINE static void prg_fix_244(void) {
-	memmap_auto_32k(MMCPU(0x8000), m244.reg[0]);
+	memmap_auto_32k(0, MMCPU(0x8000), m244.reg[0]);
 }
 INLINE static void chr_fix_244(void) {
-	memmap_auto_8k(MMPPU(0x0000), m244.reg[1]);
+	memmap_auto_8k(0, MMPPU(0x0000), m244.reg[1]);
 }

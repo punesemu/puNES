@@ -324,7 +324,7 @@ void mainWindow::retranslateUi(mainWindow *mainWindow) {
 	Ui::mainWindow::retranslateUi(mainWindow);
 	qaction_shcut.hold_fast_forward->setText(tr("Fast Forward (hold button)"));
 	shortcuts();
-	if (ppu_screen.rd) {
+	if (nes[0].p.ppu_screen.rd) {
 		save_slot_count_load();
 	}
 	update_window();
@@ -2526,6 +2526,7 @@ void timerEgds::_etc(enum with_emu_pause type) {
 }
 
 void timerEgds::s_draw_screen(void) {
+	BYTE nidx = emu_active_nidx();
 	bool ret = false;
 
 	if (info.no_rom) {
@@ -2534,7 +2535,7 @@ void timerEgds::s_draw_screen(void) {
 
 	if (info.turn_off) {
 		ret = true;
-		tv_noise_effect();
+		tv_noise_effect(nidx);
 	} else if (info.pause) {
 		ret = true;
 	} else if (rwnd.active) {
@@ -2560,7 +2561,7 @@ void timerEgds::s_draw_screen(void) {
 			recording_audio_silenced_frame();
 		}
 #endif
-		gfx_draw_screen();
+		gfx_draw_screen(nidx);
 	}
 }
 

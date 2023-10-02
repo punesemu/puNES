@@ -44,7 +44,7 @@ void map_init_404(void) {
 
 	info.mapper.extend_wr = TRUE;
 }
-void extcl_cpu_wr_mem_404(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_404(BYTE nidx, WORD address, BYTE value) {
 	if ((address >= 0x6000) && (address <= 0x7FFF)) {
 		if (!(m404.reg & 0x80)) {
 			m404.reg = value;
@@ -54,7 +54,7 @@ void extcl_cpu_wr_mem_404(WORD address, BYTE value) {
 		return;
 	}
 	if (address >= 0x8000) {
-		extcl_cpu_wr_mem_MMC1(address, value);
+		extcl_cpu_wr_mem_MMC1(nidx, address, value);
 	}
 }
 BYTE extcl_save_mapper_404(BYTE mode, BYTE slot, FILE *fp) {

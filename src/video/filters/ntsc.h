@@ -47,7 +47,7 @@ EXTERNC void ntsc_filter_parameters_changed(void);
 EXTERNC void ntsc_filter_parameters_default(void);
 EXTERNC void ntsc_filter_parameter_default(int index);
 EXTERNC void ntsc_filter_parameter_mv_default(void);
-EXTERNC void ntsc_surface(void);
+EXTERNC void ntsc_surface(BYTE nidx);
 
 #undef EXTERNC
 

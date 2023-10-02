@@ -45,21 +45,20 @@ void extcl_after_mapper_init_227(void) {
 	chr_fix_227();
 	mirroring_fix_227();
 }
-void extcl_cpu_wr_mem_227(WORD address, UNUSED(BYTE value)) {
+void extcl_cpu_wr_mem_227(UNUSED(BYTE nidx), WORD address, UNUSED(BYTE value)) {
 	m227.reg = address;
 	prg_fix_227();
 	chr_fix_227();
 	mirroring_fix_227();
 }
-BYTE extcl_cpu_rd_mem_227(WORD address, UNUSED(BYTE openbus)) {
+BYTE extcl_cpu_rd_mem_227(BYTE nidx, WORD address, UNUSED(BYTE openbus)) {
 	if (address >= 0x8000) {
-		return (m227.reg & 0x400 ? prgrom_rd(address | dipswitch.value) : prgrom_rd(address));
+		return (m227.reg & 0x400 ? prgrom_rd(nidx, address | dipswitch.value) : prgrom_rd(nidx, address));
 	}
-	return (wram_rd(address));
+	return (wram_rd(nidx, address));
 }
 BYTE extcl_save_mapper_227(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m227.reg);
-
 	return (EXIT_OK);
 }
 
@@ -84,20 +83,20 @@ INLINE static void prg_fix_227(void) {
 	//  ?       1       0     Switchable 16 KiB inner bank PPp at CPU $8000-$BFFF, mirrored at CPU $C000-$FFFF (NROM-128)
 	//  ?       1       1     Switchable 32 KiB inner bank PP at CPU $8000-$FFFF (NROM-256)
 	bank = outer | (bank & ~bit0);
-	memmap_auto_16k(MMCPU(0x8000), bank);
+	memmap_auto_16k(0, MMCPU(0x8000), bank);
 
 	bank = bit7 ? bank | bit0 : outer | (7 * bit9);
-	memmap_auto_16k(MMCPU(0xC000), bank);
+	memmap_auto_16k(0, MMCPU(0xC000), bank);
 }
 INLINE static void chr_fix_227(void) {
 	BYTE enabled = (info.mapper.battery || !(m227.reg & 0x0080));
 
-	memmap_auto_wp_8k(MMPPU(0x0000), 0, TRUE, enabled);
+	memmap_auto_wp_8k(0, MMPPU(0x0000), 0, TRUE, enabled);
 }
 INLINE static void mirroring_fix_227(void) {
 	if (m227.reg & 0x0002) {
-		mirroring_H();
+		mirroring_H(0);
 	} else  {
-		mirroring_V();
+		mirroring_V(0);
 	}
 }

@@ -44,7 +44,7 @@ void map_init_219(void) {
 	mapper.internal_struct_size[1] = sizeof(mmc3);
 
 	if (info.reset >= HARD) {
-		memset(&irqA12, 0x00, sizeof(irqA12));
+		memset(&nes[0].irqA12, 0x00, sizeof(nes[0].irqA12));
 	}
 
 	memset(&m219, 0x00, sizeof(m219));
@@ -55,10 +55,10 @@ void map_init_219(void) {
 
 	info.mapper.extend_wr = TRUE;
 
-	irqA12.present = TRUE;
-	irqA12_delay = 1;
+	nes[0].irqA12.present = TRUE;
+	nes[0].irqA12.delay = 1;
 }
-void extcl_cpu_wr_mem_219(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_219(BYTE nidx, WORD address, BYTE value) {
 	if ((address >= 0x5000) && (address <= 0x5FFF)) {
 		m219.reg[0] = address & 0x0001
 			? (m219.reg[0] & 0xFD) | ((value & 0x20) >> 4)
@@ -70,14 +70,14 @@ void extcl_cpu_wr_mem_219(WORD address, BYTE value) {
 	if (address >= 0x8000) {
 		switch (address & 0xE001) {
 			case 0x8000:
-				extcl_cpu_wr_mem_MMC3(address, value);
+				extcl_cpu_wr_mem_MMC3(nidx, address, value);
 				if (address & 0x0002) {
 					m219.reg[1] = value & 0x20;
 				}
 				return;
 			case 0x8001:
 				if (!m219.reg[1]) {
-					extcl_cpu_wr_mem_MMC3(address, value);
+					extcl_cpu_wr_mem_MMC3(nidx, address, value);
 					return;
 				}
 				if ((mmc3.bank_to_update >= 0x25) && (mmc3.bank_to_update <= 0x26)) {
@@ -98,7 +98,7 @@ void extcl_cpu_wr_mem_219(WORD address, BYTE value) {
 				MMC3_chr_fix();
 				return;
 			default:
-				extcl_cpu_wr_mem_MMC3(address, value);
+				extcl_cpu_wr_mem_MMC3(nidx, address, value);
 				return;
 		}
 	}

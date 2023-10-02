@@ -67,7 +67,7 @@ void map_init_116(void) {
 	mapper.internal_struct[1] = (BYTE *)&mmc1;
 	mapper.internal_struct_size[1] = sizeof(mmc1);
 
-	memset(&irqA12, 0x00, sizeof(irqA12));
+	memset(&nes[0].irqA12, 0x00, sizeof(nes[0].irqA12));
 	memset(&m116, 0x00, sizeof(m116));
 
 	init_MMC3(info.reset);
@@ -104,14 +104,14 @@ void map_init_116(void) {
 
 	info.mapper.extend_wr = TRUE;
 
-	irqA12.present = TRUE;
-	irqA12_delay = 1;
+	nes[0].irqA12.present = TRUE;
+	nes[0].irqA12.delay = 1;
 }
 void extcl_after_mapper_init_116(void) {
 	switch_mode();
 	fix_all();
 }
-void extcl_cpu_wr_mem_116(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_116(BYTE nidx, WORD address, BYTE value) {
 	if ((address >= 0x4000) && (address <= 0x5FFF)) {
 		if (address & 0x0100) {
 			m116.reg = value;
@@ -120,18 +120,18 @@ void extcl_cpu_wr_mem_116(WORD address, BYTE value) {
 		return;
 	}
 	if (m116.mapper == M116_MMC3) {
-		extcl_cpu_wr_mem_MMC3(address, value);
+		extcl_cpu_wr_mem_MMC3(nidx, address, value);
 	} else if (m116.mapper == M116_VRC2) {
-		extcl_cpu_wr_mem_VRC2and4(address, value);
+		extcl_cpu_wr_mem_VRC2and4(nidx, address, value);
 	} else if (m116.mapper == M116_MMC1) {
-		extcl_cpu_wr_mem_MMC1(address, value);
+		extcl_cpu_wr_mem_MMC1(nidx, address, value);
 	}
 }
-BYTE extcl_cpu_rd_mem_116(WORD address, UNUSED(BYTE openbus)) {
+BYTE extcl_cpu_rd_mem_116(BYTE nidx, WORD address, UNUSED(BYTE openbus)) {
 	if (m116.mapper == M116_VRC2) {
-		return (extcl_cpu_rd_mem_VRC2and4(address, wram_rd(address)));
+		return (extcl_cpu_rd_mem_VRC2and4(nidx, address, wram_rd(nidx, address)));
 	}
-	return (wram_rd(address));
+	return (wram_rd(nidx, address));
 }
 BYTE extcl_save_mapper_116(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m116.mapper);
@@ -141,34 +141,34 @@ BYTE extcl_save_mapper_116(BYTE mode, BYTE slot, FILE *fp) {
 	if (extcl_save_mapper_VRC2and4(mode, slot, fp) == EXIT_ERROR) return (EXIT_ERROR);
 	return (extcl_save_mapper_MMC1(mode, slot, fp));
 }
-void extcl_cpu_every_cycle_116(void) {
+void extcl_cpu_every_cycle_116(BYTE nidx) {
 	if (m116.mapper == M116_MMC3) {
-		extcl_cpu_every_cycle_MMC3();
+		extcl_cpu_every_cycle_MMC3(nidx);
 	}
 }
-void extcl_ppu_000_to_34x_116(void) {
+void extcl_ppu_000_to_34x_116(BYTE nidx) {
 	if (m116.mapper == M116_MMC3) {
-		extcl_ppu_000_to_34x_MMC3();
+		extcl_ppu_000_to_34x_MMC3(nidx);
 	}
 }
-void extcl_ppu_000_to_255_116(void) {
+void extcl_ppu_000_to_255_116(BYTE nidx) {
 	if (m116.mapper == M116_MMC3) {
-		extcl_ppu_000_to_255_MMC3();
+		extcl_ppu_000_to_255_MMC3(nidx);
 	}
 }
-void extcl_ppu_256_to_319_116(void) {
+void extcl_ppu_256_to_319_116(BYTE nidx) {
 	if (m116.mapper == M116_MMC3) {
-		extcl_ppu_256_to_319_MMC3();
+		extcl_ppu_256_to_319_MMC3(nidx);
 	}
 }
-void extcl_ppu_320_to_34x_116(void) {
+void extcl_ppu_320_to_34x_116(BYTE nidx) {
 	if (m116.mapper == M116_MMC3) {
-		extcl_ppu_320_to_34x_MMC3();
+		extcl_ppu_320_to_34x_MMC3(nidx);
 	}
 }
-void extcl_update_r2006_116(WORD new_r2006, WORD old_r2006) {
+void extcl_update_r2006_116(BYTE nidx, WORD new_r2006, WORD old_r2006) {
 	if (m116.mapper == M116_MMC3) {
-		extcl_update_r2006_MMC3(new_r2006, old_r2006);
+		extcl_update_r2006_MMC3(nidx, new_r2006, old_r2006);
 	}
 }
 
@@ -180,14 +180,14 @@ INLINE static void switch_mode(void) {
 		case 2:
 		case 3:
 			m116.mapper = M116_MMC1;
-			irq.high &= ~EXT_IRQ;
+			nes[0].c.irq.high &= ~EXT_IRQ;
 			if (info.mapper.submapper != 1) {
-				extcl_cpu_wr_mem_MMC1(0x8000, 0x80);
+				extcl_cpu_wr_mem_MMC1(0, 0x8000, 0x80);
 			}
 			break;
 		case 0:
 			m116.mapper = M116_VRC2;
-			irq.high &= ~EXT_IRQ;
+			nes[0].c.irq.high &= ~EXT_IRQ;
 			break;
 	}
 }

@@ -49,7 +49,7 @@ void extcl_after_mapper_init_028(void) {
 	chr_fix_028();
 	mirroring_fix_028();
 }
-void extcl_cpu_wr_mem_028(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_028(UNUSED(BYTE nidx), WORD address, BYTE value) {
 	if ((address >= 0x5000) && (address <= 0x5FFF)) {
 		m028.index = ((value & 0x80) >> 6) | (value & 0x01);
 		return;
@@ -67,30 +67,29 @@ void extcl_cpu_wr_mem_028(WORD address, BYTE value) {
 BYTE extcl_save_mapper_028(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m028.index);
 	save_slot_ele(mode, slot, m028.reg);
-
 	return (EXIT_OK);
 }
 
 INLINE static void prg_fix_028(void) {
-	memmap_auto_16k(MMCPU(0x8000), prg_bank_028(0x8000));
-	memmap_auto_16k(MMCPU(0xC000), prg_bank_028(0xC000));
+	memmap_auto_16k(0, MMCPU(0x8000), prg_bank_028(0x8000));
+	memmap_auto_16k(0, MMCPU(0xC000), prg_bank_028(0xC000));
 }
 INLINE static void chr_fix_028(void) {
-	memmap_auto_8k(MMPPU(0x0000), (m028.reg[0] & 0x03));
+	memmap_auto_8k(0, MMPPU(0x0000), (m028.reg[0] & 0x03));
 }
 INLINE static void mirroring_fix_028(void) {
 	switch (m028.reg[2] & 0x03) {
 		case 0:
-			mirroring_SCR0();
+			mirroring_SCR0(0);
 			break;
 		case 1:
-			mirroring_SCR1();
+			mirroring_SCR1(0);
 			break;
 		case 2:
-			mirroring_V();
+			mirroring_V(0);
 			break;
 		case 3:
-			mirroring_H();
+			mirroring_H(0);
 			break;
 	}
 }

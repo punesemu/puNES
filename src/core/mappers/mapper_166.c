@@ -40,13 +40,12 @@ void map_init_166(void) {
 void extcl_after_mapper_init_166(void) {
 	prg_fix_166();
 }
-void extcl_cpu_wr_mem_166(UNUSED(WORD address), BYTE value) {
+void extcl_cpu_wr_mem_166(UNUSED(BYTE nidx), UNUSED(WORD address), BYTE value) {
 	m166.reg[(address & 0x6000) >> 13] = value;
 	prg_fix_166();
 }
 BYTE extcl_save_mapper_166(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m166.reg);
-
 	return (EXIT_OK);
 }
 
@@ -54,13 +53,13 @@ INLINE static void prg_fix_166(void) {
 	WORD bank = (((m166.reg[0] ^ m166.reg[1]) & 0x10) << 1) + ((m166.reg[2] ^ m166.reg[3]) & 0x1F);
 
 	if (m166.reg[1] & 0x08) {
-		memmap_auto_16k(MMCPU(0x8000), (bank & 0xFE));
-		memmap_auto_16k(MMCPU(0xC000), (bank | 0x01));
+		memmap_auto_16k(0, MMCPU(0x8000), (bank & 0xFE));
+		memmap_auto_16k(0, MMCPU(0xC000), (bank | 0x01));
 	} if (m166.reg[1] & 0x04) {
-		memmap_auto_16k(MMCPU(0x8000), 0x1F);
-		memmap_auto_16k(MMCPU(0xC000), bank);
+		memmap_auto_16k(0, MMCPU(0x8000), 0x1F);
+		memmap_auto_16k(0, MMCPU(0xC000), bank);
 	} else {
-		memmap_auto_16k(MMCPU(0x8000), bank);
-		memmap_auto_16k(MMCPU(0xC000), 0x07);
+		memmap_auto_16k(0, MMCPU(0x8000), bank);
+		memmap_auto_16k(0, MMCPU(0xC000), 0x07);
 	}
 }

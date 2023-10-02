@@ -217,7 +217,8 @@ BYTE nsf_load_rom(void) {
 		rom.size = ftell(fp);
 		fseek(fp, 0L, SEEK_SET);
 
-		if ((rom.data = (BYTE *)malloc(rom.size)) == NULL) {
+		rom.data = (BYTE *)malloc(rom.size);
+		if (rom.data == NULL) {
 			fclose(fp);
 			return (EXIT_ERROR);
 		}
@@ -245,6 +246,7 @@ BYTE nsf_load_rom(void) {
 
 		info.format = NSF_FORMAT;
 
+		info.number_of_nes = 1;
 		info.machine[DATABASE] = DEFAULT;
 
 		nsf.info.name = &nsf_default_label[0];
@@ -393,7 +395,7 @@ BYTE nsf_load_rom(void) {
 			}
 		}
 
-		ram_set_size(S2K);
+		ram_set_size(0, S2K);
 		ram_init();
 
 		wram_set_ram_size(nsf.sound_chips.fds ? 0xA000 : S8K);
@@ -476,8 +478,8 @@ void nsf_init_tune(void) {
 
 	nsf.made_tick = FALSE;
 
-	cpu.SP = 0xFD;
-	memset(ram_pnt(), 0x00, ram_size());
+	nes[0].c.cpu.SP = 0xFD;
+	memset(ram_pnt(0), 0x00, ram_size(0));
 
 	wram_memset();
 
@@ -501,14 +503,14 @@ void nsf_init_tune(void) {
 	}
 
 	for (i = 0x4000; i <= 0x4013; i++) {
-		cpu_wr_mem(i, 0x00);
+		cpu_wr_mem(0, i, 0x00);
 	}
-	cpu_wr_mem(0x4015, 0x0F);
-	cpu_wr_mem(0x4017, 0x40);
+	cpu_wr_mem(0, 0x4015, 0x0F);
+	cpu_wr_mem(0, 0x4017, 0x40);
 
 	if (nsf.sound_chips.fds) {
-		cpu_wr_mem(0x4089, 0x80);
-		cpu_wr_mem(0x408A, 0xE8);
+		cpu_wr_mem(0, 0x4089, 0x80);
+		cpu_wr_mem(0, 0x408A, 0xE8);
 	}
 
 	nsf_reset_prg();
@@ -536,10 +538,10 @@ void nsf_tick(void) {
 		nsf.rate.count = nsf.rate.reload;
 		nsf.routine.prg[NSF_R_JMP_PLAY] = NSF_R_PLAY;
 		if (nsf.routine.INT_NMI) {
-			nmi.high = TRUE;
+			nes[0].c.nmi.high = TRUE;
 		}
-		ppu.odd_frame = !ppu.odd_frame;
-		info.frame_status = FRAME_FINISHED;
+		nes[0].p.ppu.odd_frame = !nes[0].p.ppu.odd_frame;
+		info.exec_cpu_op.b[0] = FALSE;
 
 		if (!cfg->apu.channel[APU_MASTER]) {
 			extcl_audio_samples_mod_nsf(NULL, 0);
@@ -547,7 +549,7 @@ void nsf_tick(void) {
 
 		nsf_main_screen_event();
 		nsf_effect();
-		gfx_draw_screen();
+		gfx_draw_screen(0);
 	}
 }
 void extcl_audio_samples_mod_nsf(SWORD *samples, int count) {
@@ -610,11 +612,11 @@ void nsf_reset_prg(void) {
 	if (nsf.bankswitch.enabled) {
 		if (nsf.sound_chips.fds) {
 			for (i = 0x5FF6; i <= 0x5FF7; i++) {
-				cpu_wr_mem(i, nsf.bankswitch.banks[i & 0x07]);
+				cpu_wr_mem(0, i, nsf.bankswitch.banks[i & 0x07]);
 			}
 		}
 		for (i = 0x5FF8; i <= 0x5FFF; i++) {
-			cpu_wr_mem(i, nsf.bankswitch.banks[i & 0x07]);
+			cpu_wr_mem(0, i, nsf.bankswitch.banks[i & 0x07]);
 		}
 	} else {
 		BYTE value = 0, bank = 0;
@@ -624,9 +626,9 @@ void nsf_reset_prg(void) {
 		for (; i < 0x10000; i += 0x1000) {
 			value = prgrom_control_bank(S4K, bank);
 			if (i < (nsf.adr.load & 0xF000)) {
-				cpu_wr_mem(0x5FF0 | (i >> 12), 0);
+				cpu_wr_mem(0, 0x5FF0 | (i >> 12), 0);
 			} else {
-				cpu_wr_mem(0x5FF0 | (i >> 12), value);
+				cpu_wr_mem(0, 0x5FF0 | (i >> 12), value);
 				if (bank < prgrom_banks(S4K)) {
 					bank++;
 				}
@@ -950,7 +952,7 @@ static void nsf_effect_raw(BYTE solid) {
 
 	for (y = nsf.effect_coords.y1; y <= nsf.effect_coords.y2; y++) {
 		for (x = nsf.effect_coords.x1; x <= nsf.effect_coords.x2; x++) {
-			ppu_screen.wr->line[y][x] = doscolor(DOS_BLACK);
+			nes[0].p.ppu_screen.wr->line[y][x] = doscolor(DOS_BLACK);
 		}
 	}
 
@@ -965,7 +967,7 @@ static void nsf_effect_raw(BYTE solid) {
 		}
 
 		if ((y >= nsf.effect_coords.y1) && (y < nsf.effect_coords.y2)) {
-			ppu_screen.wr->line[y][x] = doscolor(DOS_GREEN);
+			nes[0].p.ppu_screen.wr->line[y][x] = doscolor(DOS_GREEN);
 		}
 
 		if (y_last > y) {
@@ -980,8 +982,8 @@ static void nsf_effect_raw(BYTE solid) {
 		}
 
 		for (; a < b; a++) {
-			if (((a >= nsf.effect_coords.y1) && (a <= nsf.effect_coords.y2)) && (ppu_screen.wr->line[a][x] != doscolor(DOS_GREEN))) {
-				ppu_screen.wr->line[a][x] = doscolor(DOS_YELLOW);
+			if (((a >= nsf.effect_coords.y1) && (a <= nsf.effect_coords.y2)) && (nes[0].p.ppu_screen.wr->line[a][x] != doscolor(DOS_GREEN))) {
+				nes[0].p.ppu_screen.wr->line[a][x] = doscolor(DOS_YELLOW);
 			}
 		}
 
@@ -993,7 +995,7 @@ static void nsf_effect_raw(BYTE solid) {
 static void nsf_effect_hanning_window(BYTE solid) {
 	int x = 0, y = 0, count = 0, len = 0, y_last = nsf.effect_coords.y_center;
 	SWORD *buffer = NULL;
-	double multiplier;
+	double multiplier = 0;
 
 	if (nsf.timers.effect <= NSF_TIME_EFFECT_UPDATE) {
 		return;
@@ -1009,7 +1011,7 @@ static void nsf_effect_hanning_window(BYTE solid) {
 
 	for (y = nsf.effect_coords.y1; y <= nsf.effect_coords.y2; y++) {
 		for (x = nsf.effect_coords.x1; x <= nsf.effect_coords.x2; x++) {
-			ppu_screen.wr->line[y][x] = doscolor(DOS_BLACK);
+			nes[0].p.ppu_screen.wr->line[y][x] = doscolor(DOS_BLACK);
 		}
 	}
 
@@ -1026,7 +1028,7 @@ static void nsf_effect_hanning_window(BYTE solid) {
 		}
 
 		if ((y >= nsf.effect_coords.y1) && (y <= nsf.effect_coords.y2)) {
-			ppu_screen.wr->line[y][x] = doscolor(DOS_GREEN);
+			nes[0].p.ppu_screen.wr->line[y][x] = doscolor(DOS_GREEN);
 		}
 
 		if (y_last > y) {
@@ -1041,8 +1043,8 @@ static void nsf_effect_hanning_window(BYTE solid) {
 		}
 
 		for (; a < b; a++) {
-			if (((a >= nsf.effect_coords.y1) && (a <= nsf.effect_coords.y2)) && (ppu_screen.wr->line[a][x] != doscolor(DOS_GREEN))) {
-				ppu_screen.wr->line[a][x] = doscolor(DOS_YELLOW);
+			if (((a >= nsf.effect_coords.y1) && (a <= nsf.effect_coords.y2)) && (nes[0].p.ppu_screen.wr->line[a][x] != doscolor(DOS_GREEN))) {
+				nes[0].p.ppu_screen.wr->line[a][x] = doscolor(DOS_YELLOW);
 			}
 		}
 
@@ -1071,7 +1073,7 @@ static void nsf_effect_bars(void) {
 
 	for (y = nsf.effect_coords.y1; y <= nsf.effect_coords.y2; y++) {
 		for (x = nsf.effect_coords.x1; x <= nsf.effect_coords.x2; x++) {
-			ppu_screen.wr->line[y][x] = doscolor(DOS_BLACK);
+			nes[0].p.ppu_screen.wr->line[y][x] = doscolor(DOS_BLACK);
 		}
 	}
 
@@ -1154,7 +1156,7 @@ static void nsf_effect_bars(void) {
 
 		for (x = x1; x < x2; x++) {
 			if ((y >= nsf.effect_bars_coords.y1) && (y <= nsf.effect_bars_coords.y2)) {
-				ppu_screen.wr->line[y][x] = doscolor(DOS_GREEN);
+				nes[0].p.ppu_screen.wr->line[y][x] = doscolor(DOS_GREEN);
 			}
 		}
 
@@ -1174,11 +1176,11 @@ static void nsf_effect_bars(void) {
 
 		for (; a <= b; a++) {
 			if ((a >= nsf.effect_bars_coords.y1) && (a <= nsf.effect_bars_coords.y2)) {
-				if (ppu_screen.wr->line[a][x1] != doscolor(DOS_GREEN)) {
-					ppu_screen.wr->line[a][x1] = doscolor(DOS_RED);
+				if (nes[0].p.ppu_screen.wr->line[a][x1] != doscolor(DOS_GREEN)) {
+					nes[0].p.ppu_screen.wr->line[a][x1] = doscolor(DOS_RED);
 				}
-				if (ppu_screen.wr->line[a][x - 1] != doscolor(DOS_GREEN)) {
-					ppu_screen.wr->line[a][x - 1] = doscolor(DOS_GRAY);
+				if (nes[0].p.ppu_screen.wr->line[a][x - 1] != doscolor(DOS_GREEN)) {
+					nes[0].p.ppu_screen.wr->line[a][x - 1] = doscolor(DOS_GRAY);
 				}
 			}
 		}

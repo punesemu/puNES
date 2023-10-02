@@ -122,7 +122,8 @@ void wdgSettingsPPU::s_unlimited_sprites_auto(UNUSED(bool checked)) {
 void wdgSettingsPPU::s_ppu_overclock(UNUSED(bool checked)) {
 	emu_thread_pause();
 	cfg->ppu_overclock = !cfg->ppu_overclock;
-	ppu_overclock(TRUE);
+	ppu_overclock(0, TRUE);
+	ppu_overclock(1, TRUE);
 	emu_thread_continue();
 	settings_pgs_save();
 	update_widget();
@@ -136,14 +137,16 @@ void wdgSettingsPPU::s_disable_dmc_control(UNUSED(bool checked)) {
 void wdgSettingsPPU::s_overclock_vb_slines(int i) {
 	emu_thread_pause();
 	cfg->extra_vb_scanlines = i;
-	ppu_overclock(FALSE);
+	ppu_overclock(0, FALSE);
+	ppu_overclock(1, FALSE);
 	emu_thread_continue();
 	settings_pgs_save();
 }
 void wdgSettingsPPU::s_overclock_pr_slines(int i) {
 	emu_thread_pause();
 	cfg->extra_pr_scanlines = i;
-	ppu_overclock(FALSE);
+	ppu_overclock(0, FALSE);
+	ppu_overclock(1, FALSE);
 	emu_thread_continue();
 	settings_pgs_save();
 }

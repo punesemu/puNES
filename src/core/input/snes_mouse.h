@@ -22,7 +22,7 @@
 #include "input.h"
 
 void input_init_snes_mouse(void);
-void input_wr_snes_mouse(const BYTE *value, BYTE nport);
-void input_rd_snes_mouse(BYTE *value, BYTE nport, BYTE shift);
+void input_wr_snes_mouse(BYTE nidx, const BYTE *value, BYTE nport);
+void input_rd_snes_mouse(BYTE nidx, BYTE *value, BYTE nport, BYTE shift);
 
 #endif /* INPUT_SNES_MOUSE_H_ */

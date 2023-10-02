@@ -209,12 +209,12 @@ void extcl_after_mapper_init_355(void) {
 void extcl_mapper_quit_355(void) {
 	pic16c5x_quit();
 }
-void extcl_cpu_wr_mem_355(WORD address, UNUSED(BYTE value)) {
+void extcl_cpu_wr_mem_355(UNUSED(BYTE nidx), WORD address, UNUSED(BYTE value)) {
 	m355.address = address;
 }
-BYTE extcl_cpu_rd_mem_355(WORD address, UNUSED(BYTE openbus)) {
+BYTE extcl_cpu_rd_mem_355(BYTE nidx, WORD address, UNUSED(BYTE openbus)) {
 	m355.address = address;
-	return (address >= 0x8000 ? prgrom_rd(address) : wram_rd(address));
+	return (address >= 0x8000 ? prgrom_rd(nidx, address) : wram_rd(nidx, address));
 }
 BYTE extcl_save_mapper_355(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m355.address);
@@ -222,12 +222,12 @@ BYTE extcl_save_mapper_355(BYTE mode, BYTE slot, FILE *fp) {
 
 	return (EXIT_OK);
 }
-void extcl_cpu_every_cycle_355(void) {
+void extcl_cpu_every_cycle_355(UNUSED(BYTE nidx)) {
 	pic16c5x_run();
 }
 
 INLINE static void prg_fix_355(void) {
-	memmap_auto_32k(MMCPU(0x8000), 0);
+	memmap_auto_32k(0, MMCPU(0x8000), 0);
 }
 
 uint8_t pic16c5x_rd(int port) {
@@ -252,9 +252,9 @@ uint8_t pic16c5x_rd(int port) {
 void pic16c5x_wr(int port, int val) {
 	if (port == 0) {
 		if (val & 0x1001) {
-			irq.high &= ~EXT_IRQ;
+			nes[0].c.irq.high &= ~EXT_IRQ;
 		} else {
-			irq.high |= EXT_IRQ;
+			nes[0].c.irq.high |= EXT_IRQ;
 		}
 	}
 }

@@ -28,7 +28,7 @@ INLINE static void chr_fix_359(void);
 INLINE static void wram_fix_359(void);
 INLINE static void mirroring_fix_359(void);
 
-INLINE static void irq_clock_359(void);
+INLINE static void irq_clock_359(BYTE nidx);
 
 struct _m359 {
 	BYTE prg[6];
@@ -87,7 +87,7 @@ void extcl_after_mapper_init_359(void) {
 	wram_fix_359();
 	mirroring_fix_359();
 }
-void extcl_cpu_wr_mem_359(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_359(BYTE nidx, WORD address, BYTE value) {
 	switch (address & 0xF000) {
 		case 0x8000:
 			m359.prg[address & 0x03] = value;
@@ -160,7 +160,7 @@ void extcl_cpu_wr_mem_359(WORD address, BYTE value) {
 					m359.irq.enable = value & 0x01;
 					break;
 			}
-			irq.high &= ~EXT_IRQ;
+			nes[nidx].c.irq.high &= ~EXT_IRQ;
 			break;
 	}
 }
@@ -174,55 +174,54 @@ BYTE extcl_save_mapper_359(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m359.irq.reload);
 	save_slot_ele(mode, slot, m359.irq.a12_filter);
 	save_slot_ele(mode, slot, m359.irq.counter.w);
-
 	return (EXIT_OK);
 }
-void extcl_ppu_000_to_255_359(void) {
-	if (r2001.visible) {
-		extcl_ppu_320_to_34x_359();
+void extcl_ppu_000_to_255_359(BYTE nidx) {
+	if (nes[nidx].p.r2001.visible) {
+		extcl_ppu_320_to_34x_359(nidx);
 	}
 }
-void extcl_ppu_256_to_319_359(void) {
-	if ((ppu.frame_x & 0x0007) != 0x0003) {
+void extcl_ppu_256_to_319_359(BYTE nidx) {
+	if ((nes[nidx].p.ppu.frame_x & 0x0007) != 0x0003) {
 		return;
 	}
 
-	if ((!spr_ev.count_plus || (spr_ev.tmp_spr_plus == spr_ev.count_plus)) && (r2000.size_spr == 16)) {
-		ppu.spr_adr = r2000.spt_adr;
+	if ((!nes[nidx].p.spr_ev.count_plus || (nes[nidx].p.spr_ev.tmp_spr_plus == nes[nidx].p.spr_ev.count_plus)) && (nes[nidx].p.r2000.size_spr == 16)) {
+		nes[nidx].p.ppu.spr_adr = nes[nidx].p.r2000.spt_adr;
 	} else {
-		ppu_spr_adr((ppu.frame_x & 0x0038) >> 3);
+		ppu_spr_adr((nes[nidx].p.ppu.frame_x & 0x0038) >> 3);
 	}
 
-	if ((ppu.spr_adr & 0x1000) > (ppu.bck_adr & 0x1000)) {
-		irq_clock_359();
+	if ((nes[nidx].p.ppu.spr_adr & 0x1000) > (nes[nidx].p.ppu.bck_adr & 0x1000)) {
+		irq_clock_359(nidx);
 	}
 }
-void extcl_ppu_320_to_34x_359(void) {
-	if ((ppu.frame_x & 0x0007) != 0x0003) {
+void extcl_ppu_320_to_34x_359(BYTE nidx) {
+	if ((nes[nidx].p.ppu.frame_x & 0x0007) != 0x0003) {
 		return;
 	}
 
-	if (ppu.frame_x == 323) {
+	if (nes[nidx].p.ppu.frame_x == 323) {
 		ppu_spr_adr(7);
 	}
 
-	ppu_bck_adr(r2000.bpt_adr, r2006.value);
+	ppu_bck_adr(nes[nidx].p.r2000.bpt_adr, nes[nidx].p.r2006.value);
 
-	if ((ppu.bck_adr & 0x1000) > (ppu.spr_adr & 0x1000)) {
-		irq_clock_359();
+	if ((nes[nidx].p.ppu.bck_adr & 0x1000) > (nes[nidx].p.ppu.spr_adr & 0x1000)) {
+		irq_clock_359(nidx);
 	}
 }
-void extcl_update_r2006_359(WORD new_r2006, UNUSED(WORD old_r2006)) {
+void extcl_update_r2006_359(BYTE nidx, WORD new_r2006, UNUSED(WORD old_r2006)) {
 	if ((new_r2006 & 0x1000) > (old_r2006 & 0x1000)) {
-		irq_clock_359();
+		irq_clock_359(nidx);
 	}
 }
-void extcl_cpu_every_cycle_359(void) {
+void extcl_cpu_every_cycle_359(BYTE nidx) {
 	if (m359.irq.a12_filter) {
 		m359.irq.a12_filter--;
 	}
 	if (m359.irq.enable && !m359.irq.mode && m359.irq.counter.w[0] && !--m359.irq.counter.w[0]){
-		irq.high |= EXT_IRQ;
+		nes[nidx].c.irq.high |= EXT_IRQ;
 	}
 }
 
@@ -230,30 +229,30 @@ INLINE static void prg_fix_359(void) {
 	WORD base = (m359.prg[4] & 0x38) << 1;
 	WORD mask = m359.prg[5];
 
-	memmap_auto_8k(MMCPU(0x8000), (base | (m359.prg[0] & mask)));
-	memmap_auto_8k(MMCPU(0xA000), (base | (m359.prg[1] & mask)));
-	memmap_auto_8k(MMCPU(0xC000), (base | (m359.prg[2] & mask)));
-	memmap_auto_8k(MMCPU(0xE000), (base | (0xFF & mask)));
+	memmap_auto_8k(0, MMCPU(0x8000), (base | (m359.prg[0] & mask)));
+	memmap_auto_8k(0, MMCPU(0xA000), (base | (m359.prg[1] & mask)));
+	memmap_auto_8k(0, MMCPU(0xC000), (base | (m359.prg[2] & mask)));
+	memmap_auto_8k(0, MMCPU(0xE000), (base | (0xFF & mask)));
 }
 INLINE static void chr_fix_359(void) {
 	if (chrrom_size()) {
 		if (info.mapper.id == 540) {
-			memmap_auto_2k(MMPPU(0x0000), m359.chr[0]);
-			memmap_auto_2k(MMPPU(0x0800), m359.chr[1]);
-			memmap_auto_2k(MMPPU(0x1000), m359.chr[6]);
-			memmap_auto_2k(MMPPU(0x1800), m359.chr[7]);
+			memmap_auto_2k(0, MMPPU(0x0000), m359.chr[0]);
+			memmap_auto_2k(0, MMPPU(0x0800), m359.chr[1]);
+			memmap_auto_2k(0, MMPPU(0x1000), m359.chr[6]);
+			memmap_auto_2k(0, MMPPU(0x1800), m359.chr[7]);
 		} else {
 			WORD base = m359.chr[8] << 7;
 			WORD mask = m359.chr[9];
 
-			memmap_auto_1k(MMPPU(0x0000), (base | (m359.chr[0] & mask)));
-			memmap_auto_1k(MMPPU(0x0400), (base | (m359.chr[1] & mask)));
-			memmap_auto_1k(MMPPU(0x0800), (base | (m359.chr[2] & mask)));
-			memmap_auto_1k(MMPPU(0x0C00), (base | (m359.chr[3] & mask)));
-			memmap_auto_1k(MMPPU(0x1000), (base | (m359.chr[4] & mask)));
-			memmap_auto_1k(MMPPU(0x1400), (base | (m359.chr[5] & mask)));
-			memmap_auto_1k(MMPPU(0x1800), (base | (m359.chr[6] & mask)));
-			memmap_auto_1k(MMPPU(0x1C00), (base | (m359.chr[7] & mask)));
+			memmap_auto_1k(0, MMPPU(0x0000), (base | (m359.chr[0] & mask)));
+			memmap_auto_1k(0, MMPPU(0x0400), (base | (m359.chr[1] & mask)));
+			memmap_auto_1k(0, MMPPU(0x0800), (base | (m359.chr[2] & mask)));
+			memmap_auto_1k(0, MMPPU(0x0C00), (base | (m359.chr[3] & mask)));
+			memmap_auto_1k(0, MMPPU(0x1000), (base | (m359.chr[4] & mask)));
+			memmap_auto_1k(0, MMPPU(0x1400), (base | (m359.chr[5] & mask)));
+			memmap_auto_1k(0, MMPPU(0x1800), (base | (m359.chr[6] & mask)));
+			memmap_auto_1k(0, MMPPU(0x1C00), (base | (m359.chr[7] & mask)));
 		}
 	}
 }
@@ -261,26 +260,26 @@ INLINE static void wram_fix_359(void) {
 	WORD base = (m359.prg[4] & 0x38) << 1;
 	WORD mask = m359.prg[5];
 
-	memmap_prgrom_8k(MMCPU(0x6000), (base | (m359.prg[3] & mask)));
+	memmap_prgrom_8k(0, MMCPU(0x6000), (base | (m359.prg[3] & mask)));
 }
 INLINE static void mirroring_fix_359(void) {
 	switch (m359.mirroring & 0x03) {
 		case 0:
-			mirroring_V();
+			mirroring_V(0);
 			break;
 		case 1:
-			mirroring_H();
+			mirroring_H(0);
 			break;
 		case 2:
-			mirroring_SCR0();
+			mirroring_SCR0(0);
 			break;
 		case 3:
-			mirroring_SCR1();
+			mirroring_SCR1(0);
 			break;
 	}
 }
 
-INLINE static void irq_clock_359(void) {
+INLINE static void irq_clock_359(BYTE nidx) {
 	if (!m359.irq.a12_filter && m359.irq.mode) {
 		if (!m359.irq.counter.b[0] || m359.irq.reload) {
 			m359.irq.counter.b[0] = m359.irq.counter.b[1];
@@ -288,7 +287,7 @@ INLINE static void irq_clock_359(void) {
 			m359.irq.counter.b[0]--;
 		}
 		if (!m359.irq.counter.b[0] && m359.irq.enable) {
-			irq.high |= EXT_IRQ;
+			nes[nidx].c.irq.high |= EXT_IRQ;
 		}
 		m359.irq.reload = FALSE;
 	}

@@ -43,7 +43,7 @@ void extcl_after_mapper_init_438(void) {
 	chr_fix_438();
 	mirroring_fix_438();
 }
-void extcl_cpu_wr_mem_438(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_438(UNUSED(BYTE nidx), WORD address, BYTE value) {
 	m438.reg[0] = address;
 	m438.reg[1] = value;
 	prg_fix_438();
@@ -52,23 +52,22 @@ void extcl_cpu_wr_mem_438(WORD address, BYTE value) {
 }
 BYTE extcl_save_mapper_438(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m438.reg);
-
 	return (EXIT_OK);
 }
 
 INLINE static void prg_fix_438(void) {
 	WORD bank = m438.reg[0] >> 1;
 
-	memmap_auto_16k(MMCPU(0x8000), (bank & ~(m438.reg[0] & 0x01)));
-	memmap_auto_16k(MMCPU(0xC000), (bank |  (m438.reg[0] & 0x01)));
+	memmap_auto_16k(0, MMCPU(0x8000), (bank & ~(m438.reg[0] & 0x01)));
+	memmap_auto_16k(0, MMCPU(0xC000), (bank |  (m438.reg[0] & 0x01)));
 }
 INLINE static void chr_fix_438(void) {
-	memmap_auto_8k(MMPPU(0x0000), (m438.reg[1] >> 1));
+	memmap_auto_8k(0, MMPPU(0x0000), (m438.reg[1] >> 1));
 }
 INLINE static void mirroring_fix_438(void) {
 	if (m438.reg[1] & 0x01) {
-		mirroring_H();
+		mirroring_H(0);
 	} else {
-		mirroring_V();
+		mirroring_V(0);
 	}
 }

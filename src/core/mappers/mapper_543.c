@@ -51,7 +51,7 @@ void map_init_543(void) {
 
 	info.mapper.extend_wr = TRUE;
 }
-void extcl_cpu_wr_mem_543(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_543(BYTE nidx, WORD address, BYTE value) {
 	if ((address >= 0x5000) && (address <= 0x5FFF)) {
 		m543.accumulator |= (((value & 0x08) >> 3) << m543.shift);
 		if (m543.shift++ == 3) {
@@ -64,7 +64,7 @@ void extcl_cpu_wr_mem_543(WORD address, BYTE value) {
 		return;
 	}
 	if (address >= 0x8000) {
-		extcl_cpu_wr_mem_MMC1(address, value);
+		extcl_cpu_wr_mem_MMC1(nidx, address, value);
 	}
 }
 BYTE extcl_save_mapper_543(BYTE mode, BYTE slot, FILE *fp) {

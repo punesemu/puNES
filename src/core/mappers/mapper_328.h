@@ -23,6 +23,6 @@
 
 void map_init_328(void);
 void extcl_after_mapper_init_328(void);
-BYTE extcl_cpu_rd_mem_328(WORD address, BYTE openbus);
+BYTE extcl_cpu_rd_mem_328(BYTE nidx, WORD address, BYTE openbus);
 
 #endif /* MAPPER_328_H_ */

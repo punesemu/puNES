@@ -502,28 +502,35 @@ void gfx_set_screen(BYTE scale, DBWORD filter, DBWORD shader, BYTE fullscreen, B
 		info.on_cfg = FALSE;
 	}
 }
-void gfx_draw_screen(void) {
-	if (gfx_thread_public.filtering) {
-		gfx.frame.totals++;
-		fps.info.skipped++;
-		return;
+void gfx_draw_screen(BYTE nidx) {
+	BYTE monitor = emu_active_nidx();
+
+	if (nidx == monitor) {
+		if (gfx_thread_public.filtering) {
+			gfx.frame.totals++;
+			fps.info.skipped++;
+			return;
+		}
 	}
 
 	if (chinaersan2.enable) {
-		chinaersan2_apply_font();
+		chinaersan2_apply_font(nidx);
 	}
 
-	ppu_screen.rd = ppu_screen.wr;
-	ppu_screen.rd->frame = gfx.frame.totals++;
-	ppu_screen.last_completed_wr = ppu_screen.wr;
+	nes[nidx].p.ppu_screen.rd = nes[nidx].p.ppu_screen.wr;
+	nes[nidx].p.ppu_screen.rd->frame = gfx.frame.totals;
+	if (nidx == monitor) {
+		gfx.frame.totals++;
+	}
+	nes[nidx].p.ppu_screen.last_completed_wr = nes[nidx].p.ppu_screen.wr;
 
 	if (info.doublebuffer) {
-		ppu_screen.index = !ppu_screen.index;
-		ppu_screen.wr = &ppu_screen.buff[ppu_screen.index];
+		nes[nidx].p.ppu_screen.index = !nes[nidx].p.ppu_screen.index;
+		nes[nidx].p.ppu_screen.wr = &nes[nidx].p.ppu_screen.buff[nes[nidx].p.ppu_screen.index];
 	}
 
-	if (!ppu_screen.rd->ready) {
-		ppu_screen.rd->ready = TRUE;
+	if (!nes[nidx].p.ppu_screen.rd->ready) {
+		nes[nidx].p.ppu_screen.rd->ready = TRUE;
 	}
 }
 BYTE gfx_palette_init(void) {
@@ -587,7 +594,7 @@ void gfx_overlay_blit(void *surface, _gfx_rect *rect, double device_pixel_ratio)
 	}
 	gfx_api_overlay_blit(surface, rect, device_pixel_ratio);
 }
-void gfx_apply_filter(void) {
+void gfx_apply_filter(BYTE nidx) {
 	gfx.filter.data.palette = (void *)gfx.palette;
 
 	//applico la paletta adeguata.
@@ -612,7 +619,7 @@ void gfx_apply_filter(void) {
 
 	gfx_thread_lock();
 
-	gfx_api_apply_filter();
+	gfx_api_apply_filter(nidx);
 
 	// posso trovarmi nella situazione in cui applico il filtro ad un frame quando ancora
 	// (per molteplici motivi) non ho ancora finito di disegnare il frame precedente. Il gui_screen_update

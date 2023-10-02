@@ -67,7 +67,7 @@ void map_init_351(void) {
 	mapper.internal_struct[1] = (BYTE *)&mmc1;
 	mapper.internal_struct_size[1] = sizeof(mmc1);
 
-	memset(&irqA12, 0x00, sizeof(irqA12));
+	memset(&nes[0].irqA12, 0x00, sizeof(nes[0].irqA12));
 	memset(&m351, 0x00, sizeof(m351));
 
 	init_MMC3(HARD);
@@ -98,14 +98,14 @@ void map_init_351(void) {
 
 	info.mapper.extend_wr = TRUE;
 
-	irqA12.present = TRUE;
-	irqA12_delay = 1;
+	nes[0].irqA12.present = TRUE;
+	nes[0].irqA12.delay = 1;
 }
 void extcl_after_mapper_init_351(void) {
 	switch_mode();
 	fix_all();
 }
-void extcl_cpu_wr_mem_351(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_351(BYTE nidx, WORD address, BYTE value) {
 	if ((address >= 0x5000) && (address <= 0x5FFF)) {
 		BYTE reg = address & 0x03;
 
@@ -125,21 +125,21 @@ void extcl_cpu_wr_mem_351(WORD address, BYTE value) {
 		return;
 	}
 	if (m351.mapper == M351_MMC3) {
-		extcl_cpu_wr_mem_MMC3(address, value);
+		extcl_cpu_wr_mem_MMC3(nidx, address, value);
 	} else if (m351.mapper == M351_VRC4) {
 		if (address & 0x0800) {
 			address = (address & 0xFFF3) | ((address & 0x0004) << 1) | ((address & 0x0008) >> 1);
 		}
-		extcl_cpu_wr_mem_VRC2and4(address, value);
+		extcl_cpu_wr_mem_VRC2and4(nidx, address, value);
 	} else if (m351.mapper == M351_MMC1) {
-		extcl_cpu_wr_mem_MMC1(address, value);
+		extcl_cpu_wr_mem_MMC1(nidx, address, value);
 	}
 }
-BYTE extcl_cpu_rd_mem_351(WORD address, BYTE openbus) {
+BYTE extcl_cpu_rd_mem_351(BYTE nidx, WORD address, BYTE openbus) {
 	if ((address >= 0x5000) && (address <= 0x5FFF)) {
 		return ((openbus & 0xF8) | (dipswitch.value & 0x07));
 	}
-	return (wram_rd(address));
+	return (wram_rd(nidx, address));
 }
 BYTE extcl_save_mapper_351(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m351.mapper);
@@ -148,36 +148,36 @@ BYTE extcl_save_mapper_351(BYTE mode, BYTE slot, FILE *fp) {
 	if (extcl_save_mapper_VRC2and4(mode, slot, fp) == EXIT_ERROR) return (EXIT_ERROR);
 	return (extcl_save_mapper_MMC1(mode, slot, fp));
 }
-void extcl_cpu_every_cycle_351(void) {
+void extcl_cpu_every_cycle_351(BYTE nidx) {
 	if (m351.mapper == M351_MMC3) {
-		extcl_cpu_every_cycle_MMC3();
+		extcl_cpu_every_cycle_MMC3(nidx);
 	} else if (m351.mapper == M351_VRC4) {
-		extcl_cpu_every_cycle_VRC2and4();
+		extcl_cpu_every_cycle_VRC2and4(nidx);
 	}
 }
-void extcl_ppu_000_to_34x_351(void) {
+void extcl_ppu_000_to_34x_351(BYTE nidx) {
 	if (m351.mapper == M351_MMC3) {
-		extcl_ppu_000_to_34x_MMC3();
+		extcl_ppu_000_to_34x_MMC3(nidx);
 	}
 }
-void extcl_ppu_000_to_255_351(void) {
+void extcl_ppu_000_to_255_351(BYTE nidx) {
 	if (m351.mapper == M351_MMC3) {
-		extcl_ppu_000_to_255_MMC3();
+		extcl_ppu_000_to_255_MMC3(nidx);
 	}
 }
-void extcl_ppu_256_to_319_351(void) {
+void extcl_ppu_256_to_319_351(BYTE nidx) {
 	if (m351.mapper == M351_MMC3) {
-		extcl_ppu_256_to_319_MMC3();
+		extcl_ppu_256_to_319_MMC3(nidx);
 	}
 }
-void extcl_ppu_320_to_34x_351(void) {
+void extcl_ppu_320_to_34x_351(BYTE nidx) {
 	if (m351.mapper == M351_MMC3) {
-		extcl_ppu_320_to_34x_MMC3();
+		extcl_ppu_320_to_34x_MMC3(nidx);
 	}
 }
-void extcl_update_r2006_351(WORD new_r2006, WORD old_r2006) {
+void extcl_update_r2006_351(BYTE nidx, WORD new_r2006, WORD old_r2006) {
 	if (m351.mapper == M351_MMC3) {
-		extcl_update_r2006_MMC3(new_r2006, old_r2006);
+		extcl_update_r2006_MMC3(nidx, new_r2006, old_r2006);
 	}
 }
 
@@ -190,11 +190,11 @@ INLINE static void switch_mode(void) {
 			break;
 		case 2:
 			m351.mapper = M351_MMC1;
-			irq.high &= ~EXT_IRQ;
+			nes[0].c.irq.high &= ~EXT_IRQ;
 			break;
 		case 3:
 			m351.mapper = M351_VRC4;
-			irq.high &= ~EXT_IRQ;
+			nes[0].c.irq.high &= ~EXT_IRQ;
 			break;
 	}
 }
@@ -209,11 +209,11 @@ INLINE static void prg_fix(void) {
 	if (m351.reg[2] & 0x10) {
 		if (m351.reg[2] & 0x04) {
 			bank = m351.reg[1] >> 2;
-			memmap_auto_16k(MMCPU(0x8000), bank);
-			memmap_auto_16k(MMCPU(0xC000), bank);
+			memmap_auto_16k(0, MMCPU(0x8000), bank);
+			memmap_auto_16k(0, MMCPU(0xC000), bank);
 		} else {
 			bank = m351.reg[1] >> 3;
-			memmap_auto_32k(MMCPU(0x8000), bank);
+			memmap_auto_32k(0, MMCPU(0x8000), bank);
 		}
 	} else {
 		if (m351.mapper == M351_MMC3) {
@@ -227,9 +227,9 @@ INLINE static void prg_fix(void) {
 }
 INLINE static void chr_fix(void) {
 	if ((m351.reg[2] & 0x01) && wram_size()) {
-		memmap_vram_8k(MMPPU(0x0000), 0);
+		memmap_vram_8k(0, MMPPU(0x0000), 0);
 	} else if (m351.reg[2] & 0x40) {
-		memmap_auto_8k(MMPPU(0x0000), (m351.reg[0] >> 2));
+		memmap_auto_8k(0, MMPPU(0x0000), (m351.reg[0] >> 2));
 	} else {
 		if (m351.mapper == M351_MMC3) {
 			MMC3_chr_fix();

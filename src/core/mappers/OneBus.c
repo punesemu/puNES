@@ -33,7 +33,7 @@ void (*OneBus_chr_swap)(BYTE **banks, BYTE *base, BYTE bit4pp, BYTE extended, WO
 void (*OneBus_wram_fix)(WORD mmask, WORD mblock);
 void (*OneBus_mirroring_fix)(void);
 
-INLINE static void irq_tick_OneBus(void);
+INLINE static void irq_tick_OneBus(BYTE nidx);
 
 _onebus onebus;
 struct _onebustmp {
@@ -102,22 +102,22 @@ void extcl_mapper_quit_OneBus(void) {
 		onebustmp.chr.high16 = NULL;
 	}
 }
-void extcl_cpu_wr_mem_OneBus(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_OneBus(BYTE nidx, WORD address, BYTE value) {
 	if ((address >= 0x4100) && (address <= 0x41FF)) {
 		onebus.reg.cpu[address & 0x00FF] = value;
 		switch (address & 0x01FF) {
 			case 0x101:
-				irqA12.counter = onebus.reg.cpu[0x01];
+				nes[nidx].irqA12.counter = onebus.reg.cpu[0x01];
 				break;
 			case 0x102:
-				irqA12.counter = 0;
+				nes[nidx].irqA12.counter = 0;
 				break;
 			case 0x103:
-				irqA12.enable = FALSE;
-				irq.high &= ~EXT_IRQ;
+				nes[nidx].irqA12.enable = FALSE;
+				nes[nidx].c.irq.high &= ~EXT_IRQ;
 				break;
 			case 0x104:
-				irqA12.enable = TRUE;
+				nes[nidx].irqA12.enable = TRUE;
 				break;
 			case 0x140: case 0x141: case 0x142: case 0x143: case 0x144: case 0x145: case 0x146: case 0x147:
 			case 0x148: case 0x149: case 0x14A: case 0x14B: case 0x14C: case 0x14D: case 0x14E: case 0x14F:
@@ -141,7 +141,7 @@ void extcl_cpu_wr_mem_OneBus(WORD address, BYTE value) {
 		if (!(onebus.reg.cpu[0x0B] & 0x08)) {
 			switch (address & 0xE001) {
 				case 0x8000:
-					extcl_cpu_wr_mem_OneBus(0x4105, value & ~0x20);
+					extcl_cpu_wr_mem_OneBus(nidx, 0x4105, value & ~0x20);
 					return;
 				case 0x8001: {
 					BYTE reg = onebus.reg.cpu[0x05] & 0x07;
@@ -149,42 +149,42 @@ void extcl_cpu_wr_mem_OneBus(WORD address, BYTE value) {
 					switch (reg) {
 						case 0:
 						case 1:
-							extcl_wr_ppu_reg_OneBus(0x2016 + reg, &value);
+							extcl_wr_ppu_reg_OneBus(nidx, 0x2016 + reg, &value);
 							return;
 						case 2:
 						case 3:
 						case 4:
 						case 5:
-							extcl_wr_ppu_reg_OneBus(0x2010 + reg, &value);
+							extcl_wr_ppu_reg_OneBus(nidx, 0x2010 + reg, &value);
 							return;
 						case 6:
 						case 7:
-							extcl_cpu_wr_mem_OneBus(0x4101 + reg, value);
+							extcl_cpu_wr_mem_OneBus(nidx, 0x4101 + reg, value);
 							return;
 						default:
 							return;
 					}
 				}
 				case 0xA000:
-					extcl_cpu_wr_mem_OneBus(0x4106, value & 0x01);
+					extcl_cpu_wr_mem_OneBus(nidx, 0x4106, value & 0x01);
 					return;
 				case 0xC000:
-					extcl_cpu_wr_mem_OneBus(0x4101, value);
+					extcl_cpu_wr_mem_OneBus(nidx, 0x4101, value);
 					return;
 				case 0xC001:
-					extcl_cpu_wr_mem_OneBus(0x4102, value);
+					extcl_cpu_wr_mem_OneBus(nidx, 0x4102, value);
 					return;
 				case 0xE000:
-					extcl_cpu_wr_mem_OneBus(0x4103, value);
+					extcl_cpu_wr_mem_OneBus(nidx, 0x4103, value);
 					return;
 				case 0xE001:
-					extcl_cpu_wr_mem_OneBus(0x4104, value);
+					extcl_cpu_wr_mem_OneBus(nidx, 0x4104, value);
 					return;
 			}
 		}
 	}
 }
-BYTE extcl_cpu_rd_mem_OneBus(WORD address, UNUSED(BYTE openbus)) {
+BYTE extcl_cpu_rd_mem_OneBus(BYTE nidx, WORD address, UNUSED(BYTE openbus)) {
 	if ((address >= 0x4100) && (address <= 0x4FFF)) {
 		switch(address & 0x0FFF) {
 			case 0x140: case 0x141: case 0x142: case 0x143: case 0x144: case 0x145: case 0x146: case 0x147:
@@ -206,10 +206,10 @@ BYTE extcl_cpu_rd_mem_OneBus(WORD address, UNUSED(BYTE openbus)) {
 				if ((address <= 0x410D) || ((address >= 0x4160) && (address < 0x4800))) {
 					return (onebus.reg.cpu[address & 0xFF]);
 				}
-				return (wram_rd(address));
+				return (wram_rd(nidx, address));
 		}
 	}
-	return (wram_rd(address));
+	return (wram_rd(nidx, address));
 }
 BYTE extcl_save_mapper_OneBus(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, onebus.relative_8k);
@@ -228,9 +228,9 @@ BYTE extcl_save_mapper_OneBus(BYTE mode, BYTE slot, FILE *fp) {
 
 	return (EXIT_OK);
 }
-BYTE extcl_wr_ppu_reg_OneBus(WORD address, BYTE *value) {
+BYTE extcl_wr_ppu_reg_OneBus(BYTE nidx, WORD address, BYTE *value) {
 	if ((address >= 0x3000) && (info.mapper.ext_console_type == VT369)) {
-		nmt_wr(address, (*value));
+		nmt_wr(nidx, address, (*value));
 		return (TRUE);
 	}
 	if (address >= 0x2008) {
@@ -243,7 +243,7 @@ BYTE extcl_wr_ppu_reg_OneBus(WORD address, BYTE *value) {
 	}
 	return (FALSE);
 }
-BYTE extcl_wr_apu_OneBus(WORD address, BYTE *value) {
+BYTE extcl_wr_apu_OneBus(BYTE nidx, WORD address, BYTE *value) {
 	if ((address >= 0x4000) && (address <= 0x403F)) {
 		onebus.reg.apu[address & 0x3F] = (*value);
 		switch (address & 0x003F) {
@@ -261,7 +261,7 @@ BYTE extcl_wr_apu_OneBus(WORD address, BYTE *value) {
 				if (onebus.reg.apu[0x30] & 0x10) {
 					onebus.pcm.enable = (*value) & 0x10;
 					if (onebus.pcm.irq) {
-						irq.high &= ~EXT_IRQ;
+						nes[nidx].c.irq.high &= ~EXT_IRQ;
 						onebus.pcm.irq = 0;
 					}
 					if (onebus.pcm.enable) {
@@ -274,7 +274,7 @@ BYTE extcl_wr_apu_OneBus(WORD address, BYTE *value) {
 	}
 	return (FALSE);
 }
-BYTE extcl_rd_apu_OneBus(WORD address, BYTE openbus) {
+BYTE extcl_rd_apu_OneBus(UNUSED(BYTE nidx), WORD address, BYTE openbus) {
 	switch (address & 0x003F) {
 		case 0x15:
 			if (onebus.reg.apu[0x30] & 0x10) {
@@ -284,10 +284,10 @@ BYTE extcl_rd_apu_OneBus(WORD address, BYTE openbus) {
 	}
 	return (openbus);
 }
-BYTE extcl_rd_chr_OneBus(WORD address) {
+BYTE extcl_rd_chr_OneBus(UNUSED(BYTE nidx), WORD address) {
 	return (onebustmp.chr.bank.low.r2007[address >> 10][address & 0x3FF]);
 }
-void extcl_cpu_every_cycle_OneBus(void) {
+void extcl_cpu_every_cycle_OneBus(BYTE nidx) {
 	if (onebus.pcm.enable) {
 		onebus.pcm.latch--;
 		if (onebus.pcm.latch <= 0) {
@@ -296,39 +296,39 @@ void extcl_cpu_every_cycle_OneBus(void) {
 			if (onebus.pcm.size < 0) {
 				onebus.pcm.irq = 0x80;
 				onebus.pcm.enable = 0;
-				irq.high |= EXT_IRQ;
+				nes[nidx].c.irq.high |= EXT_IRQ;
 			} else {
 				WORD address = onebus.pcm.address | ((onebus.reg.apu[0x30] ^ 3) << 14);
 
-				apu_wr_mem_mapper(0x4011, (BYTE)(cpu_rd_mem_dbg(address) >> 1));
+				apu_wr_mem_mapper(nidx, 0x4011, (BYTE)(cpu_rd_mem_dbg(nidx, address) >> 1));
 				onebus.pcm.address++;
 				onebus.pcm.address &= 0x7FFF;
 			}
 		}
 	}
-	extcl_cpu_every_cycle_MMC3();
+	extcl_cpu_every_cycle_MMC3(nidx);
 }
-void extcl_ppu_000_to_34x_OneBus(void) {
-	extcl_ppu_000_to_34x_MMC3();
+void extcl_ppu_000_to_34x_OneBus(BYTE nidx) {
+	extcl_ppu_000_to_34x_MMC3(nidx);
 
 	if (info.mapper.ext_console_type == VT369) {
-		if ((onebus.reg.cpu[0x1C] & 0x80) && (ppu.frame_y <= ppu_sclines.vint)) {
+		if ((onebus.reg.cpu[0x1C] & 0x80) && (nes[nidx].p.ppu.frame_y <= nes[nidx].p.ppu_sclines.vint)) {
 			return;
 		}
-		if ((onebus.reg.cpu[0x1C] & 0x20) && (ppu.frame_y == ppu_sclines.vint)) {
+		if ((onebus.reg.cpu[0x1C] & 0x20) && (nes[nidx].p.ppu.frame_y == nes[nidx].p.ppu_sclines.vint)) {
 			return;
 		}
 	}
 	if (((onebus.reg.cpu[0x0B] & 0x80) | (onebus.reg.ppu[0x10] & 0x02))) {
-		if (((ppu.frame_y >= ppu_sclines.vint) && (ppu.screen_y < SCR_ROWS)) &&
-			(ppu.frame_x == (info.mapper.ext_console_type == VT369 ? 240 : 256))) {
-			irq_tick_OneBus();
+		if (((nes[nidx].p.ppu.frame_y >= nes[nidx].p.ppu_sclines.vint) && (nes[nidx].p.ppu.screen_y < SCR_ROWS)) &&
+			(nes[nidx].p.ppu.frame_x == (info.mapper.ext_console_type == VT369 ? 240 : 256))) {
+			irq_tick_OneBus(nidx);
 		}
 	}
 }
-void extcl_irq_A12_clock_OneBus(void) {
+void extcl_irq_A12_clock_OneBus(BYTE nidx) {
 	if (!((onebus.reg.cpu[0x0B] & 0x80) | (onebus.reg.ppu[0x10] & 0x02))) {
-		irq_tick_OneBus();
+		irq_tick_OneBus(nidx);
 	}
 }
 
@@ -414,7 +414,7 @@ void init_OneBus(BYTE reset) {
 	onebus.reg.cpu[0x61] = 0x00;
 
 	if (info.mapper.ext_console_type == VT369) {
-		extcl_cpu_wr_mem_OneBus(0x4162, 0x00);
+		extcl_cpu_wr_mem_OneBus(0, 0x4162, 0x00);
 
 		for (int i = 0; i < (int)LENGTH(onebus.gpio); i++) {
 			gpio_onebus_reset(onebus.gpio[i]);
@@ -455,7 +455,7 @@ void prg_fix_8k_OneBus_base(WORD mmask, WORD mblock) {
 	OneBus_prg_swap_8k(0xE000, bank);
 }
 void prg_swap_8k_OneBus_base(WORD address, WORD value) {
-	memmap_auto_8k(MMCPU(address), value);
+	memmap_auto_8k(0, MMCPU(address), value);
 }
 void prg_fix_16k_OneBus_base(WORD bank0, WORD bank1, WORD mmask, WORD mblock) {
 	BYTE mode = onebus.reg.cpu[0x0B] & 0x07;
@@ -470,7 +470,7 @@ void prg_fix_16k_OneBus_base(WORD bank0, WORD bank1, WORD mmask, WORD mblock) {
 	OneBus_prg_swap_16k(0xC000, bank);
 }
 void prg_swap_16k_OneBus_base(WORD address, WORD value) {
-	memmap_auto_16k(MMCPU(address), value);
+	memmap_auto_16k(0, MMCPU(address), value);
 }
 void chr_fix_OneBus_base(WORD mmask, WORD mblock) {
 	BYTE v16ben = (onebus.reg.ppu[0x10] & 0x40) || (onebus.reg.cpu[0x2B] == 0x61);
@@ -564,26 +564,26 @@ void wram_fix_OneBus_base(WORD mmask, WORD mblock) {
 		WORD block = ((onebus.reg.cpu[0] & 0xF0) << 4) | (onebus.reg.cpu[0x0A] & ~mask);
 		WORD bank = mblock | (((block | (onebus.reg.cpu[0x12] & mask)) + onebus.relative_8k) & mmask);
 
-		memmap_prgrom_8k(MMCPU(0x6000), bank);
+		memmap_prgrom_8k(0, MMCPU(0x6000), bank);
 	} else {
-		memmap_auto_8k(MMCPU(0x6000), 0);
+		memmap_auto_8k(0, MMCPU(0x6000), 0);
 	}
 }
 void mirroring_fix_OneBus_base(void) {
 	if (onebus.reg.cpu[0x06] & 0x01) {
-		mirroring_H();
+		mirroring_H(0);
 	} else {
-		mirroring_V();
+		mirroring_V(0);
 	}
 }
 
-INLINE static void irq_tick_OneBus(void) {
-	irqA12.counter = !irqA12.counter ? onebus.reg.cpu[0x01] : irqA12.counter - 1;
-	if (!irqA12.counter &&irqA12.enable && !ppu.vblank && r2001.visible) {
+INLINE static void irq_tick_OneBus(BYTE nidx) {
+	nes[nidx].irqA12.counter = !nes[nidx].irqA12.counter ? onebus.reg.cpu[0x01] : nes[nidx].irqA12.counter - 1;
+	if (!nes[nidx].irqA12.counter &&nes[nidx].irqA12.enable && !nes[nidx].p.ppu.vblank && nes[nidx].p.r2001.visible) {
 		if ((info.mapper.ext_console_type == VT369) && (onebus.reg.cpu[0x1C] & 0x20)) {
-			irqA12.delay = 24;
+			nes[nidx].irqA12.delay = 24;
 		} else {
-			irq.high |= EXT_IRQ;
+			nes[nidx].c.irq.high |= EXT_IRQ;
 		}
 	}
 }

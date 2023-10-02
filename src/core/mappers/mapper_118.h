@@ -22,6 +22,6 @@
 #include "common.h"
 
 void map_init_118(void);
-void extcl_cpu_wr_mem_118(WORD address, BYTE value);
+void extcl_cpu_wr_mem_118(BYTE nidx, WORD address, BYTE value);
 
 #endif /* MAPPER_118_H_ */

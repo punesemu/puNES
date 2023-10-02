@@ -43,23 +43,22 @@ void map_init_188(void) {
 void extcl_after_mapper_init_188(void) {
 	prg_fix_188();
 }
-void extcl_cpu_wr_mem_188(UNUSED(WORD address), BYTE value) {
+void extcl_cpu_wr_mem_188(UNUSED(BYTE nidx), UNUSED(WORD address), BYTE value) {
 	m188.reg = value;
 	prg_fix_188();
 }
-BYTE extcl_cpu_rd_mem_188(WORD address, UNUSED(BYTE openbus)) {
+BYTE extcl_cpu_rd_mem_188(BYTE nidx, WORD address, UNUSED(BYTE openbus)) {
 	if ((address >= 0x6000) && (address <= 0x7FFF)) {
 		return (0x03);
 	}
-	return (wram_rd(address));
+	return (wram_rd(nidx, address));
 }
 BYTE extcl_save_mapper_188(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m188.reg);
-
 	return (EXIT_OK);
 }
 
 INLINE static void prg_fix_188(void) {
-	memmap_auto_16k(MMCPU(0x8000), (m188.reg & 0x10 ? m188.reg & 0x07 : m188.reg | 0x08));
-	memmap_auto_16k(MMCPU(0xC000), 0x07);
+	memmap_auto_16k(0, MMCPU(0x8000), (m188.reg & 0x10 ? m188.reg & 0x07 : m188.reg | 0x08));
+	memmap_auto_16k(0, MMCPU(0xC000), 0x07);
 }

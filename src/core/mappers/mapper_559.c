@@ -53,7 +53,7 @@ void map_init_559(void) {
 	VRC2and4_mirroring_fix = mirroring_fix_vrc2and4_559;
 	VRC2and4_misc_03 = misc_03_vrc2and4_559;
 }
-void extcl_cpu_wr_mem_559(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_559(BYTE nidx, WORD address, BYTE value) {
 	switch (address & 0xF000) {
 		case 0xB000:
 		case 0xC000:
@@ -63,10 +63,10 @@ void extcl_cpu_wr_mem_559(WORD address, BYTE value) {
 			if (address & 0x0400) {
 				value >>= 4;
 			}
-			extcl_cpu_wr_mem_VRC2and4(address, value);
+			extcl_cpu_wr_mem_VRC2and4(nidx, address, value);
 			break;
 		default:
-			extcl_cpu_wr_mem_VRC2and4(address, value);
+			extcl_cpu_wr_mem_VRC2and4(nidx, address, value);
 			break;
 	}
 }
@@ -89,15 +89,15 @@ void chr_swap_vrc2and4_559(WORD address, WORD value) {
 	chr_swap_VRC2and4_base(address, (value & 0x1FF));
 }
 void mirroring_fix_vrc2and4_559(void) {
-	memmap_nmt_1k(MMPPU(0x2000), m559.mir[0]);
-	memmap_nmt_1k(MMPPU(0x2400), m559.mir[1]);
-	memmap_nmt_1k(MMPPU(0x2800), m559.mir[2]);
-	memmap_nmt_1k(MMPPU(0x2C00), m559.mir[3]);
+	memmap_nmt_1k(0, MMPPU(0x2000), m559.mir[0]);
+	memmap_nmt_1k(0, MMPPU(0x2400), m559.mir[1]);
+	memmap_nmt_1k(0, MMPPU(0x2800), m559.mir[2]);
+	memmap_nmt_1k(0, MMPPU(0x2C00), m559.mir[3]);
 
-	memmap_nmt_1k(MMPPU(0x3000), m559.mir[0]);
-	memmap_nmt_1k(MMPPU(0x3400), m559.mir[1]);
-	memmap_nmt_1k(MMPPU(0x3800), m559.mir[2]);
-	memmap_nmt_1k(MMPPU(0x3C00), m559.mir[3]);
+	memmap_nmt_1k(0, MMPPU(0x3000), m559.mir[0]);
+	memmap_nmt_1k(0, MMPPU(0x3400), m559.mir[1]);
+	memmap_nmt_1k(0, MMPPU(0x3800), m559.mir[2]);
+	memmap_nmt_1k(0, MMPPU(0x3C00), m559.mir[3]);
 }
 void misc_03_vrc2and4_559(WORD address, BYTE value) {
 	if (address & 0x0004) {

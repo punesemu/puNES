@@ -24,15 +24,15 @@
 void map_init_034(void);
 
 void extcl_after_mapper_init_034_s1(void);
-void extcl_cpu_wr_mem_034_s1(WORD address, BYTE value);
+void extcl_cpu_wr_mem_034_s1(BYTE nidx, WORD address, BYTE value);
 BYTE extcl_save_mapper_034_s1(BYTE mode, BYTE slot, FILE *fp);
 
 void extcl_after_mapper_init_034_s2(void);
-void extcl_cpu_wr_mem_034_s2(WORD address, BYTE value);
+void extcl_cpu_wr_mem_034_s2(BYTE nidx, WORD address, BYTE value);
 BYTE extcl_save_mapper_034_s2(BYTE mode, BYTE slot, FILE *fp);
 
 void extcl_after_mapper_init_034_nstcl(void);
-void extcl_cpu_wr_mem_034_nstcl(WORD address, BYTE value);
+void extcl_cpu_wr_mem_034_nstcl(BYTE nidx, WORD address, BYTE value);
 BYTE extcl_save_mapper_034_nstcl(BYTE mode, BYTE slot, FILE *fp);
 
 #endif /* MAPPER_034_H_ */

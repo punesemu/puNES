@@ -46,7 +46,7 @@ void map_init_045(void) {
 	mapper.internal_struct_size[1] = sizeof(mmc3);
 
 	if (info.reset >= HARD) {
-		memset(&irqA12, 0x00, sizeof(irqA12));
+		memset(&nes[0].irqA12, 0x00, sizeof(nes[0].irqA12));
 	}
 
 	memset(&m045, 0x00, sizeof(m045));
@@ -58,12 +58,12 @@ void map_init_045(void) {
 
 	info.mapper.extend_wr = TRUE;
 
-	irqA12.present = TRUE;
-	irqA12_delay = 1;
+	nes[0].irqA12.present = TRUE;
+	nes[0].irqA12.delay = 1;
 }
-void extcl_cpu_wr_mem_045(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_045(BYTE nidx, WORD address, BYTE value) {
 	if ((address >= 0x6000) && (address <= 0x7FFF)) {
-		if (!(m045.reg[3] & 0x40) && memmap_adr_is_writable(MMCPU(address))) {
+		if (!(m045.reg[3] & 0x40) && memmap_adr_is_writable(nidx, MMCPU(address))) {
 			m045.reg[m045.index] = value;
 			m045.index = (m045.index + 1) & 0x03;
 			MMC3_prg_fix();
@@ -71,14 +71,14 @@ void extcl_cpu_wr_mem_045(WORD address, BYTE value) {
 		}
 		return;
 	} else if (address >= 0x8000) {
-		extcl_cpu_wr_mem_MMC3(address, value);
+		extcl_cpu_wr_mem_MMC3(nidx, address, value);
 	}
 }
-BYTE extcl_cpu_rd_mem_045(WORD address, UNUSED(BYTE openbus)) {
+BYTE extcl_cpu_rd_mem_045(BYTE nidx, WORD address, UNUSED(BYTE openbus)) {
 	if (dipswitch.used && (address >= 0x5000) && (address <= 0x5FFF)) {
 		return (~dipswitch.value & address ? 0x01 : 0x00);
 	}
-	return (wram_rd(address));
+	return (wram_rd(nidx, address));
 }
 BYTE extcl_save_mapper_045(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m045.index);
@@ -107,11 +107,11 @@ void prg_swap_mmc3_045(WORD address, WORD value) {
 				break;
 		}
 	}
-	memmap_auto_wp_8k(MMCPU(address), (base | (value & mask)), enabled, FALSE);
+	memmap_auto_wp_8k(0, MMCPU(address), (base | (value & mask)), enabled, FALSE);
 }
 void chr_swap_mmc3_045(WORD address, WORD value) {
-	if (!chrrom_size() && (vram_size() == S8K)) {
-		memmap_vram_1k(MMPPU(address), (address >> 10));
+	if (!chrrom_size() && (vram_size(0) == S8K)) {
+		memmap_vram_1k(0, MMPPU(address), (address >> 10));
 	} else {
 		WORD base = m045.reg[0] | ((m045.reg[2] & 0xF0) << 4);
 		WORD mask = 0xFF >> (~m045.reg[2] & 0x0F);

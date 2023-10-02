@@ -46,8 +46,8 @@ void map_init_030(void) {
 		memset(&m030, 0x00, sizeof(m030));
 	}
 
-	if ((info.format != NES_2_0) && (vram_size() <= S8K)) {
-		vram_set_ram_size(S32K);
+	if ((info.format != NES_2_0) && (vram_size(0) <= S8K)) {
+		vram_set_ram_size(0, S32K);
 	}
 
 	if (ines.flags[FL6] & 0x02) {
@@ -71,42 +71,42 @@ void extcl_after_mapper_init_030(void) {
 	chr_fix_030();
 	mirroring_fix_030();
 }
-void extcl_cpu_wr_mem_030(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_030(BYTE nidx, WORD address, BYTE value) {
 	if ((address >= 0xC000) || !(ines.flags[FL6] & 0x02)) {
 		if (!m030tmp.sst39sf040) {
 			// bus conflict
-			value &= prgrom_rd(address);
+			value &= prgrom_rd(nidx, address);
 		}
 		m030.reg = value;
 		prg_fix_030();
 		chr_fix_030();
 		mirroring_fix_030();
 	} else {
-		sst39sf040_write(address, value);
+		sst39sf040_write(nidx, address, value);
 	}
 }
-BYTE extcl_cpu_rd_mem_030(WORD address, UNUSED(BYTE openbus)) {
+BYTE extcl_cpu_rd_mem_030(BYTE nidx, WORD address, UNUSED(BYTE openbus)) {
 	switch (address & 0xF000) {
 		case 0x4000:
 		case 0x5000:
 		case 0x6000:
 		case 0x7000:
-			return (wram_rd(address));
+			return (wram_rd(nidx, address));
 		case 0x8000:
 		case 0x9000:
 		case 0xA000:
 		case 0xB000:
-			return (sst39sf040_read(address));
+			return (sst39sf040_read(nidx, address));
 		default:
-			return (prgrom_rd(address));
+			return (prgrom_rd(nidx, address));
 	}
 }
 BYTE extcl_save_mapper_030(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m030.reg);
 	return (sst39sf040_save_mapper(mode, slot, fp));
 }
-void extcl_cpu_every_cycle_030(void) {
-	sst39sf040_tick();
+void extcl_cpu_every_cycle_030(BYTE nidx) {
+	sst39sf040_tick(nidx);
 }
 void extcl_battery_io_030(BYTE mode, FILE *fp) {
 	if (mode == WR_BAT) {
@@ -120,38 +120,38 @@ void extcl_battery_io_030(BYTE mode, FILE *fp) {
 	}
 }
 INLINE static void prg_fix_030(void) {
-	memmap_auto_16k(MMCPU(0x8000), m030.reg);
-	memmap_auto_16k(MMCPU(0xC000), 0xFF);
+	memmap_auto_16k(0, MMCPU(0x8000), m030.reg);
+	memmap_auto_16k(0, MMCPU(0xC000), 0xFF);
 }
 INLINE static void chr_fix_030(void) {
-	memmap_auto_8k(MMPPU(0x0000), (m030.reg >> 5));
+	memmap_auto_8k(0, MMPPU(0x0000), (m030.reg >> 5));
 }
 INLINE static void mirroring_fix_030(void) {
 	if (info.mapper.submapper == 1) {
 		if (m030.reg & 0x80) {
-			mirroring_V();
+			mirroring_V(0);
 		} else {
-			mirroring_H();
+			mirroring_H(0);
 		}
 		return;
 	} else {
 		switch ((ines.flags[FL6] & 0x01) | ((ines.flags[FL6] & 0x08) >> 2)) {
 			case 0:
-				mirroring_H();
+				mirroring_H(0);
 				return;
 			case 1:
-				mirroring_V();
+				mirroring_V(0);
 				return;
 			case 2:
 				if (m030.reg & 0x80) {
-					mirroring_SCR1();
+					mirroring_SCR1(0);
 				} else {
-					mirroring_SCR0();
+					mirroring_SCR0(0);
 				}
 				return;
 			case 3:
 				// 4-Screen, cartridge VRAM
-				memmap_nmt_chrrom_8k(MMPPU(0x2000), 3);
+				memmap_nmt_chrrom_8k(0, MMPPU(0x2000), 3);
 				return;
 			default:
 				return;

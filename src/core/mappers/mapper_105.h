@@ -23,6 +23,6 @@
 
 void map_init_105(void);
 BYTE extcl_save_mapper_105(BYTE mode, BYTE slot, FILE *fp);
-void extcl_cpu_every_cycle_105(void);
+void extcl_cpu_every_cycle_105(BYTE nidx);
 
 #endif /* MAPPER_105_H_ */

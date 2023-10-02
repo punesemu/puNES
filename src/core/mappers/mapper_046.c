@@ -42,7 +42,7 @@ void extcl_after_mapper_init_046(void) {
 	prg_fix_046();
 	chr_fix_046();
 }
-void extcl_cpu_wr_mem_046(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_046(BYTE nidx, WORD address, BYTE value) {
 	if ((address >= 0x6000) && (address <= 0x7FFF)) {
 		m046.reg[0] = value;
 		prg_fix_046();
@@ -50,7 +50,7 @@ void extcl_cpu_wr_mem_046(WORD address, BYTE value) {
 		return;
 	} else if (address >= 0x8000) {
 		// bus conflict
-		m046.reg[1] = value & prgrom_rd(address);
+		m046.reg[1] = value & prgrom_rd(nidx, address);
 		prg_fix_046();
 		chr_fix_046();
 		return;
@@ -58,13 +58,12 @@ void extcl_cpu_wr_mem_046(WORD address, BYTE value) {
 }
 BYTE extcl_save_mapper_046(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m046.reg);
-
 	return (EXIT_OK);
 }
 
 INLINE static void prg_fix_046(void) {
-	memmap_auto_32k(MMCPU(0x8000), (((m046.reg[0] & 0x0F) << 1) | (m046.reg[1] & 0x01)));
+	memmap_auto_32k(0, MMCPU(0x8000), (((m046.reg[0] & 0x0F) << 1) | (m046.reg[1] & 0x01)));
 }
 INLINE static void chr_fix_046(void) {
-	memmap_auto_8k(MMPPU(0x0000), (((m046.reg[0] & 0xF0) >> 1) | ((m046.reg[1] & 0x70) >> 4)));
+	memmap_auto_8k(0, MMPPU(0x0000), (((m046.reg[0] & 0xF0) >> 1) | ((m046.reg[1] & 0x70) >> 4)));
 }

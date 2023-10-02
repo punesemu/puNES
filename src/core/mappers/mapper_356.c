@@ -46,7 +46,7 @@ void map_init_356(void) {
 	mapper.internal_struct_size[1] = sizeof(mmc3);
 
 	if (info.reset >= HARD) {
-		memset(&irqA12, 0x00, sizeof(irqA12));
+		memset(&nes[0].irqA12, 0x00, sizeof(nes[0].irqA12));
 	}
 
 	memset(&m356, 0x00, sizeof(m356));
@@ -59,12 +59,12 @@ void map_init_356(void) {
 
 	info.mapper.extend_wr = TRUE;
 
-	irqA12.present = TRUE;
-	irqA12_delay = 1;
+	nes[0].irqA12.present = TRUE;
+	nes[0].irqA12.delay = 1;
 }
-void extcl_cpu_wr_mem_356(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_356(BYTE nidx, WORD address, BYTE value) {
 	if ((address >= 0x6000) && (address <= 0x7FFF)) {
-		if (!(m356.reg[3] & 0x40) && memmap_adr_is_writable(MMCPU(address))) {
+		if (!(m356.reg[3] & 0x40) && memmap_adr_is_writable(nidx, MMCPU(address))) {
 			m356.reg[m356.index] = value;
 			m356.index = (m356.index + 1) & 0x03;
 			MMC3_prg_fix();
@@ -73,7 +73,7 @@ void extcl_cpu_wr_mem_356(WORD address, BYTE value) {
 		}
 		return;
 	} else if (address >= 0x8000) {
-		extcl_cpu_wr_mem_MMC3(address, value);
+		extcl_cpu_wr_mem_MMC3(nidx, address, value);
 	}
 }
 BYTE extcl_save_mapper_356(BYTE mode, BYTE slot, FILE *fp) {
@@ -89,21 +89,21 @@ void prg_swap_mmc3_356(WORD address, WORD value) {
 	prg_swap_MMC3_base(address, ((base & ~mask) | (value & mask)));
 }
 void chr_swap_mmc3_356(WORD address, WORD value) {
-	if (!(m356.reg[2] & 0x20) && vram_size()) {
-		memmap_vram_1k(MMPPU(address), address >> 10);
+	if (!(m356.reg[2] & 0x20) && vram_size(0)) {
+		memmap_vram_1k(0, MMPPU(address), address >> 10);
 	} else {
 		WORD base = ((m356.reg[2] & 0xF0) << 4) | m356.reg[0];
 		WORD mask = 0xFF >> (~m356.reg[2] & 0x0F);
 
-		memmap_auto_1k(MMPPU(address), ((base & ~mask) | (value & mask)));
+		memmap_auto_1k(0, MMPPU(address), ((base & ~mask) | (value & mask)));
 	}
 }
 void mirroring_fix_mmc3_356(void) {
 	if (m356.reg[2] & 0x40) {
-		mirroring_FSCR();
+		mirroring_FSCR(0);
 	} else if (mmc3.mirroring & 0x01) {
-		mirroring_H();
+		mirroring_H(0);
 	} else {
-		mirroring_V();
+		mirroring_V(0);
 	}
 }

@@ -48,42 +48,41 @@ void extcl_after_mapper_init_338(void) {
 	chr_fix_338();
 	mirroring_fix_338();
 }
-void extcl_cpu_wr_mem_338(WORD address, UNUSED(BYTE value)) {
+void extcl_cpu_wr_mem_338(UNUSED(BYTE nidx), WORD address, UNUSED(BYTE value)) {
 	m338.reg = address;
 	prg_fix_338();
 	chr_fix_338();
 	mirroring_fix_338();
 }
-BYTE extcl_cpu_rd_mem_338(WORD address, UNUSED(BYTE openbus)) {
+BYTE extcl_cpu_rd_mem_338(BYTE nidx, WORD address, UNUSED(BYTE openbus)) {
 	if (address >= 0x8000) {
 		switch (m338.reg & 0xFF0F) {
 			case 0xF004:
-				return (prgrom_size() <= S64K ? dipswitch.value & 0x00FF : prgrom_rd(address));
+				return (prgrom_size() <= S64K ? dipswitch.value & 0x00FF : prgrom_rd(nidx, address));
 			case 0xF008:
 				return ((dipswitch.value & 0xFF00) >> 8);
 			default:
-				return (prgrom_rd(address));
+				return (prgrom_rd(nidx, address));
 		}
 	}
-	return (wram_rd(address));
+	return (wram_rd(nidx, address));
 }
 BYTE extcl_save_mapper_338(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m338.reg);
-
 	return (EXIT_OK);
 }
 
 INLINE static void prg_fix_338(void) {
-	memmap_auto_16k(MMCPU(0x8000), m338.reg);
-	memmap_auto_16k(MMCPU(0xC000), m338.reg);
+	memmap_auto_16k(0, MMCPU(0x8000), m338.reg);
+	memmap_auto_16k(0, MMCPU(0xC000), m338.reg);
 }
 INLINE static void chr_fix_338(void) {
-	memmap_auto_8k(MMPPU(0x0000), m338.reg);
+	memmap_auto_8k(0, MMPPU(0x0000), m338.reg);
 }
 INLINE static void mirroring_fix_338(void) {
 	if (m338.reg & 0x08) {
-		mirroring_V();
+		mirroring_V(0);
 	} else {
-		mirroring_H();
+		mirroring_H(0);
 	}
 }

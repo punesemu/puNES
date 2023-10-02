@@ -52,7 +52,7 @@ void map_init_369(void) {
 	mapper.internal_struct_size[1] = sizeof(mmc3);
 
 	if (info.reset >= HARD) {
-		memset(&irqA12, 0x00, sizeof(irqA12));
+		memset(&nes[0].irqA12, 0x00, sizeof(nes[0].irqA12));
 		memset(&m369, 0x00, sizeof(m369));
 	}
 
@@ -65,10 +65,10 @@ void map_init_369(void) {
 
 	info.mapper.extend_wr = TRUE;
 
-	irqA12.present = TRUE;
-	irqA12_delay = 1;
+	nes[0].irqA12.present = TRUE;
+	nes[0].irqA12.delay = 1;
 }
-void extcl_cpu_wr_mem_369(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_369(BYTE nidx, WORD address, BYTE value) {
 	switch (address & 0xF000) {
 		case 0x4000:
 			if (address & 0x0100) {
@@ -82,10 +82,10 @@ void extcl_cpu_wr_mem_369(WORD address, BYTE value) {
 		case 0x9000:
 			if (m369.reg == 0x13) {
 				m369.irq.enable = FALSE;
-				irq.high &= ~EXT_IRQ;
+				nes[nidx].c.irq.high &= ~EXT_IRQ;
 			}
 			if (!(address & 0x0001)) {
-				extcl_cpu_wr_mem_MMC3(address, value);
+				extcl_cpu_wr_mem_MMC3(nidx, address, value);
 			} else {
 				mmc3.reg[mmc3.bank_to_update & 0x07] = value;
 				switch (mmc3.bank_to_update & 0x07) {
@@ -109,11 +109,11 @@ void extcl_cpu_wr_mem_369(WORD address, BYTE value) {
 			if (m369.reg == 0x13) {
 				m369.irq.enable = value & 0x02;
 			}
-			extcl_cpu_wr_mem_MMC3(address, value);
+			extcl_cpu_wr_mem_MMC3(nidx, address, value);
 			return;
 		case 0xC000:
 		case 0xD000:
-			extcl_cpu_wr_mem_MMC3(address, value);
+			extcl_cpu_wr_mem_MMC3(nidx, address, value);
 			return;
 		case 0xE000:
 		case 0xF000:
@@ -121,7 +121,7 @@ void extcl_cpu_wr_mem_369(WORD address, BYTE value) {
 				m369.smb2j = value;
 				MMC3_prg_fix();
 			}
-			extcl_cpu_wr_mem_MMC3(address, value);
+			extcl_cpu_wr_mem_MMC3(nidx, address, value);
 			return;
 		default:
 			return;
@@ -134,41 +134,41 @@ BYTE extcl_save_mapper_369(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m369.irq.counter);
 	return (extcl_save_mapper_MMC3(mode, slot, fp));
 }
-void extcl_cpu_every_cycle_369(void) {
+void extcl_cpu_every_cycle_369(BYTE nidx) {
 	if (m369.reg == 0x13) {
 		if (m369.irq.enable) {
 			m369.irq.counter = (m369.irq.counter + 1) & 0x0FFF;
 			if (!m369.irq.counter) {
-				irq.high |= EXT_IRQ;
+				nes[nidx].c.irq.high |= EXT_IRQ;
 			}
 		}
 	} else {
-		extcl_cpu_every_cycle_MMC3();
+		extcl_cpu_every_cycle_MMC3(nidx);
 	}
 }
-void extcl_ppu_000_to_34x_369(void) {
+void extcl_ppu_000_to_34x_369(BYTE nidx) {
 	if (!(m369.reg == 0x13)) {
-		extcl_ppu_000_to_34x_MMC3();
+		extcl_ppu_000_to_34x_MMC3(nidx);
 	}
 }
-void extcl_ppu_000_to_255_369(void) {
+void extcl_ppu_000_to_255_369(BYTE nidx) {
 	if (!(m369.reg == 0x13)) {
-		extcl_ppu_000_to_255_MMC3();
+		extcl_ppu_000_to_255_MMC3(nidx);
 	}
 }
-void extcl_ppu_256_to_319_369(void) {
+void extcl_ppu_256_to_319_369(BYTE nidx) {
 	if (!(m369.reg == 0x13)) {
-		extcl_ppu_256_to_319_MMC3();
+		extcl_ppu_256_to_319_MMC3(nidx);
 	}
 }
-void extcl_ppu_320_to_34x_369(void) {
+void extcl_ppu_320_to_34x_369(BYTE nidx) {
 	if (!(m369.reg == 0x13)) {
-		extcl_ppu_320_to_34x_MMC3();
+		extcl_ppu_320_to_34x_MMC3(nidx);
 	}
 }
-void extcl_update_r2006_369(WORD new_r2006, WORD old_r2006) {
+void extcl_update_r2006_369(BYTE nidx, WORD new_r2006, WORD old_r2006) {
 	if (!(m369.reg == 0x13)) {
-		extcl_update_r2006_MMC3(new_r2006, old_r2006);
+		extcl_update_r2006_MMC3(nidx, new_r2006, old_r2006);
 	}
 }
 
@@ -176,13 +176,13 @@ void prg_fix_mmc3_369(void) {
 	switch (m369.reg) {
 		case 0x00:
 		case 0x01:
-			memmap_auto_32k(MMCPU(0x8000), m369.reg);
+			memmap_auto_32k(0, MMCPU(0x8000), m369.reg);
 			return;
 		case 0x13:
-			memmap_auto_8k(MMCPU(0x8000), 0x0C);
-			memmap_auto_8k(MMCPU(0xA000), 0x0D);
-			memmap_auto_8k(MMCPU(0xC000), (0x08 | (m369.smb2j & 0x03)));
-			memmap_auto_8k(MMCPU(0xE000), 0x0F);
+			memmap_auto_8k(0, MMCPU(0x8000), 0x0C);
+			memmap_auto_8k(0, MMCPU(0xA000), 0x0D);
+			memmap_auto_8k(0, MMCPU(0xC000), (0x08 | (m369.smb2j & 0x03)));
+			memmap_auto_8k(0, MMCPU(0xE000), 0x0F);
 			return;
 		case 0x37:
 		case 0xFF:
@@ -201,7 +201,7 @@ void chr_fix_mmc3_369(void) {
 		case 0x00:
 		case 0x01:
 		case 0x13:
-			memmap_auto_8k(MMPPU(0x0000), (m369.reg & 0x03));
+			memmap_auto_8k(0, MMPPU(0x0000), (m369.reg & 0x03));
 			return;
 		case 0x37:
 		case 0xFF:
@@ -217,7 +217,7 @@ void chr_swap_mmc3_369(WORD address, WORD value) {
 }
 void wram_fix_mmc3_369(void) {
 	if (m369.reg == 0x13) {
-		memmap_prgrom_8k(MMCPU(0x6000), 0x0E);
+		memmap_prgrom_8k(0, MMCPU(0x6000), 0x0E);
 	} else {
 		wram_fix_MMC3_base();
 	}

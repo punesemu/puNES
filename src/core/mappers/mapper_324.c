@@ -39,24 +39,23 @@ void map_init_324(void) {
 void extcl_after_mapper_init_324(void) {
 	prg_fix_324();
 }
-void extcl_cpu_wr_mem_324(WORD address, UNUSED(BYTE value)) {
+void extcl_cpu_wr_mem_324(BYTE nidx, WORD address, UNUSED(BYTE value)) {
 	if ((m324.reg & 0x08) || (m324.reg & 0x80) || !(value & 0x80)) {
 		m324.reg = (m324.reg & 0xF8) | (value & 0x07);
 	} else {
 		// bus conflict
-		m324.reg = value & prgrom_rd(address);
+		m324.reg = value & prgrom_rd(nidx, address);
 	}
 	prg_fix_324();
 }
 BYTE extcl_save_mapper_324(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m324.reg);
-
 	return (EXIT_OK);
 }
 
 INLINE static void prg_fix_324(void) {
 	WORD bank = ((m324.reg & 0x70) >> 1) | (m324.reg & 0x07);
 
-	memmap_auto_16k(MMCPU(0x8000), bank);
-	memmap_auto_16k(MMCPU(0xC000), (bank | 0x07));
+	memmap_auto_16k(0, MMCPU(0x8000), bank);
+	memmap_auto_16k(0, MMCPU(0xC000), (bank | 0x07));
 }

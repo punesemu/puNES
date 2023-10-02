@@ -41,18 +41,17 @@ void map_init_094(void) {
 void extcl_after_mapper_init_094(void) {
 	prg_fix_094();
 }
-void extcl_cpu_wr_mem_094(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_094(BYTE nidx, WORD address, BYTE value) {
 	// bus conflict
-	m094.reg = value & prgrom_rd(address);
+	m094.reg = value & prgrom_rd(nidx, address);
 	prg_fix_094();
 }
 BYTE extcl_save_mapper_094(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m094.reg);
-
 	return (EXIT_OK);
 }
 
 INLINE static void prg_fix_094(void) {
-	memmap_auto_16k(MMCPU(0x8000), (m094.reg >> 2));
-	memmap_auto_16k(MMCPU(0xC000), 0xFF);
+	memmap_auto_16k(0, MMCPU(0x8000), (m094.reg >> 2));
+	memmap_auto_16k(0, MMCPU(0xC000), 0xFF);
 }

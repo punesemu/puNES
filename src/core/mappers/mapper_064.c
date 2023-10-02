@@ -88,7 +88,7 @@ void extcl_after_mapper_init_064(void) {
 	chr_fix_064();
 	mirroring_fix_064();
 }
-void extcl_cpu_wr_mem_064(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_064(UNUSED(BYTE nidx), WORD address, BYTE value) {
 	switch (address & 0xF001) {
 		case 0x8000:
 			m064.index = value;
@@ -167,46 +167,45 @@ BYTE extcl_save_mapper_064(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m064.irq.reload);
 	save_slot_ele(mode, slot, m064.irq.a12);
 	save_slot_ele(mode, slot, m064.irq.a12_filter);
-
 	return (EXIT_OK);
 }
-void extcl_ppu_000_to_255_064(void) {
-	if (r2001.visible) {
-		extcl_ppu_320_to_34x_064();
+void extcl_ppu_000_to_255_064(BYTE nidx) {
+	if (nes[nidx].p.r2001.visible) {
+		extcl_ppu_320_to_34x_064(nidx);
 	}
 }
-void extcl_ppu_256_to_319_064(void) {
-	if ((ppu.frame_x & 0x0007) != 0x0003) {
+void extcl_ppu_256_to_319_064(BYTE nidx) {
+	if ((nes[nidx].p.ppu.frame_x & 0x0007) != 0x0003) {
 		return;
 	}
 
-	if ((!spr_ev.count_plus || (spr_ev.tmp_spr_plus == spr_ev.count_plus)) && (r2000.size_spr == 16)) {
-		ppu.spr_adr = r2000.spt_adr;
+	if ((!nes[nidx].p.spr_ev.count_plus || (nes[nidx].p.spr_ev.tmp_spr_plus == nes[nidx].p.spr_ev.count_plus)) && (nes[nidx].p.r2000.size_spr == 16)) {
+		nes[nidx].p.ppu.spr_adr = nes[nidx].p.r2000.spt_adr;
 	} else {
-		ppu_spr_adr((ppu.frame_x & 0x0038) >> 3);
+		ppu_spr_adr((nes[nidx].p.ppu.frame_x & 0x0038) >> 3);
 	}
 
-	m064.irq.a12 = (ppu.spr_adr & 0x1000) >> 12;
+	m064.irq.a12 = (nes[nidx].p.ppu.spr_adr & 0x1000) >> 12;
 }
-void extcl_ppu_320_to_34x_064(void) {
-	if ((ppu.frame_x & 0x0007) != 0x0003) {
+void extcl_ppu_320_to_34x_064(BYTE nidx) {
+	if ((nes[nidx].p.ppu.frame_x & 0x0007) != 0x0003) {
 		return;
 	}
 
-	if (ppu.frame_x == 323) {
+	if (nes[nidx].p.ppu.frame_x == 323) {
 		ppu_spr_adr(7);
 	}
 
-	ppu_bck_adr(r2000.bpt_adr, r2006.value);
+	ppu_bck_adr(nes[nidx].p.r2000.bpt_adr, nes[nidx].p.r2006.value);
 
-	m064.irq.a12 = (ppu.bck_adr & 0x1000) >> 12;
+	m064.irq.a12 = (nes[nidx].p.ppu.bck_adr & 0x1000) >> 12;
 }
-void extcl_update_r2006_064(WORD new_r2006, UNUSED(WORD old_r2006)) {
+void extcl_update_r2006_064(UNUSED(BYTE nidx), WORD new_r2006, UNUSED(WORD old_r2006)) {
 	m064.irq.a12 = (new_r2006 & 0x1000) >> 12;
 }
-void extcl_cpu_every_cycle_064(void) {
+void extcl_cpu_every_cycle_064(BYTE nidx) {
 	if (m064.irq.delay && !(--m064.irq.delay)) {
-		irq.high |= EXT_IRQ;
+		nes[nidx].c.irq.high |= EXT_IRQ;
 	}
 	m064.irq.prescaler++;
 	if (!(m064.irq.prescaler & 0x03) && (m064.irq.mode == CPU_MODE)) {
@@ -221,62 +220,62 @@ void extcl_cpu_every_cycle_064(void) {
 		m064.irq.a12_filter--;
 	}
 	if (!m064.irq.enable) {
-		irq.high &= ~EXT_IRQ;
+		nes[nidx].c.irq.high &= ~EXT_IRQ;
 	}
 }
 
 INLINE static void prg_fix_064(void) {
 	if (m064.index & 0x40) {
-		memmap_auto_8k(MMCPU(0x8000), m064.prg[2]);
-		memmap_auto_8k(MMCPU(0xA000), m064.prg[0]);
-		memmap_auto_8k(MMCPU(0xC000), m064.prg[1]);
+		memmap_auto_8k(0, MMCPU(0x8000), m064.prg[2]);
+		memmap_auto_8k(0, MMCPU(0xA000), m064.prg[0]);
+		memmap_auto_8k(0, MMCPU(0xC000), m064.prg[1]);
 	} else {
-		memmap_auto_8k(MMCPU(0x8000), m064.prg[0]);
-		memmap_auto_8k(MMCPU(0xA000), m064.prg[1]);
-		memmap_auto_8k(MMCPU(0xC000), m064.prg[2]);
+		memmap_auto_8k(0, MMCPU(0x8000), m064.prg[0]);
+		memmap_auto_8k(0, MMCPU(0xA000), m064.prg[1]);
+		memmap_auto_8k(0, MMCPU(0xC000), m064.prg[2]);
 	}
-	memmap_auto_8k(MMCPU(0xE000), 0xFF);
+	memmap_auto_8k(0, MMCPU(0xE000), 0xFF);
 }
 INLINE static void chr_fix_064(void) {
 	WORD swap = (m064.index & 0x80) << 5;
 
 	if (m064.index & 0x20) {
-		memmap_auto_1k(MMPPU(0x0000 ^ swap), m064.chr[0]);
-		memmap_auto_1k(MMPPU(0x0400 ^ swap), m064.chr[6]);
-		memmap_auto_1k(MMPPU(0x0800 ^ swap), m064.chr[1]);
-		memmap_auto_1k(MMPPU(0x0C00 ^ swap), m064.chr[7]);
+		memmap_auto_1k(0, MMPPU(0x0000 ^ swap), m064.chr[0]);
+		memmap_auto_1k(0, MMPPU(0x0400 ^ swap), m064.chr[6]);
+		memmap_auto_1k(0, MMPPU(0x0800 ^ swap), m064.chr[1]);
+		memmap_auto_1k(0, MMPPU(0x0C00 ^ swap), m064.chr[7]);
 	} else {
-		memmap_auto_2k(MMPPU(0x0000 ^ swap), (m064.chr[0] >> 1));
-		memmap_auto_2k(MMPPU(0x0800 ^ swap), (m064.chr[1] >> 1));
+		memmap_auto_2k(0, MMPPU(0x0000 ^ swap), (m064.chr[0] >> 1));
+		memmap_auto_2k(0, MMPPU(0x0800 ^ swap), (m064.chr[1] >> 1));
 	}
-	memmap_auto_1k(MMPPU(0x1000 ^ swap), m064.chr[2]);
-	memmap_auto_1k(MMPPU(0x1400 ^ swap), m064.chr[3]);
-	memmap_auto_1k(MMPPU(0x1800 ^ swap), m064.chr[4]);
-	memmap_auto_1k(MMPPU(0x1C00 ^ swap), m064.chr[5]);
+	memmap_auto_1k(0, MMPPU(0x1000 ^ swap), m064.chr[2]);
+	memmap_auto_1k(0, MMPPU(0x1400 ^ swap), m064.chr[3]);
+	memmap_auto_1k(0, MMPPU(0x1800 ^ swap), m064.chr[4]);
+	memmap_auto_1k(0, MMPPU(0x1C00 ^ swap), m064.chr[5]);
 }
 INLINE static void mirroring_fix_064(void) {
 	if (info.mapper.id == 158) {
 		WORD swap = (m064.index & 0x80) << 5;
 
 		if (m064.index & 0x20) {
-			memmap_nmt_1k(MMPPU(0x2000 ^ swap), (m064.chr[0] >> 7));
-			memmap_nmt_1k(MMPPU(0x2400 ^ swap), (m064.chr[6] >> 7));
-			memmap_nmt_1k(MMPPU(0x2800 ^ swap), (m064.chr[1] >> 7));
-			memmap_nmt_1k(MMPPU(0x2C00 ^ swap), (m064.chr[7] >> 7));
+			memmap_nmt_1k(0, MMPPU(0x2000 ^ swap), (m064.chr[0] >> 7));
+			memmap_nmt_1k(0, MMPPU(0x2400 ^ swap), (m064.chr[6] >> 7));
+			memmap_nmt_1k(0, MMPPU(0x2800 ^ swap), (m064.chr[1] >> 7));
+			memmap_nmt_1k(0, MMPPU(0x2C00 ^ swap), (m064.chr[7] >> 7));
 		} else {
-			memmap_nmt_1k(MMPPU(0x2000 ^ swap), (m064.chr[0] >> 7));
-			memmap_nmt_1k(MMPPU(0x2400 ^ swap), (m064.chr[0] >> 7));
-			memmap_nmt_1k(MMPPU(0x2800 ^ swap), (m064.chr[1] >> 7));
-			memmap_nmt_1k(MMPPU(0x2C00 ^ swap), (m064.chr[1] >> 7));
+			memmap_nmt_1k(0, MMPPU(0x2000 ^ swap), (m064.chr[0] >> 7));
+			memmap_nmt_1k(0, MMPPU(0x2400 ^ swap), (m064.chr[0] >> 7));
+			memmap_nmt_1k(0, MMPPU(0x2800 ^ swap), (m064.chr[1] >> 7));
+			memmap_nmt_1k(0, MMPPU(0x2C00 ^ swap), (m064.chr[1] >> 7));
 		}
-		memmap_nmt_1k(MMPPU(0x3000 ^ swap), (m064.chr[2] >> 7));
-		memmap_nmt_1k(MMPPU(0x3400 ^ swap), (m064.chr[3] >> 7));
-		memmap_nmt_1k(MMPPU(0x3800 ^ swap), (m064.chr[4] >> 7));
-		memmap_nmt_1k(MMPPU(0x3C00 ^ swap), (m064.chr[5] >> 7));
+		memmap_nmt_1k(0, MMPPU(0x3000 ^ swap), (m064.chr[2] >> 7));
+		memmap_nmt_1k(0, MMPPU(0x3400 ^ swap), (m064.chr[3] >> 7));
+		memmap_nmt_1k(0, MMPPU(0x3800 ^ swap), (m064.chr[4] >> 7));
+		memmap_nmt_1k(0, MMPPU(0x3C00 ^ swap), (m064.chr[5] >> 7));
 	} else if (m064.mirroring & 0x01) {
-		mirroring_H();
+		mirroring_H(0);
 	} else {
-		mirroring_V();
+		mirroring_V(0);
 	}
 }
 

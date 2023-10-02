@@ -43,7 +43,7 @@ extern nes_ntsc_bisqwit_setup_t nes_ntsc_bisqwit;
 #endif
 
 EXTERNC void ntsc_bisqwit_init(void);
-EXTERNC void ntsc_bisqwit_surface(void);
+EXTERNC void ntsc_bisqwit_surface(BYTE nidx);
 
 EXTERNC void ntsc_bisqwit_filter_parameters_changed(void);
 EXTERNC void ntsc_bisqwit_filter_parameters_default(void);

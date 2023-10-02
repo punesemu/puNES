@@ -23,7 +23,7 @@
 
 void map_init_053(void);
 void extcl_after_mapper_init_053(void);
-void extcl_cpu_wr_mem_053(WORD address, BYTE value);
+void extcl_cpu_wr_mem_053(BYTE nidx, WORD address, BYTE value);
 BYTE extcl_save_mapper_053(BYTE mode, BYTE slot, FILE *fp);
 
 #endif /* MAPPER_053_H_ */

@@ -42,7 +42,7 @@ void extcl_after_mapper_init_058(void) {
 	chr_fix_058();
 	mirroring_fix_058();
 }
-void extcl_cpu_wr_mem_058(WORD address, UNUSED(BYTE value)) {
+void extcl_cpu_wr_mem_058(UNUSED(BYTE nidx), WORD address, UNUSED(BYTE value)) {
 	m058.reg = address;
 	prg_fix_058();
 	chr_fix_058();
@@ -50,23 +50,22 @@ void extcl_cpu_wr_mem_058(WORD address, UNUSED(BYTE value)) {
 }
 BYTE extcl_save_mapper_058(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m058.reg);
-
 	return (EXIT_OK);
 }
 
 INLINE static void prg_fix_058(void) {
 	WORD bank = m058.reg & 0x07;
 
-	memmap_auto_16k(MMCPU(0x8000), (bank & ~((~m058.reg & 0x40) >> 6)));
-	memmap_auto_16k(MMCPU(0xC000), (bank |  ((~m058.reg & 0x40) >> 6)));
+	memmap_auto_16k(0, MMCPU(0x8000), (bank & ~((~m058.reg & 0x40) >> 6)));
+	memmap_auto_16k(0, MMCPU(0xC000), (bank |  ((~m058.reg & 0x40) >> 6)));
 }
 INLINE static void chr_fix_058(void) {
-	memmap_auto_8k(MMPPU(0x0000), ((m058.reg & 0x38) >> 3));
+	memmap_auto_8k(0, MMPPU(0x0000), ((m058.reg & 0x38) >> 3));
 }
 INLINE static void mirroring_fix_058(void) {
 	if (m058.reg & 0x80) {
-		mirroring_H();
+		mirroring_H(0);
 	} else {
-		mirroring_V();
+		mirroring_V(0);
 	}
 }

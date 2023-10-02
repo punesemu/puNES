@@ -68,24 +68,24 @@ void map_init_176(void) {
 		}
 		if (chrrom_size()) {
 			if ((prgrom_size() == S2M) && (chrrom_size() == S512K)) {
-				vram_set_ram_size(S8K);
+				vram_set_ram_size(0, S8K);
 			} else {
-				vram_set_ram_size(0);
+				vram_set_ram_size(0, 0);
 			}
 		} else {
 			switch (prgrom_size()) {
 				case S2M:
 				case S4M:
-					vram_set_ram_size(S128K);
+					vram_set_ram_size(0, S128K);
 					break;
 				default:
-					vram_set_ram_size(S8K);
+					vram_set_ram_size(0, S8K);
 					break;
 			}
 		}
 	}
 
-	memset(&irqA12, 0x00, sizeof(irqA12));
+	memset(&nes[0].irqA12, 0x00, sizeof(nes[0].irqA12));
 	memset(&m176, 0x00, sizeof(m176));
 
 	m176.mmc3[0] = 0;
@@ -123,8 +123,8 @@ void map_init_176(void) {
 
 	info.mapper.extend_wr = TRUE;
 
-	irqA12.present = TRUE;
-	irqA12_delay = 1;
+	nes[0].irqA12.present = TRUE;
+	nes[0].irqA12.delay = 1;
 }
 void extcl_after_mapper_init_176(void) {
 	prg_fix_176();
@@ -132,7 +132,7 @@ void extcl_after_mapper_init_176(void) {
 	wram_fix_176();
 	mirroring_fix_176();
 }
-void extcl_cpu_wr_mem_176(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_176(BYTE nidx, WORD address, BYTE value) {
 	switch (address & 0xF000) {
 		case 0x4000:
 			if ((address & 0x0800) && (info.mapper.submapper == 5)) {
@@ -186,7 +186,7 @@ void extcl_cpu_wr_mem_176(WORD address, BYTE value) {
 		case 0xD000:
 		case 0xE000:
 		case 0xF000:
-			extcl_cpu_wr_mem_MMC3(address, value);
+			extcl_cpu_wr_mem_MMC3(nidx, address, value);
 			m176.cpu8xxx[0] = value;
 			extcl_after_mapper_init_176();
 			break;
@@ -239,16 +239,16 @@ INLINE static void prg_fix_176(void) {
 
 	switch (mode) {
 		case 3:
-			memmap_auto_16k(MMCPU(0x8000), base);
-			memmap_auto_16k(MMCPU(0xC000), base);
+			memmap_auto_16k(0, MMCPU(0x8000), base);
+			memmap_auto_16k(0, MMCPU(0xC000), base);
 			return;
 		case 4:
 			base >>= 1;
-			memmap_auto_32k(MMCPU(0x8000), base);
+			memmap_auto_32k(0, MMCPU(0x8000), base);
 			return;
 		case 5:
-			memmap_auto_16k(MMCPU(0x8000), ((base & 0xFFF8) | (m176.cpu8xxx[0] & 0x07) | 0x00));
-			memmap_auto_16k(MMCPU(0xC000), ((base & 0xFFF8) | (m176.cpu8xxx[0] & 0x07) | 0x07));
+			memmap_auto_16k(0, MMCPU(0x8000), ((base & 0xFFF8) | (m176.cpu8xxx[0] & 0x07) | 0x00));
+			memmap_auto_16k(0, MMCPU(0xC000), ((base & 0xFFF8) | (m176.cpu8xxx[0] & 0x07) | 0x07));
 			return;
 		default: {
 			WORD swap = (m176.mmc3_bank_to_update & 0x40) << 8;
@@ -261,10 +261,10 @@ INLINE static void prg_fix_176(void) {
 			bank[2] = (base & ~mask) | ((!ext ? 0xFE : m176.mmc3[8]) & mask);
 			bank[3] = (base & ~mask) | ((!ext ? 0xFF : m176.mmc3[9]) & mask);
 
-			memmap_auto_8k(MMCPU(0x8000 ^ swap), bank[0]);
-			memmap_auto_8k(MMCPU(0xA000), bank[1]);
-			memmap_auto_8k(MMCPU(0xC000 ^ swap), bank[2]);
-			memmap_auto_8k(MMCPU(0xE000), bank[3]);
+			memmap_auto_8k(0, MMCPU(0x8000 ^ swap), bank[0]);
+			memmap_auto_8k(0, MMCPU(0xA000), bank[1]);
+			memmap_auto_8k(0, MMCPU(0xC000 ^ swap), bank[2]);
+			memmap_auto_8k(0, MMCPU(0xE000), bank[3]);
 			return;
 		}
 	}
@@ -277,7 +277,7 @@ INLINE static void chr_fix_176(void) {
 		base |= m176.cpu5xxx[6] << 11;
 	}
 
-	if ((m176.cpu5xxx[0] & 0x60) || (!chrrom_size() && (vram_size() == S8K))) {
+	if ((m176.cpu5xxx[0] & 0x60) || (!chrrom_size() && (vram_size(0) == S8K))) {
 		DBWORD mask = !(m176.cpu5xxx[0] & 0x20) && ((info.mapper.submapper == 1) || (info.mapper.submapper == 5))
 			? (m176.cpu5xxx[0] & 0x010 ? 0x08 : 0x18)
 			: 0x00;
@@ -316,10 +316,10 @@ INLINE static void chr_fix_176(void) {
 	}
 
 	if (info.mapper.id == 523) {
-		memmap_auto_2k(MMPPU(0x0000), bank[0]);
-		memmap_auto_2k(MMPPU(0x0800), bank[2]);
-		memmap_auto_2k(MMPPU(0x1000), bank[4]);
-		memmap_auto_2k(MMPPU(0x1800), bank[6]);
+		memmap_auto_2k(0, MMPPU(0x0000), bank[0]);
+		memmap_auto_2k(0, MMPPU(0x0800), bank[2]);
+		memmap_auto_2k(0, MMPPU(0x1000), bank[4]);
+		memmap_auto_2k(0, MMPPU(0x1800), bank[6]);
 	} else {
 		WORD swap = (m176.mmc3_bank_to_update & 0x80) << 5;
 
@@ -334,11 +334,11 @@ INLINE static void chr_fix_176(void) {
 	}
 }
 INLINE static void chr_swap_176(WORD address, WORD value) {
-	if (((vram_size() && (m176.cpu5xxx[0] & 0x20) && !(m176.cpu5xxx[0] & 0x40)) || m176.ram_cfg_reg) &&
+	if (((vram_size(0) && (m176.cpu5xxx[0] & 0x20) && !(m176.cpu5xxx[0] & 0x40)) || m176.ram_cfg_reg) &&
 		(m176.cpu8xxx[2] & 0x04) && (value < 8)) {
-		memmap_vram_1k(MMPPU(address), value);
+		memmap_vram_1k(0, MMPPU(address), value);
 	} else {
-		memmap_auto_1k(MMPPU(address), value);
+		memmap_auto_1k(0, MMPPU(address), value);
 	}
 }
 INLINE static void wram_fix_176(void) {
@@ -362,31 +362,31 @@ INLINE static void wram_fix_176(void) {
 	// +--------- PRG RAM enable (0: disable, 1: enable)
 	if (m176.ram_enabled || m176.ram_cfg_reg) {
 		if (m176.ram_cfg_reg) {
-			memmap_auto_8k(MMCPU(0x4000), bank + 1);
-			memmap_auto_8k(MMCPU(0x6000), bank);
+			memmap_auto_8k(0, MMCPU(0x4000), bank + 1);
+			memmap_auto_8k(0, MMCPU(0x6000), bank);
 		} else {
 			// MMC3 mode
-			memmap_disable_4k(MMCPU(0x5000));
-			memmap_auto_wp_8k(MMCPU(0x6000), 0, m176.ram_enabled >> 7, !m176.ram_out_reg);
+			memmap_disable_4k(0, MMCPU(0x5000));
+			memmap_auto_wp_8k(0, MMCPU(0x6000), 0, m176.ram_enabled >> 7, !m176.ram_out_reg);
 		}
 	} else {
-		memmap_disable_16k(MMCPU(0x4000));
+		memmap_disable_16k(0, MMCPU(0x4000));
 	}
 }
 INLINE static void mirroring_fix_176(void) {
 	// Single-screen mirroring is only available when the RAM Configuration Register is enabled ($A001.5).
 	switch ((m176.cpu8xxx[1] & 0x03) & (m176.ram_cfg_reg ? 0x03 : 0x01)) {
 		case 0:
-			mirroring_V();
+			mirroring_V(0);
 			break;
 		case 1:
-			mirroring_H();
+			mirroring_H(0);
 			break;
 		case 2:
-			mirroring_SCR0();
+			mirroring_SCR0(0);
 			break;
 		case 3:
-			mirroring_SCR1();
+			mirroring_SCR1(0);
 			break;
 	}
 }

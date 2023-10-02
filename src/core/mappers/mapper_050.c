@@ -51,13 +51,13 @@ void extcl_after_mapper_init_050(void) {
 	prg_fix_050();
 	wram_fix_050();
 }
-void extcl_cpu_wr_mem_050(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_050(BYTE nidx, WORD address, BYTE value) {
 	if ((address <= 0x5FFF) && ((address & 0x0060) == 0x0020)) {
 		if (address & 0x0100) {
 			m050.irq.enabled = value & 0x01;
 			if (!m050.irq.enabled) {
 				m050.irq.count = 0;
-				irq.high &= ~EXT_IRQ;
+				nes[nidx].c.irq.high &= ~EXT_IRQ;
 			}
 			return;
 		}
@@ -70,12 +70,11 @@ BYTE extcl_save_mapper_050(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m050.irq.enabled);
 	save_slot_ele(mode, slot, m050.irq.count);
 	save_slot_ele(mode, slot, m050.irq.delay);
-
 	return (EXIT_OK);
 }
-void extcl_cpu_every_cycle_050(void) {
+void extcl_cpu_every_cycle_050(BYTE nidx) {
 	if (m050.irq.delay && !(--m050.irq.delay)) {
-		irq.high |= EXT_IRQ;
+		nes[nidx].c.irq.high |= EXT_IRQ;
 	}
 
 	if (m050.irq.enabled && (++m050.irq.count == 0x1000)) {
@@ -84,11 +83,11 @@ void extcl_cpu_every_cycle_050(void) {
 }
 
 INLINE static void prg_fix_050(void) {
-	memmap_auto_8k(MMCPU(0x8000), 8);
-	memmap_auto_8k(MMCPU(0xA000), 9);
-	memmap_auto_8k(MMCPU(0xC000), ((m050.reg & 0x08) | ((m050.reg & 0x01) << 2) | ((m050.reg & 0x06) >> 1)));
-	memmap_auto_8k(MMCPU(0xE000), 11);
+	memmap_auto_8k(0, MMCPU(0x8000), 8);
+	memmap_auto_8k(0, MMCPU(0xA000), 9);
+	memmap_auto_8k(0, MMCPU(0xC000), ((m050.reg & 0x08) | ((m050.reg & 0x01) << 2) | ((m050.reg & 0x06) >> 1)));
+	memmap_auto_8k(0, MMCPU(0xE000), 11);
 }
 INLINE static void wram_fix_050(void) {
-	memmap_prgrom_8k(MMCPU(0x6000), 0x0F);
+	memmap_prgrom_8k(0, MMCPU(0x6000), 0x0F);
 }

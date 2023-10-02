@@ -44,36 +44,35 @@ void extcl_after_mapper_init_078(void) {
 	chr_fix_078();
 	mirroring_fix_078();
 }
-void extcl_cpu_wr_mem_078(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_078(BYTE nidx, WORD address, BYTE value) {
 	// bus conflict
-	m078.reg = value & prgrom_rd(address);
+	m078.reg = value & prgrom_rd(nidx, address);
 	prg_fix_078();
 	chr_fix_078();
 	mirroring_fix_078();
 }
 BYTE extcl_save_mapper_078(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m078.reg);
-
 	return (EXIT_OK);
 }
 
 INLINE static void prg_fix_078(void) {
-	memmap_auto_16k(MMCPU(0x8000), (m078.reg & 0x07));
-	memmap_auto_16k(MMCPU(0xC000), 0x0F);
+	memmap_auto_16k(0, MMCPU(0x8000), (m078.reg & 0x07));
+	memmap_auto_16k(0, MMCPU(0xC000), 0x0F);
 }
 INLINE static void chr_fix_078(void) {
-	memmap_auto_8k(MMPPU(0x0000), (m078.reg >> 4));
+	memmap_auto_8k(0, MMPPU(0x0000), (m078.reg >> 4));
 }
 INLINE static void mirroring_fix_078(void) {
 	if (info.mapper.submapper == 3) {
 		if (m078.reg & 0x08) {
-			mirroring_V();
+			mirroring_V(0);
 		} else {
-			mirroring_H();
+			mirroring_H(0);
 		}
 	} else if (m078.reg & 0x08) {
-		mirroring_SCR1();
+		mirroring_SCR1(0);
 	} else {
-		mirroring_SCR0();
+		mirroring_SCR0(0);
 	}
 }

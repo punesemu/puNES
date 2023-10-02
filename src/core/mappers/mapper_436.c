@@ -41,11 +41,11 @@ void map_init_436(void) {
 	mapper.internal_struct[0] = (BYTE *)&onebus;
 	mapper.internal_struct_size[0] = sizeof(onebus);
 
-	memset(&irqA12, 0x00, sizeof(irqA12));
+	memset(&nes[0].irqA12, 0x00, sizeof(nes[0].irqA12));
 
 	init_OneBus(info.reset);
 
-	irqA12.present = TRUE;
+	nes[0].irqA12.present = TRUE;
 }
 void extcl_after_mapper_init_436(void) {
 	if (info.mapper.submapper == 1) {

@@ -42,10 +42,10 @@ void extcl_after_mapper_init_007(void) {
 	prg_fix_007();
 	mirroring_fix_007();
 }
-void extcl_cpu_wr_mem_007(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_007(BYTE nidx, WORD address, BYTE value) {
 	// bus conflict
 	if (info.mapper.submapper == 2) {
-		value &= prgrom_rd(address);
+		value &= prgrom_rd(nidx, address);
 	}
 	m007.reg = value;
 	prg_fix_007();
@@ -53,17 +53,16 @@ void extcl_cpu_wr_mem_007(WORD address, BYTE value) {
 }
 BYTE extcl_save_mapper_007(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m007.reg);
-
 	return (EXIT_OK);
 }
 
 INLINE static void prg_fix_007(void) {
-	memmap_auto_32k(MMCPU(0x8000), m007.reg);
+	memmap_auto_32k(0, MMCPU(0x8000), m007.reg);
 }
 INLINE static void mirroring_fix_007(void) {
 	if (m007.reg & 0x10) {
-		mirroring_SCR1();
+		mirroring_SCR1(0);
 	} else {
-		mirroring_SCR0();
+		mirroring_SCR0(0);
 	}
 }

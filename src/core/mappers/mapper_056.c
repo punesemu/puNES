@@ -58,8 +58,8 @@ void extcl_after_mapper_init_056(void) {
 	chr_fix_056();
 	mirroring_fix_056();
 }
-void extcl_cpu_wr_mem_056(WORD address, BYTE value) {
-	extcl_cpu_wr_mem_KS202(address, value);
+void extcl_cpu_wr_mem_056(BYTE nidx, WORD address, BYTE value) {
+	extcl_cpu_wr_mem_KS202(nidx, address, value);
 	if (address >= 0xF000) {
 		switch ((address & 0x0FFF) >> 10) {
 			case 0:
@@ -95,19 +95,19 @@ void wram_swap_ks202_056(WORD address, WORD value) {
 }
 
 INLINE static void chr_fix_056(void) {
-	memmap_auto_1k(MMPPU(0x0000), m056.chr[0]);
-	memmap_auto_1k(MMPPU(0x0400), m056.chr[1]);
-	memmap_auto_1k(MMPPU(0x0800), m056.chr[2]);
-	memmap_auto_1k(MMPPU(0x0C00), m056.chr[3]);
-	memmap_auto_1k(MMPPU(0x1000), m056.chr[4]);
-	memmap_auto_1k(MMPPU(0x1400), m056.chr[5]);
-	memmap_auto_1k(MMPPU(0x1800), m056.chr[6]);
-	memmap_auto_1k(MMPPU(0x1C00), m056.chr[7]);
+	memmap_auto_1k(0, MMPPU(0x0000), m056.chr[0]);
+	memmap_auto_1k(0, MMPPU(0x0400), m056.chr[1]);
+	memmap_auto_1k(0, MMPPU(0x0800), m056.chr[2]);
+	memmap_auto_1k(0, MMPPU(0x0C00), m056.chr[3]);
+	memmap_auto_1k(0, MMPPU(0x1000), m056.chr[4]);
+	memmap_auto_1k(0, MMPPU(0x1400), m056.chr[5]);
+	memmap_auto_1k(0, MMPPU(0x1800), m056.chr[6]);
+	memmap_auto_1k(0, MMPPU(0x1C00), m056.chr[7]);
 }
 INLINE static void mirroring_fix_056(void) {
 	if (m056.mirroring & 0x01) {
-		mirroring_V();
+		mirroring_V(0);
 	} else {
-		mirroring_H();
+		mirroring_H(0);
 	}
 }

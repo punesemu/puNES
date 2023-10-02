@@ -37,8 +37,8 @@ typedef struct _txc {
 extern _txc txc;
 
 void extcl_after_mapper_init_TXC(void);
-void extcl_cpu_wr_mem_TXC(WORD address, BYTE value);
-BYTE extcl_cpu_rd_mem_TXC(WORD address, BYTE openbus);
+void extcl_cpu_wr_mem_TXC(BYTE nidx, WORD address, BYTE value);
+BYTE extcl_cpu_rd_mem_TXC(BYTE nidx, WORD address, BYTE openbus);
 BYTE extcl_save_mapper_TXC(BYTE mode, BYTE slot, FILE *fp);
 
 void init_TXC(BYTE reset);

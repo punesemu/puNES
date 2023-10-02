@@ -50,7 +50,7 @@ void extcl_after_mapper_init_MMC3(void) {
 	MMC3_wram_fix();
 	MMC3_mirroring_fix();
 }
-void extcl_cpu_wr_mem_MMC3(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_MMC3(BYTE nidx, WORD address, BYTE value) {
 	switch (address & 0xE001) {
 		case 0x8000: {
 			const BYTE btu = mmc3.bank_to_update;
@@ -113,7 +113,7 @@ void extcl_cpu_wr_mem_MMC3(WORD address, BYTE value) {
 			MMC3_wram_fix();
 			break;
 		case 0xC000:
-			irqA12.latch = value;
+			nes[nidx].irqA12.latch = value;
 			break;
 		case 0xC001:
 			// in "Downtown Special - Kunio-kun no Jidaigeki Dayo Zenin Shuugou! (J)"
@@ -121,20 +121,20 @@ void extcl_cpu_wr_mem_MMC3(WORD address, BYTE value) {
 			// una scrittura in questo registro nel momento esatto in cui avviene un
 			// clock irqA12_SB() facendo gia' caricare il counter con il nuovo latch
 			// cosa che invece dovrebbe avvenire nel clock successivo.
-			irqA12.race.C001 = TRUE;
-			irqA12.race.reload = irqA12.reload;
-			irqA12.race.counter = irqA12.counter;
+			nes[nidx].irqA12.race.C001 = TRUE;
+			nes[nidx].irqA12.race.reload = nes[nidx].irqA12.reload;
+			nes[nidx].irqA12.race.counter = nes[nidx].irqA12.counter;
 
-			irqA12.reload = TRUE;
-			irqA12.counter = 0;
+			nes[nidx].irqA12.reload = TRUE;
+			nes[nidx].irqA12.counter = 0;
 			break;
 		case 0xE000:
-			irqA12.enable = FALSE;
+			nes[nidx].irqA12.enable = FALSE;
 			// disabilito l'IRQ dell'MMC3
-			irq.high &= ~EXT_IRQ;
+			nes[nidx].c.irq.high &= ~EXT_IRQ;
 			break;
 		case 0xE001:
-			irqA12.enable = TRUE;
+			nes[nidx].irqA12.enable = TRUE;
 			break;
 		default:
 			return;
@@ -145,40 +145,39 @@ BYTE extcl_save_mapper_MMC3(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, mmc3.reg);
 	save_slot_ele(mode, slot, mmc3.mirroring);
 	save_slot_ele(mode, slot, mmc3.wram_protect);
-
 	return (EXIT_OK);
 }
-void extcl_cpu_every_cycle_MMC3(void) {
-	if (irqA12.delay && !(--irqA12.delay)) {
-		irq.high |= EXT_IRQ;
+void extcl_cpu_every_cycle_MMC3(BYTE nidx) {
+	if (nes[nidx].irqA12.delay && !(--nes[nidx].irqA12.delay)) {
+		nes[nidx].c.irq.high |= EXT_IRQ;
 	}
 }
-void extcl_ppu_000_to_34x_MMC3(void) {
-	irqA12_RS();
+void extcl_ppu_000_to_34x_MMC3(BYTE nidx) {
+	irqA12_RS(nidx);
 }
-void extcl_ppu_000_to_255_MMC3(void) {
-	if (r2001.visible) {
-		irqA12_SB();
+void extcl_ppu_000_to_255_MMC3(BYTE nidx) {
+	if (nes[nidx].p.r2001.visible) {
+		irqA12_SB(nidx);
 	}
 }
-void extcl_ppu_256_to_319_MMC3(void) {
-	irqA12_BS();
+void extcl_ppu_256_to_319_MMC3(BYTE nidx) {
+	irqA12_BS(nidx);
 }
-void extcl_ppu_320_to_34x_MMC3(void) {
-	irqA12_SB();
+void extcl_ppu_320_to_34x_MMC3(BYTE nidx) {
+	irqA12_SB(nidx);
 }
-void extcl_update_r2006_MMC3(WORD new_r2006, WORD old_r2006) {
-	irqA12_IO(new_r2006, old_r2006);
+void extcl_update_r2006_MMC3(BYTE nidx, WORD new_r2006, WORD old_r2006) {
+	irqA12_IO(nidx, new_r2006, old_r2006);
 }
-void extcl_irq_A12_clock_MMC3_NEC(void) {
-	if (!irqA12.counter) {
-		irqA12.counter = irqA12.latch;
-		irqA12.reload = FALSE;
+void extcl_irq_A12_clock_MMC3_NEC(BYTE nidx) {
+	if (!nes[nidx].irqA12.counter) {
+		nes[nidx].irqA12.counter = nes[nidx].irqA12.latch;
+		nes[nidx].irqA12.reload = FALSE;
 	} else {
-		irqA12.counter--;
+		nes[nidx].irqA12.counter--;
 	}
-	if (!irqA12.counter && irqA12.enable) {
-		irq.high |= EXT_IRQ;
+	if (!nes[nidx].irqA12.counter && nes[nidx].irqA12.enable) {
+		nes[nidx].c.irq.high |= EXT_IRQ;
 	}
 }
 
@@ -197,7 +196,7 @@ void init_MMC3(BYTE reset) {
 	}
 
 	mmc3.wram_protect = 0x80;
-	irq.high &= ~EXT_IRQ;
+	nes[0].c.irq.high &= ~EXT_IRQ;
 
 	MMC3_prg_fix = prg_fix_MMC3_base;
 	MMC3_prg_swap = prg_swap_MMC3_base;
@@ -219,7 +218,7 @@ void prg_fix_MMC3_base(void) {
 	MMC3_prg_swap(0xE000, ~0);
 }
 void prg_swap_MMC3_base(WORD address, WORD value) {
-	memmap_auto_8k(MMCPU(address), value);
+	memmap_auto_8k(0, MMCPU(address), value);
 }
 void chr_fix_MMC3_base(void) {
 	WORD cbase = (mmc3.bank_to_update & 0x80) << 5;
@@ -234,7 +233,7 @@ void chr_fix_MMC3_base(void) {
 	MMC3_chr_swap(cbase ^ 0x1C00, mmc3.reg[5]);
 }
 void chr_swap_MMC3_base(WORD address, WORD value) {
-	memmap_auto_1k(MMPPU(address), value);
+	memmap_auto_1k(0, MMPPU(address), value);
 }
 void wram_fix_MMC3_base(void) {
 	MMC3_wram_swap(0x6000, 0);
@@ -249,7 +248,7 @@ void wram_swap_MMC3_base(WORD address, WORD value) {
 	// ||
 	// |+-------- Write protection (0: allow writes; 1: deny writes)
 	// +--------- Chip enable (0: disable chip; 1: enable chip)
-	memmap_auto_wp_8k(MMCPU(address), value, rd, wr);
+	memmap_auto_wp_8k(0, MMCPU(address), value, rd, wr);
 }
 void mirroring_fix_MMC3_base(void) {
 	// se e' abilitato il 4 schermi, il cambio
@@ -258,8 +257,8 @@ void mirroring_fix_MMC3_base(void) {
 		return;
 	}
 	if (mmc3.mirroring & 0x01) {
-		mirroring_H();
+		mirroring_H(0);
 	} else {
-		mirroring_V();
+		mirroring_V(0);
 	}
 }

@@ -51,7 +51,7 @@ void extcl_after_mapper_init_303(void) {
 	prg_fix_303();
 	mirroring_fix_303();
 }
-void extcl_cpu_wr_mem_303(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_303(BYTE nidx, WORD address, BYTE value) {
 	if ((address >= 0x4000) && (address <= 0x5FFF)) {
 		if ((address & 0xFF00) == 0x4A00) {
 			m303.reg[0] = ((address >> 4) & 0x04) | ((address & 0x0C) >> 2);
@@ -60,11 +60,11 @@ void extcl_cpu_wr_mem_303(WORD address, BYTE value) {
 			prg_fix_303();
 			return;
 		} else if (address == 0x4020) {
-			irq.high &= ~EXT_IRQ;
+			nes[nidx].c.irq.high &= ~EXT_IRQ;
 			m303.irq.count = (m303.irq.count & 0xFF00) | value;
 			return;
 		} else if (address == 0x4021) {
-			irq.high &= ~EXT_IRQ;
+			nes[nidx].c.irq.high &= ~EXT_IRQ;
 			m303.irq.count = (value << 8) | (m303.irq.count & 0x00FF);
 			m303.irq.active = 1;
 			return;
@@ -75,38 +75,37 @@ void extcl_cpu_wr_mem_303(WORD address, BYTE value) {
 		}
 	}
 }
-BYTE extcl_cpu_rd_mem_303(WORD address, UNUSED(BYTE openbus)) {
+BYTE extcl_cpu_rd_mem_303(BYTE nidx, WORD address, UNUSED(BYTE openbus)) {
 	if (address == 0x4030) {
-		openbus = (irq.high & EXT_IRQ) ? 1 : 0;
-		irq.high &= ~EXT_IRQ;
+		openbus = (nes[nidx].c.irq.high & EXT_IRQ) ? 1 : 0;
+		nes[nidx].c.irq.high &= ~EXT_IRQ;
 	}
-	return (wram_rd(address));
+	return (wram_rd(nidx, address));
 }
 BYTE extcl_save_mapper_303(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m303.reg);
 	save_slot_ele(mode, slot, m303.irq.active);
 	save_slot_ele(mode, slot, m303.irq.count);
-
 	return (EXIT_OK);
 }
-void extcl_cpu_every_cycle_303(void) {
+void extcl_cpu_every_cycle_303(BYTE nidx) {
 	if (m303.irq.active) {
 		if (--m303.irq.count == 0) {
 			m303.irq.active = 0;
-			irq.delay = TRUE;
-			irq.high |= EXT_IRQ;
+			nes[nidx].c.irq.delay = TRUE;
+			nes[nidx].c.irq.high |= EXT_IRQ;
 		}
 	}
 }
 
 INLINE static void prg_fix_303(void) {
-	memmap_auto_16k(MMCPU(0x8000), m303.reg[0]);
-	memmap_auto_16k(MMCPU(0xC000), 0x02);
+	memmap_auto_16k(0, MMCPU(0x8000), m303.reg[0]);
+	memmap_auto_16k(0, MMCPU(0xC000), 0x02);
 }
 INLINE static void mirroring_fix_303(void) {
 	if (m303.reg[1] & 0x08) {
-		mirroring_H();
+		mirroring_H(0);
 	} else {
-		mirroring_V();
+		mirroring_V(0);
 	}
 }

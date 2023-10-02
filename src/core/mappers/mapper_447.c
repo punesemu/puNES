@@ -49,24 +49,24 @@ void map_init_447(void) {
 	info.mapper.extend_wr = TRUE;
 	info.mapper.extend_rd = TRUE;
 }
-void extcl_cpu_wr_mem_447(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_447(BYTE nidx, WORD address, BYTE value) {
 	if ((address >= 0x6000) && (address <= 0x7FFF)) {
-		if (!(m447.reg & 0x01) && memmap_adr_is_writable(MMCPU(address))) {
+		if (!(m447.reg & 0x01) && memmap_adr_is_writable(nidx, MMCPU(address))) {
 			m447.reg = address & 0xFF;
 			VRC2and4_prg_fix();
 			VRC2and4_chr_fix();
 			return;
 		}
 	}
-	extcl_cpu_wr_mem_VRC2and4(address, value);
+	extcl_cpu_wr_mem_VRC2and4(nidx, address, value);
 }
-BYTE extcl_cpu_rd_mem_447(WORD address, UNUSED(BYTE openbus)) {
+BYTE extcl_cpu_rd_mem_447(BYTE nidx, WORD address, UNUSED(BYTE openbus)) {
 	if (address >= 0x8000) {
 		return (dipswitch.used && (m447.reg & 0x08)
-			? prgrom_rd((address & 0xFFFC) | (dipswitch.value & 0x03))
-			: prgrom_rd(address));
+			? prgrom_rd(nidx, (address & 0xFFFC) | (dipswitch.value & 0x03))
+			: prgrom_rd(nidx, address));
 	}
-	return (wram_rd(address));
+	return (wram_rd(nidx, address));
 }
 BYTE extcl_save_mapper_447(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m447.reg);

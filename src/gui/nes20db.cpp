@@ -140,7 +140,7 @@ void search_in_xml(QFile &file) {
 						// roms con lo stesso crc32 ma usano mapper diverse :
 						// Esempio :
 						//    Angry Birds Week(byCasperdj777).nes (0x2A629F7D mapper 185) e
-						//    Compatibility Hacks\Bird Week [m003].nes ((0x2A629F7D mapper 003)
+						//    Compatibility Hacks\Bird Week [m003].nes (0x2A629F7D mapper 003)
 						if (nes20db.rom.crc32 == info.crc32.total) {
 							//const QString comment = game["comment"];
 							const BYTE old_format = info.format;
@@ -152,7 +152,6 @@ void search_in_xml(QFile &file) {
 							// visto che con il NES_2_0 non eseguo la ricerca nel
 							// database inizializzo queste variabili.
 							info.mirroring_db = DEFAULT;
-							info.extra_from_db = 0;
 
 							info.mapper.id = nes20db.pcb.mapper;
 							info.mapper.submapper_nes20 = nes20db.pcb.submapper;
@@ -161,14 +160,17 @@ void search_in_xml(QFile &file) {
 							wram_set_ram_size(nes20db.prgram.size ? nes20db.prgram.size : 0);
 							wram_set_nvram_size(nes20db.prgnvram.size ? nes20db.prgnvram.size : 0);
 
-							vram_set_ram_size(nes20db.chrram.size ? nes20db.chrram.size : 0);
-							vram_set_nvram_size(nes20db.chrnvram.size ? nes20db.chrnvram.size : 0);
+							vram_set_ram_size(0, nes20db.chrram.size ? nes20db.chrram.size : 0);
+							vram_set_nvram_size(0, nes20db.chrnvram.size ? nes20db.chrnvram.size : 0);
 
 							info.mapper.battery = nes20db.pcb.battery;
+							info.mapper.expansion = nes20db.expansion.type;
 
 							if (old_format != UNIF_FORMAT) {
+								info.mapper.prgrom_size = nes20db.prgrom.size;
 								info.mapper.prgrom_banks_16k = (nes20db.prgrom.size / S16K) +
 									((nes20db.prgrom.size % S16K) ? 1 : 0);
+								info.mapper.chrrom_size = nes20db.chrrom.size;
 								info.mapper.chrrom_banks_8k = (nes20db.chrrom.size / S8K) +
 									((nes20db.chrrom.size % S8K) ? 1 : 0);
 							}

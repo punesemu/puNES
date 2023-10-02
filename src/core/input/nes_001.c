@@ -21,18 +21,18 @@
 #include "apu.h"
 #include "clock.h"
 
-BYTE input_wr_reg_nes_001(BYTE value) {
+BYTE input_wr_reg_nes_001(BYTE nidx, BYTE value) {
 	// in caso di strobe azzero l'indice
-	port_funct[PORT1].input_wr(&value, PORT1);
-	port_funct[PORT2].input_wr(&value, PORT2);
+	port_funct[PORT1].input_wr(nidx, &value, PORT1);
+	port_funct[PORT2].input_wr(nidx, &value, PORT2);
 
 	// restituisco il nuovo valore del $4016
 	return (value);
 }
-BYTE input_rd_reg_nes_001(BYTE openbus, BYTE nport) {
+BYTE input_rd_reg_nes_001(BYTE nidx, BYTE openbus, BYTE nport) {
 	BYTE value = 0;
 
-	port_funct[nport].input_rd(&value, nport, 0);
+	port_funct[nport].input_rd(nidx, &value, nport, 0);
 
 	// se avviene un DMA del DMC all'inizio
 	// dell'istruzione di lettura del registro,
@@ -51,7 +51,7 @@ BYTE input_rd_reg_nes_001(BYTE openbus, BYTE nport) {
 	// This detail is poorly represented in emulators.[2] Because it is not normally a compatibility issue,
 	// many emulators do not simulate this glitch at all.
 	if ((machine.type == NTSC) && !info.r4016_dmc_double_read_disabled && (DMC.dma_cycle == 2)) {
-		port_funct[nport].input_rd(&value, nport, 0);
+		port_funct[nport].input_rd(nidx, &value, nport, 0);
 	}
 
 	// NES-001 (front-loading NES) $4016 and $4017, and NES-101 (top-loading NES) $4016 and $4017

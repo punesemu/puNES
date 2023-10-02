@@ -44,7 +44,7 @@ void extcl_after_mapper_init_335(void) {
 	chr_fix_335();
 	mirroring_fix_335();
 }
-void extcl_cpu_wr_mem_335(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_335(UNUSED(BYTE nidx), WORD address, BYTE value) {
 	switch (address & 0xE000) {
 		case 0x8000:
 		case 0xA000:
@@ -61,7 +61,6 @@ void extcl_cpu_wr_mem_335(WORD address, BYTE value) {
 }
 BYTE extcl_save_mapper_335(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m335.reg);
-
 	return (EXIT_OK);
 }
 
@@ -69,19 +68,19 @@ INLINE static void prg_fix_335(void) {
 	if (m335.reg[1] & 0x10) {
 		WORD bank = ((m335.reg[1] & 0x07) << 1) | ((m335.reg[1] & 0x08) >> 3);
 
-		memmap_auto_16k(MMCPU(0x8000), bank);
-		memmap_auto_16k(MMCPU(0xC000), bank);
+		memmap_auto_16k(0, MMCPU(0x8000), bank);
+		memmap_auto_16k(0, MMCPU(0xC000), bank);
 	} else {
-		memmap_auto_32k(MMCPU(0x8000), (m335.reg[1] & 0x07));
+		memmap_auto_32k(0, MMCPU(0x8000), (m335.reg[1] & 0x07));
 	}
 }
 INLINE static void chr_fix_335(void) {
-	memmap_auto_8k(MMPPU(0x0000), m335.reg[0]);
+	memmap_auto_8k(0, MMPPU(0x0000), m335.reg[0]);
 }
 INLINE static void mirroring_fix_335(void) {
 	if (m335.reg[1] & 0x20) {
-		mirroring_H();
+		mirroring_H(0);
 	} else {
-		mirroring_V();
+		mirroring_V(0);
 	}
 }

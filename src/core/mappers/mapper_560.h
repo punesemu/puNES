@@ -23,10 +23,10 @@
 
 void map_init_560(void);
 void extcl_after_mapper_init_560(void);
-void extcl_cpu_wr_mem_560(WORD address, BYTE value);
+void extcl_cpu_wr_mem_560(BYTE nidx, WORD address, BYTE value);
 BYTE extcl_save_mapper_560(BYTE mode, BYTE slot, FILE *fp);
-BYTE extcl_rd_chr_560(WORD address);
-void extcl_wr_nmt_560(WORD address, BYTE value);
-BYTE extcl_rd_nmt_560(WORD address);
+BYTE extcl_rd_chr_560(BYTE nidx, WORD address);
+void extcl_wr_nmt_560(BYTE nidx, WORD address, BYTE value);
+BYTE extcl_rd_nmt_560(BYTE nidx, WORD address);
 
 #endif /* MAPPER_560_H_ */

@@ -17,6 +17,7 @@
  */
 
 #include <string.h>
+#include "nes.h"
 #include "input/oeka_kids_tablet.h"
 #include "input/mouse.h"
 
@@ -28,9 +29,9 @@ struct _oeka_kids_tablet {
 void input_init_oeka_kids_tablet(void) {
 	memset(&oeka_kids_tablet, 0x00, sizeof(oeka_kids_tablet));
 }
-void input_wr_oeka_kids_tablet(const BYTE *value, UNUSED(BYTE nport)) {
+void input_wr_oeka_kids_tablet(BYTE nidx, const BYTE *value, UNUSED(BYTE nport)) {
 	if (!((*value) & 0x01)) {
-		int x, y;
+		int x = 0, y = 0;
 
 		oeka_kids_tablet.latch = oeka_kids_tablet.value = 0;
 
@@ -64,7 +65,7 @@ void input_wr_oeka_kids_tablet(const BYTE *value, UNUSED(BYTE nport)) {
 
 		oeka_kids_tablet.latch |= (x << 10) | (y << 2);
 	} else {
-		if (!(r4016.value & 0x02) && ((*value) & 0x02)) {
+		if (!(nes[nidx].c.input.r4016 & 0x02) && ((*value) & 0x02)) {
 			oeka_kids_tablet.latch <<= 1;
 		}
 
@@ -79,8 +80,8 @@ void input_wr_oeka_kids_tablet(const BYTE *value, UNUSED(BYTE nport)) {
 		}
 	}
 }
-void input_rd_oeka_kids_tablet(BYTE *value, UNUSED(BYTE nport), UNUSED(BYTE shift)) {
-	if (r4016.value & 0x03) {
+void input_rd_oeka_kids_tablet(BYTE nidx, BYTE *value, UNUSED(BYTE nport), UNUSED(BYTE shift)) {
+	if (nes[nidx].c.input.r4016 & 0x03) {
 		(*value) |= oeka_kids_tablet.value;
 	}
 }

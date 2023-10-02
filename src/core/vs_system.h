@@ -39,6 +39,9 @@ enum vs_system_special_mode {
 	VS_SM_RBI_Baseball,  // (protection hardware at port 5E0xh)
 	VS_SM_TKO_Boxing,    // (other protection hardware at port 5E0xh)
 	VS_SM_Super_Xevious, // (protection hardware at port 5xxxh)
+	VS_SM_Ice_Climber,   //
+	VS_DS_Normal,        //
+	VS_DS_Bungeling,     //
 };
 
 #define VSONTIME 28000
@@ -46,13 +49,12 @@ enum vs_system_special_mode {
 
 #define vs_system_wd_next() (machine.cpu_cycles_frame * machine.fps) + \
 	(((machine.cpu_cycles_frame * machine.fps) / 1000.0) * (emu_irand(100) + 214));
-#define vs_system_cn_next() ((machine.cpu_cycles_frame * machine.fps) / 1000.0) * \
-	(emu_irand(28) + 50);
+#define vs_system_cn_next() ((machine.cpu_cycles_frame * machine.fps) / 1000.0) * (emu_irand(28) + 50);
 #define vs_system_r4020_clock(type, val)\
-	if (vs_system.r4020.type.actual.value != (val & 0x01)) {\
+	if (vs_system.r4020.type.actual.value != ((val) & 0x01)) {\
 		vs_system.r4020.type.old.value = vs_system.r4020.type.actual.value;\
 		vs_system.r4020.type.old.timer = vs_system.r4020.type.actual.timer;\
-		vs_system.r4020.type.actual.value = val & 0x01;\
+		vs_system.r4020.type.actual.value = (val) & 0x01;\
 		vs_system.r4020.type.actual.timer = 0;\
 	}
 #define vs_system_r4020_timer(type)\

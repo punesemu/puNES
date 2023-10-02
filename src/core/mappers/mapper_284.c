@@ -19,7 +19,6 @@
 #include <string.h>
 #include "mappers.h"
 #include "cpu.h"
-#include "ppu.h"
 #include "save_slot.h"
 
 INLINE static void prg_fix_284(void);
@@ -69,7 +68,7 @@ void extcl_after_mapper_init_284(void) {
 	wram_fix_284();
 	mirroring_fix_284();
 }
-void extcl_cpu_wr_mem_284(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_284(BYTE nidx, WORD address, BYTE value) {
 	switch (address & 0xE000) {
 		case 0x8000:
 		case 0xA000:
@@ -92,7 +91,7 @@ void extcl_cpu_wr_mem_284(WORD address, BYTE value) {
 				case 0x9:
 					m284.irq.counter = ((value & 0x7F) << 8) | m284.irq.latch;
 					m284.irq.enabled = value & 0x80;
-					irq.high &= ~EXT_IRQ;
+					nes[nidx].c.irq.high &= ~EXT_IRQ;
 					break;
 				case 0xA:
 					m284.control = value & 0x0F;
@@ -118,14 +117,14 @@ void extcl_cpu_wr_mem_284(WORD address, BYTE value) {
 			break;
 	}
 }
-BYTE extcl_cpu_rd_mem_284(WORD address, UNUSED(BYTE openbus)) {
+BYTE extcl_cpu_rd_mem_284(BYTE nidx, WORD address, UNUSED(BYTE openbus)) {
 	switch (address & 0xF000) {
 		case 0x4000:
-			return (address & 0x0800 ? m284.jumper | 'd' : wram_rd(address));
+			return (address & 0x0800 ? m284.jumper | 'd' : wram_rd(nidx, address));
 		case 0x5000:
 			return (address & 0x0800 ? channel_status(&m284.channel[1]) : channel_status(&m284.channel[0]));
 		default:
-			return (wram_rd(address));
+			return (wram_rd(nidx, address));
 	}
 }
 BYTE extcl_save_mapper_284(BYTE mode, BYTE slot, FILE *fp) {
@@ -155,10 +154,9 @@ BYTE extcl_save_mapper_284(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m284.channel[1].timer);
 	save_slot_ele(mode, slot, m284.channel[1].pos.read);
 	save_slot_ele(mode, slot, m284.channel[1].pos.write);
-
 	return (EXIT_OK);
 }
-BYTE extcl_rd_nmt_284(WORD address) {
+BYTE extcl_rd_nmt_284(BYTE nidx, WORD address) {
 	if ((m284.control & 0x04) && ((address & 0x3FF) >= 0x3C0)) {
 		const BYTE ext_attrib[4] = { 0x00, 0x55, 0xAA, 0xFF };
 		BYTE bank = 0;
@@ -180,17 +178,17 @@ BYTE extcl_rd_nmt_284(WORD address) {
 				bank = (address & 0x400) ? 1 : 0;
 				break;
 		}
-		return (ext_attrib[m284.extended_attributes[bank][r2006.value & 0x3FF]]);
+		return (ext_attrib[m284.extended_attributes[bank][nes[nidx].p.r2006.value & 0x3FF]]);
 	}
-	return (nmt_rd(address));
+	return (nmt_rd(nidx, address));
 }
-void extcl_cpu_every_cycle_284(void) {
+void extcl_cpu_every_cycle_284(BYTE nidx) {
 	if (m284.irq.enabled) {
 		if (m284.irq.counter > 0) {
 			m284.irq.counter--;
 			if (!m284.irq.counter) {
 				m284.irq.enabled = FALSE;
-				irq.high |= EXT_IRQ;
+				nes[nidx].c.irq.high |= EXT_IRQ;
 			}
 		}
 	}
@@ -199,33 +197,33 @@ void extcl_cpu_every_cycle_284(void) {
 }
 
 INLINE static void prg_fix_284(void) {
-	memmap_auto_16k(MMCPU(0x8000), m284.prg);
-	memmap_auto_16k(MMCPU(0xC000), 0x0F);
+	memmap_auto_16k(0, MMCPU(0x8000), m284.prg);
+	memmap_auto_16k(0, MMCPU(0xC000), 0x0F);
 }
 INLINE static void chr_fix_284(void) {
-	memmap_auto_2k(MMPPU(0x0000), m284.chr[0]);
-	memmap_auto_2k(MMPPU(0x0800), m284.chr[1]);
-	memmap_auto_2k(MMPPU(0x1000), m284.chr[2]);
-	memmap_auto_2k(MMPPU(0x1800), m284.chr[3]);
+	memmap_auto_2k(0, MMPPU(0x0000), m284.chr[0]);
+	memmap_auto_2k(0, MMPPU(0x0800), m284.chr[1]);
+	memmap_auto_2k(0, MMPPU(0x1000), m284.chr[2]);
+	memmap_auto_2k(0, MMPPU(0x1800), m284.chr[3]);
 }
 INLINE static void wram_fix_284(void) {
 	BYTE enabled = (m284.control & 0x08) >> 3;
 
-	memmap_auto_wp_8k(MMCPU(0x6000), 0, enabled, enabled);
+	memmap_auto_wp_8k(0, MMCPU(0x6000), 0, enabled, enabled);
 }
 INLINE static void mirroring_fix_284(void) {
 	switch (m284.control & 0x03) {
 		case 0:
-			mirroring_V();
+			mirroring_V(0);
 			break;
 		case 1:
-			mirroring_H();
+			mirroring_H(0);
 			break;
 		case 2:
-			mirroring_SCR0();
+			mirroring_SCR0(0);
 			break;
 		case 3:
-			mirroring_SCR1();
+			mirroring_SCR1(0);
 			break;
 	}
 }

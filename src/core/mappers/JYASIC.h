@@ -49,16 +49,16 @@ typedef struct _jyasic {
 extern _jyasic jyasic;
 
 void extcl_after_mapper_init_JYASIC(void);
-void extcl_cpu_wr_mem_JYASIC(WORD address, BYTE value);
-BYTE extcl_cpu_rd_mem_JYASIC(WORD address, BYTE openbus);
+void extcl_cpu_wr_mem_JYASIC(BYTE nidx, WORD address, BYTE value);
+BYTE extcl_cpu_rd_mem_JYASIC(BYTE nidx, WORD address, BYTE openbus);
 BYTE extcl_save_mapper_JYASIC(BYTE mode, BYTE slot, FILE *fp);
-void extcl_cpu_every_cycle_JYASIC(void);
-void extcl_rd_ppu_mem_JYASIC(WORD address);
-BYTE extcl_rd_chr_JYASIC(WORD address);
-void extcl_ppu_000_to_255_JYASIC(void);
-void extcl_ppu_256_to_319_JYASIC(void);
-void extcl_ppu_320_to_34x_JYASIC(void);
-void extcl_update_r2006_JYASIC(WORD new_r2006, WORD old_r2006);
+void extcl_cpu_every_cycle_JYASIC(BYTE nidx);
+void extcl_rd_ppu_mem_JYASIC(BYTE nidx, WORD address);
+BYTE extcl_rd_chr_JYASIC(BYTE nidx, WORD address);
+void extcl_ppu_000_to_255_JYASIC(BYTE nidx);
+void extcl_ppu_256_to_319_JYASIC(BYTE nidx);
+void extcl_ppu_320_to_34x_JYASIC(BYTE nidx);
+void extcl_update_r2006_JYASIC(BYTE nidx, WORD new_r2006, WORD old_r2006);
 
 void init_JYASIC(BYTE extended_mode, BYTE reset);
 void prg_fix_JYASIC_base(void);

@@ -46,23 +46,22 @@ void extcl_after_mapper_init_352(void) {
 	chr_fix_352();
 	mirroring_fix_352();
 }
-void extcl_cpu_wr_mem_352(UNUSED(WORD address), UNUSED(BYTE value)) {}
+void extcl_cpu_wr_mem_352(UNUSED(BYTE nidx), UNUSED(WORD address), UNUSED(BYTE value)) {}
 BYTE extcl_save_mapper_352(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m352.chip);
-
 	return (EXIT_OK);
 }
 
 INLINE static void prg_fix_352(void) {
-	memmap_auto_32k(MMCPU(0x8000), m352.chip);
+	memmap_auto_32k(0, MMCPU(0x8000), m352.chip);
 }
 INLINE static void chr_fix_352(void) {
-	memmap_auto_8k(MMPPU(0x0000), m352.chip);
+	memmap_auto_8k(0, MMPPU(0x0000), m352.chip);
 }
 INLINE static void mirroring_fix_352(void) {
 	if (m352.chip & 0x01) {
-		mirroring_V();
+		mirroring_V(0);
 	} else {
-		mirroring_H();
+		mirroring_H(0);
 	}
 }

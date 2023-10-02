@@ -116,10 +116,10 @@ void emu_frame(void) {
 
 	// eseguo un frame dell'emulatore
 	if (info.no_rom) {
-		tv_noise_effect();
-		gfx_draw_screen();
+		tv_noise_effect(0);
+		gfx_draw_screen(0);
 		emu_frame_sleep();
-		ppu.frames++;
+		nes[0].p.ppu.frames++;
 		return;
 	} else if (nsf.state & (NSF_PAUSE | NSF_STOP)) {
 		int i = 0;
@@ -135,7 +135,7 @@ void emu_frame(void) {
 		extcl_audio_samples_mod_nsf(NULL, 0);
 		nsf_main_screen_event();
 		nsf_effect();
-		gfx_draw_screen();
+		gfx_draw_screen(0);
 		emu_frame_sleep();
 		return;
 	}
@@ -148,15 +148,16 @@ void emu_frame(void) {
 		emu_frame_started();
 	}
 
-	while (info.frame_status == FRAME_STARTED) {
+	// eseguo CPU, PPU e APU
+	while (info.exec_cpu_op.w) {
 #if defined (DEBUG)
-		if (cpu.PC.w == PCBREAK) {
+		if (nes[1].c.cpu.PC.w == PCBREAK) {
 			BYTE pippo = 5;
 			pippo = pippo + 1;
 		}
 #endif
-		// eseguo CPU, PPU e APU
-		cpu_exe_op();
+		if (info.exec_cpu_op.b[1]) cpu_exe_op(1);
+		if (info.exec_cpu_op.b[0]) cpu_exe_op(0);
 	}
 
 	emu_frame_finished();
@@ -171,10 +172,10 @@ void emu_frame_debugger(void) {
 	if (info.frame_status == FRAME_FINISHED) {
 		if (debugger.mode == DBG_GO) {
 			if (info.no_rom) {
-				tv_noise_effect();
-				gfx_draw_screen();
+				tv_noise_effect(0);
+				gfx_draw_screen(0);
 				emu_frame_sleep();
-				ppu.frames++;
+				nes[0].p.ppu.frames++;
 				return;
 			} else if (nsf.state & (NSF_PAUSE | NSF_STOP)) {
 				int i = 0;
@@ -190,7 +191,7 @@ void emu_frame_debugger(void) {
 				extcl_audio_samples_mod_nsf(NULL, 0);
 				nsf_main_screen_event();
 				nsf_effect();
-				gfx_draw_screen();
+				gfx_draw_screen(0);
 				emu_frame_sleep();
 				return;
 			}
@@ -205,23 +206,23 @@ void emu_frame_debugger(void) {
 	}
 
 	// eseguo CPU, PPU e APU
-	if (debugger.mode == DBG_GO) {
-		// posso passare dal DBG_GO al DBG_STEP durante l'esecuzione di un frame intero
-		while ((info.frame_status == FRAME_STARTED) && (debugger.mode == DBG_GO)) {
-			if ((debugger.breakpoint == cpu.PC.w) && !debugger.breakpoint_after_step) {
-				debugger.mode = DBG_BREAKPOINT;
-				//gui_dlgdebugger_click_step();
-				break;
-			} else {
-				debugger.breakpoint_after_step = FALSE;
-				info.CPU_PC_before = cpu.PC.w;
-				cpu_exe_op();
-			}
-		}
-	} else if (debugger.mode == DBG_STEP) {
-		info.CPU_PC_before = cpu.PC.w;
-		cpu_exe_op();
-	}
+//	if (debugger.mode == DBG_GO) {
+//		// posso passare dal DBG_GO al DBG_STEP durante l'esecuzione di un frame intero
+//		while ((info.frame_status == FRAME_STARTED) && (debugger.mode == DBG_GO)) {
+//			if ((debugger.breakpoint == nes[nidx].c.cpu.PC.w) && !debugger.breakpoint_after_step) {
+//				debugger.mode = DBG_BREAKPOINT;
+//				//gui_dlgdebugger_click_step();
+//				break;
+//			} else {
+//				debugger.breakpoint_after_step = FALSE;
+//				info.CPU_PC_before = nes[nidx].c.cpu.PC.w;
+//				cpu_exe_op();
+//			}
+//		}
+//	} else if (debugger.mode == DBG_STEP) {
+//		info.CPU_PC_before = nes[nidx].c.cpu.PC.w;
+//		cpu_exe_op();
+//	}
 
 	if (info.frame_status == FRAME_FINISHED) {
 		emu_frame_finished();
@@ -507,9 +508,11 @@ BYTE emu_turn_on(void) {
 	srand(time(0));
 
 	// l'inizializzazione della memmap della cpu e della ppu
-	memset(&memmap_palette, 0x00, sizeof(memmap_palette));
-	memset(&oam, 0x00, sizeof(oam));
-	memset(&ppu_screen, 0x00, sizeof(ppu_screen));
+	for (int nesidx = 0; nesidx < info.number_of_nes; nesidx++) {
+		memset(&nes[nesidx].m.memmap_palette, 0x00, sizeof(nes[nesidx].m.memmap_palette));
+		memset(&nes[nesidx].p.oam, 0x00, sizeof(_oam));
+		memset(&nes[nesidx].p.ppu_screen, 0x00, sizeof(_ppu_screen));
+	}
 	memset(&vs_system, 0x00, sizeof(vs_system));
 
 	info.lag_frame.next = TRUE;
@@ -581,11 +584,13 @@ BYTE emu_turn_on(void) {
 	}
 
 	// CPU
-	cpu_turn_on();
-	// ritardo della CPU
-	cpu_initial_cycles();
-	if (extcl_cpu_init_pc) {
-		extcl_cpu_init_pc();
+	for (int nesidx = 0; nesidx < info.number_of_nes; nesidx++) {
+		cpu_turn_on(nesidx);
+		// ritardo della CPU
+		cpu_initial_cycles(nesidx);
+		if (extcl_cpu_init_pc) {
+			extcl_cpu_init_pc(nesidx);
+		}
 	}
 
 	// trainer
@@ -621,11 +626,6 @@ BYTE emu_turn_on(void) {
 	save_slot_count_load();
 
 	ext_win.vs_system = vs_system.enabled;
-	if (vs_system.enabled) {
-		if ((cfg->dipswitch_vs == 0xFF00) && (info.default_dipswitches != 0xFF00)) {
-			cfg->dipswitch_vs = info.default_dipswitches;
-		}
-	}
 
 	gui_external_control_windows_show();
 	gui_wdgrewind_play();
@@ -736,11 +736,13 @@ BYTE emu_reset(BYTE type) {
 	}
 
 	// CPU
-	cpu_turn_on();
-	// ritardo della CPU
-	cpu_initial_cycles();
-	if (extcl_cpu_init_pc) {
-		extcl_cpu_init_pc();
+	for (int nesidx = 0; nesidx < info.number_of_nes; nesidx++) {
+		cpu_turn_on(nesidx);
+		// ritardo della CPU
+		cpu_initial_cycles(nesidx);
+		if (extcl_cpu_init_pc) {
+			extcl_cpu_init_pc(nesidx);
+		}
 	}
 
 	// trainer
@@ -775,14 +777,6 @@ BYTE emu_reset(BYTE type) {
 		}
 	}
 
-	if (vs_system.enabled) {
-		if (type >= HARD) {
-			vs_system.shared_mem = 0;
-		}
-		if ((cfg->dipswitch_vs == 0xFF00) && (info.default_dipswitches != 0xFF00)) {
-			cfg->dipswitch_vs = info.default_dipswitches;
-		}
-	}
 	memset(&vs_system.watchdog, 0x00, sizeof(vs_system.watchdog));
 	memset(&vs_system.r4020, 0x00, sizeof(vs_system.r4020));
 	memset(&vs_system.coins, 0x00, sizeof(vs_system.coins));
@@ -1108,6 +1102,200 @@ void emu_info_rom(void) {
 			case VS_SM_Super_Xevious:
 				log_close_box(uL("Unisystem (Super Xevious protection)%s"), ifchanged());
 				break;
+			case VS_SM_Ice_Climber:
+				log_close_box(uL("Unisystem (Ice Climber Japan protection)%s"), ifchanged());
+				break;
+			case VS_DS_Normal:
+				log_close_box(uL("DualSystem (normal)%s"), ifchanged());
+				break;
+			case VS_DS_Bungeling:
+				log_close_box(uL("DualSystem (Raid on Bungeling Bay protection)%s"), ifchanged());
+				break;
+		}
+	}
+
+	{
+		log_info_box_open(uL("expansion;"));
+		ischanged(info.mapper.expansion != info.header.expansion);
+		switch (info.mapper.expansion) {
+			default:
+			case 0x00:
+				log_close_box(uL("Unspecified%s"), ifchanged());
+				break;
+			case 0x01:
+				log_close_box(uL("Standard NES/Famicom controllers%s"), ifchanged());
+				break;
+			case 0x02:
+				log_close_box(uL("NES Four Score/Satellite with two additional standard controllers%s"), ifchanged());
+				break;
+			case 0x03:
+				log_close_box(uL("Famicom Four Players Adapter (two additional standard controllers, \"simple\" protocol)%s"), ifchanged());
+				break;
+			case 0x04:
+				log_close_box(uL("Vs. System (1P via $4016)%s"), ifchanged());
+				break;
+			case 0x05:
+				log_close_box(uL("Vs. System (1P via $4017)%s"), ifchanged());
+				break;
+			case 0x06:
+				log_close_box(uL("Reserved%s"), ifchanged());
+				break;
+			case 0x07:
+				log_close_box(uL("Vs. Zapper%s"), ifchanged());
+				break;
+			case 0x08:
+				log_close_box(uL("Zapper ($4017)%s"), ifchanged());
+				break;
+			case 0x09:
+				log_close_box(uL("Two Zappers%s"), ifchanged());
+				break;
+			case 0x0A:
+				log_close_box(uL("Bandai Hyper Shot Lightgun%s"), ifchanged());
+				break;
+			case 0x0B:
+				log_close_box(uL("Power Pad Side A%s"), ifchanged());
+				break;
+			case 0x0C:
+				log_close_box(uL("Power Pad Side B%s"), ifchanged());
+				break;
+			case 0x0D:
+				log_close_box(uL("Family Trainer Side A%s"), ifchanged());
+				break;
+			case 0x0E:
+				log_close_box(uL("Family Trainer Side B%s"), ifchanged());
+				break;
+			case 0x0F:
+				log_close_box(uL("Arkanoid Vaus Controller (NES)%s"), ifchanged());
+				break;
+			case 0x10:
+				log_close_box(uL("Arkanoid Vaus Controller (Famicom)%s"), ifchanged());
+				break;
+			case 0x11:
+				log_close_box(uL("Two Vaus Controllers plus Famicom Data Recorder%s"), ifchanged());
+				break;
+			case 0x12:
+				log_close_box(uL("Konami Hyper Shot Controller%s"), ifchanged());
+				break;
+			case 0x13:
+				log_close_box(uL("Coconuts Pachinko Controller%s"), ifchanged());
+				break;
+			case 0x14:
+				log_close_box(uL("Exciting Boxing Punching Bag (Blowup Doll)%s"), ifchanged());
+				break;
+			case 0x15:
+				log_close_box(uL("Jissen Mahjong Controller%s"), ifchanged());
+				break;
+			case 0x16:
+				log_close_box(uL("Party Tap%s"), ifchanged());
+				break;
+			case 0x17:
+				log_close_box(uL("Oeka Kids Tablet%s"), ifchanged());
+				break;
+			case 0x18:
+				log_close_box(uL("Sunsoft Barcode Battler%s"), ifchanged());
+				break;
+			case 0x19:
+				log_close_box(uL("Miracle Piano Keyboard%s"), ifchanged());
+				break;
+			case 0x1A:
+				log_close_box(uL("Pokkun Moguraa (Whack-a-Mole Mat and Mallet)%s"), ifchanged());
+				break;
+			case 0x1B:
+				log_close_box(uL("Top Rider (Inflatable Bicycle)%s"), ifchanged());
+				break;
+			case 0x1C:
+				log_close_box(uL("Double-Fisted (Requires or allows use of two controllers by one player)%s"), ifchanged());
+				break;
+			case 0x1D:
+				log_close_box(uL("Famicom 3D System%s"), ifchanged());
+				break;
+			case 0x1E:
+				log_close_box(uL("Doremikko Keyboard%s"), ifchanged());
+				break;
+			case 0x1F:
+				log_close_box(uL("R.O.B. Gyro Set%s"), ifchanged());
+				break;
+			case 0x20:
+				log_close_box(uL("Famicom Data Recorder (\"silent\" keyboard)%s"), ifchanged());
+				break;
+			case 0x21:
+				log_close_box(uL("ASCII Turbo File%s"), ifchanged());
+				break;
+			case 0x22:
+				log_close_box(uL("IGS Storage Battle Box%s"), ifchanged());
+				break;
+			case 0x23:
+				log_close_box(uL("Family BASIC Keyboard plus Famicom Data Recorder%s"), ifchanged());
+				break;
+			case 0x24:
+				log_close_box(uL("Dongda PEC-586 Keyboard%s"), ifchanged());
+				break;
+			case 0x25:
+				log_close_box(uL("Bit Corp. Bit-79 Keyboard%s"), ifchanged());
+				break;
+			case 0x26:
+				log_close_box(uL("Subor Keyboard%s"), ifchanged());
+				break;
+			case 0x27:
+				log_close_box(uL("Subor Keyboard plus mouse (3x8-bit protocol)%s"), ifchanged());
+				break;
+			case 0x28:
+				log_close_box(uL("Subor Keyboard plus mouse (24-bit protocol via $4016)%s"), ifchanged());
+				break;
+			case 0x29:
+				log_close_box(uL("SNES Mouse ($4017.d0)%s"), ifchanged());
+				break;
+			case 0x2A:
+				log_close_box(uL("Multicart%s"), ifchanged());
+				break;
+			case 0x2B:
+				log_close_box(uL("Two SNES controllers replacing the two standard NES controllers%s"), ifchanged());
+				break;
+			case 0x2C:
+				log_close_box(uL("RacerMate Bicycle%s"), ifchanged());
+				break;
+			case 0x2D:
+				log_close_box(uL("U-Force%s"), ifchanged());
+				break;
+			case 0x2E:
+				log_close_box(uL("R.O.B. Stack-Up%s"), ifchanged());
+				break;
+			case 0x2F:
+				log_close_box(uL("City Patrolman Lightgun%s"), ifchanged());
+				break;
+			case 0x30:
+				log_close_box(uL("Sharp C1 Cassette Interface%s"), ifchanged());
+				break;
+			case 0x31:
+				log_close_box(uL("Standard Controller with swapped Left-Right/Up-Down/B-A%s"), ifchanged());
+				break;
+			case 0x32:
+				log_close_box(uL("Excalibor Sudoku Pad%s"), ifchanged());
+				break;
+			case 0x33:
+				log_close_box(uL("ABL Pinball%s"), ifchanged());
+				break;
+			case 0x34:
+				log_close_box(uL("Golden Nugget Casino extra buttons%s"), ifchanged());
+				break;
+			case 0x35:
+				log_close_box(uL("Unknown famiclone keyboard used by the \"Golden Key\" educational cartridge%s"), ifchanged());
+				break;
+			case 0x36:
+				log_close_box(uL("Subor Keyboard plus mouse (24-bit protocol via $4017)%s"), ifchanged());
+				break;
+			case 0x37:
+				log_close_box(uL("Port test controller%s"), ifchanged());
+				break;
+			case 0x38:
+				log_close_box(uL("Bandai Multi Game Player Gamepad buttons%s"), ifchanged());
+				break;
+			case 0x39:
+				log_close_box(uL("Venom TV Dance Mat%s"), ifchanged());
+				break;
+			case 0x3A:
+				log_close_box(uL("LG TV Remote Control%s"), ifchanged());
+				break;
 		}
 	}
 
@@ -1218,19 +1406,19 @@ void emu_info_rom(void) {
 		ischanged(info.header.prgnvram !=  wram_nvram_size());
 		log_info_box(uL("PRG NVRAM;%u%s"),  wram_nvram_size(), ifchanged());
 	}
-	if (vram_ram_size()) {
-		ischanged(info.header.chrram != vram_ram_size());
-		log_info_box(uL("CHR RAM;%u%s"), vram_ram_size(), ifchanged());
+	if (vram_ram_size(0)) {
+		ischanged(info.header.chrram != vram_ram_size(0));
+		log_info_box(uL("CHR RAM;%u%s"), vram_ram_size(0), ifchanged());
 	}
-	if (vram_nvram_size()) {
-		ischanged(info.header.chrnvram !=  vram_nvram_size());
-		log_info_box(uL("CHR NVRAM;%u%s"),  vram_nvram_size(), ifchanged());
+	if (vram_nvram_size(0)) {
+		ischanged(info.header.chrnvram !=  vram_nvram_size(0));
+		log_info_box(uL("CHR NVRAM;%u%s"),  vram_nvram_size(0), ifchanged());
 	}
 
 	log_info_box(uL("PRG 8k rom;%-4lu [ %08X %ld ]%s"),
 		prgrom_banks(S8K),
 		info.crc32.prg,
-		prgrom_size(),
+		info.mapper.prgrom_size,//prgrom_size(),
 		(info.prg_truncated ? " truncated" : ""));
 
 	if (info.header.format == UNIF_FORMAT) {
@@ -1250,7 +1438,7 @@ void emu_info_rom(void) {
 		log_info_box(uL("CHR 4k vrom;%-4lu [ %08X %ld ]%s"),
 			chrrom_banks(S4K),
 			info.crc32.chr,
-			chrrom_size(),
+			info.mapper.chrrom_size, //chrrom_size(),
 			(info.chr_truncated ? " truncated" : ""));
 
 		if (info.header.format == UNIF_FORMAT) {
@@ -1313,20 +1501,26 @@ void emu_initial_ram(BYTE *ram, unsigned int length) {
 }
 void emu_save_header_info(void) {
 	info.header.format = info.format;
+	info.header.prgrom_size = info.mapper.prgrom_size;
 	info.header.prgrom = info.mapper.prgrom_banks_16k;
+	info.header.chrrom_size = info.mapper.chrrom_size;
 	info.header.chrrom = info.mapper.chrrom_banks_8k;
 	info.header.prgram = wram_ram_size();
 	info.header.prgnvram = wram_nvram_size();
-	info.header.chrram = vram_ram_size();
-	info.header.chrnvram = vram_nvram_size();
+	info.header.chrram = vram_ram_size(0);
+	info.header.chrnvram = vram_nvram_size(0);
 	info.header.battery = info.mapper.battery;
 	info.header.mapper = info.mapper.id;
 	info.header.submapper = info.mapper.submapper;
 	info.header.mirroring = info.mapper.mirroring;
 	info.header.cpu_timing = info.machine[HEADER];
 	info.header.ext_console_type = info.mapper.ext_console_type;
+	info.header.expansion = info.mapper.expansion;
 	info.header.vs_ppu = vs_system.ppu;
 	info.header.vs_hardware = vs_system.special_mode.type;
+}
+BYTE emu_active_nidx(void) {
+	return (vs_system.special_mode.type == VS_DS_Normal ? cfg->vs_monitor : 0);
 }
 
 INLINE static void emu_frame_started(void) {
@@ -1334,8 +1528,14 @@ INLINE static void emu_frame_started(void) {
 
 	// riprendo a far correre la CPU
 	info.frame_status = FRAME_STARTED;
+
+	for (int nesidx = 0; nesidx < info.number_of_nes; nesidx++) {
+		info.exec_cpu_op.b[nesidx] = TRUE;
+	}
 }
 INLINE static void emu_frame_finished(void) {
+	info.frame_status = FRAME_FINISHED;
+
 	if ((cfg->cheat_mode == GAMEGENIE_MODE) && (gamegenie.phase == GG_LOAD_ROM)) {
 		gui_emit_et_gg_reset();
 	}

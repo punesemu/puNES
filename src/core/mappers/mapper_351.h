@@ -23,14 +23,14 @@
 
 void map_init_351(void);
 void extcl_after_mapper_init_351(void);
-void extcl_cpu_wr_mem_351(WORD address, BYTE value);
-BYTE extcl_cpu_rd_mem_351(WORD address, BYTE openbus);
+void extcl_cpu_wr_mem_351(BYTE nidx, WORD address, BYTE value);
+BYTE extcl_cpu_rd_mem_351(BYTE nidx, WORD address, BYTE openbus);
 BYTE extcl_save_mapper_351(BYTE mode, BYTE slot, FILE *fp);
-void extcl_cpu_every_cycle_351(void);
-void extcl_ppu_000_to_34x_351(void);
-void extcl_ppu_000_to_255_351(void);
-void extcl_ppu_256_to_319_351(void);
-void extcl_ppu_320_to_34x_351(void);
-void extcl_update_r2006_351(WORD new_r2006, WORD old_r2006);
+void extcl_cpu_every_cycle_351(BYTE nidx);
+void extcl_ppu_000_to_34x_351(BYTE nidx);
+void extcl_ppu_000_to_255_351(BYTE nidx);
+void extcl_ppu_256_to_319_351(BYTE nidx);
+void extcl_ppu_320_to_34x_351(BYTE nidx);
+void extcl_update_r2006_351(BYTE nidx, WORD new_r2006, WORD old_r2006);
 
 #endif /* MAPPER_351_H_ */

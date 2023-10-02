@@ -38,8 +38,8 @@ void prg_swap_n118_076(WORD address, WORD value) {
 	prg_swap_N118_base(address, (value & 0x1F));
 }
 void chr_fix_n118_076(void) {
-	memmap_auto_2k(MMPPU(0x0000), n118.reg[2]);
-	memmap_auto_2k(MMPPU(0x0800), n118.reg[3]);
-	memmap_auto_2k(MMPPU(0x1000), n118.reg[4]);
-	memmap_auto_2k(MMPPU(0x1800), n118.reg[5]);
+	memmap_auto_2k(0, MMPPU(0x0000), n118.reg[2]);
+	memmap_auto_2k(0, MMPPU(0x0800), n118.reg[3]);
+	memmap_auto_2k(0, MMPPU(0x1000), n118.reg[4]);
+	memmap_auto_2k(0, MMPPU(0x1800), n118.reg[5]);
 }

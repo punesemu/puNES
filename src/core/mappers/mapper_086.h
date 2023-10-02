@@ -38,8 +38,8 @@ extern _m086 m086;
 void map_init_086(void);
 void extcl_after_mapper_init_086(void);
 void extcl_mapper_quit_086(void);
-void extcl_cpu_wr_mem_086(WORD address, BYTE value);
+void extcl_cpu_wr_mem_086(BYTE nidx, WORD address, BYTE value);
 BYTE extcl_save_mapper_086(BYTE mode, BYTE slot, FILE *fp);
-void extcl_cpu_every_cycle_086(void);
+void extcl_cpu_every_cycle_086(BYTE nidx);
 
 #endif /* MAPPER_086_H_ */

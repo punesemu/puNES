@@ -47,7 +47,7 @@ void extcl_after_mapper_init_141(void) {
 	chr_fix_141();
 	mirroring_fix_141();
 }
-void extcl_cpu_wr_mem_141(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_141(UNUSED(BYTE nidx), WORD address, BYTE value) {
 	if ((address & 0x4000) && (address & 0x0100)) {
 		if (address & 0x01) {
 			m141.reg[m141.index & 0x07] = value;
@@ -61,38 +61,37 @@ void extcl_cpu_wr_mem_141(WORD address, BYTE value) {
 }
 BYTE extcl_save_mapper_141(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m141.reg);
-
 	return (EXIT_OK);
 }
 
 INLINE static void prg_fix_141(void) {
-	memmap_auto_32k(MMCPU(0x8000), m141.reg[5]);
+	memmap_auto_32k(0, MMCPU(0x8000), m141.reg[5]);
 }
 INLINE static void chr_fix_141(void) {
 	if (chrrom_size()) {
 		WORD base = m141.reg[4] << 3;
 
-		memmap_auto_2k(MMPPU(0x0000), (((base | (m141.reg[(m141.reg[7] & 0x01) ? 0 : 0] & 0x07)) << 1) | 0));
-		memmap_auto_2k(MMPPU(0x0800), (((base | (m141.reg[(m141.reg[7] & 0x01) ? 0 : 1] & 0x07)) << 1) | 1));
-		memmap_auto_2k(MMPPU(0x1000), (((base | (m141.reg[(m141.reg[7] & 0x01) ? 0 : 2] & 0x07)) << 1) | 0));
-		memmap_auto_2k(MMPPU(0x1800), (((base | (m141.reg[(m141.reg[7] & 0x01) ? 0 : 3] & 0x07)) << 1) | 1));
+		memmap_auto_2k(0, MMPPU(0x0000), (((base | (m141.reg[(m141.reg[7] & 0x01) ? 0 : 0] & 0x07)) << 1) | 0));
+		memmap_auto_2k(0, MMPPU(0x0800), (((base | (m141.reg[(m141.reg[7] & 0x01) ? 0 : 1] & 0x07)) << 1) | 1));
+		memmap_auto_2k(0, MMPPU(0x1000), (((base | (m141.reg[(m141.reg[7] & 0x01) ? 0 : 2] & 0x07)) << 1) | 0));
+		memmap_auto_2k(0, MMPPU(0x1800), (((base | (m141.reg[(m141.reg[7] & 0x01) ? 0 : 3] & 0x07)) << 1) | 1));
 	} else {
-		memmap_auto_8k(MMPPU(0x0000), 0);
+		memmap_auto_8k(0, MMPPU(0x0000), 0);
 	}
 }
 INLINE static void mirroring_fix_141(void) {
 	switch (m141.reg[7] & 0x07) {
 		case 0:
-			mirroring_SCR0x3_SCR1x1();
+			mirroring_SCR0x3_SCR1x1(0);
 			break;
 		case 2:
-			mirroring_H();
+			mirroring_H(0);
 			break;
 		default:
-			mirroring_V();
+			mirroring_V(0);
 			break;
 		case 6:
-			mirroring_SCR0();
+			mirroring_SCR0(0);
 			break;
 	}
 }

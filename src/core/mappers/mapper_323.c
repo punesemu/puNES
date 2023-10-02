@@ -46,9 +46,9 @@ void map_init_323(void) {
 
 	info.mapper.extend_wr = TRUE;
 }
-void extcl_cpu_wr_mem_323(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_323(BYTE nidx, WORD address, BYTE value) {
 	if ((address >= 0x6000) && (address <= 0x7FFF)) {
-		if (!(m323.reg & 0x08) && memmap_adr_is_writable(MMCPU(address))) {
+		if (!(m323.reg & 0x08) && memmap_adr_is_writable(nidx, MMCPU(address))) {
 			m323.reg = value;
 			MMC1_prg_fix();
 			MMC1_chr_fix();
@@ -57,7 +57,7 @@ void extcl_cpu_wr_mem_323(WORD address, BYTE value) {
 		return;
 	}
 	if (address >= 0x8000) {
-		extcl_cpu_wr_mem_MMC1(address, value);
+		extcl_cpu_wr_mem_MMC1(nidx, address, value);
 	}
 }
 BYTE extcl_save_mapper_323(BYTE mode, BYTE slot, FILE *fp) {

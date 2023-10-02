@@ -49,7 +49,7 @@ void map_init_183(void) {
 
 	info.mapper.extend_wr = TRUE;
 }
-void extcl_cpu_wr_mem_183(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_183(BYTE nidx, WORD address, BYTE value) {
 	switch (address & 0xF800) {
 		case 0x6800:
 			m183.reg[0] = address & 0x3F;
@@ -60,7 +60,7 @@ void extcl_cpu_wr_mem_183(WORD address, BYTE value) {
 			VRC2and4_prg_fix();
 			return;
 		case 0x9800:
-			extcl_cpu_wr_mem_VRC2and4(0x9000, value);
+			extcl_cpu_wr_mem_VRC2and4(nidx, 0x9000, value);
 			return;
 		case 0xA800:
 			m183.reg[2] = value;
@@ -77,7 +77,7 @@ void extcl_cpu_wr_mem_183(WORD address, BYTE value) {
 		case 0x9000:
 			return;
 		default:
-			extcl_cpu_wr_mem_VRC2and4(address, value);
+			extcl_cpu_wr_mem_VRC2and4(nidx, address, value);
 			return;
 	}
 }
@@ -87,14 +87,14 @@ BYTE extcl_save_mapper_183(BYTE mode, BYTE slot, FILE *fp) {
 }
 
 void prg_fix_vrc2and4_183(void) {
-	memmap_auto_8k(MMCPU(0x8000), m183.reg[1]);
-	memmap_auto_8k(MMCPU(0xA000), m183.reg[2]);
-	memmap_auto_8k(MMCPU(0xC000), m183.reg[3]);
-	memmap_auto_8k(MMCPU(0xE000), 0xFF);
+	memmap_auto_8k(0, MMCPU(0x8000), m183.reg[1]);
+	memmap_auto_8k(0, MMCPU(0xA000), m183.reg[2]);
+	memmap_auto_8k(0, MMCPU(0xC000), m183.reg[3]);
+	memmap_auto_8k(0, MMCPU(0xE000), 0xFF);
 }
 void chr_swap_vrc2and4_183(WORD address, WORD value) {
 	chr_swap_VRC2and4_base(address, (value & 0x1FF));
 }
 void wram_fix_vrc2and4_183(void) {
-	memmap_prgrom_8k(MMCPU(0x6000), m183.reg[0]);
+	memmap_prgrom_8k(0, MMCPU(0x6000), m183.reg[0]);
 }

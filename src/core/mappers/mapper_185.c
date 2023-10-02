@@ -47,17 +47,16 @@ void extcl_after_mapper_init_185(void) {
 	prg_fix_185();
 	chr_fix_185();
 }
-void extcl_cpu_wr_mem_185(UNUSED(WORD address), BYTE value) {
+void extcl_cpu_wr_mem_185(UNUSED(BYTE nidx), UNUSED(WORD address), BYTE value) {
 	m185.reg = value;
 	chr_fix_185();
 }
 BYTE extcl_save_mapper_185(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m185.reg);
 	save_slot_ele(mode, slot, m185.ppu_read_count);
-
 	return (EXIT_OK);
 }
-void extcl_rd_r2007_185(void) {
+void extcl_rd_r2007_185(UNUSED(BYTE nidx)) {
 	if (m185.ppu_read_count < 2) {
 		m185.ppu_read_count++;
 		chr_fix_185();
@@ -65,7 +64,7 @@ void extcl_rd_r2007_185(void) {
 }
 
 INLINE static void prg_fix_185(void) {
-	memmap_auto_32k(MMCPU(0x8000), 0);
+	memmap_auto_32k(0, MMCPU(0x8000), 0);
 }
 INLINE static void chr_fix_185(void) {
 	BYTE enabled = TRUE;
@@ -75,5 +74,5 @@ INLINE static void chr_fix_185(void) {
 	} else {
 		enabled = (m185.ppu_read_count >= 2);
 	}
-	memmap_auto_wp_8k(MMPPU(0x0000), 0, enabled, enabled);
+	memmap_auto_wp_8k(0, MMPPU(0x0000), 0, enabled, enabled);
 }

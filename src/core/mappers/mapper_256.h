@@ -23,7 +23,7 @@
 
 void map_init_256(void);
 void extcl_after_mapper_init_256(void);
-void extcl_cpu_wr_mem_256(WORD address, BYTE value);
-BYTE extcl_wr_ppu_reg_256(WORD address, BYTE *value);
+void extcl_cpu_wr_mem_256(BYTE nidx, WORD address, BYTE value);
+BYTE extcl_wr_ppu_reg_256(BYTE nidx, WORD address, BYTE *value);
 
 #endif /* MAPPER_256_H_ */
