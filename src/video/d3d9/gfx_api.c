@@ -39,9 +39,9 @@ uint32_t gfx_api_color(BYTE a, BYTE r, BYTE g, BYTE b) {
 void gfx_api_overlay_blit(void *surface, _gfx_rect *rect, double device_pixel_ratio) {
 	D3DLOCKED_RECT lock_dst;
 	RECT dst;
-	LONG pitch, pitch_dpr;
-	unsigned char *psrc, *pdst;
-	int h;
+	LONG pitch = 0, pitch_dpr = 0;
+	unsigned char *psrc = NULL, *pdst = NULL;
+	int h = 0;
 
 	if (((rect->x + rect->w) > d3d9.overlay.rect.w) || ((rect->y + rect->h) > d3d9.overlay.rect.h)) {
 		return;
@@ -71,8 +71,8 @@ void gfx_api_overlay_blit(void *surface, _gfx_rect *rect, double device_pixel_ra
 	IDirect3DSurface9_UnlockRect(d3d9.overlay.map0);
 	IDirect3DTexture9_AddDirtyRect(d3d9.overlay.data, &dst);
 }
-void gfx_api_apply_filter(void) {
-	const _texture_simple *scrtex;
+void gfx_api_apply_filter(BYTE nidx) {
+	const _texture_simple *scrtex = NULL;
 
 	scrtex = &d3d9.screen.tex[d3d9.screen.index];
 
@@ -89,7 +89,7 @@ void gfx_api_apply_filter(void) {
 		gfx.filter.data.pix = lrect.pBits;
 		gfx.filter.data.width = scrtex->rect.base.w;
 		gfx.filter.data.height = scrtex->rect.base.h;
-		gfx.filter.func();
+		gfx.filter.func(nidx);
 
 		// unlock della surface in memoria
 		IDirect3DSurface9_UnlockRect(scrtex->offscreen);
@@ -97,7 +97,7 @@ void gfx_api_apply_filter(void) {
 }
 void gfx_api_control_changed_adapter(void *monitor) {
 	HMONITOR *in_use = monitor;
-	unsigned int i;
+	unsigned int i = 0;
 
 	if ((*in_use) == IDirect3D9_GetAdapterMonitor(d3d9.d3d, d3d9.adapter->id)) {
 		return;

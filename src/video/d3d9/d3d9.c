@@ -57,7 +57,8 @@ _d3d9 d3d9;
 BYTE d3d9_init(void) {
 	memset(&d3d9, 0x00, sizeof(d3d9));
 
-	if ((d3d9.d3d = Direct3DCreate9(D3D_SDK_VERSION)) == NULL) {
+	d3d9.d3d = Direct3DCreate9(D3D_SDK_VERSION);
+	if (d3d9.d3d == NULL) {
 		gui_critical(uL("Unable to create d3d object."));
 		return (EXIT_ERROR);
 	}
@@ -65,13 +66,14 @@ BYTE d3d9_init(void) {
 	// mi passo in rassegna tutti gli adapter presenti sul sistema
 	d3d9.adapters_on_system = IDirect3D9_GetAdapterCount(d3d9.d3d);
 
-	if (!(d3d9.array = malloc(d3d9.adapters_on_system * sizeof(_d3d9_adapter)))) {
+	d3d9.array = malloc(d3d9.adapters_on_system * sizeof(_d3d9_adapter));
+	if (!d3d9.array) {
 		gui_critical(uL("Unable to create devices array."));
 		return (EXIT_ERROR);
 	}
 
 	{
-		unsigned int adapt;
+		unsigned int adapt = 0;
 
 		for (adapt = 0; adapt < d3d9.adapters_on_system; adapt++) {
 			_d3d9_adapter *dev = D3D9_ADAPTER(d3d9.adapters_in_use);
@@ -192,7 +194,7 @@ BYTE d3d9_init(void) {
 
 	{
 		HMONITOR monitor = MonitorFromWindow(gui_win_id(), MONITOR_DEFAULTTOPRIMARY);
-		UINT i;
+		UINT i = 0;
 
 		d3d9.adapter = D3D9_ADAPTER(0);
 
@@ -218,7 +220,7 @@ void d3d9_quit(void) {
 	d3d9_context_delete(TRUE);
 
 	{
-		UINT i;
+		UINT i = 0;
 
 		for (i = 0; i < d3d9.adapters_in_use; i++) {
 			_d3d9_adapter *dev = D3D9_ADAPTER(i);
@@ -256,8 +258,8 @@ void d3d9_quit(void) {
 }
 BYTE d3d9_context_create(void) {
 	D3DXMATRIX identity;
-	WORD w, h;
-	UINT i;
+	WORD w = 0, h = 0;
+	UINT i = 0;
 
 	gfx_thread_lock();
 
@@ -287,7 +289,8 @@ BYTE d3d9_context_create(void) {
 		return (EXIT_ERROR);
 	}
 
-	if ((d3d9.cgctx = cgCreateContext()) == NULL) {
+	d3d9.cgctx = cgCreateContext();
+	if (d3d9.cgctx == NULL) {
 		d3d9_context_delete(FALSE);
 		gfx_thread_unlock();
 		return (EXIT_ERROR);
@@ -369,8 +372,8 @@ BYTE d3d9_context_create(void) {
 			if (overscan.enabled && !cfg->oscan_black_borders_fscr) {
 				float left = cfg->hflip_screen ? (float)overscan.borders->right : (float)overscan.borders->left;
 				float right = cfg->hflip_screen ? (float)overscan.borders->left : (float)overscan.borders->right;
-				float brd_l_x, brd_r_x, brd_u_y, brd_d_y;
-				float ratio_x, ratio_y;
+				float brd_l_x = 0, brd_r_x = 0, brd_u_y = 0, brd_d_y = 0;
+				float ratio_x = 0, ratio_y = 0;
 
 				ratio_x = vp->w / mw;
 				ratio_y = vp->h / mh;
@@ -473,7 +476,7 @@ BYTE d3d9_context_create(void) {
 	// PREV (calcolo il numero di screen da utilizzare)
 	// deve essere fatto dopo il d3d9_shader_init().
 	for (i = 0; i < shader_effect.pass; i++) {
-		UINT a;
+		UINT a = 0;
 
 		for (a = 0; a < LENGTH(d3d9.texture[i].shader.uni.prev); a++) {
 			if (d3d9.texture[i].shader.uni.prev[a].f.texture) {
@@ -509,7 +512,7 @@ BYTE d3d9_context_create(void) {
 	// overlay
 	{
 		BYTE rotate = FALSE;
-		float ow, oh;
+		float ow = 0, oh = 0;
 		float vmw = (float)gfx.w[VIDEO_MODE];
 		float vmh = (float)gfx.h[VIDEO_MODE];
 
@@ -519,7 +522,7 @@ BYTE d3d9_context_create(void) {
 		IDirect3DDevice9_SetRenderState(d3d9.adapter->dev, D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
 
 		if (cfg->fullscreen) {
-			float div;
+			float div = 0;
 
 			if (!gfx.is_wayland && !cfg->fullscreen_in_window) {
 				vmw *= gfx.device_pixel_ratio;
@@ -608,9 +611,9 @@ BYTE d3d9_context_create(void) {
 	return (EXIT_OK);
 }
 void d3d9_draw_scene(void) {
-	const _texture_simple *scrtex;
-	LPDIRECT3DSURFACE9 back_buffer;
-	UINT sindex, i;
+	const _texture_simple *scrtex = NULL;
+	LPDIRECT3DSURFACE9 back_buffer = NULL;
+	UINT sindex = 0, i = 0;
 
 	if (!gui.start || (gfx.frame.in_draw == gfx.frame.filtered)) {
 		return;
@@ -686,7 +689,7 @@ void d3d9_draw_scene(void) {
 
 		IDirect3DDevice9_SetVertexDeclaration(d3d9.adapter->dev, texture->shader.vd);
 
-		d3d9_shader_param_set(texture, sindex, sp->frame_count_mod, ppu.frames);
+		d3d9_shader_param_set(texture, sindex, sp->frame_count_mod, nes[0].p.ppu.frames);
 
 		IDirect3DDevice9_BeginScene(d3d9.adapter->dev);
 		IDirect3DDevice9_DrawPrimitive(d3d9.adapter->dev, D3DPT_TRIANGLESTRIP, 0, 2);
@@ -710,7 +713,7 @@ void d3d9_draw_scene(void) {
 
 	// overlay
 	if (cfg->txt_on_screen && gui_overlay_is_updated()) {
-		DWORD vpx, vpy, vpw, vph;
+		DWORD vpx = 0, vpy = 0, vpw = 0, vph = 0;
 
 		vpx = (DWORD)d3d9.viewp.left;
 		vpy = (DWORD)d3d9.viewp.top;
@@ -808,7 +811,7 @@ static BYTE d3d9_device_create(UINT width, UINT height) {
 	return (EXIT_OK);
 }
 void d3d9_context_delete(BYTE lock) {
-	UINT i;
+	UINT i = 0;
 
 	if (lock) {
 		gfx_thread_lock();
@@ -937,8 +940,8 @@ INLINE static void d3d9_read_front_buffer(void) {
 	int w = 0, h = 0;
 
 	if (info.screenshot == SCRSH_ORIGINAL_SIZE) {
-		void *buffer;
-		int stride;
+		void *buffer = NULL;
+		int stride = 0;
 
 		w = SCR_COLUMNS;
 		h = SCR_ROWS;
@@ -947,7 +950,7 @@ INLINE static void d3d9_read_front_buffer(void) {
 		buffer = malloc(stride * SCR_ROWS);
 		if (buffer) {
 			emu_thread_pause();
-			scale_surface_screenshoot_1x(stride, buffer);
+			scale_surface_screenshoot_1x(emu_active_nidx(), stride, buffer);
 			gui_save_screenshot(SCR_COLUMNS, SCR_ROWS, stride, buffer, FALSE);
 			free(buffer);
 			emu_thread_continue();
@@ -987,7 +990,8 @@ INLINE static void d3d9_read_front_buffer(void) {
 			d3d9.screenshot.srfc.w = w;
 			d3d9.screenshot.srfc.h = h;
 
-			if ((d3d9.screenshot.walign32 = w) % 32) {
+			d3d9.screenshot.walign32 = w;
+			if (d3d9.screenshot.walign32 % 32) {
 				d3d9.screenshot.walign32 = (w / 32) + 1;
 				d3d9.screenshot.walign32 *= 32;
 			}
@@ -1065,7 +1069,7 @@ INLINE static void d3d9_read_front_buffer(void) {
 static BYTE d3d9_texture_create(_texture *texture, UINT index) {
 	_shader_pass *sp = &shader_effect.sp[index];
 	_shader_scale *sc = &sp->sc;
-	const _texture_rect *prev;
+	const _texture_rect *prev = NULL;
 	_texture_rect *rect = &texture->rect;
 	_viewport *vp = &texture->vp;
 
@@ -1201,7 +1205,7 @@ static BYTE d3d9_texture_simple_create(_texture_simple *texture, UINT w, UINT h,
 	_texture_rect *rect = &texture->rect;
 	_shader *shd = &texture->shader;
 	_viewport vp = { 0, 0, (float)w, (float)h };
-	UINT flt;
+	UINT flt = 0;
 
 	rect->base.w = w;
 	rect->base.h = h;
@@ -1308,9 +1312,9 @@ static BYTE d3d9_texture_simple_create(_texture_simple *texture, UINT w, UINT h,
 }
 static BYTE d3d9_texture_lut_create(_lut *lut, UINT index) {
 	_lut_pass *lp = &shader_effect.lp[index];
-	LPDIRECT3DSURFACE9 map0, offscreen;
+	LPDIRECT3DSURFACE9 map0 = NULL, offscreen = NULL;
 	D3DLOCKED_RECT lrect;
-	UINT width, height;
+	UINT width = 0, height = 0;
 
 	if (gui_load_lut(lut, lp->path) == EXIT_ERROR) {
 		return (EXIT_ERROR);
@@ -1392,8 +1396,8 @@ static void d3d9_surface_clean(LPDIRECT3DSURFACE9 *surface, UINT width, UINT hei
 	D3DLOCKED_RECT lock_dst;
 
 	if (IDirect3DSurface9_LockRect((*surface), &lock_dst, NULL, D3DLOCK_DISCARD) == D3D_OK) {
-		uint32_t *pbits;
-		UINT w, h;
+		uint32_t *pbits = NULL;
+		UINT w = 0, h = 0;
 
 		pbits = (uint32_t *)lock_dst.pBits;
 
@@ -1408,7 +1412,7 @@ static void d3d9_surface_clean(LPDIRECT3DSURFACE9 *surface, UINT width, UINT hei
 	}
 }
 static BYTE d3d9_shader_init(UINT pass, _shader *shd, const uTCHAR *path, const char *code) {
-	const char *list;
+	const char *list = NULL;
 	const char *argv[128];
 	const char **fopts = cgD3D9GetOptimalOptions(cgD3D9GetLatestPixelProfile());
 	const char **vopts = cgD3D9GetOptimalOptions(cgD3D9GetLatestVertexProfile());
@@ -1416,7 +1420,7 @@ static BYTE d3d9_shader_init(UINT pass, _shader *shd, const uTCHAR *path, const 
 	uTCHAR base[LENGTH_FILE_NAME_MID];
 	uTCHAR dname[LENGTH_FILE_NAME_MID];
 	char bname[LENGTH_FILE_NAME_MID];
-	UINT i, argc;
+	UINT i = 0, argc = 0;
 
 	if ((path != NULL) && path[0]) {
 		uTCHAR buffer[LENGTH_FILE_NAME_MID];
@@ -1618,7 +1622,7 @@ static void d3d9_shader_uni_texture_clear(_shader_uniforms_tex *sut) {
 	sut->v.tex_coord = NULL;
 }
 static void d3d9_shader_uni_texture(_shader_uniforms_tex *sut, _shader_prg_cg *prg, char *fmt, ...) {
-	CGparameter param;
+	CGparameter param = NULL;
 	char type[50], buff[100];
 	va_list ap;
 
@@ -1654,8 +1658,8 @@ static void d3d9_shader_uni_texture(_shader_uniforms_tex *sut, _shader_prg_cg *p
 	}
 }
 static BYTE d3d9_vertex_declaration_create(_shader *shd) {
-	UINT i, count, index, tex_index = 0;
-	CGparameter param;
+	UINT i = 0, count = 0, index = 0, tex_index = 0;
+	CGparameter param = NULL;
 	BYTE texcoord[2] = { FALSE };
 	BYTE stream[4] = { FALSE };
 	BYTE indices[LENGTH(shd->attribs.attrib)] = { FALSE };
@@ -1672,7 +1676,8 @@ static BYTE d3d9_vertex_declaration_create(_shader *shd) {
 		}
 	}
 
-	if (!(param = d3d9_cg_find_param(cgGetFirstParameter(shd->prg.v, CG_PROGRAM), "POSITION"))) {
+	param = d3d9_cg_find_param(cgGetFirstParameter(shd->prg.v, CG_PROGRAM), "POSITION");
+	if (!param) {
 		param = d3d9_cg_find_param(cgGetFirstParameter(shd->prg.v, CG_PROGRAM), "POSITION0");
 	}
 	if (param && !indices[cgGetParameterResourceIndex(param)]) {
@@ -1690,7 +1695,8 @@ static BYTE d3d9_vertex_declaration_create(_shader *shd) {
 #endif
 	}
 
-	if (!(param = d3d9_cg_find_param(cgGetFirstParameter(shd->prg.v, CG_PROGRAM), "TEXCOORD"))) {
+	param = d3d9_cg_find_param(cgGetFirstParameter(shd->prg.v, CG_PROGRAM), "TEXCOORD");
+	if (!param) {
 		param = d3d9_cg_find_param(cgGetFirstParameter(shd->prg.v, CG_PROGRAM), "TEXCOORD0");
 	}
 	if (param && !indices[cgGetParameterResourceIndex(param)]) {
@@ -1726,7 +1732,8 @@ static BYTE d3d9_vertex_declaration_create(_shader *shd) {
 #endif
 	}
 
-	if (!(param = d3d9_cg_find_param(cgGetFirstParameter(shd->prg.v, CG_PROGRAM), "COLOR"))) {
+	param = d3d9_cg_find_param(cgGetFirstParameter(shd->prg.v, CG_PROGRAM), "COLOR");
+	if (!param) {
 		param = d3d9_cg_find_param(cgGetFirstParameter(shd->prg.v, CG_PROGRAM), "COLOR0");
 	}
 	if (param && !indices[cgGetParameterResourceIndex(param)]) {
@@ -1795,8 +1802,8 @@ static void d3d9_vertex_buffer_set(_shader *shd, _viewport *vp, _texture_rect *p
 	FLOAT u = (FLOAT)prev->base.w / prev->w;
 	FLOAT v = (FLOAT)prev->base.h / prev->h;
 	FLOAT rotation = 0, u0 = 0.0f, u1 = u;
-	void *buffer;
-	UINT i;
+	void *buffer = NULL;
+	UINT i = 0;
 
 	if (last_pass) {
 		if (cfg->hflip_screen) {
@@ -1888,7 +1895,7 @@ static void d3d9_vertex_buffer_set(_shader *shd, _viewport *vp, _texture_rect *p
 	}
 }
 static CGparameter d3d9_cg_find_param(CGparameter prm, const char *name) {
-	UINT i;
+	UINT i = 0;
 	static const char *illegal[] = {
 		"IN.",
 		"ORIG.",
@@ -1903,16 +1910,18 @@ static CGparameter d3d9_cg_find_param(CGparameter prm, const char *name) {
 		const char *semantic = NULL;
 
 		if (cgGetParameterType(prm) == CG_STRUCT) {
-			CGparameter ret;
+			CGparameter ret = NULL;
 
-			if ((ret = d3d9_cg_find_param(cgGetFirstStructParameter(prm), name))) {
+			ret = d3d9_cg_find_param(cgGetFirstStructParameter(prm), name);
+			if (ret) {
 				return (ret);
 			}
 		}
-		if (cgGetParameterDirection(prm) != CG_IN || cgGetParameterVariability(prm) != CG_VARYING) {
+		if ((cgGetParameterDirection(prm) != CG_IN) || (cgGetParameterVariability(prm) != CG_VARYING)) {
 			continue;
 		}
-		if (!(semantic = cgGetParameterSemantic(prm))) {
+		semantic = cgGetParameterSemantic(prm);
+		if (!semantic) {
 			continue;
 		}
 		if (strcmp(name, semantic) == 0) {
@@ -1958,7 +1967,7 @@ INLINE D3DTEXTUREFILTERTYPE d3d9_shader_filter(UINT type) {
 	}
 }
 INLINE static void d3d9_shader_params_overlay_set(_shader *shd) {
-	UINT i;
+	UINT i = 0;
 
 	if (shd->uni.mvp) {
 		// posso tranquillamente utilizzare l'mvp dell'ultimo pass
@@ -1971,7 +1980,7 @@ INLINE static void d3d9_shader_params_overlay_set(_shader *shd) {
 }
 INLINE static void d3d9_shader_param_set(const _texture *texture, UINT sindex, UINT fcountmod, UINT fcount) {
 	const _shader *shd = &texture->shader;
-	UINT i, index;
+	UINT i = 0, index = 0;
 
 	if (shd->uni.mvp) {
 		cgD3D9SetUniformMatrix(shd->uni.mvp, &shd->mvp);
