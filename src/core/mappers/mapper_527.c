@@ -27,7 +27,7 @@ void mirroring_fix_vrc2and4_527(void);
 void map_init_527(void) {
 	EXTCL_AFTER_MAPPER_INIT(VRC2and4);
 	EXTCL_CPU_WR_MEM(VRC2and4);
-	EXTCL_CPU_RD_MEM(VRC2and4);
+	EXTCL_CPU_RD_MEM(527);
 	EXTCL_SAVE_MAPPER(VRC2and4);
 	mapper.internal_struct[0] = (BYTE *)&vrc2and4;
 	mapper.internal_struct_size[0] = sizeof(vrc2and4);
@@ -37,6 +37,9 @@ void map_init_527(void) {
 	VRC2and4_chr_fix = chr_fix_vrc2and4_527;
 	VRC2and4_chr_swap = chr_swap_vrc2and4_527;
 	VRC2and4_mirroring_fix = mirroring_fix_vrc2and4_527;
+}
+BYTE extcl_cpu_rd_mem_527(BYTE nidx, WORD address, UNUSED(BYTE openbus)) {
+	return (extcl_cpu_rd_mem_VRC2and4(nidx, address, wram_rd(nidx, address)));
 }
 
 void prg_swap_vrc2and4_527(WORD address, WORD value) {

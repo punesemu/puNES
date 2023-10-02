@@ -22,5 +22,6 @@
 #include "common.h"
 
 void map_init_023(void);
+BYTE extcl_cpu_rd_mem_023(BYTE nidx, WORD address, BYTE openbus);
 
 #endif /* MAPPER_023_H_ */

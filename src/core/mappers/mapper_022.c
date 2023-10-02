@@ -25,7 +25,7 @@ void chr_swap_vrc2and4_022(WORD address, WORD value);
 void map_init_022(void) {
 	EXTCL_AFTER_MAPPER_INIT(VRC2and4);
 	EXTCL_CPU_WR_MEM(VRC2and4);
-	EXTCL_CPU_RD_MEM(VRC2and4);
+	EXTCL_CPU_RD_MEM(022);
 	EXTCL_SAVE_MAPPER(VRC2and4);
 	EXTCL_CPU_EVERY_CYCLE(VRC2and4);
 	mapper.internal_struct[0] = (BYTE *)&vrc2and4;
@@ -34,6 +34,9 @@ void map_init_022(void) {
 	init_VRC2and4(VRC24_VRC2, 0x02, 0x01, TRUE, info.reset);
 	VRC2and4_prg_swap = prg_swap_vrc2and4_022;
 	VRC2and4_chr_swap = chr_swap_vrc2and4_022;
+}
+BYTE extcl_cpu_rd_mem_022(BYTE nidx, WORD address, UNUSED(BYTE openbus)) {
+	return (extcl_cpu_rd_mem_VRC2and4(nidx, address, wram_rd(nidx, address)));
 }
 
 void prg_swap_vrc2and4_022(WORD address, WORD value) {

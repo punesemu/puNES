@@ -25,7 +25,6 @@ void chr_swap_vrc2and4_021(WORD address, WORD value);
 void map_init_021(void) {
 	EXTCL_AFTER_MAPPER_INIT(VRC2and4);
 	EXTCL_CPU_WR_MEM(VRC2and4);
-	EXTCL_CPU_RD_MEM(VRC2and4);
 	EXTCL_SAVE_MAPPER(VRC2and4);
 	EXTCL_CPU_EVERY_CYCLE(VRC2and4);
 	mapper.internal_struct[0] = (BYTE *)&vrc2and4;

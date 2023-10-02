@@ -23,6 +23,7 @@
 
 void map_init_222(void);
 void extcl_cpu_wr_mem_222(BYTE nidx, WORD address, BYTE value);
+BYTE extcl_cpu_rd_mem_222(BYTE nidx, WORD address, BYTE openbus);
 BYTE extcl_save_mapper_222(BYTE mode, BYTE slot, FILE *fp);
 void extcl_cpu_every_cycle_222(BYTE nidx);
 
