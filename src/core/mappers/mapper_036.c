@@ -47,7 +47,7 @@ void extcl_cpu_wr_mem_036(BYTE nidx, WORD address, BYTE value) {
 	if ((address >= 0x4000) && (address <= 0x4FFF) && (address & 0x200)) {
 		m036.reg = value;
 	}
-	extcl_cpu_wr_mem_TXC(nidx, address, (value & 0x0F));
+	extcl_cpu_wr_mem_TXC(nidx, address, ((value & 0x30) >> 4));
 }
 BYTE extcl_cpu_rd_mem_036(BYTE nidx, WORD address, BYTE openbus) {
 	if ((address >= 0x4020) && (address <= 0x5FFF)) {
