@@ -237,13 +237,13 @@ void extcl_cpu_wr_mem_446(BYTE nidx, WORD address, BYTE value) {
 			return;
 	}
 }
-BYTE extcl_cpu_rd_mem_446(BYTE nidx, WORD address, UNUSED(BYTE openbus)) {
+BYTE extcl_cpu_rd_mem_446(BYTE nidx, WORD address, BYTE openbus) {
 	switch (address & 0xF000) {
 		default:
 			return (wram_rd(nidx, address));
 		case 0x6000:
 			return ((m446.reg[0] & 0x80) && (m446.mapper == M446_VRC2_22)
-				? extcl_cpu_rd_mem_VRC2and4(nidx, address, wram_rd(nidx, address))
+				? extcl_cpu_rd_mem_VRC2and4(nidx, address, openbus)
 				: wram_rd(nidx, address));
 		case 0x8000:
 		case 0x9000:

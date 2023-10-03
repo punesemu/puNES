@@ -199,7 +199,7 @@ BYTE extcl_cpu_rd_mem_JYASIC(UNUSED(BYTE nidx), WORD address, BYTE openbus) {
 				return (jyasic.single_byte_ram);
 		}
 	}
-	return (openbus);
+	return (wram_rd(nidx, address));
 }
 BYTE extcl_save_mapper_JYASIC(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, jyasic.mul);

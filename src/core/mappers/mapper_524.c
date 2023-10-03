@@ -34,7 +34,7 @@ struct _m524 {
 void map_init_524(void) {
 	EXTCL_AFTER_MAPPER_INIT(VRC2and4);
 	EXTCL_CPU_WR_MEM(524);
-	EXTCL_CPU_RD_MEM(524);
+	EXTCL_CPU_RD_MEM(VRC2and4);
 	EXTCL_SAVE_MAPPER(524);
 	EXTCL_CPU_EVERY_CYCLE(524);
 	mapper.internal_struct[0] = (BYTE *)&m524;
@@ -64,9 +64,6 @@ void extcl_cpu_wr_mem_524(BYTE nidx, WORD address, BYTE value) {
 			extcl_cpu_wr_mem_VRC2and4(nidx, address, value);
 			return;
 	}
-}
-BYTE extcl_cpu_rd_mem_524(BYTE nidx, WORD address, UNUSED(BYTE openbus)) {
-	return (extcl_cpu_rd_mem_VRC2and4(nidx, address, wram_rd(nidx, address)));
 }
 BYTE extcl_save_mapper_524(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m524.irq.enabled);

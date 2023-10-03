@@ -127,9 +127,9 @@ void extcl_cpu_wr_mem_116(BYTE nidx, WORD address, BYTE value) {
 		extcl_cpu_wr_mem_MMC1(nidx, address, value);
 	}
 }
-BYTE extcl_cpu_rd_mem_116(BYTE nidx, WORD address, UNUSED(BYTE openbus)) {
+BYTE extcl_cpu_rd_mem_116(BYTE nidx, WORD address, BYTE openbus) {
 	if (m116.mapper == M116_VRC2) {
-		return (extcl_cpu_rd_mem_VRC2and4(nidx, address, wram_rd(nidx, address)));
+		return (extcl_cpu_rd_mem_VRC2and4(nidx, address, openbus));
 	}
 	return (wram_rd(nidx, address));
 }

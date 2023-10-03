@@ -34,7 +34,7 @@ struct _m222 {
 void map_init_222(void) {
 	EXTCL_AFTER_MAPPER_INIT(VRC2and4);
 	EXTCL_CPU_WR_MEM(222);
-	EXTCL_CPU_RD_MEM(222);
+	EXTCL_CPU_RD_MEM(VRC2and4);
 	EXTCL_SAVE_MAPPER(222);
 	EXTCL_CPU_EVERY_CYCLE(222);
 	mapper.internal_struct[0] = (BYTE *)&m222;
@@ -80,9 +80,6 @@ void extcl_cpu_wr_mem_222(BYTE nidx, WORD address, BYTE value) {
 			extcl_cpu_wr_mem_VRC2and4(nidx, address, value);
 			return;
 	}
-}
-BYTE extcl_cpu_rd_mem_222(BYTE nidx, WORD address, UNUSED(BYTE openbus)) {
-	return (extcl_cpu_rd_mem_VRC2and4(nidx, address, wram_rd(nidx, address)));
 }
 BYTE extcl_save_mapper_222(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m222.prescaler);

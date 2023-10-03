@@ -42,16 +42,13 @@ void map_init_023(void) {
 			init_VRC2and4(VRC24_VRC4, 0x04, 0x08, TRUE, info.reset);
 			break;
 		case 3:
-			EXTCL_CPU_RD_MEM(023);
+			EXTCL_CPU_RD_MEM(VRC2and4);
 			init_VRC2and4(VRC24_VRC2, 0x01, 0x02, TRUE, info.reset);
 			break;
 	}
 	VRC2and4_prg_swap = prg_swap_vrc2and4_023;
 	VRC2and4_chr_swap = chr_swap_vrc2and4_023;
 	VRC2and4_wired_fix = wired_fix_vrc2and4_023;
-}
-BYTE extcl_cpu_rd_mem_023(BYTE nidx, WORD address, UNUSED(BYTE openbus)) {
-	return (extcl_cpu_rd_mem_VRC2and4(nidx, address, wram_rd(nidx, address)));
 }
 
 void prg_swap_vrc2and4_023(WORD address, WORD value) {

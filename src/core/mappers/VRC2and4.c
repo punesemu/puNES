@@ -151,12 +151,12 @@ void extcl_cpu_wr_mem_VRC2and4(BYTE nidx, WORD address, BYTE value) {
 			return;
 	}
 }
-BYTE extcl_cpu_rd_mem_VRC2and4(UNUSED(BYTE nidx), WORD address, BYTE openbus) {
+BYTE extcl_cpu_rd_mem_VRC2and4(BYTE nidx, WORD address, BYTE openbus) {
 	switch (address & 0xF000) {
 		case 0x6000:
-			return (vrc2and4tmp.prg6000_wired ? (openbus & 0xFE) | ((vrc2and4.wired & 0x08) >> 3) : openbus);
+			return (vrc2and4tmp.prg6000_wired ? (openbus & 0xFE) | ((vrc2and4.wired & 0x08) >> 3) : wram_rd(nidx, address));
 		default:
-			return (openbus);
+			return (wram_rd(nidx, address));
 	}
 }
 BYTE extcl_save_mapper_VRC2and4(BYTE mode, BYTE slot, FILE *fp) {
