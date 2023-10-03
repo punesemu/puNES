@@ -507,7 +507,7 @@ void calculate_checksums_from_rom(void *rom_mem) {
 
 			info.mapper.chrrom_banks_8k = banks <= 1 ? banks : emu_power_of_two(banks);
 			len = rom->size - position;
-			difference = len < S8K ? 0 : ((size_t)info.mapper.prgrom_banks_16k * S16K) - len;
+			difference = len < S8K ? 0 : ((size_t)info.mapper.chrrom_banks_8k * S8K) - len;
 		}
 		// calcolo anche l'sha1 e il crc32 della CHR rom
 		sha1_csum(&rom->data[position], (int)len, info.sha1sum.chr.value, info.sha1sum.chr.string, LOWER);
