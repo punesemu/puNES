@@ -19,6 +19,7 @@
 #include <string.h>
 #include "mappers.h"
 #include "info.h"
+#include "irqA12.h"
 
 void wram_fix_004_mmc6(void);
 
@@ -60,10 +61,9 @@ void map_init_004(void) {
 		}
 
 		nes[0].irqA12.present = TRUE;
-		nes[0].irqA12.delay = 1;
+		irqA12_delay = 1;
 	}
 }
-
 BYTE extcl_cpu_rd_mem_004_mmc6(BYTE nidx, WORD address, BYTE openbus) {
 	if ((address >= 0x7000) && (address <= 0x7FFF)) {
 		return (memmap_adr_is_readable(nidx, MMCPU(address))

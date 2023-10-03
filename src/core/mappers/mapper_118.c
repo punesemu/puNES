@@ -44,7 +44,7 @@ void map_init_118(void) {
 	MMC3_mirroring_fix = mirroring_fix_mmc3_118;
 
 	nes[0].irqA12.present = TRUE;
-	nes[0].irqA12.delay = 1;
+	irqA12_delay = 1;
 }
 void extcl_cpu_wr_mem_118(BYTE nidx, WORD address, BYTE value) {
 	switch (address & 0xE001) {

@@ -151,7 +151,7 @@ void emu_frame(void) {
 	// eseguo CPU, PPU e APU
 	while (info.exec_cpu_op.w) {
 #if defined (DEBUG)
-		if (nes[1].c.cpu.PC.w == PCBREAK) {
+		if (nes[0].c.cpu.PC.w == PCBREAK) {
 			BYTE pippo = 5;
 			pippo = pippo + 1;
 		}

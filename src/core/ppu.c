@@ -55,20 +55,20 @@ enum ppu_misc { PPU_OVERFLOW_SPR = 3 };
 	nes[nidx].c.nmi.cpu_cycles_from_last_nmi++;\
 	/* deve essere azzerato alla fine di ogni ciclo PPU */\
 	nes[nidx].p.r2006.changed_from_op = 0;
-#define put_pixel(clr) nes[nidx].p.ppu_screen.wr->line[nes[nidx].p.ppu.screen_y][nes[nidx].p.ppu.frame_x] = nes[nidx].p.r2001.emphasis | clr;
+#define put_pixel(clr) nes[nidx].p.ppu_screen.wr->line[nes[nidx].p.ppu.screen_y][nes[nidx].p.ppu.frame_x] = nes[nidx].p.r2001.emphasis | (clr);
 #define put_emphasis(clr) put_pixel((nes[nidx].m.memmap_palette.color[clr] & nes[nidx].p.r2001.color_mode))
 #define put_bg put_emphasis(color_bg)
 #define put_sp put_emphasis(color_sp | 0x10)
 #define examine_sprites(senv, sp, vis, ty)\
 	/* esamino se ci sono sprite da renderizzare */\
-	for (a = 0; a < senv.count; a++) {\
+	for (a = 0; a < (senv).count; a++) {\
 		/*\
 		 * per essercene, la differenza tra frameX e la\
 		 * cordinata X dello sprite deve essere\
 		 * inferiore a 8 (per questo uso il WORD, per\
 		 * avere risultati unsigned).\
 		 */\
-		if ((WORD)(nes[nidx].p.ppu.frame_x - sp[a].x_C) < 8) {\
+		if ((WORD)(nes[nidx].p.ppu.frame_x - (sp)[a].x_C) < 8) {\
 			/*\
 			 * se il bit 2 del $2001 e' a 0 vuol dire\
 			 * che e' abilitato il clipping degli sprite\
@@ -87,16 +87,16 @@ enum ppu_misc { PPU_OVERFLOW_SPR = 3 };
 				 * intendo).\
 				 */\
 				if (!color_sp) {\
-					color_sp = ((sp[a].l_byte & 0x01) | (sp[a].h_byte & 0x02));\
+					color_sp = (((sp)[a].l_byte & 0x01) | ((sp)[a].h_byte & 0x02));\
 					/*\
 					 * se i 2 bit LSB del colore non sono uguali a\
 					 * 0, vuol dire che il pixel non e' trasparente\
 					 * e quindi vi aggiungo i 2 bit MSB.\
 					 */\
 					if (color_sp) {\
-						color_sp |= ((sp[a].attrib & 0x03) << 2);\
+						color_sp |= (((sp)[a].attrib & 0x03) << 2);\
 						/* questo sprite non e' invisibile */\
-						vis = a;\
+						(vis) = a;\
 						unlimited_spr = ty;\
 					}\
 				}\
@@ -106,8 +106,8 @@ enum ppu_misc { PPU_OVERFLOW_SPR = 3 };
 			 * sprite della scanlines, compresi quelli non\
 			 * visibili.\
 			 */\
-			sp[a].l_byte >>= 1;\
-			sp[a].h_byte >>= 1;\
+			(sp)[a].l_byte >>= 1;\
+			(sp)[a].h_byte >>= 1;\
 		}\
 	}
 #define get_sprites(elp, spenv, spl, sadr)\
@@ -116,15 +116,15 @@ enum ppu_misc { PPU_OVERFLOW_SPR = 3 };
 	 *  0 -> no flip orizzontale\
 	 *  1 -> si flip orizzontale\
 	 */\
-	if (nes[nidx].p.oam.elp[spenv.tmp_spr_plus][AT] & 0x40) {\
+	if (nes[nidx].p.oam.elp[(spenv).tmp_spr_plus][AT] & 0x40) {\
 		/* salvo i primi 8 bit del tile dello sprite */\
-		spl[spenv.tmp_spr_plus].l_byte = ppu_rd_mem(nidx, sadr);\
+		(spl)[(spenv).tmp_spr_plus].l_byte = ppu_rd_mem(nidx, sadr);\
 		/* salvo i secondi 8 bit del tile dello sprite */\
-		spl[spenv.tmp_spr_plus].h_byte = (ppu_rd_mem(nidx, sadr | 0x08) << 1);\
+		(spl)[(spenv).tmp_spr_plus].h_byte = (ppu_rd_mem(nidx, (sadr) | 0x08) << 1);\
 	} else {\
-		spl[spenv.tmp_spr_plus].l_byte = inv_chr[ppu_rd_mem(nidx, sadr)];\
+		(spl)[(spenv).tmp_spr_plus].l_byte = inv_chr[ppu_rd_mem(nidx, sadr)];\
 		/* salvo i secondi 8 bit del tile dello sprite */\
-		spl[spenv.tmp_spr_plus].h_byte = (inv_chr[ppu_rd_mem(nidx, sadr | 0x08)] << 1);\
+		(spl)[(spenv).tmp_spr_plus].h_byte = (inv_chr[ppu_rd_mem(nidx, (sadr) | 0x08)] << 1);\
 	}
 
 static void ppu_alignment_init(BYTE nidx);

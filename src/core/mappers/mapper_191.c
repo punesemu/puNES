@@ -46,7 +46,7 @@ void map_init_191(void) {
 	MMC3_chr_swap = chr_swap_mmc3_191;
 
 	nes[0].irqA12.present = TRUE;
-	nes[0].irqA12.delay = 1;
+	irqA12_delay = 1;
 }
 
 void prg_swap_mmc3_191(WORD address, WORD value) {

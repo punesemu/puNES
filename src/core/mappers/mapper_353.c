@@ -53,7 +53,7 @@ void map_init_353(void) {
 	MMC3_mirroring_fix = mirroring_fix_mmc3_353;
 
 	nes[0].irqA12.present = TRUE;
-	nes[0].irqA12.delay = 1;
+	irqA12_delay = 1;
 }
 void extcl_cpu_wr_mem_353(BYTE nidx, WORD address, BYTE value) {
 	if ((address & 0x0FFF) == 0x0080) {

@@ -124,7 +124,7 @@ void map_init_176(void) {
 	info.mapper.extend_wr = TRUE;
 
 	nes[0].irqA12.present = TRUE;
-	nes[0].irqA12.delay = 1;
+	irqA12_delay = 1;
 }
 void extcl_after_mapper_init_176(void) {
 	prg_fix_176();
@@ -189,7 +189,7 @@ void extcl_cpu_wr_mem_176(BYTE nidx, WORD address, BYTE value) {
 			extcl_cpu_wr_mem_MMC3(nidx, address, value);
 			m176.cpu8xxx[0] = value;
 			extcl_after_mapper_init_176();
-			break;
+			return;
 	}
 }
 BYTE extcl_save_mapper_176(BYTE mode, BYTE slot, FILE *fp) {

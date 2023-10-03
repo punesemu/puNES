@@ -102,7 +102,7 @@ void map_init_313(void) {
 	}
 
 	nes[0].irqA12.present = TRUE;
-	nes[0].irqA12.delay = 1;
+	irqA12_delay = 1;
 }
 BYTE extcl_save_mapper_313(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m313.reg);

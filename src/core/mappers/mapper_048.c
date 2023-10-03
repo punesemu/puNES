@@ -58,7 +58,7 @@ void map_init_048(void) {
 	}
 
 	nes[0].irqA12.present = TRUE;
-	nes[0].irqA12.delay = 7;
+	irqA12_delay = 7;
 }
 void extcl_after_mapper_init_048(void) {
 	prg_fix_048();

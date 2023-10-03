@@ -46,7 +46,7 @@ void map_init_199(void) {
 	MMC3_wram_fix = wram_fix_mmc3_199;
 
 	nes[0].irqA12.present = TRUE;
-	nes[0].irqA12.delay = 1;
+	irqA12_delay = 1;
 }
 
 void chr_swap_mmc3_199(WORD address, UNUSED(WORD value)) {

@@ -219,7 +219,7 @@ enum cpu_opcode_type { RD_OP, WR_OP };
 	_RDD;\
 	_RDX((nes[nidx].c.cpu.SP | STACK), TRUE);\
 	nes[nidx].c.cpu.PC.b[0] = _PUL;\
-	nes[nidx].c.cpu.PC.b[1] = _PUL;          \
+	nes[nidx].c.cpu.PC.b[1] = _PUL;\
 	_RDP;
 // RTI
 #define RTI\

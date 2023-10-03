@@ -19,6 +19,7 @@
 #include <string.h>
 #include "mappers.h"
 #include "save_slot.h"
+#include "irqA12.h"
 
 void prg_swap_mmc3_012(WORD address, WORD value);
 void chr_swap_mmc3_012(WORD address, WORD value);
@@ -58,7 +59,7 @@ void map_init_012(void) {
 		info.mapper.extend_wr = TRUE;
 
 		nes[0].irqA12.present = TRUE;
-		nes[0].irqA12.delay = 1;
+		irqA12_delay = 1;
 	}
 }
 void extcl_cpu_wr_mem_012(BYTE nidx, WORD address, BYTE value) {

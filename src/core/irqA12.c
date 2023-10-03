@@ -19,7 +19,7 @@
 #include "ppu_inline.h"
 #include "irqA12.h"
 
-BYTE irqA12_delay;
+BYTE irqA12_delay = 0;
 
 void irqA12_IO(BYTE nidx, WORD value, WORD value_old) {
 	if (!(value_old & 0x1000) && (value & 0x1000)) {
@@ -46,7 +46,7 @@ void irqA12_IO(BYTE nidx, WORD value, WORD value_old) {
 	}
 }
 void irqA12_BS(BYTE nidx) {
-	BYTE n_spr;
+	BYTE n_spr = 0;
 
 	if (nes[nidx].irqA12.a12BS || ((nes[nidx].p.ppu.frame_x & 0x0007) != 0x0003)) {
 		return;

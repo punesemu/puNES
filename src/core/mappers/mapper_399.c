@@ -54,7 +54,7 @@ void map_init_399(void) {
 	MMC3_chr_fix = chr_fix_mmc3_399;
 
 	nes[0].irqA12.present = TRUE;
-	nes[0].irqA12.delay = 1;
+	irqA12_delay = 1;
 }
 void extcl_cpu_wr_mem_399(BYTE nidx, WORD address, BYTE value) {
 	if ((address >= 0x8000) && (address <= 0x9FFF)) {

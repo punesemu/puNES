@@ -66,7 +66,7 @@ void map_init_369(void) {
 	info.mapper.extend_wr = TRUE;
 
 	nes[0].irqA12.present = TRUE;
-	nes[0].irqA12.delay = 1;
+	irqA12_delay = 1;
 }
 void extcl_cpu_wr_mem_369(BYTE nidx, WORD address, BYTE value) {
 	switch (address & 0xF000) {

@@ -65,7 +65,7 @@ void map_init_014(void) {
 	VRC2and4_chr_swap = chr_swap_vrc2and4_014;
 
 	nes[0].irqA12.present = TRUE;
-	nes[0].irqA12.delay = 1;
+	irqA12_delay = 1;
 }
 void extcl_after_mapper_init_014(void) {
 	if (m014.reg & 0x02) {

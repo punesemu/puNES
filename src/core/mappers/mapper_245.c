@@ -44,7 +44,7 @@ void map_init_245(void) {
 	MMC3_prg_swap = prg_swap_mmc3_245;
 
 	nes[0].irqA12.present = TRUE;
-	nes[0].irqA12.delay = 1;
+	irqA12_delay = 1;
 }
 void extcl_cpu_wr_mem_245(BYTE nidx, WORD address, BYTE value) {
 	if ((address & 0xE001) == 0x8001) {

@@ -99,7 +99,7 @@ void map_init_351(void) {
 	info.mapper.extend_wr = TRUE;
 
 	nes[0].irqA12.present = TRUE;
-	nes[0].irqA12.delay = 1;
+	irqA12_delay = 1;
 }
 void extcl_after_mapper_init_351(void) {
 	switch_mode();

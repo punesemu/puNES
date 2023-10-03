@@ -67,7 +67,7 @@ void map_init_406(void) {
 	info.mapper.extend_rd = TRUE;
 
 	nes[0].irqA12.present = TRUE;
-	nes[0].irqA12.delay = 1;
+	irqA12_delay = 1;
 }
 void extcl_mapper_quit_406(void) {
 	if (m406tmp.sst39sf040) {

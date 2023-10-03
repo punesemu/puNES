@@ -46,7 +46,7 @@ void map_init_325(void) {
 	MMC3_chr_swap = chr_swap_mmc3_325;
 
 	nes[0].irqA12.present = TRUE;
-	nes[0].irqA12.delay = 1;
+	irqA12_delay = 1;
 }
 void extcl_cpu_wr_mem_325(BYTE nidx, WORD address, BYTE value) {
 	if (address < 0xC000) {

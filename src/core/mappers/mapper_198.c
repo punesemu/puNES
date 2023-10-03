@@ -46,7 +46,7 @@ void map_init_198(void) {
 	MMC3_wram_fix = wram_fix_mmc3_198;
 
 	nes[0].irqA12.present = TRUE;
-	nes[0].irqA12.delay = 1;
+	irqA12_delay = 1;
 }
 
 void prg_swap_mmc3_198(WORD address, WORD value) {

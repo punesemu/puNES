@@ -27,8 +27,8 @@ enum ppu_color_mode { PPU_CM_GRAYSCALE = 0x30, PPU_CM_NORMAL = 0x3F };
 enum ppu_scanline_cycles { SHORT_SLINE_CYCLES = 340, SLINE_CYCLES };
 enum ppu_alignment { PPU_ALIGMENT_DEFAULT, PPU_ALIGMENT_RANDOMIZE, PPU_ALIGMENT_INC_AT_RESET };
 
-#define screen_size() (SCR_ROWS * SCR_COLUMNS) * sizeof(WORD)
-#define _ppu_spr_adr(sprite, epl, spl, sadr)\
+#define screen_size() ((SCR_ROWS * SCR_COLUMNS) * sizeof(WORD))
+#define _ppu_spr_adr(spr, epl, spl, sadr)\
 {\
 	BYTE flip_v;\
 	/*\
@@ -36,12 +36,12 @@ enum ppu_alignment { PPU_ALIGMENT_DEFAULT, PPU_ALIGMENT_RANDOMIZE, PPU_ALIGMENT_
 	 *  0 -> no flip verticale\
 	 *  1 -> si flip verticale\
 	 */\
-	if (nes[nidx].p.oam.epl[sprite][AT] & 0x80) {\
+	if (nes[nidx].p.oam.epl[spr][AT] & 0x80) {\
 		/* flip verticale */\
-		flip_v = ~spl[sprite].flip_v;\
+		flip_v = ~(spl)[spr].flip_v;\
 	} else {\
 		/* no flip verticale */\
-		flip_v = spl[sprite].flip_v;\
+		flip_v = (spl)[spr].flip_v;\
 	}\
 	/*\
 	 * significato bit 5 del $2000:\
@@ -66,24 +66,24 @@ enum ppu_alignment { PPU_ALIGMENT_DEFAULT, PPU_ALIGMENT_RANDOMIZE, PPU_ALIGMENT_
 		 * caso di flip verticale sara' l'esatto contrario,\
 		 * dispari per i primi 8x8 e pari per i secondi 8x8.\
 		 */\
-		sadr = (nes[nidx].p.oam.epl[sprite][TL] & 0xFE) | ((flip_v & 0x08) >> 3);\
+		(sadr) = (nes[nidx].p.oam.epl[spr][TL] & 0xFE) | ((flip_v & 0x08) >> 3);\
 		/* recupero la posizione nella vram del tile */\
-		sadr = ((nes[nidx].p.oam.epl[sprite][TL] & 0x01) << 12) | (sadr << 4);\
+		(sadr) = ((nes[nidx].p.oam.epl[spr][TL] & 0x01) << 12) | ((sadr) << 4);\
 	} else {\
 		/* -- 8x8 --\
 		 *\
 		 * sprite_plus[x].tile = numero del tile nella vram.\
 		 */\
 		/* recupero la posizione nella vram del tile */\
-		sadr = nes[nidx].p.r2000.spt_adr | (nes[nidx].p.oam.epl[sprite][TL] << 4);\
+		(sadr) = nes[nidx].p.r2000.spt_adr | (nes[nidx].p.oam.epl[spr][TL] << 4);\
 	}\
 	/* aggiungo la cordinata Y dello sprite */\
-	sadr += (flip_v & 0x07);\
+	(sadr) += (flip_v & 0x07);\
 }
-#define ppu_spr_adr(sprite) _ppu_spr_adr(sprite, ele_plus, nes[nidx].p.sprite_plus, nes[nidx].p.ppu.spr_adr)
+#define ppu_spr_adr(spr) _ppu_spr_adr(spr, ele_plus, nes[nidx].p.sprite_plus, nes[nidx].p.ppu.spr_adr)
 #define ppu_bck_adr(r2000bck, r2006vl)\
-	nes[nidx].p.ppu.bck_adr = r2000bck | ((ppu_rd_mem(nidx, 0x2000 | (r2006vl & 0x0FFF)) << 4)\
-		| ((r2006vl & 0x7000) >> 12))
+	nes[nidx].p.ppu.bck_adr = (r2000bck) | ((ppu_rd_mem(nidx, 0x2000 | ((r2006vl) & 0x0FFF)) << 4)\
+		| (((r2006vl) & 0x7000) >> 12))
 #define r2006_inc()\
 	/* controllo se fine Y e' uguale a 7 */\
 	if ((nes[nidx].p.r2006.value & 0x7000) == 0x7000) {\

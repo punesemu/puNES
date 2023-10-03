@@ -50,7 +50,7 @@ void map_init_254(void) {
 	init_MMC3(info.reset);
 
 	nes[0].irqA12.present = TRUE;
-	nes[0].irqA12.delay = 1;
+	irqA12_delay = 1;
 }
 void extcl_cpu_wr_mem_254(BYTE nidx, WORD address, BYTE value) {
 	if (address == 0x8000) {
