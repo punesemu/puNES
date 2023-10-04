@@ -151,6 +151,9 @@
          </item>
          <item>
           <layout class="QHBoxLayout" name="horizontalLayout_Button_Monitor">
+           <property name="spacing">
+            <number>0</number>
+           </property>
            <item>
             <widget class="QPushButton" name="pushButton_Left_Monitor">
              <property name="text">

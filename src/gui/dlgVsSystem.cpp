@@ -32,6 +32,8 @@ dlgVsSystem::dlgVsSystem(QWidget *parent) : QDialog(parent) {
 
 	setStyleSheet(tools_stylesheet());
 
+	widget_Monitor->setStyleSheet(button_stylesheet());
+
 	pushButton_Left_Coin->setProperty("myIndex", QVariant(1));
 	pushButton_Right_Coin->setProperty("myIndex", QVariant(2));
 	pushButton_Service_Coin->setProperty("myIndex", QVariant(3));
