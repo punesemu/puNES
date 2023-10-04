@@ -2771,8 +2771,6 @@ static const _dbelement dblist[] = {
 
 	/* Akumajou Special - Boku Dracula-kun (J) [o1].nes */
 	{"f7baf2b7f4e2bff59d57f9c249c532fc52decbc2", 23, 2, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NOEXTRA},
-	/* Akumajou Special - Boku Dracula-kun (J) [p1][t1].nes */
-	{"4dcff251754747ede445b6cd7cc894f11bff3d95", 23, 2, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NOEXTRA},
 	/* Akumajou Special - Boku Dracula-kun (J) [t1].nes */
 	{"5582871715c4d7a5ed432a78b5c5c10cfa7c157a", 23, 2, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NOEXTRA},
 	/* Akumajou Special - Boku Dracula-kun (J) [t2].nes */
@@ -4009,6 +4007,10 @@ static const _dbelement dblist[] = {
 /* ------------------------------------- BMC-22026 ---------------------------------------- */
 	/* 4-in-1 (MGC-026, TXC, Idea-Tek).nes */
 	{"a612291ad4cd3a9a4dc8a3ff511a7c3f4979d0af", 271, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NOEXTRA},
+
+/* -------------------------------------------- 272 --------------------------------------- */
+	/* Akumajou Special - Boku Dracula-kun (J) [p1][t1].nes */
+	{"4dcff251754747ede445b6cd7cc894f11bff3d95", 272, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NOEXTRA},
 
 /* -------------------------------------------- 291 --------------------------------------- */
 	/* 2-in-1- Mortal Kombat VI + Mortal Kombat VII (Multi)[Unknown][NT-639].nes */

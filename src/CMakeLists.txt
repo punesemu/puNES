@@ -312,6 +312,7 @@ set(core_srcs
 	core/mappers/mapper_268.c
 	core/mappers/mapper_269.c
 	core/mappers/mapper_271.c
+	core/mappers/mapper_272.c
 	core/mappers/mapper_274.c
 	core/mappers/mapper_281.c
 	core/mappers/mapper_282.c

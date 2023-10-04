@@ -248,6 +248,7 @@
 #include "mappers/mapper_268.h"
 #include "mappers/mapper_269.h"
 #include "mappers/mapper_271.h"
+#include "mappers/mapper_272.h"
 #include "mappers/mapper_274.h"
 #include "mappers/mapper_281.h"
 #include "mappers/mapper_282.h"
