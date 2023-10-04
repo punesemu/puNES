@@ -23,9 +23,10 @@
 
 BYTE patcher_xdelta(_rom_mem *patch, _rom_mem *rom) {
 	usize_t size = 32 * 1024 * 1024; // 32 MB
-	BYTE *blk1, *blk2;
+	BYTE *blk1 = NULL, *blk2 = NULL;
 
-	if ((blk1 = (BYTE *)malloc(size)) == NULL) {
+	blk1 = (BYTE *)malloc(size);
+	if (blk1 == NULL) {
 		return (EXIT_ERROR);
 	}
 
@@ -36,7 +37,8 @@ BYTE patcher_xdelta(_rom_mem *patch, _rom_mem *rom) {
 		return (EXIT_ERROR);
 	}
 
-	if ((blk2 = (BYTE *)malloc(size)) == NULL) {
+	blk2 = (BYTE *)malloc(size);
+	if (blk2 == NULL) {
 		free(blk1);
 		return (EXIT_ERROR);
 	}

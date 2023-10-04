@@ -82,8 +82,8 @@ BYTE patcher_ctrl_if_exist(uTCHAR *patch) {
 	memset(&patcher, 0x00, sizeof(patcher));
 
 	{
-		_uncompress_archive *archive;
-		BYTE rc;
+		_uncompress_archive *archive = NULL;
+		BYTE rc = 0;
 
 		archive = uncompress_archive_alloc(file, &rc);
 
@@ -113,13 +113,14 @@ BYTE patcher_ctrl_if_exist(uTCHAR *patch) {
 	found = FALSE;
 
 	{
-		unsigned int i;
+		unsigned int i = 0;
 
 		for (i = 0; i < LENGTH(patch_ext); i++) {
-			uTCHAR *last_dot;
+			uTCHAR *last_dot = NULL;
 
-					// rintraccio l'ultimo '.' nel nome
-			if ((last_dot = ustrrchr(file, uL('.')))) {
+			// rintraccio l'ultimo '.' nel nome
+			last_dot = ustrrchr(file, uL('.'));
+			if (last_dot) {
 				// elimino l'estensione
 				(*last_dot) = 0x00;
 			}
@@ -143,8 +144,8 @@ BYTE patcher_ctrl_if_exist(uTCHAR *patch) {
 }
 void patcher_apply(void *rom_mem) {
 	_rom_mem patch, *rom = (_rom_mem *)rom_mem;
-	uTCHAR *ext;
-	FILE *fp;
+	uTCHAR *ext = 0;
+	FILE *fp = NULL;
 
 	if ((cfg->cheat_mode == GAMEGENIE_MODE) && (gamegenie.phase != GG_LOAD_ROM)) {
 		return;
@@ -154,7 +155,8 @@ void patcher_apply(void *rom_mem) {
 		return;
 	}
 
-	if ((fp = ufopen(patcher.file, uL("rb"))) == NULL) {
+	fp = ufopen(patcher.file, uL("rb"));
+	if (fp == NULL) {
 		patcher_quit();
 		return;
 	}
@@ -163,7 +165,8 @@ void patcher_apply(void *rom_mem) {
 	patch.size = ftell(fp);
 	fseek(fp, 0L, SEEK_SET);
 
-	if ((patch.data = (BYTE *)malloc(patch.size)) == NULL) {
+	patch.data = (BYTE *)malloc(patch.size);
+	if (patch.data == NULL) {
 		patcher_quit();
 		fclose(fp);
 		return;
@@ -213,8 +216,8 @@ void patcher_apply(void *rom_mem) {
 }
 
 static SDBWORD patcher_2byte(_rom_mem *patch) {
-	SDBWORD dbw;
-	BYTE ch;
+	SDBWORD dbw = 0;
+	BYTE ch = 0;
 
 	if (rom_mem_ctrl_memcpy(&ch, patch, 1) == EXIT_ERROR) {
 		return (-1);
@@ -228,8 +231,8 @@ static SDBWORD patcher_2byte(_rom_mem *patch) {
 	return (dbw);
 }
 static SDBWORD patcher_3byte(_rom_mem *patch) {
-	SDBWORD dbw;
-	BYTE ch;
+	SDBWORD dbw = 0;
+	BYTE ch = 0;
 
 	if (rom_mem_ctrl_memcpy(&ch, patch, 1) == EXIT_ERROR) {
 		return (-1);
@@ -247,8 +250,8 @@ static SDBWORD patcher_3byte(_rom_mem *patch) {
 	return (dbw);
 }
 static int64_t patcher_4byte_reverse(_rom_mem *patch) {
-	int64_t dbw;
-	BYTE ch;
+	int64_t dbw = 0;
+	BYTE ch = 0;
 
 	if (rom_mem_ctrl_memcpy(&ch, patch, 1) == EXIT_ERROR) {
 		return (-1);
@@ -270,8 +273,8 @@ static int64_t patcher_4byte_reverse(_rom_mem *patch) {
 	return (dbw);
 }
 static uint32_t patcher_crc32(const unsigned char *message, unsigned int len) {
-	unsigned int byte, crc, mask, i;
-	int j;
+	unsigned int byte = 0, crc = 0, mask = 0, i = 0;
+	int j = 0;
 
 	crc = 0xFFFFFFFF;
 
@@ -288,30 +291,33 @@ static uint32_t patcher_crc32(const unsigned char *message, unsigned int len) {
 }
 static BYTE patcher_ips(_rom_mem *patch, _rom_mem *rom) {
 	size_t size = rom->size;
-	BYTE *blk;
+	BYTE *blk = NULL;
 
 	if (strncmp((void *)patch->data, "PATCH", 5) != 0) {
 		return (EXIT_ERROR);
 	}
 	patch->position += 5;
 
-	if ((blk = (BYTE *)malloc(size)) == NULL) {
+	blk = (BYTE *)malloc(size);
+	if (blk == NULL) {
 		return (EXIT_ERROR);
 	}
 
 	memcpy(blk, rom->data, size);
 
 	while (TRUE) {
-		SDBWORD len;
-		SDBWORD address;
+		SDBWORD len = 0;
+		SDBWORD address = 0;
 		BYTE rle = FALSE;
-		BYTE ch;
+		BYTE ch = 0;
 
-		if (((address = patcher_3byte(patch)) == -1) || (address == 0x454f46)) {
+		address = patcher_3byte(patch);
+		if ((address == -1) || (address == 0x454f46)) {
 			break;
 		}
 
-		if ((len = patcher_2byte(patch)) == -1) {
+		len = patcher_2byte(patch);
+		if (len == -1) {
 			free(blk);
 			return (EXIT_ERROR);
 		}
@@ -320,7 +326,8 @@ static BYTE patcher_ips(_rom_mem *patch, _rom_mem *rom) {
 		if (len == 0) {
 			rle = TRUE;
 
-			if ((len = patcher_2byte(patch)) == -1) {
+			len = patcher_2byte(patch);
+			if (len == -1) {
 				free(blk);
 				return (EXIT_ERROR);
 			}
@@ -331,12 +338,21 @@ static BYTE patcher_ips(_rom_mem *patch, _rom_mem *rom) {
 		}
 
 		if (((size_t)address + (size_t)len) > size) {
+			size_t old_size = size;
+			BYTE *new_blk = NULL;
+
 			size = (address + len);
-			blk = (BYTE *)realloc(blk, size);
+			new_blk = (BYTE *)realloc(blk, size);
+			if (!new_blk) {
+				free(blk);
+				return (EXIT_ERROR);
+			}
+			memset(new_blk + old_size, 0x00, size - old_size);
+			blk = new_blk;
 		}
 
 		if (rle) {
-			SDBWORD i;
+			SDBWORD i = 0;
 
 			for (i = 0; i < len; i++) {
 				blk[address + i] = ch;
@@ -363,7 +379,7 @@ static BYTE patcher_bps_decode(_rom_mem *patch, size_t *size) {
 	(*size) = 0;
 
 	while (TRUE) {
-		BYTE x;
+		BYTE x = 0;
 
 		if (rom_mem_ctrl_memcpy(&x, patch, 1) == EXIT_ERROR) {
 			return (EXIT_ERROR);
@@ -382,11 +398,11 @@ static BYTE patcher_bps_decode(_rom_mem *patch, size_t *size) {
 	return (EXIT_OK);
 }
 static BYTE patcher_bps(_rom_mem *patch, _rom_mem *rom) {
-	uint32_t crc_patch, crc_out, crc_in;
+	uint32_t crc_patch = 0, crc_out = 0, crc_in = 0;
 	size_t size_in = 0, size_out = 0, size_metadata = 0;
 	size_t output_offset = 0;
 	int32_t source_relative = 0, target_relative = 0;
-	BYTE *blk;
+	BYTE *blk = NULL;
 
 	if (patch->size < (4 + 3 + 12)) {
 		return (EXIT_ERROR);
@@ -399,22 +415,25 @@ static BYTE patcher_bps(_rom_mem *patch, _rom_mem *rom) {
 
 	{
 		uint32_t position = patch->position;
-		int64_t tmp;
+		int64_t tmp = 0;
 
 		patch->position = patch->size - 4;
-		if ((tmp = patcher_4byte_reverse(patch)) == -1) {
+		tmp = patcher_4byte_reverse(patch);
+		if (tmp == -1) {
 			return (EXIT_ERROR);
 		}
 		crc_patch = tmp;
 
 		patch->position = patch->size - 8;
-		if ((tmp = patcher_4byte_reverse(patch)) == -1) {
+		tmp = patcher_4byte_reverse(patch);
+		if (tmp == -1) {
 			return (EXIT_ERROR);
 		}
 		crc_out = tmp;
 
 		patch->position = patch->size - 12;
-		if ((tmp = patcher_4byte_reverse(patch)) == -1) {
+		tmp = patcher_4byte_reverse(patch);
+		if (tmp == -1) {
 			return (EXIT_ERROR);
 		}
 		crc_in = tmp;
@@ -446,7 +465,8 @@ static BYTE patcher_bps(_rom_mem *patch, _rom_mem *rom) {
 		return (EXIT_ERROR);
 	}
 
-	if ((blk = (BYTE *)malloc(size_out)) == NULL) {
+	blk = (BYTE *)malloc(size_out);
+	if (blk == NULL) {
 		return (EXIT_ERROR);
 	}
 
@@ -457,8 +477,8 @@ static BYTE patcher_bps(_rom_mem *patch, _rom_mem *rom) {
 	}
 
 	while (patch->position < (patch->size - 12)) {
-		size_t data, length, tmp;
-		BYTE command;
+		size_t data = 0, length = 0, tmp = 0;
+		BYTE command = 0;
 
 		if (patcher_bps_decode(patch, &data) == EXIT_ERROR) {
 			return (EXIT_ERROR);
