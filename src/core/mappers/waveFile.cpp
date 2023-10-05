@@ -13,7 +13,7 @@ WaveFile::WaveFile (uTCHAR *name) {
 	channels =1;
 	position =0;
 	data.clear();
-	
+
 	FILE *handle =ufopen(name, uL("rb"));
 	if (handle) {
 		uint8_t header[0x2C];
@@ -59,7 +59,7 @@ void WaveFile::restart () {
 
 int WaveFile::getNextSample () {
 	int result =0;
-	
+
 	finished =position >=data.size();
 	if (!finished) {
 		result =data[position];
