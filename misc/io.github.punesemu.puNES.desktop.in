@@ -2,7 +2,7 @@
 Name=puNES
 GenericName=Nintendo Entertainment System emulator
 Comment=Nintendo Entertainment System emulator
-Exec=punes
+Exec=punes %f
 Icon=io.github.punesemu.puNES
 Type=Application
 Categories=Game;Emulator;
