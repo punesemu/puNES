@@ -361,7 +361,7 @@ void prg_swap_JYASIC_base(WORD address, DBWORD value) {
 	memmap_auto_8k(0, MMCPU(address), value);
 }
 void chr_fix_JYASIC_base(void) {
-	DBWORD bank[8];
+	DBWORD bank[8] = { 0 };
 
 	switch (jyasic.mode[0] & 0x18) {
 		case 0x00:
