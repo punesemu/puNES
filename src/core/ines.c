@@ -273,8 +273,9 @@ BYTE ines_load_rom(void) {
 			calculate_checksums_from_rom(&rom);
 		}
 
-		nes20db_search();
-		calculate_checksums_from_rom(&rom);
+		if (nes20db_search()) {
+			calculate_checksums_from_rom(&rom);
+		}
 
 		// gestione Vs. System
 		if ((info.mapper.id != 99) && !vs_system.ppu && !vs_system.special_mode.type) {
@@ -371,12 +372,12 @@ BYTE ines_load_rom(void) {
 
 		info.mapper.prgrom_banks_16k = !info.mapper.prgrom_banks_16k? 1 : info.mapper.prgrom_banks_16k;
 		info.mapper.prgrom_size = !info.mapper.prgrom_size ||
-			(info.mapper.prgrom_size > info.mapper.prgrom_banks_16k * S16K)
-			? info.mapper.prgrom_banks_16k * S16K
+			(info.mapper.prgrom_size > (size_t)info.mapper.prgrom_banks_16k * S16K)
+			? (size_t)info.mapper.prgrom_banks_16k * S16K
 			: info.mapper.prgrom_size;
 
 		// alloco e carico la PRG Rom
-		prgrom_set_size(info.mapper.prgrom_banks_16k * S16K);
+		prgrom_set_size((size_t)info.mapper.prgrom_banks_16k * S16K);
 
 		if (prgrom_init(0x00) == EXIT_ERROR) {
 			free(rom.data);
@@ -388,7 +389,7 @@ BYTE ines_load_rom(void) {
 		}
 
 		// alloco e carico la CHR Rom
-		chrrom_set_size(info.mapper.chrrom_banks_8k * S8K);
+		chrrom_set_size((size_t)info.mapper.chrrom_banks_8k * S8K);
 
 		if (chrrom_size()) {
 			if (chrrom_init() == EXIT_ERROR) {

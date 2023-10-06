@@ -83,7 +83,7 @@ extern _nes20db nes20db;
 #endif
 
 EXTERNC void nes20db_reset(void);
-EXTERNC void nes20db_search(void);
+EXTERNC BYTE nes20db_search(void);
 
 #undef EXTERNC
 

@@ -32,7 +32,7 @@
 
 typedef QMap<QString, QString> game_map;
 
-void search_in_xml(QFile &file);
+bool search_in_xml(QFile &file);
 game_map parse_game(QXmlStreamReader &xml);
 bool is_game_element(QXmlStreamReader &xml);
 void add_element_data_to_map(const QString &element_name, const QString &text, game_map &map);
@@ -46,11 +46,12 @@ _nes20db nes20db;
 void nes20db_reset(void) {
 	::memset((void *)&nes20db, 0x00, sizeof(_nes20db));
 }
-void nes20db_search(void) {
+BYTE nes20db_search(void) {
 	QStringList gdl = QStandardPaths::standardLocations(QStandardPaths::GenericDataLocation);
 	QStringList data_locations;
 	const QString gdf = uQString(gui_extract_base(gui_data_folder()));
 	const QString gaf = uQString(gui_application_folder());
+	bool finded = false;
 
 	nes20db_reset();
 
@@ -71,12 +72,17 @@ void nes20db_search(void) {
 		QFile file(QString("%0/%1").arg(path, NES20DBFILENAME));
 
 		if (file.exists()) {
-			search_in_xml(file);
+			if (search_in_xml(file)) {
+				finded = true;
+			}
 		}
 	}
+	return (finded);
 }
 
-void search_in_xml(QFile &file) {
+bool search_in_xml(QFile &file) {
+	bool finded = false;
+
 	// Just "rom" is the entirety of the ROM file without header, including PRG-, CHR- and Misc ROM. It's what you look
 	// up when being confronted with a headerless ROM file (see note 2).
 	// "prgram","prgnvram","chrram","chrnvram","chrrom","miscrom" tags are only present if the respective memory type
@@ -229,6 +235,8 @@ void search_in_xml(QFile &file) {
 									info.machine[DATABASE] = DENDY;
 									break;
 							}
+							finded = true;
+							break;
 						}
 					}
 				}
@@ -238,9 +246,9 @@ void search_in_xml(QFile &file) {
 			//QMessageBox::critical(parent, tr("Error on reading the file"), xmlReader.errorString(), QMessageBox::Ok);
 		}
 		xmlReader.clear();
-
 		file.close();
 	}
+	return (finded);
 }
 game_map parse_game(QXmlStreamReader &xml) {
 	game_map game;
