@@ -23,7 +23,7 @@ WaveFile::WaveFile (uTCHAR *name) {
 		    !memcmp(header +0x20,"\x02\x00\x10\x00", 4)) {
 			rate =header[0x18] | header[0x19] <<8 | header[0x1A] <<16 | header[0x1B] <<24;
 			data.resize((header[0x28] | header[0x29] <<8 | header[0x2A] <<16 | header[0x2B] <<24) /2);
-			fread(&data[0], 2, data.size(), handle);
+			if (fread(&data[0], 2, data.size(), handle) == data.size()) {};
 		}
 		fclose(handle);
 	}
