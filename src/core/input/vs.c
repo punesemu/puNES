@@ -56,8 +56,7 @@ BYTE input_rd_reg_vs_r4016(BYTE nidx, UNUSED(BYTE openbus), BYTE nport) {
 	//            1: Game is running on the secondary CPU (it must prevent watchdog timer timeout)
 	if (vs_system.special_mode.type < VS_DS_Normal) {
 		value = input_rd_reg_nes_001(nidx, 0x00, nport);
-		value |= (vs_system.coins.right ? 0x40 : 0x00);
-		value |= (vs_system.coins.left ? 0x20 : 0x00);
+		value |= (vs_system.coins.left || vs_system.coins.right ? 0x20 : 0x00);
 	} else {
 		value = input_rd_reg_four_score_vs(nidx, 0x00, nport);
 		value |= (nidx == 1 ? vs_system.coins.right ? 0x40 : 0x00 : 0x00);
