@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>214</width>
-    <height>385</height>
+    <height>408</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -36,6 +36,43 @@
      </property>
      <layout class="QVBoxLayout" name="verticalLayout_groupBox_Vs_System">
       <item>
+       <layout class="QHBoxLayout" name="horizontalLayout_Coins">
+        <item>
+         <widget class="QLabel" name="icon_Coins">
+          <property name="text">
+           <string notr="true">Coins icon</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="label_Coins">
+          <property name="font">
+           <font>
+            <weight>75</weight>
+            <bold>true</bold>
+           </font>
+          </property>
+          <property name="text">
+           <string>Coins</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="Line" name="line_Coins">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
        <layout class="QHBoxLayout" name="horizontalLayout_coin">
         <item>
          <widget class="QPushButton" name="pushButton_Left_Coin">
@@ -62,6 +99,13 @@
       </item>
       <item>
        <layout class="QHBoxLayout" name="horizontalLayout_coin_counter">
+        <item>
+         <widget class="QLabel" name="icon_Coin_Counter">
+          <property name="text">
+           <string notr="true">CC icon</string>
+          </property>
+         </widget>
+        </item>
         <item>
          <widget class="QLabel" name="label_Coin_Counter">
           <property name="font">
@@ -122,6 +166,13 @@
          <item>
           <layout class="QHBoxLayout" name="horizontalLayout_Monitor">
            <item>
+            <widget class="QLabel" name="icon_Monitor">
+             <property name="text">
+              <string notr="true">Monitor icon</string>
+             </property>
+            </widget>
+           </item>
+           <item>
             <widget class="QLabel" name="label_Monitor">
              <property name="font">
               <font>
@@ -181,6 +232,13 @@
       </item>
       <item>
        <layout class="QHBoxLayout" name="horizontalLayout_Dip_Switches">
+        <item>
+         <widget class="QLabel" name="icon_Dipswitches">
+          <property name="text">
+           <string notr="true">DS icon</string>
+          </property>
+         </widget>
+        </item>
         <item>
          <widget class="QLabel" name="label_Dip_Switches">
           <property name="font">

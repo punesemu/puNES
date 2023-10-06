@@ -149,6 +149,14 @@ void dlgVsSystem::changeEvent(QEvent *event) {
 		QWidget::changeEvent(event);
 	}
 }
+void dlgVsSystem::showEvent(UNUSED(QShowEvent *event)) {
+	int dim = fontMetrics().height();
+
+	icon_Coins->setPixmap(QIcon(":/icon/icons/insert_coins.svgz").pixmap(dim, dim));
+	icon_Coin_Counter->setPixmap(QIcon(":/icon/icons/stereo_delay.svgz").pixmap(dim, dim));
+	icon_Monitor->setPixmap(QIcon(":/icon/icons/monitor_screen.svgz").pixmap(dim, dim));
+	icon_Dipswitches->setPixmap(QIcon(":/icon/icons/dipswitch.svgz").pixmap(dim, dim));
+}
 
 int dlgVsSystem::update_pos(int startY) {
 	int x = parentWidget()->pos().x() + parentWidget()->frameGeometry().width();

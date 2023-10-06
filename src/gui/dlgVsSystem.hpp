@@ -32,6 +32,7 @@ class dlgVsSystem : public QDialog, public Ui::dlgVsSystem {
 	protected:
 		bool eventFilter(QObject *obj, QEvent *event) override;
 		void changeEvent(QEvent *event) override;
+		void showEvent(QShowEvent *event) override;
 
 	public:
 		int update_pos(int startY);
