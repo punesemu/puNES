@@ -16,7 +16,7 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#include <math.h>
+#include <cmath>
 #include <QtCore/QTimer>
 #include <QtCore/QDir>
 #include <QtCore/QFile>
@@ -34,7 +34,6 @@
 #include "gui.h"
 #include "ines.h"
 #include "conf.h"
-#include "memmap.h"
 
 dlgHeaderEditor::dlgHeaderEditor(QWidget *parent) : QDialog(parent) {
 	setupUi(this);
@@ -115,7 +114,7 @@ bool dlgHeaderEditor::read_header(const uTCHAR *rom) {
 		return (false);
 	}
 
-	if (file.read((char *)horg, HEADER_SIZE) != HEADER_SIZE) {
+	if (file.read((char *)horg.data(), HEADER_SIZE) != HEADER_SIZE) {
 		file.close();
 		gui_critical(uQStringCD(QString("Error on reading header from '%0'.").arg(finfo.fileName())));
 		return (false);
@@ -132,8 +131,8 @@ bool dlgHeaderEditor::read_header(const uTCHAR *rom) {
 	return (true);
 }
 bool dlgHeaderEditor::write_header(void) {
+	std::array<BYTE, HEADER_SIZE> tmp = { 0 };
 	QFile file(finfo.filePath());
-	BYTE tmp[HEADER_SIZE];
 	_header_info hi;
 
 	dialog_to_struct(hi);
@@ -150,14 +149,14 @@ bool dlgHeaderEditor::write_header(void) {
 		return (false);
 	}
 
-	if (file.write((char *)tmp, HEADER_SIZE) != HEADER_SIZE) {
+	if (file.write((char *)tmp.data(), HEADER_SIZE) != HEADER_SIZE) {
 		file.close();
 		gui_critical(uQStringCD(QString("Error on writing header on '%0'.").arg(finfo.fileName())));
 		return (false);
 	}
 
 	file.close();
-	memcpy(horg, tmp, HEADER_SIZE);
+	horg = tmp;
 	return (true);
 }
 void dlgHeaderEditor::reset_dialog(void) {
@@ -167,7 +166,9 @@ void dlgHeaderEditor::reset_dialog(void) {
 	struct_to_dialog(hi, false);
 }
 
-bool dlgHeaderEditor::header_to_struct(_header_info &hi, const BYTE *header) {
+bool dlgHeaderEditor::header_to_struct(_header_info &hi, const std::array<BYTE, HEADER_SIZE> &header) {
+	size_t prg_size = 0, chr_size = 0;
+
 	hi = {};
 
 	if ((header[0] != 'N') || (header[1] != 'E') || (header[2] != 'S') || (header[3] != '\32')) {
@@ -182,11 +183,15 @@ bool dlgHeaderEditor::header_to_struct(_header_info &hi, const BYTE *header) {
 		hi.mapper = ((header[8] & 0x0F) << 8) | (header[7] & 0xF0) | (header[6] >> 4);
 		hi.submapper = (header[8] & 0xF0) >> 4;
 
-		hi.prg_rom_kib = ((header[9] & 0x0F) << 8) | header[4];
-		nes20_prg_chr_size(&hi.prg_rom_kib, S16K);
+		prg_size = ((header[9] & 0x0F) < 0x0F)
+			? (size_t)(header[4] | ((header[9] & 0x0F) << 8)) * S16K
+			: (size_t)pow(2.0, (double)(header[4] >> 2)) * ((header[4] & 0x03) * 2 + 1);
+		hi.prg_rom_kib = prg_size / S1K;
 
-		hi.chr_rom_kib = ((header[9] & 0xF0) << 4) | header[5];
-		nes20_prg_chr_size(&hi.chr_rom_kib, S8K);
+		chr_size = ((header[9] >> 4) < 0x0F)
+			? (size_t)(header[5] | ((header[9] & 0xF0) << 4)) * S8K
+			: (size_t)pow(2.0, (double)(header[5] >> 2)) * ((header[5] & 0x03) * 2 + 1);
+		hi.chr_rom_kib = chr_size / S1K;
 
 		hi.prg_ram = header[10] & 0x0F;
 		hi.chr_ram = header[11] & 0x0F;
@@ -224,9 +229,6 @@ bool dlgHeaderEditor::header_to_struct(_header_info &hi, const BYTE *header) {
 		hi.submapper = 0;
 	}
 
-	hi.prg_rom_kib *= 16;
-	hi.chr_rom_kib *= 8;
-
 	hi.battery = (header[6] & 0x02) >> 1;
 	hi.trainer = (header[6] & 0x04) >> 2;
 
@@ -234,13 +236,11 @@ bool dlgHeaderEditor::header_to_struct(_header_info &hi, const BYTE *header) {
 
 	return (true);
 }
-void dlgHeaderEditor::struct_to_header(const _header_info &hi, BYTE *header) {
-	bool is_nes_20;
-	int prg_size, chr_size;
+void dlgHeaderEditor::struct_to_header(const _header_info &hi, std::array<BYTE, HEADER_SIZE> &header) {
+	const bool is_nes_20 = hi.format == NES_2_0;
+	int prg_size = 0, chr_size = 0;
 
-	is_nes_20 = hi.format == NES_2_0;
-
-	memset(header, 0x00, HEADER_SIZE);
+	header.fill(0x00);
 
 	header[0] = 'N';
 	header[1] = 'E';
@@ -248,11 +248,11 @@ void dlgHeaderEditor::struct_to_header(const _header_info &hi, BYTE *header) {
 	header[3] = '\32';
 
 	// PRG ROM
-	prg_size = hi.prg_rom_kib * 1024;
-	header[4] = (prg_size / 16384) & 0xFF;
+	prg_size = (int)hi.prg_rom_kib * S1K;
+	header[4] = (prg_size / S16K) & 0xFF;
 	// CHR ROM
-	chr_size = hi.chr_rom_kib * 1024;
-	header[5] = (chr_size / 8192) & 0xFF;
+	chr_size = (int)hi.chr_rom_kib * S1K;
+	header[5] = (chr_size / S8K) & 0xFF;
 	// Mirroring
 	header[6] = (header[6] & 0xF6) | (hi.mirroring > 1 ? 0x08 : (hi.mirroring & 0X01));
 	// Battery
@@ -265,23 +265,25 @@ void dlgHeaderEditor::struct_to_header(const _header_info &hi, BYTE *header) {
 		header[7] = (header[7] & 0xF3) | 0x08;
 		// PRG ROM
 		{
-			header[9] = (header[9] & 0xF0) | (((prg_size / 16384) & 0xF00) >> 8);
-			if (prg_size >= (64 * 1024 * 1024) || (prg_size % 16384)) {
-				int multiplier = find_multiplier(prg_size), exponent;
+			header[9] = (header[9] & 0xF0) | (((prg_size / S16K) & 0xF00) >> 8);
+			if (prg_size >= (64 * S1K * S1K) || (prg_size % S16K)) {
+				const int multiplier = find_multiplier(prg_size);
+				int exponent = 0;
 
 				header[9] = (header[9] & 0xF0) | 0x0F;
-				exponent = log2(prg_size / multiplier);
+				exponent = (int)log2(prg_size / multiplier);
 				header[4] = (exponent << 2) | ((multiplier - 1) >> 1);
 			}
 		}
 		// CHR ROM
 		{
-			header[9] = (header[9] & 0x0F) | (((chr_size / 8192) & 0xF00) >> 4);
-			if (chr_size >= (32 * 1024 * 1024) || (chr_size % 8192)) {
-				int multiplier = find_multiplier(chr_size), exponent;
+			header[9] = (header[9] & 0x0F) | (((chr_size / S8K) & 0xF00) >> 4);
+			if (chr_size >= (32 * S1K * S1K) || (chr_size % S8K)) {
+				const int multiplier = find_multiplier(chr_size);
+				int exponent = 0;
 
 				header[9] = (header[9] & 0x0F) | 0xF0;
-				exponent = log2(chr_size / multiplier);
+				exponent = (int)log2(chr_size / multiplier);
 				header[5] = (exponent << 2) | ((multiplier - 1) >> 1);
 			}
 		}
@@ -348,8 +350,8 @@ void dlgHeaderEditor::dialog_to_struct(_header_info &hi) {
 	hi.trainer = checkBox_Trainer->isChecked();
 }
 void dlgHeaderEditor::struct_to_dialog(const _header_info &hi, bool save_enabled) {
-	bool is_ines_10 = hi.format == iNES_1_0;
-	bool is_nes_20 = hi.format == NES_2_0;
+	const bool is_ines_10 = hi.format == iNES_1_0;
+	const bool is_nes_20 = hi.format == NES_2_0;
 
 	// File
 	lineEdit_File->setText(finfo.filePath());
@@ -368,9 +370,9 @@ void dlgHeaderEditor::struct_to_dialog(const _header_info &hi, bool save_enabled
 	// Mirroring
 	qtHelper::combox_set_index(comboBox_Mirroring, hi.mirroring);
 	// PRG ROM
-	qtHelper::spinbox_set_value(spinBox_PRG_Rom, hi.prg_rom_kib);
+	qtHelper::spinbox_set_value(spinBox_PRG_Rom, (int)hi.prg_rom_kib);
 	// CHR ROM
-	qtHelper::spinbox_set_value(spinBox_CHR_Rom, hi.chr_rom_kib);
+	qtHelper::spinbox_set_value(spinBox_CHR_Rom, (int)hi.chr_rom_kib);
 	// PRG RAM
 	qtHelper::combox_set_index(comboBox_PRG_Ram, hi.prg_ram);
 	// CHR RAM
@@ -415,12 +417,12 @@ int dlgHeaderEditor::find_multiplier(int size) {
 }
 
 void dlgHeaderEditor::s_control_changed(void) {
-	BYTE tmp[HEADER_SIZE];
+	std::array<BYTE, HEADER_SIZE> tmp = { 0 };
 	_header_info hi;
 
 	dialog_to_struct(hi);
 	struct_to_header(hi, tmp);
-	pushButton_Reset->setEnabled(memcmp(horg, tmp, HEADER_SIZE) != 0);
+	pushButton_Reset->setEnabled(!std::equal(horg.begin(), horg.end(), tmp.begin()));
 	pushButton_Save->setEnabled(pushButton_Reset->isEnabled());
 }
 void dlgHeaderEditor::s_open_folder(UNUSED(bool checked)) {
@@ -436,8 +438,8 @@ void dlgHeaderEditor::s_open_folder(UNUSED(bool checked)) {
 #endif
 }
 void dlgHeaderEditor::s_grp_type(UNUSED(QAbstractButton *button)) {
-	bool is_ines_10 = grp->checkedId() == iNES_1_0;
-	bool is_nes_20 = grp->checkedId() == NES_2_0;
+	const bool is_ines_10 = grp->checkedId() == iNES_1_0;
+	const bool is_nes_20 = grp->checkedId() == NES_2_0;
 
 	// iNES 1.0
 	radioButton_ines10->setEnabled(is_ines_10);
@@ -481,8 +483,8 @@ void dlgHeaderEditor::s_grp_type(UNUSED(QAbstractButton *button)) {
 	comboBox_Input->setVisible(is_nes_20);
 }
 void dlgHeaderEditor::s_console_type(int index) {
-	bool is_nes_20 = radioButton_nes20->isChecked();
-	bool is_vs_system = index == 1;
+	const bool is_nes_20 = radioButton_nes20->isChecked();
+	const bool is_vs_system = index == 1;
 
 	// VS Type
 	label_VS_Type->setEnabled(is_vs_system);
@@ -496,8 +498,8 @@ void dlgHeaderEditor::s_console_type(int index) {
 	comboBox_VS_PPU->setVisible(is_nes_20);
 }
 void dlgHeaderEditor::s_battery(bool checked) {
-	bool is_nes_20 = radioButton_nes20->isChecked();
-	bool is_battery = checked;
+	const bool is_nes_20 = radioButton_nes20->isChecked();
+	const bool is_battery = checked;
 
 	// PRG RAM Battery
 	label_PRG_Ram_Battery->setEnabled(is_battery);
@@ -515,12 +517,11 @@ void dlgHeaderEditor::s_reset_clicked(UNUSED(bool checked)) {
 }
 void dlgHeaderEditor::s_save_clicked(UNUSED(bool checked)) {
 	if (write_header() && (this == dlgheader)) {
-		QMessageBox::StandardButton reply;
+		const QMessageBox::StandardButton reply = QMessageBox::question(this,
+			tr("Attention"),
+			tr("Do you want to boot the ROM with the changes made?"),
+			QMessageBox::Yes | QMessageBox::No);
 
-		reply = QMessageBox::question(this,
-		tr("Attention"),
-		tr("Do you want to boot the ROM with the changes made?"),
-		QMessageBox::Yes | QMessageBox::No);
 		if (reply == QMessageBox::Yes) {
 			info.block_recent_roms_update = TRUE;
 			gui_emit_et_reset(CHANGE_ROM);

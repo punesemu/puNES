@@ -30,6 +30,9 @@
 dlgVsSystem::dlgVsSystem(QWidget *parent) : QDialog(parent) {
 	setupUi(this);
 
+	setWindowFlags(Qt::Dialog | Qt::FramelessWindowHint);
+	setAttribute(Qt::WA_DeleteOnClose);
+
 	setStyleSheet(tools_stylesheet());
 
 	widget_Monitor->setStyleSheet(button_stylesheet());
@@ -82,10 +85,6 @@ dlgVsSystem::dlgVsSystem(QWidget *parent) : QDialog(parent) {
 	connect(checkBox_ds14, SIGNAL(stateChanged(int)), this, SLOT(s_ds_changed(int)));
 	connect(checkBox_ds15, SIGNAL(stateChanged(int)), this, SLOT(s_ds_changed(int)));
 	connect(checkBox_ds16, SIGNAL(stateChanged(int)), this, SLOT(s_ds_changed(int)));
-
-	setWindowFlags(Qt::Dialog | Qt::FramelessWindowHint);
-
-	setAttribute(Qt::WA_DeleteOnClose);
 
 	{
 		QFont f9;

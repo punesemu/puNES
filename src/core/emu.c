@@ -1403,23 +1403,25 @@ void emu_info_rom(void) {
 		log_info_box(uL("PRG RAM;%u%s"), wram_ram_size(), ifchanged());
 	}
 	if (wram_nvram_size()) {
-		ischanged(info.header.prgnvram !=  wram_nvram_size());
-		log_info_box(uL("PRG NVRAM;%u%s"),  wram_nvram_size(), ifchanged());
+		ischanged(info.header.prgnvram != wram_nvram_size());
+		log_info_box(uL("PRG NVRAM;%u%s"), wram_nvram_size(), ifchanged());
 	}
 	if (vram_ram_size(0)) {
 		ischanged(info.header.chrram != vram_ram_size(0));
 		log_info_box(uL("CHR RAM;%u%s"), vram_ram_size(0), ifchanged());
 	}
 	if (vram_nvram_size(0)) {
-		ischanged(info.header.chrnvram !=  vram_nvram_size(0));
-		log_info_box(uL("CHR NVRAM;%u%s"),  vram_nvram_size(0), ifchanged());
+		ischanged(info.header.chrnvram != vram_nvram_size(0));
+		log_info_box(uL("CHR NVRAM;%u%s"), vram_nvram_size(0), ifchanged());
 	}
 
-	log_info_box(uL("PRG 8k rom;%-4lu [ %08X %ld ]%s"),
+	ischanged(info.header.prgrom_size != info.mapper.prgrom_size);
+	log_info_box(uL("PRG 8k rom;%-4lu [ %08X %ld ]%s%s"),
 		prgrom_banks(S8K),
 		info.crc32.prg,
-		info.mapper.prgrom_size,//prgrom_size(),
-		(info.prg_truncated ? " truncated" : ""));
+		info.mapper.prgrom_size,
+		(info.prg_truncated ? " truncated" : ""),
+		ifchanged());
 
 	if (info.header.format == UNIF_FORMAT) {
 		if (prgrom.chips.amount > 1) {
@@ -1435,11 +1437,13 @@ void emu_info_rom(void) {
 	}
 
 	if (chrrom_size()) {
-		log_info_box(uL("CHR 4k vrom;%-4lu [ %08X %ld ]%s"),
+		ischanged(info.header.chrrom_size != info.mapper.chrrom_size);
+		log_info_box(uL("CHR 4k vrom;%-4lu [ %08X %ld ]%s%s"),
 			chrrom_banks(S4K),
 			info.crc32.chr,
-			info.mapper.chrrom_size, //chrrom_size(),
-			(info.chr_truncated ? " truncated" : ""));
+			info.mapper.chrrom_size,
+			(info.chr_truncated ? " truncated" : ""),
+			ifchanged());
 
 		if (info.header.format == UNIF_FORMAT) {
 			if (chrrom.chips.amount > 1) {

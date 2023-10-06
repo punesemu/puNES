@@ -19,6 +19,7 @@
 #ifndef DLGHEADEREDITOR_HPP_
 #define DLGHEADEREDITOR_HPP_
 
+#include <array>
 #include <QtCore/QFileInfo>
 #include <QtWidgets/QDialog>
 #include <QtWidgets/QButtonGroup>
@@ -60,7 +61,7 @@ class dlgHeaderEditor : public QDialog, public Ui::dlgHeaderEditor {
 	private:
 		QButtonGroup *grp;
 		QFileInfo finfo;
-		BYTE horg[HEADER_SIZE];
+		std::array<BYTE, HEADER_SIZE> horg;
 
 	public:
 		QRect geom;
@@ -80,8 +81,8 @@ class dlgHeaderEditor : public QDialog, public Ui::dlgHeaderEditor {
 		void reset_dialog(void);
 
 	private:
-		bool header_to_struct(_header_info &hi, const BYTE *header);
-		void struct_to_header(const _header_info &hi,BYTE *header);
+		bool header_to_struct(_header_info &hi, const std::array<BYTE, HEADER_SIZE> &header);
+		void struct_to_header(const _header_info &hi, std::array<BYTE, HEADER_SIZE> &header);
 		void dialog_to_struct(_header_info &hi);
 		void struct_to_dialog(const _header_info &hi, bool save_enabled);
 		int find_multiplier(int size);

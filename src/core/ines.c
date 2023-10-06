@@ -274,6 +274,7 @@ BYTE ines_load_rom(void) {
 		}
 
 		nes20db_search();
+		calculate_checksums_from_rom(&rom);
 
 		// gestione Vs. System
 		if ((info.mapper.id != 99) && !vs_system.ppu && !vs_system.special_mode.type) {

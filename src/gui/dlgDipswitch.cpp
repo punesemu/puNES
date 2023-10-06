@@ -28,6 +28,8 @@ extern _dp_internal dp;
 dlgDipswitch::dlgDipswitch(QWidget *parent) : QDialog(parent) {
 	setupUi(this);
 
+	setAttribute(Qt::WA_DeleteOnClose);
+
 	for (int i = 0; i < dp.types.length(); i++) {
 		QLabel *lb = new QLabel(this);
 		QComboBox *cb = new QComboBox(this);
@@ -68,8 +70,6 @@ dlgDipswitch::dlgDipswitch(QWidget *parent) : QDialog(parent) {
 	if ((info.reset != CHANGE_ROM) && (info.reset != POWER_UP)) {
 		pushButton_Start->setText(tr("Ok"));
 	}
-
-	setAttribute(Qt::WA_DeleteOnClose);
 }
 dlgDipswitch::~dlgDipswitch() = default;
 

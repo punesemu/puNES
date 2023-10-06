@@ -23,34 +23,108 @@
    </property>
    <item>
     <layout class="QGridLayout" name="gridLayout_HeaderEditor" columnstretch="0,0,0,0">
-     <item row="5" column="2">
-      <widget class="QLabel" name="label_Mirroring">
+     <item row="4" column="0">
+      <widget class="QLabel" name="label_Mapper">
        <property name="text">
-        <string>Mirroring</string>
+        <string>Mapper</string>
        </property>
       </widget>
      </item>
-     <item row="11" column="0">
-      <widget class="QLabel" name="label_Console_Type">
+     <item row="8" column="1">
+      <widget class="QCheckBox" name="checkBox_Battery">
        <property name="text">
-        <string>Console Type</string>
+        <string>Battery</string>
        </property>
       </widget>
      </item>
-     <item row="6" column="0">
-      <widget class="QLabel" name="label_PRG_Rom">
-       <property name="text">
-        <string>PRG ROM KiB</string>
-       </property>
+     <item row="7" column="3">
+      <widget class="QComboBox" name="comboBox_CHR_Ram">
+       <item>
+        <property name="text">
+         <string>None</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>128 Bytes</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>256 Bytes</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>512 Bytes</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>1 KiB</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>2 KiB</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>4 KiB</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>8 KiB</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>16 KiB</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>32 KiB</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>64 KiB</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>128 KiB</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>256 KiB</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>512 KiB</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>1 MiB</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>N/A</string>
+        </property>
+       </item>
       </widget>
      </item>
-     <item row="6" column="3">
-      <widget class="QSpinBox" name="spinBox_CHR_Rom">
-       <property name="maximum">
-        <number>100000</number>
-       </property>
-       <property name="singleStep">
-        <number>8</number>
+     <item row="2" column="0">
+      <widget class="QLabel" name="label_Header">
+       <property name="text">
+        <string>Header</string>
        </property>
       </widget>
      </item>
@@ -138,6 +212,125 @@
        </item>
       </widget>
      </item>
+     <item row="9" column="0">
+      <widget class="QLabel" name="label_PRG_Ram_Battery">
+       <property name="text">
+        <string>PRG RAM Battery</string>
+       </property>
+      </widget>
+     </item>
+     <item row="11" column="1" colspan="3">
+      <widget class="QComboBox" name="comboBox_Console_Type">
+       <item>
+        <property name="text">
+         <string>NES/Famicom/Dendy</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Vs. System</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Playchoice 10</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Famiclone with Decimal Mode</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>NES/Famicom with EPSM</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>VT01</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>VT02</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>VT03</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>VT09</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>VT32</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>VT369</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>UMC UM6578</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Famicom Network System</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>N/A</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>N/A</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>N/A</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item row="13" column="0">
+      <widget class="QLabel" name="label_VS_PPU">
+       <property name="text">
+        <string>VS PPU</string>
+       </property>
+      </widget>
+     </item>
+     <item row="7" column="2">
+      <widget class="QLabel" name="label_CHR_Ram">
+       <property name="text">
+        <string>CHR RAM</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="0" colspan="4">
+      <widget class="Line" name="line_2">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
+     <item row="11" column="0">
+      <widget class="QLabel" name="label_Console_Type">
+       <property name="text">
+        <string>Console Type</string>
+       </property>
+      </widget>
+     </item>
      <item row="8" column="3">
       <widget class="QCheckBox" name="checkBox_Trainer">
        <property name="layoutDirection">
@@ -146,6 +339,240 @@
        <property name="text">
         <string>Trainer</string>
        </property>
+      </widget>
+     </item>
+     <item row="3" column="0" colspan="4">
+      <widget class="Line" name="line">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="3">
+      <widget class="QSpinBox" name="spinBox_Submapper">
+       <property name="maximum">
+        <number>15</number>
+       </property>
+      </widget>
+     </item>
+     <item row="6" column="1">
+      <widget class="QSpinBox" name="spinBox_PRG_Rom">
+       <property name="maximum">
+        <number>999999</number>
+       </property>
+       <property name="singleStep">
+        <number>1</number>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="0">
+      <widget class="QLabel" name="label_File">
+       <property name="text">
+        <string>File</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="1" colspan="3">
+      <layout class="QHBoxLayout" name="horizontalLayout_Header">
+       <item>
+        <widget class="QRadioButton" name="radioButton_ines10">
+         <property name="text">
+          <string>iNES 1.0</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QRadioButton" name="radioButton_nes20">
+         <property name="layoutDirection">
+          <enum>Qt::RightToLeft</enum>
+         </property>
+         <property name="text">
+          <string>NES 2.0</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item row="7" column="1">
+      <widget class="QComboBox" name="comboBox_PRG_Ram">
+       <item>
+        <property name="text">
+         <string>None</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>128 Bytes</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>256 Bytes</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>512 Bytes</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>1 KiB</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>2 KiB</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>4 KiB</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>8 KiB</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>16 KiB</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>32 KiB</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>64 KiB</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>128 KiB</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>256 KiB</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>512 KiB</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>1 MiB</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>N/A</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item row="8" column="0">
+      <widget class="QLabel" name="label_Misc">
+       <property name="text">
+        <string>Misc</string>
+       </property>
+      </widget>
+     </item>
+     <item row="10" column="0">
+      <widget class="QLabel" name="label_Misc_Roms">
+       <property name="text">
+        <string>Misc ROMs</string>
+       </property>
+      </widget>
+     </item>
+     <item row="9" column="1">
+      <widget class="QComboBox" name="comboBox_PRG_Ram_Battery">
+       <item>
+        <property name="text">
+         <string>None</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>128 Bytes</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>256 Bytes</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>512 Bytes</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>1 KiB</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>2 KiB</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>4 KiB</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>8 KiB</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>16 KiB</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>32 KiB</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>64 KiB</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>128 KiB</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>256 KiB</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>512 KiB</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>1 MiB</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>N/A</string>
+        </property>
+       </item>
       </widget>
      </item>
      <item row="14" column="1" colspan="3">
@@ -172,7 +599,7 @@
        </item>
        <item>
         <property name="text">
-         <string>Vs. System</string>
+         <string>Vs. System (1P via $4016)</string>
         </property>
        </item>
        <item>
@@ -192,7 +619,7 @@
        </item>
        <item>
         <property name="text">
-         <string>Zapper</string>
+         <string>Zapper ($4017)</string>
         </property>
        </item>
        <item>
@@ -227,17 +654,17 @@
        </item>
        <item>
         <property name="text">
-         <string>Arkanoid Paddle (NES)</string>
+         <string>Arkanoid Vaus Controller (NES)</string>
         </property>
        </item>
        <item>
         <property name="text">
-         <string>Arkanoid Paddle (Famicom)</string>
+         <string>Arkanoid Vaus Controller (Famicom)</string>
         </property>
        </item>
        <item>
         <property name="text">
-         <string>Two Paddles plus Famicom Data Recorder</string>
+         <string>Two Vaus Controllers plus Famicom Data Recorder</string>
         </property>
        </item>
        <item>
@@ -347,17 +774,17 @@
        </item>
        <item>
         <property name="text">
-         <string>Subor Keyboard plus 3x8-bit mouse</string>
+         <string>Subor Keyboard plus mouse (3x8-bit)</string>
         </property>
        </item>
        <item>
         <property name="text">
-         <string>Subor Keyboard plus 24-bit mouse</string>
+         <string>Subor Keyboard plus mouse (24-bit)</string>
         </property>
        </item>
        <item>
         <property name="text">
-         <string>SNES Mouse</string>
+         <string>SNES Mouse ($4017.0)</string>
         </property>
        </item>
        <item>
@@ -415,12 +842,81 @@
          <string>Golden Nugget Casino</string>
         </property>
        </item>
+       <item>
+        <property name="text">
+         <string>Unknown Famiclone Keyboard (Golden Key)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Subor Keyboard plus mouse (24-bit $4017)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Port Test</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Bandai Multi Game Player Gamepad</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Venom TV Dance Mat</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>LG TV Remote Control</string>
+        </property>
+       </item>
       </widget>
      </item>
-     <item row="3" column="0" colspan="4">
-      <widget class="Line" name="line">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
+     <item row="4" column="1">
+      <widget class="QSpinBox" name="spinBox_Mapper">
+       <property name="maximum">
+        <number>1000</number>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1" colspan="3">
+      <layout class="QHBoxLayout" name="horizontalLayout_2">
+       <item>
+        <widget class="QLineEdit" name="lineEdit_File">
+         <property name="enabled">
+          <bool>true</bool>
+         </property>
+         <property name="readOnly">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="pushButton_Folder">
+         <property name="text">
+          <string/>
+         </property>
+         <property name="icon">
+          <iconset resource="resources.qrc">
+           <normaloff>:/icon/icons/open.svgz</normaloff>:/icon/icons/open.svgz</iconset>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item row="5" column="2">
+      <widget class="QLabel" name="label_Mirroring">
+       <property name="text">
+        <string>Mirroring</string>
+       </property>
+      </widget>
+     </item>
+     <item row="12" column="0">
+      <widget class="QLabel" name="label_VS_Type">
+       <property name="text">
+        <string>VS Type</string>
        </property>
       </widget>
      </item>
@@ -448,17 +944,10 @@
        </item>
       </widget>
      </item>
-     <item row="4" column="1">
-      <widget class="QSpinBox" name="spinBox_Mapper">
-       <property name="maximum">
-        <number>1000</number>
-       </property>
-      </widget>
-     </item>
-     <item row="12" column="0">
-      <widget class="QLabel" name="label_VS_Type">
+     <item row="5" column="0">
+      <widget class="QLabel" name="label_CPU_Timing">
        <property name="text">
-        <string>VS Type</string>
+        <string>CPU Timing</string>
        </property>
       </widget>
      </item>
@@ -481,209 +970,31 @@
        </item>
       </widget>
      </item>
-     <item row="5" column="0">
-      <widget class="QLabel" name="label_CPU_Timing">
-       <property name="text">
-        <string>CPU Timing</string>
-       </property>
-      </widget>
-     </item>
-     <item row="7" column="3">
-      <widget class="QComboBox" name="comboBox_CHR_Ram">
-       <item>
-        <property name="text">
-         <string>None</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>128 Bytes</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>256 Bytes</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>512 Bytes</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>1 KiB</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>2 KiB</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>4 KiB</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>8 KiB</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>16 KiB</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>32 KiB</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>64 KiB</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>128 KiB</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>256 KiB</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>512 KiB</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>1 MiB</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>N/A</string>
-        </property>
-       </item>
-      </widget>
-     </item>
-     <item row="13" column="0">
-      <widget class="QLabel" name="label_VS_PPU">
-       <property name="text">
-        <string>VS PPU</string>
-       </property>
-      </widget>
-     </item>
-     <item row="6" column="1">
-      <widget class="QSpinBox" name="spinBox_PRG_Rom">
+     <item row="10" column="1" colspan="3">
+      <widget class="QSpinBox" name="spinBox_Misc_Roms">
        <property name="maximum">
-        <number>100000</number>
-       </property>
-       <property name="singleStep">
-        <number>16</number>
+        <number>3</number>
        </property>
       </widget>
      </item>
-     <item row="6" column="2">
-      <widget class="QLabel" name="label_CHR_Rom">
+     <item row="4" column="2">
+      <widget class="QLabel" name="label_Submapper">
        <property name="text">
-        <string>CHR ROM KiB</string>
+        <string>Submapper</string>
        </property>
       </widget>
      </item>
-     <item row="11" column="1" colspan="3">
-      <widget class="QComboBox" name="comboBox_Console_Type">
-       <item>
-        <property name="text">
-         <string>NES/Famicom/Dendy</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>Vs. System</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>Playchoice 10</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>Famiclone with Decimal Mode</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>NES/Famicom with EPSM</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>VT01</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>VT02</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>VT03</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>VT09</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>VT32</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>VT369</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>UMC UM6578</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>Famicom Network System</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>N/A</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>N/A</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>N/A</string>
-        </property>
-       </item>
+     <item row="6" column="0">
+      <widget class="QLabel" name="label_PRG_Rom">
+       <property name="text">
+        <string>PRG ROM KiB</string>
+       </property>
       </widget>
      </item>
-     <item row="0" column="0">
-      <widget class="QLabel" name="label_File">
+     <item row="14" column="0">
+      <widget class="QLabel" name="label_Input">
        <property name="text">
-        <string>File</string>
+        <string>Input</string>
        </property>
       </widget>
      </item>
@@ -694,99 +1005,32 @@
        </property>
       </widget>
      </item>
-     <item row="4" column="0">
-      <widget class="QLabel" name="label_Mapper">
+     <item row="7" column="0">
+      <widget class="QLabel" name="label_PRG_Ram">
        <property name="text">
-        <string>Mapper</string>
+        <string>PRG RAM</string>
        </property>
       </widget>
      </item>
-     <item row="7" column="1">
-      <widget class="QComboBox" name="comboBox_PRG_Ram">
-       <item>
-        <property name="text">
-         <string>None</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>128 Bytes</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>256 Bytes</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>512 Bytes</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>1 KiB</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>2 KiB</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>4 KiB</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>8 KiB</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>16 KiB</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>32 KiB</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>64 KiB</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>128 KiB</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>256 KiB</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>512 KiB</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>1 MiB</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>N/A</string>
-        </property>
-       </item>
+     <item row="6" column="2">
+      <widget class="QLabel" name="label_CHR_Rom">
+       <property name="text">
+        <string>CHR ROM KiB</string>
+       </property>
       </widget>
      </item>
-     <item row="13" column="1" colspan="3">
-      <widget class="QComboBox" name="comboBox_VS_PPU">
+     <item row="6" column="3">
+      <widget class="QSpinBox" name="spinBox_CHR_Rom">
+       <property name="maximum">
+        <number>999999</number>
+       </property>
+       <property name="singleStep">
+        <number>1</number>
+       </property>
+      </widget>
+     </item>
+     <item row="12" column="1" colspan="3">
+      <widget class="QComboBox" name="comboBox_VS_Type">
        <property name="sizeAdjustPolicy">
         <enum>QComboBox::AdjustToContents</enum>
        </property>
@@ -827,127 +1071,8 @@
        </item>
       </widget>
      </item>
-     <item row="9" column="1">
-      <widget class="QComboBox" name="comboBox_PRG_Ram_Battery">
-       <item>
-        <property name="text">
-         <string>None</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>128 Bytes</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>256 Bytes</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>512 Bytes</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>1 KiB</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>2 KiB</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>4 KiB</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>8 KiB</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>16 KiB</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>32 KiB</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>64 KiB</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>128 KiB</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>256 KiB</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>512 KiB</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>1 MiB</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>N/A</string>
-        </property>
-       </item>
-      </widget>
-     </item>
-     <item row="7" column="0">
-      <widget class="QLabel" name="label_PRG_Ram">
-       <property name="text">
-        <string>PRG RAM</string>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="1" colspan="3">
-      <layout class="QHBoxLayout" name="horizontalLayout_Header">
-       <item>
-        <widget class="QRadioButton" name="radioButton_ines10">
-         <property name="text">
-          <string>iNES 1.0</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QRadioButton" name="radioButton_nes20">
-         <property name="layoutDirection">
-          <enum>Qt::RightToLeft</enum>
-         </property>
-         <property name="text">
-          <string>NES 2.0</string>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </item>
-     <item row="4" column="2">
-      <widget class="QLabel" name="label_Submapper">
-       <property name="text">
-        <string>Submapper</string>
-       </property>
-      </widget>
-     </item>
-     <item row="12" column="1" colspan="3">
-      <widget class="QComboBox" name="comboBox_VS_Type">
+     <item row="13" column="1" colspan="3">
+      <widget class="QComboBox" name="comboBox_VS_PPU">
        <item>
         <property name="text">
          <string>RP2C03B</string>
@@ -1030,101 +1155,6 @@
        </item>
       </widget>
      </item>
-     <item row="2" column="0">
-      <widget class="QLabel" name="label_Header">
-       <property name="text">
-        <string>Header</string>
-       </property>
-      </widget>
-     </item>
-     <item row="9" column="0">
-      <widget class="QLabel" name="label_PRG_Ram_Battery">
-       <property name="text">
-        <string>PRG RAM Battery</string>
-       </property>
-      </widget>
-     </item>
-     <item row="4" column="3">
-      <widget class="QSpinBox" name="spinBox_Submapper">
-       <property name="maximum">
-        <number>15</number>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="0" colspan="4">
-      <widget class="Line" name="line_2">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-      </widget>
-     </item>
-     <item row="7" column="2">
-      <widget class="QLabel" name="label_CHR_Ram">
-       <property name="text">
-        <string>CHR RAM</string>
-       </property>
-      </widget>
-     </item>
-     <item row="14" column="0">
-      <widget class="QLabel" name="label_Input">
-       <property name="text">
-        <string>Input</string>
-       </property>
-      </widget>
-     </item>
-     <item row="10" column="0">
-      <widget class="QLabel" name="label_Misc_Roms">
-       <property name="text">
-        <string>Misc ROMs</string>
-       </property>
-      </widget>
-     </item>
-     <item row="8" column="1">
-      <widget class="QCheckBox" name="checkBox_Battery">
-       <property name="text">
-        <string>Battery</string>
-       </property>
-      </widget>
-     </item>
-     <item row="8" column="0">
-      <widget class="QLabel" name="label_Misc">
-       <property name="text">
-        <string>Misc</string>
-       </property>
-      </widget>
-     </item>
-     <item row="10" column="1" colspan="3">
-      <widget class="QSpinBox" name="spinBox_Misc_Roms">
-       <property name="maximum">
-        <number>3</number>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="1" colspan="3">
-      <layout class="QHBoxLayout" name="horizontalLayout_2">
-       <item>
-        <widget class="QLineEdit" name="lineEdit_File">
-         <property name="enabled">
-          <bool>true</bool>
-         </property>
-         <property name="readOnly">
-          <bool>true</bool>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="pushButton_Folder">
-         <property name="text">
-          <string/>
-         </property>
-         <property name="icon">
-          <iconset resource="resources.qrc">
-           <normaloff>:/icon/icons/open.svgz</normaloff>:/icon/icons/open.svgz</iconset>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </item>
     </layout>
    </item>
    <item>
@@ -1192,8 +1222,6 @@
   <tabstop>comboBox_CHR_Ram_Battery</tabstop>
   <tabstop>spinBox_Misc_Roms</tabstop>
   <tabstop>comboBox_Console_Type</tabstop>
-  <tabstop>comboBox_VS_Type</tabstop>
-  <tabstop>comboBox_VS_PPU</tabstop>
   <tabstop>comboBox_Input</tabstop>
   <tabstop>pushButton_Reset</tabstop>
   <tabstop>pushButton_Save</tabstop>

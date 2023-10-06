@@ -22,6 +22,8 @@
 dlgWizard::dlgWizard(QWidget *parent, const QString &config_folder, const QString &application_folder) : QDialog(parent) {
 	setupUi(this);
 
+	setAttribute(Qt::WA_DeleteOnClose);
+
 	cfg_folder = config_folder;
 	app_folder = application_folder;
 
@@ -36,8 +38,6 @@ dlgWizard::dlgWizard(QWidget *parent, const QString &config_folder, const QStrin
 		connect(grp, SIGNAL(buttonClicked(QAbstractButton*)), this, SLOT(s_grp_storage_type(QAbstractButton*)));
 	}
 	connect(pushButton_Start, SIGNAL(clicked(bool)), this, SLOT(s_accepted(bool)));
-
-	setAttribute(Qt::WA_DeleteOnClose);
 }
 dlgWizard::~dlgWizard() = default;
 

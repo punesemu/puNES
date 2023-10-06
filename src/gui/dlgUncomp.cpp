@@ -33,9 +33,10 @@ dlgUncomp::dlgUncomp(QWidget *parent, void *uncompress_archive, BYTE type) : QDi
 
 	setupUi(this);
 
-	//tableWidget_Selection->setStyleSheet("QTreeView {selection-background-color: red;}");
-
+	setAttribute(Qt::WA_DeleteOnClose);
 	setWindowTitle(QFileInfo(uQString(archive->file)).fileName());
+
+	//tableWidget_Selection->setStyleSheet("QTreeView {selection-background-color: red;}");
 
 	switch (type) {
 		default:
@@ -78,8 +79,6 @@ dlgUncomp::dlgUncomp(QWidget *parent, void *uncompress_archive, BYTE type) : QDi
 	connect(tableWidget_Selection, SIGNAL(cellDoubleClicked(int,int)), this, SLOT(s_doubleclick(int,int)));
 	connect(pushButton_Ok, SIGNAL(clicked(bool)), this, SLOT(s_ok_clicked(bool)));
 	connect(pushButton_None, SIGNAL(clicked(bool)), this, SLOT(s_none_clicked(bool)));
-
-	setAttribute(Qt::WA_DeleteOnClose);
 
 	// se l'archivio compresso e' caricato da riga di comando,
 	// la gui non e' ancora stata avviata.

@@ -50,6 +50,7 @@ dlgStdPad::dlgStdPad(QWidget *parent, _cfg_port *cfg_port) : QDialog(parent) {
 
 	setupUi(this);
 
+	setAttribute(Qt::WA_DeleteOnClose);
 	setFocusProxy(tabWidget_kbd_joy);
 
 	groupBox_controller->setStyleSheet(group_title_bold_stylesheet());
@@ -154,8 +155,6 @@ dlgStdPad::dlgStdPad(QWidget *parent, _cfg_port *cfg_port) : QDialog(parent) {
 
 	connect(pushButton_Apply, SIGNAL(clicked(bool)), this, SLOT(s_apply_clicked(bool)));
 	connect(pushButton_Discard, SIGNAL(clicked(bool)), this, SLOT(s_discard_clicked(bool)));
-
-	setAttribute(Qt::WA_DeleteOnClose);
 
 	data.joy.timer = new QTimer(this);
 	connect(data.joy.timer, SIGNAL(timeout()), this, SLOT(s_pad_joy_read_timer()));
