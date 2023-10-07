@@ -233,11 +233,17 @@ void dlgVsSystem::s_coins_clicked(UNUSED(bool checked)) {
 	gui_active_window();
 	gui_set_focus();
 }
-void dlgVsSystem::s_monitor_clicked(UNUSED(bool checked)) {
-	emu_thread_pause();
-	cfg->vs_monitor = !cfg->vs_monitor;
-	emu_thread_continue();
+void dlgVsSystem::s_monitor_clicked(bool checked) {
+	if (checked) {
+		int monitor = QVariant(((QPushButton *)sender())->property("myIndex")).toInt();
 
+		if (cfg->vs_monitor == monitor) {
+			return;
+		}
+		emu_thread_pause();
+		cfg->vs_monitor = monitor;
+		emu_thread_continue();
+	}
 	update_dialog();
 	gui_active_window();
 	gui_set_focus();
