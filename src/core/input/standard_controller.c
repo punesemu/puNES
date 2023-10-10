@@ -26,7 +26,7 @@
 #include "tas.h"
 
 INLINE static void input_turbo_buttons_standard_controller(_port *prt);
-INLINE static void input_reverse_button_standard_controller(BYTE *b0, BYTE *b1);
+INLINE static void input_reverse_button_standard_controller(BYTE **b0, BYTE **b1);
 
 void input_wr_standard_controller(BYTE nidx, const BYTE *value, BYTE nport) {
 	if ((nes[nidx].c.input.r4016 & 0x01) || ((*value) & 0x01)) {
@@ -57,38 +57,32 @@ BYTE input_decode_event_standard_controller(BYTE mode, UNUSED(BYTE autorepeat), 
 		return (EXIT_OK);
 	}
 
-//	if (vs_system.enabled) {
-//		input_reverse_button_standard_controller(select, start);
-//		input_reverse_button_standard_controller(left, right);
-//		input_reverse_button_standard_controller(up, down);
-//	}
-
 	if ((cfg->screen_rotation | cfg->hflip_screen) && cfg->input_rotation) {
 		switch (cfg->screen_rotation) {
 			default:
 			case ROTATE_0:
 				if (cfg->hflip_screen) {
-					input_reverse_button_standard_controller(left, right);
+					input_reverse_button_standard_controller(&left, &right);
 				}
 				break;
 			case ROTATE_90:
-				input_reverse_button_standard_controller(left, down);
-				input_reverse_button_standard_controller(right, up);
+				input_reverse_button_standard_controller(&left, &down);
+				input_reverse_button_standard_controller(&right, &up);
 				if (!cfg->hflip_screen) {
-					input_reverse_button_standard_controller(up, down);
+					input_reverse_button_standard_controller(&up, &down);
 				}
 				break;
 			case ROTATE_180:
-				input_reverse_button_standard_controller(up, down);
+				input_reverse_button_standard_controller(&up, &down);
 				if (!cfg->hflip_screen) {
-					input_reverse_button_standard_controller(left, right);
+					input_reverse_button_standard_controller(&left, &right);
 				}
 				break;
 			case ROTATE_270:
-				input_reverse_button_standard_controller(left, up);
-				input_reverse_button_standard_controller(right, down);
+				input_reverse_button_standard_controller(&left, &up);
+				input_reverse_button_standard_controller(&right, &down);
 				if (!cfg->hflip_screen) {
-					input_reverse_button_standard_controller(up, down);
+					input_reverse_button_standard_controller(&up, &down);
 				}
 				break;
 		}
@@ -199,9 +193,9 @@ INLINE static void input_turbo_buttons_standard_controller(_port *prt) {
 		}
 	}
 }
-INLINE static void input_reverse_button_standard_controller(BYTE *b0, BYTE *b1) {
-	BYTE *tmp = b0;
+INLINE static void input_reverse_button_standard_controller(BYTE **b0, BYTE **b1) {
+	BYTE *tmp = (*b0);
 
-	b0 = b1;
-	b1 = tmp;
+	(*b0) = (*b1);
+	(*b1) = tmp;
 }
