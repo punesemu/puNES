@@ -510,6 +510,7 @@ set(core_srcs
 	core/bck_states.c
 	core/cheat.c
 	core/cpu.c
+	core/detach_barcode.c
 	core/draw_on_screen.c
 	core/emu.c
 	core/emu_thread.c
@@ -553,6 +554,7 @@ set(extra_srcs
 set(gui_ui_srcs
 	gui/designer/dlgCfgNSCode.ui
 	gui/designer/dlgCmdLineHelp.ui
+	gui/designer/dlgDetachBarcode.ui
 	gui/designer/dlgDipswitch.ui
 	gui/designer/dlgHeaderEditor.ui
 	gui/designer/dlgJsc.ui
@@ -592,6 +594,8 @@ set(gui_srcs
 	gui/dipswitch.cpp
 	gui/dlgCmdLineHelp.cpp
 	gui/dlgCmdLineHelp.hpp
+	gui/dlgDetachBarcode.cpp
+	gui/dlgDetachBarcode.hpp
 	gui/dlgDipswitch.cpp
 	gui/dlgDipswitch.hpp
 	gui/dlgHeaderEditor.cpp

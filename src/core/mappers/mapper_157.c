@@ -20,6 +20,7 @@
 #include "mappers.h"
 #include "save_slot.h"
 #include "gui.h"
+#include "detach_barcode.h"
 
 void prg_swap_lz93d50_157(WORD address, WORD value);
 void chr_fix_lz93d50_157(void);
@@ -27,16 +28,8 @@ void chr_fix_lz93d50_157(void);
 struct _m157 {
 	BYTE e0_data[256];
 	BYTE e1_latch;
-	struct _m157_barcode {
-		BYTE out;
-		DBWORD pos;
-		DBWORD count;
-		BYTE  data[256];
-	} barcode;
 } m157;
 struct _m157tmp {
-	uTCHAR barcode[256];
-	int number_named_barcodes;
 	heeprom_i2c *e0;
 	heeprom_i2c *e1;
 } m157tmp;
@@ -56,12 +49,7 @@ void map_init_157(void) {
 		memset(&m157, 0x00, sizeof(m157));
 	}
 
-	m157.barcode.pos = 0;
-	m157.barcode.out = 0;
-	m157.barcode.count = 0;
-	m157.barcode.data[0] = 0xFF;
-
-	m157tmp.barcode[0] = 0;
+	init_detach_barcode(info.reset);
 
 	init_LZ93D50(FALSE, info.reset);
 	LZ93D50_prg_swap = prg_swap_lz93d50_157;
@@ -128,7 +116,7 @@ BYTE extcl_cpu_rd_mem_157(BYTE nidx, WORD address, BYTE openbus) {
 		if (m157tmp.e1) {
 			value &= eeprom_i2c_get_data(m157tmp.e1) * 0x10;
 		}
-		value |= (m157.barcode.out & 0x08);
+		value |= (detach_barcode.out & 0x08);
 		value |= (openbus & 0xE7);
 		return (value);
 	}
@@ -137,22 +125,19 @@ BYTE extcl_cpu_rd_mem_157(BYTE nidx, WORD address, BYTE openbus) {
 BYTE extcl_save_mapper_157(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m157.e0_data);
 	save_slot_ele(mode, slot, m157.e1_latch);
-	save_slot_ele(mode, slot, m157.barcode.out);
-	save_slot_ele(mode, slot, m157.barcode.pos);
-	save_slot_ele(mode, slot, m157.barcode.count);
-	save_slot_ele(mode, slot, m157.barcode.data);
+	if (detach_barcode_save_mapper(mode, slot, fp) == EXIT_ERROR) return (EXIT_ERROR);
 	if (eeprom_i2c_save_mapper(m157tmp.e0, mode, slot, fp) == EXIT_ERROR) return (EXIT_ERROR);
 	if (eeprom_i2c_save_mapper(m157tmp.e1, mode, slot, fp) == EXIT_ERROR) return (EXIT_ERROR);
 	return (extcl_save_mapper_LZ93D50(mode, slot, fp));
 }
 void extcl_cpu_every_cycle_157(BYTE nidx) {
 	extcl_cpu_every_cycle_LZ93D50(nidx);
-	m157.barcode.count++;
-	if (m157.barcode.count >= 1000) {
-		m157.barcode.count -= 1000;
-		m157.barcode.out = m157.barcode.data[m157.barcode.pos] == 0xFF
+	detach_barcode.count++;
+	if (detach_barcode.count >= 1000) {
+		detach_barcode.count -= 1000;
+		detach_barcode.out = detach_barcode.data[detach_barcode.pos] == 0xFF
 			? 0
-			: (m157.barcode.data[m157.barcode.pos++] ^ 0x01) << 3;
+			: (detach_barcode.data[detach_barcode.pos++] ^ 0x01) << 3;
 	}
 }
 void extcl_battery_io_157(BYTE mode, FILE *fp) {

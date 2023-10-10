@@ -36,6 +36,7 @@
 #include "mainWindow.hpp"
 #include "extra/singleapplication/singleapplication.h"
 #include "dlgHeaderEditor.hpp"
+#include "dlgDetachBarcode.hpp"
 #include "dlgJsc.hpp"
 #include "dlgKeyboard.hpp"
 #include "dlgLog.hpp"
@@ -891,6 +892,7 @@ void mainWindow::connect_menu_signals(void) {
 	connect_action(action_Dipswitch, SLOT(s_open_ddip()));
 	connect_action(action_Virtual_Keyboard, SLOT(s_open_dkeyb()));
 	connect_action(action_Vs_System, SLOT(s_set_vs_window()));
+	connect_action(action_Detach_Barcode, SLOT(s_set_detach_barcode_window()));
 	connect_action(action_Joypad_Gamepads_Debug, SLOT(s_open_djsc()));
 	// Help/About
 	connect_action(action_Show_Log, SLOT(s_show_log()));
@@ -1281,6 +1283,10 @@ void mainWindow::s_set_vs_window(void) {
 	ext_win.vs_system = !ext_win.vs_system;
 	gui_external_control_windows_show();
 }
+void mainWindow::s_set_detach_barcode_window(void) {
+	ext_win.detach_barcode = !ext_win.detach_barcode;
+	gui_external_control_windows_show();
+}
 void mainWindow::s_open_dkeyb(void) {
 	if (nes_keyboard.enabled) {
 		if (dlgkeyb->isHidden()) {
@@ -1646,7 +1652,7 @@ void mainWindow::s_max_speed_stop(void) const {
 	emu_thread_continue();
 }
 void mainWindow::s_toggle_gui_in_window(void) {
-	bool visibility = false;
+	bool gui_visibility = false;
 
 	if (gfx.type_of_fscreen_in_use == FULLSCR) {
 		return;
@@ -1654,13 +1660,13 @@ void mainWindow::s_toggle_gui_in_window(void) {
 
 	emu_thread_pause();
 
-	visibility = !menubar->isVisible();
-	menubar->setVisible(visibility);
-	if (visibility) {
-		visibility = !cfg->toolbar.hidden;
+	gui_visibility = !menubar->isVisible();
+	menubar->setVisible(gui_visibility);
+	if (gui_visibility) {
+		gui_visibility = !cfg->toolbar.hidden;
 	}
-	toolbar->setVisible(visibility);
-	statusbar->setVisible(visibility);
+	toolbar->setVisible(gui_visibility);
+	statusbar->setVisible(gui_visibility);
 	update_gfx_monitor_dimension();
 	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, FALSE);
 

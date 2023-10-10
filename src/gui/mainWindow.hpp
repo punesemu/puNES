@@ -259,6 +259,7 @@ class mainWindow : public QMainWindow, public Ui::mainWindow {
 	public slots:
 		void s_set_fullscreen(void);
 		void s_set_vs_window(void);
+		void s_set_detach_barcode_window(void);
 		void s_open_dkeyb(void);
 
 	private slots:

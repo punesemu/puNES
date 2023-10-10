@@ -1221,7 +1221,7 @@ static const _settings main_cfg[] = {
 			{0, NULL}
 	},
 	{
-			uL("GUI"), uL("last geometry of head editor"), uL("80, 80, 0, 0"),
+			uL("GUI"), uL("last geometry of header editor"), uL("80, 80, 0, 0"),
 			uL("# possible values: [X],[Y],[W],[H]"),
 			NULL,
 			{0, NULL}

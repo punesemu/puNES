@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Vs System Controls</string>
+   <string>Vs System</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_Vs_System">
    <property name="leftMargin">
@@ -29,7 +29,7 @@
    <item>
     <widget class="QGroupBox" name="groupBox_Vs_System">
      <property name="title">
-      <string>Vs System Controls</string>
+      <string>Vs System</string>
      </property>
      <property name="flat">
       <bool>true</bool>

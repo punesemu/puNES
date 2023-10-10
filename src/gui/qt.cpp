@@ -63,6 +63,7 @@ Q_IMPORT_PLUGIN(QSvgPlugin)
 #include "dlgSettings.hpp"
 #include "dlgUncomp.hpp"
 #include "dlgVsSystem.hpp"
+#include "dlgDetachBarcode.hpp"
 #include "dlgDipswitch.hpp"
 #include "wdgScreen.hpp"
 #include "wdgOverlayUi.hpp"
@@ -104,6 +105,7 @@ static struct _qt {
 
 	// controlli esterni
 	dlgVsSystem *vssystem{};
+	dlgDetachBarcode *dbarcode{};
 	dlgJsc *djsc{};
 
 	// dialog della tastiera virtuale
@@ -250,6 +252,7 @@ BYTE gui_create(void) {
 
 	memset(&ext_win, 0x00, sizeof(ext_win));
 	qt.vssystem = new dlgVsSystem(qt.mwin);
+	qt.dbarcode = new dlgDetachBarcode(qt.mwin);
 	qt.djsc = new dlgJsc(qt.mwin);
 	qt.dkeyb = new dlgKeyboard(qt.mwin);
 	qt.header = new dlgHeaderEditor(qt.mwin);
@@ -257,6 +260,7 @@ BYTE gui_create(void) {
 	qt.no_bck_pause.append(qt.mwin);
 	qt.no_bck_pause.append(qt.dset);
 	qt.no_bck_pause.append(qt.vssystem);
+	qt.no_bck_pause.append(qt.dbarcode);
 	qt.no_bck_pause.append(qt.djsc);
 	qt.no_bck_pause.append(qt.dkeyb);
 
@@ -760,7 +764,12 @@ void gui_external_control_windows_show(void) {
 	} else {
 		qt.vssystem->hide();
 	}
-
+	if (ext_win.detach_barcode && (cfg->fullscreen != FULLSCR)) {
+		qt.dbarcode->update_dialog();
+		qt.dbarcode->show();
+	} else {
+		qt.dbarcode->hide();
+	}
 	gui_update();
 	gui_external_control_windows_update_pos();
 	gui_active_window();
@@ -770,6 +779,7 @@ void gui_external_control_windows_update_pos(void) {
 	unsigned int y = 0;
 
 	y += qt.vssystem->update_pos((int)y);
+	y += qt.dbarcode->update_pos((int)y);
 }
 
 void gui_vs_system_update_dialog(void) {
@@ -779,6 +789,10 @@ void gui_vs_system_insert_coin(void) {
 	if (vs_system.enabled) {
 		qt.vssystem->insert_coin(1);
 	}
+}
+
+void gui_detach_barcode_change_rom(void) {
+	qt.dbarcode->change_rom();
 }
 
 #if defined (WITH_OPENGL)

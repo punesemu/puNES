@@ -32,6 +32,7 @@
 #include "video/gfx_thread.h"
 #include "mappers.h"
 #include "vs_system.h"
+#include "detach_barcode.h"
 #include "version.h"
 #include "conf.h"
 #include "save_slot.h"
@@ -514,6 +515,7 @@ BYTE emu_turn_on(void) {
 		memset(&nes[nesidx].p.ppu_screen, 0x00, sizeof(_ppu_screen));
 	}
 	memset(&vs_system, 0x00, sizeof(vs_system));
+	memset(&detach_barcode, 0x00, sizeof(detach_barcode));
 
 	info.lag_frame.next = TRUE;
 	info.lag_frame.actual = TRUE;
@@ -626,6 +628,7 @@ BYTE emu_turn_on(void) {
 	save_slot_count_load();
 
 	ext_win.vs_system = vs_system.enabled;
+	ext_win.detach_barcode = detach_barcode.enabled;
 
 	gui_external_control_windows_show();
 	gui_wdgrewind_play();
@@ -734,6 +737,8 @@ BYTE emu_reset(BYTE type) {
 	if (map_init()) {
 		return (EXIT_ERROR);
 	}
+
+	ext_win.detach_barcode = detach_barcode.enabled;
 
 	// CPU
 	for (int nesidx = 0; nesidx < info.number_of_nes; nesidx++) {

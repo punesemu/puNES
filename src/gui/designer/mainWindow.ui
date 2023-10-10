@@ -163,6 +163,7 @@
     <property name="title">
      <string>Too&amp;ls</string>
     </property>
+    <addaction name="action_Detach_Barcode"/>
     <addaction name="action_Dipswitch"/>
     <addaction name="action_Virtual_Keyboard"/>
     <addaction name="action_Vs_System"/>
@@ -762,7 +763,16 @@
      <normaloff>:/icon/icons/dipswitch.svgz</normaloff>:/icon/icons/dipswitch.svgz</iconset>
    </property>
    <property name="text">
-    <string>Dipswitch</string>
+    <string>&amp;Dipswitch</string>
+   </property>
+  </action>
+  <action name="action_Detach_Barcode">
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/icon/icons/barcode.svgz</normaloff>:/icon/icons/barcode.svgz</iconset>
+   </property>
+   <property name="text">
+    <string>Detach &amp;Barcode</string>
    </property>
   </action>
  </widget>

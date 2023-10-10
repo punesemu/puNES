@@ -22,6 +22,7 @@
 #include "irqA12.h"
 #include "gui.h"
 #include "vs_system.h"
+#include "detach_barcode.h"
 #include "nes20db.h"
 #include "conf.h"
 
@@ -1344,6 +1345,7 @@ void map_quit(void) {
 	memset(&info.sha1sum, 0x00, sizeof(info.sha1sum));
 	memset(&info.crc32, 0x00, sizeof(info.crc32));
 	memset(&vs_system, 0x00, sizeof(vs_system));
+	memset(&detach_barcode, 0x00, sizeof(detach_barcode));
 
 	nes20db_reset();
 

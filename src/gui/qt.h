@@ -162,6 +162,7 @@ typedef struct _gui_mouse {
 } _gui_mouse;
 typedef struct _external_windows {
 	uint8_t vs_system;
+	uint8_t detach_barcode;
 } _external_windows;
 
 extern _gui gui;
@@ -293,6 +294,8 @@ EXTERNC void gui_external_control_windows_update_pos(void);
 
 EXTERNC void gui_vs_system_update_dialog(void);
 EXTERNC void gui_vs_system_insert_coin(void);
+
+EXTERNC void gui_detach_barcode_change_rom(void);
 
 EXTERNC void gui_nes_keyboard(void);
 EXTERNC void gui_nes_keyboard_paste_event(void);
