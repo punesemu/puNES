@@ -289,6 +289,12 @@ void dlgDetachBarcode::change_rom(void) {
 
 		listWidget_Barcodes->addItem(new QListWidgetItem(icon, desc));
 	}
+	if (listWidget_Barcodes->count() > 0) {
+		QListWidgetItem* item = listWidget_Barcodes->item(0);
+
+		listWidget_Barcodes->setCurrentItem(item);
+		s_barcode_click(item);
+	}
 }
 
 void dlgDetachBarcode::apply_barcode(void) {
@@ -312,5 +318,5 @@ void dlgDetachBarcode::s_apply_clicked(UNUSED(bool checked)) {
 	apply_barcode();
 }
 void dlgDetachBarcode::s_x_clicked(UNUSED(bool checked)) {
-	mainwin->s_set_vs_window();
+	mainwin->s_set_detach_barcode_window();
 }

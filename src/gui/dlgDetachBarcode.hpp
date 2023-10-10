@@ -36,7 +36,6 @@ class dlgDetachBarcode : public QDialog, public Ui::dlgDetachBarcode {
 
 	private:
 		int selected;
-		bool first_time;
 		name_detach_barcode ndb;
 
 	public:
