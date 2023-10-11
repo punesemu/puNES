@@ -871,7 +871,8 @@ void objSet::to_cfg(const QString &group) {
 		val.replace(SET_NTSC_COMPOSITE_PARAM, ntsc_val((void *)&ntsc_filter.format[COMPOSITE]));
 		val.replace(SET_NTSC_SVIDEO_PARAM, ntsc_val((void *)&ntsc_filter.format[SVIDEO]));
 		val.replace(SET_NTSC_RGB_PARAM, ntsc_val((void *)&ntsc_filter.format[RGBMODE]));
-		val.replace(SET_NTSC_BISQWIT_PARAM, ntsc_bisqwit_val((void *)&nes_ntsc_bisqwit));
+		val.replace(SET_NTSC_BISQWIT_PARAM, ntsc_bisqwit_val((void *)&ntsc_bisqwit));
+		val.replace(SET_NTSC_CRT_LMP88959_PARAM, ntsc_crt_lmp88959_val((void *)&ntsc_crt_lmp88959));
 		int_to_val(SET_SHADER, (int)cfg_from_file.shader);
 		cpy_utchar_to_val(SET_FILE_SHADER, cfg_from_file.shader_file);
 		int_to_val(SET_PALETTE, cfg_from_file.palette);
@@ -1004,7 +1005,8 @@ void objSet::fr_cfg(const QString &group) {
 		ntsc_val_to_double(SET_NTSC_COMPOSITE_PARAM, (void *)&ntsc_filter.format[COMPOSITE]);
 		ntsc_val_to_double(SET_NTSC_SVIDEO_PARAM, (void *)&ntsc_filter.format[SVIDEO]);
 		ntsc_val_to_double(SET_NTSC_RGB_PARAM, (void *)&ntsc_filter.format[RGBMODE]);
-		ntsc_bisqwit_val_to_double(SET_NTSC_BISQWIT_PARAM, (void *)&nes_ntsc_bisqwit);
+		ntsc_bisqwit_val_to_double(SET_NTSC_BISQWIT_PARAM, (void *)&ntsc_bisqwit);
+		ntsc_crt_lmp88959_val_to_int(SET_NTSC_CRT_LMP88959_PARAM, (void *)&ntsc_crt_lmp88959);
 		cfg_from_file.shader = val_to_int(SET_SHADER);
 		cpy_val_to_utchar(SET_FILE_SHADER, cfg_from_file.shader_file, usizeof(cfg_from_file.shader_file));
 		cfg_from_file.palette = val_to_int(SET_PALETTE);
@@ -1247,7 +1249,7 @@ void objSet::ntsc_bisqwit_val_to_double(int index, void *ntsc_frmt) {
 }
 void objSet::ntsc_bisqwit_val_to_double(void *ntsc_frmt, const uTCHAR *buffer) {
 	QStringList splitted = uQString(buffer).toLower().split(",");
-	nes_ntsc_bisqwit_setup_t *format = (nes_ntsc_bisqwit_setup_t *)ntsc_frmt;
+	_ntsc_bisqwit_setup_t *format = (_ntsc_bisqwit_setup_t *)ntsc_frmt;
 
 	if (splitted.count() == 10) {
 		format->hue = splitted.at(0).toDouble() / 100.0f;
@@ -1272,7 +1274,7 @@ void objSet::ntsc_bisqwit_val_to_double(void *ntsc_frmt, const uTCHAR *buffer) {
 	}
 }
 QString objSet::ntsc_bisqwit_val(void *ntsc_frmt) {
-	nes_ntsc_bisqwit_setup_t *format = (nes_ntsc_bisqwit_setup_t *)ntsc_frmt;
+	_ntsc_bisqwit_setup_t *format = (_ntsc_bisqwit_setup_t *)ntsc_frmt;
 
 	return (QString("%0,%1,%2,%3,%4,%5,%6,%7,%8,%9").
 			arg(round(format->hue * 100)).
@@ -1285,6 +1287,65 @@ QString objSet::ntsc_bisqwit_val(void *ntsc_frmt) {
 			arg(round(format->merge_fields & 0x01)).
 			arg(round(format->vertical_blend & 0x01)).
 			arg(round(format->scanline_intensity * 100)));
+}
+
+void objSet::ntsc_crt_lmp88959_val_to_int(int index, void *ntsc_frmt) {
+	ntsc_crt_lmp88959_val_to_int(ntsc_frmt, uQStringCD(val.at(index)));
+
+	val.replace(index, ntsc_crt_lmp88959_val(ntsc_frmt));
+}
+void objSet::ntsc_crt_lmp88959_val_to_int(void *ntsc_frmt, const uTCHAR *buffer) {
+	QStringList splitted = uQString(buffer).toLower().split(",");
+	_ntsc_crt_lmp88959_setup_t *format = (_ntsc_crt_lmp88959_setup_t *)ntsc_frmt;
+
+	if (splitted.count() == 10) {
+		format->hue = splitted.at(0).toInt();
+		if ((format->hue < 0) || (format->hue > 255)) {
+			format->hue = 0;
+		}
+		format->saturation = splitted.at(1).toInt();
+		if ((format->saturation < 0) || (format->saturation > 50)) {
+			format->saturation = 16;
+		}
+		format->contrast = splitted.at(2).toInt();
+		if ((format->contrast < 0) || (format->contrast > 255)) {
+			format->contrast = 165;
+		}
+		format->brightness = splitted.at(3).toInt();
+		if ((format->brightness < 0) || (format->brightness > 100)) {
+			format->brightness = 0;
+		}
+		format->black_point = splitted.at(4).toInt();
+		if ((format->black_point < 0) || (format->black_point > 100)) {
+			format->black_point = 2;
+		}
+		format->white_point = splitted.at(5).toInt();
+		if ((format->white_point < 0) || (format->white_point > 255)) {
+			format->white_point = 85;
+		}
+		format->noise = splitted.at(6).toInt();
+		if ((format->noise < 0) || (format->noise > 255)) {
+			format->noise = 12;
+		}
+		format->merge_fields = splitted.at(7).toInt() & 0x01;
+		format->vertical_blend = splitted.at(8).toInt() & 0x01;
+		format->scanline = splitted.at(9).toInt() & 0x01;
+	}
+}
+QString objSet::ntsc_crt_lmp88959_val(void *ntsc_frmt) {
+	_ntsc_crt_lmp88959_setup_t *format = (_ntsc_crt_lmp88959_setup_t *)ntsc_frmt;
+
+	return (QString("%0,%1,%2,%3,%4,%5,%6,%7,%8,%9").
+			arg(round(format->hue)).
+			arg(round(format->saturation)).
+			arg(round(format->contrast)).
+			arg(round(format->brightness)).
+			arg(round(format->black_point)).
+			arg(round(format->white_point)).
+			arg(round(format->noise)).
+			arg(round(format->merge_fields & 0x01)).
+			arg(round(format->vertical_blend & 0x01)).
+			arg(round(format->scanline & 0x01)));
 }
 
 int objSet::channel_convert_index(int index) {

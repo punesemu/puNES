@@ -26,7 +26,6 @@
 #include "thread_def.h"
 #include "ppu.h"
 #include "clock.h"
-#include "info.h"
 
 #define NTSC_BISQWIT_NUM_SLICE 4
 
@@ -47,8 +46,8 @@ typedef struct _ntsc_bisqwit_thread {
 	int start_phase;
 } _ntsc_bisqwit_thread;
 
-const nes_ntsc_bisqwit_setup_t nes_ntsc_bisqwit_default  = { 0, 0, 0, 0, 12, 24,  24,  0, 1, 0.88};
-nes_ntsc_bisqwit_setup_t nes_ntsc_bisqwit  = { 0, 0, 0, 0, 12, 24,  24,  0, 1, 0.88};
+const _ntsc_bisqwit_setup_t ntsc_bisqwit_default  = { 0, 0, 0, 0, 12, 24, 24, 0, 1, 0.88 };
+_ntsc_bisqwit_setup_t ntsc_bisqwit  = { 0, 0, 0, 0, 12, 24, 24, 0, 1, 0.88 };
 
 const WORD _bitmask_lut[12] = { 0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80, 0x100, 0x200, 0x400, 0x800 };
 const int _signals_per_pixel = 8;
@@ -67,21 +66,21 @@ void ntsc_bisqwit_init(void) {
 	const double pi = atan(1.0) * 4;
 	const int8_t signal_luma_low[4] = { -29, -15, 22, 71 };
 	const int8_t signal_luma_high[4] = { 32, 66, 105, 105 };
-	int contrast = (int)((nes_ntsc_bisqwit.contrast + 1.0) * (nes_ntsc_bisqwit.contrast + 1.0) * 167941);
-	int saturation = (int)((nes_ntsc_bisqwit.saturation + 1.0) * (nes_ntsc_bisqwit.saturation + 1.0) * 144044);
+	int contrast = (int)((ntsc_bisqwit.contrast + 1.0) * (ntsc_bisqwit.contrast + 1.0) * 167941);
+	int saturation = (int)((ntsc_bisqwit.saturation + 1.0) * (ntsc_bisqwit.saturation + 1.0) * 144044);
 	int i;
 
 	burst_count = 0;
 
 	for(i = 0; i < 27; i++) {
-		_sine_table[i] = (int8_t)(8 * sin(i * 2 * pi / 12 + nes_ntsc_bisqwit.hue * pi));
+		_sine_table[i] = (int8_t)(8 * sin(i * 2 * pi / 12 + ntsc_bisqwit.hue * pi));
 	}
 
 	_res_divider = 8 / gfx.filter.factor;
 
-	_yWidth = nes_ntsc_bisqwit.ywidth;
-	_iWidth = nes_ntsc_bisqwit.iwidth;
-	_qWidth = nes_ntsc_bisqwit.qwidth;
+	_yWidth = ntsc_bisqwit.ywidth;
+	_iWidth = ntsc_bisqwit.iwidth;
+	_qWidth = ntsc_bisqwit.qwidth;
 
 	_y = contrast / _yWidth;
 
@@ -115,7 +114,7 @@ void ntsc_bisqwit_surface(BYTE nidx) {
 	int height = (SCR_ROWS / NTSC_BISQWIT_NUM_SLICE);
 	unsigned int i = 0, max = machine.type != NTSC ? 2 : 3;
 
-	burst_count = nes_ntsc_bisqwit.merge_fields ? 1 : (burst_count + 1) % max;
+	burst_count = ntsc_bisqwit.merge_fields ? 1 : (burst_count + 1) % max;
 
 	for (i = 0; i < NTSC_BISQWIT_NUM_SLICE; i++) {
 		param[i].factor = gfx.filter.factor;
@@ -137,44 +136,44 @@ void ntsc_bisqwit_filter_parameters_changed(void) {
 	ntsc_bisqwit_init();
 }
 void ntsc_bisqwit_filter_parameters_default(void) {
-	nes_ntsc_bisqwit = nes_ntsc_bisqwit_default;
+	ntsc_bisqwit = ntsc_bisqwit_default;
 }
 void ntsc_bisqwit_filter_parameter_default(int index) {
-	const nes_ntsc_bisqwit_setup_t *format = &nes_ntsc_bisqwit_default;
+	const _ntsc_bisqwit_setup_t *format = &ntsc_bisqwit_default;
 
 	switch (index) {
 		default:
 		case 0:
-			nes_ntsc_bisqwit.hue = format->hue;
+			ntsc_bisqwit.hue = format->hue;
 			break;
 		case 1:
-			nes_ntsc_bisqwit.saturation = format->saturation;
+			ntsc_bisqwit.saturation = format->saturation;
 			break;
 		case 2:
-			nes_ntsc_bisqwit.contrast = format->contrast;
+			ntsc_bisqwit.contrast = format->contrast;
 			break;
 		case 3:
-			nes_ntsc_bisqwit.brightness = format->brightness;
+			ntsc_bisqwit.brightness = format->brightness;
 			break;
 		case 4:
-			nes_ntsc_bisqwit.ywidth = format->ywidth;
+			ntsc_bisqwit.ywidth = format->ywidth;
 			break;
 		case 5:
-			nes_ntsc_bisqwit.iwidth = format->iwidth;
+			ntsc_bisqwit.iwidth = format->iwidth;
 			break;
 		case 6:
-			nes_ntsc_bisqwit.qwidth = format->qwidth;
+			ntsc_bisqwit.qwidth = format->qwidth;
 			break;
 		case 7:
-			nes_ntsc_bisqwit.scanline_intensity = format->scanline_intensity;
+			ntsc_bisqwit.scanline_intensity = format->scanline_intensity;
 			break;
 	}
 }
 void ntsc_bisqwit_filter_parameter_mv_default(void) {
-	const nes_ntsc_bisqwit_setup_t *format = &nes_ntsc_bisqwit_default;
+	const _ntsc_bisqwit_setup_t *format = &ntsc_bisqwit_default;
 
-	nes_ntsc_bisqwit.merge_fields = format->merge_fields;
-	nes_ntsc_bisqwit.vertical_blend = format->vertical_blend;
+	ntsc_bisqwit.merge_fields = format->merge_fields;
+	ntsc_bisqwit.vertical_blend = format->vertical_blend;
 }
 
 thread_funct(ntsc_bisqwit_mt, void *arg) {
@@ -188,7 +187,7 @@ thread_funct(ntsc_bisqwit_mt, void *arg) {
 static void ntsc_bisqwit_recursive_blend(int iteration_count, uint64_t *output, uint64_t *current_line, uint64_t *next_line, int pixels_per_cycle) {
 	// Blend 2 pixels at once
 	uint32_t width = SCR_COLUMNS * pixels_per_cycle / 2, x;
-	double scanline_intensity = nes_ntsc_bisqwit.scanline_intensity;
+	double scanline_intensity = ntsc_bisqwit.scanline_intensity;
 	BYTE enable = FALSE;
 
 	switch (_res_divider) {
@@ -212,7 +211,7 @@ static void ntsc_bisqwit_recursive_blend(int iteration_count, uint64_t *output, 
 			uint8_t r1, g1, b1;
 			uint8_t r2, g2, b2;
 
-			if (nes_ntsc_bisqwit.vertical_blend) {
+			if (ntsc_bisqwit.vertical_blend) {
 				mixed = ((((current_line[x] ^ next_line[x]) & 0xFEFEFEFEFEFEFEFEL) >> 1) + (current_line[x] & next_line[x]));
 			} else {
 				mixed = current_line[x];
@@ -233,7 +232,7 @@ static void ntsc_bisqwit_recursive_blend(int iteration_count, uint64_t *output, 
 
 			output[x] = ((uint64_t)r2 << 48) | ((uint64_t)g2 << 40) | ((uint64_t)b2 << 32) | (r1 << 16) | (g1 << 8) | b1;
 		}
-	} else if (nes_ntsc_bisqwit.vertical_blend) {
+	} else if (ntsc_bisqwit.vertical_blend) {
 		for (x = 0; x < width; x++) {
 			output[x] = ((((current_line[x] ^ next_line[x]) & 0xFEFEFEFEFEFEFEFEL) >> 1) + (current_line[x] & next_line[x]));
 		}
@@ -353,7 +352,7 @@ INLINE static void ntsc_bisqwit_decode_frame(int start_row, int end_row, const W
  * Larger values = more horizontal blurring.
 */
 INLINE static void ntsc_bisqwit_decode_line(int width, const int8_t *signal, uint32_t *pix, int phase0) {
-	int brightness = (int)(nes_ntsc_bisqwit.brightness * 750);
+	int brightness = (int)(ntsc_bisqwit.brightness * 750);
 	int ysum = brightness, isum = 0, qsum = 0;
 	int r, g, b, s;
 

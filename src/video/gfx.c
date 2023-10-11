@@ -229,6 +229,12 @@ void gfx_set_screen(BYTE scale, DBWORD filter, DBWORD shader, BYTE fullscreen, B
 				gfx.filter_linear = TEXTURE_LINEAR_ENAB;
 				ntsc_bisqwit_init();
 				break;
+			case NTSC_CRT_LMP88959:
+				gfx.filter.func = ntsc_crt_lmp88959_surface;
+				gfx.filter.factor = X4;
+				gfx.filter_linear = TEXTURE_LINEAR_ENAB;
+				ntsc_crt_lmp88959_init();
+				break;
 		}
 		// forzo il controllo del fattore di scale
 		force_scale = TRUE;

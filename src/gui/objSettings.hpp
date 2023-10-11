@@ -119,6 +119,11 @@ class objSet : public objSettings {
 		QString ntsc_bisqwit_val(void *ntsc_frmt);
 
 	private:
+		void ntsc_crt_lmp88959_val_to_int(int index, void *ntsc_frmt);
+		void ntsc_crt_lmp88959_val_to_int(void *ntsc_frmt, const uTCHAR *buffer);
+		QString ntsc_crt_lmp88959_val(void *ntsc_frmt);
+
+	private:
 		int channel_convert_index(int index);
 		void channel_decode(int index, const QString &val);
 		void channel_default(int index);

@@ -1,0 +1,47 @@
+diff --git a/crt_core.h b/crt_core.h
+index bb09b00..51d6a4a 100644
+--- a/crt_core.h
++++ b/crt_core.h
+@@ -65,7 +65,7 @@ extern "C" {
+ 
+ /* do bloom emulation (side effect: makes screen have black borders) */
+ #define CRT_DO_BLOOM    0  /* does not work for NES */
+-#define CRT_DO_VSYNC    1  /* look for VSYNC */
++#define CRT_DO_VSYNC    0  /* look for VSYNC */
+ #define CRT_DO_HSYNC    1  /* look for HSYNC */
+ 
+ struct CRT {
+diff --git a/crt_ntsc.c b/crt_ntsc.c
+index 107a2ea..8aaa988 100644
+--- a/crt_ntsc.c
++++ b/crt_ntsc.c
+@@ -275,7 +275,7 @@ crt_modulate(struct CRT *v, struct NTSC_SETTINGS *s)
+             int ire; /* composite signal */
+             int xoff;
+             
+-            pix = s->data + ((((x * s->w) / destw) + sy) * bpp);
++            pix = (unsigned char *)&s->palette[(*(s->data + ((((x * s->w) / destw) + sy) * 2)))];
+             switch (s->format) {
+                 case CRT_PIX_FORMAT_RGB:
+                 case CRT_PIX_FORMAT_RGBA:
+diff --git a/crt_ntsc.h b/crt_ntsc.h
+index 2a6f0e9..386e2bd 100644
+--- a/crt_ntsc.h
++++ b/crt_ntsc.h
+@@ -11,6 +11,8 @@
+ #ifndef _CRT_NTSC_H_
+ #define _CRT_NTSC_H_
+ 
++#include <stdint.h>
++
+ #ifdef __cplusplus
+ extern "C" {
+ #endif
+@@ -121,6 +123,7 @@ struct NTSC_SETTINGS {
+     int yoffset;    /* y offset in # of lines. 0 is minimum value */
+     /* make sure your NTSC_SETTINGS struct is zeroed out before you do anything */
+     int iirs_initialized; /* internal state */
++    uint32_t *palette; /* FHorse */
+ };
+ 
+ #ifdef __cplusplus

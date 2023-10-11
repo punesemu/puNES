@@ -16,25 +16,25 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#ifndef NTSC_BISQWIT_H_
-#define NTSC_BISQWIT_H_
+#ifndef NTSC_CRT_LMP88959_H_
+#define NTSC_CRT_LMP88959_H_
 
 #include "common.h"
 
-typedef struct _ntsc_bisqwit_setup_t {
-	double hue;        /* -1 = -180 degrees     +1 = +180 degrees */
-	double saturation; /* -1 = grayscale (0.0)  +1 = oversaturated colors (2.0) */
-	double contrast;   /* -1 = dark (0.5)       +1 = light (1.5) */
-	double brightness; /* -1 = dark (0.5)       +1 = light (1.5) */
-	int ywidth;
-	int iwidth;
-	int qwidth;
+typedef struct _ntsc_crt_lmp88959_setup_t {
+	int hue;
+	int saturation;
+	int contrast;
+	int brightness;
+	int black_point;
+	int white_point;
+	int noise;
 	int merge_fields;
 	int vertical_blend;
-	double scanline_intensity;
-} _ntsc_bisqwit_setup_t;
+	int scanline;
+} _ntsc_crt_lmp88959_setup_t;
 
-extern _ntsc_bisqwit_setup_t ntsc_bisqwit;
+extern _ntsc_crt_lmp88959_setup_t ntsc_crt_lmp88959;
 
 #if defined (__cplusplus)
 #define EXTERNC extern "C"
@@ -42,14 +42,15 @@ extern _ntsc_bisqwit_setup_t ntsc_bisqwit;
 #define EXTERNC
 #endif
 
-EXTERNC void ntsc_bisqwit_init(void);
-EXTERNC void ntsc_bisqwit_surface(BYTE nidx);
+EXTERNC BYTE ntsc_crt_lmp88959_init(void);
+EXTERNC void ntsc_crt_lmp88959_surface(BYTE nidx);
 
-EXTERNC void ntsc_bisqwit_filter_parameters_changed(void);
-EXTERNC void ntsc_bisqwit_filter_parameters_default(void);
-EXTERNC void ntsc_bisqwit_filter_parameter_default(int index);
-EXTERNC void ntsc_bisqwit_filter_parameter_mv_default(void);
+EXTERNC void ntsc_crt_lmp88959_filter_parameters_changed(void);
+EXTERNC void ntsc_crt_lmp88959_filter_parameters_default(void);
+
+EXTERNC void ntsc_crt_lmp88959_filter_parameter_default(int index);
+EXTERNC void ntsc_crt_lmp88959_filter_parameter_smv_default(void);
 
 #undef EXTERNC
 
-#endif /* NTSC_BISQWIT_H_ */
+#endif /* NTSC_CRT_LMP88959_H_ */

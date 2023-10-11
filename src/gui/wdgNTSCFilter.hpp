@@ -22,6 +22,9 @@
 #include <QtWidgets/QWidget>
 #include "ui_wdgNTSCFilter.h"
 #include "ui_wdgNTSCBisqwitFilter.h"
+#include "ui_wdgNTSCCRTLMP88959Filter.h"
+
+// wdgNTSCFilter ------------------------------------------------------------------------------------------------------
 
 class wdgNTSCFilter : public QWidget, public Ui::wdgNTSCFilter {
 	Q_OBJECT
@@ -47,6 +50,9 @@ class wdgNTSCFilter : public QWidget, public Ui::wdgNTSCFilter {
 		void s_default_value_mv_clicked(bool checked);
 		void s_reset(bool checked);
 };
+
+// wdgNTSCBisqwitFilter -----------------------------------------------------------------------------------------------
+
 class wdgNTSCBisqwitFilter : public QWidget, public Ui::wdgNTSCBisqwitFilter {
 	Q_OBJECT
 
@@ -72,4 +78,30 @@ class wdgNTSCBisqwitFilter : public QWidget, public Ui::wdgNTSCBisqwitFilter {
 		void s_reset(bool checked);
 };
 
+// wdgNTSCCRTLMP88959Filter -------------------------------------------------------------------------------------------
+
+class wdgNTSCCRTLMP88959Filter : public QWidget, public Ui::wdgNTSCCRTLMP88959Filter {
+	Q_OBJECT
+
+	public:
+		explicit wdgNTSCCRTLMP88959Filter(QWidget *parent = nullptr);
+		~wdgNTSCCRTLMP88959Filter() override;
+
+	private:
+		void changeEvent(QEvent *event) override;
+
+	public:
+		void update_widget(void);
+
+	private:
+		void ntsc_update_paramaters(void);
+		void set_sliders_spins(void);
+
+	private slots:
+		void s_slider_spin_changed(int value);
+		void s_checkbox_changed(int state);
+		void s_default_value_clicked(bool checked);
+		void s_default_value_smv_clicked(bool checked);
+		void s_reset(bool checked);
+};
 #endif /* WDGNTSCFILTER_HPP_ */

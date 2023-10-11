@@ -1,0 +1,33 @@
+diff --git a/crt_core.c b/crt_core.c
+index 389929d..3a6c7ab 100644
+--- a/crt_core.c
++++ b/crt_core.c
+@@ -185,13 +185,13 @@ init_eq(struct EQF *f,
+     if (EQ_P >= 15) {
+         f->lf = 2 * (sn << (EQ_P - 15));
+     } else {
+-        f->lf = 2 * (sn >> (15 - EQ_P));
++        //f->lf = 2 * (sn >> (15 - EQ_P));
+     }
+     crt_sincos14(&sn, &cs, T14_PI * f_hi / rate);
+     if (EQ_P >= 15) {
+         f->hf = 2 * (sn << (EQ_P - 15));
+     } else {
+-        f->hf = 2 * (sn >> (15 - EQ_P));
++        //f->hf = 2 * (sn >> (15 - EQ_P));
+     }
+ }
+ 
+diff --git a/crt_core.h b/crt_core.h
+index bb09b00..7d9c3fb 100644
+--- a/crt_core.h
++++ b/crt_core.h
+@@ -36,7 +36,7 @@ extern "C" {
+ 
+ /* the system to be compiled */
+ #ifndef CRT_SYSTEM
+-#define CRT_SYSTEM CRT_SYSTEM_NTSC
++#define CRT_SYSTEM CRT_SYSTEM_NES
+ #endif
+ 
+ #if (CRT_SYSTEM == CRT_SYSTEM_NES)
