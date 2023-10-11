@@ -1,0 +1,31 @@
+Controls for the interactive app in crt_main.c
+
+ESC - shutdown
+
+q - increase black point
+a - decrease black point
+w - increase white point
+s - decrease white point
+r - reset CRT settings (hue, brightness, saturation, contrast, black point, white point)
+f - toggle between even and odd fields
+e - toggle between progressive and interlaced mode
+t - (in non-NES mode) toggle raw display mode
+m - toggle fading phosphors
+g - toggle scanlines (if needed)
+b - toggle field blending
+
+SPACE - (in non-NES mode) toggle color
+
+up arrow - increase brightness
+down arrow - decrease brightness
+right arrow - increase contrast
+left arrow - decrease contrast
+
+1 - decrease saturation
+2 - increase saturation
+3 - decrease noise (minimum 0)
+4 - increase noise
+5 - decrease color artifacting hue (mod 360)
+6 - increase color artifacting hue (mod 360)
+7 - decrease decoding hue (mod 360)
+8 - increase decoding hue (mod 360)

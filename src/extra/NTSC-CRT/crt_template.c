@@ -1,0 +1,337 @@
+/*****************************************************************************/
+/*
+ * NTSC/CRT - integer-only NTSC video signal encoding / decoding emulation
+ * 
+ *   by EMMIR 2018-2023
+ *   
+ *   YouTube: https://www.youtube.com/@EMMIR_KC/videos
+ *   Discord: https://discord.com/invite/hdYctSmyQJ
+ */
+/*****************************************************************************/
+
+#include "crt_core.h"
+
+#if (CRT_SYSTEM == CRT_SYSTEM_TEMP)
+#include <stdlib.h>
+#include <string.h>
+
+#define EXP_P         11
+#define EXP_ONE       (1 << EXP_P)
+#define EXP_MASK      (EXP_ONE - 1)
+#define EXP_PI        6434
+#define EXP_MUL(x, y) (((x) * (y)) >> EXP_P)
+#define EXP_DIV(x, y) (((x) << EXP_P) / (y))
+
+static int e11[] = {
+    EXP_ONE,
+    5567,  /* e   */
+    15133, /* e^2 */
+    41135, /* e^3 */
+    111817 /* e^4 */
+}; 
+
+/* fixed point e^x */
+static int
+expx(int n)
+{
+    int neg, idx, res;
+    int nxt, acc, del;
+    int i;
+
+    if (n == 0) {
+        return EXP_ONE;
+    }
+    neg = n < 0;
+    if (neg) {
+        n = -n;
+    }
+    idx = n >> EXP_P;
+    res = EXP_ONE;
+    for (i = 0; i < idx / 4; i++) {
+        res = EXP_MUL(res, e11[4]);
+    }
+    idx &= 3;
+    if (idx > 0) {
+        res = EXP_MUL(res, e11[idx]);
+    }
+    
+    n &= EXP_MASK;
+    nxt = EXP_ONE;
+    acc = 0;
+    del = 1;
+    for (i = 1; i < 17; i++) {
+        acc += nxt / del;
+        nxt = EXP_MUL(nxt, n);
+        del *= i;
+        if (del > nxt || nxt <= 0 || del <= 0) {
+            break;
+        }
+    }
+    res = EXP_MUL(res, acc);
+
+    if (neg) {
+        res = EXP_DIV(EXP_ONE, res);
+    }
+    return res;
+}
+
+/*****************************************************************************/
+/********************************* FILTERS ***********************************/
+/*****************************************************************************/
+
+/* infinite impulse response low pass filter for bandlimiting YIQ */
+static struct IIRLP {
+    int c;
+    int h; /* history */
+} iirY, iirI, iirQ;
+
+/* freq  - total bandwidth
+ * limit - max frequency
+ */
+static void
+init_iir(struct IIRLP *f, int freq, int limit)
+{
+    int rate; /* cycles/pixel rate */
+    
+    memset(f, 0, sizeof(struct IIRLP));
+    rate = (freq << 9) / limit;
+    f->c = EXP_ONE - expx(-((EXP_PI << 9) / rate));
+}
+
+static void
+reset_iir(struct IIRLP *f)
+{
+    f->h = 0;
+}
+
+/* hi-pass for debugging */
+#define HIPASS 0
+
+static int
+iirf(struct IIRLP *f, int s)
+{
+#if CRT_DO_BANDLIMITING
+    f->h += EXP_MUL(s - f->h, f->c);
+#if HIPASS
+    return s - f->h;
+#else
+    return f->h;
+#endif
+#else
+    return s;
+#endif
+}
+
+extern void
+crt_modulate(struct CRT *v, struct NTSC_SETTINGS *s)
+{
+    int x, y, xo, yo;
+    int destw = AV_LEN;
+    int desth = ((CRT_LINES * 64500) >> 16);
+    int iccf[CRT_CC_VPER][CRT_CC_SAMPLES];
+    int ccmodI[CRT_CC_VPER][CRT_CC_SAMPLES]; /* color phase for mod */
+    int ccmodQ[CRT_CC_VPER][CRT_CC_SAMPLES]; /* color phase for mod */
+    int ccburst[CRT_CC_VPER][CRT_CC_SAMPLES]; /* color phase for burst */
+    int sn, cs, n, ph;
+    int bpp;
+
+    if (!s->iirs_initialized) {
+        init_iir(&iirY, L_FREQ, Y_FREQ);
+        init_iir(&iirI, L_FREQ, I_FREQ);
+        init_iir(&iirQ, L_FREQ, Q_FREQ);
+        s->iirs_initialized = 1;
+    }
+#if CRT_DO_BLOOM
+    if (s->raw) {
+        destw = s->w;
+        desth = s->h;
+        if (destw > ((AV_LEN * 55500) >> 16)) {
+            destw = ((AV_LEN * 55500) >> 16);
+        }
+        if (desth > ((CRT_LINES * 63500) >> 16)) {
+            desth = ((CRT_LINES * 63500) >> 16);
+        }
+    } else {
+        destw = (AV_LEN * 55500) >> 16;
+        desth = (CRT_LINES * 63500) >> 16;
+    }
+#else
+    if (s->raw) {
+        destw = s->w;
+        desth = s->h;
+        if (destw > AV_LEN) {
+            destw = AV_LEN;
+        }
+        if (desth > ((CRT_LINES * 64500) >> 16)) {
+            desth = ((CRT_LINES * 64500) >> 16);
+        }
+    }
+#endif
+    if (s->as_color) {
+        for (y = 0; y < CRT_CC_VPER; y++) {
+            int vert = (y + s->dot_crawl_offset) * (360 / CRT_CC_VPER);
+            for (x = 0; x < CRT_CC_SAMPLES; x++) {
+                int step = (360 / CRT_CC_SAMPLES);
+                n = vert + s->hue + x * step;
+                crt_sincos14(&sn, &cs, (n - step + HUE_OFFSET) * 8192 / 180);
+                ccburst[y][x] = sn >> 10;
+                crt_sincos14(&sn, &cs, n * 8192 / 180);
+                ccmodI[y][x] = sn >> 10;
+                crt_sincos14(&sn, &cs, (n + Q_OFFSET) * 8192 / 180);
+                ccmodQ[y][x] = sn >> 10;
+            }
+        }
+    } else {
+        memset(ccburst, 0, sizeof(ccburst));
+        memset(ccmodI, 0, sizeof(ccmodI));
+        memset(ccmodQ, 0, sizeof(ccmodQ));
+    }
+    
+    bpp = crt_bpp4fmt(s->format);
+    if (bpp == 0) {
+        return; /* just to be safe */
+    }
+    xo = AV_BEG  + s->xoffset + (AV_LEN    - destw) / 2;
+    yo = CRT_TOP + s->yoffset + (CRT_LINES - desth) / 2;
+    
+    s->field &= 1;
+    s->frame &= 1;
+    /* use field and frame variables as you'd like here
+     * to determine starting phases, etc.
+     */
+    
+    /* align signal */
+    xo = xo - (xo % CRT_CC_SAMPLES);
+    
+    for (n = 0; n < CRT_VRES; n++) {
+        int t; /* time */
+        signed char *line = &v->analog[n * CRT_HRES];
+        
+        t = LINE_BEG;
+
+        if ((n >= EQU_REGION_A_LO && n <= EQU_REGION_A_HI) ||
+            (n >= EQU_REGION_B_LO && n <= EQU_REGION_B_HI)) {
+            /* equalizing pulses - small blips of sync, mostly blank */
+            while (t < (4   * CRT_HRES / 100)) line[t++] = SYNC_LEVEL;
+            while (t < (50  * CRT_HRES / 100)) line[t++] = BLANK_LEVEL;
+            while (t < (54  * CRT_HRES / 100)) line[t++] = SYNC_LEVEL;
+            while (t < (100 * CRT_HRES / 100)) line[t++] = BLANK_LEVEL;
+        } else if (n >= SYNC_REGION_LO && n <= SYNC_REGION_HI) {
+            int even[4] = { 46, 50, 96, 100 };
+            int odd[4] =  { 4, 50, 96, 100 };
+            int *offs = even;
+            if (s->field == 1) {
+                offs = odd;
+            }
+            /* vertical sync pulse - small blips of blank, mostly sync */
+            while (t < (offs[0] * CRT_HRES / 100)) line[t++] = SYNC_LEVEL;
+            while (t < (offs[1] * CRT_HRES / 100)) line[t++] = BLANK_LEVEL;
+            while (t < (offs[2] * CRT_HRES / 100)) line[t++] = SYNC_LEVEL;
+            while (t < (offs[3] * CRT_HRES / 100)) line[t++] = BLANK_LEVEL;
+        } else {
+            int cb;
+
+            /* video line */
+            while (t < SYNC_BEG) line[t++] = BLANK_LEVEL; /* FP */
+            while (t < BW_BEG)   line[t++] = SYNC_LEVEL;  /* SYNC */
+            while (t < AV_BEG)   line[t++] = BLANK_LEVEL; /* BW + CB + BP */
+            if (n < CRT_TOP) {
+                while (t < CRT_HRES) line[t++] = BLANK_LEVEL;
+            }
+
+            /* CB_CYCLES of color burst */
+            for (t = CB_BEG; t < CB_BEG + (CB_CYCLES * CRT_CB_FREQ); t++) {
+                cb = ccburst[n % CRT_CC_VPER][t % CRT_CC_SAMPLES];
+                line[t] = (BLANK_LEVEL + (cb * BURST_LEVEL)) >> 5;
+                iccf[(n + 3) % CRT_CC_VPER][t % CRT_CC_SAMPLES] = line[t];
+            }
+        }
+    }
+
+    for (y = 0; y < desth; y++) {
+        int field_offset;
+        int sy;
+        
+        field_offset = (s->field * s->h + desth) / desth / 2;
+        sy = (y * s->h) / desth;
+    
+        sy += field_offset;
+
+        if (sy >= s->h) sy = s->h;
+        
+        sy *= s->w;
+        
+        reset_iir(&iirY);
+        reset_iir(&iirI);
+        reset_iir(&iirQ);
+        
+        ph = (y + yo) % CRT_CC_VPER;
+        
+        for (x = 0; x < destw; x++) {
+            int fy, fi, fq;
+            int rA, gA, bA;
+            const unsigned char *pix;
+            int ire; /* composite signal */
+            int xoff;
+            /* RGB to YIQ matrix in 16.16 fixed point format */
+            static int yiqmat[9] = {
+                19595,  38470,  7471,   /* Y */
+                39059, -18022, -21103,  /* I */
+                13894, -34275,  20382,  /* Q */
+            };
+            pix = s->data + ((((x * s->w) / destw) + sy) * bpp);
+            switch (s->format) {
+                case CRT_PIX_FORMAT_RGB:
+                case CRT_PIX_FORMAT_RGBA:
+                    rA = pix[0];
+                    gA = pix[1];
+                    bA = pix[2];
+                    break;
+                case CRT_PIX_FORMAT_BGR: 
+                case CRT_PIX_FORMAT_BGRA:
+                    rA = pix[2];
+                    gA = pix[1];
+                    bA = pix[0];
+                    break;
+                case CRT_PIX_FORMAT_ARGB:
+                    rA = pix[1];
+                    gA = pix[2];
+                    bA = pix[3];
+                    break;
+                case CRT_PIX_FORMAT_ABGR:
+                    rA = pix[3];
+                    gA = pix[2];
+                    bA = pix[1];
+                    break;
+                default:
+                    rA = gA = bA = 0;
+                    break;
+            }
+
+            /* RGB to YIQ */
+            fy = (yiqmat[0] * rA + yiqmat[1] * gA + yiqmat[2] * bA) >> 14;
+            fi = (yiqmat[3] * rA + yiqmat[4] * gA + yiqmat[5] * bA) >> 14;
+            fq = (yiqmat[6] * rA + yiqmat[7] * gA + yiqmat[8] * bA) >> 14;
+            ire = BLACK_LEVEL + v->black_point;
+            
+            xoff = (x + xo) % CRT_CC_SAMPLES;
+            /* bandlimit Y,I,Q */
+            fy = iirf(&iirY, fy);
+            fi = iirf(&iirI, fi) * ccmodI[ph][xoff] >> 4;
+            fq = iirf(&iirQ, fq) * ccmodQ[ph][xoff] >> 4;
+            /* modulate as (Y + sin(x) * I + cos(x) * Q) */
+            ire += (fy + fi + fq) * (WHITE_LEVEL * v->white_point / 100) >> 10;
+            if (ire < IRE_MIN) ire = IRE_MIN;
+            if (ire > IRE_MAX) ire = IRE_MAX;
+
+            v->analog[(x + xo) + (y + yo) * CRT_HRES] = ire;
+        }
+    }
+    /* this generally does not need to be touched */
+    for (n = 0; n < CRT_CC_VPER; n++) {
+        for (x = 0; x < CRT_CC_SAMPLES; x++) {
+            v->ccf[n][x] = iccf[n][x] << 7;
+        }
+    }
+}
+#endif
