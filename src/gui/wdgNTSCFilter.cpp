@@ -535,3 +535,184 @@ void wdgNTSCCRTLMP88959Filter::s_reset(UNUSED(bool checked)) {
 	ntsc_crt_lmp88959_filter_parameters_changed();
 	gfx_thread_continue();
 }
+
+// wdgPALCRTLMP88959Filter -------------------------------------------------------------------------------------------
+
+static const char pal_cr_lmp88959_parameters_desc[][15] = {
+	"Brightness" , "Saturation", "Contrast", "Black_Point", "White_Point", "Noise", "Color_Phase", "Chroma_Lag"
+};
+
+wdgPALCRTLMP88959Filter::wdgPALCRTLMP88959Filter(QWidget *parent) : QWidget(parent) {
+	unsigned int i;
+
+	setupUi(this);
+
+	setFocusProxy(horizontalSlider_Brightness);
+
+	for (i = 0; i < LENGTH(pal_cr_lmp88959_parameters_desc); i++) {
+		QSlider *slider = findChild<QSlider *>("horizontalSlider_" + QString(pal_cr_lmp88959_parameters_desc[i]));
+		QSpinBox *sbox = findChild<QSpinBox *>("spinBox_" + QString(pal_cr_lmp88959_parameters_desc[i]));
+		QPushButton *btn = findChild<QPushButton *>("pushButton_" + QString(pal_cr_lmp88959_parameters_desc[i]));
+
+		slider->setProperty("myIndex", QVariant(i));
+		connect(slider, SIGNAL(valueChanged(int)), this, SLOT(s_slider_spin_changed(int)));
+
+		sbox->setProperty("myIndex", QVariant(i));
+		connect(sbox, SIGNAL(valueChanged(int)), this, SLOT(s_slider_spin_changed(int)));
+
+		btn->setProperty("myIndex", QVariant(i));
+		connect(btn, SIGNAL(clicked(bool)), this, SLOT(s_default_value_clicked(bool)));
+	}
+
+	checkBox_Scanline->setProperty("myIndex", QVariant(0));
+	connect(checkBox_Scanline, SIGNAL(stateChanged(int)), this, SLOT(s_checkbox_changed(int)));
+
+	checkBox_Merge_Fields->setProperty("myIndex", QVariant(1));
+	connect(checkBox_Merge_Fields, SIGNAL(stateChanged(int)), this, SLOT(s_checkbox_changed(int)));
+
+	checkBox_Vertical_Blend->setProperty("myIndex", QVariant(2));
+	connect(checkBox_Vertical_Blend, SIGNAL(stateChanged(int)), this, SLOT(s_checkbox_changed(int)));
+
+	connect(pushButton_Scanline_MFields_VBlend, SIGNAL(clicked(bool)), this, SLOT(s_default_value_smv_clicked(bool)));
+	connect(pushButton_PAL_Parameters_reset, SIGNAL(clicked(bool)), this, SLOT(s_reset(bool)));
+}
+wdgPALCRTLMP88959Filter::~wdgPALCRTLMP88959Filter() = default;
+
+void wdgPALCRTLMP88959Filter::changeEvent(QEvent *event) {
+	if (event->type() == QEvent::LanguageChange) {
+		Ui::wdgPALCRTLMP88959Filter::retranslateUi(this);
+	} else {
+		QWidget::changeEvent(event);
+	}
+}
+
+void wdgPALCRTLMP88959Filter::update_widget(void) {
+	bool enabled = cfg->filter == PAL_CRT_LMP88959;
+
+	if (enabled) {
+		set_sliders_spins();
+	}
+	setVisible(enabled);
+}
+
+void wdgPALCRTLMP88959Filter::pal_update_paramaters(void) {
+	emu_thread_pause();
+	pal_crt_lmp88959_init();
+	emu_thread_continue();
+}
+void wdgPALCRTLMP88959Filter::set_sliders_spins(void) {
+	_pal_crt_lmp88959_setup_t *format = &pal_crt_lmp88959;
+
+	qtHelper::slider_set_value(horizontalSlider_Brightness, format->brightness);
+	qtHelper::slider_set_value(horizontalSlider_Saturation, format->saturation);
+	qtHelper::slider_set_value(horizontalSlider_Contrast, format->contrast);
+	qtHelper::slider_set_value(horizontalSlider_Black_Point, format->black_point);
+	qtHelper::slider_set_value(horizontalSlider_White_Point, format->white_point);
+	qtHelper::slider_set_value(horizontalSlider_Noise, format->noise);
+	qtHelper::slider_set_value(horizontalSlider_Color_Phase, format->color_phase);
+	qtHelper::slider_set_value(horizontalSlider_Chroma_Lag, format->chroma_lag);
+
+	qtHelper::spinbox_set_value(spinBox_Brightness, format->brightness);
+	qtHelper::spinbox_set_value(spinBox_Saturation, format->saturation);
+	qtHelper::spinbox_set_value(spinBox_Contrast, format->contrast);
+	qtHelper::spinbox_set_value(spinBox_Black_Point, format->black_point);
+	qtHelper::spinbox_set_value(spinBox_White_Point, format->white_point);
+	qtHelper::spinbox_set_value(spinBox_Noise, format->noise);
+	qtHelper::spinbox_set_value(spinBox_Color_Phase, format->color_phase);
+	qtHelper::spinbox_set_value(spinBox_Chroma_Lag, format->chroma_lag);
+
+	qtHelper::checkbox_set_checked(checkBox_Scanline, format->scanline);
+	qtHelper::checkbox_set_checked(checkBox_Merge_Fields, format->merge_fields);
+	qtHelper::checkbox_set_checked(checkBox_Vertical_Blend, format->vertical_blend);
+}
+
+void wdgPALCRTLMP88959Filter::s_slider_spin_changed(int value) {
+	int index = QVariant(((QObject *)sender())->property("myIndex")).toInt();
+	_pal_crt_lmp88959_setup_t *format = &pal_crt_lmp88959;
+
+	gfx_thread_pause();
+	switch (index) {
+		default:
+		case 0:
+			format->brightness = value;
+			break;
+		case 1:
+			format->saturation = value;
+			break;
+		case 2:
+			format->contrast = value;
+			break;
+		case 3:
+			format->black_point = value;
+			break;
+		case 4:
+			format->white_point = value;
+			break;
+		case 5:
+			format->noise = value;
+			break;
+		case 6:
+			format->color_phase = value;
+			break;
+		case 7:
+			format->chroma_lag = value;
+			break;
+	}
+	if (((QObject *)sender())->objectName().contains("horizontalSlider_", Qt::CaseSensitive)) {
+		QSpinBox *sbox = findChild<QSpinBox *>("spinBox_" + QString(pal_cr_lmp88959_parameters_desc[index]));
+
+		qtHelper::spinbox_set_value((void *)sbox, value);
+	} else {
+		QSlider *slider = findChild<QSlider *>("horizontalSlider_" + QString(pal_cr_lmp88959_parameters_desc[index]));
+
+		qtHelper::slider_set_value((void *)slider, value);
+	}
+	pal_crt_lmp88959_filter_parameters_changed();
+	gfx_thread_continue();
+}
+void wdgPALCRTLMP88959Filter::s_checkbox_changed(int state) {
+	int index = QVariant(((QCheckBox *)sender())->property("myIndex")).toInt();
+	_pal_crt_lmp88959_setup_t *format = &pal_crt_lmp88959;
+
+	gfx_thread_pause();
+	switch (index) {
+		default:
+		case 0:
+			format->scanline = state > 0;
+			break;
+		case 1:
+			format->merge_fields = state > 0;
+			break;
+		case 2:
+			format->vertical_blend = state > 0;
+			break;
+//		case 3:
+//			format->chroma_correction = state > 0;
+//			break;
+	}
+	pal_crt_lmp88959_filter_parameters_changed();
+	gfx_thread_continue();
+}
+void wdgPALCRTLMP88959Filter::s_default_value_clicked(UNUSED(bool checked)) {
+	int index = QVariant(((QObject *)sender())->property("myIndex")).toInt();
+
+	gfx_thread_pause();
+	pal_crt_lmp88959_filter_parameter_default(index);
+	gui_update_ntsc_widgets();
+	pal_crt_lmp88959_filter_parameters_changed();
+	gfx_thread_continue();
+}
+void wdgPALCRTLMP88959Filter::s_default_value_smv_clicked(UNUSED(bool checked)) {
+	gfx_thread_pause();
+	pal_crt_lmp88959_filter_parameter_smv_default();
+	gui_update_ntsc_widgets();
+	pal_crt_lmp88959_filter_parameters_changed();
+	gfx_thread_continue();
+}
+void wdgPALCRTLMP88959Filter::s_reset(UNUSED(bool checked)) {
+	gfx_thread_pause();
+	pal_crt_lmp88959_filter_parameters_default();
+	gui_update_ntsc_widgets();
+	pal_crt_lmp88959_filter_parameters_changed();
+	gfx_thread_continue();
+}

@@ -23,6 +23,7 @@
 #include "ui_wdgNTSCFilter.h"
 #include "ui_wdgNTSCBisqwitFilter.h"
 #include "ui_wdgNTSCCRTLMP88959Filter.h"
+#include "ui_wdgPALCRTLMP88959Filter.h"
 
 // wdgNTSCFilter ------------------------------------------------------------------------------------------------------
 
@@ -104,4 +105,32 @@ class wdgNTSCCRTLMP88959Filter : public QWidget, public Ui::wdgNTSCCRTLMP88959Fi
 		void s_default_value_smv_clicked(bool checked);
 		void s_reset(bool checked);
 };
+
+// wdgPALCRTLMP88959Filter --------------------------------------------------------------------------------------------
+
+class wdgPALCRTLMP88959Filter : public QWidget, public Ui::wdgPALCRTLMP88959Filter {
+	Q_OBJECT
+
+	public:
+		explicit wdgPALCRTLMP88959Filter(QWidget *parent = nullptr);
+		~wdgPALCRTLMP88959Filter() override;
+
+	private:
+		void changeEvent(QEvent *event) override;
+
+	public:
+		void update_widget(void);
+
+	private:
+		void pal_update_paramaters(void);
+		void set_sliders_spins(void);
+
+	private slots:
+		void s_slider_spin_changed(int value);
+		void s_checkbox_changed(int state);
+		void s_default_value_clicked(bool checked);
+		void s_default_value_smv_clicked(bool checked);
+		void s_reset(bool checked);
+};
+
 #endif /* WDGNTSCFILTER_HPP_ */

@@ -1,0 +1,58 @@
+diff --git a/pal.c b/pal.c
+index a09cf33..76b27c8 100644
+--- a/pal.c
++++ b/pal.c
+@@ -272,7 +272,7 @@ pal_modulate(struct PAL_CRT *v, struct PAL_SETTINGS *s)
+             int ire; /* composite signal */
+             int voff;
+             
+-            pix = s->data + ((((x * s->w) / destw) + sy) * bpp);
++            pix = (unsigned char *)&s->palette[(*(s->data + ((((x * s->w) / destw) + sy) * 2)))];
+             switch (s->format) {
+                 case PAL_PIX_FORMAT_RGB:
+                 case PAL_PIX_FORMAT_RGBA:
+diff --git a/pal.h b/pal.h
+index 6957a10..b08933c 100644
+--- a/pal.h
++++ b/pal.h
+@@ -13,6 +13,8 @@
+ #ifndef _PAL_H_
+ #define _PAL_H_
+ 
++#include <stdint.h>
++
+ #ifdef __cplusplus
+ extern "C" {
+ #endif
+@@ -32,8 +34,8 @@ extern "C" {
+ #define PAL_VRES        312                       /* vertical resolution */
+ #define PAL_INPUT_SIZE  (PAL_HRES * PAL_VRES)
+ 
+-#define PAL_TOP         22     /* first line with active video */
+-#define PAL_BOT         311    /* final line with active video */
++#define PAL_TOP         42     /* first line with active video */
++#define PAL_BOT         282    /* final line with active video */
+ #define PAL_LINES       (PAL_BOT - PAL_TOP) /* number of active video lines */
+ 
+ /*
+@@ -103,6 +105,7 @@ struct PAL_SETTINGS {
+     int color_phase_error; /* 0-2, 0 = none, 1 = mild, 2 = wild */
+     /* make sure your PAL_SETTINGS struct is zeroed out before you do anything */
+     int iirs_initialized; /* internal state */
++    uint32_t *palette; /* FHorse */
+ };
+ 
+ #ifdef __cplusplus
+diff --git a/pal_core.h b/pal_core.h
+index 24ae282..eec2c9e 100644
+--- a/pal_core.h
++++ b/pal_core.h
+@@ -52,7 +52,7 @@ extern "C" {
+ 
+ /* do bloom emulation (side effect: makes screen have black borders) */
+ #define PAL_DO_BLOOM    0  /* does not work for NES */
+-#define PAL_DO_VSYNC    1  /* look for VSYNC */
++#define PAL_DO_VSYNC    0  /* look for VSYNC */
+ #define PAL_DO_HSYNC    1  /* look for HSYNC */
+ 
+ struct PAL_CRT {

@@ -124,6 +124,11 @@ class objSet : public objSettings {
 		QString ntsc_crt_lmp88959_val(void *ntsc_frmt);
 
 	private:
+		void pal_crt_lmp88959_val_to_int(int index, void *ntsc_frmt);
+		void pal_crt_lmp88959_val_to_int(void *ntsc_frmt, const uTCHAR *buffer);
+		QString pal_crt_lmp88959_val(void *ntsc_frmt);
+
+	private:
 		int channel_convert_index(int index);
 		void channel_decode(int index, const QString &val);
 		void channel_default(int index);

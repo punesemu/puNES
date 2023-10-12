@@ -873,6 +873,7 @@ void objSet::to_cfg(const QString &group) {
 		val.replace(SET_NTSC_RGB_PARAM, ntsc_val((void *)&ntsc_filter.format[RGBMODE]));
 		val.replace(SET_NTSC_BISQWIT_PARAM, ntsc_bisqwit_val((void *)&ntsc_bisqwit));
 		val.replace(SET_NTSC_CRT_LMP88959_PARAM, ntsc_crt_lmp88959_val((void *)&ntsc_crt_lmp88959));
+		val.replace(SET_PAL_CRT_LMP88959_PARAM, pal_crt_lmp88959_val((void *)&pal_crt_lmp88959));
 		int_to_val(SET_SHADER, (int)cfg_from_file.shader);
 		cpy_utchar_to_val(SET_FILE_SHADER, cfg_from_file.shader_file);
 		int_to_val(SET_PALETTE, cfg_from_file.palette);
@@ -1007,6 +1008,7 @@ void objSet::fr_cfg(const QString &group) {
 		ntsc_val_to_double(SET_NTSC_RGB_PARAM, (void *)&ntsc_filter.format[RGBMODE]);
 		ntsc_bisqwit_val_to_double(SET_NTSC_BISQWIT_PARAM, (void *)&ntsc_bisqwit);
 		ntsc_crt_lmp88959_val_to_int(SET_NTSC_CRT_LMP88959_PARAM, (void *)&ntsc_crt_lmp88959);
+		pal_crt_lmp88959_val_to_int(SET_PAL_CRT_LMP88959_PARAM, (void *)&pal_crt_lmp88959);
 		cfg_from_file.shader = val_to_int(SET_SHADER);
 		cpy_val_to_utchar(SET_FILE_SHADER, cfg_from_file.shader_file, usizeof(cfg_from_file.shader_file));
 		cfg_from_file.palette = val_to_int(SET_PALETTE);
@@ -1346,6 +1348,72 @@ QString objSet::ntsc_crt_lmp88959_val(void *ntsc_frmt) {
 			arg(round(format->merge_fields & 0x01)).
 			arg(round(format->vertical_blend & 0x01)).
 			arg(round(format->scanline & 0x01)));
+}
+
+void objSet::pal_crt_lmp88959_val_to_int(int index, void *ntsc_frmt) {
+	pal_crt_lmp88959_val_to_int(ntsc_frmt, uQStringCD(val.at(index)));
+
+	val.replace(index, pal_crt_lmp88959_val(ntsc_frmt));
+}
+void objSet::pal_crt_lmp88959_val_to_int(void *ntsc_frmt, const uTCHAR *buffer) {
+	QStringList splitted = uQString(buffer).toLower().split(",");
+	_pal_crt_lmp88959_setup_t *format = (_pal_crt_lmp88959_setup_t *)ntsc_frmt;
+
+	if (splitted.count() == 12) {
+		format->saturation = splitted.at(0).toInt();
+		if ((format->saturation < 0) || (format->saturation > 50)) {
+			format->saturation = 16;
+		}
+		format->contrast = splitted.at(1).toInt();
+		if ((format->contrast < 0) || (format->contrast > 255)) {
+			format->contrast = 165;
+		}
+		format->brightness = splitted.at(2).toInt();
+		if ((format->brightness < 0) || (format->brightness > 100)) {
+			format->brightness = 0;
+		}
+		format->black_point = splitted.at(3).toInt();
+		if ((format->black_point < 0) || (format->black_point > 100)) {
+			format->black_point = 2;
+		}
+		format->white_point = splitted.at(4).toInt();
+		if ((format->white_point < 0) || (format->white_point > 255)) {
+			format->white_point = 85;
+		}
+		format->noise = splitted.at(5).toInt();
+		if ((format->noise < 0) || (format->noise > 255)) {
+			format->noise = 12;
+		}
+		format->color_phase = splitted.at(6).toInt();
+		if ((format->color_phase < 0) || (format->color_phase > 2)) {
+			format->color_phase = 0;
+		}
+		format->chroma_lag = splitted.at(7).toInt();
+		if ((format->chroma_lag < -8) || (format->chroma_lag > 8)) {
+			format->chroma_lag = 0;
+		}
+		format->merge_fields = splitted.at(8).toInt() & 0x01;
+		format->vertical_blend = splitted.at(9).toInt() & 0x01;
+		format->scanline = splitted.at(10).toInt() & 0x01;
+		format->chroma_correction = splitted.at(11).toInt() & 0x01;
+	}
+}
+QString objSet::pal_crt_lmp88959_val(void *ntsc_frmt) {
+	_pal_crt_lmp88959_setup_t *format = (_pal_crt_lmp88959_setup_t *)ntsc_frmt;
+
+	return (QString("%0,%1,%2,%3,%4,%5,%6,%7,%8,%9,%10,%11").
+			arg(round(format->saturation)).
+			arg(round(format->contrast)).
+			arg(round(format->brightness)).
+			arg(round(format->black_point)).
+			arg(round(format->white_point)).
+			arg(round(format->noise)).
+			arg(round(format->color_phase)).
+			arg(round(format->chroma_lag)).
+			arg(round(format->merge_fields & 0x01)).
+			arg(round(format->vertical_blend & 0x01)).
+			arg(round(format->scanline & 0x01)).
+			arg(round(format->chroma_correction & 0x01)));
 }
 
 int objSet::channel_convert_index(int index) {

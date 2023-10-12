@@ -1,0 +1,32 @@
+Controls for the interactive app in pal_main.c
+
+ESC - shutdown
+
+q - increase black point
+a - decrease black point
+w - increase white point
+s - decrease white point
+r - reset CRT settings (brightness, saturation, contrast, black point, white point)
+f - increment field number
+e - toggle between progressive and interlaced mode
+t - (in non-NES mode) toggle raw display mode
+m - toggle fading phosphors
+g - toggle scanlines
+b - toggle field blending
+k - change between amounts of chroma lag, (-8 -> 8)
+
+SPACE - (in non-NES mode) toggle color
+
+up arrow - increase brightness
+down arrow - decrease brightness
+right arrow - increase contrast
+left arrow - decrease contrast
+
+1 - decrease saturation
+2 - increase saturation
+3 - decrease noise (minimum 0)
+4 - increase noise
+5 - decrease color artifacting hue (mod 360)
+6 - increase color artifacting hue (mod 360)
+7 - switch between color phase error amounts (0, 1, 2)
+8 - toggle chroma correction (Hanover bar suppression)

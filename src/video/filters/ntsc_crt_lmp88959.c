@@ -23,7 +23,7 @@
 #include "nes.h"
 #include "thread_def.h"
 
-#define NTC_CRT_LMP88959_NUM_SLICE 4
+#define NTSC_CRT_LMP88959_NUM_SLICE 4
 
 void ntsc_crt_lmp88959_phosphor_decay(void);
 static thread_funct(ntsc_crt_lmp88959_thread_phosphor_decay, void *arg);
@@ -137,19 +137,19 @@ static thread_funct(ntsc_crt_lmp88959_thread_phosphor_decay, void *arg) {
 	thread_funct_return();
 }
 void ntsc_crt_lmp88959_phosphor_decay(void) {
-	_ntsc_crt_thread_phospohor param[NTC_CRT_LMP88959_NUM_SLICE];
-	thread_t thread[NTC_CRT_LMP88959_NUM_SLICE];
+	_ntsc_crt_thread_phospohor param[NTSC_CRT_LMP88959_NUM_SLICE];
+	thread_t thread[NTSC_CRT_LMP88959_NUM_SLICE];
 	int i = 0;
 
 	// creo i threads
-	for (i = 0; i < NTC_CRT_LMP88959_NUM_SLICE; i++) {
+	for (i = 0; i < NTSC_CRT_LMP88959_NUM_SLICE; i++) {
 		param[i].width = gfx.filter.data.width;
-		param[i].height = gfx.filter.data.height / NTC_CRT_LMP88959_NUM_SLICE;
+		param[i].height = gfx.filter.data.height / NTSC_CRT_LMP88959_NUM_SLICE;
 		param[i].pix =  gfx.filter.data.pix + (param[i].width * (i * param[i].height) * 4);
 		thread_create(thread[i], ntsc_crt_lmp88959_thread_phosphor_decay, &param[i]);
 	}
 	// attendo che i threads concludano
-	for (i = 0; i < NTC_CRT_LMP88959_NUM_SLICE; i++) {
+	for (i = 0; i < NTSC_CRT_LMP88959_NUM_SLICE; i++) {
 		thread_join(thread[i]);
 		thread_free(thread[i]);
 	}
