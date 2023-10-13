@@ -16,12 +16,12 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#ifndef NTSC_CRT_LMP88959_H_
-#define NTSC_CRT_LMP88959_H_
+#ifndef NTSC_LMP88959_H_
+#define NTSC_LMP88959_H_
 
 #include "common.h"
 
-typedef struct _ntsc_crt_lmp88959_setup_t {
+typedef struct _ntsc_lmp88959_setup_t {
 	int hue;
 	int saturation;
 	int contrast;
@@ -32,9 +32,15 @@ typedef struct _ntsc_crt_lmp88959_setup_t {
 	int merge_fields;
 	int vertical_blend;
 	int scanline;
-} _ntsc_crt_lmp88959_setup_t;
+	int dot_crowl;
+} _ntsc_lmp88959_setup_t;
+typedef struct _lmp88959_thread_phospohor {
+	uint32_t *pix;
+	int width;
+	int height;
+} _lmp88959_thread_phospohor;
 
-extern _ntsc_crt_lmp88959_setup_t ntsc_crt_lmp88959;
+extern _ntsc_lmp88959_setup_t ntsc_lmp88959;
 
 #if defined (__cplusplus)
 #define EXTERNC extern "C"
@@ -42,15 +48,17 @@ extern _ntsc_crt_lmp88959_setup_t ntsc_crt_lmp88959;
 #define EXTERNC
 #endif
 
-EXTERNC BYTE ntsc_crt_lmp88959_init(void);
-EXTERNC void ntsc_crt_lmp88959_surface(BYTE nidx);
+EXTERNC BYTE ntsc_lmp88959_init(void);
+EXTERNC void ntsc_lmp88959_surface(BYTE nidx);
 
-EXTERNC void ntsc_crt_lmp88959_filter_parameters_changed(void);
-EXTERNC void ntsc_crt_lmp88959_filter_parameters_default(void);
+EXTERNC void ntsc_lmp88959_filter_parameters_changed(void);
+EXTERNC void ntsc_lmp88959_filter_parameters_default(void);
 
-EXTERNC void ntsc_crt_lmp88959_filter_parameter_default(int index);
-EXTERNC void ntsc_crt_lmp88959_filter_parameter_smv_default(void);
+EXTERNC void ntsc_lmp88959_filter_parameter_default(int index);
+EXTERNC void ntsc_lmp88959_filter_parameter_smv_default(void);
+
+EXTERNC void lmp88959_phosphor_decay(void);
 
 #undef EXTERNC
 
-#endif /* NTSC_CRT_LMP88959_H_ */
+#endif /* NTSC_LMP88959_H_ */

@@ -547,10 +547,6 @@ set(core_srcs
 set(extra_srcs
 	extra/filter-c/filter.c
 	extra/kissfft/kiss_fft.c
-	extra/NTSC-CRT/crt_core.c
-	extra/NTSC-CRT/crt_ntsc.c
-	extra/PAL-CRT/pal.c
-	extra/PAL-CRT/pal_core.c
 	extra/singleapplication/singleapplication.cpp
 	extra/singleapplication/singleapplication_p.cpp
 	)
@@ -576,9 +572,11 @@ set(gui_ui_srcs
 	gui/designer/wdgKeyboardSubor.ui
 	gui/designer/wdgNTSCFilter.ui
 	gui/designer/wdgNTSCBisqwitFilter.ui
-	gui/designer/wdgNTSCCRTLMP88959Filter.ui
+	gui/designer/wdgNTSCLMP88959Filter.ui
+	gui/designer/wdgNTSCNESRGBLMP88959Filter.ui
 	gui/designer/wdgOverlayUi.ui
-	gui/designer/wdgPALCRTLMP88959Filter.ui
+	gui/designer/wdgPALLMP88959Filter.ui
+	gui/designer/wdgPALNESRGBLMP88959Filter.ui
 	gui/designer/wdgPaletteEditor.ui
 	gui/designer/wdgRewind.ui
 	gui/designer/wdgRotateScreen.ui
@@ -709,9 +707,11 @@ set(video_srcs
 	video/filters/hqx.c
 	video/filters/nes_ntsc.c
 	video/filters/ntsc.c
-	video/filters/ntsc_crt_lmp88959.c
 	video/filters/ntsc_bisqwit.c
-	video/filters/pal_crt_lmp88959.c
+	video/filters/ntsc_lmp88959.c
+	video/filters/ntsc_nesrgb_lmp88959.c
+	video/filters/pal_lmp88959.c
+	video/filters/pal_nesrgb_lmp88959.c
 	video/filters/scale.c
 	video/filters/scale2x.c
 	video/filters/scalers.c

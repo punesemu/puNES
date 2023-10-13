@@ -22,9 +22,11 @@
 #include "common.h"
 #include "video/filters/hqx.h"
 #include "video/filters/ntsc.h"
-#include "video/filters/ntsc_crt_lmp88959.h"
 #include "video/filters/ntsc_bisqwit.h"
-#include "video/filters/pal_crt_lmp88959.h"
+#include "video/filters/ntsc_lmp88959.h"
+#include "video/filters/ntsc_nesrgb_lmp88959.h"
+#include "video/filters/pal_lmp88959.h"
+#include "video/filters/pal_nesrgb_lmp88959.h"
 #include "video/filters/scale.h"
 #include "video/filters/scale2x.h"
 #include "video/filters/scalers.h"
@@ -75,7 +77,9 @@ enum filters_type {
 	NTSC_BISQWIT_4X,
 	NTSC_BISQWIT_8X,
 	NTSC_CRT_LMP88959,
-	PAL_CRT_LMP88959
+	NTSC_NESRGB_LMP88959,
+	PAL_CRT_LMP88959,
+	PAL_NESRGB_LMP88959
 };
 enum shader_type {
 	NO_SHADER,

@@ -68,8 +68,10 @@ enum set_element {
 	SET_NTSC_SVIDEO_PARAM,
 	SET_NTSC_RGB_PARAM,
 	SET_NTSC_BISQWIT_PARAM,
-	SET_NTSC_CRT_LMP88959_PARAM,
-	SET_PAL_CRT_LMP88959_PARAM,
+	SET_NTSC_LMP88959_PARAM,
+	SET_NTSC_NESRGB_LMP88959_PARAM,
+	SET_PAL_LMP88959_PARAM,
+	SET_PAL_NESRGB_LMP88959_PARAM,
 	SET_SHADER,
 	SET_FILE_SHADER,
 	SET_PALETTE,
@@ -595,8 +597,10 @@ static const _opt opt_filter[] = {
 	{uL("NTSC Bisqwit 2x")  , uL("ntscbisqwit2x"), NTSC_BISQWIT_2X},
 	{uL("NTSC Bisqwit 4x")  , uL("ntscbisqwit4x"), NTSC_BISQWIT_4X},
 	{uL("NTSC Bisqwit 8x")  , uL("ntscbisqwit8x"), NTSC_BISQWIT_8X},
-	{uL("NTSC CRT LMP88959"), uL("ntsccrtlmp")   , NTSC_CRT_LMP88959},
-	{uL("PAL CRT LMP88959") , uL("palcrtlmp")    , PAL_CRT_LMP88959}
+	{uL("NTSC CRT LMP88959"), uL("ntscrtclmp")   , NTSC_CRT_LMP88959},
+	{uL("NTSC NES LMP88959"), uL("ntsneslmp")    , NTSC_NESRGB_LMP88959},
+	{uL("PAL CRT LMP88959") , uL("palcrtlmp")    , PAL_CRT_LMP88959},
+	{uL("PAL NES LMP88959") , uL("palneslmp")    , PAL_NESRGB_LMP88959}
 };
 static const _opt opt_ntsc[] = {
 	{uL("Composite"), uL("composite"), COMPOSITE},
@@ -923,14 +927,14 @@ static const _settings main_cfg[] = {
 		uL("#                  ntsc, 2xsai, super2xsai, supereagle, tv2x, tv3x," NEWLINE)
 		uL("#                  tv4x, dotmatrix, paltv1x, paltv2x, paltv3x, paltv4x," NEWLINE)
 		uL("#                  ntscbisqwit2x, ntscbisqwit8x, ntscbisqwit8x, ntsccrtlmp," NEWLINE)
-		uL("#                  palcrtlmp"),
+		uL("#                  ntscneslmp, palcrtlmp, palneslmp"),
 		uL("-i, --filter              filter to apply       : nofilter, scale2x, scale3x, scale4x, hq2x, hq3x," NEWLINE)
 		uL("                                                  hq4x, xbrz2x, xbrz3x, xbrz4x, xbrz5x, xbrz6x," NEWLINE)
 		uL("                                                  xbrz2xmt, xbrz3xmt, xbrz4xmt, xbrz5xmt, xbrz6xmt," NEWLINE)
 		uL("                                                  ntsc, 2xsai, super2xsai, supereagle, tv2x,tv3x," NEWLINE)
 		uL("                                                  tv4x, dotmatrix, paltv1x, paltv2x, paltv3x," NEWLINE)
 		uL("                                                  paltv4x, ntscbisqwit2x, ntscbisqwit8x, ntscbisqwit8x," NEWLINE)
-		uL("                                                  ntsccrtlmp, palcrtlmp"),
+		uL("                                                  ntsccrtlmp, ntscneslmp, palcrtlmp, palneslmp"),
 		{LENGTH(opt_filter), opt_filter}
 	},
 	{
@@ -979,23 +983,42 @@ static const _settings main_cfg[] = {
 		{0, NULL}
 	},
 	{
-		uL("video"), uL("ntsc-crt lmp88959 filter parameters"), uL("0,16,165,0,2,85,12,1,0,1"),
+		uL("video"), uL("ntsc lmp88959 filter parameters"), uL("0,16,165,0,2,85,12,1,0,1"),
 		uL("# possible values: [hue       : 0/255],[saturation  :  0/50],[contrast      : 0/255]," NEWLINE)
 		uL("#                  [brightness: 0/255],[black point : 0/100],[white point   : 0/255]," NEWLINE)
 		uL("#                  [noise     : 0/100],[merge fields:   0/1],[vertical blend:   0/1]," NEWLINE)
+		uL("#                  [scanline  :   0/1]"),
+	NULL,
+		{0, NULL}
+	},
+	{
+		uL("video"), uL("ntsc nesrgb lmp88959 filter parameters"), uL("0,16,165,0,2,85,12,0,0,1"),
+		uL("# possible values: [hue       : 0/255],[saturation :  0/50],[contrast      : 0/255]," NEWLINE)
+		uL("#                  [brightness: 0/255],[black point: 0/100],[white point   : 0/255]," NEWLINE)
+		uL("#                  [noise     : 0/100],[dot crowl  :   0/2],[vertical blend:   0/1]," NEWLINE)
 		uL("#                  [scanline  :   0/1]"),
 		NULL,
 		{0, NULL}
 	},
 	{
-			uL("video"), uL("pal-crt lmp88959 filter parameters"), uL("16,165,0,2,85,12,0,0,1,0,1,1"),
-			uL("# possible values: [saturation    :  0/50],[contrast   : 0/255],[brightness  : 0/255]," NEWLINE)
-			uL("#                  [black point   : 0/100],[white point: 0/255],[noise       : 0/100]," NEWLINE)
-			uL("#                  [color phase   :   0/2],[chroma lag :  -8/8],[merge fields:   0/1]," NEWLINE)
-			uL("#                  [vertical blend:   0/1],[scanline   :   0/1],[color fix   :   0/1]" NEWLINE),
-			NULL,
-			{0, NULL}
-	},	{
+		uL("video"), uL("pal lmp88959 filter parameters"), uL("16,165,0,2,85,12,0,0,1,0,1,1"),
+		uL("# possible values: [saturation    :  0/50],[contrast   : 0/255],[brightness  : 0/255]," NEWLINE)
+		uL("#                  [black point   : 0/100],[white point: 0/255],[noise       : 0/100]," NEWLINE)
+		uL("#                  [color phase   :   0/2],[chroma lag :  -8/8],[merge fields:   0/1]," NEWLINE)
+		uL("#                  [vertical blend:   0/1],[scanline   :   0/1],[color fix   :   0/1]"),
+		NULL,
+		{0, NULL}
+	},
+	{
+		uL("video"), uL("pal nesrgb lmp88959 filter parameters"), uL("16,165,0,2,85,12,0,0,1,1"),
+		uL("# possible values: [saturation :  0/50],[contrast      : 0/255],[brightness: 0/255]," NEWLINE)
+		uL("#                  [black point: 0/100],[white point   : 0/255],[noise     : 0/100]," NEWLINE)
+		uL("#                  [chroma lag :  -8/8],[vertical blend:   0/1],[scanline  :   0/1]," NEWLINE)
+		uL("#                  [color fix  :   0/1]"),
+		NULL,
+		{0, NULL}
+	},
+	{
 		uL("video"), uL("shader"), uL("none"),
 		uL("# possible values: none, crtdotmask, crtscanlines, crtcurve, emboss, noise," NEWLINE)
 		uL("#                  ntsc2phcomp, oldtv, file"),

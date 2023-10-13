@@ -191,10 +191,18 @@ Most modifications should only be to the constants defined in crt_template.h
 
 ------
 
+### Emulators
+These emulators have this NTSC filter as an option:  
+puNES: https://github.com/punesemu/puNES  
+BeesNES: https://github.com/L-Spiro/BeesNES  
+
+------
+
 ### Other Information
 Web version by @binji (might not be up to date):  
 https://binji.github.io/NTSC-CRT/  
-To use the web version, drag a PPM image into the web browser.
+To use the web version, drag a PPM image into the web browser.  
+
 #### Related projects
 https://github.com/LMP88959/PAL-CRT - my PAL modem written in a similar fashion to this library  
 https://github.com/F33RNI/NTSC-VHS-Renderer - Intuitive rendering and GUI for this project  

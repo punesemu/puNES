@@ -16,27 +16,13 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#ifndef PAL_CRT_LMP88959_H_
-#define PAL_CRT_LMP88959_H_
+#ifndef PAL_NESRGB_LMP88959_H_
+#define PAL_NESRGB_LMP88959_H_
 
 #include "common.h"
+#include "pal_lmp88959.h"
 
-typedef struct _pal_crt_lmp88959_setup_t {
-	int saturation;
-	int contrast;
-	int brightness;
-	int black_point;
-	int white_point;
-	int noise;
-	int color_phase;
-	int chroma_lag;
-	int merge_fields;
-	int vertical_blend;
-	int scanline;
-	int chroma_correction;
-} _pal_crt_lmp88959_setup_t;
-
-extern _pal_crt_lmp88959_setup_t pal_crt_lmp88959;
+extern _pal_lmp88959_setup_t pal_nesrgb_lmp88959;
 
 #if defined (__cplusplus)
 #define EXTERNC extern "C"
@@ -44,15 +30,15 @@ extern _pal_crt_lmp88959_setup_t pal_crt_lmp88959;
 #define EXTERNC
 #endif
 
-EXTERNC BYTE pal_crt_lmp88959_init(void);
-EXTERNC void pal_crt_lmp88959_surface(BYTE nidx);
+EXTERNC BYTE pal_nesrgb_lmp88959_init(void);
+EXTERNC void pal_nesrgb_lmp88959_surface(BYTE nidx);
 
-EXTERNC void pal_crt_lmp88959_filter_parameters_changed(void);
-EXTERNC void pal_crt_lmp88959_filter_parameters_default(void);
+EXTERNC void pal_nesrgb_lmp88959_filter_parameters_changed(void);
+EXTERNC void pal_nesrgb_lmp88959_filter_parameters_default(void);
 
-EXTERNC void pal_crt_lmp88959_filter_parameter_default(int index);
-EXTERNC void pal_crt_lmp88959_filter_parameter_smv_default(void);
+EXTERNC void pal_nesrgb_lmp88959_filter_parameter_default(int index);
+EXTERNC void pal_nesrgb_lmp88959_filter_parameter_smv_default(void);
 
 #undef EXTERNC
 
-#endif /* PAL_CRT_LMP88959_H_ */
+#endif /* PAL_NESRGB_LMP88959_H_ */

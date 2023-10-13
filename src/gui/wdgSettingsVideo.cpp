@@ -304,8 +304,10 @@ void wdgSettingsVideo::update_widget(void) {
 		sfilter_set();
 		widget_NTSC_Filter->update_widget();
 		widget_NTSC_Bisqwit_Filter->update_widget();
-		widget_NTSC_CRT_LMP88959_Filter->update_widget();
-		widget_PAL_CRT_LMP88959_Filter->update_widget();
+		widget_NTSC_LMP88959_Filter->update_widget();
+		widget_NTSC_NESRGB_LMP88959_Filter->update_widget();
+		widget_PAL_LMP88959_Filter->update_widget();
+		widget_PAL_NESRGB_LMP88959_Filter->update_widget();
 		shader_set();
 #if defined (WITH_OPENGL)
 		checkBox_Disable_sRGB_FBO->setChecked(cfg->disable_srgb_fbo);
@@ -534,74 +536,80 @@ void wdgSettingsVideo::sfilter_set(void) {
 		case NTSC_CRT_LMP88959:
 			filter = 12;
 			break;
-		case PAL_CRT_LMP88959:
+		case NTSC_NESRGB_LMP88959:
 			filter = 13;
 			break;
-		case PALTV1X:
+		case PAL_CRT_LMP88959:
 			filter = 14;
 			break;
-		case PALTV2X:
+		case PAL_NESRGB_LMP88959:
 			filter = 15;
 			break;
-		case PALTV3X:
+		case PALTV1X:
 			filter = 16;
 			break;
-		case PALTV4X:
+		case PALTV2X:
 			filter = 17;
 			break;
-		case SCALE2X:
+		case PALTV3X:
 			filter = 18;
 			break;
-		case SCALE3X:
+		case PALTV4X:
 			filter = 19;
 			break;
-		case SCALE4X:
+		case SCALE2X:
 			filter = 20;
 			break;
-		case SUPER2XSAI:
+		case SCALE3X:
 			filter = 21;
 			break;
-		case SUPEREAGLE:
+		case SCALE4X:
 			filter = 22;
 			break;
-		case TV2X:
+		case SUPER2XSAI:
 			filter = 23;
 			break;
-		case TV3X:
+		case SUPEREAGLE:
 			filter = 24;
 			break;
-		case TV4X:
+		case TV2X:
 			filter = 25;
 			break;
-		case XBRZ2X:
+		case TV3X:
 			filter = 26;
 			break;
-		case XBRZ3X:
+		case TV4X:
 			filter = 27;
 			break;
-		case XBRZ4X:
+		case XBRZ2X:
 			filter = 28;
 			break;
-		case XBRZ5X:
+		case XBRZ3X:
 			filter = 29;
 			break;
-		case XBRZ6X:
+		case XBRZ4X:
 			filter = 30;
 			break;
-		case XBRZ2XMT:
+		case XBRZ5X:
 			filter = 31;
 			break;
-		case XBRZ3XMT:
+		case XBRZ6X:
 			filter = 32;
 			break;
-		case XBRZ4XMT:
+		case XBRZ2XMT:
 			filter = 33;
 			break;
-		case XBRZ5XMT:
+		case XBRZ3XMT:
 			filter = 34;
 			break;
-		case XBRZ6XMT:
+		case XBRZ4XMT:
 			filter = 35;
+			break;
+		case XBRZ5XMT:
+			filter = 36;
+			break;
+		case XBRZ6XMT:
+			filter = 37;
 			break;
 		}
 	}
@@ -993,72 +1001,78 @@ void wdgSettingsVideo::s_sfilter(int index) {
 			filter = NTSC_CRT_LMP88959;
 			break;
 		case 13:
-			filter = PAL_CRT_LMP88959;
+			filter = NTSC_NESRGB_LMP88959;
 			break;
 		case 14:
-			filter = PALTV1X;
+			filter = PAL_CRT_LMP88959;
 			break;
 		case 15:
-			filter = PALTV2X;
+			filter = PAL_NESRGB_LMP88959;
 			break;
 		case 16:
-			filter = PALTV3X;
+			filter = PALTV1X;
 			break;
 		case 17:
-			filter = PALTV4X;
+			filter = PALTV2X;
 			break;
 		case 18:
-			filter = SCALE2X;
+			filter = PALTV3X;
 			break;
 		case 19:
-			filter = SCALE3X;
+			filter = PALTV4X;
 			break;
 		case 20:
-			filter = SCALE4X;
+			filter = SCALE2X;
 			break;
 		case 21:
-			filter = SUPER2XSAI;
+			filter = SCALE3X;
 			break;
 		case 22:
-			filter = SUPEREAGLE;
+			filter = SCALE4X;
 			break;
 		case 23:
-			filter = TV2X;
+			filter = SUPER2XSAI;
 			break;
 		case 24:
-			filter = TV3X;
+			filter = SUPEREAGLE;
 			break;
 		case 25:
-			filter = TV4X;
+			filter = TV2X;
 			break;
 		case 26:
-			filter = XBRZ2X;
+			filter = TV3X;
 			break;
 		case 27:
-			filter = XBRZ3X;
+			filter = TV4X;
 			break;
 		case 28:
-			filter = XBRZ4X;
+			filter = XBRZ2X;
 			break;
 		case 29:
-			filter = XBRZ5X;
+			filter = XBRZ3X;
 			break;
 		case 30:
-			filter = XBRZ6X;
+			filter = XBRZ4X;
 			break;
 		case 31:
-			filter = XBRZ2XMT;
+			filter = XBRZ5X;
 			break;
 		case 32:
-			filter = XBRZ3XMT;
+			filter = XBRZ6X;
 			break;
 		case 33:
-			filter = XBRZ4XMT;
+			filter = XBRZ2XMT;
 			break;
 		case 34:
-			filter = XBRZ5XMT;
+			filter = XBRZ3XMT;
 			break;
 		case 35:
+			filter = XBRZ4XMT;
+			break;
+		case 36:
+			filter = XBRZ5XMT;
+			break;
+		case 37:
 			filter = XBRZ6XMT;
 			break;
 	}

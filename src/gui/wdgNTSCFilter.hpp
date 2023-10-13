@@ -22,8 +22,10 @@
 #include <QtWidgets/QWidget>
 #include "ui_wdgNTSCFilter.h"
 #include "ui_wdgNTSCBisqwitFilter.h"
-#include "ui_wdgNTSCCRTLMP88959Filter.h"
-#include "ui_wdgPALCRTLMP88959Filter.h"
+#include "ui_wdgNTSCLMP88959Filter.h"
+#include "ui_wdgNTSCNESRGBLMP88959Filter.h"
+#include "ui_wdgPALLMP88959Filter.h"
+#include "ui_wdgPALNESRGBLMP88959Filter.h"
 
 // wdgNTSCFilter ------------------------------------------------------------------------------------------------------
 
@@ -79,14 +81,14 @@ class wdgNTSCBisqwitFilter : public QWidget, public Ui::wdgNTSCBisqwitFilter {
 		void s_reset(bool checked);
 };
 
-// wdgNTSCCRTLMP88959Filter -------------------------------------------------------------------------------------------
+// wdgNTSCLMP88959Filter -------------------------------------------------------------------------------------------
 
-class wdgNTSCCRTLMP88959Filter : public QWidget, public Ui::wdgNTSCCRTLMP88959Filter {
+class wdgNTSCLMP88959Filter : public QWidget, public Ui::wdgNTSCLMP88959Filter {
 	Q_OBJECT
 
 	public:
-		explicit wdgNTSCCRTLMP88959Filter(QWidget *parent = nullptr);
-		~wdgNTSCCRTLMP88959Filter() override;
+		explicit wdgNTSCLMP88959Filter(QWidget *parent = nullptr);
+		~wdgNTSCLMP88959Filter() override;
 
 	private:
 		void changeEvent(QEvent *event) override;
@@ -106,14 +108,41 @@ class wdgNTSCCRTLMP88959Filter : public QWidget, public Ui::wdgNTSCCRTLMP88959Fi
 		void s_reset(bool checked);
 };
 
-// wdgPALCRTLMP88959Filter --------------------------------------------------------------------------------------------
+// wdgNTSCNESRGBLMP88959Filter -------------------------------------------------------------------------------------------
 
-class wdgPALCRTLMP88959Filter : public QWidget, public Ui::wdgPALCRTLMP88959Filter {
+class wdgNTSCNESRGBLMP88959Filter : public QWidget, public Ui::wdgNTSCNESRGBLMP88959Filter {
 	Q_OBJECT
 
 	public:
-		explicit wdgPALCRTLMP88959Filter(QWidget *parent = nullptr);
-		~wdgPALCRTLMP88959Filter() override;
+		explicit wdgNTSCNESRGBLMP88959Filter(QWidget *parent = nullptr);
+		~wdgNTSCNESRGBLMP88959Filter() override;
+
+	private:
+		void changeEvent(QEvent *event) override;
+
+	public:
+		void update_widget(void);
+
+	private:
+		void ntsc_update_paramaters(void);
+		void set_sliders_spins(void);
+
+	private slots:
+		void s_slider_spin_changed(int value);
+		void s_checkbox_changed(int state);
+		void s_default_value_clicked(bool checked);
+		void s_default_value_sv_clicked(bool checked);
+		void s_reset(bool checked);
+};
+
+// wdgPALLMP88959Filter --------------------------------------------------------------------------------------------
+
+class wdgPALLMP88959Filter : public QWidget, public Ui::wdgPALLMP88959Filter {
+	Q_OBJECT
+
+	public:
+		explicit wdgPALLMP88959Filter(QWidget *parent = nullptr);
+		~wdgPALLMP88959Filter() override;
 
 	private:
 		void changeEvent(QEvent *event) override;
@@ -130,6 +159,33 @@ class wdgPALCRTLMP88959Filter : public QWidget, public Ui::wdgPALCRTLMP88959Filt
 		void s_checkbox_changed(int state);
 		void s_default_value_clicked(bool checked);
 		void s_default_value_smv_clicked(bool checked);
+		void s_reset(bool checked);
+};
+
+// wdgPALNESRGBLMP88959Filter --------------------------------------------------------------------------------------------
+
+class wdgPALNESRGBLMP88959Filter : public QWidget, public Ui::wdgPALNESRGBLMP88959Filter {
+	Q_OBJECT
+
+	public:
+		explicit wdgPALNESRGBLMP88959Filter(QWidget *parent = nullptr);
+		~wdgPALNESRGBLMP88959Filter() override;
+
+	private:
+		void changeEvent(QEvent *event) override;
+
+	public:
+		void update_widget(void);
+
+	private:
+		void pal_update_paramaters(void);
+		void set_sliders_spins(void);
+
+	private slots:
+		void s_slider_spin_changed(int value);
+		void s_checkbox_changed(int state);
+		void s_default_value_clicked(bool checked);
+		void s_default_value_sv_clicked(bool checked);
 		void s_reset(bool checked);
 };
 
