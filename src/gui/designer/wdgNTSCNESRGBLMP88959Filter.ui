@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>566</width>
-    <height>176</height>
+    <height>146</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -28,13 +28,56 @@
    </property>
    <item>
     <layout class="QGridLayout" name="gridLayout_parameters">
-     <item row="1" column="1">
-      <widget class="QSlider" name="horizontalSlider_Hue">
+     <item row="0" column="6">
+      <widget class="QSlider" name="horizontalSlider_Noise">
+       <property name="minimum">
+        <number>0</number>
+       </property>
        <property name="maximum">
         <number>255</number>
        </property>
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="4" rowspan="4">
+      <widget class="Line" name="line">
+       <property name="orientation">
+        <enum>Qt::Vertical</enum>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="5">
+      <widget class="QLabel" name="label_Black_Point">
+       <property name="text">
+        <string>Black Point</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="0">
+      <widget class="QLabel" name="label_Brightness">
+       <property name="text">
+        <string>Brightness</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="7">
+      <widget class="QSpinBox" name="spinBox_White_Point">
+       <property name="buttonSymbols">
+        <enum>QAbstractSpinBox::PlusMinus</enum>
+       </property>
+       <property name="maximum">
+        <number>255</number>
+       </property>
+       <property name="value">
+        <number>0</number>
        </property>
       </widget>
      </item>
@@ -48,8 +91,32 @@
        </property>
       </widget>
      </item>
-     <item row="1" column="8">
-      <widget class="QPushButton" name="pushButton_Black_Point">
+     <item row="0" column="7">
+      <widget class="QSpinBox" name="spinBox_Noise">
+       <property name="buttonSymbols">
+        <enum>QAbstractSpinBox::PlusMinus</enum>
+       </property>
+       <property name="maximum">
+        <number>255</number>
+       </property>
+       <property name="value">
+        <number>0</number>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="8">
+      <widget class="QPushButton" name="pushButton_Noise">
+       <property name="text">
+        <string notr="true"/>
+       </property>
+       <property name="icon">
+        <iconset resource="resources.qrc">
+         <normaloff>:/icon/icons/default.svgz</normaloff>:/icon/icons/default.svgz</iconset>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="8">
+      <widget class="QPushButton" name="pushButton_Scanline_VBlend">
        <property name="text">
         <string notr="true"/>
        </property>
@@ -72,16 +139,6 @@
        </property>
       </widget>
      </item>
-     <item row="1" column="6">
-      <widget class="QSlider" name="horizontalSlider_Black_Point">
-       <property name="maximum">
-        <number>100</number>
-       </property>
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-      </widget>
-     </item>
      <item row="2" column="2">
       <widget class="QSpinBox" name="spinBox_Saturation">
        <property name="buttonSymbols">
@@ -92,29 +149,46 @@
        </property>
       </widget>
      </item>
-     <item row="4" column="5" colspan="3">
-      <layout class="QHBoxLayout" name="horizontalLayout_SV">
-       <item>
-        <widget class="QCheckBox" name="checkBox_Scanline">
-         <property name="layoutDirection">
-          <enum>Qt::LeftToRight</enum>
-         </property>
-         <property name="text">
-          <string>Scanline</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QCheckBox" name="checkBox_Vertical_Blend">
-         <property name="layoutDirection">
-          <enum>Qt::RightToLeft</enum>
-         </property>
-         <property name="text">
-          <string>VBlend</string>
-         </property>
-        </widget>
-       </item>
-      </layout>
+     <item row="1" column="0">
+      <widget class="QLabel" name="label_Hue">
+       <property name="text">
+        <string>Hue</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="6">
+      <widget class="QSlider" name="horizontalSlider_White_Point">
+       <property name="maximum">
+        <number>255</number>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="0">
+      <widget class="QLabel" name="label_Contrast">
+       <property name="text">
+        <string>Contrast</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="8">
+      <widget class="QPushButton" name="pushButton_Black_Point">
+       <property name="text">
+        <string notr="true"/>
+       </property>
+       <property name="icon">
+        <iconset resource="resources.qrc">
+         <normaloff>:/icon/icons/default.svgz</normaloff>:/icon/icons/default.svgz</iconset>
+       </property>
+      </widget>
      </item>
      <item row="1" column="2">
       <widget class="QSpinBox" name="spinBox_Hue">
@@ -126,14 +200,34 @@
        </property>
       </widget>
      </item>
-     <item row="2" column="3">
-      <widget class="QPushButton" name="pushButton_Saturation">
+     <item row="3" column="2">
+      <widget class="QSpinBox" name="spinBox_Contrast">
+       <property name="buttonSymbols">
+        <enum>QAbstractSpinBox::PlusMinus</enum>
+       </property>
+       <property name="maximum">
+        <number>255</number>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="3">
+      <widget class="QPushButton" name="pushButton_Brightness">
        <property name="text">
         <string notr="true"/>
        </property>
        <property name="icon">
         <iconset resource="resources.qrc">
          <normaloff>:/icon/icons/default.svgz</normaloff>:/icon/icons/default.svgz</iconset>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="1">
+      <widget class="QSlider" name="horizontalSlider_Contrast">
+       <property name="maximum">
+        <number>255</number>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
        </property>
       </widget>
      </item>
@@ -147,8 +241,18 @@
        </property>
       </widget>
      </item>
-     <item row="4" column="8">
-      <widget class="QPushButton" name="pushButton_Scanline_VBlend">
+     <item row="1" column="1">
+      <widget class="QSlider" name="horizontalSlider_Hue">
+       <property name="maximum">
+        <number>255</number>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="3">
+      <widget class="QPushButton" name="pushButton_Contrast">
        <property name="text">
         <string notr="true"/>
        </property>
@@ -158,23 +262,14 @@
        </property>
       </widget>
      </item>
-     <item row="2" column="0">
-      <widget class="QLabel" name="label_Saturation">
+     <item row="2" column="8">
+      <widget class="QPushButton" name="pushButton_White_Point">
        <property name="text">
-        <string>Saturation</string>
+        <string notr="true"/>
        </property>
-       <property name="alignment">
-        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="0">
-      <widget class="QLabel" name="label_Brightness">
-       <property name="text">
-        <string>Brightness</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+       <property name="icon">
+        <iconset resource="resources.qrc">
+         <normaloff>:/icon/icons/default.svgz</normaloff>:/icon/icons/default.svgz</iconset>
        </property>
       </widget>
      </item>
@@ -198,69 +293,58 @@
        </property>
       </widget>
      </item>
-     <item row="1" column="5">
-      <widget class="QLabel" name="label_Black_Point">
+     <item row="2" column="5">
+      <widget class="QLabel" name="label_White_Point">
        <property name="text">
-        <string>Black Point</string>
+        <string>White Point</string>
        </property>
        <property name="alignment">
         <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
        </property>
       </widget>
      </item>
-     <item row="0" column="7">
-      <widget class="QSpinBox" name="spinBox_Noise">
-       <property name="buttonSymbols">
-        <enum>QAbstractSpinBox::PlusMinus</enum>
-       </property>
-       <property name="maximum">
-        <number>255</number>
-       </property>
-       <property name="value">
-        <number>0</number>
-       </property>
-      </widget>
+     <item row="3" column="5" colspan="3">
+      <layout class="QHBoxLayout" name="horizontalLayout_SV">
+       <item>
+        <widget class="QCheckBox" name="checkBox_Scanline">
+         <property name="layoutDirection">
+          <enum>Qt::LeftToRight</enum>
+         </property>
+         <property name="text">
+          <string>Scanline</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QCheckBox" name="checkBox_Vertical_Blend">
+         <property name="layoutDirection">
+          <enum>Qt::RightToLeft</enum>
+         </property>
+         <property name="text">
+          <string>VBlend</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
      </item>
-     <item row="2" column="7">
-      <widget class="QSpinBox" name="spinBox_White_Point">
-       <property name="buttonSymbols">
-        <enum>QAbstractSpinBox::PlusMinus</enum>
-       </property>
-       <property name="maximum">
-        <number>255</number>
-       </property>
-       <property name="value">
-        <number>0</number>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="0">
-      <widget class="QLabel" name="label_Hue">
+     <item row="2" column="3">
+      <widget class="QPushButton" name="pushButton_Saturation">
        <property name="text">
-        <string>Hue</string>
+        <string notr="true"/>
+       </property>
+       <property name="icon">
+        <iconset resource="resources.qrc">
+         <normaloff>:/icon/icons/default.svgz</normaloff>:/icon/icons/default.svgz</iconset>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="0">
+      <widget class="QLabel" name="label_Saturation">
+       <property name="text">
+        <string>Saturation</string>
        </property>
        <property name="alignment">
         <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="4" rowspan="5">
-      <widget class="Line" name="line">
-       <property name="orientation">
-        <enum>Qt::Vertical</enum>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="6">
-      <widget class="QSlider" name="horizontalSlider_Noise">
-       <property name="minimum">
-        <number>0</number>
-       </property>
-       <property name="maximum">
-        <number>255</number>
-       </property>
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
        </property>
       </widget>
      </item>
@@ -275,141 +359,13 @@
        </property>
       </widget>
      </item>
-     <item row="2" column="5">
-      <widget class="QLabel" name="label_White_Point">
-       <property name="text">
-        <string>White Point</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="8">
-      <widget class="QPushButton" name="pushButton_White_Point">
-       <property name="text">
-        <string notr="true"/>
-       </property>
-       <property name="icon">
-        <iconset resource="resources.qrc">
-         <normaloff>:/icon/icons/default.svgz</normaloff>:/icon/icons/default.svgz</iconset>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="3">
-      <widget class="QPushButton" name="pushButton_Brightness">
-       <property name="text">
-        <string notr="true"/>
-       </property>
-       <property name="icon">
-        <iconset resource="resources.qrc">
-         <normaloff>:/icon/icons/default.svgz</normaloff>:/icon/icons/default.svgz</iconset>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="8">
-      <widget class="QPushButton" name="pushButton_Noise">
-       <property name="text">
-        <string notr="true"/>
-       </property>
-       <property name="icon">
-        <iconset resource="resources.qrc">
-         <normaloff>:/icon/icons/default.svgz</normaloff>:/icon/icons/default.svgz</iconset>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="6">
-      <widget class="QSlider" name="horizontalSlider_White_Point">
+     <item row="1" column="6">
+      <widget class="QSlider" name="horizontalSlider_Black_Point">
        <property name="maximum">
-        <number>255</number>
+        <number>100</number>
        </property>
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="5">
-      <widget class="QLabel" name="label_Dot_Crawl">
-       <property name="text">
-        <string>Dot Crawl</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="0">
-      <widget class="QLabel" name="label_Contrast">
-       <property name="text">
-        <string>Contrast</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="1">
-      <widget class="QSlider" name="horizontalSlider_Contrast">
-       <property name="maximum">
-        <number>255</number>
-       </property>
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="2">
-      <widget class="QSpinBox" name="spinBox_Contrast">
-       <property name="buttonSymbols">
-        <enum>QAbstractSpinBox::PlusMinus</enum>
-       </property>
-       <property name="maximum">
-        <number>255</number>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="3">
-      <widget class="QPushButton" name="pushButton_Contrast">
-       <property name="text">
-        <string notr="true"/>
-       </property>
-       <property name="icon">
-        <iconset resource="resources.qrc">
-         <normaloff>:/icon/icons/default.svgz</normaloff>:/icon/icons/default.svgz</iconset>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="6">
-      <widget class="QSlider" name="horizontalSlider_Dot_Crawl">
-       <property name="maximum">
-        <number>2</number>
-       </property>
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="7">
-      <widget class="QSpinBox" name="spinBox_Dot_Crawl">
-       <property name="buttonSymbols">
-        <enum>QAbstractSpinBox::PlusMinus</enum>
-       </property>
-       <property name="maximum">
-        <number>2</number>
-       </property>
-       <property name="value">
-        <number>0</number>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="8">
-      <widget class="QPushButton" name="pushButton_Dot_Crawl">
-       <property name="text">
-        <string notr="true"/>
-       </property>
-       <property name="icon">
-        <iconset resource="resources.qrc">
-         <normaloff>:/icon/icons/default.svgz</normaloff>:/icon/icons/default.svgz</iconset>
        </property>
       </widget>
      </item>
@@ -450,12 +406,8 @@
   <tabstop>horizontalSlider_White_Point</tabstop>
   <tabstop>spinBox_White_Point</tabstop>
   <tabstop>pushButton_White_Point</tabstop>
-  <tabstop>horizontalSlider_Dot_Crawl</tabstop>
-  <tabstop>spinBox_Dot_Crawl</tabstop>
-  <tabstop>pushButton_Dot_Crawl</tabstop>
   <tabstop>checkBox_Scanline</tabstop>
   <tabstop>checkBox_Vertical_Blend</tabstop>
-  <tabstop>pushButton_Scanline_VBlend</tabstop>
   <tabstop>pushButton_NTSC_Parameters_reset</tabstop>
  </tabstops>
  <resources>

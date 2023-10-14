@@ -32,7 +32,6 @@ typedef struct _ntsc_lmp88959_setup_t {
 	int merge_fields;
 	int vertical_blend;
 	int scanline;
-	int dot_crowl;
 } _ntsc_lmp88959_setup_t;
 typedef struct _lmp88959_thread_phospohor {
 	uint32_t *pix;

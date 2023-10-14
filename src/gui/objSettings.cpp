@@ -1362,7 +1362,7 @@ void objSet::ntsc_nesrgb_lmp88959_val_to_int(void *ntsc_frmt, const uTCHAR *buff
 	QStringList splitted = uQString(buffer).toLower().split(",");
 	_ntsc_lmp88959_setup_t *format = (_ntsc_lmp88959_setup_t *)ntsc_frmt;
 
-	if (splitted.count() == 10) {
+	if (splitted.count() == 9) {
 		format->hue = splitted.at(0).toInt();
 		if ((format->hue < 0) || (format->hue > 255)) {
 			format->hue = 0;
@@ -1391,18 +1391,14 @@ void objSet::ntsc_nesrgb_lmp88959_val_to_int(void *ntsc_frmt, const uTCHAR *buff
 		if ((format->noise < 0) || (format->noise > 255)) {
 			format->noise = 12;
 		}
-		format->dot_crowl = splitted.at(7).toInt();
-		if ((format->dot_crowl < 0) || (format->dot_crowl > 2)) {
-			format->dot_crowl = 0;
-		}
-		format->vertical_blend = splitted.at(8).toInt() & 0x01;
-		format->scanline = splitted.at(9).toInt() & 0x01;
+		format->vertical_blend = splitted.at(7).toInt() & 0x01;
+		format->scanline = splitted.at(8).toInt() & 0x01;
 	}
 }
 QString objSet::ntsc_nesrgb_lmp88959_val(void *ntsc_frmt) {
 	_ntsc_lmp88959_setup_t *format = (_ntsc_lmp88959_setup_t *)ntsc_frmt;
 
-	return (QString("%0,%1,%2,%3,%4,%5,%6,%7,%8,%9").
+	return (QString("%0,%1,%2,%3,%4,%5,%6,%7,%8").
 			arg(round(format->hue)).
 			arg(round(format->saturation)).
 			arg(round(format->contrast)).
@@ -1410,7 +1406,6 @@ QString objSet::ntsc_nesrgb_lmp88959_val(void *ntsc_frmt) {
 			arg(round(format->black_point)).
 			arg(round(format->white_point)).
 			arg(round(format->noise)).
-			arg(round(format->dot_crowl)).
 			arg(round(format->vertical_blend & 0x01)).
 			arg(round(format->scanline & 0x01)));
 }

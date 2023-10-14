@@ -23,8 +23,8 @@
 #define CRT_SYSTEM CRT_SYSTEM_NTSC
 #include "extra/NTSC-CRT/crt_core.h"
 
-const _ntsc_lmp88959_setup_t ntsc_lmp88959_default = { 0, 16, 165, 0, 2, 85, 12, 1, 0, 1, 0 };
-_ntsc_lmp88959_setup_t ntsc_lmp88959 = { 0, 16, 165, 0, 2, 85, 12, 1, 0, 1, 0 };
+const _ntsc_lmp88959_setup_t ntsc_lmp88959_default = { 0, 16, 165, 0, 2, 85, 12, 1, 0, 1 };
+_ntsc_lmp88959_setup_t ntsc_lmp88959 = { 0, 16, 165, 0, 2, 85, 12, 1, 0, 1 };
 static struct CRT crt = { 0 };
 static struct NTSC_SETTINGS ntsc = { 0 };
 static int field = 0;

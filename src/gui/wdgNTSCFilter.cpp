@@ -539,7 +539,7 @@ void wdgNTSCLMP88959Filter::s_reset(UNUSED(bool checked)) {
 // wdgNTSCNESRGBLMP88959Filter ----------------------------------------------------------------------------------------
 
 static const char ntsc_nesrgb_lmp88959_parameters_desc[][15] = {
-	"Brightness", "Hue", "Saturation", "Contrast", "Black_Point", "White_Point", "Noise", "Dot_Crawl"
+	"Brightness", "Hue", "Saturation", "Contrast", "Black_Point", "White_Point", "Noise"
 };
 
 wdgNTSCNESRGBLMP88959Filter::wdgNTSCNESRGBLMP88959Filter(QWidget *parent) : QWidget(parent) {
@@ -607,7 +607,6 @@ void wdgNTSCNESRGBLMP88959Filter::set_sliders_spins(void) {
 	qtHelper::slider_set_value(horizontalSlider_Black_Point, format->black_point);
 	qtHelper::slider_set_value(horizontalSlider_White_Point, format->white_point);
 	qtHelper::slider_set_value(horizontalSlider_Noise, format->noise);
-	qtHelper::slider_set_value(horizontalSlider_Dot_Crawl, format->dot_crowl);
 
 	qtHelper::spinbox_set_value(spinBox_Brightness, format->brightness);
 	qtHelper::spinbox_set_value(spinBox_Hue, format->hue);
@@ -616,7 +615,6 @@ void wdgNTSCNESRGBLMP88959Filter::set_sliders_spins(void) {
 	qtHelper::spinbox_set_value(spinBox_Black_Point, format->black_point);
 	qtHelper::spinbox_set_value(spinBox_White_Point, format->white_point);
 	qtHelper::spinbox_set_value(spinBox_Noise, format->noise);
-	qtHelper::spinbox_set_value(spinBox_Dot_Crawl, format->dot_crowl);
 
 	qtHelper::checkbox_set_checked(checkBox_Scanline, format->scanline);
 	qtHelper::checkbox_set_checked(checkBox_Vertical_Blend, format->vertical_blend);
@@ -649,9 +647,6 @@ void wdgNTSCNESRGBLMP88959Filter::s_slider_spin_changed(int value) {
 			break;
 		case 6:
 			format->noise = value;
-			break;
-		case 7:
-			format->dot_crowl = value;
 			break;
 	}
 	if (((QObject *)sender())->objectName().contains("horizontalSlider_", Qt::CaseSensitive)) {

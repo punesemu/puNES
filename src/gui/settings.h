@@ -992,11 +992,10 @@ static const _settings main_cfg[] = {
 		{0, NULL}
 	},
 	{
-		uL("video"), uL("ntsc nesrgb lmp88959 filter parameters"), uL("0,16,165,0,2,85,12,0,0,1"),
-		uL("# possible values: [hue       : 0/255],[saturation :  0/50],[contrast      : 0/255]," NEWLINE)
-		uL("#                  [brightness: 0/255],[black point: 0/100],[white point   : 0/255]," NEWLINE)
-		uL("#                  [noise     : 0/100],[dot crowl  :   0/2],[vertical blend:   0/1]," NEWLINE)
-		uL("#                  [scanline  :   0/1]"),
+		uL("video"), uL("ntsc nesrgb lmp88959 filter parameters"), uL("0,16,165,0,2,85,12,0,1"),
+		uL("# possible values: [hue       : 0/255],[saturation    :  0/50],[contrast   : 0/255]," NEWLINE)
+		uL("#                  [brightness: 0/255],[black point   : 0/100],[white point: 0/255]," NEWLINE)
+		uL("#                  [noise     : 0/100],[vertical blend:   0/1],[scanline   :   0/1]"),
 		NULL,
 		{0, NULL}
 	},
