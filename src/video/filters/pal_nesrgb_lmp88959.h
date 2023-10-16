@@ -37,7 +37,8 @@ EXTERNC void pal_nesrgb_lmp88959_filter_parameters_changed(void);
 EXTERNC void pal_nesrgb_lmp88959_filter_parameters_default(void);
 
 EXTERNC void pal_nesrgb_lmp88959_filter_parameter_default(int index);
-EXTERNC void pal_nesrgb_lmp88959_filter_parameter_smv_default(void);
+EXTERNC void pal_nesrgb_lmp88959_filter_parameter_c_default(void);
+EXTERNC void pal_nesrgb_lmp88959_filter_parameter_sv_default(void);
 
 #undef EXTERNC
 

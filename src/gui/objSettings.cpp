@@ -1307,11 +1307,11 @@ void objSet::ntsc_lmp88959_val_to_int(void *ntsc_frmt, const uTCHAR *buffer) {
 	if (splitted.count() == 10) {
 		format->hue = splitted.at(0).toInt();
 		if ((format->hue < 0) || (format->hue > 255)) {
-			format->hue = 0;
+			format->hue = 8;
 		}
 		format->saturation = splitted.at(1).toInt();
 		if ((format->saturation < 0) || (format->saturation > 50)) {
-			format->saturation = 16;
+			format->saturation = 10;
 		}
 		format->contrast = splitted.at(2).toInt();
 		if ((format->contrast < 0) || (format->contrast > 255)) {
@@ -1327,7 +1327,7 @@ void objSet::ntsc_lmp88959_val_to_int(void *ntsc_frmt, const uTCHAR *buffer) {
 		}
 		format->white_point = splitted.at(5).toInt();
 		if ((format->white_point < 0) || (format->white_point > 255)) {
-			format->white_point = 85;
+			format->white_point = 110;
 		}
 		format->noise = splitted.at(6).toInt();
 		if ((format->noise < 0) || (format->noise > 255)) {
@@ -1365,11 +1365,11 @@ void objSet::ntsc_nesrgb_lmp88959_val_to_int(void *ntsc_frmt, const uTCHAR *buff
 	if (splitted.count() == 9) {
 		format->hue = splitted.at(0).toInt();
 		if ((format->hue < 0) || (format->hue > 255)) {
-			format->hue = 0;
+			format->hue = 8;
 		}
 		format->saturation = splitted.at(1).toInt();
 		if ((format->saturation < 0) || (format->saturation > 50)) {
-			format->saturation = 16;
+			format->saturation = 10;
 		}
 		format->contrast = splitted.at(2).toInt();
 		if ((format->contrast < 0) || (format->contrast > 255)) {
@@ -1385,7 +1385,7 @@ void objSet::ntsc_nesrgb_lmp88959_val_to_int(void *ntsc_frmt, const uTCHAR *buff
 		}
 		format->white_point = splitted.at(5).toInt();
 		if ((format->white_point < 0) || (format->white_point > 255)) {
-			format->white_point = 85;
+			format->white_point = 110;
 		}
 		format->noise = splitted.at(6).toInt();
 		if ((format->noise < 0) || (format->noise > 255)) {
@@ -1422,7 +1422,7 @@ void objSet::pal_lmp88959_val_to_int(void *ntsc_frmt, const uTCHAR *buffer) {
 	if (splitted.count() == 12) {
 		format->saturation = splitted.at(0).toInt();
 		if ((format->saturation < 0) || (format->saturation > 50)) {
-			format->saturation = 16;
+			format->saturation = 10;
 		}
 		format->contrast = splitted.at(1).toInt();
 		if ((format->contrast < 0) || (format->contrast > 255)) {
@@ -1438,7 +1438,7 @@ void objSet::pal_lmp88959_val_to_int(void *ntsc_frmt, const uTCHAR *buffer) {
 		}
 		format->white_point = splitted.at(4).toInt();
 		if ((format->white_point < 0) || (format->white_point > 255)) {
-			format->white_point = 85;
+			format->white_point = 110;
 		}
 		format->noise = splitted.at(5).toInt();
 		if ((format->noise < 0) || (format->noise > 255)) {
@@ -1487,7 +1487,7 @@ void objSet::pal_nesrgb_lmp88959_val_to_int(void *ntsc_frmt, const uTCHAR *buffe
 	if (splitted.count() == 10) {
 		format->saturation = splitted.at(0).toInt();
 		if ((format->saturation < 0) || (format->saturation > 50)) {
-			format->saturation = 16;
+			format->saturation = 10;
 		}
 		format->contrast = splitted.at(1).toInt();
 		if ((format->contrast < 0) || (format->contrast > 255)) {
@@ -1503,7 +1503,7 @@ void objSet::pal_nesrgb_lmp88959_val_to_int(void *ntsc_frmt, const uTCHAR *buffe
 		}
 		format->white_point = splitted.at(4).toInt();
 		if ((format->white_point < 0) || (format->white_point > 255)) {
-			format->white_point = 85;
+			format->white_point = 110;
 		}
 		format->noise = splitted.at(5).toInt();
 		if ((format->noise < 0) || (format->noise > 255)) {
@@ -1533,7 +1533,6 @@ QString objSet::pal_nesrgb_lmp88959_val(void *ntsc_frmt) {
 			arg(round(format->scanline & 0x01)).
 			arg(round(format->chroma_correction & 0x01)));
 }
-
 
 int objSet::channel_convert_index(int index) {
 	switch (index) {

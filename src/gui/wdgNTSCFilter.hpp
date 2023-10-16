@@ -158,7 +158,8 @@ class wdgPALLMP88959Filter : public QWidget, public Ui::wdgPALLMP88959Filter {
 		void s_slider_spin_changed(int value);
 		void s_checkbox_changed(int state);
 		void s_default_value_clicked(bool checked);
-		void s_default_value_smv_clicked(bool checked);
+		void s_default_value_cm_clicked(bool checked);
+		void s_default_value_sv_clicked(bool checked);
 		void s_reset(bool checked);
 };
 
@@ -185,6 +186,7 @@ class wdgPALNESRGBLMP88959Filter : public QWidget, public Ui::wdgPALNESRGBLMP889
 		void s_slider_spin_changed(int value);
 		void s_checkbox_changed(int state);
 		void s_default_value_clicked(bool checked);
+		void s_default_value_c_clicked(bool checked);
 		void s_default_value_sv_clicked(bool checked);
 		void s_reset(bool checked);
 };

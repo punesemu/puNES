@@ -23,8 +23,8 @@
 #define CRT_SYSTEM CRT_SYSTEM_NESRGB
 #include "extra/NTSC-CRT/crt_core_nesrgb.h"
 
-const _ntsc_lmp88959_setup_t ntsc_nesrgb_lmp88959_default = { 0, 16, 165, 0, 2, 85, 12, 0, 0, 1 };
-_ntsc_lmp88959_setup_t ntsc_nesrgb_lmp88959 = { 0, 16, 165, 0, 2, 85, 12, 0, 0, 1 };
+const _ntsc_lmp88959_setup_t ntsc_nesrgb_lmp88959_default = { 8, 10, 165, 0, 2, 110, 12, 0, 1, 0 };
+_ntsc_lmp88959_setup_t ntsc_nesrgb_lmp88959 = { 8, 10, 165, 0, 2, 110, 12, 0, 1, 0 };
 static struct CRT_NESRGB crt_nesrgb = { 0 };
 static struct NTSC_SETTINGS ntsc_nesrgb = { 0 };
 
@@ -52,7 +52,7 @@ void ntsc_nesrgb_lmp88959_surface(BYTE nidx) {
 	ntsc_nesrgb.palette = (uint32_t *)gfx.filter.data.palette;
 	ntsc_nesrgb.w = SCR_COLUMNS;
 	ntsc_nesrgb.h = SCR_ROWS;
-	ntsc_nesrgb.dot_crawl_offset = (ntsc_nesrgb.dot_crawl_offset + 1) % 2;
+	ntsc_nesrgb.dot_crawl_offset = (ntsc_nesrgb.dot_crawl_offset + 1) % 3;
 //	ntsc_nesrgb.hue = ntsc_nesrgb_lmp88959.hue;
 	crt_nesrgb_modulate(&crt_nesrgb, &ntsc_nesrgb);
 	crt_nesrgb_demodulate(&crt_nesrgb, ntsc_nesrgb_lmp88959.noise);

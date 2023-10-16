@@ -70,6 +70,6 @@
 "void main()\n"
 "{\n"
 "    FragColor = vec4(COMPAT_TEXTURE(Texture, TEX0.xy).rgb, 1.0);\n"
-"} \n"
+"}\n"
 "#endif\n"
 },

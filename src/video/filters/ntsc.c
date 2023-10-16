@@ -34,7 +34,8 @@ BYTE ntsc_init(void) {
 	// quello per la paletta
 	palette = nes_ntsc_composite;
 
-	if (!(ntsc_filter.ntsc = (nes_ntsc_t *)malloc(sizeof(nes_ntsc_t)))) {
+	ntsc_filter.ntsc = (nes_ntsc_t *)malloc(sizeof(nes_ntsc_t));
+	if (!ntsc_filter.ntsc) {
 		log_error(uL("ntsc;out of memory"));
 		return (EXIT_ERROR);
 	}
@@ -98,7 +99,7 @@ void ntsc_set(nes_ntsc_t *ntsc, BYTE create_palette, BYTE color, const BYTE *pal
 }
 void ntsc_rgb_modifier(nes_ntsc_t *ntsc, BYTE *palette_out, SWORD min, SWORD red, SWORD green, SWORD blue) {
 	_color_RGB *pRGB = (_color_RGB *)palette_out;
-	WORD i;
+	WORD i = 0;
 
 	// prima ottengo la paletta monocromatica
 	ntsc_set(ntsc, TRUE, PALETTE_MONO, 0, 0, palette_out);
@@ -130,7 +131,7 @@ void ntsc_filter_parameters_default(void) {
 	}
 }
 void ntsc_filter_parameter_default(int index) {
-	nes_ntsc_setup_t *format;
+	nes_ntsc_setup_t *format = NULL;
 
 	switch (cfg->ntsc_format) {
 		default:
@@ -182,7 +183,7 @@ void ntsc_filter_parameter_default(int index) {
 	}
 }
 void ntsc_filter_parameter_mv_default(void) {
-	nes_ntsc_setup_t *format;
+	nes_ntsc_setup_t *format = NULL;
 
 	switch (cfg->ntsc_format) {
 		default:
@@ -201,7 +202,7 @@ void ntsc_filter_parameter_mv_default(void) {
 }
 void ntsc_surface(BYTE nidx) {
 	static int burst_count = 0, burst_phase = 0;
-	int y;
+	int y = 0;
 
 	if (gfx.filter.data.palette == NULL) {
 		gfx.filter.data.palette = (void *)ntsc_filter.ntsc;
@@ -228,12 +229,12 @@ void ntsc_surface(BYTE nidx) {
 	for (y = ((gfx.filter.data.height / gfx.filter.factor) - 1); --y >= 0;) {
 		unsigned char const *in = ((const unsigned char *)gfx.filter.data.pix) + (y * gfx.filter.data.pitch);
 		unsigned char *out = ((unsigned char *)gfx.filter.data.pix) + ((y * gfx.filter.factor) * gfx.filter.data.pitch);
-		int n;
+		int n = 0;
 
 		for (n = gfx.filter.data.width; n; --n) {
 			unsigned prev = *(uint32_t *)in;
 			unsigned next = *(uint32_t *)(in + gfx.filter.data.pitch);
-			unsigned mixed;
+			unsigned mixed = 0;
 
 			// mix rgb without losing low bits
 			mixed = ntsc_filter.format[cfg->ntsc_format].vertical_blend ? (prev + next + ((prev ^ next) & 0x030303)) >> 1 : prev;

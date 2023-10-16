@@ -24,8 +24,8 @@
 #define PAL_SYSTEM PAL_SYSTEM_PAL
 #include "extra/PAL-CRT/pal_core.h"
 
-const _pal_lmp88959_setup_t pal_lmp88959_default = { 16, 165, 0, 2, 85, 12, 0, 0, 1, 0, 1, 1 };
-_pal_lmp88959_setup_t pal_lmp88959 = { 16, 165, 0, 2, 85, 12, 0, 0, 1, 0, 1, 1 };
+const _pal_lmp88959_setup_t pal_lmp88959_default = { 10, 165, 0, 2, 110, 12, 0, 0, 0, 1, 0, 1 };
+_pal_lmp88959_setup_t pal_lmp88959 = { 10, 165, 0, 2, 110, 12, 0, 0, 0, 1, 0, 1 };
 static struct PAL_CRT crt = { 0 };
 static struct PAL_SETTINGS pal = { 0 };
 static int field = 0;
@@ -105,11 +105,16 @@ void pal_lmp88959_filter_parameter_default(int index) {
 			break;
 	}
 }
-void pal_lmp88959_filter_parameter_smv_default(void) {
+void pal_lmp88959_filter_parameter_cm_default(void) {
+	const _pal_lmp88959_setup_t *format = &pal_lmp88959_default;
+
+	pal_lmp88959.chroma_correction = format->chroma_correction;
+	pal_lmp88959.merge_fields = format->merge_fields;
+}
+void pal_lmp88959_filter_parameter_sv_default(void) {
 	const _pal_lmp88959_setup_t *format = &pal_lmp88959_default;
 
 	pal_lmp88959.scanline = format->scanline;
-	pal_lmp88959.merge_fields = format->merge_fields;
 	pal_lmp88959.vertical_blend = format->vertical_blend;
 }
 

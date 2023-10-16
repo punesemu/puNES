@@ -33,7 +33,7 @@ static const char parameters_desc[][15] = {
 };
 
 wdgNTSCFilter::wdgNTSCFilter(QWidget *parent) : QWidget(parent) {
-	unsigned int i;
+	unsigned int i = 0;
 
 	setupUi(this);
 
@@ -209,7 +209,7 @@ static const char bisqwit_parameters_desc[][15] = {
 };
 
 wdgNTSCBisqwitFilter::wdgNTSCBisqwitFilter(QWidget *parent) : QWidget(parent) {
-	unsigned int i;
+	unsigned int i = 0;
 
 	setupUi(this);
 
@@ -370,7 +370,7 @@ static const char ntsc_lmp88959_parameters_desc[][15] = {
 };
 
 wdgNTSCLMP88959Filter::wdgNTSCLMP88959Filter(QWidget *parent) : QWidget(parent) {
-	unsigned int i;
+	unsigned int i = 0;
 
 	setupUi(this);
 
@@ -543,7 +543,7 @@ static const char ntsc_nesrgb_lmp88959_parameters_desc[][15] = {
 };
 
 wdgNTSCNESRGBLMP88959Filter::wdgNTSCNESRGBLMP88959Filter(QWidget *parent) : QWidget(parent) {
-	unsigned int i;
+	unsigned int i = 0;
 
 	setupUi(this);
 
@@ -709,7 +709,7 @@ static const char pal_lmp88959_parameters_desc[][15] = {
 };
 
 wdgPALLMP88959Filter::wdgPALLMP88959Filter(QWidget *parent) : QWidget(parent) {
-	unsigned int i;
+	unsigned int i = 0;
 
 	setupUi(this);
 
@@ -739,7 +739,11 @@ wdgPALLMP88959Filter::wdgPALLMP88959Filter(QWidget *parent) : QWidget(parent) {
 	checkBox_Vertical_Blend->setProperty("myIndex", QVariant(2));
 	connect(checkBox_Vertical_Blend, SIGNAL(stateChanged(int)), this, SLOT(s_checkbox_changed(int)));
 
-	connect(pushButton_Scanline_MFields_VBlend, SIGNAL(clicked(bool)), this, SLOT(s_default_value_smv_clicked(bool)));
+	checkBox_Chroma_Correction->setProperty("myIndex", QVariant(3));
+	connect(checkBox_Chroma_Correction, SIGNAL(stateChanged(int)), this, SLOT(s_checkbox_changed(int)));
+
+	connect(pushButton_Chroma_Correction_MFields, SIGNAL(clicked(bool)), this, SLOT(s_default_value_cm_clicked(bool)));
+	connect(pushButton_Scanline_VBlend, SIGNAL(clicked(bool)), this, SLOT(s_default_value_sv_clicked(bool)));
 	connect(pushButton_PAL_Parameters_reset, SIGNAL(clicked(bool)), this, SLOT(s_reset(bool)));
 }
 wdgPALLMP88959Filter::~wdgPALLMP88959Filter() = default;
@@ -787,8 +791,9 @@ void wdgPALLMP88959Filter::set_sliders_spins(void) {
 	qtHelper::spinbox_set_value(spinBox_Color_Phase, format->color_phase);
 	qtHelper::spinbox_set_value(spinBox_Chroma_Lag, format->chroma_lag);
 
-	qtHelper::checkbox_set_checked(checkBox_Scanline, format->scanline);
+	qtHelper::checkbox_set_checked(checkBox_Chroma_Correction, format->chroma_correction);
 	qtHelper::checkbox_set_checked(checkBox_Merge_Fields, format->merge_fields);
+	qtHelper::checkbox_set_checked(checkBox_Scanline, format->scanline);
 	qtHelper::checkbox_set_checked(checkBox_Vertical_Blend, format->vertical_blend);
 }
 
@@ -852,9 +857,9 @@ void wdgPALLMP88959Filter::s_checkbox_changed(int state) {
 		case 2:
 			format->vertical_blend = state > 0;
 			break;
-//		case 3:
-//			format->chroma_correction = state > 0;
-//			break;
+		case 3:
+			format->chroma_correction = state > 0;
+			break;
 	}
 	pal_lmp88959_filter_parameters_changed();
 	gfx_thread_continue();
@@ -868,9 +873,16 @@ void wdgPALLMP88959Filter::s_default_value_clicked(UNUSED(bool checked)) {
 	pal_lmp88959_filter_parameters_changed();
 	gfx_thread_continue();
 }
-void wdgPALLMP88959Filter::s_default_value_smv_clicked(UNUSED(bool checked)) {
+void wdgPALLMP88959Filter::s_default_value_cm_clicked(UNUSED(bool checked)) {
 	gfx_thread_pause();
-	pal_lmp88959_filter_parameter_smv_default();
+	pal_lmp88959_filter_parameter_cm_default();
+	gui_update_ntsc_widgets();
+	pal_lmp88959_filter_parameters_changed();
+	gfx_thread_continue();
+}
+void wdgPALLMP88959Filter::s_default_value_sv_clicked(UNUSED(bool checked)) {
+	gfx_thread_pause();
+	pal_lmp88959_filter_parameter_sv_default();
 	gui_update_ntsc_widgets();
 	pal_lmp88959_filter_parameters_changed();
 	gfx_thread_continue();
@@ -890,7 +902,7 @@ static const char pal_nesrgb_lmp88959_parameters_desc[][15] = {
 };
 
 wdgPALNESRGBLMP88959Filter::wdgPALNESRGBLMP88959Filter(QWidget *parent) : QWidget(parent) {
-	unsigned int i;
+	unsigned int i = 0;
 
 	setupUi(this);
 
@@ -917,6 +929,10 @@ wdgPALNESRGBLMP88959Filter::wdgPALNESRGBLMP88959Filter(QWidget *parent) : QWidge
 	checkBox_Vertical_Blend->setProperty("myIndex", QVariant(1));
 	connect(checkBox_Vertical_Blend, SIGNAL(stateChanged(int)), this, SLOT(s_checkbox_changed(int)));
 
+	checkBox_Chroma_Correction->setProperty("myIndex", QVariant(2));
+	connect(checkBox_Chroma_Correction, SIGNAL(stateChanged(int)), this, SLOT(s_checkbox_changed(int)));
+
+	connect(pushButton_Chroma_Correction, SIGNAL(clicked(bool)), this, SLOT(s_default_value_c_clicked(bool)));
 	connect(pushButton_Scanline_VBlend, SIGNAL(clicked(bool)), this, SLOT(s_default_value_sv_clicked(bool)));
 	connect(pushButton_PAL_Parameters_reset, SIGNAL(clicked(bool)), this, SLOT(s_reset(bool)));
 }
@@ -963,6 +979,7 @@ void wdgPALNESRGBLMP88959Filter::set_sliders_spins(void) {
 	qtHelper::spinbox_set_value(spinBox_Noise, format->noise);
 	qtHelper::spinbox_set_value(spinBox_Chroma_Lag, format->chroma_lag);
 
+	qtHelper::checkbox_set_checked(checkBox_Chroma_Correction, format->chroma_correction);
 	qtHelper::checkbox_set_checked(checkBox_Scanline, format->scanline);
 	qtHelper::checkbox_set_checked(checkBox_Vertical_Blend, format->vertical_blend);
 }
@@ -1021,9 +1038,9 @@ void wdgPALNESRGBLMP88959Filter::s_checkbox_changed(int state) {
 		case 1:
 			format->vertical_blend = state > 0;
 			break;
-//		case 2:
-//			format->chroma_correction = state > 0;
-//			break;
+		case 2:
+			format->chroma_correction = state > 0;
+			break;
 	}
 	pal_nesrgb_lmp88959_filter_parameters_changed();
 	gfx_thread_continue();
@@ -1037,9 +1054,16 @@ void wdgPALNESRGBLMP88959Filter::s_default_value_clicked(UNUSED(bool checked)) {
 	pal_nesrgb_lmp88959_filter_parameters_changed();
 	gfx_thread_continue();
 }
+void wdgPALNESRGBLMP88959Filter::s_default_value_c_clicked(UNUSED(bool checked)) {
+	gfx_thread_pause();
+	pal_nesrgb_lmp88959_filter_parameter_c_default();
+	gui_update_ntsc_widgets();
+	pal_nesrgb_lmp88959_filter_parameters_changed();
+	gfx_thread_continue();
+}
 void wdgPALNESRGBLMP88959Filter::s_default_value_sv_clicked(UNUSED(bool checked)) {
 	gfx_thread_pause();
-	pal_nesrgb_lmp88959_filter_parameter_smv_default();
+	pal_nesrgb_lmp88959_filter_parameter_sv_default();
 	gui_update_ntsc_widgets();
 	pal_nesrgb_lmp88959_filter_parameters_changed();
 	gfx_thread_continue();

@@ -53,7 +53,7 @@
       </widget>
      </item>
      <item row="4" column="5" colspan="3">
-      <layout class="QHBoxLayout" name="horizontalLayout_SMV">
+      <layout class="QHBoxLayout" name="horizontalLayout_SV">
        <item>
         <widget class="QCheckBox" name="checkBox_Scanline">
          <property name="layoutDirection">
@@ -61,16 +61,6 @@
          </property>
          <property name="text">
           <string>Scanline</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QCheckBox" name="checkBox_Merge_Fields">
-         <property name="layoutDirection">
-          <enum>Qt::RightToLeft</enum>
-         </property>
-         <property name="text">
-          <string>MFields</string>
          </property>
         </widget>
        </item>
@@ -229,7 +219,7 @@
       </widget>
      </item>
      <item row="4" column="8">
-      <widget class="QPushButton" name="pushButton_Scanline_MFields_VBlend">
+      <widget class="QPushButton" name="pushButton_Scanline_VBlend">
        <property name="text">
         <string notr="true"/>
        </property>
@@ -426,6 +416,41 @@
        </property>
       </widget>
      </item>
+     <item row="4" column="0" colspan="3">
+      <layout class="QHBoxLayout" name="horizontalLayout_CM">
+       <item>
+        <widget class="QCheckBox" name="checkBox_Chroma_Correction">
+         <property name="layoutDirection">
+          <enum>Qt::LeftToRight</enum>
+         </property>
+         <property name="text">
+          <string>Chroma Correction</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QCheckBox" name="checkBox_Merge_Fields">
+         <property name="layoutDirection">
+          <enum>Qt::RightToLeft</enum>
+         </property>
+         <property name="text">
+          <string>MFields</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item row="4" column="3">
+      <widget class="QPushButton" name="pushButton_Chroma_Correction_MFields">
+       <property name="text">
+        <string notr="true"/>
+       </property>
+       <property name="icon">
+        <iconset resource="resources.qrc">
+         <normaloff>:/icon/icons/default.svgz</normaloff>:/icon/icons/default.svgz</iconset>
+       </property>
+      </widget>
+     </item>
     </layout>
    </item>
    <item>
@@ -454,6 +479,9 @@
   <tabstop>horizontalSlider_Chroma_Lag</tabstop>
   <tabstop>spinBox_Chroma_Lag</tabstop>
   <tabstop>pushButton_Chroma_Lag</tabstop>
+  <tabstop>checkBox_Chroma_Correction</tabstop>
+  <tabstop>checkBox_Merge_Fields</tabstop>
+  <tabstop>pushButton_Chroma_Correction_MFields</tabstop>
   <tabstop>horizontalSlider_Noise</tabstop>
   <tabstop>spinBox_Noise</tabstop>
   <tabstop>pushButton_Noise</tabstop>
@@ -467,9 +495,8 @@
   <tabstop>spinBox_Color_Phase</tabstop>
   <tabstop>pushButton_Color_Phase</tabstop>
   <tabstop>checkBox_Scanline</tabstop>
-  <tabstop>checkBox_Merge_Fields</tabstop>
   <tabstop>checkBox_Vertical_Blend</tabstop>
-  <tabstop>pushButton_Scanline_MFields_VBlend</tabstop>
+  <tabstop>pushButton_Scanline_VBlend</tabstop>
   <tabstop>pushButton_PAL_Parameters_reset</tabstop>
  </tabstops>
  <resources>

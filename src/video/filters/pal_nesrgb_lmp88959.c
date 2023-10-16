@@ -24,15 +24,15 @@
 #define PAL_SYSTEM PAL_SYSTEM_NESRGB
 #include "extra/PAL-CRT/pal_core_nesrgb.h"
 
-const _pal_lmp88959_setup_t pal_nesrgb_lmp88959_default = { 16, 165, 0, 2, 85, 12, 0, 0, 0, 0, 1, 1 };
-_pal_lmp88959_setup_t pal_nesrgb_lmp88959 = { 16, 165, 0, 2, 85, 12, 0, 0, 0, 0, 1, 1 };
+const _pal_lmp88959_setup_t pal_nesrgb_lmp88959_default = { 10, 165, 0, 2, 110, 12, 0, 0, 0, 1, 0, 1 };
+_pal_lmp88959_setup_t pal_nesrgb_lmp88959 = { 10, 165, 0, 2, 110, 12, 0, 0, 0, 1, 0, 1 };
 static struct PAL_CRT_NESRGB crt_nesrgb = { 0 };
-static struct PAL_SETTINGS pal_nergb = { 0 };
+static struct PAL_SETTINGS pal_nesrgb = { 0 };
 static int field = 0;
 
 BYTE pal_nesrgb_lmp88959_init(void) {
 	memset(&crt_nesrgb, 0x00, sizeof(crt_nesrgb));
-	memset(&pal_nergb, 0x00, sizeof(pal_nergb));
+	memset(&pal_nesrgb, 0x00, sizeof(pal_nesrgb));
 	field = 0;
 	pal_nesrgb_init(&crt_nesrgb, 0, 0, PAL_PIX_FORMAT_BGRA, NULL);
 	return (EXIT_OK);
@@ -51,12 +51,12 @@ void pal_nesrgb_lmp88959_surface(BYTE nidx) {
 	crt_nesrgb.scanlines = pal_nesrgb_lmp88959.scanline;
 	crt_nesrgb.chroma_lag = pal_nesrgb_lmp88959.chroma_lag;
 	crt_nesrgb.chroma_correction = pal_nesrgb_lmp88959.chroma_correction;
-	pal_nergb.data = (const unsigned char *)nes[nidx].p.ppu_screen.rd->data;
-	pal_nergb.format = PAL_PIX_FORMAT_BGRA;
-	pal_nergb.palette = (uint32_t *)gfx.filter.data.palette;
-	pal_nergb.w = SCR_COLUMNS;
-	pal_nergb.h = SCR_ROWS;
-	pal_nesrgb_modulate(&crt_nesrgb, &pal_nergb);
+	pal_nesrgb.data = (const unsigned char *)nes[nidx].p.ppu_screen.rd->data;
+	pal_nesrgb.format = PAL_PIX_FORMAT_BGRA;
+	pal_nesrgb.palette = (uint32_t *)gfx.filter.data.palette;
+	pal_nesrgb.w = SCR_COLUMNS;
+	pal_nesrgb.h = SCR_ROWS;
+	pal_nesrgb_modulate(&crt_nesrgb, &pal_nesrgb);
 	pal_nesrgb_demodulate(&crt_nesrgb, pal_nesrgb_lmp88959.noise);
 	lmp88959_phosphor_decay();
 }
@@ -95,7 +95,12 @@ void pal_nesrgb_lmp88959_filter_parameter_default(int index) {
 			break;
 	}
 }
-void pal_nesrgb_lmp88959_filter_parameter_smv_default(void) {
+void pal_nesrgb_lmp88959_filter_parameter_c_default(void) {
+	const _pal_lmp88959_setup_t *format = &pal_nesrgb_lmp88959_default;
+
+	pal_nesrgb_lmp88959.chroma_correction = format->chroma_correction;
+}
+void pal_nesrgb_lmp88959_filter_parameter_sv_default(void) {
 	const _pal_lmp88959_setup_t *format = &pal_nesrgb_lmp88959_default;
 
 	pal_nesrgb_lmp88959.scanline = format->scanline;
