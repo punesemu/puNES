@@ -36,6 +36,7 @@ BYTE ntsc_nesrgb_lmp88959_init(void) {
 }
 void ntsc_nesrgb_lmp88959_surface(BYTE nidx) {
 	if (crt_nesrgb.out != gfx.filter.data.pix) {
+		ntsc_nesrgb_lmp88959_init();
 		crt_nesrgb_init(&crt_nesrgb, SCR_COLUMNS * gfx.filter.factor, SCR_ROWS * gfx.filter.factor,
 			CRT_PIX_FORMAT_BGRA, (unsigned char *)gfx.filter.data.pix);
 	}

@@ -38,6 +38,7 @@ BYTE ntsc_lmp88959_init(void) {
 }
 void ntsc_lmp88959_surface(BYTE nidx) {
 	if (crt.out != gfx.filter.data.pix) {
+		ntsc_lmp88959_init();
 		crt_init(&crt, SCR_COLUMNS * gfx.filter.factor, SCR_ROWS * gfx.filter.factor,
 			CRT_PIX_FORMAT_BGRA, (unsigned char *)gfx.filter.data.pix);
 	}

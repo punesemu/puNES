@@ -39,6 +39,7 @@ BYTE pal_lmp88959_init(void) {
 }
 void pal_lmp88959_surface(BYTE nidx) {
 	if (crt.out != gfx.filter.data.pix) {
+		pal_lmp88959_init();
 		pal_init(&crt, SCR_COLUMNS * gfx.filter.factor, SCR_ROWS * gfx.filter.factor,
 			PAL_PIX_FORMAT_BGRA, (unsigned char *)gfx.filter.data.pix);
 	}

@@ -39,6 +39,7 @@ BYTE pal_nesrgb_lmp88959_init(void) {
 }
 void pal_nesrgb_lmp88959_surface(BYTE nidx) {
 	if (crt_nesrgb.out != gfx.filter.data.pix) {
+		pal_nesrgb_lmp88959_init();
 		pal_nesrgb_init(&crt_nesrgb, SCR_COLUMNS * gfx.filter.factor, SCR_ROWS * gfx.filter.factor,
 			PAL_PIX_FORMAT_BGRA, (unsigned char *)gfx.filter.data.pix);
 	}
