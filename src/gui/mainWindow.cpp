@@ -1430,10 +1430,14 @@ void mainWindow::s_open_recent_roms(void) {
 	emu_pause(FALSE);
 }
 void mainWindow::s_open_config_folder(void) {
-	QDesktopServices::openUrl(QUrl(QDir(uQString(gui_config_folder())).absolutePath()));
+	QString url = QString("file:///%0").arg(QDir(uQString(gui_config_folder())).absolutePath());
+
+	QDesktopServices::openUrl(QUrl(url, QUrl::TolerantMode));
 }
 void mainWindow::s_open_working_folder(void) {
-	QDesktopServices::openUrl(QUrl(QDir(uQString(gui_data_folder())).absolutePath()));
+	QString url = QString("file:///%0").arg(QDir(uQString(gui_data_folder())).absolutePath());
+
+	QDesktopServices::openUrl(QUrl(url, QUrl::TolerantMode));
 }
 void mainWindow::s_quit(void) {
 	close();
