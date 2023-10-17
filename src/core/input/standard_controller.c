@@ -105,32 +105,16 @@ BYTE input_decode_event_standard_controller(BYTE mode, UNUSED(BYTE autorepeat), 
 		(*start) = mode;
 		return (EXIT_OK);
 	} else if (event == prt->input[type][UP]) {
-		(*up) = mode;
-		// non possono essere premuti contemporaneamente
-		if (!cfg->input.permit_updown_leftright && (mode == PRESSED)) {
-			(*down) = RELEASED;
-		}
+		(*up) = ((*down) == PRESSED) && !cfg->input.permit_updown_leftright ? RELEASED : mode;
 		return (EXIT_OK);
 	} else if (event == prt->input[type][DOWN]) {
-		(*down) = mode;
-		// non possono essere premuti contemporaneamente
-		if (!cfg->input.permit_updown_leftright && (mode == PRESSED)) {
-			(*up) = RELEASED;
-		}
+		(*down) = ((*up) == PRESSED) && !cfg->input.permit_updown_leftright ? RELEASED : mode;
 		return (EXIT_OK);
 	} else if (event == prt->input[type][LEFT]) {
-		(*left) = mode;
-		// non possono essere premuti contemporaneamente
-		if (!cfg->input.permit_updown_leftright && (mode == PRESSED)) {
-			(*right) = RELEASED;
-		}
+		(*left) = ((*right) == PRESSED) && !cfg->input.permit_updown_leftright ? RELEASED : mode;
 		return (EXIT_OK);
 	} else if (event == prt->input[type][RIGHT]) {
-		(*right) = mode;
-		// non possono essere premuti contemporaneamente
-		if (!cfg->input.permit_updown_leftright && (mode == PRESSED)) {
-			(*left) = RELEASED;
-		}
+		(*right) = ((*left) == PRESSED) && !cfg->input.permit_updown_leftright ? RELEASED : mode;
 		return (EXIT_OK);
 	} else if (event == prt->input[type][TRB_A]) {
 		prt->turbo[TURBOA].mode = mode;
