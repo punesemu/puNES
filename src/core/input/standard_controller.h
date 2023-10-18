@@ -21,6 +21,16 @@
 
 #include "input.h"
 
+typedef struct _ctrl_input_permit_updown_leftright {
+	BYTE axe;
+	int delay;
+} _ctrl_input_permit_updown_leftright;
+
+extern _ctrl_input_permit_updown_leftright cipu[PORT_MAX];
+extern _ctrl_input_permit_updown_leftright cipl[PORT_MAX];
+
+void input_init_standard_controller(void);
+
 void input_wr_standard_controller(BYTE nidx, const BYTE *value, BYTE nport);
 void input_rd_standard_controller(BYTE nidx, BYTE *value, BYTE nport, BYTE shift);
 

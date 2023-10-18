@@ -74,6 +74,7 @@ void input_init(BYTE set_cursor) {
 	input_init_arkanoid();
 	input_init_oeka_kids_tablet();
 	input_init_nsf_mouse();
+	input_init_standard_controller();
 	input_init_generic_keyboard();
 
 	memset(&mic, 0x00, sizeof(mic));

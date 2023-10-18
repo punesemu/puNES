@@ -16,6 +16,7 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
+#include <string.h>
 #include "input/standard_controller.h"
 #include "info.h"
 #include "conf.h"
@@ -27,6 +28,17 @@
 
 INLINE static void input_turbo_buttons_standard_controller(_port *prt);
 INLINE static void input_reverse_button_standard_controller(BYTE **b0, BYTE **b1);
+INLINE BYTE ctrl_input_permit_updown_leftright(BYTE index, BYTE nport);
+
+_ctrl_input_permit_updown_leftright cipu[PORT_MAX];
+_ctrl_input_permit_updown_leftright cipl[PORT_MAX];
+
+void input_init_standard_controller(void) {
+	for (int i = 0; i < PORT_MAX; i++) {
+		memset(&cipu[i], 0x00, sizeof(_ctrl_input_permit_updown_leftright));
+		memset(&cipl[i], 0x00, sizeof(_ctrl_input_permit_updown_leftright));
+	}
+}
 
 void input_wr_standard_controller(BYTE nidx, const BYTE *value, BYTE nport) {
 	if ((nes[nidx].c.input.r4016 & 0x01) || ((*value) & 0x01)) {
@@ -34,8 +46,7 @@ void input_wr_standard_controller(BYTE nidx, const BYTE *value, BYTE nport) {
 	}
 }
 void input_rd_standard_controller(BYTE nidx, BYTE *value, BYTE nport, BYTE shift) {
-	(*value) = port[nport].data[nes[nidx].c.input.pindex[nport]] << shift;
-
+	(*value) = ctrl_input_permit_updown_leftright(nes[nidx].c.input.pindex[nport], nport) << shift;
 	// Se $4016 e' a 1 leggo solo lo stato del primo pulsante
 	// del controller. Quando verra' scritto 0 nel $4016
 	// riprendero' a leggere lo stato di tutti i pulsanti.
@@ -48,15 +59,16 @@ void input_add_event_standard_controller(BYTE index) {
 	js_jdev_read_port(&jsp[index], &port[index]);
 	input_turbo_buttons_standard_controller(&port[index]);
 }
-BYTE input_decode_event_standard_controller(BYTE mode, UNUSED(BYTE autorepeat), DBWORD event, BYTE type, _port *prt) {
+BYTE input_decode_event_standard_controller(BYTE mode, BYTE autorepeat, DBWORD event, BYTE type, _port *prt) {
 	BYTE *left = &prt->data[LEFT], *right = &prt->data[RIGHT];
 	BYTE *up = &prt->data[UP], *down = &prt->data[DOWN];
 	BYTE *select = &prt->data[SELECT], *start = &prt->data[START];
 
-	if (tas.type) {
+	autorepeat = autorepeat && (type == KEYBOARD);
+
+	if (tas.type || autorepeat) {
 		return (EXIT_OK);
 	}
-
 	if ((cfg->screen_rotation | cfg->hflip_screen) && cfg->input_rotation) {
 		switch (cfg->screen_rotation) {
 			default:
@@ -87,7 +99,6 @@ BYTE input_decode_event_standard_controller(BYTE mode, UNUSED(BYTE autorepeat), 
 				break;
 		}
 	}
-
 	if (event == prt->input[type][BUT_A]) {
 		if (!prt->turbo[TURBOA].active) {
 			prt->data[BUT_A] = mode;
@@ -105,16 +116,16 @@ BYTE input_decode_event_standard_controller(BYTE mode, UNUSED(BYTE autorepeat), 
 		(*start) = mode;
 		return (EXIT_OK);
 	} else if (event == prt->input[type][UP]) {
-		(*up) = ((*down) == PRESSED) && !cfg->input.permit_updown_leftright ? RELEASED : mode;
+		(*up) = mode;
 		return (EXIT_OK);
 	} else if (event == prt->input[type][DOWN]) {
-		(*down) = ((*up) == PRESSED) && !cfg->input.permit_updown_leftright ? RELEASED : mode;
+		(*down) = mode;
 		return (EXIT_OK);
 	} else if (event == prt->input[type][LEFT]) {
-		(*left) = ((*right) == PRESSED) && !cfg->input.permit_updown_leftright ? RELEASED : mode;
+		(*left) = mode;
 		return (EXIT_OK);
 	} else if (event == prt->input[type][RIGHT]) {
-		(*right) = ((*left) == PRESSED) && !cfg->input.permit_updown_leftright ? RELEASED : mode;
+		(*right) = mode;
 		return (EXIT_OK);
 	} else if (event == prt->input[type][TRB_A]) {
 		prt->turbo[TURBOA].mode = mode;
@@ -145,8 +156,7 @@ void input_rd_standard_controller_vs(BYTE nidx, BYTE *value, BYTE nport, BYTE sh
 	} else if (info.mapper.expansion == EXP_VS_1P_R4017) {
 		np ^= 0x01;
 	}
-	(*value) = (protection ? PRESSED : port[np].data[index]) << shift;
-
+	(*value) = (protection ? PRESSED : ctrl_input_permit_updown_leftright(index, nport)) << shift;
 	// Se $4016 e' a 1 leggo solo lo stato del primo pulsante
 	// del controller. Quando verra' scritto 0 nel $4016
 	// riprendero' a leggere lo stato di tutti i pulsanti.
@@ -182,4 +192,60 @@ INLINE static void input_reverse_button_standard_controller(BYTE **b0, BYTE **b1
 
 	(*b0) = (*b1);
 	(*b1) = tmp;
+}
+INLINE BYTE ctrl_input_permit_updown_leftright(BYTE index, BYTE nport) {
+	_ctrl_input_permit_updown_leftright *cip = NULL;
+	static BYTE delay = 5;
+	BYTE value[2] = { 0 };
+	BYTE axe[2] = { 0 };
+
+	if (cfg->input.permit_updown_leftright) {
+		return (port[nport].data[index]);
+	}
+	if ((index == LEFT) || (index == RIGHT)) {
+		axe[0] = LEFT;
+		axe[1] = RIGHT;
+		cip = &cipl[nport];
+	} else if ((index == UP) || (index == DOWN)) {
+		axe[0] = UP;
+		axe[1] = DOWN;
+		cip = &cipu[nport];
+	} else {
+		return (port[nport].data[index]);
+	}
+	value[0] = port[nport].data[axe[0]];
+	value[1] = port[nport].data[axe[1]];
+	if (!cip->delay) {
+		if (cip->axe != FALSE) {
+			if (((cip->axe == axe[0]) && !port[nport].data[axe[0]]) ||
+				((cip->axe == axe[1]) && !port[nport].data[axe[1]])) {
+				cip->delay = delay;
+			}
+		} else {
+			if (!(port[nport].data[axe[0]] | port[nport].data[axe[1]])) {
+				cip->axe = FALSE;
+			} else if (port[nport].data[axe[0]] & port[nport].data[axe[1]]) {
+				if (cip->axe == FALSE) {
+					cip->axe = axe[0];
+				}
+			} else if (port[nport].data[axe[0]]) {
+				cip->axe = axe[0];
+			} else if (port[nport].data[axe[1]]) {
+				cip->axe = axe[1];
+			} else {
+				cip->axe = FALSE;
+			}
+		}
+	} else {
+		cip->delay--;
+		if (!cip->delay) {
+			cip->axe = FALSE;
+		}
+	}
+	if (cip->axe == axe[0]) {
+		value[1] = RELEASED;
+	} else if (cip->axe == axe[1]) {
+		value[0] = RELEASED;
+	}
+	return (index == axe[0] ? value[0] : value[1]);
 }
