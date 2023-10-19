@@ -149,6 +149,7 @@ typedef struct _info {
 #endif
 	BYTE decimal_mode;
 	BYTE number_of_nes;
+	BYTE clean_input_data;
 	union _exec_nes_op {
 		BYTE b[2];
 		WORD w;

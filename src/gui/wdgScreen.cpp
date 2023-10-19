@@ -87,7 +87,9 @@ bool wdgScreen::eventFilter(QObject *obj, QEvent *event) {
 	static QKeyEvent *keyEvent;
 	static DBWORD keyval;
 
-	if (event->type() == QEvent::ShortcutOverride) {
+	if ((event->type() == QEvent::FocusOut) || (event->type() == QEvent::FocusIn)) {
+		info.clean_input_data = TRUE;
+	} else if (event->type() == QEvent::ShortcutOverride) {
 		keyEvent = ((QKeyEvent *)event);
 
 		if (rwnd.active || !mainwin->is_rwnd_shortcut_or_not_shcut(keyEvent)) {

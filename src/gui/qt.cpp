@@ -660,6 +660,17 @@ void gui_max_speed_stop(void) {
 }
 
 void gui_decode_all_input_events(void) {
+	if (info.clean_input_data) {
+		for (unsigned int a = PORT1; a < PORT_MAX; a++) {
+			for (unsigned int b = 0; b < LENGTH(port[a].data); b++) {
+				if (b < 8) {
+					port[a].data[b] = RELEASED;
+				}
+			}
+			info.clean_input_data = FALSE;
+		}
+	}
+
 	if (!qt.screen->events.keyb.count() && !qt.screen->events.mouse.count()) {
 		return;
 	}
