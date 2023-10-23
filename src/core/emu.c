@@ -45,6 +45,7 @@
 #include "recent_roms.h"
 #include "../../c++/crc/crc.h"
 #include "gui.h"
+#include "video/effects/pause.h"
 #include "video/effects/tv_noise.h"
 #if defined (FULLSCREEN_RESFREQ)
 #include "video/gfx_monitor.h"
@@ -644,6 +645,7 @@ BYTE emu_turn_on(void) {
 void emu_pause(BYTE mode) {
 	if (mode) {
 		if (++info.pause == 1) {
+			pause_effect.frames = PAUSE_EFFECT_FRAMES;
 			gui_egds_start_pause();
 		}
 	} else {

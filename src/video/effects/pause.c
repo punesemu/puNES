@@ -25,9 +25,10 @@
 _pause_effect pause_effect;
 
 BYTE pause_init(void) {
-	uint32_t *palette;
-	_color_RGB pRGB[NUM_COLORS];
-	WORD i;
+	_color_RGB pRGB[NUM_COLORS] = { 0 };
+	uint32_t *palette = NULL;
+
+	pause_effect.frames = 0;
 
 	if (!(pause_effect.palette = malloc(NUM_COLORS * sizeof(uint32_t)))) {
 		log_error(uL("pause;unable to allocate the palette"));
@@ -42,7 +43,7 @@ BYTE pause_init(void) {
 
 	ntsc_rgb_modifier((nes_ntsc_t *)pause_effect.ntsc, (BYTE *)pRGB, 0x1A, -0x0A, -0x0A, -0x30);
 
-	for (i = 0; i < NUM_COLORS; i++) {
+	for (int i = 0; i < NUM_COLORS; i++) {
 		palette[i] = gfx_color(255, pRGB[i].r, pRGB[i].g, pRGB[i].b);
 	}
 

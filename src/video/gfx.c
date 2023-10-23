@@ -525,6 +525,8 @@ void gfx_set_screen(BYTE scale, DBWORD filter, DBWORD shader, BYTE fullscreen, B
 	if (info.on_cfg) {
 		info.on_cfg = FALSE;
 	}
+
+	pause_effect.frames = info.pause ? PAUSE_EFFECT_FRAMES : 0;
 }
 void gfx_draw_screen(BYTE nidx) {
 	BYTE monitor = emu_active_nidx();

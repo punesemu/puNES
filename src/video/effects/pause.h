@@ -21,9 +21,14 @@
 
 #include "common.h"
 
+enum _pause_effect_misc {
+	PAUSE_EFFECT_FRAMES = 10
+};
+
 typedef struct _pause_effect {
 	void *palette;
 	void *ntsc;
+	int frames;
 } _pause_effect;
 
 extern _pause_effect pause_effect;

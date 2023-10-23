@@ -20,9 +20,11 @@
  */
 
 #include "video/gfx.h"
+#include "video/effects/pause.h"
 #include "d3d9.h"
 #include "gui.h"
 #include "ppu.h"
+#include "info.h"
 
 BYTE gfx_api_init(void) {
 	return (d3d9_init());
@@ -77,22 +79,30 @@ void gfx_api_apply_filter(BYTE nidx) {
 	scrtex = &d3d9.screen.tex[d3d9.screen.index];
 
 	if (scrtex->offscreen) {
-		D3DLOCKED_RECT lrect;
+		BYTE apply = !info.pause;
 
 		gfx.frame.filtered = nes[nidx].p.ppu_screen.rd->frame;
 
-		// lock della surface in memoria
-		IDirect3DSurface9_LockRect(scrtex->offscreen, &lrect, NULL, D3DLOCK_DISCARD);
+		if (info.pause && pause_effect.frames) {
+			pause_effect.frames--;
+			apply = TRUE;
+		}
+		if (apply) {
+			D3DLOCKED_RECT lrect;
 
-		// applico l'effetto
-		gfx.filter.data.pitch = lrect.Pitch;
-		gfx.filter.data.pix = lrect.pBits;
-		gfx.filter.data.width = scrtex->rect.base.w;
-		gfx.filter.data.height = scrtex->rect.base.h;
-		gfx.filter.func(nidx);
+			// lock della surface in memoria
+			IDirect3DSurface9_LockRect(scrtex->offscreen, &lrect, NULL, D3DLOCK_DISCARD);
 
-		// unlock della surface in memoria
-		IDirect3DSurface9_UnlockRect(scrtex->offscreen);
+			// applico l'effetto
+			gfx.filter.data.pitch = lrect.Pitch;
+			gfx.filter.data.pix = lrect.pBits;
+			gfx.filter.data.width = scrtex->rect.base.w;
+			gfx.filter.data.height = scrtex->rect.base.h;
+			gfx.filter.func(nidx);
+
+			// unlock della surface in memoria
+			IDirect3DSurface9_UnlockRect(scrtex->offscreen);
+		}
 	}
 }
 void gfx_api_control_changed_adapter(void *monitor) {

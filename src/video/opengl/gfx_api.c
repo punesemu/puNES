@@ -20,9 +20,11 @@
  */
 
 #include "video/gfx.h"
+#include "video/effects/pause.h"
 #include "opengl.h"
 #include "gui.h"
 #include "ppu.h"
+#include "info.h"
 
 #if defined (_WIN32)
 HMONITOR monitor_in_use;
@@ -54,14 +56,22 @@ void gfx_api_overlay_blit(void *surface, _gfx_rect *rect, double device_pixel_ra
 	glPixelStoref(GL_UNPACK_ROW_LENGTH, 0);
 }
 void gfx_api_apply_filter(BYTE nidx) {
+	BYTE apply = !info.pause;
+
 	gfx.frame.filtered = nes[nidx].p.ppu_screen.rd->frame;
 
 	// applico l'effetto desiderato
-	gfx.filter.data.pitch = opengl.surface.pitch;
-	gfx.filter.data.pix = opengl.surface.pixels;
-	gfx.filter.data.width = opengl.surface.w;
-	gfx.filter.data.height = opengl.surface.h;
-	gfx.filter.func(nidx);
+	if (info.pause && pause_effect.frames) {
+		pause_effect.frames--;
+		apply = TRUE;
+	}
+	if (apply) {
+		gfx.filter.data.pitch = opengl.surface.pitch;
+		gfx.filter.data.pix = opengl.surface.pixels;
+		gfx.filter.data.width = opengl.surface.w;
+		gfx.filter.data.height = opengl.surface.h;
+		gfx.filter.func(nidx);
+	}
 }
 void gfx_api_control_changed_adapter(UNUSED(void *monitor)) {
 #if defined (_WIN32)
