@@ -294,20 +294,24 @@ BYTE opengl_context_create(void) {
 			if (!cfg->stretch) {
 				if (cfg->integer_scaling) {
 					int factor = (int)(vmw > vmh
-						? ratio >= ratio_vm ? vmw / mw : vmh / mh
-						: ratio >= ratio_vm ? vmh / mh : vmw / mw);
+						? (((gfx.screen_rotation == ROTATE_90) || (gfx.screen_rotation == ROTATE_270))
+							? ratio <= ratio_vm : ratio >= ratio_vm) ? vmw / mw : vmh / mh
+						: (((gfx.screen_rotation == ROTATE_90) || (gfx.screen_rotation == ROTATE_270))
+							? ratio <= ratio_vm : ratio >= ratio_vm) ? vmh / mh : vmw / mw);
 
 					vp->w = mw * (float)factor;
 					vp->h = mh * (float)factor;
 				} else {
 					if (vmw > vmh) {
-						if (ratio >= ratio_vm) {
+						if (((gfx.screen_rotation == ROTATE_90) || (gfx.screen_rotation == ROTATE_270))
+							? ratio <= ratio_vm : ratio >= ratio_vm) {
 							vp->h = vmw / ratio;
 						} else {
 							vp->w = vmh * ratio;
 						}
 					} else {
-						if (ratio >= ratio_vm) {
+						if (((gfx.screen_rotation == ROTATE_90) || (gfx.screen_rotation == ROTATE_270))
+							? ratio <= ratio_vm : ratio >= ratio_vm) {
 							vp->w = vmw * ratio;
 						} else {
 							vp->h = vmw / ratio;

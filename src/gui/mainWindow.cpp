@@ -676,12 +676,33 @@ void mainWindow::update_gfx_monitor_dimension(void) {
 		gfx.h[MONITOR] -= (statusbar->isHidden() ? 0 : statusbar->sizeHint().height());
 	} else if (gfx.type_of_fscreen_in_use == FULLSCR) {
 		fs_geom = win_handle_screen()->geometry();
+
+		switch (win_handle_screen()->orientation()) {
+			default:
+			case Qt::LandscapeOrientation:
+				gfx.screen_rotation = ROTATE_0;
+				break;
+			case Qt::InvertedPortraitOrientation:
+				gfx.screen_rotation = ROTATE_90;
+				break;
+			case Qt::InvertedLandscapeOrientation:
+				gfx.screen_rotation = ROTATE_180;
+				break;
+			case Qt::PortraitOrientation:
+				gfx.screen_rotation = ROTATE_270;
+				break;
+		}
+
 #if defined (FULLSCREEN_RESFREQ)
 		if (setup_in_out_fullscreen) {
 			int w, h, x, y;
 
 			if (gfx_monitor_mode_in_use_info(&x, &y, &w, &h, nullptr) == EXIT_OK) {
-				fs_geom = QRect(x, y, w, h);
+				if ((gfx.screen_rotation == ROTATE_90) || (gfx.screen_rotation == ROTATE_270)) {
+					fs_geom = QRect(x, y, h, w);
+				} else {
+					fs_geom = QRect(x, y, w, h);
+				}
 			}
 		}
 #endif
