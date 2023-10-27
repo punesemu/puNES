@@ -142,15 +142,15 @@ void wram_swap_MMC1_base(WORD address, WORD value) {
 //	be writable or readable. This bit is more "reliable" on authentic hardware as it is implemented even in
 //	older boards with older MMC1's, while the R bit was only introduced later. But because the E bit wasn't
 //	confirmed by the homebrew community until October 2010[4], emulators tend not to implement it.
-//	const BYTE wram_enabled = mmc1tmp.type == MMC1B																																																																																																		 //	const BYTE wram_enabled = mmc1tmp.type == MMC1B
 //
 //  !!!! : Se Lascio questo controllo attivo "Witch n' Wiz (World) (Digital Release) (Aftermarket) (Unl).nes" ha le
 //  schermate sporche dopo la selezione dello slot di salvataggio
+//	const BYTE wram_enabled = mmc1tmp.type == MMC1B
 //		? (info.mapper.submapper == 0
 //			? (mmc1.reg[3] | (mmc1.reg[1] | mmc1.reg[2])) & 0x10 ? FALSE : TRUE
 //			: mmc1.reg[3] & 0x10 ? FALSE : TRUE)
 //		: TRUE;
-	const BYTE wram_enabled = mmc1tmp.type == MMC1B																																																																																																		 //	const BYTE wram_enabled = mmc1tmp.type == MMC1B
+	const BYTE wram_enabled = mmc1tmp.type == MMC1B
 		? mmc1.reg[3] & 0x10 ? FALSE : TRUE
 		: TRUE;
 
