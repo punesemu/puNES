@@ -143,11 +143,13 @@ jobs:
         run: |
           cp dll/*.* d3d9/.
           rm d3d9/cgGL.dll
+          cp ../misc/dip.cfg d3d9/.
           cp ../misc/nes20db.xml d3d9/.
           cp ../build/d3d9/src/punes.exe d3d9/.
           cp dll/*.* opengl/.
           rm opengl/cgD3D9.dll
-          cp ../misc/nes20db.xml d3d9/.
+          cp ../misc/dip.cfg opengl/.
+          cp ../misc/nes20db.xml opengl/.
           cp ../build/opengl/src/punes.exe opengl/.
 
       - name: 'Upload d3d9 artifact'
