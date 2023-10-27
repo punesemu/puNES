@@ -5,14 +5,14 @@
     <name>Settings</name>
     <message>
       <source>System Default</source>
-      <translation>Système par Défaut</translation>
+      <translation>Par défaut du système</translation>
     </message>
   </context>
   <context>
     <name>dlgCfgNSCode</name>
     <message>
       <source>Default</source>
-      <translation>Défaut</translation>
+      <translation>Par défaut</translation>
     </message>
     <message>
       <source>Unset</source>
@@ -89,15 +89,15 @@
     </message>
     <message>
       <source>128 Bytes</source>
-      <translation>128 Bytes</translation>
+      <translation>128 Octets</translation>
     </message>
     <message>
       <source>256 Bytes</source>
-      <translation>256 Bytes</translation>
+      <translation>256 Octets</translation>
     </message>
     <message>
       <source>512 Bytes</source>
-      <translation>512 Bytes</translation>
+      <translation>512 Octets</translation>
     </message>
     <message>
       <source>1 KiB</source>
@@ -165,7 +165,7 @@
     </message>
     <message>
       <source>Famicom Four Players Adapter</source>
-      <translation>Adaptateur Famicom Four Players</translation>
+      <translation>Adaptateur FAMICOM Quatre Joueurs</translation>
     </message>
     <message>
       <source>Vs. System</source>
@@ -2573,7 +2573,7 @@
     </message>
     <message>
       <source>Polish</source>
-      <translation type="unfinished">Polish</translation>
+      <translation>Polonais</translation>
     </message>
   </context>
   <context>
