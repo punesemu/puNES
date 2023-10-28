@@ -39,6 +39,21 @@
     </message>
 </context>
 <context>
+    <name>dlgDetachBarcode</name>
+    <message>
+        <source>Enter a barcode yourself...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Detach Barcode</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Apply</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>dlgDipswitch</name>
     <message>
         <source>Ok</source>
@@ -184,10 +199,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Zapper</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Two Zappers</source>
         <translation type="unfinished"></translation>
     </message>
@@ -209,18 +220,6 @@
     </message>
     <message>
         <source>Family Trainer Side B</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Arkanoid Paddle (NES)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Arkanoid Paddle (Famicom)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Two Paddles plus Famicom Data Recorder</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -305,18 +304,6 @@
     </message>
     <message>
         <source>Subor Keyboard</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Subor Keyboard plus 3x8-bit mouse</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Subor Keyboard plus 24-bit mouse</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>SNES Mouse</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -601,6 +588,62 @@
     </message>
     <message>
         <source>Reset to defaults</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Vs. System (1P via $4016)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Zapper ($4017)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Arkanoid Vaus Controller (NES)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Arkanoid Vaus Controller (Famicom)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Two Vaus Controllers plus Famicom Data Recorder</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Subor Keyboard plus mouse (3x8-bit)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Subor Keyboard plus mouse (24-bit)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>SNES Mouse ($4017.0)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unknown Famiclone Keyboard (Golden Key)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Subor Keyboard plus mouse (24-bit $4017)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Port Test</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Bandai Multi Game Player Gamepad</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Venom TV Dance Mat</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>LG TV Remote Control</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -913,10 +956,6 @@
 <context>
     <name>dlgVsSystem</name>
     <message>
-        <source>Vs System Controls</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Left Coin</source>
         <translation type="unfinished"></translation>
     </message>
@@ -970,6 +1009,62 @@
     </message>
     <message>
         <source>Defaults Game Dip Switches</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Vs System</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Coins</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Monitor</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Left</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Right</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>12</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>13</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>14</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>15</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>16</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>11</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>10</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>9</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Game Dip Switches</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -1516,7 +1611,11 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Dipswitch</source>
+        <source>&amp;Dipswitch</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Detach &amp;Barcode</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -2089,6 +2188,198 @@
     </message>
 </context>
 <context>
+    <name>wdgNTSCLMP88959Filter</name>
+    <message>
+        <source>Scanline</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>MFields</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>VBlend</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Contrast</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Brightness</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>White Point</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Black Point</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Saturation</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Noise</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Hue</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Reset parameters to defaults</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>wdgNTSCNESRGBLMP88959Filter</name>
+    <message>
+        <source>Black Point</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Brightness</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Hue</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Contrast</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Noise</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>White Point</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Scanline</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>VBlend</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Saturation</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Reset parameters to defaults</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>wdgPALLMP88959Filter</name>
+    <message>
+        <source>Scanline</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>VBlend</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Black Point</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>White Point</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Noise</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Color Phase</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Brightness</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Saturation</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Contrast</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Chroma Lag</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Chroma Correction</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>MFields</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Reset parameters to defaults</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>wdgPALNESRGBLMP88959Filter</name>
+    <message>
+        <source>White Point</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Chroma Lag</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Contrast</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Chroma Correction</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Brightness</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Noise</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Black Point</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Saturation</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Scanline</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>VBlend</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Reset parameters to defaults</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>wdgPaletteEditor</name>
     <message>
         <source>Palette files</source>
@@ -2573,6 +2864,10 @@
     </message>
     <message>
         <source>Polish</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Arabic</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -3520,6 +3815,22 @@
     </message>
     <message>
         <source>Reset parameters to defaults</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>NTSC CRT LMP88959</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>NTSC NES LMP88959</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>PAL CRT LMP88959</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>PAL NES LMP88959</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
