@@ -331,23 +331,23 @@ void gfx_set_screen(BYTE scale, DBWORD filter, DBWORD shader, BYTE fullscreen, B
 						palette = PALETTE_SONY;
 					}
 				} else {
-					ntsc_set(NULL, TRUE, 0, (BYTE *)palette_base_file, 0, (BYTE *)palette_RGB.noswap);
+					ntsc_set(NULL, TRUE, 0, (BYTE *)palette_base_file, NULL, (BYTE *)palette_RGB.noswap);
 				}
 			}
 		}
 
 		switch (palette) {
 			case PALETTE_PAL:
-				ntsc_set(NULL, TRUE, 0, (BYTE *)palette_base_pal, 0, (BYTE *)palette_RGB.noswap);
+				ntsc_set(NULL, TRUE, 0, (BYTE *)palette_base_pal, NULL, (BYTE *)palette_RGB.noswap);
 				break;
 			case PALETTE_NTSC:
-				ntsc_set(NULL, TRUE, 0, 0, 0, (BYTE *)palette_RGB.noswap);
+				ntsc_set(NULL, TRUE, 0, NULL, NULL, (BYTE *)palette_RGB.noswap);
 				break;
 			case PALETTE_FRBX_NOSTALGIA:
-				ntsc_set(NULL, TRUE, 0, (BYTE *)palette_firebrandx_nostalgia_FBX, 0, (BYTE *)palette_RGB.noswap);
+				ntsc_set(NULL, TRUE, 0, (BYTE *)palette_firebrandx_nostalgia_FBX, NULL, (BYTE *)palette_RGB.noswap);
 				break;
 			case PALETTE_FRBX_YUV:
-				ntsc_set(NULL, TRUE, 0, (BYTE *)palette_firebrandx_YUV_v3, 0, (BYTE *)palette_RGB.noswap);
+				ntsc_set(NULL, TRUE, 0, (BYTE *)palette_firebrandx_YUV_v3, NULL, (BYTE *)palette_RGB.noswap);
 				break;
 			case PALETTE_GREEN:
 				ntsc_rgb_modifier(NULL, (BYTE *)palette_RGB.noswap, 0x00, -0x20, 0x20, -0x20);
@@ -358,12 +358,12 @@ void gfx_set_screen(BYTE scale, DBWORD filter, DBWORD shader, BYTE fullscreen, B
 					palette_RGB.noswap[i].g = (((i >> 4) & 0x03) * 255 / 3);
 					palette_RGB.noswap[i].b = (((i >> 6) & 0x07) * 255 / 7);
 				}
-				ntsc_set(NULL, TRUE, 0, 0, (BYTE *)palette_RGB.noswap, (BYTE *)palette_RGB.noswap);
+				ntsc_set(NULL, TRUE, 0, NULL, (BYTE *)palette_RGB.noswap, (BYTE *)palette_RGB.noswap);
 				break;
 			case PALETTE_FILE:
 				break;
 			default:
-				ntsc_set(NULL, TRUE, palette, 0, 0, (BYTE *)palette_RGB.noswap);
+				ntsc_set(NULL, TRUE, palette, NULL, NULL, (BYTE *)palette_RGB.noswap);
 				break;
 		}
 
@@ -373,16 +373,16 @@ void gfx_set_screen(BYTE scale, DBWORD filter, DBWORD shader, BYTE fullscreen, B
 				case RP2C03G:
 					break;
 				case RP2C04:
-					ntsc_set(NULL, TRUE, 0, (BYTE *)palette_RP2C04_0001, 0, (BYTE *)palette_RGB.noswap);
+					ntsc_set(NULL, TRUE, 0, (BYTE *)palette_RP2C04_0001, NULL, (BYTE *)palette_RGB.noswap);
 					break;
 				case RP2C04_0002:
-					ntsc_set(NULL, TRUE, 0, (BYTE *)palette_RP2C04_0002, 0, (BYTE *)palette_RGB.noswap);
+					ntsc_set(NULL, TRUE, 0, (BYTE *)palette_RP2C04_0002, NULL, (BYTE *)palette_RGB.noswap);
 					break;
 				case RP2C04_0003:
-					ntsc_set(NULL, TRUE, 0, (BYTE *)palette_RP2C04_0003, 0, (BYTE *)palette_RGB.noswap);
+					ntsc_set(NULL, TRUE, 0, (BYTE *)palette_RP2C04_0003, NULL, (BYTE *)palette_RGB.noswap);
 					break;
 				case RP2C04_0004:
-					ntsc_set(NULL, TRUE, 0, (BYTE *)palette_RP2C04_0004, 0, (BYTE *)palette_RGB.noswap);
+					ntsc_set(NULL, TRUE, 0, (BYTE *)palette_RP2C04_0004, NULL, (BYTE *)palette_RGB.noswap);
 					break;
 				case RC2C03B:
 				case RC2C03C:

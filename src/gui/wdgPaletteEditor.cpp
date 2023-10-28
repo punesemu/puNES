@@ -181,9 +181,7 @@ void wdgPaletteWall::color_reset(int index) {
 	update_cell_color(index, defaults.at(index));
 }
 void wdgPaletteWall::colors_reset(void) {
-	int i;
-
-	for (i = 0; i < colors.count(); i++) {
+	for (int i = 0; i < colors.count(); i++) {
 		color_reset(i);
 	}
 }
@@ -294,7 +292,7 @@ void wdgPaletteWall::paint_cell(QPainter *p, int row, int col, const QRect &rect
 void wdgPaletteWall::paint_cell_contents(QPainter *p, int row, int col, const QRect &rect) {
 	int pindex = palette_index(row, col);
 	int index = color_index(row, col);
-	double brightness;
+	double brightness = 0;
 	_color_RGB *rgb = &palette_RGB.noswap[pindex];
 	QColor color = QColor(rgb->r, rgb->g, rgb->b);
 	QColor bg;
@@ -470,7 +468,7 @@ void wdgPaletteEditor::set_internal_color(int index, const QColor &qrgb, bool up
 	rgb->b = qrgb.blue();
 
 	if (update_palette) {
-		ntsc_set(nullptr, TRUE, 0, (BYTE *)palette_RGB.noswap, nullptr, (BYTE *)palette_RGB.noswap);
+		ntsc_set(nullptr, !(cfg->filter == NTSC_FILTER), 0, (BYTE *)palette_RGB.noswap, nullptr, (BYTE *)palette_RGB.noswap);
 		gfx_palette_update();
 	}
 }
@@ -491,7 +489,7 @@ void wdgPaletteEditor::s_palette_ppu(UNUSED(int row), UNUSED(int col)) {
 void wdgPaletteEditor::s_slider_and_spin(int i) {
 	int index = widget_Color_Selected->color;
 	QColor qrgb = widget_Palette_Wall->color_at(index);
-	int h, s, v;
+	int h = 0, s = 0, v = 0;
 
 	qrgb.getHsv(&h, &s, &v);
 
@@ -573,11 +571,9 @@ void wdgPaletteEditor::s_palette_save(UNUSED(bool checked)) {
 	emu_pause(FALSE);
 }
 void wdgPaletteEditor::s_palette_reset(UNUSED(bool checked)) {
-	int i;
-
 	widget_Palette_Wall->colors_reset();
 
-	for (i = 0; i < widget_Palette_Wall->count(); i++) {
+	for (int i = 0; i < widget_Palette_Wall->count(); i++) {
 		QColor qrgb = widget_Palette_Wall->color_at(i);
 
 		set_internal_color(i, qrgb, false);

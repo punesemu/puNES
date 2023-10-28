@@ -102,7 +102,7 @@ void ntsc_rgb_modifier(nes_ntsc_t *ntsc, BYTE *palette_out, SWORD min, SWORD red
 	WORD i = 0;
 
 	// prima ottengo la paletta monocromatica
-	ntsc_set(ntsc, TRUE, PALETTE_MONO, 0, 0, palette_out);
+	ntsc_set(ntsc, TRUE, PALETTE_MONO, NULL, NULL, palette_out);
 	// quindi la modifico
 	for (i = 0; i < NUM_COLORS; i++, pRGB++) {
 		// rosso
@@ -111,11 +111,11 @@ void ntsc_rgb_modifier(nes_ntsc_t *ntsc, BYTE *palette_out, SWORD min, SWORD red
 		change_color(&pRGB->b, min, blue);
 	}
 	// ed infine utilizzo la nuova
-	ntsc_set(ntsc, TRUE, 0, 0, palette_out, palette_out);
+	ntsc_set(ntsc, TRUE, 0, NULL, palette_out, palette_out);
 }
 void ntsc_filter_parameters_changed(void) {
-	ntsc_set(NULL, FALSE, 0, 0, (BYTE *)palette_RGB.noswap, 0);
-	ntsc_set(NULL, FALSE, 0, 0, (BYTE *)palette_RGB.swapped, 0);
+	ntsc_set(NULL, FALSE, 0, NULL, (BYTE *)palette_RGB.noswap, NULL);
+	ntsc_set(NULL, FALSE, 0, NULL, (BYTE *)palette_RGB.swapped, NULL);
 }
 void ntsc_filter_parameters_default(void) {
 	switch (cfg->ntsc_format) {
