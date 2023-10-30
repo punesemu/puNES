@@ -620,7 +620,7 @@
     </message>
     <message>
       <source>SNES Mouse ($4017.0)</source>
-      <translation type="unfinished">SNES Mouse ($4017.0)</translation>
+      <translation>فأرة سنيس ($4017.0)</translation>
     </message>
     <message>
       <source>Unknown Famiclone Keyboard (Golden Key)</source>
@@ -628,167 +628,167 @@
     </message>
     <message>
       <source>Subor Keyboard plus mouse (24-bit $4017)</source>
-      <translation type="unfinished">Subor Keyboard plus mouse (24-bit $4017)</translation>
+      <translation>لوحة مفاتيح ملك النمور الذهبي إضافة للفأرة (24-بت $4017)</translation>
     </message>
     <message>
       <source>Port Test</source>
-      <translation type="unfinished">Port Test</translation>
+      <translation>اختبار المنفذ</translation>
     </message>
     <message>
       <source>Bandai Multi Game Player Gamepad</source>
-      <translation type="unfinished">Bandai Multi Game Player Gamepad</translation>
+      <translation>وحدة تحكم بانداي متعددة الألعاب</translation>
     </message>
     <message>
       <source>Venom TV Dance Mat</source>
-      <translation type="unfinished">Venom TV Dance Mat</translation>
+      <translation>Venom TV Dance Mat</translation>
     </message>
     <message>
       <source>LG TV Remote Control</source>
-      <translation type="unfinished">LG TV Remote Control</translation>
+      <translation>ريموت تلفاز إل جي</translation>
     </message>
   </context>
   <context>
     <name>dlgJsc</name>
     <message>
       <source>Close Window</source>
-      <translation type="unfinished">Close Window</translation>
+      <translation>إغلاق النافذة</translation>
     </message>
     <message>
       <source>Save Configuration</source>
-      <translation type="unfinished">Save Configuration</translation>
+      <translation>حفظ الإعدادات</translation>
     </message>
   </context>
   <context>
     <name>dlgKeyboard</name>
     <message>
       <source>Virtual Keyboard</source>
-      <translation type="unfinished">Virtual Keyboard</translation>
+      <translation>لوحة المفاتيح الافتراضية</translation>
     </message>
     <message>
       <source>Subor Keyboard</source>
-      <translation type="unfinished">Subor Keyboard</translation>
+      <translation>لوحة مفاتيح ملك النمور الذهبي</translation>
     </message>
     <message>
       <source>Options</source>
-      <translation type="unfinished">Options</translation>
+      <translation>الخيارات</translation>
     </message>
     <message>
       <source>Size</source>
-      <translation type="unfinished">Size</translation>
+      <translation>الحجم</translation>
     </message>
     <message>
       <source>1.0x</source>
-      <translation type="unfinished">1.0x</translation>
+      <translation>1.0x</translation>
     </message>
     <message>
       <source>1.5x</source>
-      <translation type="unfinished">1.5x</translation>
+      <translation>1.5x</translation>
     </message>
     <message>
       <source>2.0x</source>
-      <translation type="unfinished">2.0x</translation>
+      <translation>2.0x</translation>
     </message>
     <message>
       <source>2.5x</source>
-      <translation type="unfinished">2.5x</translation>
+      <translation>2.5x</translation>
     </message>
     <message>
       <source>Mode</source>
-      <translation type="unfinished">Mode</translation>
+      <translation>الوضع</translation>
     </message>
     <message>
       <source>Setup</source>
-      <translation type="unfinished">Setup</translation>
+      <translation>إعداد</translation>
     </message>
     <message>
       <source>Extended Mode (enable support for keypad, F10, F11, F12 and &quot;` &quot;. P.S. : &apos;Study and Game 32-in-1&apos; have problems with this mode)</source>
-      <translation type="unfinished">Extended Mode (enable support for keypad, F10, F11, F12 and &quot;` &quot;. P.S. : &apos;Study and Game 32-in-1&apos; have problems with this mode)</translation>
+      <translation>الوضع الموسّع (تمكين دعم الأزرار، F10، F11، F12 وَ &quot;` &quot;. PS.:&apos;أدرس والعب 32-في-1&apos; لديها مشكلة مع هذا الوضع)</translation>
     </message>
   </context>
   <context>
     <name>dlgLog</name>
     <message>
       <source>Log</source>
-      <translation type="unfinished">Log</translation>
+      <translation>السجل</translation>
     </message>
     <message>
       <source>Close</source>
-      <translation type="unfinished">Close</translation>
+      <translation>إغلاق</translation>
     </message>
   </context>
   <context>
     <name>dlgSettings</name>
     <message>
       <source>Settings</source>
-      <translation type="unfinished">Settings</translation>
+      <translation>الإعدادات</translation>
     </message>
     <message>
       <source>General</source>
-      <translation type="unfinished">General</translation>
+      <translation>العامّة</translation>
     </message>
     <message>
       <source>Video</source>
-      <translation type="unfinished">Video</translation>
+      <translation>فيديو</translation>
     </message>
     <message>
       <source>Audio</source>
-      <translation type="unfinished">Audio</translation>
+      <translation>صوت</translation>
     </message>
     <message>
       <source>Input</source>
-      <translation type="unfinished">Input</translation>
+      <translation>تحكم</translation>
     </message>
     <message>
       <source>PPU</source>
-      <translation type="unfinished">PPU</translation>
+      <translation>و.م.ص</translation>
     </message>
     <message>
       <source>Cheats</source>
-      <translation type="unfinished">Cheats</translation>
+      <translation>الغشّ</translation>
     </message>
     <message>
       <source>Save Settings</source>
-      <translation type="unfinished">Save Settings</translation>
+      <translation>حفظ الإعدادات</translation>
     </message>
     <message>
       <source>Close Settings</source>
-      <translation type="unfinished">Close Settings</translation>
+      <translation>إغلاق</translation>
     </message>
     <message>
       <source>Rewind Mode On/Off</source>
-      <translation type="unfinished">Rewind Mode On/Off</translation>
+      <translation>وضع اللف تفعيل/تعطيل</translation>
     </message>
     <message>
       <source>Rewind Step Backward</source>
-      <translation type="unfinished">Rewind Step Backward</translation>
+      <translation>اللف خطوة للخلف</translation>
     </message>
     <message>
       <source>Rewind Step Forward</source>
-      <translation type="unfinished">Rewind Step Forward</translation>
+      <translation>اللف خطوة للأمام</translation>
     </message>
     <message>
       <source>Rewind Fast Forward</source>
-      <translation type="unfinished">Rewind Fast Forward</translation>
+      <translation>تسريع اللف للأمام </translation>
     </message>
     <message>
       <source>Rewind Play</source>
-      <translation type="unfinished">Rewind Play</translation>
+      <translation>شغل اللف</translation>
     </message>
     <message>
       <source>Rewind Pause</source>
-      <translation type="unfinished">Rewind Pause</translation>
+      <translation>إيقاف اللف</translation>
     </message>
     <message>
       <source>Rewind Fast Backward</source>
-      <translation type="unfinished">Rewind Fast Backward</translation>
+      <translation>تسريع اللف للخلف</translation>
     </message>
     <message>
       <source>Recording</source>
-      <translation type="unfinished">Recording</translation>
+      <translation>تسجيل</translation>
     </message>
     <message>
       <source>Toggle the Menu Bar in Fullscreen</source>
-      <translation type="unfinished">Toggle the Menu Bar in Fullscreen</translation>
+      <translation>تبديل شريط القوائم أثناءَ ملء الشاشة</translation>
     </message>
     <message>
       <source>Capture/Release Input</source>
@@ -799,39 +799,39 @@
     <name>dlgStdPad</name>
     <message>
       <source>Controller %1 : Standard Pad</source>
-      <translation type="unfinished">Controller %1 : Standard Pad</translation>
+      <translation>وحدة التحكم %1 : العادية</translation>
     </message>
     <message>
       <source>Auto</source>
-      <translation type="unfinished">Auto</translation>
+      <translation>تلقائية</translation>
     </message>
     <message>
       <source>Original</source>
-      <translation type="unfinished">Original</translation>
+      <translation>أصليّة</translation>
     </message>
     <message>
       <source>3rd-party</source>
-      <translation type="unfinished">3rd-party</translation>
+      <translation>طرف ثالث</translation>
     </message>
     <message>
       <source>Keyboard</source>
-      <translation type="unfinished">Keyboard</translation>
+      <translation>لوحة المفاتيح</translation>
     </message>
     <message>
       <source>Select device first</source>
-      <translation type="unfinished">Select device first</translation>
+      <translation>حدد الجهاز أولاً</translation>
     </message>
     <message>
       <source>Press a key (ESC for the previous value &quot;%1&quot;)</source>
-      <translation type="unfinished">Press a key (ESC for the previous value &quot;%1&quot;)</translation>
+      <translation>اضغط على زر (ESC للقيمة السابقة &quot;%1&quot;)</translation>
     </message>
     <message>
       <source>Standard Pad</source>
-      <translation type="unfinished">Standard Pad</translation>
+      <translation>وحدة التحكم العاديّة</translation>
     </message>
     <message>
       <source>ID</source>
-      <translation type="unfinished">ID</translation>
+      <translation>ID</translation>
     </message>
     <message>
       <source>Up</source>
@@ -1251,7 +1251,7 @@
     </message>
     <message>
       <source>&amp;Switch sides</source>
-      <translation type="unfinished">&amp;Switch sides</translation>
+      <translation>(&amp;S)تبديل الجهة</translation>
     </message>
     <message>
       <source>&amp;Save to file</source>
@@ -1347,15 +1347,15 @@
     </message>
     <message>
       <source>&amp;File</source>
-      <translation type="unfinished">&amp;File</translation>
+      <translation>(&amp;F)مِلَفّ</translation>
     </message>
     <message>
       <source>&amp;Recent Roms</source>
-      <translation type="unfinished">&amp;Recent Roms</translation>
+      <translation>(&amp;R)الرومات الأخيرة</translation>
     </message>
     <message>
       <source>&amp;NES</source>
-      <translation type="unfinished">&amp;NES</translation>
+      <translation>(&amp;N)نيس</translation>
     </message>
     <message>
       <source>&amp;Disk Side</source>
@@ -1371,7 +1371,7 @@
     </message>
     <message>
       <source>&amp;Audio</source>
-      <translation type="unfinished">&amp;Audio</translation>
+      <translation>(&amp;A)صوت</translation>
     </message>
     <message>
       <source>&amp;Input</source>
@@ -1399,7 +1399,7 @@
     </message>
     <message>
       <source>&amp;Turn Off</source>
-      <translation type="unfinished">&amp;Turn Off</translation>
+      <translation>(&amp;T)إيقاف التشغيل</translation>
     </message>
     <message>
       <source>Too&amp;ls</source>
@@ -1447,15 +1447,15 @@
     </message>
     <message>
       <source>Open IPS/BPS/XDELTA Patch</source>
-      <translation type="unfinished">Open IPS/BPS/XDELTA Patch</translation>
+      <translation>فتح مِلَفّ رُقْعَة (پاتش) IPS/BPS/XDELTA</translation>
     </message>
     <message>
       <source>&amp;General</source>
-      <translation type="unfinished">&amp;General</translation>
+      <translation>(&amp;G)العامّة</translation>
     </message>
     <message>
       <source>Save Unalte&amp;red NES screen</source>
-      <translation type="unfinished">Save Unalte&amp;red NES screen</translation>
+      <translation>(&amp;R)حفظ لقطة الشاشة الأصلية</translation>
     </message>
     <message>
       <source>Widgets</source>
@@ -1463,11 +1463,11 @@
     </message>
     <message>
       <source>Start &amp;AUDIO recording</source>
-      <translation type="unfinished">Start &amp;AUDIO recording</translation>
+      <translation>(&amp;A)بَدْء تسجيل صوت</translation>
     </message>
     <message>
       <source>Start &amp;VIDEO recording</source>
-      <translation type="unfinished">Start &amp;VIDEO recording</translation>
+      <translation>(&amp;V)بَدْء تسجيل فيديو</translation>
     </message>
     <message>
       <source>Stop &amp;AUDIO recording</source>
@@ -1479,7 +1479,7 @@
     </message>
     <message>
       <source>Start/Stop &amp;AUDIO recording</source>
-      <translation type="unfinished">Start/Stop &amp;AUDIO recording</translation>
+      <translation>(&amp;A)بَدْء/إيقاف تسجيل صوت</translation>
     </message>
     <message>
       <source>&amp;Recording</source>
@@ -1487,12 +1487,12 @@
     </message>
     <message>
       <source>Start/Stop &amp;VIDEO recording</source>
-      <translation type="unfinished">Start/Stop &amp;VIDEO recording</translation>
+      <translation>(&amp;V)بَدْء/إيقاف تسجيل فيديو</translation>
     </message>
     <message>
       <source>Slot %1 never used</source>
       <extracomment>Refers to the unused save slot. Important: Do not translate the &quot;%1&quot;.</extracomment>
-      <translation type="unfinished">Slot %1 never used</translation>
+      <translation>الفتحة %1 لم تُستَعمل</translation>
     </message>
     <message>
       <source>Slot &amp;A</source>
@@ -1512,7 +1512,7 @@
     </message>
     <message>
       <source>Fast Forward (hold button)</source>
-      <translation type="unfinished">Fast Forward (hold button)</translation>
+      <translation>التسريع (الضغط على الزر)</translation>
     </message>
     <message>
       <source>puNES tape image</source>
@@ -1552,7 +1552,7 @@
     </message>
     <message>
       <source>Toggle &amp;Fast Forward</source>
-      <translation type="unfinished">Toggle &amp;Fast Forward</translation>
+      <translation>(&amp;F)تبديل التسريع</translation>
     </message>
     <message>
       <source>&amp;Play</source>
@@ -1568,7 +1568,7 @@
     </message>
     <message>
       <source>Shout into &amp;Microphone</source>
-      <translation type="unfinished">Shout into &amp;Microphone</translation>
+      <translation>(&amp;M)أصرخ في الميكروفون</translation>
     </message>
     <message>
       <source>Toggle Virtual &amp;Keyboard</source>
@@ -1580,27 +1580,27 @@
     </message>
     <message>
       <source>Edit Current iNES/NES2.0 &amp;Header</source>
-      <translation type="unfinished">Edit Current iNES/NES2.0 &amp;Header</translation>
+      <translation>(&amp;H) تعديل الترويسة iNES/NES2.0 الحالية</translation>
     </message>
     <message>
       <source>Toggle &amp;GUI in window</source>
-      <translation type="unfinished">Toggle &amp;GUI in window</translation>
+      <translation>(&amp;T)إخفاء/إظهار الواجهة</translation>
     </message>
     <message>
       <source>Sa&amp;ve Screenshot</source>
-      <translation type="unfinished">Sa&amp;ve Screenshot</translation>
+      <translation>(&amp;H) أخذ لقطة شاشة</translation>
     </message>
     <message>
       <source>Insert &amp;Coin</source>
-      <translation type="unfinished">Insert &amp;Coin</translation>
+      <translation>إدراج قطعة نقدية</translation>
     </message>
     <message>
       <source>Open &amp;working folder</source>
-      <translation type="unfinished">Open &amp;working folder</translation>
+      <translation>(&amp;O)فتح مجلد المحاكي</translation>
     </message>
     <message>
       <source>Apply IPS/BPS/XDELTA &amp;Patch</source>
-      <translation type="unfinished">Apply IPS/BPS/XDELTA &amp;Patch</translation>
+      <translation>تطبيق رُقعة(پاتش) IPS/BPS/XDELTA</translation>
     </message>
     <message>
       <source>Open &amp;config folder</source>
@@ -1773,12 +1773,12 @@
     <message>
       <source>[red]error on game genie rom file[normal]</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">[red]error on game genie rom file[normal]</translation>
+      <translation>[red]هناك خطب ما مع مِلَفّ روم غيم جيني هذا[normal]</translation>
     </message>
     <message>
       <source>[red]error on FDS bios file[normal]</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">[red]error on FDS bios file[normal]</translation>
+      <translation>[red]هناك خطب ما مع مِلَفّ بايوس FDS هذا[normal]</translation>
     </message>
     <message>
       <source>[red]error on shader file[normal]</source>
@@ -1813,7 +1813,7 @@
     <message>
       <source>state [cyan]%1[normal] saved successfully</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">state [cyan]%1[normal] saved successfully</translation>
+      <translation>تمّ حفظ الحالة [cyan]%1[normal] بنجاح</translation>
     </message>
     <message>
       <source>state [cyan]%1[normal] loaded successfully</source>
@@ -1848,18 +1848,18 @@
     <message>
       <source>[red]error[normal] on write save state</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">[red]error[normal] on write save state</translation>
+      <translation>[red]تعثرت[normal] كتابة حالة الحفظ</translation>
     </message>
   </context>
   <context>
     <name>recStatusBar</name>
     <message>
       <source>Audio</source>
-      <translation type="unfinished">Audio</translation>
+      <translation>صوت</translation>
     </message>
     <message>
       <source>Video</source>
-      <translation type="unfinished">Video</translation>
+      <translation>فيديو</translation>
     </message>
   </context>
   <context>
@@ -2489,7 +2489,7 @@
     </message>
     <message>
       <source>Fast forward (from 1x to 8x)</source>
-      <translation type="unfinished">Fast forward (from 1x to 8x)</translation>
+      <translation>التسريع (من ×1 إلى ×8)</translation>
     </message>
     <message>
       <source>Fast rewind (from 1x to 8x)</source>
@@ -2508,11 +2508,11 @@
     <name>wdgRotateScreen</name>
     <message>
       <source>Rotate the screen 90 degrees to the Right</source>
-      <translation type="unfinished">Rotate the screen 90 degrees to the Right</translation>
+      <translation>تدوير الشاشة 90 درجة إلى اليمين</translation>
     </message>
     <message>
       <source>Rotate the screen 90 degrees to the left</source>
-      <translation type="unfinished">Rotate the screen 90 degrees to the left</translation>
+      <translation>تدوير الشاشة 90 درجة إلى اليسار</translation>
     </message>
     <message>
       <source>Current degree of rotation</source>
@@ -2520,7 +2520,7 @@
     </message>
     <message>
       <source>Degrees</source>
-      <translation type="unfinished">Degrees</translation>
+      <translation>درجات</translation>
     </message>
   </context>
   <context>
@@ -2531,7 +2531,7 @@
     </message>
     <message>
       <source>Tape</source>
-      <translation type="unfinished">Tape</translation>
+      <translation>شريط</translation>
     </message>
     <message>
       <source>Play</source>
@@ -2562,7 +2562,7 @@
     </message>
     <message>
       <source>Mono</source>
-      <translation type="unfinished">Mono</translation>
+      <translation>مونو</translation>
     </message>
     <message>
       <source>Stereo Delay</source>
@@ -2582,7 +2582,7 @@
     </message>
     <message>
       <source>Settings</source>
-      <translation type="unfinished">Settings</translation>
+      <translation>الإعدادات</translation>
     </message>
     <message>
       <source>Channels</source>
@@ -2606,27 +2606,27 @@
     </message>
     <message>
       <source>192000</source>
-      <translation type="unfinished">192000</translation>
+      <translation>192000</translation>
     </message>
     <message>
       <source>96000</source>
-      <translation type="unfinished">96000</translation>
+      <translation>96000</translation>
     </message>
     <message>
       <source>48000</source>
-      <translation type="unfinished">48000</translation>
+      <translation>48000</translation>
     </message>
     <message>
       <source>44100</source>
-      <translation type="unfinished">44100</translation>
+      <translation>44100</translation>
     </message>
     <message>
       <source>22050</source>
-      <translation type="unfinished">22050</translation>
+      <translation>22050</translation>
     </message>
     <message>
       <source>11025</source>
-      <translation type="unfinished">11025</translation>
+      <translation>11025</translation>
     </message>
   </context>
   <context>
@@ -2637,7 +2637,7 @@
     </message>
     <message>
       <source>Settings</source>
-      <translation type="unfinished">Settings</translation>
+      <translation>الإعدادات</translation>
     </message>
     <message>
       <source>Disabled</source>
@@ -2656,7 +2656,7 @@
     <name>wdgSettingsGeneral</name>
     <message>
       <source>[Select a file]</source>
-      <translation type="unfinished">[Select a file]</translation>
+      <translation>[اختر مِلَفّ]</translation>
     </message>
     <message>
       <source>All files</source>
@@ -2664,11 +2664,11 @@
     </message>
     <message>
       <source>Select Game Genie ROM file</source>
-      <translation type="unfinished">Select Game Genie ROM file</translation>
+      <translation>اختيار مِلَفّ روم غيم جيني</translation>
     </message>
     <message>
       <source>Select FDS BIOS file</source>
-      <translation type="unfinished">Select FDS BIOS file</translation>
+      <translation>اختيار مِلَفّ بايوس FDS</translation>
     </message>
     <message>
       <source>General Settings</source>
@@ -2676,51 +2676,51 @@
     </message>
     <message>
       <source>3x</source>
-      <translation type="unfinished">3x</translation>
+      <translation>3x</translation>
     </message>
     <message>
       <source>4x</source>
-      <translation type="unfinished">4x</translation>
+      <translation>4x</translation>
     </message>
     <message>
       <source>5x</source>
-      <translation type="unfinished">5x</translation>
+      <translation>5x</translation>
     </message>
     <message>
       <source>Auto</source>
-      <translation type="unfinished">Auto</translation>
+      <translation>تلقائي</translation>
     </message>
     <message>
       <source>NTSC</source>
-      <translation type="unfinished">NTSC</translation>
+      <translation>إن تي إس سي</translation>
     </message>
     <message>
       <source>PAL</source>
-      <translation type="unfinished">PAL</translation>
+      <translation>بال</translation>
     </message>
     <message>
       <source>Dendy</source>
-      <translation type="unfinished">Dendy</translation>
+      <translation>ديندي</translation>
     </message>
     <message>
       <source>System Roms</source>
-      <translation type="unfinished">System Roms</translation>
+      <translation>رومات الأنظمة</translation>
     </message>
     <message>
       <source>Mode</source>
-      <translation type="unfinished">Mode</translation>
+      <translation>الوضع</translation>
     </message>
     <message>
       <source>English</source>
-      <translation type="unfinished">English</translation>
+      <translation>الانجليزية</translation>
     </message>
     <message>
       <source>Italian</source>
-      <translation type="unfinished">Italian</translation>
+      <translation>الإيطالية</translation>
     </message>
     <message>
       <source>Russian</source>
-      <translation type="unfinished">Russian</translation>
+      <translation>الروسية</translation>
     </message>
     <message>
       <source>Pause when in background</source>
@@ -2728,7 +2728,7 @@
     </message>
     <message>
       <source>Language</source>
-      <translation type="unfinished">Language</translation>
+      <translation>اللغة</translation>
     </message>
     <message>
       <source>Save settings on exit</source>
@@ -2740,7 +2740,7 @@
     </message>
     <message>
       <source>Fast Forward velocity</source>
-      <translation type="unfinished">Fast Forward velocity</translation>
+      <translation>سرعة التسريع</translation>
     </message>
     <message>
       <source>Misc</source>
@@ -2748,27 +2748,27 @@
     </message>
     <message>
       <source>Settings</source>
-      <translation type="unfinished">Settings</translation>
+      <translation>الإعدادات</translation>
     </message>
     <message>
       <source>Game Genie Rom file</source>
-      <translation type="unfinished">Game Genie Rom file</translation>
+      <translation>مِلَفّ روم غيم جيني</translation>
     </message>
     <message>
       <source>FDS Bios file</source>
-      <translation type="unfinished">FDS Bios file</translation>
+      <translation>مِلَفّ بايوس FDS</translation>
     </message>
     <message>
       <source>Rewind minutes</source>
-      <translation type="unfinished">Rewind minutes</translation>
+      <translation>دقائق اللف</translation>
     </message>
     <message>
       <source>Spanish</source>
-      <translation type="unfinished">Spanish</translation>
+      <translation>الإسبانية</translation>
     </message>
     <message>
       <source>Hungarian</source>
-      <translation type="unfinished">Hungarian</translation>
+      <translation>المجرية</translation>
     </message>
     <message>
       <source>Turkish</source>
@@ -2776,7 +2776,7 @@
     </message>
     <message>
       <source>Portuguese (Brazil)</source>
-      <translation type="unfinished">Portuguese (Brazil)</translation>
+      <translation>البرتغالية (البرازيل)</translation>
     </message>
     <message>
       <source>Off</source>
@@ -2804,15 +2804,15 @@
     </message>
     <message>
       <source>Unlim.</source>
-      <translation type="unfinished">Unlim.</translation>
+      <translation>مُطلَق</translation>
     </message>
     <message>
       <source>2x</source>
-      <translation type="unfinished">2x</translation>
+      <translation>2x</translation>
     </message>
     <message>
       <source>Chinese Simplified</source>
-      <translation type="unfinished">Chinese Simplified</translation>
+      <translation>الصينية المبسّطة</translation>
     </message>
     <message>
       <source>Insert disk 1 side A at power-up/reset</source>
@@ -2832,15 +2832,15 @@
     </message>
     <message>
       <source>Use fast forward when loading the disk/side</source>
-      <translation type="unfinished">Use fast forward when loading the disk/side</translation>
+      <translation>استعمال التسريع في أثناء تحميل القرص/الجانب</translation>
     </message>
     <message>
       <source>French</source>
-      <translation type="unfinished">French</translation>
+      <translation>الفرنسية</translation>
     </message>
     <message>
       <source>German</source>
-      <translation type="unfinished">German</translation>
+      <translation>الألمانية</translation>
     </message>
     <message>
       <source>0x00</source>
@@ -2864,11 +2864,11 @@
     </message>
     <message>
       <source>Polish</source>
-      <translation type="unfinished">Polish</translation>
+      <translation>البولندية</translation>
     </message>
     <message>
       <source>Arabic</source>
-      <translation type="unfinished">Arabic</translation>
+      <translation>العربيّة</translation>
     </message>
   </context>
   <context>
@@ -2995,11 +2995,11 @@
     </message>
     <message>
       <source>Start/Stop AUDIO recording</source>
-      <translation type="unfinished">Start/Stop AUDIO recording</translation>
+      <translation>بَدْء/إيقاف تسجيل صوت</translation>
     </message>
     <message>
       <source>Start/Stop VIDEO recording</source>
-      <translation type="unfinished">Start/Stop VIDEO recording</translation>
+      <translation>بَدْء/إيقاف تسجيل فيديو</translation>
     </message>
     <message>
       <source>Start/Stop WAV recording</source>
@@ -3054,7 +3054,7 @@
     </message>
     <message>
       <source>Unlimited Sprites</source>
-      <translation type="unfinished">Unlimited Sprites</translation>
+      <translation>كائنات لامحدودة</translation>
     </message>
     <message>
       <source>Enable Extra Scanlines</source>
@@ -3319,7 +3319,7 @@
     </message>
     <message>
       <source>[Select a file]</source>
-      <translation type="unfinished">[Select a file]</translation>
+      <translation>[اختر مِلَفّ]</translation>
     </message>
     <message>
       <source>Default</source>
@@ -3351,27 +3351,27 @@
     </message>
     <message>
       <source>1x</source>
-      <translation type="unfinished">1x</translation>
+      <translation>1x</translation>
     </message>
     <message>
       <source>2x</source>
-      <translation type="unfinished">2x</translation>
+      <translation>2x</translation>
     </message>
     <message>
       <source>3x</source>
-      <translation type="unfinished">3x</translation>
+      <translation>3x</translation>
     </message>
     <message>
       <source>4x</source>
-      <translation type="unfinished">4x</translation>
+      <translation>4x</translation>
     </message>
     <message>
       <source>5x</source>
-      <translation type="unfinished">5x</translation>
+      <translation>5x</translation>
     </message>
     <message>
       <source>6x</source>
-      <translation type="unfinished">6x</translation>
+      <translation>6x</translation>
     </message>
     <message>
       <source>Scale</source>
@@ -3387,11 +3387,11 @@
     </message>
     <message>
       <source>1:1</source>
-      <translation type="unfinished">1:1</translation>
+      <translation>1:1</translation>
     </message>
     <message>
       <source>5:4</source>
-      <translation type="unfinished">5:4</translation>
+      <translation>5:4</translation>
     </message>
     <message>
       <source>8:7 (NTSC TV)</source>
@@ -3419,11 +3419,11 @@
     </message>
     <message>
       <source>NTSC</source>
-      <translation type="unfinished">NTSC</translation>
+      <translation>إن تي إس سي</translation>
     </message>
     <message>
       <source>PAL/Dendy</source>
-      <translation type="unfinished">PAL/Dendy</translation>
+      <translation>بال/ديندي</translation>
     </message>
     <message>
       <source>Right</source>
@@ -3559,7 +3559,7 @@
     </message>
     <message>
       <source>PAL</source>
-      <translation type="unfinished">PAL</translation>
+      <translation>بال</translation>
     </message>
     <message>
       <source>Sony CXA2025AS US</source>
@@ -3643,7 +3643,7 @@
     </message>
     <message>
       <source>Stretch in fullscreen</source>
-      <translation type="unfinished">Stretch in fullscreen</translation>
+      <translation>تمديد أثناء ملء الشاشة</translation>
     </message>
     <message>
       <source>Soft stretch</source>
@@ -3659,19 +3659,19 @@
     </message>
     <message>
       <source>0 degrees</source>
-      <translation type="unfinished">0 degrees</translation>
+      <translation>0 درجة</translation>
     </message>
     <message>
       <source>90 degrees</source>
-      <translation type="unfinished">90 degrees</translation>
+      <translation>90 درجة</translation>
     </message>
     <message>
       <source>180 degrees</source>
-      <translation type="unfinished">180 degrees</translation>
+      <translation>180 درجة</translation>
     </message>
     <message>
       <source>270 degrees</source>
-      <translation type="unfinished">270 degrees</translation>
+      <translation>270 درجة</translation>
     </message>
     <message>
       <source>Raw</source>
@@ -3743,7 +3743,7 @@
     </message>
     <message>
       <source>Fullscreen</source>
-      <translation type="unfinished">Fullscreen</translation>
+      <translation>ملء الشاشة</translation>
     </message>
     <message>
       <source>* applied if supported by the monitor</source>
@@ -3838,15 +3838,15 @@
     <name>wdgState</name>
     <message>
       <source>Save/Load Slot Box</source>
-      <translation type="unfinished">Save/Load Slot Box</translation>
+      <translation>صندوق فتحات الحفظ/التحميل</translation>
     </message>
     <message>
       <source>Save state</source>
-      <translation type="unfinished">Save state</translation>
+      <translation>حفظ الحالة</translation>
     </message>
     <message>
       <source>Save/Load State</source>
-      <translation type="unfinished">Save/Load State</translation>
+      <translation>حفظ/تحميل الحالة</translation>
     </message>
     <message>
       <source>Load state</source>
