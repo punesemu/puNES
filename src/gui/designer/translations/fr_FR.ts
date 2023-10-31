@@ -3775,7 +3775,7 @@
     </message>
     <message>
       <source>PAL TV3x</source>
-      <translation>AL TV3x</translation>
+      <translation>PAL TV3x</translation>
     </message>
     <message>
       <source>PAL TV4x</source>
