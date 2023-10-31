@@ -624,7 +624,7 @@
     </message>
     <message>
       <source>Unknown Famiclone Keyboard (Golden Key)</source>
-      <translation type="unfinished">Unknown Famiclone Keyboard (Golden Key)</translation>
+      <translation>لوحة مفاتيح فاميكلون غير معروفة (Golden Key)</translation>
     </message>
     <message>
       <source>Subor Keyboard plus mouse (24-bit $4017)</source>
@@ -1263,7 +1263,7 @@
     </message>
     <message>
       <source>F&amp;ullscreen</source>
-      <translation type="unfinished">F&amp;ullscreen</translation>
+      <translation>(&amp;F) ملء الشاشة</translation>
     </message>
     <message>
       <source>&amp;Game Genie Rom Mode</source>
@@ -1271,63 +1271,63 @@
     </message>
     <message>
       <source>S&amp;ave state</source>
-      <translation type="unfinished">S&amp;ave state</translation>
+      <translation>(&amp;A) حفظ الحالة</translation>
     </message>
     <message>
       <source>L&amp;oad state</source>
-      <translation type="unfinished">L&amp;oad state</translation>
+      <translation>(&amp;O)تحميل الحالة</translation>
     </message>
     <message>
       <source>&amp;Increment slot</source>
-      <translation type="unfinished">&amp;Increment slot</translation>
+      <translation>(&amp;I)الفُتْحَة التالية</translation>
     </message>
     <message>
       <source>&amp;Decrement slot</source>
-      <translation type="unfinished">&amp;Decrement slot</translation>
+      <translation>(&amp;I)الفُتْحَة السابقة</translation>
     </message>
     <message>
       <source>Slot &amp;0</source>
-      <translation type="unfinished">Slot &amp;0</translation>
+      <translation>الفُتْحَة &amp;0</translation>
     </message>
     <message>
       <source>Slot &amp;1</source>
-      <translation type="unfinished">Slot &amp;1</translation>
+      <translation>الفُتْحَة &amp;1</translation>
     </message>
     <message>
       <source>Slot &amp;2</source>
-      <translation type="unfinished">Slot &amp;2</translation>
+      <translation>الفُتْحَة &amp;2</translation>
     </message>
     <message>
       <source>Slot &amp;3</source>
-      <translation type="unfinished">Slot &amp;3</translation>
+      <translation>الفُتْحَة &amp;3</translation>
     </message>
     <message>
       <source>Slot &amp;4</source>
-      <translation type="unfinished">Slot &amp;4</translation>
+      <translation>الفُتْحَة &amp;4</translation>
     </message>
     <message>
       <source>Slot &amp;5</source>
-      <translation type="unfinished">Slot &amp;5</translation>
+      <translation>الفُتْحَة &amp;5</translation>
     </message>
     <message>
       <source>&amp;About</source>
-      <translation type="unfinished">&amp;About</translation>
+      <translation>&amp;نبذة</translation>
     </message>
     <message>
       <source>Slot &amp;6</source>
-      <translation type="unfinished">Slot &amp;6</translation>
+      <translation>الفُتْحَة &amp;6</translation>
     </message>
     <message>
       <source>Slot &amp;7</source>
-      <translation type="unfinished">Slot &amp;7</translation>
+      <translation>الفُتْحَة &amp;7</translation>
     </message>
     <message>
       <source>Slot &amp;8</source>
-      <translation type="unfinished">Slot &amp;8</translation>
+      <translation>الفُتْحَة &amp;8</translation>
     </message>
     <message>
       <source>Slot &amp;9</source>
-      <translation type="unfinished">Slot &amp;9</translation>
+      <translation>الفُتْحَة &amp;9</translation>
     </message>
     <message>
       <source>&amp;Cheats List Mode</source>
@@ -1339,11 +1339,11 @@
     </message>
     <message>
       <source>&amp;Disabled</source>
-      <translation type="unfinished">&amp;Disabled</translation>
+      <translation>(&amp;D)معطل</translation>
     </message>
     <message>
       <source>&amp;Pause</source>
-      <translation type="unfinished">&amp;Pause</translation>
+      <translation>(&amp;P)إيقاف مؤقت</translation>
     </message>
     <message>
       <source>&amp;File</source>
@@ -1359,7 +1359,7 @@
     </message>
     <message>
       <source>&amp;Disk Side</source>
-      <translation type="unfinished">&amp;Disk Side</translation>
+      <translation>(&amp;D)جانب القرص</translation>
     </message>
     <message>
       <source>Setti&amp;ngs</source>
@@ -1391,7 +1391,7 @@
     </message>
     <message>
       <source>&amp;Help</source>
-      <translation type="unfinished">&amp;Help</translation>
+      <translation>&amp;مساعدة</translation>
     </message>
     <message>
       <source>&amp;Turn On</source>
@@ -1427,23 +1427,23 @@
     </message>
     <message>
       <source>NSF rom files</source>
-      <translation type="unfinished">NSF rom files</translation>
+      <translation>ملفات روم NSF</translation>
     </message>
     <message>
       <source>NSFE rom files</source>
-      <translation type="unfinished">NSFE rom files</translation>
+      <translation>ملفات روم NSFE</translation>
     </message>
     <message>
       <source>IPS patch files</source>
-      <translation type="unfinished">IPS patch files</translation>
+      <translation>ملفات رقعة IPS</translation>
     </message>
     <message>
       <source>BPS patch files</source>
-      <translation type="unfinished">BPS patch files</translation>
+      <translation>ملفات رقعة BPS</translation>
     </message>
     <message>
       <source>XDELTA patch files</source>
-      <translation type="unfinished">XDELTA patch files</translation>
+      <translation>ملفات رقعة XDELTA</translation>
     </message>
     <message>
       <source>Open IPS/BPS/XDELTA Patch</source>
@@ -1475,7 +1475,7 @@
     </message>
     <message>
       <source>Stop &amp;VIDEO recording</source>
-      <translation type="unfinished">Stop &amp;VIDEO recording</translation>
+      <translation>(&amp;V)إيقاف تسجيل الفيديو</translation>
     </message>
     <message>
       <source>Start/Stop &amp;AUDIO recording</source>
@@ -1496,11 +1496,11 @@
     </message>
     <message>
       <source>Slot &amp;A</source>
-      <translation type="unfinished">Slot &amp;A</translation>
+      <translation>الفُتْحَة &amp;A</translation>
     </message>
     <message>
       <source>Slot &amp;B</source>
-      <translation type="unfinished">Slot &amp;B</translation>
+      <translation>الفُتْحَة &amp;B</translation>
     </message>
     <message>
       <source>&amp;Vs System Controls</source>
@@ -1508,7 +1508,7 @@
     </message>
     <message>
       <source>&amp;Joypad/Gamepad Debug</source>
-      <translation type="unfinished">&amp;Joypad/Gamepad Debug</translation>
+      <translation>(&amp;J)اختبار وحدة التحكم/ذراع التحكم</translation>
     </message>
     <message>
       <source>Fast Forward (hold button)</source>
@@ -1576,7 +1576,7 @@
     </message>
     <message>
       <source>&amp;Show Log</source>
-      <translation type="unfinished">&amp;Show Log</translation>
+      <translation>(&amp;S)عرض السجل</translation>
     </message>
     <message>
       <source>Edit Current iNES/NES2.0 &amp;Header</source>
@@ -1693,12 +1693,12 @@
     <message>
       <source>disk [cyan]%1[normal] side [cyan]%2[normal] [yellow]ejected[normal]</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">disk [cyan]%1[normal] side [cyan]%2[normal] [yellow]ejected[normal]</translation>
+      <translation>قرص [cyan]%1[normal] جانب [cyan]%2[normal][yellow]تم إخراجه[normal]</translation>
     </message>
     <message>
       <source>you must [yellow]eject[normal] disk first</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">you must [yellow]eject[normal] disk first</translation>
+      <translation>يجب [yellow]إخراج[normal] القرص أولا</translation>
     </message>
     <message>
       <source>disk [cyan]%1[normal] side [cyan]%2[normal] [green]inserted[normal]</source>
@@ -1753,7 +1753,7 @@
     <message>
       <source>overclock enabled [green]VB[normal] [cyan]%1[normal], [green]PR[normal] [cyan]%2[normal]</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">overclock enabled [green]VB[normal] [cyan]%1[normal], [green]PR[normal] [cyan]%2[normal]</translation>
+      <translation>تعدي الميقت مُفَعّل [green]VB[normal][cyan]%1[normal]،[green]PR[normal][cyan]%2[normal]</translation>
     </message>
     <message>
       <source>[yellow]silence, the movie has begun[normal]</source>
@@ -1783,7 +1783,7 @@
     <message>
       <source>[red]error on shader file[normal]</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">[red]error on shader file[normal]</translation>
+      <translation>[red]هناك خطب ما مع مِلَفّ المظلل[normal]</translation>
     </message>
     <message>
       <source>[red]error on palette file[normal]</source>
@@ -1793,7 +1793,7 @@
     <message>
       <source>[red]errors[normal] on shader, use [green]&apos;No shader&apos;[cyan]</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">[red]errors[normal] on shader, use [green]&apos;No shader&apos;[cyan]</translation>
+      <translation>[red]أخطاء[normal]خاصّة بالمظلل، استعمل [green]&apos;دونَ مظلل&apos;[cyan]</translation>
     </message>
     <message>
       <source>switch on [cyan]%1x%2[normal] at [green]%3Hz[normal]</source>
@@ -1873,55 +1873,55 @@
     <name>wdgAPUChannels</name>
     <message>
       <source>APU Channels</source>
-      <translation type="unfinished">APU Channels</translation>
+      <translation>قنوات وحدة معالجة الصوت</translation>
     </message>
     <message>
       <source>Square 1</source>
-      <translation type="unfinished">Square 1</translation>
+      <translation>مربع 1</translation>
     </message>
     <message>
       <source>DMC</source>
-      <translation type="unfinished">DMC</translation>
+      <translation>قناة تضمين دلتا</translation>
     </message>
     <message>
       <source>Noise</source>
-      <translation type="unfinished">Noise</translation>
+      <translation>ضجيج</translation>
     </message>
     <message>
       <source>Square 2</source>
-      <translation type="unfinished">Square 2</translation>
+      <translation>مربع 2</translation>
     </message>
     <message>
       <source>Extra</source>
-      <translation type="unfinished">Extra</translation>
+      <translation>إضافية</translation>
     </message>
     <message>
       <source>Master</source>
-      <translation type="unfinished">Master</translation>
+      <translation>الرئيسيّ</translation>
     </message>
     <message>
       <source>Triangle</source>
-      <translation type="unfinished">Triangle</translation>
+      <translation>مثلث</translation>
     </message>
     <message>
       <source>active</source>
-      <translation type="unfinished">active</translation>
+      <translation>شغالة</translation>
     </message>
     <message>
       <source>volume</source>
-      <translation type="unfinished">volume</translation>
+      <translation>مستوى الصوت</translation>
     </message>
     <message>
       <source>Active all</source>
-      <translation type="unfinished">Active all</translation>
+      <translation>تفعيل الكل</translation>
     </message>
     <message>
       <source>Disable all</source>
-      <translation type="unfinished">Disable all</translation>
+      <translation>تعطيل الكل</translation>
     </message>
     <message>
       <source>Reset to defaults</source>
-      <translation type="unfinished">Reset to defaults</translation>
+      <translation>إعادة التعيين للوضع الافتراضي</translation>
     </message>
   </context>
   <context>
@@ -1956,7 +1956,7 @@
     </message>
     <message>
       <source>Show Tools</source>
-      <translation type="unfinished">Show Tools</translation>
+      <translation>عرض الأدوات</translation>
     </message>
     <message>
       <source>Import</source>
@@ -2019,11 +2019,11 @@
     <name>wdgCheatsEditor</name>
     <message>
       <source>Show Tools</source>
-      <translation type="unfinished">Show Tools</translation>
+      <translation>عرض الأدوات</translation>
     </message>
     <message>
       <source>Hide Tools</source>
-      <translation type="unfinished">Hide Tools</translation>
+      <translation>إخفاء الأدوات</translation>
     </message>
     <message>
       <source>All supported formats</source>
@@ -2085,113 +2085,113 @@
     <name>wdgNTSCBisqwitFilter</name>
     <message>
       <source>QWidth</source>
-      <translation type="unfinished">QWidth</translation>
+      <translation>عرض Q</translation>
     </message>
     <message>
       <source>YWidth</source>
-      <translation type="unfinished">YWidth</translation>
+      <translation>عرض Y</translation>
     </message>
     <message>
       <source>VBlend</source>
-      <translation type="unfinished">VBlend</translation>
+      <translation>VBlend</translation>
     </message>
     <message>
       <source>Brightness</source>
-      <translation type="unfinished">Brightness</translation>
+      <translation>السّطوع</translation>
     </message>
     <message>
       <source>IWidth</source>
-      <translation type="unfinished">IWidth</translation>
+      <translation>عرض I</translation>
     </message>
     <message>
       <source>Scanline</source>
-      <translation type="unfinished">Scanline</translation>
+      <translation>خطوط المسح</translation>
     </message>
     <message>
       <source>Saturation</source>
-      <translation type="unfinished">Saturation</translation>
+      <translation>التشبع</translation>
     </message>
     <message>
       <source>Contrast</source>
-      <translation type="unfinished">Contrast</translation>
+      <translation>التباين</translation>
     </message>
     <message>
       <source>Hue</source>
-      <translation type="unfinished">Hue</translation>
+      <translation>التدرج اللوني</translation>
     </message>
     <message>
       <source>Reset parameters to defaults</source>
-      <translation type="unfinished">Reset parameters to defaults</translation>
+      <translation>إعادة تعيين الإعدادات</translation>
     </message>
     <message>
       <source>MFields</source>
-      <translation type="unfinished">MFields</translation>
+      <translation>MFields</translation>
     </message>
   </context>
   <context>
     <name>wdgNTSCFilter</name>
     <message>
       <source>Artifacts</source>
-      <translation type="unfinished">Artifacts</translation>
+      <translation>التأثيرات</translation>
     </message>
     <message>
       <source>Fringing</source>
-      <translation type="unfinished">Fringing</translation>
+      <translation>تهديب</translation>
     </message>
     <message>
       <source>Resolution</source>
-      <translation type="unfinished">Resolution</translation>
+      <translation>دِقَّة الوضوح</translation>
     </message>
     <message>
       <source>Gamma</source>
-      <translation type="unfinished">Gamma</translation>
+      <translation>غاما</translation>
     </message>
     <message>
       <source>Bleed</source>
-      <translation type="unfinished">Bleed</translation>
+      <translation>نزيف</translation>
     </message>
     <message>
       <source>MFields</source>
-      <translation type="unfinished">MFields</translation>
+      <translation>MFields</translation>
     </message>
     <message>
       <source>VBlend</source>
-      <translation type="unfinished">VBlend</translation>
+      <translation>VBlend</translation>
     </message>
     <message>
       <source>Sharpness</source>
-      <translation type="unfinished">Sharpness</translation>
+      <translation>الحدّة</translation>
     </message>
     <message>
       <source>Brightness</source>
-      <translation type="unfinished">Brightness</translation>
+      <translation>السّطوع</translation>
     </message>
     <message>
       <source>Hue</source>
-      <translation type="unfinished">Hue</translation>
+      <translation>التدرج اللوني</translation>
     </message>
     <message>
       <source>Contrast</source>
-      <translation type="unfinished">Contrast</translation>
+      <translation>التباين</translation>
     </message>
     <message>
       <source>Saturation</source>
-      <translation type="unfinished">Saturation</translation>
+      <translation>التشبع</translation>
     </message>
     <message>
       <source>Scanline</source>
-      <translation type="unfinished">Scanline</translation>
+      <translation>خطوط المسح</translation>
     </message>
     <message>
       <source>Reset parameters to defaults</source>
-      <translation type="unfinished">Reset parameters to defaults</translation>
+      <translation>إعادة تعيين الإعدادات</translation>
     </message>
   </context>
   <context>
     <name>wdgNTSCLMP88959Filter</name>
     <message>
       <source>Scanline</source>
-      <translation type="unfinished">Scanline</translation>
+      <translation>خطوط المسح</translation>
     </message>
     <message>
       <source>MFields</source>
@@ -2203,23 +2203,23 @@
     </message>
     <message>
       <source>Contrast</source>
-      <translation type="unfinished">Contrast</translation>
+      <translation>التباين</translation>
     </message>
     <message>
       <source>Brightness</source>
-      <translation type="unfinished">Brightness</translation>
+      <translation>السّطوع</translation>
     </message>
     <message>
       <source>White Point</source>
-      <translation type="unfinished">White Point</translation>
+      <translation>نقطة بيضاء</translation>
     </message>
     <message>
       <source>Black Point</source>
-      <translation type="unfinished">Black Point</translation>
+      <translation>نقطة سوداء</translation>
     </message>
     <message>
       <source>Saturation</source>
-      <translation type="unfinished">Saturation</translation>
+      <translation>التشبع</translation>
     </message>
     <message>
       <source>Noise</source>
@@ -2227,7 +2227,7 @@
     </message>
     <message>
       <source>Hue</source>
-      <translation type="unfinished">Hue</translation>
+      <translation>التدرج اللوني</translation>
     </message>
     <message>
       <source>Reset parameters to defaults</source>
@@ -2238,19 +2238,19 @@
     <name>wdgNTSCNESRGBLMP88959Filter</name>
     <message>
       <source>Black Point</source>
-      <translation type="unfinished">Black Point</translation>
+      <translation>نقطة سوداء</translation>
     </message>
     <message>
       <source>Brightness</source>
-      <translation type="unfinished">Brightness</translation>
+      <translation>السّطوع</translation>
     </message>
     <message>
       <source>Hue</source>
-      <translation type="unfinished">Hue</translation>
+      <translation>التدرج اللوني</translation>
     </message>
     <message>
       <source>Contrast</source>
-      <translation type="unfinished">Contrast</translation>
+      <translation>التباين</translation>
     </message>
     <message>
       <source>Noise</source>
@@ -2258,11 +2258,11 @@
     </message>
     <message>
       <source>White Point</source>
-      <translation type="unfinished">White Point</translation>
+      <translation>نقطة بيضاء</translation>
     </message>
     <message>
       <source>Scanline</source>
-      <translation type="unfinished">Scanline</translation>
+      <translation>خطوط المسح</translation>
     </message>
     <message>
       <source>VBlend</source>
@@ -2270,7 +2270,7 @@
     </message>
     <message>
       <source>Saturation</source>
-      <translation type="unfinished">Saturation</translation>
+      <translation>التشبع</translation>
     </message>
     <message>
       <source>Reset parameters to defaults</source>
@@ -2281,7 +2281,7 @@
     <name>wdgPALLMP88959Filter</name>
     <message>
       <source>Scanline</source>
-      <translation type="unfinished">Scanline</translation>
+      <translation>خطوط المسح</translation>
     </message>
     <message>
       <source>VBlend</source>
@@ -2289,11 +2289,11 @@
     </message>
     <message>
       <source>Black Point</source>
-      <translation type="unfinished">Black Point</translation>
+      <translation>نقطة سوداء</translation>
     </message>
     <message>
       <source>White Point</source>
-      <translation type="unfinished">White Point</translation>
+      <translation>نقطة بيضاء</translation>
     </message>
     <message>
       <source>Noise</source>
@@ -2305,15 +2305,15 @@
     </message>
     <message>
       <source>Brightness</source>
-      <translation type="unfinished">Brightness</translation>
+      <translation>السّطوع</translation>
     </message>
     <message>
       <source>Saturation</source>
-      <translation type="unfinished">Saturation</translation>
+      <translation>التشبع</translation>
     </message>
     <message>
       <source>Contrast</source>
-      <translation type="unfinished">Contrast</translation>
+      <translation>التباين</translation>
     </message>
     <message>
       <source>Chroma Lag</source>
@@ -2336,110 +2336,110 @@
     <name>wdgPALNESRGBLMP88959Filter</name>
     <message>
       <source>White Point</source>
-      <translation type="unfinished">White Point</translation>
+      <translation>نقطة بيضاء</translation>
     </message>
     <message>
       <source>Chroma Lag</source>
-      <translation type="unfinished">Chroma Lag</translation>
+      <translation>Chroma Lag</translation>
     </message>
     <message>
       <source>Contrast</source>
-      <translation type="unfinished">Contrast</translation>
+      <translation>التباين</translation>
     </message>
     <message>
       <source>Chroma Correction</source>
-      <translation type="unfinished">Chroma Correction</translation>
+      <translation>تصحيح Chroma</translation>
     </message>
     <message>
       <source>Brightness</source>
-      <translation type="unfinished">Brightness</translation>
+      <translation>السّطوع</translation>
     </message>
     <message>
       <source>Noise</source>
-      <translation type="unfinished">Noise</translation>
+      <translation>تشويش</translation>
     </message>
     <message>
       <source>Black Point</source>
-      <translation type="unfinished">Black Point</translation>
+      <translation>نقطة سوداء</translation>
     </message>
     <message>
       <source>Saturation</source>
-      <translation type="unfinished">Saturation</translation>
+      <translation>التشبع</translation>
     </message>
     <message>
       <source>Scanline</source>
-      <translation type="unfinished">Scanline</translation>
+      <translation>خطوط المسح</translation>
     </message>
     <message>
       <source>VBlend</source>
-      <translation type="unfinished">VBlend</translation>
+      <translation>VBlend</translation>
     </message>
     <message>
       <source>Reset parameters to defaults</source>
-      <translation type="unfinished">Reset parameters to defaults</translation>
+      <translation>إعادة تعيين الإعدادات</translation>
     </message>
   </context>
   <context>
     <name>wdgPaletteEditor</name>
     <message>
       <source>Palette files</source>
-      <translation type="unfinished">Palette files</translation>
+      <translation>مِلَفّات لوحة الألوان</translation>
     </message>
     <message>
       <source>All files</source>
-      <translation type="unfinished">All files</translation>
+      <translation>كل الملفات</translation>
     </message>
     <message>
       <source>Save palette on file</source>
-      <translation type="unfinished">Save palette on file</translation>
+      <translation>حفظ لوحة الألوان إلى ملف</translation>
     </message>
     <message>
       <source>Selected</source>
-      <translation type="unfinished">Selected</translation>
+      <translation>اللّون المحدد</translation>
     </message>
     <message>
       <source>PPU</source>
-      <translation type="unfinished">PPU</translation>
+      <translation>وحدة معالجة الصور</translation>
     </message>
     <message>
       <source>Val</source>
-      <translation type="unfinished">Val</translation>
+      <translation>القيمة</translation>
     </message>
     <message>
       <source>Blue</source>
-      <translation type="unfinished">Blue</translation>
+      <translation>أزرق</translation>
     </message>
     <message>
       <source>Red</source>
-      <translation type="unfinished">Red</translation>
+      <translation>أحمر</translation>
     </message>
     <message>
       <source>Green</source>
-      <translation type="unfinished">Green</translation>
+      <translation>أخضر</translation>
     </message>
     <message>
       <source>Sat</source>
-      <translation type="unfinished">Sat</translation>
+      <translation>التشبّع</translation>
     </message>
     <message>
       <source>Hue</source>
-      <translation type="unfinished">Hue</translation>
+      <translation>التدرج اللوني</translation>
     </message>
     <message>
       <source>HTML</source>
-      <translation type="unfinished">HTML</translation>
+      <translation>هيكس</translation>
     </message>
     <message>
       <source>Reset color</source>
-      <translation type="unfinished">Reset color</translation>
+      <translation>إعادة تعيين اللون</translation>
     </message>
     <message>
       <source>Save to a file</source>
-      <translation type="unfinished">Save to a file</translation>
+      <translation>حفظ إلى ملف</translation>
     </message>
     <message>
       <source>Reset palette</source>
-      <translation type="unfinished">Reset palette</translation>
+      <translation>إعادة تعيين لوحة الألوان</translation>
     </message>
   </context>
   <context>
@@ -2450,7 +2450,7 @@
     </message>
     <message>
       <source>Output Quality</source>
-      <translation type="unfinished">Output Quality</translation>
+      <translation>جودة التسجيل</translation>
     </message>
     <message>
       <source>Low</source>
@@ -2485,7 +2485,7 @@
     </message>
     <message>
       <source>Pause</source>
-      <translation type="unfinished">Pause</translation>
+      <translation>إيقاف مؤقت</translation>
     </message>
     <message>
       <source>Fast forward (from 1x to 8x)</source>
@@ -2550,15 +2550,15 @@
     <name>wdgSettingsAudio</name>
     <message>
       <source>Output Devices</source>
-      <translation type="unfinished">Output Devices</translation>
+      <translation>أجهزة إخراج الصوت</translation>
     </message>
     <message>
       <source>Sample Rate</source>
-      <translation type="unfinished">Sample Rate</translation>
+      <translation>معدل العيِّنة</translation>
     </message>
     <message>
       <source>Buffer Size factor</source>
-      <translation type="unfinished">Buffer Size factor</translation>
+      <translation>عامل حجم التخزين المؤقت</translation>
     </message>
     <message>
       <source>Mono</source>
@@ -2566,19 +2566,19 @@
     </message>
     <message>
       <source>Stereo Delay</source>
-      <translation type="unfinished">Stereo Delay</translation>
+      <translation>ستيريو مؤخر</translation>
     </message>
     <message>
       <source>Stereo Panning</source>
-      <translation type="unfinished">Stereo Panning</translation>
+      <translation>تحريك ستيريو</translation>
     </message>
     <message>
       <source>Channels Delay</source>
-      <translation type="unfinished">Channels Delay</translation>
+      <translation>تأخير القنوات</translation>
     </message>
     <message>
       <source>Misc</source>
-      <translation type="unfinished">Misc</translation>
+      <translation>إعدادات متنوعة</translation>
     </message>
     <message>
       <source>Settings</source>
@@ -2586,23 +2586,23 @@
     </message>
     <message>
       <source>Channels</source>
-      <translation type="unfinished">Channels</translation>
+      <translation>القنوات</translation>
     </message>
     <message>
       <source>APU Channels</source>
-      <translation type="unfinished">APU Channels</translation>
+      <translation>قنوات وحدة معالجة الصوت</translation>
     </message>
     <message>
       <source>Swap Duty Cycles</source>
-      <translation type="unfinished">Swap Duty Cycles</translation>
+      <translation>استبدال دورات التشغيل</translation>
     </message>
     <message>
       <source>Enable Audio</source>
-      <translation type="unfinished">Enable Audio</translation>
+      <translation>تفعيل الصوت</translation>
     </message>
     <message>
       <source>Reverse bits of DPCM</source>
-      <translation type="unfinished">Reverse bits of DPCM</translation>
+      <translation>عكس جميع البت الخاصة بقناة تضمين نبضي مرمز تفاضلي</translation>
     </message>
     <message>
       <source>192000</source>
@@ -2641,7 +2641,7 @@
     </message>
     <message>
       <source>Disabled</source>
-      <translation type="unfinished">Disabled</translation>
+      <translation>معطَّل</translation>
     </message>
     <message>
       <source>Game Genie Rom Mode</source>
@@ -2724,7 +2724,7 @@
     </message>
     <message>
       <source>Pause when in background</source>
-      <translation type="unfinished">Pause when in background</translation>
+      <translation>إيقاف مؤقت عندما تكون في الخلفية</translation>
     </message>
     <message>
       <source>Language</source>
@@ -2744,7 +2744,7 @@
     </message>
     <message>
       <source>Misc</source>
-      <translation type="unfinished">Misc</translation>
+      <translation>إعدادات متنوعة</translation>
     </message>
     <message>
       <source>Settings</source>
@@ -2820,11 +2820,11 @@
     </message>
     <message>
       <source>Famicom Disk System</source>
-      <translation type="unfinished">Famicom Disk System</translation>
+      <translation>نظام القرص فاميكوم</translation>
     </message>
     <message>
       <source>Switch the disk/side automatically</source>
-      <translation type="unfinished">Switch the disk/side automatically</translation>
+      <translation>تبديل القرص/الجانب تلقائياً</translation>
     </message>
     <message>
       <source>Allow multiple instances of the emulator</source>
@@ -2875,7 +2875,7 @@
     <name>wdgSettingsInput</name>
     <message>
       <source>Disabled</source>
-      <translation type="unfinished">Disabled</translation>
+      <translation>معطَّل</translation>
     </message>
     <message>
       <source>Standard Pad</source>
@@ -2915,27 +2915,27 @@
     </message>
     <message>
       <source>Joystick ID</source>
-      <translation type="unfinished">Joystick ID</translation>
+      <translation>ذراع التحكم</translation>
     </message>
     <message>
       <source>NES</source>
-      <translation type="unfinished">NES</translation>
+      <translation>نيس</translation>
     </message>
     <message>
       <source>Famicom</source>
-      <translation type="unfinished">Famicom</translation>
+      <translation>فاميكوم</translation>
     </message>
     <message>
       <source>Four Score</source>
-      <translation type="unfinished">Four Score</translation>
+      <translation>أربعة لاعبين</translation>
     </message>
     <message>
       <source>Misc</source>
-      <translation type="unfinished">Misc</translation>
+      <translation>إعدادات متنوعة</translation>
     </message>
     <message>
       <source>Expansion Port</source>
-      <translation type="unfinished">Expansion Port</translation>
+      <translation>منفذ التوسيع</translation>
     </message>
     <message>
       <source>Hide Zapper cursor</source>
@@ -2943,55 +2943,55 @@
     </message>
     <message>
       <source>Controller Port 1</source>
-      <translation type="unfinished">Controller Port 1</translation>
+      <translation>وحدة التحكم منفذ 1</translation>
     </message>
     <message>
       <source>Controller Port 3</source>
-      <translation type="unfinished">Controller Port 3</translation>
+      <translation>وحدة التحكم منفذ 3</translation>
     </message>
     <message>
       <source>Controller Port 2</source>
-      <translation type="unfinished">Controller Port 2</translation>
+      <translation>وحدة التحكم منفذ 2</translation>
     </message>
     <message>
       <source>Ports</source>
-      <translation type="unfinished">Ports</translation>
+      <translation>المنافذ</translation>
     </message>
     <message>
       <source>Shortcuts</source>
-      <translation type="unfinished">Shortcuts</translation>
+      <translation>الاختصارات</translation>
     </message>
     <message>
       <source>Permit &quot;Up + Down&quot; and &quot;Left + Right&quot; at the same time</source>
-      <translation type="unfinished">Permit &quot;Up + Down&quot; and &quot;Left + Right&quot; at the same time</translation>
+      <translation>إتاحة &quot;أعلى+أسفل&quot; وَ &quot;يسار+يمين&quot; بنفس الوقت</translation>
     </message>
     <message>
       <source>Controller Mode</source>
-      <translation type="unfinished">Controller Mode</translation>
+      <translation>نوع التحكم</translation>
     </message>
     <message>
       <source>Controller Port 4</source>
-      <translation type="unfinished">Controller Port 4</translation>
+      <translation>وحدة التحكم منفذ 4</translation>
     </message>
     <message>
       <source>Reset to defaults</source>
-      <translation type="unfinished">Reset to defaults</translation>
+      <translation>إعادة التعيين للوضع الافتراضي</translation>
     </message>
     <message>
       <source>Action</source>
-      <translation type="unfinished">Action</translation>
+      <translation>الإجراء</translation>
     </message>
     <message>
       <source>Keyboard</source>
-      <translation type="unfinished">Keyboard</translation>
+      <translation>لوحة المفاتيح</translation>
     </message>
     <message>
       <source>Joystick</source>
-      <translation type="unfinished">Joystick</translation>
+      <translation>ذراع التحكم</translation>
     </message>
     <message>
       <source>Unset all</source>
-      <translation type="unfinished">Unset all</translation>
+      <translation>إلغاء تعيين الكل</translation>
     </message>
     <message>
       <source>Start/Stop AUDIO recording</source>
@@ -3030,27 +3030,27 @@
     </message>
     <message>
       <source>Disable 7bit Sample Control</source>
-      <translation type="unfinished">Disable 7bit Sample Control</translation>
+      <translation>تعطيل التحكم بالعينة 7bit</translation>
     </message>
     <message>
       <source>Reset Lag Counter</source>
-      <translation type="unfinished">Reset Lag Counter</translation>
+      <translation>إعادة تعيين عدّاد التخلف</translation>
     </message>
     <message>
       <source>VBlank Lines</source>
-      <translation type="unfinished">VBlank Lines</translation>
+      <translation>خطوط المسح العمودية الفارغة</translation>
     </message>
     <message>
       <source>Postrender Lines</source>
-      <translation type="unfinished">Postrender Lines</translation>
+      <translation>خطوط المسح ما بعد التقديم</translation>
     </message>
     <message>
       <source>Overclock</source>
-      <translation type="unfinished">Overclock</translation>
+      <translation>تعدي الميقت</translation>
     </message>
     <message>
       <source>Sprites and background</source>
-      <translation type="unfinished">Sprites and background</translation>
+      <translation>الكائنات والخلفية</translation>
     </message>
     <message>
       <source>Unlimited Sprites</source>
@@ -3058,19 +3058,19 @@
     </message>
     <message>
       <source>Enable Extra Scanlines</source>
-      <translation type="unfinished">Enable Extra Scanlines</translation>
+      <translation>تفعيل خطوط مسح إضافية</translation>
     </message>
     <message>
       <source>Hide Sprites</source>
-      <translation type="unfinished">Hide Sprites</translation>
+      <translation>إخفاء الكائنات</translation>
     </message>
     <message>
       <source>Hide Background</source>
-      <translation type="unfinished">Hide Background</translation>
+      <translation>إخفاء الخلفية</translation>
     </message>
     <message>
       <source>Advanced</source>
-      <translation type="unfinished">Advanced</translation>
+      <translation>إعدادات متقدّمة</translation>
     </message>
     <message>
       <source>Default</source>
@@ -3090,7 +3090,7 @@
     </message>
     <message>
       <source>Automatically restores the limit when necessary to prevent graphical glitches</source>
-      <translation type="unfinished">Automatically restores the limit when necessary to prevent graphical glitches</translation>
+      <translation>استعادة المحدودية عند الضرورة لتفادي تشوهات بصرية.</translation>
     </message>
   </context>
   <context>
@@ -3098,72 +3098,72 @@
     <message>
       <source>MPEG 1 Video (*.mpg *.mpeg)</source>
       <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
-      <translation type="unfinished">MPEG 1 Video (*.mpg *.mpeg)</translation>
+      <translation>فيديو MPEG 1 (*.mpg *.mpeg)</translation>
     </message>
     <message>
       <source>MPEG 2 Video (*.mpg *.mpeg)</source>
       <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
-      <translation type="unfinished">MPEG 2 Video (*.mpg *.mpeg)</translation>
+      <translation>فيديو MPEG 2 (*.mpg *.mpeg)</translation>
     </message>
     <message>
       <source>MPEG 4 Video (*.mp4)</source>
       <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
-      <translation type="unfinished">MPEG 4 Video (*.mp4)</translation>
+      <translation>فيديو MPEG 4 (*.mp4)</translation>
     </message>
     <message>
       <source>MPEG H264 Video (*.mp4)</source>
       <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
-      <translation type="unfinished">MPEG H264 Video (*.mp4)</translation>
+      <translation>فيديو MPEG H264 (*.mp4)</translation>
     </message>
     <message>
       <source>High Efficiency Video Codec (*.mkv)</source>
       <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
-      <translation type="unfinished">High Efficiency Video Codec (*.mkv)</translation>
+      <translation>ترميز الفيديو عالي الفعالية (*.mkv)</translation>
     </message>
     <message>
       <source>WebM Video (*.webm)</source>
       <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
-      <translation type="unfinished">WebM Video (*.webm)</translation>
+      <translation>فيديو WebM (*.webm)</translation>
     </message>
     <message>
       <source>Windows Media Video (*.wmv)</source>
       <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
-      <translation type="unfinished">Windows Media Video (*.wmv)</translation>
+      <translation>ويندوز ميديا فيديو (*.wmv)</translation>
     </message>
     <message>
       <source>AVI FF Video (*.avi)</source>
       <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
-      <translation type="unfinished">AVI FF Video (*.avi)</translation>
+      <translation>فيديو AVI FF (*.avi)</translation>
     </message>
     <message>
       <source>AVI Video (*.avi)</source>
       <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
-      <translation type="unfinished">AVI Video (*.avi)</translation>
+      <translation>فيديو AVI (*.avi)</translation>
     </message>
     <message>
       <source>WAV Audio (*.wav)</source>
       <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
-      <translation type="unfinished">WAV Audio (*.wav)</translation>
+      <translation>صوت WAV (*.wav)</translation>
     </message>
     <message>
       <source>MP3 Audio (*.mp3)</source>
       <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
-      <translation type="unfinished">MP3 Audio (*.mp3)</translation>
+      <translation>صوت MP3 (*.mp3)</translation>
     </message>
     <message>
       <source>AAC Audio (*.aac)</source>
       <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
-      <translation type="unfinished">AAC Audio (*.aac)</translation>
+      <translation>صوت AAC (*.aac)</translation>
     </message>
     <message>
       <source>Flac Audio (*.flac)</source>
       <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
-      <translation type="unfinished">Flac Audio (*.flac)</translation>
+      <translation>صوت FLAC (*.flac)</translation>
     </message>
     <message>
       <source>Ogg Audio (*.ogg)</source>
       <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
-      <translation type="unfinished">Ogg Audio (*.ogg)</translation>
+      <translation>صوت OGG (*.ogg)</translation>
     </message>
     <message>
       <source>Not supported</source>
@@ -3171,31 +3171,31 @@
     </message>
     <message>
       <source>Custom Height</source>
-      <translation type="unfinished">Custom Height</translation>
+      <translation>ارتفاع مخصص</translation>
     </message>
     <message>
       <source>Output Video Format</source>
-      <translation type="unfinished">Output Video Format</translation>
+      <translation>صيغة التسجيل</translation>
     </message>
     <message>
       <source>Custom Width</source>
-      <translation type="unfinished">Custom Width</translation>
+      <translation>عرض مخصص</translation>
     </message>
     <message>
       <source>Output Quality</source>
-      <translation type="unfinished">Output Quality</translation>
+      <translation>جودة التسجيل</translation>
     </message>
     <message>
       <source>Output Audio Format</source>
-      <translation type="unfinished">Output Audio Format</translation>
+      <translation>صيغة التسجيل</translation>
     </message>
     <message>
       <source>Output Resolution</source>
-      <translation type="unfinished">Output Resolution</translation>
+      <translation>دِقَّة التسجيل</translation>
     </message>
     <message>
       <source>Custom</source>
-      <translation type="unfinished">Custom</translation>
+      <translation>مُخصّص</translation>
     </message>
     <message>
       <source>256 x 240  (1:1)</source>
@@ -3271,31 +3271,31 @@
     </message>
     <message>
       <source>Use the emulator resolution</source>
-      <translation type="unfinished">Use the emulator resolution</translation>
+      <translation>استخدام دِقَّة المحاكي</translation>
     </message>
     <message>
       <source>Follow screen rotation</source>
-      <translation type="unfinished">Follow screen rotation</translation>
+      <translation>اتباع دوران الشاشة</translation>
     </message>
     <message>
       <source>Low</source>
-      <translation type="unfinished">Low</translation>
+      <translation>منخفضة</translation>
     </message>
     <message>
       <source>Medium</source>
-      <translation type="unfinished">Medium</translation>
+      <translation>متوسّطة</translation>
     </message>
     <message>
       <source>High</source>
-      <translation type="unfinished">High</translation>
+      <translation>عالية</translation>
     </message>
     <message>
       <source>Audio recording settings</source>
-      <translation type="unfinished">Audio recording settings</translation>
+      <translation>إعدادات تسجيل الصوت</translation>
     </message>
     <message>
       <source>Video recording settings</source>
-      <translation type="unfinished">Video recording settings</translation>
+      <translation>إعدادات تسجيل الفيديو</translation>
     </message>
     <message>
       <source>Recording Settings</source>
@@ -3304,7 +3304,7 @@
     <message>
       <source>Opus Audio (*.opus)</source>
       <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
-      <translation type="unfinished">Opus Audio (*.opus)</translation>
+      <translation>صوت Opus (*.opus)</translation>
     </message>
   </context>
   <context>
@@ -3315,7 +3315,7 @@
     </message>
     <message>
       <source>HLSL &amp;soft stretch</source>
-      <translation type="unfinished">HLSL &amp;soft stretch</translation>
+      <translation>تمدد لطيف للHLSL</translation>
     </message>
     <message>
       <source>[Select a file]</source>
@@ -3327,27 +3327,27 @@
     </message>
     <message>
       <source>Shaders files</source>
-      <translation type="unfinished">Shaders files</translation>
+      <translation>ملفات المظللات</translation>
     </message>
     <message>
       <source>All files</source>
-      <translation type="unfinished">All files</translation>
+      <translation>كل الملفات</translation>
     </message>
     <message>
       <source>Open Shader file</source>
-      <translation type="unfinished">Open Shader file</translation>
+      <translation>فتح مِلَفّ المظلل</translation>
     </message>
     <message>
       <source>Palette files</source>
-      <translation type="unfinished">Palette files</translation>
+      <translation>مِلَفّات لوحة الألوان</translation>
     </message>
     <message>
       <source>Open palette file</source>
-      <translation type="unfinished">Open palette file</translation>
+      <translation>فتح مِلَفّ لوحة الألوان</translation>
     </message>
     <message>
       <source>Video Settings</source>
-      <translation type="unfinished">Video Settings</translation>
+      <translation>إعدادات الفيديو</translation>
     </message>
     <message>
       <source>1x</source>
@@ -3375,15 +3375,15 @@
     </message>
     <message>
       <source>Scale</source>
-      <translation type="unfinished">Scale</translation>
+      <translation>المقياس</translation>
     </message>
     <message>
       <source>** To apply this change restart is needed **</source>
-      <translation type="unfinished">** To apply this change restart is needed **</translation>
+      <translation>**لتطبيق هذا التغيير، يلزم إعادة التشغيل**</translation>
     </message>
     <message>
       <source>Misc</source>
-      <translation type="unfinished">Misc</translation>
+      <translation>إعدادات متنوعة</translation>
     </message>
     <message>
       <source>1:1</source>
@@ -3395,27 +3395,27 @@
     </message>
     <message>
       <source>8:7 (NTSC TV)</source>
-      <translation type="unfinished">8:7 (NTSC TV)</translation>
+      <translation>8:7 (NTSC TV)</translation>
     </message>
     <message>
       <source>11:8 (PAL TV)</source>
-      <translation type="unfinished">11:8 (PAL TV)</translation>
+      <translation>11:8 (PAL TV)</translation>
     </message>
     <message>
       <source>Pixel Aspect Ratio</source>
-      <translation type="unfinished">Pixel Aspect Ratio</translation>
+      <translation>نسبة أبعاد البكسل</translation>
     </message>
     <message>
       <source>Off</source>
-      <translation type="unfinished">Off</translation>
+      <translation>معطل</translation>
     </message>
     <message>
       <source>On</source>
-      <translation type="unfinished">On</translation>
+      <translation>مفعل</translation>
     </message>
     <message>
       <source>Default Value</source>
-      <translation type="unfinished">Default Value</translation>
+      <translation>القيمة الافتراضية</translation>
     </message>
     <message>
       <source>NTSC</source>
@@ -3427,135 +3427,135 @@
     </message>
     <message>
       <source>Right</source>
-      <translation type="unfinished">Right</translation>
+      <translation>يمين</translation>
     </message>
     <message>
       <source>Down</source>
-      <translation type="unfinished">Down</translation>
+      <translation>أسفل</translation>
     </message>
     <message>
       <source>Up</source>
-      <translation type="unfinished">Up</translation>
+      <translation>أعلى</translation>
     </message>
     <message>
       <source>Left</source>
-      <translation type="unfinished">Left</translation>
+      <translation>يسار</translation>
     </message>
     <message>
       <source>Reset to defaults</source>
-      <translation type="unfinished">Reset to defaults</translation>
+      <translation>إعادة التعيين للوضع الافتراضي</translation>
     </message>
     <message>
       <source>Black borders in window mode</source>
-      <translation type="unfinished">Black borders in window mode</translation>
+      <translation>الحدود السوداء في وضع النافذة</translation>
     </message>
     <message>
       <source>Black borders in fullscreen</source>
-      <translation type="unfinished">Black borders in fullscreen</translation>
+      <translation>الحدود السوداء في وضع ملء الشاشة</translation>
     </message>
     <message>
       <source>Overscan</source>
-      <translation type="unfinished">Overscan</translation>
+      <translation>المسح الزائد</translation>
     </message>
     <message>
       <source>No Shaders</source>
-      <translation type="unfinished">No Shaders</translation>
+      <translation>دونَ مظللات</translation>
     </message>
     <message>
       <source>CRT Dotmask</source>
-      <translation type="unfinished">CRT Dotmask</translation>
+      <translation>CRT Dotmask</translation>
     </message>
     <message>
       <source>CRT Scanlines</source>
-      <translation type="unfinished">CRT Scanlines</translation>
+      <translation>خطوط مسح CRT</translation>
     </message>
     <message>
       <source>CRT With Curve</source>
-      <translation type="unfinished">CRT With Curve</translation>
+      <translation>CRT متقوس</translation>
     </message>
     <message>
       <source>Emboss</source>
-      <translation type="unfinished">Emboss</translation>
+      <translation>محدّب</translation>
     </message>
     <message>
       <source>Noise</source>
-      <translation type="unfinished">Noise</translation>
+      <translation>تشويش</translation>
     </message>
     <message>
       <source>NTSC 2Phase Composite</source>
-      <translation type="unfinished">NTSC 2Phase Composite</translation>
+      <translation>NTSC 2Phase Composite</translation>
     </message>
     <message>
       <source>Old TV</source>
-      <translation type="unfinished">Old TV</translation>
+      <translation>تلفاز قديم</translation>
     </message>
     <message>
       <source>From File</source>
-      <translation type="unfinished">From File</translation>
+      <translation>مِن مِلَفّ</translation>
     </message>
     <message>
       <source>No Filters</source>
-      <translation type="unfinished">No Filters</translation>
+      <translation>دونَ فلاتر</translation>
     </message>
     <message>
       <source>Scale2X</source>
-      <translation type="unfinished">Scale2X</translation>
+      <translation>Scale2X</translation>
     </message>
     <message>
       <source>Scale3X</source>
-      <translation type="unfinished">Scale3X</translation>
+      <translation>Scale3X</translation>
     </message>
     <message>
       <source>Scale4X</source>
-      <translation type="unfinished">Scale4X</translation>
+      <translation>Scale4X</translation>
     </message>
     <message>
       <source>Hq2X</source>
-      <translation type="unfinished">Hq2X</translation>
+      <translation>Hq2X</translation>
     </message>
     <message>
       <source>Hq3X</source>
-      <translation type="unfinished">Hq3X</translation>
+      <translation>Hq3X</translation>
     </message>
     <message>
       <source>Hq4X</source>
-      <translation type="unfinished">Hq4X</translation>
+      <translation>Hq4X</translation>
     </message>
     <message>
       <source>xBRZ 2X</source>
-      <translation type="unfinished">xBRZ 2X</translation>
+      <translation>xBRZ 2X</translation>
     </message>
     <message>
       <source>xBRZ 3X</source>
-      <translation type="unfinished">xBRZ 3X</translation>
+      <translation>xBRZ 3X</translation>
     </message>
     <message>
       <source>xBRZ 4X</source>
-      <translation type="unfinished">xBRZ 4X</translation>
+      <translation>xBRZ 4X</translation>
     </message>
     <message>
       <source>xBRZ 5X</source>
-      <translation type="unfinished">xBRZ 5X</translation>
+      <translation>xBRZ 5X</translation>
     </message>
     <message>
       <source>xBRZ 6X</source>
-      <translation type="unfinished">xBRZ 6X</translation>
+      <translation>xBRZ 6X</translation>
     </message>
     <message>
       <source>NTSC Composite</source>
-      <translation type="unfinished">NTSC Composite</translation>
+      <translation>NTSC Composite</translation>
     </message>
     <message>
       <source>NTSC S-Video</source>
-      <translation type="unfinished">NTSC S-Video</translation>
+      <translation>NTSC S-Video</translation>
     </message>
     <message>
       <source>NTSC RGB</source>
-      <translation type="unfinished">NTSC RGB</translation>
+      <translation>NTSC RGB</translation>
     </message>
     <message>
       <source>Filters</source>
-      <translation type="unfinished">Filters</translation>
+      <translation>الفلاتر</translation>
     </message>
     <message>
       <source>PAL</source>
@@ -3563,83 +3563,83 @@
     </message>
     <message>
       <source>Sony CXA2025AS US</source>
-      <translation type="unfinished">Sony CXA2025AS US</translation>
+      <translation>Sony CXA2025AS US</translation>
     </message>
     <message>
       <source>Firebrandx Nostalgia (FBX)</source>
-      <translation type="unfinished">Firebrandx Nostalgia (FBX)</translation>
+      <translation>Firebrandx Nostalgia (FBX)</translation>
     </message>
     <message>
       <source>Firebrandx YUV</source>
-      <translation type="unfinished">Firebrandx YUV</translation>
+      <translation>Firebrandx YUV</translation>
     </message>
     <message>
       <source>Monochrome</source>
-      <translation type="unfinished">Monochrome</translation>
+      <translation>أحادي اللون</translation>
     </message>
     <message>
       <source>Green</source>
-      <translation type="unfinished">Green</translation>
+      <translation>أخضر</translation>
     </message>
     <message>
       <source>Editor</source>
-      <translation type="unfinished">Editor</translation>
+      <translation>المحرر</translation>
     </message>
     <message>
       <source>Palette</source>
-      <translation type="unfinished">Palette</translation>
+      <translation>لوحة الألوان</translation>
     </message>
     <message>
       <source>xBRZ 2X Multithreading</source>
-      <translation type="unfinished">xBRZ 2X Multithreading</translation>
+      <translation>xBRZ 2X Multithreading</translation>
     </message>
     <message>
       <source>xBRZ 3X Multithreading</source>
-      <translation type="unfinished">xBRZ 3X Multithreading</translation>
+      <translation>xBRZ 3X Multithreading</translation>
     </message>
     <message>
       <source>xBRZ 4X Multithreading</source>
-      <translation type="unfinished">xBRZ 4X Multithreading</translation>
+      <translation>xBRZ 4X Multithreading</translation>
     </message>
     <message>
       <source>xBRZ 5X Multithreading</source>
-      <translation type="unfinished">xBRZ 5X Multithreading</translation>
+      <translation>xBRZ 5X Multithreading</translation>
     </message>
     <message>
       <source>xBRZ 6X Multithreading</source>
-      <translation type="unfinished">xBRZ 6X Multithreading</translation>
+      <translation>xBRZ 6X Multithreading</translation>
     </message>
     <message>
       <source>VSync</source>
-      <translation type="unfinished">VSync</translation>
+      <translation>المزامنة العموديّة</translation>
     </message>
     <message>
       <source>Interpolation</source>
-      <translation type="unfinished">Interpolation</translation>
+      <translation>الاستيفاء</translation>
     </message>
     <message>
       <source>Text on screen</source>
-      <translation type="unfinished">Text on screen</translation>
+      <translation>عرض النص على الشاشة</translation>
     </message>
     <message>
       <source>Show FPS</source>
-      <translation type="unfinished">Show FPS</translation>
+      <translation>عرض معدل الإطارات في الثانية</translation>
     </message>
     <message>
       <source>Input display</source>
-      <translation type="unfinished">Input display</translation>
+      <translation>عرض ذراع التحكم</translation>
     </message>
     <message>
       <source>Disable TV noise emulation when turned off</source>
-      <translation type="unfinished">Disable TV noise emulation when turned off</translation>
+      <translation>تعطيل محاكاة تشويش التلفاز عند إيقاف التشغيل</translation>
     </message>
     <message>
       <source>Disable sepia color on pause</source>
-      <translation type="unfinished">Disable sepia color on pause</translation>
+      <translation>تعطيل اللون البني في حالة الإيقاف المؤقت</translation>
     </message>
     <message>
       <source>Fullscreen in window</source>
-      <translation type="unfinished">Fullscreen in window</translation>
+      <translation>ملء الشاشة في نافذة</translation>
     </message>
     <message>
       <source>Stretch in fullscreen</source>
@@ -3647,15 +3647,15 @@
     </message>
     <message>
       <source>Soft stretch</source>
-      <translation type="unfinished">Soft stretch</translation>
+      <translation>تمديد ناعم</translation>
     </message>
     <message>
       <source>Disable sRGB FBO</source>
-      <translation type="unfinished">Disable sRGB FBO</translation>
+      <translation>تعطيل sRGB FBO</translation>
     </message>
     <message>
       <source>Disable Red and Green emphasis swap for PAL/Dendy</source>
-      <translation type="unfinished">Disable Red and Green emphasis swap for PAL/Dendy</translation>
+      <translation>تعطيل تبديل التركيز الأحمر والأخضر لنظام بال/ديندي</translation>
     </message>
     <message>
       <source>0 degrees</source>
@@ -3675,71 +3675,71 @@
     </message>
     <message>
       <source>Raw</source>
-      <translation type="unfinished">Raw</translation>
+      <translation>خام</translation>
     </message>
     <message>
       <source>Horizontal flip</source>
-      <translation type="unfinished">Horizontal flip</translation>
+      <translation>قلب أفقي</translation>
     </message>
     <message>
       <source>Flip/Rotate the controller input</source>
-      <translation type="unfinished">Flip/Rotate the controller input</translation>
+      <translation>قلب/تدوير وحدة التحكم</translation>
     </message>
     <message>
       <source>Flip/Rotate the text on screen</source>
-      <translation type="unfinished">Flip/Rotate the text on screen</translation>
+      <translation>قلب/تدوير النص على الشاشة</translation>
     </message>
     <message>
       <source>Per-Game Overscan Setting</source>
-      <translation type="unfinished">Per-Game Overscan Setting</translation>
+      <translation>إعدادات المسح الزائد حسب اللعبة</translation>
     </message>
     <message>
       <source>Horizontal Flip and Rotation</source>
-      <translation type="unfinished">Horizontal Flip and Rotation</translation>
+      <translation>القلب الأفقي والدوران</translation>
     </message>
     <message>
       <source>Screen</source>
-      <translation type="unfinished">Screen</translation>
+      <translation>الشاشة</translation>
     </message>
     <message>
       <source>Software Filters</source>
-      <translation type="unfinished">Software Filters</translation>
+      <translation>فلاتر البرنامَج</translation>
     </message>
     <message>
       <source>Shader</source>
-      <translation type="unfinished">Shader</translation>
+      <translation>المظلل</translation>
     </message>
     <message>
       <source>Shader File</source>
-      <translation type="unfinished">Shader File</translation>
+      <translation>ملف المظلل</translation>
     </message>
     <message>
       <source>Filter</source>
-      <translation type="unfinished">Filter</translation>
+      <translation>فلتر</translation>
     </message>
     <message>
       <source>GPU Shaders</source>
-      <translation type="unfinished">GPU Shaders</translation>
+      <translation>مظللات كرت الشاشة</translation>
     </message>
     <message>
       <source>Palette Selection</source>
-      <translation type="unfinished">Palette Selection</translation>
+      <translation>اختيار لوحة الألوان</translation>
     </message>
     <message>
       <source>Palette File</source>
-      <translation type="unfinished">Palette File</translation>
+      <translation>مِلَفّ لوحة الألوان</translation>
     </message>
     <message>
       <source>Show frames and lags counters</source>
-      <translation type="unfinished">Show frames and lags counters</translation>
+      <translation>إظهار عَدّاد الإطارات والتخلفات</translation>
     </message>
     <message>
       <source>Desktop resolution</source>
-      <translation type="unfinished">Desktop resolution</translation>
+      <translation>دِقَّة سطح المكتب</translation>
     </message>
     <message>
       <source>Adapt the refresh rate to the region (PAL/Dendy 50Hz, NTSC 60Hz)</source>
-      <translation type="unfinished">Adapt the refresh rate to the region (PAL/Dendy 50Hz, NTSC 60Hz)</translation>
+      <translation>تكييف معدل التحديث حسب المنطقة (PAL/Dendy 50 هرتز، NTSC 60 هرتز)</translation>
     </message>
     <message>
       <source>Fullscreen</source>
@@ -3747,91 +3747,91 @@
     </message>
     <message>
       <source>* applied if supported by the monitor</source>
-      <translation type="unfinished">* applied if supported by the monitor</translation>
+      <translation>* يُطبق إذا تم دعمه من قبل الشاشة</translation>
     </message>
     <message>
       <source>Use integer scaling</source>
-      <translation type="unfinished">Use integer scaling</translation>
+      <translation>استخدام التمديد بالأعداد الصحيحة</translation>
     </message>
     <message>
       <source>Preferred resolution </source>
-      <translation type="unfinished">Preferred resolution </translation>
+      <translation>الدِّقَّة المفضلة</translation>
     </message>
     <message>
       <source>2xSaI</source>
-      <translation type="unfinished">2xSaI</translation>
+      <translation>2xSaI</translation>
     </message>
     <message>
       <source>Dot Matrix</source>
-      <translation type="unfinished">Dot Matrix</translation>
+      <translation>Dot Matrix</translation>
     </message>
     <message>
       <source>PAL TV1x</source>
-      <translation type="unfinished">PAL TV1x</translation>
+      <translation>PAL TV1x</translation>
     </message>
     <message>
       <source>PAL TV2x</source>
-      <translation type="unfinished">PAL TV2x</translation>
+      <translation>PAL TV2x</translation>
     </message>
     <message>
       <source>PAL TV3x</source>
-      <translation type="unfinished">PAL TV3x</translation>
+      <translation>PAL TV3x</translation>
     </message>
     <message>
       <source>PAL TV4x</source>
-      <translation type="unfinished">PAL TV4x</translation>
+      <translation>PAL TV4x</translation>
     </message>
     <message>
       <source>Super 2xSaI</source>
-      <translation type="unfinished">Super 2xSaI</translation>
+      <translation>2xSaI الخارق</translation>
     </message>
     <message>
       <source>Super Eagle</source>
-      <translation type="unfinished">Super Eagle</translation>
+      <translation>النسر الخارق</translation>
     </message>
     <message>
       <source>TV2x</source>
-      <translation type="unfinished">TV2x</translation>
+      <translation>TV2x</translation>
     </message>
     <message>
       <source>TV3x</source>
-      <translation type="unfinished">TV3x</translation>
+      <translation>TV3x</translation>
     </message>
     <message>
       <source>TV4x</source>
-      <translation type="unfinished">TV4x</translation>
+      <translation>TV4x</translation>
     </message>
     <message>
       <source>NTSC Bisqwit 2X</source>
-      <translation type="unfinished">NTSC Bisqwit 2X</translation>
+      <translation>NTSC Bisqwit 2X</translation>
     </message>
     <message>
       <source>NTSC Bisqwit 4X</source>
-      <translation type="unfinished">NTSC Bisqwit 4X</translation>
+      <translation>NTSC Bisqwit 4X</translation>
     </message>
     <message>
       <source>NTSC Bisqwit 8X</source>
-      <translation type="unfinished">NTSC Bisqwit 8X</translation>
+      <translation>NTSC Bisqwit 8X</translation>
     </message>
     <message>
       <source>Reset parameters to defaults</source>
-      <translation type="unfinished">Reset parameters to defaults</translation>
+      <translation>إعادة تعيين الإعدادات</translation>
     </message>
     <message>
       <source>NTSC CRT LMP88959</source>
-      <translation type="unfinished">NTSC CRT LMP88959</translation>
+      <translation>NTSC CRT LMP88959</translation>
     </message>
     <message>
       <source>NTSC NES LMP88959</source>
-      <translation type="unfinished">NTSC NES LMP88959</translation>
+      <translation>NTSC NES LMP88959</translation>
     </message>
     <message>
       <source>PAL CRT LMP88959</source>
-      <translation type="unfinished">PAL CRT LMP88959</translation>
+      <translation>PAL CRT LMP88959</translation>
     </message>
     <message>
       <source>PAL NES LMP88959</source>
-      <translation type="unfinished">PAL NES LMP88959</translation>
+      <translation>PAL NES LMP88959</translation>
     </message>
   </context>
   <context>
