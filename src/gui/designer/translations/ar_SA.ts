@@ -1367,7 +1367,7 @@
     </message>
     <message>
       <source>&amp;Video</source>
-      <translation type="unfinished">&amp;Video</translation>
+      <translation>(&amp;V)فيديو</translation>
     </message>
     <message>
       <source>&amp;Audio</source>
@@ -1375,19 +1375,19 @@
     </message>
     <message>
       <source>&amp;Input</source>
-      <translation type="unfinished">&amp;Input</translation>
+      <translation>(&amp;I)التحكم</translation>
     </message>
     <message>
       <source>&amp;Cheats</source>
-      <translation type="unfinished">&amp;Cheats</translation>
+      <translation>(&amp;C)الغش</translation>
     </message>
     <message>
       <source>&amp;PPU</source>
-      <translation type="unfinished">&amp;PPU</translation>
+      <translation>&amp;و.م.ص</translation>
     </message>
     <message>
       <source>S&amp;tate</source>
-      <translation type="unfinished">S&amp;tate</translation>
+      <translation>(&amp;T)الحالة</translation>
     </message>
     <message>
       <source>&amp;Help</source>
@@ -1395,7 +1395,7 @@
     </message>
     <message>
       <source>&amp;Turn On</source>
-      <translation type="unfinished">&amp;Turn On</translation>
+      <translation>(&amp;T)تشغيل</translation>
     </message>
     <message>
       <source>&amp;Turn Off</source>
@@ -1403,27 +1403,27 @@
     </message>
     <message>
       <source>Too&amp;ls</source>
-      <translation type="unfinished">Too&amp;ls</translation>
+      <translation>(&amp;L)أدوات</translation>
     </message>
     <message>
       <source>UNIF rom files</source>
-      <translation type="unfinished">UNIF rom files</translation>
+      <translation>ملفات روم UNIF</translation>
     </message>
     <message>
       <source>Stop &amp;WAV recording</source>
-      <translation type="unfinished">Stop &amp;WAV recording</translation>
+      <translation>(&amp;W)إيقاف تسجيل WAV</translation>
     </message>
     <message>
       <source>Start &amp;WAV recording</source>
-      <translation type="unfinished">Start &amp;WAV recording</translation>
+      <translation>(&amp;W)بَدْء تسجيل WAV</translation>
     </message>
     <message>
       <source>MS WAVE files</source>
-      <translation type="unfinished">MS WAVE files</translation>
+      <translation>ملفات MS WAVE</translation>
     </message>
     <message>
       <source>Record sound</source>
-      <translation type="unfinished">Record sound</translation>
+      <translation>تسجيل الصوت</translation>
     </message>
     <message>
       <source>NSF rom files</source>
@@ -1459,7 +1459,7 @@
     </message>
     <message>
       <source>Widgets</source>
-      <translation type="unfinished">Widgets</translation>
+      <translation>العناصر</translation>
     </message>
     <message>
       <source>Start &amp;AUDIO recording</source>
@@ -1471,7 +1471,7 @@
     </message>
     <message>
       <source>Stop &amp;AUDIO recording</source>
-      <translation type="unfinished">Stop &amp;AUDIO recording</translation>
+      <translation>(&amp;A)إيقاف تسجيل الصوت</translation>
     </message>
     <message>
       <source>Stop &amp;VIDEO recording</source>
@@ -1483,7 +1483,7 @@
     </message>
     <message>
       <source>&amp;Recording</source>
-      <translation type="unfinished">&amp;Recording</translation>
+      <translation>(&amp;R)تسجيل</translation>
     </message>
     <message>
       <source>Start/Stop &amp;VIDEO recording</source>
@@ -1504,7 +1504,7 @@
     </message>
     <message>
       <source>&amp;Vs System Controls</source>
-      <translation type="unfinished">&amp;Vs System Controls</translation>
+      <translation>(&amp;V)وحدة التحكم بنظام Vs</translation>
     </message>
     <message>
       <source>&amp;Joypad/Gamepad Debug</source>
@@ -1516,39 +1516,39 @@
     </message>
     <message>
       <source>puNES tape image</source>
-      <translation type="unfinished">puNES tape image</translation>
+      <translation>صورة شريط puNES</translation>
     </message>
     <message>
       <source>Virtuanes tape image</source>
-      <translation type="unfinished">Virtuanes tape image</translation>
+      <translation>صورة شريط Virtuanes</translation>
     </message>
     <message>
       <source>Nestopia tape image</source>
-      <translation type="unfinished">Nestopia tape image</translation>
+      <translation>صورة شريط Nestopia</translation>
     </message>
     <message>
       <source>Open tape image</source>
-      <translation type="unfinished">Open tape image</translation>
+      <translation>فتح صورة شريط</translation>
     </message>
     <message>
       <source>Tape Image</source>
-      <translation type="unfinished">Tape Image</translation>
+      <translation>صورة شريط</translation>
     </message>
     <message>
       <source>Unsupported format</source>
-      <translation type="unfinished">Unsupported format</translation>
+      <translation>صيغة الملف غير مدعومة</translation>
     </message>
     <message>
       <source>Error opening tape image file</source>
-      <translation type="unfinished">Error opening tape image file</translation>
+      <translation>خطأ في فتح ملف صورة الشريط</translation>
     </message>
     <message>
       <source>WAVE tape image</source>
-      <translation type="unfinished">WAVE tape image</translation>
+      <translation>صورة شريط WAVE</translation>
     </message>
     <message>
       <source>Save tape image</source>
-      <translation type="unfinished">Save tape image</translation>
+      <translation>حفظ صورة الشريط</translation>
     </message>
     <message>
       <source>Toggle &amp;Fast Forward</source>
@@ -1556,15 +1556,15 @@
     </message>
     <message>
       <source>&amp;Play</source>
-      <translation type="unfinished">&amp;Play</translation>
+      <translation>(&amp;P)تشغيل</translation>
     </message>
     <message>
       <source>&amp;Record</source>
-      <translation type="unfinished">&amp;Record</translation>
+      <translation>(&amp;R)تسجيل</translation>
     </message>
     <message>
       <source>&amp;Stop</source>
-      <translation type="unfinished">&amp;Stop</translation>
+      <translation>(&amp;S)إيقاف</translation>
     </message>
     <message>
       <source>Shout into &amp;Microphone</source>
@@ -1572,7 +1572,7 @@
     </message>
     <message>
       <source>Toggle Virtual &amp;Keyboard</source>
-      <translation type="unfinished">Toggle Virtual &amp;Keyboard</translation>
+      <translation>(&amp;K)تبديل لوحة المفاتيح الوهمية</translation>
     </message>
     <message>
       <source>&amp;Show Log</source>
@@ -1604,19 +1604,19 @@
     </message>
     <message>
       <source>Open &amp;config folder</source>
-      <translation type="unfinished">Open &amp;config folder</translation>
+      <translation>(&amp;O)فتح مجلد المحاكي</translation>
     </message>
     <message>
       <source>T&amp;ape</source>
-      <translation type="unfinished">T&amp;ape</translation>
+      <translation>(&amp;A)شريط</translation>
     </message>
     <message>
       <source>&amp;Dipswitch</source>
-      <translation type="unfinished">&amp;Dipswitch</translation>
+      <translation>(&amp;D)ديبسويتش</translation>
     </message>
     <message>
       <source>Detach &amp;Barcode</source>
-      <translation type="unfinished">Detach &amp;Barcode</translation>
+      <translation>(&amp;B)الرمز الشريطي ديتاتش</translation>
     </message>
   </context>
   <context>
@@ -1635,7 +1635,7 @@
     </message>
     <message>
       <source>Toggle Virtual Keyboard</source>
-      <translation type="unfinished">Toggle Virtual Keyboard</translation>
+      <translation>تبديل لوحة المفاتيح الوهمية</translation>
     </message>
   </context>
   <context>
