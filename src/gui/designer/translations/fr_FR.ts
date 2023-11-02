@@ -50,7 +50,7 @@
     </message>
     <message>
       <source>Apply</source>
-      <translation type="unfinished">Apply</translation>
+      <translation>Appliquer</translation>
     </message>
   </context>
   <context>
@@ -592,7 +592,7 @@
     </message>
     <message>
       <source>Vs. System (1P via $4016)</source>
-      <translation type="unfinished">Vs. System (1P via $4016)</translation>
+      <translation>Vs. System (1P via $4016)</translation>
     </message>
     <message>
       <source>Zapper ($4017)</source>
@@ -608,7 +608,7 @@
     </message>
     <message>
       <source>Two Vaus Controllers plus Famicom Data Recorder</source>
-      <translation type="unfinished">Two Vaus Controllers plus Famicom Data Recorder</translation>
+      <translation>Deux Paddles plus Famicom Data Recorde</translation>
     </message>
     <message>
       <source>Subor Keyboard plus mouse (3x8-bit)</source>
@@ -624,7 +624,7 @@
     </message>
     <message>
       <source>Unknown Famiclone Keyboard (Golden Key)</source>
-      <translation type="unfinished">Unknown Famiclone Keyboard (Golden Key)</translation>
+      <translation>Clavier Famiclone Inconnu (Golden Key)</translation>
     </message>
     <message>
       <source>Subor Keyboard plus mouse (24-bit $4017)</source>
@@ -1013,7 +1013,7 @@
     </message>
     <message>
       <source>Vs System</source>
-      <translation type="unfinished">Vs System</translation>
+      <translation>Vs System</translation>
     </message>
     <message>
       <source>Coins</source>
@@ -1021,47 +1021,47 @@
     </message>
     <message>
       <source>Monitor</source>
-      <translation type="unfinished">Monitor</translation>
+      <translation>Moniteur</translation>
     </message>
     <message>
       <source>Left</source>
-      <translation type="unfinished">Left</translation>
+      <translation>Gauche</translation>
     </message>
     <message>
       <source>Right</source>
-      <translation type="unfinished">Right</translation>
+      <translation>Droite</translation>
     </message>
     <message>
       <source>12</source>
-      <translation type="unfinished">12</translation>
+      <translation>12</translation>
     </message>
     <message>
       <source>13</source>
-      <translation type="unfinished">13</translation>
+      <translation>13</translation>
     </message>
     <message>
       <source>14</source>
-      <translation type="unfinished">14</translation>
+      <translation>14</translation>
     </message>
     <message>
       <source>15</source>
-      <translation type="unfinished">15</translation>
+      <translation>15</translation>
     </message>
     <message>
       <source>16</source>
-      <translation type="unfinished">16</translation>
+      <translation>16</translation>
     </message>
     <message>
       <source>11</source>
-      <translation type="unfinished">11</translation>
+      <translation>11</translation>
     </message>
     <message>
       <source>10</source>
-      <translation type="unfinished">10</translation>
+      <translation>10</translation>
     </message>
     <message>
       <source>9</source>
-      <translation type="unfinished">9</translation>
+      <translation>9</translation>
     </message>
     <message>
       <source>Game Dip Switches</source>
@@ -2195,19 +2195,19 @@
     </message>
     <message>
       <source>MFields</source>
-      <translation type="unfinished">MFields</translation>
+      <translation>MFields</translation>
     </message>
     <message>
       <source>VBlend</source>
-      <translation type="unfinished">VBlend</translation>
+      <translation>VBlend</translation>
     </message>
     <message>
       <source>Contrast</source>
-      <translation type="unfinished">Contrast</translation>
+      <translation>Contraste</translation>
     </message>
     <message>
       <source>Brightness</source>
-      <translation type="unfinished">Brightness</translation>
+      <translation>Luminosité</translation>
     </message>
     <message>
       <source>White Point</source>
@@ -2219,7 +2219,7 @@
     </message>
     <message>
       <source>Saturation</source>
-      <translation type="unfinished">Saturation</translation>
+      <translation>Saturation</translation>
     </message>
     <message>
       <source>Noise</source>
@@ -2227,7 +2227,7 @@
     </message>
     <message>
       <source>Hue</source>
-      <translation type="unfinished">Hue</translation>
+      <translation>Teinte</translation>
     </message>
     <message>
       <source>Reset parameters to defaults</source>
@@ -2242,15 +2242,15 @@
     </message>
     <message>
       <source>Brightness</source>
-      <translation type="unfinished">Brightness</translation>
+      <translation>Luminosité</translation>
     </message>
     <message>
       <source>Hue</source>
-      <translation type="unfinished">Hue</translation>
+      <translation>Teinte</translation>
     </message>
     <message>
       <source>Contrast</source>
-      <translation type="unfinished">Contrast</translation>
+      <translation>Contraste</translation>
     </message>
     <message>
       <source>Noise</source>
@@ -2266,11 +2266,11 @@
     </message>
     <message>
       <source>VBlend</source>
-      <translation type="unfinished">VBlend</translation>
+      <translation>VBlend</translation>
     </message>
     <message>
       <source>Saturation</source>
-      <translation type="unfinished">Saturation</translation>
+      <translation>Saturation</translation>
     </message>
     <message>
       <source>Reset parameters to defaults</source>
@@ -2285,7 +2285,7 @@
     </message>
     <message>
       <source>VBlend</source>
-      <translation type="unfinished">VBlend</translation>
+      <translation>VBlend</translation>
     </message>
     <message>
       <source>Black Point</source>
