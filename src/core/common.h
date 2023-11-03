@@ -101,7 +101,8 @@ enum languages {
 	LNG_CHINESE_SIMPLIFIED,
 	LNG_FRENCH,
 	LNG_GERMAN,
-	LNG_POLISH
+	LNG_POLISH,
+	LNG_ARABIC
 };
 enum epansions_device_mode {
 	NOEXTRA = 0x0000,

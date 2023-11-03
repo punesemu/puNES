@@ -621,6 +621,15 @@
        </property>
        <item>
         <property name="text">
+         <string>Arabic</string>
+        </property>
+        <property name="icon">
+         <iconset resource="resources.qrc">
+          <normaloff>:/icon/icons/flag_arabic.svgz</normaloff>:/icon/icons/flag_arabic.svgz</iconset>
+        </property>
+       </item>
+       <item>
+        <property name="text">
          <string>Chinese Simplified</string>
         </property>
         <property name="icon">

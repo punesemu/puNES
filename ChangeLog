@@ -9,6 +9,7 @@ Changelog:
   * 0x00
   * 0xFF (default)
   * Randomize.
+- Added Arabic translation (thx to Chipsum).
 - Added Polish translation (thx to elektronicznypank).
 - Added full support for the NES 2.0 header format.
 - Added video filter : "NTSC CRT LMP88959" and "NTSC NES LMP88959" (https://github.com/LMP88959/NTSC-CRT, Thx to LMP88959 for is great work).
@@ -23,6 +24,7 @@ Changelog:
   if you want to use a more updated version than the one distributed with the emulator, just copy it either in the executable directory or in the working directory of the emulator, which can also be opened from the "File -> Open working directory" menu.
 - Added full support for Vs System (UniSystem and DualSystem).
 - Windows x86_64: Update to Qt5 5.15.8 (#279).
+- Fixed the management of keyboard input (#317).
 - Fixed map of one keyboard button to multiple controllers (#277).
 - Fixed FDS wavetable pitch (#295).
 - Fixed patching of IPS files.

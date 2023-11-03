@@ -1,5 +1,6 @@
 # Translation files
 set(ts_files
+	gui/designer/translations/ar_AR.ts
 	gui/designer/translations/de_DE.ts
 	gui/designer/translations/en_EN.ts
 	gui/designer/translations/es_ES.ts
@@ -12,6 +13,7 @@ set(ts_files
 	gui/designer/translations/tr_TR.ts
 	gui/designer/translations/zh_CN.ts
 
+	gui/designer/translations/qt_ar.ts
 	gui/designer/translations/qt_de.ts
 	gui/designer/translations/qt_es.ts
 	gui/designer/translations/qt_fr.ts

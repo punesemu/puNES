@@ -427,6 +427,10 @@ void mainWindow::set_language(int lang) {
 	}
 
 	switch (lang) {
+		case LNG_ARABIC:
+			lng = "ar";
+			file = "ar_AR";
+			break;
 		case LNG_CHINESE_SIMPLIFIED:
 			lng = "zh_CN";
 			file = "zh_CN";

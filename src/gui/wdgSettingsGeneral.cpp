@@ -258,39 +258,42 @@ void wdgSettingsGeneral::language_set(void) {
 	int lang;
 
 	switch (cfg->language) {
-		default:
-		case LNG_CHINESE_SIMPLIFIED:
+		case LNG_ARABIC:
 			lang = 0;
 			break;
-		case LNG_ENGLISH:
+		case LNG_CHINESE_SIMPLIFIED:
 			lang = 1;
 			break;
-		case LNG_FRENCH:
+		default:
+		case LNG_ENGLISH:
 			lang = 2;
 			break;
-		case LNG_GERMAN:
+		case LNG_FRENCH:
 			lang = 3;
 			break;
-		case LNG_HUNGARIAN:
+		case LNG_GERMAN:
 			lang = 4;
 			break;
-		case LNG_ITALIAN:
+		case LNG_HUNGARIAN:
 			lang = 5;
 			break;
-		case LNG_POLISH:
+		case LNG_ITALIAN:
 			lang = 6;
 			break;
-		case LNG_PORTUGUESEBR:
+		case LNG_POLISH:
 			lang = 7;
 			break;
-		case LNG_RUSSIAN:
+		case LNG_PORTUGUESEBR:
 			lang = 8;
 			break;
-		case LNG_SPANISH:
+		case LNG_RUSSIAN:
 			lang = 9;
 			break;
-		case LNG_TURKISH:
+		case LNG_SPANISH:
 			lang = 10;
+			break;
+		case LNG_TURKISH:
+			lang = 11;
 			break;
 	}
 
@@ -416,37 +419,40 @@ void wdgSettingsGeneral::s_language(int index) {
 
 	switch (index) {
 		case 0:
+			lang = LNG_ARABIC;
+			break;
+		case 1:
 			lang = LNG_CHINESE_SIMPLIFIED;
 			break;
 		default:
-		case 1:
+		case 2:
 			lang = LNG_ENGLISH;
 			break;
-		case 2:
+		case 3:
 			lang = LNG_FRENCH;
 			break;
-		case 3:
+		case 4:
 			lang = LNG_GERMAN;
 			break;
-		case 4:
+		case 5:
 			lang = LNG_HUNGARIAN;
 			break;
-		case 5:
+		case 6:
 			lang = LNG_ITALIAN;
 			break;
-		case 6:
+		case 7:
 			lang = LNG_POLISH;
 			break;
-		case 7:
+		case 8:
 			lang = LNG_PORTUGUESEBR;
 			break;
-		case 8:
+		case 9:
 			lang = LNG_RUSSIAN;
 			break;
-		case 9:
+		case 10:
 			lang = LNG_SPANISH;
 			break;
-		case 10:
+		case 11:
 			lang = LNG_TURKISH;
 			break;
 	}

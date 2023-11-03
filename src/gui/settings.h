@@ -685,7 +685,8 @@ static const _opt opt_languages[] = {
 	{NULL, uL("chinese simplified"), LNG_CHINESE_SIMPLIFIED},
 	{NULL, uL("french")            , LNG_FRENCH},
 	{NULL, uL("german")            , LNG_GERMAN},
-	{NULL, uL("polish")            , LNG_POLISH}
+	{NULL, uL("polish")            , LNG_POLISH},
+	{NULL, uL("arabic")            , LNG_ARABIC}
 };
 static const _opt opt_nsf_player_effect[] = {
 	{NULL, uL("bars")       , NSF_EFFECT_BARS},
@@ -1273,12 +1274,13 @@ static const _settings main_cfg[] = {
 	},
 	{
 		uL("GUI"), uL("language"), uL("english"),
-		uL("# possible values: chinese simplified, english, french, german, hungarian, italian," NEWLINE)
-		uL("#                  polish, portuguese, russian, spanish, turkish"),
-		uL("    --language            GUI language          : chinese simplified, english," NEWLINE)
-		uL("                                                  french, german, hungarian,"  NEWLINE)
-		uL("                                                  italian, polish, portuguese"  NEWLINE)
-		uL("                                                  russian, spanish, turkish"),
+		uL("# possible values: arabic, chinese simplified, english, french, german, hungarian," NEWLINE)
+		uL("#                  italian, polish, portuguese, russian, spanish, turkish"),
+		uL("    --language            GUI language          : arabic, chinese simplified," NEWLINE)
+		uL("                                                  english, french, german,"  NEWLINE)
+		uL("                                                  hungarian, italian, polish,"  NEWLINE)
+		uL("                                                  portuguese, russian, spanish," NEWLINE)
+		uL("                                                  turkish"),
 		{LENGTH(opt_languages), opt_languages}
 	},
 	{

@@ -1,5 +1,7 @@
 <RCC>
   <qresource prefix="tr">
+    <file>translations/ar_AR.qm</file>
+    <file>translations/qt_ar.qm</file>
     <file>translations/en_EN.qm</file>
     <file>translations/tr_TR.qm</file>
     <file>translations/qt_tr.qm</file>
