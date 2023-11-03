@@ -1,322 +1,322 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="zh_CN" sourcelanguage="en">
+<TS version="2.1" language="ar_AR" sourcelanguage="en">
   <context>
     <name>Settings</name>
     <message>
       <source>System Default</source>
-      <translation>系统默认</translation>
+      <translation>النظام الافتراضي</translation>
     </message>
   </context>
   <context>
     <name>dlgCfgNSCode</name>
     <message>
       <source>Default</source>
-      <translation>默认</translation>
+      <translation>افتراضي</translation>
     </message>
     <message>
       <source>Unset</source>
-      <translation>未设置</translation>
+      <translation>إلغاء التعيين</translation>
     </message>
     <message>
       <source>Apply</source>
-      <translation>应用</translation>
+      <translation>تطبيق</translation>
     </message>
     <message>
       <source>Discard</source>
-      <translation>放弃</translation>
+      <translation>تجاهل</translation>
     </message>
   </context>
   <context>
     <name>dlgCmdLineHelp</name>
     <message>
       <source>Close</source>
-      <translation>关闭</translation>
+      <translation>إغلاق</translation>
     </message>
     <message>
       <source>Command Line Help</source>
-      <translation>命令行帮助</translation>
+      <translation>مُساعدة سطر الأوامِر</translation>
     </message>
   </context>
   <context>
     <name>dlgDetachBarcode</name>
     <message>
       <source>Enter a barcode yourself...</source>
-      <translation type="unfinished">Enter a barcode yourself...</translation>
+      <translation>أدخل الرمز الشريطي بنفسك...</translation>
     </message>
     <message>
       <source>Detach Barcode</source>
-      <translation type="unfinished">Detach Barcode</translation>
+      <translation>الرمز الشريطي ديتاتش</translation>
     </message>
     <message>
       <source>Apply</source>
-      <translation type="unfinished">Apply</translation>
+      <translation>تطبيق</translation>
     </message>
   </context>
   <context>
     <name>dlgDipswitch</name>
     <message>
       <source>Ok</source>
-      <translation>确定</translation>
+      <translation>موافق</translation>
     </message>
     <message>
       <source>Dipswitch</source>
-      <translation>Dip 开关</translation>
+      <translation>ديبسويتش</translation>
     </message>
     <message>
       <source>Start</source>
-      <translation>开始</translation>
+      <translation>ابدأ</translation>
     </message>
     <message>
       <source>Default</source>
-      <translation>默认</translation>
+      <translation>افتراضي</translation>
     </message>
   </context>
   <context>
     <name>dlgHeaderEditor</name>
     <message>
       <source>Attention</source>
-      <translation>警告</translation>
+      <translation>انتباه</translation>
     </message>
     <message>
       <source>Do you want to boot the ROM with the changes made?</source>
-      <translation>您希望以更改模式启动 ROM 吗?</translation>
+      <translation>هل تريد تشغيل الروم مع التغييرات التي أجريت؟</translation>
     </message>
     <message>
       <source>Header Editor</source>
-      <translation>头部编辑器</translation>
+      <translation>محرر الترويسة</translation>
     </message>
     <message>
       <source>Mirroring</source>
-      <translation>镜像</translation>
+      <translation>تناظر</translation>
     </message>
     <message>
       <source>Console Type</source>
-      <translation>主机类型</translation>
+      <translation>نوع المنصة</translation>
     </message>
     <message>
       <source>PRG ROM KiB</source>
-      <translation>PRG ROM KiB</translation>
+      <translation>روم البرنامَج ك.ب</translation>
     </message>
     <message>
       <source>None</source>
-      <translation>无</translation>
+      <translation>بدون</translation>
     </message>
     <message>
       <source>128 Bytes</source>
-      <translation>128 字节</translation>
+      <translation>128 بايت</translation>
     </message>
     <message>
       <source>256 Bytes</source>
-      <translation>256 字节</translation>
+      <translation>256 بايت</translation>
     </message>
     <message>
       <source>512 Bytes</source>
-      <translation>512 字节</translation>
+      <translation>512 بايت</translation>
     </message>
     <message>
       <source>1 KiB</source>
-      <translation>1 KiB</translation>
+      <translation>1 ك.ب</translation>
     </message>
     <message>
       <source>2 KiB</source>
-      <translation>2 KiB</translation>
+      <translation>2 ك.ب</translation>
     </message>
     <message>
       <source>4 KiB</source>
-      <translation>4 KiB</translation>
+      <translation>4 ك.ب</translation>
     </message>
     <message>
       <source>8 KiB</source>
-      <translation>8 KiB</translation>
+      <translation>8 ك.ب</translation>
     </message>
     <message>
       <source>16 KiB</source>
-      <translation>16 KiB</translation>
+      <translation>16 ك.ب</translation>
     </message>
     <message>
       <source>32 KiB</source>
-      <translation>32 KiB</translation>
+      <translation>32 ك.ب</translation>
     </message>
     <message>
       <source>64 KiB</source>
-      <translation>64 KiB</translation>
+      <translation>64 ك.ب</translation>
     </message>
     <message>
       <source>128 KiB</source>
-      <translation>128 KiB</translation>
+      <translation>128 ك.ب</translation>
     </message>
     <message>
       <source>256 KiB</source>
-      <translation>256 KiB</translation>
+      <translation>256 ك.ب</translation>
     </message>
     <message>
       <source>512 KiB</source>
-      <translation>512 KiB</translation>
+      <translation>512 ك.ب</translation>
     </message>
     <message>
       <source>1 MiB</source>
-      <translation>1 MiB</translation>
+      <translation>1 م.ب</translation>
     </message>
     <message>
       <source>N/A</source>
-      <translation>无</translation>
+      <translation>غ/م</translation>
     </message>
     <message>
       <source>Trainer</source>
-      <translation>作弊</translation>
+      <translation>ترينر</translation>
     </message>
     <message>
       <source>Unspecified</source>
-      <translation>未指定</translation>
+      <translation>غير محدد</translation>
     </message>
     <message>
       <source>Standard Controllers</source>
-      <translation>标准控制器</translation>
+      <translation>وحدات التحكم العادية</translation>
     </message>
     <message>
       <source>NES Four Score/Satellite</source>
-      <translation>NES 四分插</translation>
+      <translation>فور سكور/ستلايت (نيس)</translation>
     </message>
     <message>
       <source>Famicom Four Players Adapter</source>
-      <translation>Famicom 四玩家适配器</translation>
+      <translation>محول فاميكوم أربعة لاعبين</translation>
     </message>
     <message>
       <source>Vs. System</source>
-      <translation>VS 系统</translation>
+      <translation>نظام Vs</translation>
     </message>
     <message>
       <source>Vs. System (1P via $4017)</source>
-      <translation>VS 系统 (1P 经由 $4017)</translation>
+      <translation>نظام Vs (1P عبر $4017)</translation>
     </message>
     <message>
       <source>Reserved</source>
-      <translation>保留</translation>
+      <translation>محجوز</translation>
     </message>
     <message>
       <source>Vs. Zapper</source>
-      <translation>VS 手枪</translation>
+      <translation>مسدس Vs</translation>
     </message>
     <message>
       <source>Two Zappers</source>
-      <translation>双手枪</translation>
+      <translation>مسدسين</translation>
     </message>
     <message>
       <source>Bandai Hyper Shot Lightgun</source>
-      <translation>万代机关枪</translation>
+      <translation>بندقية بانداي هايبر شوت</translation>
     </message>
     <message>
       <source>Power Pad Side A</source>
-      <translation>跳舞毯 A 面</translation>
+      <translation>بساط الرقص الجانب A</translation>
     </message>
     <message>
       <source>Power Pad Side B</source>
-      <translation>跳舞毯 B 面</translation>
+      <translation>بساط الرقص الجانب B</translation>
     </message>
     <message>
       <source>Family Trainer Side A</source>
-      <translation>家庭训练者 A 面</translation>
+      <translation>فاميلي ترينر الجانب A</translation>
     </message>
     <message>
       <source>Family Trainer Side B</source>
-      <translation>家庭训练者 B 面</translation>
+      <translation>فاميلي ترينر الجانب B</translation>
     </message>
     <message>
       <source>Konami Hyper Shot</source>
-      <translation>科乐美大按钮</translation>
+      <translation>كونامي هايبر شوت</translation>
     </message>
     <message>
       <source>Coconuts Pachinko</source>
-      <translation>柏青哥</translation>
+      <translation>كوكونيت باتشينكو</translation>
     </message>
     <message>
       <source>Exciting Boxing Punching Bag</source>
-      <translation>刺激拳击袋</translation>
+      <translation>كيس الملاكمة</translation>
     </message>
     <message>
       <source>Jissen Mahjong Controller</source>
-      <translation>实战麻将控制器</translation>
+      <translation>جيسين ما جونغ</translation>
     </message>
     <message>
       <source>Party Tap</source>
-      <translation>派对分插</translation>
+      <translation>بارتي تاب</translation>
     </message>
     <message>
       <source>Oeka Kids Tablet</source>
-      <translation>Oeka 儿童输入板</translation>
+      <translation>لوحة أويكا كيدز</translation>
     </message>
     <message>
       <source>Sunsoft Barcode Battler</source>
-      <translation>Sunsoft 条码对战</translation>
+      <translation>الرمز الشريطي لمعارك سنسوفت</translation>
     </message>
     <message>
       <source>Miracle Piano Keyboard</source>
-      <translation>Miracle 钢琴</translation>
+      <translation>بيانو العجائب</translation>
     </message>
     <message>
       <source>Pokkun Moguraa</source>
-      <translation>打地鼠</translation>
+      <translation>Pokkun Moguraa</translation>
     </message>
     <message>
       <source>Top Rider</source>
-      <translation>骑手凌云</translation>
+      <translation>توب ريدر</translation>
     </message>
     <message>
       <source>Double-Fisted</source>
-      <translation>双拳</translation>
+      <translation>القبضة المزدوجة</translation>
     </message>
     <message>
       <source>Famicom 3D System</source>
-      <translation>Famicom 3D 系统</translation>
+      <translation>نظام فاميكوم 3D</translation>
     </message>
     <message>
       <source>Doremikko Keyboard</source>
-      <translation>Doremikko 键盘</translation>
+      <translation>بيانو دوريميكُّو</translation>
     </message>
     <message>
       <source>R.O.B. Gyro Set</source>
-      <translation>机器人陀螺组件</translation>
+      <translation>مجموعة روبوت R.O.B</translation>
     </message>
     <message>
       <source>Famicom Data Recorder</source>
-      <translation>Famicom 数据记录器</translation>
+      <translation>مسجل بيانات فاميكوم</translation>
     </message>
     <message>
       <source>ASCII Turbo File</source>
-      <translation>ASCII Turbo 文件</translation>
+      <translation>مِلَفّ ASCII Turbo</translation>
     </message>
     <message>
       <source>IGS Storage Battle Box</source>
-      <translation>IGS 存储战斗盒子</translation>
+      <translation>صندوق معركة تخزين IGS</translation>
     </message>
     <message>
       <source>Family BASIC Keyboard</source>
-      <translation>Family BASIC 键盘</translation>
+      <translation>لوحة مفاتيح فاميلي بايسك</translation>
     </message>
     <message>
       <source>Dongda PEC-586 Keyboard</source>
-      <translation>Dongda PEC-586 键盘</translation>
+      <translation>لوحة مفاتيح Dongda PEC-586</translation>
     </message>
     <message>
       <source>Bit Corp. Bit-79 Keyboard</source>
-      <translation>Bit Corp. Bit-79 键盘</translation>
+      <translation>لوحة مفاتيح Bit Corp. Bit-79</translation>
     </message>
     <message>
       <source>Subor Keyboard</source>
-      <translation>小霸王键盘</translation>
+      <translation>لوحة مفاتيح ملك النمور الذهبي</translation>
     </message>
     <message>
       <source>Multicart</source>
-      <translation>多重卡带</translation>
+      <translation>خرطوشة متعددة الألعاب</translation>
     </message>
     <message>
       <source>Two SNES controllers</source>
-      <translation>双 SNES 控制器</translation>
+      <translation>وحدتي تحكم سنيس</translation>
     </message>
     <message>
       <source>RacerMate Bicycle</source>
-      <translation>竞速自行车</translation>
+      <translation/>
     </message>
     <message>
       <source>U-Force</source>
@@ -324,67 +324,67 @@
     </message>
     <message>
       <source>R.O.B. Stack-Up</source>
-      <translation>机器人叠塔</translation>
+      <translation>R.O.B. Stack-Up</translation>
     </message>
     <message>
       <source>City Patrolman Lightgun</source>
-      <translation>城市巡警光枪</translation>
+      <translation>مسدس City Patrolman</translation>
     </message>
     <message>
       <source>Sharp C1 Cassette Interface</source>
-      <translation>Sharp C1 卡带界面</translation>
+      <translation>واجهة كاسيت Sharp C1</translation>
     </message>
     <message>
       <source>Standard Controller (inverted direction)</source>
-      <translation>标准控制器 (方向相反)</translation>
+      <translation>وحدة التحكم العادية ( الاتجاهات معكوسة)</translation>
     </message>
     <message>
       <source>Excalibor Sudoku Pad</source>
-      <translation>Excalibor Sudoku 手柄</translation>
+      <translation>Excalibor Sudoku Pad</translation>
     </message>
     <message>
       <source>ABL Pinball</source>
-      <translation>ABL 弹球</translation>
+      <translation>ABL Pinball</translation>
     </message>
     <message>
       <source>Golden Nugget Casino</source>
-      <translation>金块赌场</translation>
+      <translation>Golden Nugget Casino</translation>
     </message>
     <message>
       <source>NTSC</source>
-      <translation>NTSC</translation>
+      <translation>إن تي إس سي</translation>
     </message>
     <message>
       <source>PAL</source>
-      <translation>PAL</translation>
+      <translation>بال</translation>
     </message>
     <message>
       <source>Both</source>
-      <translation>两者</translation>
+      <translation>كلاهما</translation>
     </message>
     <message>
       <source>Dendy</source>
-      <translation>Dendy</translation>
+      <translation>ديندي</translation>
     </message>
     <message>
       <source>VS Type</source>
-      <translation>类型</translation>
+      <translation>نوع VS</translation>
     </message>
     <message>
       <source>Horizontal</source>
-      <translation>水平</translation>
+      <translation>أفُقي</translation>
     </message>
     <message>
       <source>Vertical</source>
-      <translation>垂直</translation>
+      <translation>عمودي</translation>
     </message>
     <message>
       <source>4-Screen</source>
-      <translation>4 屏幕</translation>
+      <translation>4-شاشات</translation>
     </message>
     <message>
       <source>CPU Timing</source>
-      <translation>CPU 计时</translation>
+      <translation>توقيت المعالج</translation>
     </message>
     <message>
       <source>VS PPU</source>
@@ -392,11 +392,11 @@
     </message>
     <message>
       <source>CHR ROM KiB</source>
-      <translation>CHR ROM KiB</translation>
+      <translation>CHR ROM ك.ب</translation>
     </message>
     <message>
       <source>NES/Famicom/Dendy</source>
-      <translation>NES/Famicom/Dendy</translation>
+      <translation>نيس/فاميكوم/ديندي</translation>
     </message>
     <message>
       <source>Playchoice 10</source>
@@ -404,11 +404,11 @@
     </message>
     <message>
       <source>Famiclone with Decimal Mode</source>
-      <translation>十进制模式盗版红白机</translation>
+      <translation>فاميكلون مع الوضع العَشَري</translation>
     </message>
     <message>
       <source>NES/Famicom with EPSM</source>
-      <translation>NES/Famicom 和 EPSM</translation>
+      <translation>نيس/فاميكوم معَ EPSM</translation>
     </message>
     <message>
       <source>VT01</source>
@@ -440,47 +440,47 @@
     </message>
     <message>
       <source>Famicom Network System</source>
-      <translation>Famicom 网络系统</translation>
+      <translation>نظام شبكة فاميكوم</translation>
     </message>
     <message>
       <source>File</source>
-      <translation>文件</translation>
+      <translation>ملف</translation>
     </message>
     <message>
       <source>CHR RAM Battery</source>
-      <translation>CHR RAM 电池</translation>
+      <translation>بطارية CHR RAM</translation>
     </message>
     <message>
       <source>Mapper</source>
-      <translation>Mapper</translation>
+      <translation>ماپر</translation>
     </message>
     <message>
       <source>Normal</source>
-      <translation>普通</translation>
+      <translation>عادي</translation>
     </message>
     <message>
       <source>RBI Baseball</source>
-      <translation>RBI 棒球</translation>
+      <translation>كرة القاعدة RBI</translation>
     </message>
     <message>
       <source>TKO Boxing</source>
-      <translation>TKO 拳击</translation>
+      <translation>ملاكمة TKO</translation>
     </message>
     <message>
       <source>Super Xevious</source>
-      <translation>超级铁板阵</translation>
+      <translation>Super Xevious</translation>
     </message>
     <message>
       <source>Vs. Ice Climber</source>
-      <translation>Vs. 敲冰块</translation>
+      <translation>متسلق الجليد Vs</translation>
     </message>
     <message>
       <source>Vs. Dual</source>
-      <translation>VS 双系统</translation>
+      <translation>مزدوج Vs</translation>
     </message>
     <message>
       <source>Raid on Bungeling Bay</source>
-      <translation>救难直升机</translation>
+      <translation>Raid on Bungeling Bay</translation>
     </message>
     <message>
       <source>PRG RAM</source>
@@ -496,7 +496,7 @@
     </message>
     <message>
       <source>Submapper</source>
-      <translation>子 mapper</translation>
+      <translation>ماپر فرعي</translation>
     </message>
     <message>
       <source>RP2C03B</source>
@@ -552,11 +552,11 @@
     </message>
     <message>
       <source>Header</source>
-      <translation>头部</translation>
+      <translation>الترويسة</translation>
     </message>
     <message>
       <source>PRG RAM Battery</source>
-      <translation>PRG RAM 电池</translation>
+      <translation>بطارية PRG RAM</translation>
     </message>
     <message>
       <source>CHR RAM</source>
@@ -564,270 +564,270 @@
     </message>
     <message>
       <source>Input</source>
-      <translation>输入</translation>
+      <translation>التحكم</translation>
     </message>
     <message>
       <source>Misc ROMs</source>
-      <translation>其它 ROM</translation>
+      <translation>رومات متنوعة</translation>
     </message>
     <message>
       <source>Battery</source>
-      <translation>电池</translation>
+      <translation>البطارية</translation>
     </message>
     <message>
       <source>Misc</source>
-      <translation>其它</translation>
+      <translation>إعدادات متنوعة</translation>
     </message>
     <message>
       <source>Save</source>
-      <translation>保存</translation>
+      <translation>حفظ</translation>
     </message>
     <message>
       <source>Cancel</source>
-      <translation>取消</translation>
+      <translation>إلغاء</translation>
     </message>
     <message>
       <source>Reset to defaults</source>
-      <translation>重置为默认</translation>
+      <translation>إعادة التعيين للوضع الافتراضي</translation>
     </message>
     <message>
       <source>Vs. System (1P via $4016)</source>
-      <translation type="unfinished">Vs. System (1P via $4016)</translation>
+      <translation>نظام Vs (1P عبر $4016)</translation>
     </message>
     <message>
       <source>Zapper ($4017)</source>
-      <translation type="unfinished">Zapper ($4017)</translation>
+      <translation>مسدس ($4017)</translation>
     </message>
     <message>
       <source>Arkanoid Vaus Controller (NES)</source>
-      <translation type="unfinished">Arkanoid Vaus Controller (NES)</translation>
+      <translation>وحدة تحكم Arkanoid Vaus (نيس)</translation>
     </message>
     <message>
       <source>Arkanoid Vaus Controller (Famicom)</source>
-      <translation type="unfinished">Arkanoid Vaus Controller (Famicom)</translation>
+      <translation>وحدة تحكم Arkanoid Vaus (فاميكوم)</translation>
     </message>
     <message>
       <source>Two Vaus Controllers plus Famicom Data Recorder</source>
-      <translation type="unfinished">Two Vaus Controllers plus Famicom Data Recorder</translation>
+      <translation>وحدتي تحكم Vaus إضافة إلى مسجل بيانات فاميكوم</translation>
     </message>
     <message>
       <source>Subor Keyboard plus mouse (3x8-bit)</source>
-      <translation type="unfinished">Subor Keyboard plus mouse (3x8-bit)</translation>
+      <translation>لوحة مفاتيح ملك النمور الذهبي إضافة للفأرة (3×8-بت)</translation>
     </message>
     <message>
       <source>Subor Keyboard plus mouse (24-bit)</source>
-      <translation type="unfinished">Subor Keyboard plus mouse (24-bit)</translation>
+      <translation>لوحة مفاتيح ملك النمور الذهبي إضافة للفأرة (24-بت)</translation>
     </message>
     <message>
       <source>SNES Mouse ($4017.0)</source>
-      <translation type="unfinished">SNES Mouse ($4017.0)</translation>
+      <translation>فأرة سنيس ($4017.0)</translation>
     </message>
     <message>
       <source>Unknown Famiclone Keyboard (Golden Key)</source>
-      <translation type="unfinished">Unknown Famiclone Keyboard (Golden Key)</translation>
+      <translation>لوحة مفاتيح فاميكلون غير معروفة (Golden Key)</translation>
     </message>
     <message>
       <source>Subor Keyboard plus mouse (24-bit $4017)</source>
-      <translation type="unfinished">Subor Keyboard plus mouse (24-bit $4017)</translation>
+      <translation>لوحة مفاتيح ملك النمور الذهبي إضافة للفأرة (24-بت $4017)</translation>
     </message>
     <message>
       <source>Port Test</source>
-      <translation type="unfinished">Port Test</translation>
+      <translation>اختبار المنفذ</translation>
     </message>
     <message>
       <source>Bandai Multi Game Player Gamepad</source>
-      <translation type="unfinished">Bandai Multi Game Player Gamepad</translation>
+      <translation>وحدة تحكم بانداي متعددة الألعاب</translation>
     </message>
     <message>
       <source>Venom TV Dance Mat</source>
-      <translation type="unfinished">Venom TV Dance Mat</translation>
+      <translation>Venom TV Dance Mat</translation>
     </message>
     <message>
       <source>LG TV Remote Control</source>
-      <translation type="unfinished">LG TV Remote Control</translation>
+      <translation>ريموت تلفاز إل جي</translation>
     </message>
   </context>
   <context>
     <name>dlgJsc</name>
     <message>
       <source>Close Window</source>
-      <translation>关闭窗口</translation>
+      <translation>إغلاق النافذة</translation>
     </message>
     <message>
       <source>Save Configuration</source>
-      <translation>保存配置</translation>
+      <translation>حفظ الإعدادات</translation>
     </message>
   </context>
   <context>
     <name>dlgKeyboard</name>
     <message>
       <source>Virtual Keyboard</source>
-      <translation>虚拟键盘</translation>
+      <translation>لوحة المفاتيح الافتراضية</translation>
     </message>
     <message>
       <source>Subor Keyboard</source>
-      <translation>小霸王键盘</translation>
+      <translation>لوحة مفاتيح ملك النمور الذهبي</translation>
     </message>
     <message>
       <source>Options</source>
-      <translation>选项</translation>
+      <translation>الخيارات</translation>
     </message>
     <message>
       <source>Size</source>
-      <translation>尺寸</translation>
+      <translation>الحجم</translation>
     </message>
     <message>
       <source>1.0x</source>
-      <translation>1.0 倍</translation>
+      <translation>1.0x</translation>
     </message>
     <message>
       <source>1.5x</source>
-      <translation>1.5 倍</translation>
+      <translation>1.5x</translation>
     </message>
     <message>
       <source>2.0x</source>
-      <translation>2.0 倍</translation>
+      <translation>2.0x</translation>
     </message>
     <message>
       <source>2.5x</source>
-      <translation>2.5 倍</translation>
+      <translation>2.5x</translation>
     </message>
     <message>
       <source>Mode</source>
-      <translation>模式</translation>
+      <translation>الوضع</translation>
     </message>
     <message>
       <source>Setup</source>
-      <translation>设置</translation>
+      <translation>إعداد</translation>
     </message>
     <message>
       <source>Extended Mode (enable support for keypad, F10, F11, F12 and &quot;` &quot;. P.S. : &apos;Study and Game 32-in-1&apos; have problems with this mode)</source>
-      <translation>扩展模式 (开启键盘支持, F10, F11, F12 和 &quot;` &quot;. P.S. : &apos;学习和游戏 32-in-1&apos; 在此模式下有问题)</translation>
+      <translation>الوضع الموسّع (تمكين دعم الأزرار، F10، F11، F12 وَ &quot;` &quot;. PS.:&apos;أدرس والعب 32-في-1&apos; لديها مشكلة مع هذا الوضع)</translation>
     </message>
   </context>
   <context>
     <name>dlgLog</name>
     <message>
       <source>Log</source>
-      <translation>日志</translation>
+      <translation>السجل</translation>
     </message>
     <message>
       <source>Close</source>
-      <translation>关闭</translation>
+      <translation>إغلاق</translation>
     </message>
   </context>
   <context>
     <name>dlgSettings</name>
     <message>
       <source>Settings</source>
-      <translation>设置</translation>
+      <translation>الإعدادات</translation>
     </message>
     <message>
       <source>General</source>
-      <translation>常规</translation>
+      <translation>العامّة</translation>
     </message>
     <message>
       <source>Video</source>
-      <translation>视频</translation>
+      <translation>فيديو</translation>
     </message>
     <message>
       <source>Audio</source>
-      <translation>音频</translation>
+      <translation>صوت</translation>
     </message>
     <message>
       <source>Input</source>
-      <translation>输入</translation>
+      <translation>تحكم</translation>
     </message>
     <message>
       <source>PPU</source>
-      <translation>PPU</translation>
+      <translation>و.م.ص</translation>
     </message>
     <message>
       <source>Cheats</source>
-      <translation>作弊</translation>
+      <translation>الغشّ</translation>
     </message>
     <message>
       <source>Save Settings</source>
-      <translation>保存设置</translation>
+      <translation>حفظ الإعدادات</translation>
     </message>
     <message>
       <source>Close Settings</source>
-      <translation>关闭</translation>
+      <translation>إغلاق</translation>
     </message>
     <message>
       <source>Rewind Mode On/Off</source>
-      <translation>倒放开关</translation>
+      <translation>وضع اللف تفعيل/تعطيل</translation>
     </message>
     <message>
       <source>Rewind Step Backward</source>
-      <translation>倒放后退</translation>
+      <translation>اللف خطوة للخلف</translation>
     </message>
     <message>
       <source>Rewind Step Forward</source>
-      <translation>倒放前进</translation>
+      <translation>اللف خطوة للأمام</translation>
     </message>
     <message>
       <source>Rewind Fast Forward</source>
-      <translation>倒放快进</translation>
+      <translation>تسريع اللف للأمام </translation>
     </message>
     <message>
       <source>Rewind Play</source>
-      <translation>倒放</translation>
+      <translation>شغل اللف</translation>
     </message>
     <message>
       <source>Rewind Pause</source>
-      <translation>倒放暂停</translation>
+      <translation>إيقاف اللف</translation>
     </message>
     <message>
       <source>Rewind Fast Backward</source>
-      <translation>倒放快退</translation>
+      <translation>تسريع اللف للخلف</translation>
     </message>
     <message>
       <source>Recording</source>
-      <translation>录制</translation>
+      <translation>تسجيل</translation>
     </message>
     <message>
       <source>Toggle the Menu Bar in Fullscreen</source>
-      <translation>切换全屏菜单栏</translation>
+      <translation>تبديل شريط القوائم أثناءَ ملء الشاشة</translation>
     </message>
     <message>
       <source>Capture/Release Input</source>
-      <translation>捕获/释放输入</translation>
+      <translation>التقاط/تسريح الإدخال</translation>
     </message>
   </context>
   <context>
     <name>dlgStdPad</name>
     <message>
       <source>Controller %1 : Standard Pad</source>
-      <translation>控制器 %1 : 标准手柄</translation>
+      <translation>وحدة التحكم %1 : العادية</translation>
     </message>
     <message>
       <source>Auto</source>
-      <translation>自动</translation>
+      <translation>تلقائية</translation>
     </message>
     <message>
       <source>Original</source>
-      <translation>原始</translation>
+      <translation>أصليّة</translation>
     </message>
     <message>
       <source>3rd-party</source>
-      <translation>山寨</translation>
+      <translation>طرف ثالث</translation>
     </message>
     <message>
       <source>Keyboard</source>
-      <translation>键盘</translation>
+      <translation>لوحة المفاتيح</translation>
     </message>
     <message>
       <source>Select device first</source>
-      <translation>先选择设备</translation>
+      <translation>حدد الجهاز أولاً</translation>
     </message>
     <message>
       <source>Press a key (ESC for the previous value &quot;%1&quot;)</source>
-      <translation>请按键 (按 ESC 恢复成 &quot;%1&quot;)</translation>
+      <translation>اضغط على زر (ESC للقيمة السابقة &quot;%1&quot;)</translation>
     </message>
     <message>
       <source>Standard Pad</source>
-      <translation>标准手柄</translation>
+      <translation>وحدة التحكم العاديّة</translation>
     </message>
     <message>
       <source>ID</source>
@@ -835,7 +835,7 @@
     </message>
     <message>
       <source>Up</source>
-      <translation>↑</translation>
+      <translation>أعلى</translation>
     </message>
     <message>
       <source>A</source>
@@ -843,31 +843,31 @@
     </message>
     <message>
       <source>Down</source>
-      <translation>↓</translation>
+      <translation>أسفل</translation>
     </message>
     <message>
       <source>Unset</source>
-      <translation>清除</translation>
+      <translation>إلغاء التعيين</translation>
     </message>
     <message>
       <source>Left</source>
-      <translation>←</translation>
+      <translation>يسار</translation>
     </message>
     <message>
       <source>Start</source>
-      <translation>开始</translation>
+      <translation>ستارت</translation>
     </message>
     <message>
       <source>Turbo B</source>
-      <translation>B 连发</translation>
+      <translation>توربو B</translation>
     </message>
     <message>
       <source>Select</source>
-      <translation>选择</translation>
+      <translation>سيلكت</translation>
     </message>
     <message>
       <source>Turbo A</source>
-      <translation>A 连发</translation>
+      <translation>توربو A</translation>
     </message>
     <message>
       <source>B</source>
@@ -875,105 +875,105 @@
     </message>
     <message>
       <source>Right</source>
-      <translation>→</translation>
+      <translation>يمين</translation>
     </message>
     <message>
       <source>In sequence</source>
-      <translation>依次设置</translation>
+      <translation>بالترتيب</translation>
     </message>
     <message>
       <source>Unset all</source>
-      <translation>全部清除</translation>
+      <translation>إلغاء تعيين الكل</translation>
     </message>
     <message>
       <source>Defaults</source>
-      <translation>默认</translation>
+      <translation>الافتراضية</translation>
     </message>
     <message>
       <source>Joystick</source>
-      <translation>手柄</translation>
+      <translation>عصا التحكم</translation>
     </message>
     <message>
       <source>Misc</source>
-      <translation>其他</translation>
+      <translation>إعدادات متنوعة</translation>
     </message>
     <message>
       <source>Controller type</source>
-      <translation>控制器类型</translation>
+      <translation>نوع التحكم</translation>
     </message>
     <message>
       <source>Turbo B Delay</source>
-      <translation>B 连发延迟</translation>
+      <translation>مستوى تأخير توربو B</translation>
     </message>
     <message>
       <source>Turbo A Delay</source>
-      <translation>A 连发延迟</translation>
+      <translation>مستوى تأخير توربو A</translation>
     </message>
     <message>
       <source>Apply</source>
-      <translation>提交</translation>
+      <translation>تطبيق</translation>
     </message>
     <message>
       <source>Discard</source>
-      <translation>放弃</translation>
+      <translation>إلغاء</translation>
     </message>
     <message>
       <source>Press a key (ESC for the previous value &quot;%1&quot;%2)</source>
-      <translation>请按键 (按 ESC 恢复到前一个值 &quot;%1&quot;%2)</translation>
+      <translation>اضغط على زر (ESC للقيمة السابقة  &quot;%1&quot;%2)</translation>
     </message>
     <message>
       <source>Default</source>
-      <translation>默认</translation>
+      <translation>افتراضي</translation>
     </message>
     <message>
       <source>Deadzone</source>
-      <translation>死区</translation>
+      <translation>المنطقة الميتة</translation>
     </message>
   </context>
   <context>
     <name>dlgUncomp</name>
     <message>
       <source>which ROM do you want to load?</source>
-      <translation>您要载入哪个 ROM?</translation>
+      <translation>أيُ روم تريدُ تشغيلها؟</translation>
     </message>
     <message>
       <source>which PATCH do you want to apply?</source>
-      <translation>您要打哪个补丁？</translation>
+      <translation>أيُ رقعة (پاتش) تريد أن تطبقهُ؟</translation>
     </message>
     <message>
       <source>Unpacked archive</source>
-      <translation>解压档案</translation>
+      <translation>مِلَفّ مضغوط مفكوك</translation>
     </message>
     <message>
       <source>OK</source>
-      <translation>确定</translation>
+      <translation>حسناً</translation>
     </message>
     <message>
       <source>None</source>
-      <translation>无</translation>
+      <translation>بدون</translation>
     </message>
   </context>
   <context>
     <name>dlgVsSystem</name>
     <message>
       <source>Left Coin</source>
-      <translation>左投币</translation>
+      <translation>قطعة نقدية يسار</translation>
     </message>
     <message>
       <source>Right Coin</source>
-      <translation>右投币</translation>
+      <translation>قطعة نقدية يمين</translation>
     </message>
     <message>
       <source>Service Coin</source>
-      <translation>服务投币</translation>
+      <translation>قطعة نقدية خدمة</translation>
     </message>
     <message>
       <source>Coin Counter</source>
-      <translation>币数</translation>
+      <translation>عداد القطع النقدية</translation>
     </message>
     <message>
       <source>Dip Switches</source>
-      <translation>Dip 开关</translation>
+      <translation>محوّلات Dip</translation>
     </message>
     <message>
       <source>4</source>
@@ -993,7 +993,7 @@
     </message>
     <message>
       <source>8</source>
-      <translation>7</translation>
+      <translation>8</translation>
     </message>
     <message>
       <source>3</source>
@@ -1009,70 +1009,70 @@
     </message>
     <message>
       <source>Defaults Game Dip Switches</source>
-      <translation>默认游戏 Dip 开关</translation>
+      <translation>محوّلات Dip الافتراضية للعبة</translation>
     </message>
     <message>
       <source>Vs System</source>
-      <translation type="unfinished">Vs System</translation>
+      <translation>نظام Vs</translation>
     </message>
     <message>
       <source>Coins</source>
-      <translation type="unfinished">Coins</translation>
+      <translation>النقود</translation>
     </message>
     <message>
       <source>Monitor</source>
-      <translation type="unfinished">Monitor</translation>
+      <translation>الشاشة</translation>
     </message>
     <message>
       <source>Left</source>
-      <translation type="unfinished">Left</translation>
+      <translation>يسار</translation>
     </message>
     <message>
       <source>Right</source>
-      <translation type="unfinished">Right</translation>
+      <translation>يمين</translation>
     </message>
     <message>
       <source>12</source>
-      <translation type="unfinished">12</translation>
+      <translation>12</translation>
     </message>
     <message>
       <source>13</source>
-      <translation type="unfinished">13</translation>
+      <translation>13</translation>
     </message>
     <message>
       <source>14</source>
-      <translation type="unfinished">14</translation>
+      <translation>14</translation>
     </message>
     <message>
       <source>15</source>
-      <translation type="unfinished">15</translation>
+      <translation>15</translation>
     </message>
     <message>
       <source>16</source>
-      <translation type="unfinished">16</translation>
+      <translation>16</translation>
     </message>
     <message>
       <source>11</source>
-      <translation type="unfinished">11</translation>
+      <translation>11</translation>
     </message>
     <message>
       <source>10</source>
-      <translation type="unfinished">10</translation>
+      <translation>10</translation>
     </message>
     <message>
       <source>9</source>
-      <translation type="unfinished">9</translation>
+      <translation>9</translation>
     </message>
     <message>
       <source>Game Dip Switches</source>
-      <translation type="unfinished">Game Dip Switches</translation>
+      <translation>محوّلات Dip</translation>
     </message>
   </context>
   <context>
     <name>familyBasicKeyboard</name>
     <message>
       <source>Family Basic Keyboard</source>
-      <translation>Family Basic 键盘</translation>
+      <translation>لوحة مفاتيح فاميلي بايسك</translation>
     </message>
   </context>
   <context>
@@ -1080,577 +1080,577 @@
     <message>
       <source>%1 folders</source>
       <extracomment>Do not translate %1</extracomment>
-      <translation>%1 个文件夹</translation>
+      <translation>%1 مجلدات</translation>
     </message>
     <message>
       <source>Error on create config folder</source>
-      <translation>创建配置文件夹错误</translation>
+      <translation>تعثر إنشاء مُجلّد الإعدادات</translation>
     </message>
     <message>
       <source>Error on create data folder</source>
-      <translation>创建数据文件夹错误</translation>
+      <translation>تعثر إنشاء مُجلّد البيانات</translation>
     </message>
     <message>
       <source>Error on create temp folder</source>
-      <translation>创建临时文件夹错误</translation>
+      <translation>تعثر إنشاء المُجلّد المؤقت</translation>
     </message>
     <message>
       <source>Error on create cheat folder</source>
-      <translation>创建作弊文件夹错误</translation>
+      <translation>تعثر إنشاء مُجلّد الغِشّ</translation>
     </message>
     <message>
       <source>Error on create psg folder</source>
-      <translation>创建 psg 文件夹错误</translation>
+      <translation>تعثر إنشاء مُجلّد psg</translation>
     </message>
     <message>
       <source>Error on create shp folder</source>
-      <translation>创建 shp 文件夹错误</translation>
+      <translation>تعثر إنشاء مُجلّد shp</translation>
     </message>
     <message>
       <source>Error on create jsc folder</source>
-      <translation>创建 jsc 文件夹错误</translation>
+      <translation>تعثر إنشاء مُجلّد jsc</translation>
     </message>
     <message>
       <source>Error on create bios folder</source>
-      <translation>创建 bios 文件夹错误</translation>
+      <translation>تعثر إنشاء مُجلّد البايوس</translation>
     </message>
     <message>
       <source>Error on create diff folder</source>
-      <translation>创建 diff 文件夹错误</translation>
+      <translation>تعثر إنشاء مُجلّد diff</translation>
     </message>
     <message>
       <source>Error on create prb folder</source>
-      <translation>创建 prb 文件夹错误</translation>
+      <translation>تعثر إنشاء مُجلّد prb</translation>
     </message>
     <message>
       <source>Error on create save folder</source>
-      <translation>创建存档文件夹错误</translation>
+      <translation>تعثر إنشاء مُجلّد الحفظ</translation>
     </message>
     <message>
       <source>Error on create screenshot folder</source>
-      <translation>创建截图文件夹错误</translation>
+      <translation>تعثر إنشاء مُجلّد لقطة شاشة</translation>
     </message>
   </context>
   <context>
     <name>mainWindow</name>
     <message>
       <source>&amp;Insert disk</source>
-      <translation>插入磁盘(&amp;I)</translation>
+      <translation>(&amp;I)إدراج قرص</translation>
     </message>
     <message>
       <source>&amp;Eject disk</source>
-      <translation>弹出磁盘(&amp;E)</translation>
+      <translation>(&amp;E)إخراج القرص</translation>
     </message>
     <message>
       <source>&amp;Eject/Insert disk</source>
-      <translation>弹出/插入磁盘(&amp;E)</translation>
+      <translation>(&amp;E)إخراج/إدراج القرص</translation>
     </message>
     <message>
       <source>All supported formats</source>
-      <translation>所有支持的格式</translation>
+      <translation>كل الصيغ المدعومة</translation>
     </message>
     <message>
       <source>Compressed files</source>
-      <translation>压缩文件</translation>
+      <translation>الملفات المضغوطة</translation>
     </message>
     <message>
       <source>Nes rom files</source>
-      <translation>NES ROM 文件</translation>
+      <translation>ملفات روم نيس</translation>
     </message>
     <message>
       <source>FDS image files</source>
-      <translation>FDS 镜像文件</translation>
+      <translation>ملفات صور FDS</translation>
     </message>
     <message>
       <source>TAS movie files</source>
-      <translation>TAS 电影文件</translation>
+      <translation>ملفات فيلم TAS</translation>
     </message>
     <message>
       <source>All files</source>
-      <translation>所有文件</translation>
+      <translation>كل الملفات</translation>
     </message>
     <message>
       <source>Open File</source>
-      <translation>打开文件</translation>
+      <translation>فتح ملف</translation>
     </message>
     <message>
       <source>Save states</source>
-      <translation>保存进度</translation>
+      <translation>حالات الحفظ</translation>
     </message>
     <message>
       <source>Save state on file</source>
-      <translation>保存进度文件</translation>
+      <translation>حفظ الحالة إلى مِلَفّ</translation>
     </message>
     <message>
       <source>Open save state</source>
-      <translation>打开进度文件</translation>
+      <translation>فتح مِلَفّ حفظ</translation>
     </message>
     <message>
       <source>Nintendo Entertainment System Emulator</source>
-      <translation>任天堂娱乐系统模拟器</translation>
+      <translation>مُحاكي نينتندو إنترتينمنت سيستم</translation>
     </message>
     <message>
       <source>Compiled</source>
-      <translation>编译于</translation>
+      <translation>مُجَمَّع</translation>
     </message>
     <message>
       <source>portable version</source>
-      <translation>便携版</translation>
+      <translation>نسخة محمولة</translation>
     </message>
     <message>
       <source>&amp;Open</source>
-      <translation>打开(&amp;O)</translation>
+      <translation>(&amp;O)فتح</translation>
     </message>
     <message>
       <source>&amp;Quit</source>
-      <translation>退出(&amp;Q)</translation>
+      <translation>(&amp;Q)خروج</translation>
     </message>
     <message>
       <source>&amp;Hard Reset</source>
-      <translation>硬重置(&amp;H)</translation>
+      <translation>(&amp;H)إعادة تشغيل عَتادية</translation>
     </message>
     <message>
       <source>&amp;Soft Reset</source>
-      <translation>软重置(&amp;S)</translation>
+      <translation>(&amp;S)إعادة تشغيل جزئية</translation>
     </message>
     <message>
       <source>&amp;Eject/Insert Disk</source>
-      <translation>弹出/插入磁盘(&amp;E)</translation>
+      <translation>(&amp;E)إخراج/إدخال القرص</translation>
     </message>
     <message>
       <source>Disk 1 side A</source>
-      <translation>磁盘 1 Ａ面</translation>
+      <translation>قرص 1 الجانب A</translation>
     </message>
     <message>
       <source>Disk 1 side B</source>
-      <translation>磁盘 1 Ｂ面</translation>
+      <translation>قرص 1 جانب B</translation>
     </message>
     <message>
       <source>Disk 2 side A</source>
-      <translation>磁盘 2 Ａ面</translation>
+      <translation>قرص 2 الجانب A</translation>
     </message>
     <message>
       <source>Disk 2 side B</source>
-      <translation>磁盘 2 Ｂ面</translation>
+      <translation>قرص 2 جانب B</translation>
     </message>
     <message>
       <source>Disk 3 side A</source>
-      <translation>磁盘 3 Ａ面</translation>
+      <translation>قرص 3 الجانب A</translation>
     </message>
     <message>
       <source>Disk 3 side B</source>
-      <translation>磁盘 3 Ｂ面</translation>
+      <translation>قرص 3 جانب B</translation>
     </message>
     <message>
       <source>Disk 4 side A</source>
-      <translation>磁盘 4 Ａ面</translation>
+      <translation>قرص 4 الجانب A</translation>
     </message>
     <message>
       <source>Disk 4 side B</source>
-      <translation>磁盘 4 Ｂ面</translation>
+      <translation>قرص 4 جانب B</translation>
     </message>
     <message>
       <source>&amp;Switch sides</source>
-      <translation>磁盘换面(&amp;S)</translation>
+      <translation>(&amp;S)تبديل الجهة</translation>
     </message>
     <message>
       <source>&amp;Save to file</source>
-      <translation>进度另存为(&amp;S)</translation>
+      <translation>(&amp;S)حفظ إلى مِلَفّ</translation>
     </message>
     <message>
       <source>&amp;Load from file</source>
-      <translation>载入进度文件(&amp;L)</translation>
+      <translation>(&amp;L)تحميل من مِلَفّ</translation>
     </message>
     <message>
       <source>F&amp;ullscreen</source>
-      <translation>全屏(&amp;U)</translation>
+      <translation>(&amp;F) ملء الشاشة</translation>
     </message>
     <message>
       <source>&amp;Game Genie Rom Mode</source>
-      <translation>金手指(&amp;G)</translation>
+      <translation>(&amp;G)وضع روم غيم جيني</translation>
     </message>
     <message>
       <source>S&amp;ave state</source>
-      <translation>保存进度(&amp;A)</translation>
+      <translation>(&amp;A) حفظ الحالة</translation>
     </message>
     <message>
       <source>L&amp;oad state</source>
-      <translation>载入进度(&amp;O)</translation>
+      <translation>(&amp;O)تحميل الحالة</translation>
     </message>
     <message>
       <source>&amp;Increment slot</source>
-      <translation>下一进度槽(&amp;I)</translation>
+      <translation>(&amp;I)الفُتْحَة التالية</translation>
     </message>
     <message>
       <source>&amp;Decrement slot</source>
-      <translation>上一进度槽(&amp;D)</translation>
+      <translation>(&amp;I)الفُتْحَة السابقة</translation>
     </message>
     <message>
       <source>Slot &amp;0</source>
-      <translation>进度槽 &amp;0</translation>
+      <translation>الفُتْحَة &amp;0</translation>
     </message>
     <message>
       <source>Slot &amp;1</source>
-      <translation>进度槽 &amp;1</translation>
+      <translation>الفُتْحَة &amp;1</translation>
     </message>
     <message>
       <source>Slot &amp;2</source>
-      <translation>进度槽 &amp;2</translation>
+      <translation>الفُتْحَة &amp;2</translation>
     </message>
     <message>
       <source>Slot &amp;3</source>
-      <translation>进度槽 &amp;3</translation>
+      <translation>الفُتْحَة &amp;3</translation>
     </message>
     <message>
       <source>Slot &amp;4</source>
-      <translation>进度槽 &amp;4</translation>
+      <translation>الفُتْحَة &amp;4</translation>
     </message>
     <message>
       <source>Slot &amp;5</source>
-      <translation>进度槽 &amp;5</translation>
+      <translation>الفُتْحَة &amp;5</translation>
     </message>
     <message>
       <source>&amp;About</source>
-      <translation>关于(&amp;A)</translation>
+      <translation>&amp;نبذة</translation>
     </message>
     <message>
       <source>Slot &amp;6</source>
-      <translation>进度槽 &amp;6</translation>
+      <translation>الفُتْحَة &amp;6</translation>
     </message>
     <message>
       <source>Slot &amp;7</source>
-      <translation>进度槽 &amp;7</translation>
+      <translation>الفُتْحَة &amp;7</translation>
     </message>
     <message>
       <source>Slot &amp;8</source>
-      <translation>进度槽 &amp;8</translation>
+      <translation>الفُتْحَة &amp;8</translation>
     </message>
     <message>
       <source>Slot &amp;9</source>
-      <translation>进度槽 &amp;9</translation>
+      <translation>الفُتْحَة &amp;9</translation>
     </message>
     <message>
       <source>&amp;Cheats List Mode</source>
-      <translation>作弊列表(&amp;C)</translation>
+      <translation>(&amp;C)وضع قائمة الغشّ</translation>
     </message>
     <message>
       <source>Cheats &amp;Editor</source>
-      <translation>编辑作弊(&amp;E)</translation>
+      <translation>(&amp;E)محرر الغشّ</translation>
     </message>
     <message>
       <source>&amp;Disabled</source>
-      <translation>禁用(&amp;D)</translation>
+      <translation>(&amp;D)معطل</translation>
     </message>
     <message>
       <source>&amp;Pause</source>
-      <translation>暂停(&amp;P)</translation>
+      <translation>(&amp;P)إيقاف مؤقت</translation>
     </message>
     <message>
       <source>&amp;File</source>
-      <translation>文件(&amp;F)</translation>
+      <translation>(&amp;F)مِلَفّ</translation>
     </message>
     <message>
       <source>&amp;Recent Roms</source>
-      <translation>最近的 Rom(&amp;R)</translation>
+      <translation>(&amp;R)الرومات الأخيرة</translation>
     </message>
     <message>
       <source>&amp;NES</source>
-      <translation>游戏(&amp;N)</translation>
+      <translation>(&amp;N)نيس</translation>
     </message>
     <message>
       <source>&amp;Disk Side</source>
-      <translation>磁盘换面(&amp;D)</translation>
+      <translation>(&amp;D)جانب القرص</translation>
     </message>
     <message>
       <source>Setti&amp;ngs</source>
-      <translation>设置(&amp;S)</translation>
+      <translation>(&amp;S)الإعدادات</translation>
     </message>
     <message>
       <source>&amp;Video</source>
-      <translation>视频(&amp;V)</translation>
+      <translation>(&amp;V)فيديو</translation>
     </message>
     <message>
       <source>&amp;Audio</source>
-      <translation>音频(&amp;A)</translation>
+      <translation>(&amp;A)صوت</translation>
     </message>
     <message>
       <source>&amp;Input</source>
-      <translation>输入(&amp;I)</translation>
+      <translation>(&amp;I)التحكم</translation>
     </message>
     <message>
       <source>&amp;Cheats</source>
-      <translation>作弊(&amp;C)</translation>
+      <translation>(&amp;C)الغش</translation>
     </message>
     <message>
       <source>&amp;PPU</source>
-      <translation>&amp;PPU</translation>
+      <translation>&amp;و.م.ص</translation>
     </message>
     <message>
       <source>S&amp;tate</source>
-      <translation>进度(&amp;T)</translation>
+      <translation>(&amp;T)الحالة</translation>
     </message>
     <message>
       <source>&amp;Help</source>
-      <translation>帮助(&amp;H)</translation>
+      <translation>&amp;مساعدة</translation>
     </message>
     <message>
       <source>&amp;Turn On</source>
-      <translation>开机(&amp;T)</translation>
+      <translation>(&amp;T)تشغيل</translation>
     </message>
     <message>
       <source>&amp;Turn Off</source>
-      <translation>关机(&amp;T)</translation>
+      <translation>(&amp;T)إيقاف التشغيل</translation>
     </message>
     <message>
       <source>Too&amp;ls</source>
-      <translation>工具(&amp;L)</translation>
+      <translation>(&amp;L)أدوات</translation>
     </message>
     <message>
       <source>UNIF rom files</source>
-      <translation>UNIF ROM</translation>
+      <translation>ملفات روم UNIF</translation>
     </message>
     <message>
       <source>Stop &amp;WAV recording</source>
-      <translation>停止录制 &amp;WAV</translation>
+      <translation>(&amp;W)إيقاف تسجيل WAV</translation>
     </message>
     <message>
       <source>Start &amp;WAV recording</source>
-      <translation>开始录制 &amp;WAV</translation>
+      <translation>(&amp;W)بَدْء تسجيل WAV</translation>
     </message>
     <message>
       <source>MS WAVE files</source>
-      <translation>波形文件</translation>
+      <translation>ملفات MS WAVE</translation>
     </message>
     <message>
       <source>Record sound</source>
-      <translation>录音</translation>
+      <translation>تسجيل الصوت</translation>
     </message>
     <message>
       <source>NSF rom files</source>
-      <translation>NSF ROM</translation>
+      <translation>ملفات روم NSF</translation>
     </message>
     <message>
       <source>NSFE rom files</source>
-      <translation>NSFE ROM</translation>
+      <translation>ملفات روم NSFE</translation>
     </message>
     <message>
       <source>IPS patch files</source>
-      <translation>IPS 补丁</translation>
+      <translation>ملفات رقعة IPS</translation>
     </message>
     <message>
       <source>BPS patch files</source>
-      <translation>BPS 补丁</translation>
+      <translation>ملفات رقعة BPS</translation>
     </message>
     <message>
       <source>XDELTA patch files</source>
-      <translation>XDELTA 补丁</translation>
+      <translation>ملفات رقعة XDELTA</translation>
     </message>
     <message>
       <source>Open IPS/BPS/XDELTA Patch</source>
-      <translation>打开 IPS/BPS/XDELTA 补丁</translation>
+      <translation>فتح مِلَفّ رُقْعَة (پاتش) IPS/BPS/XDELTA</translation>
     </message>
     <message>
       <source>&amp;General</source>
-      <translation>常规(&amp;G)</translation>
+      <translation>(&amp;G)العامّة</translation>
     </message>
     <message>
       <source>Save Unalte&amp;red NES screen</source>
-      <translation>保存原始截图(&amp;R)</translation>
+      <translation>(&amp;R)حفظ لقطة الشاشة الأصلية</translation>
     </message>
     <message>
       <source>Widgets</source>
-      <translation>组件</translation>
+      <translation>العناصر</translation>
     </message>
     <message>
       <source>Start &amp;AUDIO recording</source>
-      <translation>录音(&amp;A)</translation>
+      <translation>(&amp;A)بَدْء تسجيل صوت</translation>
     </message>
     <message>
       <source>Start &amp;VIDEO recording</source>
-      <translation>录像(&amp;V)</translation>
+      <translation>(&amp;V)بَدْء تسجيل فيديو</translation>
     </message>
     <message>
       <source>Stop &amp;AUDIO recording</source>
-      <translation>停止录音(&amp;A)</translation>
+      <translation>(&amp;A)إيقاف تسجيل الصوت</translation>
     </message>
     <message>
       <source>Stop &amp;VIDEO recording</source>
-      <translation>停止录像(&amp;V)</translation>
+      <translation>(&amp;V)إيقاف تسجيل الفيديو</translation>
     </message>
     <message>
       <source>Start/Stop &amp;AUDIO recording</source>
-      <translation>开始/停止录音(&amp;A)</translation>
+      <translation>(&amp;A)بَدْء/إيقاف تسجيل صوت</translation>
     </message>
     <message>
       <source>&amp;Recording</source>
-      <translation>录制(&amp;R)</translation>
+      <translation>(&amp;R)تسجيل</translation>
     </message>
     <message>
       <source>Start/Stop &amp;VIDEO recording</source>
-      <translation>开始/停止录像(&amp;V)</translation>
+      <translation>(&amp;V)بَدْء/إيقاف تسجيل فيديو</translation>
     </message>
     <message>
       <source>Slot %1 never used</source>
       <extracomment>Refers to the unused save slot. Important: Do not translate the &quot;%1&quot;.</extracomment>
-      <translation>进度槽 %1 未使用</translation>
+      <translation>الفتحة %1 لم تُستَعمل</translation>
     </message>
     <message>
       <source>Slot &amp;A</source>
-      <translation>进度槽 &amp;A</translation>
+      <translation>الفُتْحَة &amp;A</translation>
     </message>
     <message>
       <source>Slot &amp;B</source>
-      <translation>进度槽 &amp;B</translation>
+      <translation>الفُتْحَة &amp;B</translation>
     </message>
     <message>
       <source>&amp;Vs System Controls</source>
-      <translation>街机系统控制(&amp;V)</translation>
+      <translation>(&amp;V)وحدة التحكم بنظام Vs</translation>
     </message>
     <message>
       <source>&amp;Joypad/Gamepad Debug</source>
-      <translation>调试手柄/摇杆(&amp;J)</translation>
+      <translation>(&amp;J)اختبار وحدة التحكم/ذراع التحكم</translation>
     </message>
     <message>
       <source>Fast Forward (hold button)</source>
-      <translation>快进 (按住按钮)</translation>
+      <translation>التسريع (الضغط على الزر)</translation>
     </message>
     <message>
       <source>puNES tape image</source>
-      <translation>puNES 磁带镜像</translation>
+      <translation>صورة شريط puNES</translation>
     </message>
     <message>
       <source>Virtuanes tape image</source>
-      <translation>Virtuanes 磁带镜像</translation>
+      <translation>صورة شريط Virtuanes</translation>
     </message>
     <message>
       <source>Nestopia tape image</source>
-      <translation>Nestopia 磁带镜像</translation>
+      <translation>صورة شريط Nestopia</translation>
     </message>
     <message>
       <source>Open tape image</source>
-      <translation>打开磁带镜像</translation>
+      <translation>فتح صورة شريط</translation>
     </message>
     <message>
       <source>Tape Image</source>
-      <translation>磁带镜像</translation>
+      <translation>صورة شريط</translation>
     </message>
     <message>
       <source>Unsupported format</source>
-      <translation>尚未支持的磁带镜像</translation>
+      <translation>صيغة الملف غير مدعومة</translation>
     </message>
     <message>
       <source>Error opening tape image file</source>
-      <translation>打开磁带镜像文件错误</translation>
+      <translation>خطأ في فتح ملف صورة الشريط</translation>
     </message>
     <message>
       <source>WAVE tape image</source>
-      <translation>波形磁带镜像</translation>
+      <translation>صورة شريط WAVE</translation>
     </message>
     <message>
       <source>Save tape image</source>
-      <translation>保存磁带镜像</translation>
+      <translation>حفظ صورة الشريط</translation>
     </message>
     <message>
       <source>Toggle &amp;Fast Forward</source>
-      <translation>切换快进(&amp;F)</translation>
+      <translation>(&amp;F)تبديل التسريع</translation>
     </message>
     <message>
       <source>&amp;Play</source>
-      <translation>播放(&amp;P)</translation>
+      <translation>(&amp;P)تشغيل</translation>
     </message>
     <message>
       <source>&amp;Record</source>
-      <translation>录制(&amp;R)</translation>
+      <translation>(&amp;R)تسجيل</translation>
     </message>
     <message>
       <source>&amp;Stop</source>
-      <translation>停止(&amp;S)</translation>
+      <translation>(&amp;S)إيقاف</translation>
     </message>
     <message>
       <source>Shout into &amp;Microphone</source>
-      <translation>对话筒喊叫(&amp;M)</translation>
+      <translation>(&amp;M)أصرخ في الميكروفون</translation>
     </message>
     <message>
       <source>Toggle Virtual &amp;Keyboard</source>
-      <translation>切换虚拟键盘(&amp;K)</translation>
+      <translation>(&amp;K)تبديل لوحة المفاتيح الوهمية</translation>
     </message>
     <message>
       <source>&amp;Show Log</source>
-      <translation>显示日志(&amp;S)</translation>
+      <translation>(&amp;S)عرض السجل</translation>
     </message>
     <message>
       <source>Edit Current iNES/NES2.0 &amp;Header</source>
-      <translation>编辑当前的 iNES/NES2.0 头部(&amp;H)</translation>
+      <translation>(&amp;H) تعديل الترويسة iNES/NES2.0 الحالية</translation>
     </message>
     <message>
       <source>Toggle &amp;GUI in window</source>
-      <translation>切换窗口界面(&amp;T)</translation>
+      <translation>(&amp;T)إخفاء/إظهار الواجهة</translation>
     </message>
     <message>
       <source>Sa&amp;ve Screenshot</source>
-      <translation>截图(&amp;H)</translation>
+      <translation>(&amp;H) أخذ لقطة شاشة</translation>
     </message>
     <message>
       <source>Insert &amp;Coin</source>
-      <translation>投币</translation>
+      <translation>إدراج قطعة نقدية</translation>
     </message>
     <message>
       <source>Open &amp;working folder</source>
-      <translation>打开工作文件夹(&amp;O)</translation>
+      <translation>(&amp;O)فتح مجلد المحاكي</translation>
     </message>
     <message>
       <source>Apply IPS/BPS/XDELTA &amp;Patch</source>
-      <translation>打 IPS/BPS/XDELTA 补丁(&amp;A)</translation>
+      <translation>تطبيق رُقعة(پاتش) IPS/BPS/XDELTA</translation>
     </message>
     <message>
       <source>Open &amp;config folder</source>
-      <translation>打开配置文件夹(&amp;O)</translation>
+      <translation>(&amp;O)فتح مجلد المحاكي</translation>
     </message>
     <message>
       <source>T&amp;ape</source>
-      <translation>磁带(&amp;A)</translation>
+      <translation>(&amp;A)شريط</translation>
     </message>
     <message>
       <source>&amp;Dipswitch</source>
-      <translation type="unfinished">&amp;Dipswitch</translation>
+      <translation>(&amp;D)ديبسويتش</translation>
     </message>
     <message>
       <source>Detach &amp;Barcode</source>
-      <translation type="unfinished">Detach &amp;Barcode</translation>
+      <translation>(&amp;B)الرمز الشريطي ديتاتش</translation>
     </message>
   </context>
   <context>
     <name>nesKeyboardStatusBar</name>
     <message>
       <source>Capture/Release the Input</source>
-      <translation>捕获/释放输入</translation>
+      <translation>التقاط/تسريح الإدخال</translation>
     </message>
     <message>
       <source>Input is released</source>
-      <translation>输入已被释放</translation>
+      <translation>تم تسريح الإدخال</translation>
     </message>
     <message>
       <source>Input is captured</source>
-      <translation>输入已被捕获</translation>
+      <translation>تم التقاط الإدخال</translation>
     </message>
     <message>
       <source>Toggle Virtual Keyboard</source>
-      <translation>切换虚拟键盘</translation>
+      <translation>تبديل لوحة المفاتيح الوهمية</translation>
     </message>
   </context>
   <context>
     <name>objCheat</name>
     <message>
       <source>Error on reading the file</source>
-      <translation>读取文件错误</translation>
+      <translation>خطأ في قراءة الملف</translation>
     </message>
     <message>
       <source>Read only</source>
-      <translation>只读</translation>
+      <translation>للقراءة فقط</translation>
     </message>
     <message>
       <source>The file is in read only mode</source>
-      <translation>文件处于只读模式</translation>
+      <translation>الملف في وضع القراءة فقط</translation>
     </message>
   </context>
   <context>
@@ -1658,321 +1658,321 @@
     <message>
       <source>start wav recording</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation>开始录制 wav</translation>
+      <translation>بَدْء تسجيل wav</translation>
     </message>
     <message>
       <source>stop wav recording</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation>停止录制 wav</translation>
+      <translation>إيقاف تسجيل wav</translation>
     </message>
     <message>
       <source>[red]Game Genie rom not found[normal]</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation>[red]未找到金手指[normal]</translation>
+      <translation>[red]لم يتم العثور على روم غيم جيني[normal]</translation>
     </message>
     <message>
       <source>[red]error loading Game Genie rom[normal]</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation>[red]载入金手指 ROM 错误[normal]</translation>
+      <translation>[red]حصل خطأ في أثناء تحميل روم غيم جيني[normal]</translation>
     </message>
     <message>
       <source>[red]Illegal Opcode[normal] [yellow]0x%1[normal] at [yellow]0x%2[normal]</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation>[red]非法操作码[normal] [yellow]0x%1[normal] 位于 [yellow]0x%2[normal]</translation>
+      <translation>[red]رمز تشغيل غير قانوني[normal][yellow]0x%1[normal]عند[yellow]0x%2[normal]</translation>
     </message>
     <message>
       <source>[red]error loading rom[normal]</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation>[red]载入 ROM 错误[normal]</translation>
+      <translation>[red]خطأ في أثناء تحميل الروم[normal]</translation>
     </message>
     <message>
       <source>[red]FDS bios not found[normal]</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation>[red]FDS BIOS 未找到[normal]</translation>
+      <translation>[red]لم يتم العثور على بايوس نظام قرص فاميكوم[normal]</translation>
     </message>
     <message>
       <source>disk [cyan]%1[normal] side [cyan]%2[normal] [yellow]ejected[normal]</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation>[yellow]弹出[normal]磁盘 [cyan]%1[normal] 的 [cyan]%2[normal] 面</translation>
+      <translation>قرص [cyan]%1[normal] جانب [cyan]%2[normal][yellow]تم إخراجه[normal]</translation>
     </message>
     <message>
       <source>you must [yellow]eject[normal] disk first</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation>您需要先[yellow]弹出[normal]磁盘</translation>
+      <translation>يجب [yellow]إخراج[normal] القرص أولا</translation>
     </message>
     <message>
       <source>disk [cyan]%1[normal] side [cyan]%2[normal] [green]inserted[normal]</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation>[green]插入[normal]磁盘 [cyan]%1[normal] 的 [cyan]%2[normal] 面</translation>
+      <translation>القرص[cyan]%1[normal]الجانب[cyan]%2[normal][green]تم إدراجه[normal]</translation>
     </message>
     <message>
       <source>disk [cyan]%1[normal] side [cyan]%2[normal] [brown]selected[normal]</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation>[brown]选择[normal]磁盘 [cyan]%1[normal] 的 [cyan]%2[normal] 面</translation>
+      <translation>القرص[cyan]%1[normal]الجانب[cyan]%2[normal][brown]تم اختياره[normal]</translation>
     </message>
     <message>
       <source>[yellow]mapper[normal] [brown]%1[normal] [yellow]not supported[normal]</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation>[yellow]不支持第 [brown]%1 [yellow]号 mapper[normal]</translation>
+      <translation>[yellow]الماپر[normal][brown]%1[normal][yellow]غير مدعوم[normal]</translation>
     </message>
     <message>
       <source>[red]error loading patch file[normal]</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation>[red]载入补丁文件错误[normal]</translation>
+      <translation>[red]حصل خطأ خلال تحميل مِلَفّ الرقعة (پاتش)[normal]</translation>
     </message>
     <message>
       <source>[yellow]save is impossible in Game Genie menu[normal]</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation>[yellow]金手指界面不能保存进度[normal]</translation>
+      <translation>[yellow]الحفظ مستحيل في قائمة غيم جيني[normal]</translation>
     </message>
     <message>
       <source>[yellow]movie playback interrupted[normal]</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation>[yellow]停止播放电影[normal]</translation>
+      <translation>[yellow]تمت مقاطعة تشغيل الفيلم[normal]</translation>
     </message>
     <message>
       <source>[red]error[normal] loading state</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation>载入进度[red]错误[normal]</translation>
+      <translation>[red]حصل خطأ[normal]خلال تحميل الحالة</translation>
     </message>
     <message>
       <source>[red]state file is not for this rom[normal]</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation>[red]进度和 ROM 不对应[normal]</translation>
+      <translation>[red]مِلَفّ الحالة ليس لهذا الروم[normal]</translation>
     </message>
     <message>
       <source>[green]%1[normal] cheat active</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation>[green]%1[normal] 个作弊</translation>
+      <translation>[green]%1[normal] كود غشّ مفعل</translation>
     </message>
     <message>
       <source>[green]%1[normal] cheats active</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation>[green]%1[normal] 个作弊</translation>
+      <translation>[green]%1[normal] أكواد غِشّ مفعّلة</translation>
     </message>
     <message>
       <source>overclock enabled [green]VB[normal] [cyan]%1[normal], [green]PR[normal] [cyan]%2[normal]</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation>启用超频 [green]VB[normal] [cyan]%1[normal], [green]PR[normal] [cyan]%2[normal]</translation>
+      <translation>تعدي الميقت مُفَعّل [green]VB[normal][cyan]%1[normal]،[green]PR[normal][cyan]%2[normal]</translation>
     </message>
     <message>
       <source>[yellow]silence, the movie has begun[normal]</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation>[yellow]嘘，电影开始了[normal]</translation>
+      <translation>[yellow]هدوء، لقد بدأ الفيلم[normal]</translation>
     </message>
     <message>
       <source>The End</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation>完</translation>
+      <translation>النهاية</translation>
     </message>
     <message>
       <source>switched to [green]%1[normal]</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation>切换到 [green]%1[normal]</translation>
+      <translation>تبديل إلى [green]%1[normal]</translation>
     </message>
     <message>
       <source>[red]error on game genie rom file[normal]</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation>[red]金手指文件错误[normal]</translation>
+      <translation>[red]هناك خطب ما مع مِلَفّ روم غيم جيني هذا[normal]</translation>
     </message>
     <message>
       <source>[red]error on FDS bios file[normal]</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation>[red]FDS BIOS 文件错误[normal]</translation>
+      <translation>[red]هناك خطب ما مع مِلَفّ بايوس FDS هذا[normal]</translation>
     </message>
     <message>
       <source>[red]error on shader file[normal]</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation>[red]着色文件错误[normal]</translation>
+      <translation>[red]هناك خطب ما مع مِلَفّ المظلل[normal]</translation>
     </message>
     <message>
       <source>[red]error on palette file[normal]</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation>[red]调色板文件错误[normal]</translation>
+      <translation>[red]حصل خطأ مع مِلَفّ لوحة الألوان[normal]</translation>
     </message>
     <message>
       <source>[red]errors[normal] on shader, use [green]&apos;No shader&apos;[cyan]</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation>着色器[red]错误[normal]，返回[green]&apos;无着色器&apos;[normal]状态[cyan]</translation>
+      <translation>[red]أخطاء[normal]خاصّة بالمظلل، استعمل [green]&apos;دونَ مظلل&apos;[cyan]</translation>
     </message>
     <message>
       <source>switch on [cyan]%1x%2[normal] at [green]%3Hz[normal]</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation>切换到 [cyan]%1×%2 [green]%3Hz[normal]</translation>
+      <translation>تبديل [cyan]%1x%2[normal]إلى[green]%3هرتز[normal]</translation>
     </message>
     <message>
       <source>[cyan]%1[normal] ID sides founds, auto switch [red]disabled[normal]</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation>找到 [cyan]%1[normal] 个 ID 终端，[red]禁用[normal]自动切换</translation>
+      <translation>[cyan]%1[normal]تم العثور على آي دي الجوانب،[red]تم تعطيل[normal]التبديل التلقائي</translation>
     </message>
     <message>
       <source>[red]error[normal] loading state [cyan]%1[normal], file is corrupted</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation>载入进度 [cyan]%1 [red]错误[normal]，文件已损坏</translation>
+      <translation>[red]خطأ[normal] خلال تحميل الحالة [cyan]%1[normal]، المِلَفّ فاسد.</translation>
     </message>
     <message>
       <source>state [cyan]%1[normal] saved successfully</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation>进度 [cyan]%1[normal] 已保存</translation>
+      <translation>تمّ حفظ الحالة [cyan]%1[normal] بنجاح</translation>
     </message>
     <message>
       <source>state [cyan]%1[normal] loaded successfully</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation>进度 [cyan]%1[normal] 已载入</translation>
+      <translation>تم تحميل الحالة [cyan]%1[normal] بنجاح</translation>
     </message>
     <message>
       <source>tape play</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation>播放磁带</translation>
+      <translation>تشغيل الشريط</translation>
     </message>
     <message>
       <source>tape record</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation>录制磁带</translation>
+      <translation>تسجيل الشريط</translation>
     </message>
     <message>
       <source>tape stop</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation>停止磁带</translation>
+      <translation>إيقاف الشريط</translation>
     </message>
     <message>
       <source>keyboard input captured</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation>捕获键盘输入</translation>
+      <translation>تم تسريح إدخال لوحة المفاتيح</translation>
     </message>
     <message>
       <source>keyboard input released</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation>释放键盘输入</translation>
+      <translation>تم تسريح إدخال لوحة المفاتيح</translation>
     </message>
     <message>
       <source>[red]error[normal] on write save state</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation>写入进度[red]出错[normal]</translation>
+      <translation>[red]تعثرت[normal] كتابة حالة الحفظ</translation>
     </message>
   </context>
   <context>
     <name>recStatusBar</name>
     <message>
       <source>Audio</source>
-      <translation>音频</translation>
+      <translation>صوت</translation>
     </message>
     <message>
       <source>Video</source>
-      <translation>视频</translation>
+      <translation>فيديو</translation>
     </message>
   </context>
   <context>
     <name>suborKeyboard</name>
     <message>
       <source>Subor Keyboard</source>
-      <translation>小霸王键盘</translation>
+      <translation>لوحة مفاتيح ملك النمور الذهبي</translation>
     </message>
   </context>
   <context>
     <name>wdgAPUChannels</name>
     <message>
       <source>APU Channels</source>
-      <translation>APU 声道</translation>
+      <translation>قنوات وحدة معالجة الصوت</translation>
     </message>
     <message>
       <source>Square 1</source>
-      <translation>方波 1</translation>
+      <translation>مربع 1</translation>
     </message>
     <message>
       <source>DMC</source>
-      <translation>DMC</translation>
+      <translation>قناة تضمين دلتا</translation>
     </message>
     <message>
       <source>Noise</source>
-      <translation>噪波</translation>
+      <translation>ضجيج</translation>
     </message>
     <message>
       <source>Square 2</source>
-      <translation>方波 2</translation>
+      <translation>مربع 2</translation>
     </message>
     <message>
       <source>Extra</source>
-      <translation>附加</translation>
+      <translation>إضافية</translation>
     </message>
     <message>
       <source>Master</source>
-      <translation>主</translation>
+      <translation>الرئيسيّ</translation>
     </message>
     <message>
       <source>Triangle</source>
-      <translation>三角波</translation>
+      <translation>مثلث</translation>
     </message>
     <message>
       <source>active</source>
-      <translation>出声</translation>
+      <translation>شغالة</translation>
     </message>
     <message>
       <source>volume</source>
-      <translation>音量</translation>
+      <translation>مستوى الصوت</translation>
     </message>
     <message>
       <source>Active all</source>
-      <translation>全部出声</translation>
+      <translation>تفعيل الكل</translation>
     </message>
     <message>
       <source>Disable all</source>
-      <translation>静音</translation>
+      <translation>تعطيل الكل</translation>
     </message>
     <message>
       <source>Reset to defaults</source>
-      <translation>默认</translation>
+      <translation>إعادة التعيين للوضع الافتراضي</translation>
     </message>
   </context>
   <context>
     <name>wdgCheatEditor</name>
     <message>
       <source>Cheats Editor</source>
-      <translation>作弊编辑器</translation>
+      <translation>محرر الغشّ</translation>
     </message>
     <message>
       <source>Cheats List</source>
-      <translation>作弊列表</translation>
+      <translation>قائمة الغشّ</translation>
     </message>
     <message>
       <source>Description</source>
-      <translation>描述</translation>
+      <translation>الوصف</translation>
     </message>
     <message>
       <source>Code</source>
-      <translation>代码</translation>
+      <translation>الكود</translation>
     </message>
     <message>
       <source>Address</source>
-      <translation>地址</translation>
+      <translation>العنوان</translation>
     </message>
     <message>
       <source>Value</source>
-      <translation>值</translation>
+      <translation>القيمة</translation>
     </message>
     <message>
       <source>Compare</source>
-      <translation>比较</translation>
+      <translation>المقارنة</translation>
     </message>
     <message>
       <source>Show Tools</source>
-      <translation>显示工具</translation>
+      <translation>عرض الأدوات</translation>
     </message>
     <message>
       <source>Import</source>
-      <translation>导入</translation>
+      <translation>استيراد</translation>
     </message>
     <message>
       <source>Export</source>
-      <translation>导出</translation>
+      <translation>تصدير</translation>
     </message>
     <message>
       <source>Editor Tools</source>
-      <translation>工具</translation>
+      <translation>أدوات المحرر</translation>
     </message>
     <message>
       <source>CPU Ram</source>
-      <translation>CPU RAM</translation>
+      <translation>ذاكرة المعالج</translation>
     </message>
     <message>
       <source>Pro Action Rocky</source>
@@ -1980,116 +1980,116 @@
     </message>
     <message>
       <source>Game Genie</source>
-      <translation>金手指</translation>
+      <translation>غيم جيني</translation>
     </message>
     <message>
       <source>Submit</source>
-      <translation>提交</translation>
+      <translation>تأكيد</translation>
     </message>
     <message>
       <source>Cancel</source>
-      <translation>取消</translation>
+      <translation>إلغاء</translation>
     </message>
     <message>
       <source>Delete</source>
-      <translation>删除</translation>
+      <translation>حذف</translation>
     </message>
     <message>
       <source>Delete All</source>
-      <translation>全部删除</translation>
+      <translation>حذف الكل</translation>
     </message>
     <message>
       <source>Copy</source>
-      <translation>复制</translation>
+      <translation>نسخ</translation>
     </message>
     <message>
       <source>New Game Genie</source>
-      <translation>新建 Game Genie</translation>
+      <translation>غيم جيني جديد</translation>
     </message>
     <message>
       <source>New Pro Action</source>
-      <translation>新建 Pro Action</translation>
+      <translation>برو أكشن جديد</translation>
     </message>
     <message>
       <source>New CPU Ram</source>
-      <translation>新建 CPU 内存</translation>
+      <translation>كود ذاكرة المعالج جديد</translation>
     </message>
   </context>
   <context>
     <name>wdgCheatsEditor</name>
     <message>
       <source>Show Tools</source>
-      <translation>显示工具</translation>
+      <translation>عرض الأدوات</translation>
     </message>
     <message>
       <source>Hide Tools</source>
-      <translation>隐藏工具</translation>
+      <translation>إخفاء الأدوات</translation>
     </message>
     <message>
       <source>All supported formats</source>
-      <translation>所有支持的格式</translation>
+      <translation>كل الصيغ المدعومة</translation>
     </message>
     <message>
       <source>Import Cheats</source>
-      <translation>导入作弊</translation>
+      <translation>استيراد أكواد الغشّ</translation>
     </message>
     <message>
       <source>All files</source>
-      <translation>所有文件</translation>
+      <translation>كل الملفات</translation>
     </message>
     <message>
       <source>Export cheats on file</source>
-      <translation>导出作弊文件</translation>
+      <translation>تصدير الغشّ إلى مِلَفّ</translation>
     </message>
     <message>
       <source>Submit warning</source>
-      <translation>提交警告</translation>
+      <translation>إرسال تحذير</translation>
     </message>
     <message>
       <source>The code is invalid</source>
-      <translation>代码无效</translation>
+      <translation>الكود خاطئ</translation>
     </message>
     <message>
       <source>The cheat is already in the list</source>
-      <translation>作弊已在列表中</translation>
+      <translation>كود الغشّ موجود في القائمة مسبّقًا</translation>
     </message>
     <message>
       <source>A description must be entered</source>
-      <translation>请输入描述</translation>
+      <translation>إلزامية وصف للغشّ</translation>
     </message>
     <message>
       <source>Nestopia XML files</source>
-      <translation>Nestopia XML 文件</translation>
+      <translation>ملفات Nestopia XML</translation>
     </message>
     <message>
       <source>Mame 128+ XML files</source>
-      <translation>Mame 128+ XML 文件</translation>
+      <translation>ملفات Mame 128+ XML</translation>
     </message>
     <message>
       <source>FCEUX CHT files</source>
-      <translation>FCEUX CHT 文件</translation>
+      <translation>ملفات FCEUX CHT</translation>
     </message>
     <message>
       <source>libretro CHT files</source>
-      <translation>libretro CHT 文件</translation>
+      <translation>ملفات libretro CHT</translation>
     </message>
   </context>
   <context>
     <name>wdgKeyboard</name>
     <message>
       <source>Virtual Keyboard</source>
-      <translation>虚拟键盘</translation>
+      <translation>لوحة المفاتيح الوهمية</translation>
     </message>
   </context>
   <context>
     <name>wdgNTSCBisqwitFilter</name>
     <message>
       <source>QWidth</source>
-      <translation>QWidth</translation>
+      <translation>عرض Q</translation>
     </message>
     <message>
       <source>YWidth</source>
-      <translation>YWidth</translation>
+      <translation>عرض Y</translation>
     </message>
     <message>
       <source>VBlend</source>
@@ -2097,31 +2097,31 @@
     </message>
     <message>
       <source>Brightness</source>
-      <translation>亮度</translation>
+      <translation>السّطوع</translation>
     </message>
     <message>
       <source>IWidth</source>
-      <translation>IWidth</translation>
+      <translation>عرض I</translation>
     </message>
     <message>
       <source>Scanline</source>
-      <translation>扫描线</translation>
+      <translation>خطوط المسح</translation>
     </message>
     <message>
       <source>Saturation</source>
-      <translation>饱和度</translation>
+      <translation>التشبع</translation>
     </message>
     <message>
       <source>Contrast</source>
-      <translation>对比度</translation>
+      <translation>التباين</translation>
     </message>
     <message>
       <source>Hue</source>
-      <translation>色调</translation>
+      <translation>التدرج اللوني</translation>
     </message>
     <message>
       <source>Reset parameters to defaults</source>
-      <translation>恢复默认参数</translation>
+      <translation>إعادة تعيين الإعدادات</translation>
     </message>
     <message>
       <source>MFields</source>
@@ -2132,23 +2132,23 @@
     <name>wdgNTSCFilter</name>
     <message>
       <source>Artifacts</source>
-      <translation>效果</translation>
+      <translation>التأثيرات</translation>
     </message>
     <message>
       <source>Fringing</source>
-      <translation>散射</translation>
+      <translation>تهديب</translation>
     </message>
     <message>
       <source>Resolution</source>
-      <translation>分辨率</translation>
+      <translation>دِقَّة الوضوح</translation>
     </message>
     <message>
       <source>Gamma</source>
-      <translation>伽马</translation>
+      <translation>غاما</translation>
     </message>
     <message>
       <source>Bleed</source>
-      <translation>渗色</translation>
+      <translation>نزيف</translation>
     </message>
     <message>
       <source>MFields</source>
@@ -2160,449 +2160,449 @@
     </message>
     <message>
       <source>Sharpness</source>
-      <translation>清晰度</translation>
+      <translation>الحدّة</translation>
     </message>
     <message>
       <source>Brightness</source>
-      <translation>亮度</translation>
+      <translation>السّطوع</translation>
     </message>
     <message>
       <source>Hue</source>
-      <translation>色调</translation>
+      <translation>التدرج اللوني</translation>
     </message>
     <message>
       <source>Contrast</source>
-      <translation>对比度</translation>
+      <translation>التباين</translation>
     </message>
     <message>
       <source>Saturation</source>
-      <translation>饱和度</translation>
+      <translation>التشبع</translation>
     </message>
     <message>
       <source>Scanline</source>
-      <translation>扫描线</translation>
+      <translation>خطوط المسح</translation>
     </message>
     <message>
       <source>Reset parameters to defaults</source>
-      <translation>恢复默认参数</translation>
+      <translation>إعادة تعيين الإعدادات</translation>
     </message>
   </context>
   <context>
     <name>wdgNTSCLMP88959Filter</name>
     <message>
       <source>Scanline</source>
-      <translation type="unfinished">Scanline</translation>
+      <translation>خطوط المسح</translation>
     </message>
     <message>
       <source>MFields</source>
-      <translation type="unfinished">MFields</translation>
+      <translation>MFields</translation>
     </message>
     <message>
       <source>VBlend</source>
-      <translation type="unfinished">VBlend</translation>
+      <translation>VBlend</translation>
     </message>
     <message>
       <source>Contrast</source>
-      <translation type="unfinished">Contrast</translation>
+      <translation>التباين</translation>
     </message>
     <message>
       <source>Brightness</source>
-      <translation type="unfinished">Brightness</translation>
+      <translation>السّطوع</translation>
     </message>
     <message>
       <source>White Point</source>
-      <translation type="unfinished">White Point</translation>
+      <translation>نقطة بيضاء</translation>
     </message>
     <message>
       <source>Black Point</source>
-      <translation type="unfinished">Black Point</translation>
+      <translation>نقطة سوداء</translation>
     </message>
     <message>
       <source>Saturation</source>
-      <translation type="unfinished">Saturation</translation>
+      <translation>التشبع</translation>
     </message>
     <message>
       <source>Noise</source>
-      <translation type="unfinished">Noise</translation>
+      <translation>تشويش</translation>
     </message>
     <message>
       <source>Hue</source>
-      <translation type="unfinished">Hue</translation>
+      <translation>التدرج اللوني</translation>
     </message>
     <message>
       <source>Reset parameters to defaults</source>
-      <translation type="unfinished">Reset parameters to defaults</translation>
+      <translation>إعادة تعيين الإعدادات</translation>
     </message>
   </context>
   <context>
     <name>wdgNTSCNESRGBLMP88959Filter</name>
     <message>
       <source>Black Point</source>
-      <translation type="unfinished">Black Point</translation>
+      <translation>نقطة سوداء</translation>
     </message>
     <message>
       <source>Brightness</source>
-      <translation type="unfinished">Brightness</translation>
+      <translation>السّطوع</translation>
     </message>
     <message>
       <source>Hue</source>
-      <translation type="unfinished">Hue</translation>
+      <translation>التدرج اللوني</translation>
     </message>
     <message>
       <source>Contrast</source>
-      <translation type="unfinished">Contrast</translation>
+      <translation>التباين</translation>
     </message>
     <message>
       <source>Noise</source>
-      <translation type="unfinished">Noise</translation>
+      <translation>تشويش</translation>
     </message>
     <message>
       <source>White Point</source>
-      <translation type="unfinished">White Point</translation>
+      <translation>نقطة بيضاء</translation>
     </message>
     <message>
       <source>Scanline</source>
-      <translation type="unfinished">Scanline</translation>
+      <translation>خطوط المسح</translation>
     </message>
     <message>
       <source>VBlend</source>
-      <translation type="unfinished">VBlend</translation>
+      <translation>VBlend</translation>
     </message>
     <message>
       <source>Saturation</source>
-      <translation type="unfinished">Saturation</translation>
+      <translation>التشبع</translation>
     </message>
     <message>
       <source>Reset parameters to defaults</source>
-      <translation type="unfinished">Reset parameters to defaults</translation>
+      <translation>إعادة تعيين الإعدادات</translation>
     </message>
   </context>
   <context>
     <name>wdgPALLMP88959Filter</name>
     <message>
       <source>Scanline</source>
-      <translation type="unfinished">Scanline</translation>
+      <translation>خطوط المسح</translation>
     </message>
     <message>
       <source>VBlend</source>
-      <translation type="unfinished">VBlend</translation>
+      <translation>VBlend</translation>
     </message>
     <message>
       <source>Black Point</source>
-      <translation type="unfinished">Black Point</translation>
+      <translation>نقطة سوداء</translation>
     </message>
     <message>
       <source>White Point</source>
-      <translation type="unfinished">White Point</translation>
+      <translation>نقطة بيضاء</translation>
     </message>
     <message>
       <source>Noise</source>
-      <translation type="unfinished">Noise</translation>
+      <translation>تشويش</translation>
     </message>
     <message>
       <source>Color Phase</source>
-      <translation type="unfinished">Color Phase</translation>
+      <translation>مرحلة اللون</translation>
     </message>
     <message>
       <source>Brightness</source>
-      <translation type="unfinished">Brightness</translation>
+      <translation>السّطوع</translation>
     </message>
     <message>
       <source>Saturation</source>
-      <translation type="unfinished">Saturation</translation>
+      <translation>التشبع</translation>
     </message>
     <message>
       <source>Contrast</source>
-      <translation type="unfinished">Contrast</translation>
+      <translation>التباين</translation>
     </message>
     <message>
       <source>Chroma Lag</source>
-      <translation type="unfinished">Chroma Lag</translation>
+      <translation>Chroma Lag</translation>
     </message>
     <message>
       <source>Chroma Correction</source>
-      <translation type="unfinished">Chroma Correction</translation>
+      <translation>تصحيح Chroma</translation>
     </message>
     <message>
       <source>MFields</source>
-      <translation type="unfinished">MFields</translation>
+      <translation>MFields</translation>
     </message>
     <message>
       <source>Reset parameters to defaults</source>
-      <translation type="unfinished">Reset parameters to defaults</translation>
+      <translation>إعادة تعيين الإعدادات</translation>
     </message>
   </context>
   <context>
     <name>wdgPALNESRGBLMP88959Filter</name>
     <message>
       <source>White Point</source>
-      <translation type="unfinished">White Point</translation>
+      <translation>نقطة بيضاء</translation>
     </message>
     <message>
       <source>Chroma Lag</source>
-      <translation type="unfinished">Chroma Lag</translation>
+      <translation>Chroma Lag</translation>
     </message>
     <message>
       <source>Contrast</source>
-      <translation type="unfinished">Contrast</translation>
+      <translation>التباين</translation>
     </message>
     <message>
       <source>Chroma Correction</source>
-      <translation type="unfinished">Chroma Correction</translation>
+      <translation>تصحيح Chroma</translation>
     </message>
     <message>
       <source>Brightness</source>
-      <translation type="unfinished">Brightness</translation>
+      <translation>السّطوع</translation>
     </message>
     <message>
       <source>Noise</source>
-      <translation type="unfinished">Noise</translation>
+      <translation>تشويش</translation>
     </message>
     <message>
       <source>Black Point</source>
-      <translation type="unfinished">Black Point</translation>
+      <translation>نقطة سوداء</translation>
     </message>
     <message>
       <source>Saturation</source>
-      <translation type="unfinished">Saturation</translation>
+      <translation>التشبع</translation>
     </message>
     <message>
       <source>Scanline</source>
-      <translation type="unfinished">Scanline</translation>
+      <translation>خطوط المسح</translation>
     </message>
     <message>
       <source>VBlend</source>
-      <translation type="unfinished">VBlend</translation>
+      <translation>VBlend</translation>
     </message>
     <message>
       <source>Reset parameters to defaults</source>
-      <translation type="unfinished">Reset parameters to defaults</translation>
+      <translation>إعادة تعيين الإعدادات</translation>
     </message>
   </context>
   <context>
     <name>wdgPaletteEditor</name>
     <message>
       <source>Palette files</source>
-      <translation>调色板</translation>
+      <translation>مِلَفّات لوحة الألوان</translation>
     </message>
     <message>
       <source>All files</source>
-      <translation>所有文件</translation>
+      <translation>كل الملفات</translation>
     </message>
     <message>
       <source>Save palette on file</source>
-      <translation>保存调色板</translation>
+      <translation>حفظ لوحة الألوان إلى ملف</translation>
     </message>
     <message>
       <source>Selected</source>
-      <translation>选中</translation>
+      <translation>اللّون المحدد</translation>
     </message>
     <message>
       <source>PPU</source>
-      <translation>PPU</translation>
+      <translation>وحدة معالجة الصور</translation>
     </message>
     <message>
       <source>Val</source>
-      <translation>值</translation>
+      <translation>القيمة</translation>
     </message>
     <message>
       <source>Blue</source>
-      <translation>蓝</translation>
+      <translation>أزرق</translation>
     </message>
     <message>
       <source>Red</source>
-      <translation>红</translation>
+      <translation>أحمر</translation>
     </message>
     <message>
       <source>Green</source>
-      <translation>绿</translation>
+      <translation>أخضر</translation>
     </message>
     <message>
       <source>Sat</source>
-      <translation>饱和</translation>
+      <translation>التشبّع</translation>
     </message>
     <message>
       <source>Hue</source>
-      <translation>色调</translation>
+      <translation>التدرج اللوني</translation>
     </message>
     <message>
       <source>HTML</source>
-      <translation>HTML</translation>
+      <translation>هيكس</translation>
     </message>
     <message>
       <source>Reset color</source>
-      <translation>重设颜色</translation>
+      <translation>إعادة تعيين اللون</translation>
     </message>
     <message>
       <source>Save to a file</source>
-      <translation>保存</translation>
+      <translation>حفظ إلى ملف</translation>
     </message>
     <message>
       <source>Reset palette</source>
-      <translation>重设调色板</translation>
+      <translation>إعادة تعيين لوحة الألوان</translation>
     </message>
   </context>
   <context>
     <name>wdgRecGetSaveFileName</name>
     <message>
       <source>Record AUDIO on file</source>
-      <translation>录音</translation>
+      <translation>تسجيل صوت إلى مِلَفّ</translation>
     </message>
     <message>
       <source>Output Quality</source>
-      <translation>输出质量</translation>
+      <translation>جودة التسجيل</translation>
     </message>
     <message>
       <source>Low</source>
-      <translation>低</translation>
+      <translation>منخفض</translation>
     </message>
     <message>
       <source>Medium</source>
-      <translation>中</translation>
+      <translation>متوسط</translation>
     </message>
     <message>
       <source>High</source>
-      <translation>高</translation>
+      <translation>عالي</translation>
     </message>
     <message>
       <source>Record VIDEO on file</source>
-      <translation>录像</translation>
+      <translation>تسجيل فيديو إلى مِلَفّ</translation>
     </message>
     <message>
       <source>Not supported</source>
-      <translation>不支持</translation>
+      <translation>غير مدعوم</translation>
     </message>
   </context>
   <context>
     <name>wdgRewind</name>
     <message>
       <source>Forward (single frame)</source>
-      <translation>帧进</translation>
+      <translation>تقديم (إطار واحد)</translation>
     </message>
     <message>
       <source>Rewind (single frame)</source>
-      <translation>帧退</translation>
+      <translation>ترجيع (إطار واحد)</translation>
     </message>
     <message>
       <source>Pause</source>
-      <translation>暂停</translation>
+      <translation>إيقاف مؤقت</translation>
     </message>
     <message>
       <source>Fast forward (from 1x to 8x)</source>
-      <translation>快进 (1~8 倍)</translation>
+      <translation>التسريع (من ×1 إلى ×8)</translation>
     </message>
     <message>
       <source>Fast rewind (from 1x to 8x)</source>
-      <translation>倒带 (1~8 倍)</translation>
+      <translation>التسريع (من ×1 إلى ×8)</translation>
     </message>
     <message>
       <source>Play</source>
-      <translation>播放</translation>
+      <translation>تشغيل</translation>
     </message>
     <message>
       <source>Rewind</source>
-      <translation>倒带</translation>
+      <translation>الترجيع</translation>
     </message>
   </context>
   <context>
     <name>wdgRotateScreen</name>
     <message>
       <source>Rotate the screen 90 degrees to the Right</source>
-      <translation>顺时针旋转 90°</translation>
+      <translation>تدوير الشاشة 90 درجة إلى اليمين</translation>
     </message>
     <message>
       <source>Rotate the screen 90 degrees to the left</source>
-      <translation>逆时针旋转 90°</translation>
+      <translation>تدوير الشاشة 90 درجة إلى اليسار</translation>
     </message>
     <message>
       <source>Current degree of rotation</source>
-      <translation>旋转角度</translation>
+      <translation>الدرجة الحالية للدوران</translation>
     </message>
     <message>
       <source>Degrees</source>
-      <translation>角度</translation>
+      <translation>درجات</translation>
     </message>
   </context>
   <context>
     <name>wdgScreen</name>
     <message>
       <source>Paste</source>
-      <translation>粘贴</translation>
+      <translation>لصق</translation>
     </message>
     <message>
       <source>Tape</source>
-      <translation>磁带</translation>
+      <translation>شريط</translation>
     </message>
     <message>
       <source>Play</source>
-      <translation>播放</translation>
+      <translation>تشغيل</translation>
     </message>
     <message>
       <source>Record</source>
-      <translation>录制</translation>
+      <translation>تسجيل</translation>
     </message>
     <message>
       <source>Stop</source>
-      <translation>停止</translation>
+      <translation>إيقاف</translation>
     </message>
   </context>
   <context>
     <name>wdgSettingsAudio</name>
     <message>
       <source>Output Devices</source>
-      <translation>输出设备</translation>
+      <translation>أجهزة إخراج الصوت</translation>
     </message>
     <message>
       <source>Sample Rate</source>
-      <translation>采样率</translation>
+      <translation>معدل العيِّنة</translation>
     </message>
     <message>
       <source>Buffer Size factor</source>
-      <translation>缓冲大小因数</translation>
+      <translation>عامل حجم التخزين المؤقت</translation>
     </message>
     <message>
       <source>Mono</source>
-      <translation>单声道</translation>
+      <translation>مونو</translation>
     </message>
     <message>
       <source>Stereo Delay</source>
-      <translation>立体声延迟</translation>
+      <translation>ستيريو مؤخر</translation>
     </message>
     <message>
       <source>Stereo Panning</source>
-      <translation>立体声削切</translation>
+      <translation>تحريك ستيريو</translation>
     </message>
     <message>
       <source>Channels Delay</source>
-      <translation>声道延迟</translation>
+      <translation>تأخير القنوات</translation>
     </message>
     <message>
       <source>Misc</source>
-      <translation>其他</translation>
+      <translation>إعدادات متنوعة</translation>
     </message>
     <message>
       <source>Settings</source>
-      <translation>设置</translation>
+      <translation>الإعدادات</translation>
     </message>
     <message>
       <source>Channels</source>
-      <translation>声道</translation>
+      <translation>القنوات</translation>
     </message>
     <message>
       <source>APU Channels</source>
-      <translation>APU 声道</translation>
+      <translation>قنوات وحدة معالجة الصوت</translation>
     </message>
     <message>
       <source>Swap Duty Cycles</source>
-      <translation>互换占空比</translation>
+      <translation>استبدال دورات التشغيل</translation>
     </message>
     <message>
       <source>Enable Audio</source>
-      <translation>开启音频</translation>
+      <translation>تفعيل الصوت</translation>
     </message>
     <message>
       <source>Reverse bits of DPCM</source>
-      <translation>反转 DPCM 字位</translation>
+      <translation>عكس جميع البت الخاصة بقناة تضمين نبضي مرمز تفاضلي</translation>
     </message>
     <message>
       <source>192000</source>
@@ -2633,154 +2633,154 @@
     <name>wdgSettingsCheats</name>
     <message>
       <source>Cheats Settings</source>
-      <translation>作弊设置</translation>
+      <translation>إعدادات الغشّ</translation>
     </message>
     <message>
       <source>Settings</source>
-      <translation>设置</translation>
+      <translation>الإعدادات</translation>
     </message>
     <message>
       <source>Disabled</source>
-      <translation>禁用</translation>
+      <translation>معطَّل</translation>
     </message>
     <message>
       <source>Game Genie Rom Mode</source>
-      <translation>金手指 ROM</translation>
+      <translation>وضع روم غيم جيني</translation>
     </message>
     <message>
       <source>Cheats List Mode</source>
-      <translation>作弊列表</translation>
+      <translation>وضع قائمة الغشّ</translation>
     </message>
   </context>
   <context>
     <name>wdgSettingsGeneral</name>
     <message>
       <source>[Select a file]</source>
-      <translation>[选择文件]</translation>
+      <translation>[اختر مِلَفّ]</translation>
     </message>
     <message>
       <source>All files</source>
-      <translation>所有文件</translation>
+      <translation>كل الملفات</translation>
     </message>
     <message>
       <source>Select Game Genie ROM file</source>
-      <translation>选择金手指 ROM</translation>
+      <translation>اختيار مِلَفّ روم غيم جيني</translation>
     </message>
     <message>
       <source>Select FDS BIOS file</source>
-      <translation>选择磁碟机 BIOS</translation>
+      <translation>اختيار مِلَفّ بايوس FDS</translation>
     </message>
     <message>
       <source>General Settings</source>
-      <translation>常规设置</translation>
+      <translation>الإعدادات العامة</translation>
     </message>
     <message>
       <source>3x</source>
-      <translation>3 倍</translation>
+      <translation>3x</translation>
     </message>
     <message>
       <source>4x</source>
-      <translation>4 倍</translation>
+      <translation>4x</translation>
     </message>
     <message>
       <source>5x</source>
-      <translation>5 倍</translation>
+      <translation>5x</translation>
     </message>
     <message>
       <source>Auto</source>
-      <translation>自动</translation>
+      <translation>تلقائي</translation>
     </message>
     <message>
       <source>NTSC</source>
-      <translation>NTSC</translation>
+      <translation>إن تي إس سي</translation>
     </message>
     <message>
       <source>PAL</source>
-      <translation>PAL</translation>
+      <translation>بال</translation>
     </message>
     <message>
       <source>Dendy</source>
-      <translation>Dendy</translation>
+      <translation>ديندي</translation>
     </message>
     <message>
       <source>System Roms</source>
-      <translation>系统 ROM</translation>
+      <translation>رومات الأنظمة</translation>
     </message>
     <message>
       <source>Mode</source>
-      <translation>模式</translation>
+      <translation>الوضع</translation>
     </message>
     <message>
       <source>English</source>
-      <translation>英语 (English)</translation>
+      <translation>الانجليزية</translation>
     </message>
     <message>
       <source>Italian</source>
-      <translation>意大利语 (Italiano)</translation>
+      <translation>الإيطالية</translation>
     </message>
     <message>
       <source>Russian</source>
-      <translation>俄语 (Русский)</translation>
+      <translation>الروسية</translation>
     </message>
     <message>
       <source>Pause when in background</source>
-      <translation>后台暂停</translation>
+      <translation>إيقاف مؤقت عندما تكون في الخلفية</translation>
     </message>
     <message>
       <source>Language</source>
-      <translation>语言</translation>
+      <translation>اللغة</translation>
     </message>
     <message>
       <source>Save settings on exit</source>
-      <translation>退出时保存设置</translation>
+      <translation>حفظ الإعدادات عند الخروج</translation>
     </message>
     <message>
       <source>Save battery RAM file every 3 min.</source>
-      <translation>每 3 分钟保存一次电池 RAM</translation>
+      <translation>حفظ مِلَفّ بطارية الرام كل 3 دقائق.</translation>
     </message>
     <message>
       <source>Fast Forward velocity</source>
-      <translation>快进</translation>
+      <translation>سرعة التسريع</translation>
     </message>
     <message>
       <source>Misc</source>
-      <translation>其他</translation>
+      <translation>إعدادات متنوعة</translation>
     </message>
     <message>
       <source>Settings</source>
-      <translation>设置</translation>
+      <translation>الإعدادات</translation>
     </message>
     <message>
       <source>Game Genie Rom file</source>
-      <translation>金手指 ROM 文件</translation>
+      <translation>مِلَفّ روم غيم جيني</translation>
     </message>
     <message>
       <source>FDS Bios file</source>
-      <translation>磁碟机 Bios 文件</translation>
+      <translation>مِلَفّ بايوس FDS</translation>
     </message>
     <message>
       <source>Rewind minutes</source>
-      <translation>倒带分钟数</translation>
+      <translation>دقائق اللف</translation>
     </message>
     <message>
       <source>Spanish</source>
-      <translation>西班牙语 (Español)</translation>
+      <translation>الإسبانية</translation>
     </message>
     <message>
       <source>Hungarian</source>
-      <translation>匈牙利语 (Magyar)</translation>
+      <translation>المجرية</translation>
     </message>
     <message>
       <source>Turkish</source>
-      <translation>土耳其语 (Türkçe)</translation>
+      <translation>اللغة التركية</translation>
     </message>
     <message>
       <source>Portuguese (Brazil)</source>
-      <translation>巴西葡萄牙语 (Português brasileiro)</translation>
+      <translation>البرتغالية (البرازيل)</translation>
     </message>
     <message>
       <source>Off</source>
-      <translation>关</translation>
+      <translation>معطل</translation>
     </message>
     <message>
       <source>2</source>
@@ -2804,43 +2804,43 @@
     </message>
     <message>
       <source>Unlim.</source>
-      <translation>不限制</translation>
+      <translation>مُطلَق</translation>
     </message>
     <message>
       <source>2x</source>
-      <translation>2 倍</translation>
+      <translation>2x</translation>
     </message>
     <message>
       <source>Chinese Simplified</source>
-      <translation>简体中文(Chinese Simplified)</translation>
+      <translation>الصينية المبسّطة</translation>
     </message>
     <message>
       <source>Insert disk 1 side A at power-up/reset</source>
-      <translation>启动/重设时插入磁盘 1 的 A 面</translation>
+      <translation>إدراج القرص 1 الجانب A عند التشغيل/إعادة التشغيل</translation>
     </message>
     <message>
       <source>Famicom Disk System</source>
-      <translation>Famicom 磁碟系统</translation>
+      <translation>نظام القرص فاميكوم</translation>
     </message>
     <message>
       <source>Switch the disk/side automatically</source>
-      <translation>自动切换磁盘/面</translation>
+      <translation>تبديل القرص/الجانب تلقائياً</translation>
     </message>
     <message>
       <source>Allow multiple instances of the emulator</source>
-      <translation>允许多个模拟器实例</translation>
+      <translation>السماح بفتح المحاكي عدة مرات</translation>
     </message>
     <message>
       <source>Use fast forward when loading the disk/side</source>
-      <translation>加载磁盘/面时快进</translation>
+      <translation>استعمال التسريع في أثناء تحميل القرص/الجانب</translation>
     </message>
     <message>
       <source>French</source>
-      <translation>法语</translation>
+      <translation>الفرنسية</translation>
     </message>
     <message>
       <source>German</source>
-      <translation>德语</translation>
+      <translation>الألمانية</translation>
     </message>
     <message>
       <source>0x00</source>
@@ -2848,15 +2848,15 @@
     </message>
     <message>
       <source>Random</source>
-      <translation>随机</translation>
+      <translation>عشوائية</translation>
     </message>
     <message>
       <source>Initial RAM value</source>
-      <translation>RAM 初始值</translation>
+      <translation>قيمة رام المبدئية</translation>
     </message>
     <message>
       <source>RAM</source>
-      <translation>RAM</translation>
+      <translation>رام</translation>
     </message>
     <message>
       <source>0xFF</source>
@@ -2864,233 +2864,233 @@
     </message>
     <message>
       <source>Polish</source>
-      <translation>波兰语</translation>
+      <translation>البولندية</translation>
     </message>
     <message>
       <source>Arabic</source>
-      <translation type="unfinished">Arabic</translation>
+      <translation>العربيّة</translation>
     </message>
   </context>
   <context>
     <name>wdgSettingsInput</name>
     <message>
       <source>Disabled</source>
-      <translation>禁用</translation>
+      <translation>معطَّل</translation>
     </message>
     <message>
       <source>Standard Pad</source>
-      <translation>标准手柄</translation>
+      <translation>وحدة التحكم العاديّة</translation>
     </message>
     <message>
       <source>Zapper</source>
-      <translation>手枪</translation>
+      <translation>المسدّس</translation>
     </message>
     <message>
       <source>Snes Mouse</source>
-      <translation>SNES 鼠标</translation>
+      <translation>فأرة سوبر نينتندو</translation>
     </message>
     <message>
       <source>Arkanoid Paddle</source>
-      <translation>打砖块摇杆</translation>
+      <translation>مِقذاف أركنويد</translation>
     </message>
     <message>
       <source>Oeka Kids Tablet</source>
-      <translation>Oeka 儿童输入板</translation>
+      <translation>لوحة أويكا كيدز</translation>
     </message>
     <message>
       <source>Default</source>
-      <translation>默认</translation>
+      <translation>افتراضي</translation>
     </message>
     <message>
       <source>Unset</source>
-      <translation>撤消</translation>
+      <translation>إلغاء التعيين</translation>
     </message>
     <message>
       <source>No usable device</source>
-      <translation>无可用设备</translation>
+      <translation>لا يوجد جهاز</translation>
     </message>
     <message>
       <source>Input Settings</source>
-      <translation>输入设置</translation>
+      <translation>إعدادات الإدخال</translation>
     </message>
     <message>
       <source>Joystick ID</source>
-      <translation>手柄 ID</translation>
+      <translation>ذراع التحكم</translation>
     </message>
     <message>
       <source>NES</source>
-      <translation>NES</translation>
+      <translation>نيس</translation>
     </message>
     <message>
       <source>Famicom</source>
-      <translation>Famicom</translation>
+      <translation>فاميكوم</translation>
     </message>
     <message>
       <source>Four Score</source>
-      <translation>四分插</translation>
+      <translation>أربعة لاعبين</translation>
     </message>
     <message>
       <source>Misc</source>
-      <translation>其他</translation>
+      <translation>إعدادات متنوعة</translation>
     </message>
     <message>
       <source>Expansion Port</source>
-      <translation>扩展接口</translation>
+      <translation>منفذ التوسيع</translation>
     </message>
     <message>
       <source>Hide Zapper cursor</source>
-      <translation>隐藏光枪准星</translation>
+      <translation>إخفاء مؤشر المسدّس</translation>
     </message>
     <message>
       <source>Controller Port 1</source>
-      <translation>控制器接口 1</translation>
+      <translation>وحدة التحكم منفذ 1</translation>
     </message>
     <message>
       <source>Controller Port 3</source>
-      <translation>控制器接口 3</translation>
+      <translation>وحدة التحكم منفذ 3</translation>
     </message>
     <message>
       <source>Controller Port 2</source>
-      <translation>控制器接口 2</translation>
+      <translation>وحدة التحكم منفذ 2</translation>
     </message>
     <message>
       <source>Ports</source>
-      <translation>接口</translation>
+      <translation>المنافذ</translation>
     </message>
     <message>
       <source>Shortcuts</source>
-      <translation>快捷键</translation>
+      <translation>الاختصارات</translation>
     </message>
     <message>
       <source>Permit &quot;Up + Down&quot; and &quot;Left + Right&quot; at the same time</source>
-      <translation>允许同时按↑↓/←→</translation>
+      <translation>إتاحة &quot;أعلى+أسفل&quot; وَ &quot;يسار+يمين&quot; بنفس الوقت</translation>
     </message>
     <message>
       <source>Controller Mode</source>
-      <translation>模式</translation>
+      <translation>نوع التحكم</translation>
     </message>
     <message>
       <source>Controller Port 4</source>
-      <translation>控制器接口 4</translation>
+      <translation>وحدة التحكم منفذ 4</translation>
     </message>
     <message>
       <source>Reset to defaults</source>
-      <translation>默认</translation>
+      <translation>إعادة التعيين للوضع الافتراضي</translation>
     </message>
     <message>
       <source>Action</source>
-      <translation>操作</translation>
+      <translation>الإجراء</translation>
     </message>
     <message>
       <source>Keyboard</source>
-      <translation>键盘</translation>
+      <translation>لوحة المفاتيح</translation>
     </message>
     <message>
       <source>Joystick</source>
-      <translation>手柄</translation>
+      <translation>ذراع التحكم</translation>
     </message>
     <message>
       <source>Unset all</source>
-      <translation>全部清除</translation>
+      <translation>إلغاء تعيين الكل</translation>
     </message>
     <message>
       <source>Start/Stop AUDIO recording</source>
-      <translation>开始/停止录音</translation>
+      <translation>بَدْء/إيقاف تسجيل صوت</translation>
     </message>
     <message>
       <source>Start/Stop VIDEO recording</source>
-      <translation>开始/停止录像</translation>
+      <translation>بَدْء/إيقاف تسجيل فيديو</translation>
     </message>
     <message>
       <source>Start/Stop WAV recording</source>
-      <translation>开始/停止录制 WAV</translation>
+      <translation>بدء/إيقاف تسجيل WAV</translation>
     </message>
     <message>
       <source>Standard Pads on Port3 and Port4</source>
-      <translation>接口 3、4 标准手柄</translation>
+      <translation>وحدتي تحكم عاديّة عبر المنفذ 3 والمنفذ 4</translation>
     </message>
     <message>
       <source>Press a key - timeout in %1</source>
-      <translation>请按键 - 剩余 %1 秒</translation>
+      <translation>اضغط على زر - لديك مهلة %1</translation>
     </message>
     <message>
       <source>Family BASIC Keyboard</source>
-      <translation>Family BASIC 键盘</translation>
+      <translation>لوحة مفاتيح فاميلي بايسك</translation>
     </message>
     <message>
       <source>Subor Keyboard</source>
-      <translation>小霸王键盘</translation>
+      <translation>لوحة مفاتيح ملك النمور الذهبي</translation>
     </message>
   </context>
   <context>
     <name>wdgSettingsPPU</name>
     <message>
       <source>PPU Settings</source>
-      <translation>PPU 设置</translation>
+      <translation>إعدادات وحدة معالجة الصور</translation>
     </message>
     <message>
       <source>Disable 7bit Sample Control</source>
-      <translation>禁用 7 位采样控制</translation>
+      <translation>تعطيل التحكم بالعينة 7bit</translation>
     </message>
     <message>
       <source>Reset Lag Counter</source>
-      <translation>重置延迟计数</translation>
+      <translation>إعادة تعيين عدّاد التخلف</translation>
     </message>
     <message>
       <source>VBlank Lines</source>
-      <translation>垂直空白扫描线</translation>
+      <translation>خطوط المسح العمودية الفارغة</translation>
     </message>
     <message>
       <source>Postrender Lines</source>
-      <translation>渲染后扫描线</translation>
+      <translation>خطوط المسح ما بعد التقديم</translation>
     </message>
     <message>
       <source>Overclock</source>
-      <translation>超频</translation>
+      <translation>تعدي الميقت</translation>
     </message>
     <message>
       <source>Sprites and background</source>
-      <translation>精灵和背景</translation>
+      <translation>الكائنات والخلفية</translation>
     </message>
     <message>
       <source>Unlimited Sprites</source>
-      <translation>不限制精灵</translation>
+      <translation>كائنات لامحدودة</translation>
     </message>
     <message>
       <source>Enable Extra Scanlines</source>
-      <translation>启用额外扫描线</translation>
+      <translation>تفعيل خطوط مسح إضافية</translation>
     </message>
     <message>
       <source>Hide Sprites</source>
-      <translation>隐藏精灵</translation>
+      <translation>إخفاء الكائنات</translation>
     </message>
     <message>
       <source>Hide Background</source>
-      <translation>隐藏背景</translation>
+      <translation>إخفاء الخلفية</translation>
     </message>
     <message>
       <source>Advanced</source>
-      <translation>高级</translation>
+      <translation>إعدادات متقدّمة</translation>
     </message>
     <message>
       <source>Default</source>
-      <translation>默认</translation>
+      <translation>افتراضي</translation>
     </message>
     <message>
       <source>Randomize (Not recommended)</source>
-      <translation>随机化(不推荐)</translation>
+      <translation>مُعَشْوِئ (غير منصوح به)</translation>
     </message>
     <message>
       <source>Power up/reset CPU/PPU Alignment</source>
-      <translation>开机/重设 CPU/PPU 对齐</translation>
+      <translation>محاذاة التشغيل/إعادة التشغيل لوحدة المعالجة المركزية/وحدة معالجة الصور</translation>
     </message>
     <message>
       <source>Increment at every hard reset (Not recommended)</source>
-      <translation>每次硬件重设时增加 (不推荐)</translation>
+      <translation>زيادة خلال كل إعادة تشغيل عتادية (غير منصوح به)</translation>
     </message>
     <message>
       <source>Automatically restores the limit when necessary to prevent graphical glitches</source>
-      <translation>必要时自动恢复限制以避免图像出问题</translation>
+      <translation>استعادة المحدودية عند الضرورة لتفادي تشوهات بصرية.</translation>
     </message>
   </context>
   <context>
@@ -3098,292 +3098,292 @@
     <message>
       <source>MPEG 1 Video (*.mpg *.mpeg)</source>
       <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
-      <translation>MPEG 1 视频 (*.mpg *.mpeg)</translation>
+      <translation>فيديو MPEG 1 (*.mpg *.mpeg)</translation>
     </message>
     <message>
       <source>MPEG 2 Video (*.mpg *.mpeg)</source>
       <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
-      <translation>MPEG 2 视频 (*.mpg *.mpeg)</translation>
+      <translation>فيديو MPEG 2 (*.mpg *.mpeg)</translation>
     </message>
     <message>
       <source>MPEG 4 Video (*.mp4)</source>
       <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
-      <translation>MPEG4 视频 (*.mp4)</translation>
+      <translation>فيديو MPEG 4 (*.mp4)</translation>
     </message>
     <message>
       <source>MPEG H264 Video (*.mp4)</source>
       <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
-      <translation>MPEG H264 视频 (*.mp4)</translation>
+      <translation>فيديو MPEG H264 (*.mp4)</translation>
     </message>
     <message>
       <source>High Efficiency Video Codec (*.mkv)</source>
       <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
-      <translation>高效率视频编码 (*.mkv)</translation>
+      <translation>ترميز الفيديو عالي الفعالية (*.mkv)</translation>
     </message>
     <message>
       <source>WebM Video (*.webm)</source>
       <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
-      <translation>WebM 视频 (*.webm)</translation>
+      <translation>فيديو WebM (*.webm)</translation>
     </message>
     <message>
       <source>Windows Media Video (*.wmv)</source>
       <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
-      <translation>Windows 媒体视频 (*.wmv)</translation>
+      <translation>ويندوز ميديا فيديو (*.wmv)</translation>
     </message>
     <message>
       <source>AVI FF Video (*.avi)</source>
       <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
-      <translation>AVI FF 视频 (*.avi)</translation>
+      <translation>فيديو AVI FF (*.avi)</translation>
     </message>
     <message>
       <source>AVI Video (*.avi)</source>
       <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
-      <translation>AVI 视频 (*.avi)</translation>
+      <translation>فيديو AVI (*.avi)</translation>
     </message>
     <message>
       <source>WAV Audio (*.wav)</source>
       <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
-      <translation>WAV 音频 (*.wav)</translation>
+      <translation>صوت WAV (*.wav)</translation>
     </message>
     <message>
       <source>MP3 Audio (*.mp3)</source>
       <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
-      <translation>MP3 音频 (*.mp3)</translation>
+      <translation>صوت MP3 (*.mp3)</translation>
     </message>
     <message>
       <source>AAC Audio (*.aac)</source>
       <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
-      <translation>AAC 音频 (*.aac)</translation>
+      <translation>صوت AAC (*.aac)</translation>
     </message>
     <message>
       <source>Flac Audio (*.flac)</source>
       <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
-      <translation>Flac 音频 (*.flac)</translation>
+      <translation>صوت FLAC (*.flac)</translation>
     </message>
     <message>
       <source>Ogg Audio (*.ogg)</source>
       <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
-      <translation>Ogg 音频 (*.ogg)</translation>
+      <translation>صوت OGG (*.ogg)</translation>
     </message>
     <message>
       <source>Not supported</source>
-      <translation>不支持</translation>
+      <translation>غير مدعوم</translation>
     </message>
     <message>
       <source>Custom Height</source>
-      <translation>自定义高度</translation>
+      <translation>ارتفاع مخصص</translation>
     </message>
     <message>
       <source>Output Video Format</source>
-      <translation>输出视频格式</translation>
+      <translation>صيغة التسجيل</translation>
     </message>
     <message>
       <source>Custom Width</source>
-      <translation>自定义宽度</translation>
+      <translation>عرض مخصص</translation>
     </message>
     <message>
       <source>Output Quality</source>
-      <translation>输出质量</translation>
+      <translation>جودة التسجيل</translation>
     </message>
     <message>
       <source>Output Audio Format</source>
-      <translation>输出音频格式</translation>
+      <translation>صيغة التسجيل</translation>
     </message>
     <message>
       <source>Output Resolution</source>
-      <translation>输出分辨率</translation>
+      <translation>دِقَّة التسجيل</translation>
     </message>
     <message>
       <source>Custom</source>
-      <translation>自定义</translation>
+      <translation>مُخصّص</translation>
     </message>
     <message>
       <source>256 x 240  (1:1)</source>
-      <translation>256×240  (1:1)</translation>
+      <translation>256 x 240  (1:1)</translation>
     </message>
     <message>
       <source>292 x 240  (8:7 NTSC TV)</source>
-      <translation>292×240  (8:7 NTSC 电视)</translation>
+      <translation>292 x 240  (8:7 NTSC TV)</translation>
     </message>
     <message>
       <source>320 x 240  (5:4)</source>
-      <translation>320×240  (5:4)</translation>
+      <translation>320 x 240  (5:4)</translation>
     </message>
     <message>
       <source>354 x 240  (11:8 PAL TV)</source>
-      <translation>354×240  (11:8 PAL 电视)</translation>
+      <translation>354 x 240  (11:8 PAL TV)</translation>
     </message>
     <message>
       <source>512 x 480  (1:1)</source>
-      <translation>512×480  (1:1)</translation>
+      <translation>512 x 480  (1:1)</translation>
     </message>
     <message>
       <source>584 x 480  (8:7 NTSC TV)</source>
-      <translation>584×480  (8:7 NTSC 电视)</translation>
+      <translation>584 x 480  (8:7 NTSC TV)</translation>
     </message>
     <message>
       <source>640 x 480  (5:4)</source>
-      <translation>640×480  (5:4)</translation>
+      <translation>640 x 480  (5:4)</translation>
     </message>
     <message>
       <source>708 x 480  (11:8 PAL TV)</source>
-      <translation>708×480  (11:8 PAL 电视)</translation>
+      <translation>708 x 480  (11:8 PAL TV)</translation>
     </message>
     <message>
       <source>768 x 720  (1:1)</source>
-      <translation>768×720  (1:1)</translation>
+      <translation>768 x 720  (1:1)</translation>
     </message>
     <message>
       <source>876 x 720  (8:7 NTSC TV)</source>
-      <translation>876×720  (8:7 NTSC 电视)</translation>
+      <translation>876 x 720  (8:7 NTSC TV)</translation>
     </message>
     <message>
       <source>960 x 720  (5:4)</source>
-      <translation>960×720  (5:4)</translation>
+      <translation>960 × 720 (5:4)</translation>
     </message>
     <message>
       <source>1064 x 720  (11:8 PAL TV)</source>
-      <translation>1064×720  (11:8 PAL 电视)</translation>
+      <translation>1064 × 720 (11:8 بال تيفي)</translation>
     </message>
     <message>
       <source>1024 x 960  (1:1)</source>
-      <translation>1024×960  (1:1)</translation>
+      <translation>1024 × 960 (1:1)</translation>
     </message>
     <message>
       <source>1170 x 960  (8:7 NTSC TV)</source>
-      <translation>1170×960  (8:7 NTSC 电视)</translation>
+      <translation>1170 × 960 (8:7 إن تي إس سي تيفي)</translation>
     </message>
     <message>
       <source>1280 x 960  (5:4)</source>
-      <translation>1280×960  (5:4)</translation>
+      <translation>1280 × 960 (5:4)</translation>
     </message>
     <message>
       <source>1418 x 960  (11:8 PAL TV)</source>
-      <translation>1418×960  (11:8 PAL 电视)</translation>
+      <translation>1418 × 960 (11:8 بال تيفي)</translation>
     </message>
     <message>
       <source>1280 x 720</source>
-      <translation>1280×720</translation>
+      <translation>1280 × 720</translation>
     </message>
     <message>
       <source>1920 x 1080</source>
-      <translation>1920×1080</translation>
+      <translation>1920 × 1080</translation>
     </message>
     <message>
       <source>Use the emulator resolution</source>
-      <translation>使用模拟器分辨率</translation>
+      <translation>استخدام دِقَّة المحاكي</translation>
     </message>
     <message>
       <source>Follow screen rotation</source>
-      <translation>跟随屏幕旋转</translation>
+      <translation>اتباع دوران الشاشة</translation>
     </message>
     <message>
       <source>Low</source>
-      <translation>低</translation>
+      <translation>منخفضة</translation>
     </message>
     <message>
       <source>Medium</source>
-      <translation>中</translation>
+      <translation>متوسّطة</translation>
     </message>
     <message>
       <source>High</source>
-      <translation>高</translation>
+      <translation>عالية</translation>
     </message>
     <message>
       <source>Audio recording settings</source>
-      <translation>录音设置</translation>
+      <translation>إعدادات تسجيل الصوت</translation>
     </message>
     <message>
       <source>Video recording settings</source>
-      <translation>录像设置</translation>
+      <translation>إعدادات تسجيل الفيديو</translation>
     </message>
     <message>
       <source>Recording Settings</source>
-      <translation>录制设置</translation>
+      <translation>إعدادات التسجيل</translation>
     </message>
     <message>
       <source>Opus Audio (*.opus)</source>
       <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
-      <translation>Opus 音频 (*.opus)</translation>
+      <translation>صوت Opus (*.opus)</translation>
     </message>
   </context>
   <context>
     <name>wdgSettingsVideo</name>
     <message>
       <source>GLSL &amp;soft stretch</source>
-      <translation>GL&amp;SL 柔和拉伸</translation>
+      <translation>تمديد ناعم GLSL</translation>
     </message>
     <message>
       <source>HLSL &amp;soft stretch</source>
-      <translation>HL&amp;SL 柔和拉伸</translation>
+      <translation>تمدد لطيف للHLSL</translation>
     </message>
     <message>
       <source>[Select a file]</source>
-      <translation>[选择文件]</translation>
+      <translation>[اختر مِلَفّ]</translation>
     </message>
     <message>
       <source>Default</source>
-      <translation>默认</translation>
+      <translation>افتراضي</translation>
     </message>
     <message>
       <source>Shaders files</source>
-      <translation>着色文件</translation>
+      <translation>ملفات المظللات</translation>
     </message>
     <message>
       <source>All files</source>
-      <translation>所有文件</translation>
+      <translation>كل الملفات</translation>
     </message>
     <message>
       <source>Open Shader file</source>
-      <translation>打开着色文件</translation>
+      <translation>فتح مِلَفّ المظلل</translation>
     </message>
     <message>
       <source>Palette files</source>
-      <translation>调色板</translation>
+      <translation>مِلَفّات لوحة الألوان</translation>
     </message>
     <message>
       <source>Open palette file</source>
-      <translation>打开调色板</translation>
+      <translation>فتح مِلَفّ لوحة الألوان</translation>
     </message>
     <message>
       <source>Video Settings</source>
-      <translation>视频设置</translation>
+      <translation>إعدادات الفيديو</translation>
     </message>
     <message>
       <source>1x</source>
-      <translation>1 倍</translation>
+      <translation>×1</translation>
     </message>
     <message>
       <source>2x</source>
-      <translation>2 倍</translation>
+      <translation>×2</translation>
     </message>
     <message>
       <source>3x</source>
-      <translation>3 倍</translation>
+      <translation>×3</translation>
     </message>
     <message>
       <source>4x</source>
-      <translation>4 倍</translation>
+      <translation>×4</translation>
     </message>
     <message>
       <source>5x</source>
-      <translation>5 倍</translation>
+      <translation>×5</translation>
     </message>
     <message>
       <source>6x</source>
-      <translation>6 倍</translation>
+      <translation>×6</translation>
     </message>
     <message>
       <source>Scale</source>
-      <translation>缩放</translation>
+      <translation>المقياس</translation>
     </message>
     <message>
       <source>** To apply this change restart is needed **</source>
-      <translation>** 重启后更改生效 **</translation>
+      <translation>**لتطبيق هذا التغيير، يلزم إعادة التشغيل**</translation>
     </message>
     <message>
       <source>Misc</source>
-      <translation>其他</translation>
+      <translation>إعدادات متنوعة</translation>
     </message>
     <message>
       <source>1:1</source>
@@ -3395,107 +3395,107 @@
     </message>
     <message>
       <source>8:7 (NTSC TV)</source>
-      <translation>8:7 (NTSC 电视)</translation>
+      <translation>8:7 (إن تي إس سي)</translation>
     </message>
     <message>
       <source>11:8 (PAL TV)</source>
-      <translation>11:8 (PAL 电视)</translation>
+      <translation>11:8 (بال)</translation>
     </message>
     <message>
       <source>Pixel Aspect Ratio</source>
-      <translation>像素比例</translation>
+      <translation>نسبة أبعاد البكسل</translation>
     </message>
     <message>
       <source>Off</source>
-      <translation>关</translation>
+      <translation>معطل</translation>
     </message>
     <message>
       <source>On</source>
-      <translation>开</translation>
+      <translation>مفعل</translation>
     </message>
     <message>
       <source>Default Value</source>
-      <translation>默认</translation>
+      <translation>القيمة الافتراضية</translation>
     </message>
     <message>
       <source>NTSC</source>
-      <translation>NTSC</translation>
+      <translation>إن تي إس سي</translation>
     </message>
     <message>
       <source>PAL/Dendy</source>
-      <translation>PAL/Dendy</translation>
+      <translation>بال/ديندي</translation>
     </message>
     <message>
       <source>Right</source>
-      <translation>右</translation>
+      <translation>يمين</translation>
     </message>
     <message>
       <source>Down</source>
-      <translation>下</translation>
+      <translation>أسفل</translation>
     </message>
     <message>
       <source>Up</source>
-      <translation>上</translation>
+      <translation>أعلى</translation>
     </message>
     <message>
       <source>Left</source>
-      <translation>左</translation>
+      <translation>يسار</translation>
     </message>
     <message>
       <source>Reset to defaults</source>
-      <translation>默认</translation>
+      <translation>إعادة التعيين للوضع الافتراضي</translation>
     </message>
     <message>
       <source>Black borders in window mode</source>
-      <translation>窗口黑框</translation>
+      <translation>الحدود السوداء في وضع النافذة</translation>
     </message>
     <message>
       <source>Black borders in fullscreen</source>
-      <translation>全屏黑框</translation>
+      <translation>الحدود السوداء في وضع ملء الشاشة</translation>
     </message>
     <message>
       <source>Overscan</source>
-      <translation>过扫描</translation>
+      <translation>المسح الزائد</translation>
     </message>
     <message>
       <source>No Shaders</source>
-      <translation>无着色器</translation>
+      <translation>دونَ مظللات</translation>
     </message>
     <message>
       <source>CRT Dotmask</source>
-      <translation>CRT 点罩</translation>
+      <translation>CRT Dotmask</translation>
     </message>
     <message>
       <source>CRT Scanlines</source>
-      <translation>CRT 扫描线</translation>
+      <translation>خطوط مسح CRT</translation>
     </message>
     <message>
       <source>CRT With Curve</source>
-      <translation>CRT 变形</translation>
+      <translation>CRT متقوس</translation>
     </message>
     <message>
       <source>Emboss</source>
-      <translation>浮雕</translation>
+      <translation>محدّب</translation>
     </message>
     <message>
       <source>Noise</source>
-      <translation>噪点</translation>
+      <translation>تشويش</translation>
     </message>
     <message>
       <source>NTSC 2Phase Composite</source>
-      <translation>NTSC 二相复合</translation>
+      <translation>NTSC 2Phase Composite</translation>
     </message>
     <message>
       <source>Old TV</source>
-      <translation>老电视</translation>
+      <translation>تلفاز قديم</translation>
     </message>
     <message>
       <source>From File</source>
-      <translation>其他</translation>
+      <translation>مِن مِلَفّ</translation>
     </message>
     <message>
       <source>No Filters</source>
-      <translation>无过滤</translation>
+      <translation>دونَ فلاتر</translation>
     </message>
     <message>
       <source>Scale2X</source>
@@ -3523,11 +3523,11 @@
     </message>
     <message>
       <source>xBRZ 2X</source>
-      <translation>XBRZ 2X</translation>
+      <translation>xBRZ 2X</translation>
     </message>
     <message>
       <source>xBRZ 3X</source>
-      <translation>XBRZ 3X</translation>
+      <translation>xBRZ 3X</translation>
     </message>
     <message>
       <source>xBRZ 4X</source>
@@ -3543,11 +3543,11 @@
     </message>
     <message>
       <source>NTSC Composite</source>
-      <translation>NTSC 复合</translation>
+      <translation>NTSC Composite</translation>
     </message>
     <message>
       <source>NTSC S-Video</source>
-      <translation>NTSC S 端子</translation>
+      <translation>NTSC S-Video</translation>
     </message>
     <message>
       <source>NTSC RGB</source>
@@ -3555,19 +3555,19 @@
     </message>
     <message>
       <source>Filters</source>
-      <translation>滤镜</translation>
+      <translation>الفلاتر</translation>
     </message>
     <message>
       <source>PAL</source>
-      <translation>PAL</translation>
+      <translation>بال</translation>
     </message>
     <message>
       <source>Sony CXA2025AS US</source>
-      <translation>索尼 CXA2025AS US</translation>
+      <translation>Sony CXA2025AS US</translation>
     </message>
     <message>
       <source>Firebrandx Nostalgia (FBX)</source>
-      <translation>Firebrandx 怀旧 (FBX)</translation>
+      <translation>Firebrandx Nostalgia (FBX)</translation>
     </message>
     <message>
       <source>Firebrandx YUV</source>
@@ -3575,187 +3575,187 @@
     </message>
     <message>
       <source>Monochrome</source>
-      <translation>黑白</translation>
+      <translation>أحادي اللون</translation>
     </message>
     <message>
       <source>Green</source>
-      <translation>绿</translation>
+      <translation>أخضر</translation>
     </message>
     <message>
       <source>Editor</source>
-      <translation>编辑器</translation>
+      <translation>المحرر</translation>
     </message>
     <message>
       <source>Palette</source>
-      <translation>调色板</translation>
+      <translation>لوحة الألوان</translation>
     </message>
     <message>
       <source>xBRZ 2X Multithreading</source>
-      <translation>XBRZ 多线程 2 倍</translation>
+      <translation>xBRZ 2X Multithreading</translation>
     </message>
     <message>
       <source>xBRZ 3X Multithreading</source>
-      <translation>XBRZ 多线程 3 倍</translation>
+      <translation>xBRZ 3X Multithreading</translation>
     </message>
     <message>
       <source>xBRZ 4X Multithreading</source>
-      <translation>XBRZ 多线程 4 倍</translation>
+      <translation>xBRZ 4X Multithreading</translation>
     </message>
     <message>
       <source>xBRZ 5X Multithreading</source>
-      <translation>XBRZ 多线程 5 倍</translation>
+      <translation>xBRZ 5X Multithreading</translation>
     </message>
     <message>
       <source>xBRZ 6X Multithreading</source>
-      <translation>XBRZ 多线程 6 倍</translation>
+      <translation>xBRZ 6X Multithreading</translation>
     </message>
     <message>
       <source>VSync</source>
-      <translation>垂直同步</translation>
+      <translation>المزامنة العموديّة</translation>
     </message>
     <message>
       <source>Interpolation</source>
-      <translation>插补</translation>
+      <translation>الاستيفاء</translation>
     </message>
     <message>
       <source>Text on screen</source>
-      <translation>屏显文字</translation>
+      <translation>عرض النص على الشاشة</translation>
     </message>
     <message>
       <source>Show FPS</source>
-      <translation>显示帧率</translation>
+      <translation>عرض معدل الإطارات في الثانية</translation>
     </message>
     <message>
       <source>Input display</source>
-      <translation>显示按键</translation>
+      <translation>عرض ذراع التحكم</translation>
     </message>
     <message>
       <source>Disable TV noise emulation when turned off</source>
-      <translation>关机时不显示电视噪点</translation>
+      <translation>تعطيل محاكاة تشويش التلفاز عند إيقاف التشغيل</translation>
     </message>
     <message>
       <source>Disable sepia color on pause</source>
-      <translation>暂停不变暗</translation>
+      <translation>تعطيل اللون البني في حالة الإيقاف المؤقت</translation>
     </message>
     <message>
       <source>Fullscreen in window</source>
-      <translation>窗口全屏</translation>
+      <translation>ملء الشاشة في نافذة</translation>
     </message>
     <message>
       <source>Stretch in fullscreen</source>
-      <translation>拉伸全屏</translation>
+      <translation>تمديد أثناء ملء الشاشة</translation>
     </message>
     <message>
       <source>Soft stretch</source>
-      <translation>柔和拉伸</translation>
+      <translation>تمديد ناعم</translation>
     </message>
     <message>
       <source>Disable sRGB FBO</source>
-      <translation>禁用 SRGB FBO</translation>
+      <translation>تعطيل sRGB FBO</translation>
     </message>
     <message>
       <source>Disable Red and Green emphasis swap for PAL/Dendy</source>
-      <translation>禁用 PAL/Dendy 红绿凸显互换</translation>
+      <translation>تعطيل تبديل التركيز الأحمر والأخضر لنظام بال/ديندي</translation>
     </message>
     <message>
       <source>0 degrees</source>
-      <translation>0°</translation>
+      <translation>0 درجة</translation>
     </message>
     <message>
       <source>90 degrees</source>
-      <translation>90°</translation>
+      <translation>90 درجة</translation>
     </message>
     <message>
       <source>180 degrees</source>
-      <translation>180°</translation>
+      <translation>180 درجة</translation>
     </message>
     <message>
       <source>270 degrees</source>
-      <translation>270°</translation>
+      <translation>270 درجة</translation>
     </message>
     <message>
       <source>Raw</source>
-      <translation>原始</translation>
+      <translation>خام</translation>
     </message>
     <message>
       <source>Horizontal flip</source>
-      <translation>水平翻转</translation>
+      <translation>قلب أفقي</translation>
     </message>
     <message>
       <source>Flip/Rotate the controller input</source>
-      <translation>翻转或旋转控制器输入</translation>
+      <translation>قلب/تدوير وحدة التحكم</translation>
     </message>
     <message>
       <source>Flip/Rotate the text on screen</source>
-      <translation>翻转或旋转屏显文字</translation>
+      <translation>قلب/تدوير النص على الشاشة</translation>
     </message>
     <message>
       <source>Per-Game Overscan Setting</source>
-      <translation>单个游戏设置</translation>
+      <translation>إعدادات المسح الزائد حسب اللعبة</translation>
     </message>
     <message>
       <source>Horizontal Flip and Rotation</source>
-      <translation>水平翻转并旋转</translation>
+      <translation>القلب الأفقي والدوران</translation>
     </message>
     <message>
       <source>Screen</source>
-      <translation>屏幕</translation>
+      <translation>الشاشة</translation>
     </message>
     <message>
       <source>Software Filters</source>
-      <translation>软件滤镜</translation>
+      <translation>فلاتر البرنامَج</translation>
     </message>
     <message>
       <source>Shader</source>
-      <translation>着色器</translation>
+      <translation>المظلل</translation>
     </message>
     <message>
       <source>Shader File</source>
-      <translation>着色文件</translation>
+      <translation>ملف المظلل</translation>
     </message>
     <message>
       <source>Filter</source>
-      <translation>滤镜</translation>
+      <translation>فلتر</translation>
     </message>
     <message>
       <source>GPU Shaders</source>
-      <translation>GPU 着色器</translation>
+      <translation>مظللات كرت الشاشة</translation>
     </message>
     <message>
       <source>Palette Selection</source>
-      <translation>选择调色板</translation>
+      <translation>اختيار لوحة الألوان</translation>
     </message>
     <message>
       <source>Palette File</source>
-      <translation>调色板文件</translation>
+      <translation>مِلَفّ لوحة الألوان</translation>
     </message>
     <message>
       <source>Show frames and lags counters</source>
-      <translation>显示帧数和延迟数</translation>
+      <translation>إظهار عَدّاد الإطارات والتخلفات</translation>
     </message>
     <message>
       <source>Desktop resolution</source>
-      <translation>桌面分辨率</translation>
+      <translation>دِقَّة سطح المكتب</translation>
     </message>
     <message>
       <source>Adapt the refresh rate to the region (PAL/Dendy 50Hz, NTSC 60Hz)</source>
-      <translation>刷新率适配地区 (PAL/Dendy 50Hz, NTSC 60Hz)</translation>
+      <translation>تكييف معدل التحديث حسب المنطقة (PAL/Dendy 50 هرتز، NTSC 60 هرتز)</translation>
     </message>
     <message>
       <source>Fullscreen</source>
-      <translation>全屏</translation>
+      <translation>ملء الشاشة</translation>
     </message>
     <message>
       <source>* applied if supported by the monitor</source>
-      <translation>※生效与否取决于显示器支持</translation>
+      <translation>* يُطبق إذا تم دعمه من قبل الشاشة</translation>
     </message>
     <message>
       <source>Use integer scaling</source>
-      <translation>整数倍缩放</translation>
+      <translation>استخدام التمديد بالأعداد الصحيحة</translation>
     </message>
     <message>
       <source>Preferred resolution </source>
-      <translation>建议分辨率</translation>
+      <translation>الدِّقَّة المفضلة</translation>
     </message>
     <message>
       <source>2xSaI</source>
@@ -3763,7 +3763,7 @@
     </message>
     <message>
       <source>Dot Matrix</source>
-      <translation>点阵</translation>
+      <translation>Dot Matrix</translation>
     </message>
     <message>
       <source>PAL TV1x</source>
@@ -3783,11 +3783,11 @@
     </message>
     <message>
       <source>Super 2xSaI</source>
-      <translation>超级 2xSaI</translation>
+      <translation>2xSaI الخارق</translation>
     </message>
     <message>
       <source>Super Eagle</source>
-      <translation>超级 Eagle</translation>
+      <translation>النسر الخارق</translation>
     </message>
     <message>
       <source>TV2x</source>
@@ -3815,42 +3815,42 @@
     </message>
     <message>
       <source>Reset parameters to defaults</source>
-      <translation>恢复默认参数</translation>
+      <translation>إعادة تعيين الإعدادات</translation>
     </message>
     <message>
       <source>NTSC CRT LMP88959</source>
-      <translation type="unfinished">NTSC CRT LMP88959</translation>
+      <translation>NTSC CRT LMP88959</translation>
     </message>
     <message>
       <source>NTSC NES LMP88959</source>
-      <translation type="unfinished">NTSC NES LMP88959</translation>
+      <translation>NTSC NES LMP88959</translation>
     </message>
     <message>
       <source>PAL CRT LMP88959</source>
-      <translation type="unfinished">PAL CRT LMP88959</translation>
+      <translation>PAL CRT LMP88959</translation>
     </message>
     <message>
       <source>PAL NES LMP88959</source>
-      <translation type="unfinished">PAL NES LMP88959</translation>
+      <translation>PAL NES LMP88959</translation>
     </message>
   </context>
   <context>
     <name>wdgState</name>
     <message>
       <source>Save/Load Slot Box</source>
-      <translation>保存/载入进度框</translation>
+      <translation>صندوق فتحات الحفظ/التحميل</translation>
     </message>
     <message>
       <source>Save state</source>
-      <translation>保存进度</translation>
+      <translation>حفظ الحالة</translation>
     </message>
     <message>
       <source>Save/Load State</source>
-      <translation>保存/载入进度</translation>
+      <translation>حفظ/تحميل الحالة</translation>
     </message>
     <message>
       <source>Load state</source>
-      <translation>载入进度</translation>
+      <translation>تحميل الحالة</translation>
     </message>
   </context>
 </TS>

@@ -5,14 +5,14 @@
     <name>Settings</name>
     <message>
       <source>System Default</source>
-      <translation>Système par Défaut</translation>
+      <translation>Par défaut du système</translation>
     </message>
   </context>
   <context>
     <name>dlgCfgNSCode</name>
     <message>
       <source>Default</source>
-      <translation>Défaut</translation>
+      <translation>Par défaut</translation>
     </message>
     <message>
       <source>Unset</source>
@@ -36,6 +36,40 @@
     <message>
       <source>Command Line Help</source>
       <translation>Aide Ligne de Commande</translation>
+    </message>
+  </context>
+  <context>
+    <name>dlgDetachBarcode</name>
+    <message>
+      <source>Enter a barcode yourself...</source>
+      <translation type="unfinished">Enter a barcode yourself...</translation>
+    </message>
+    <message>
+      <source>Detach Barcode</source>
+      <translation type="unfinished">Detach Barcode</translation>
+    </message>
+    <message>
+      <source>Apply</source>
+      <translation>Appliquer</translation>
+    </message>
+  </context>
+  <context>
+    <name>dlgDipswitch</name>
+    <message>
+      <source>Ok</source>
+      <translation>Ok</translation>
+    </message>
+    <message>
+      <source>Dipswitch</source>
+      <translation>Commutateur DIP</translation>
+    </message>
+    <message>
+      <source>Start</source>
+      <translation>Démarrer</translation>
+    </message>
+    <message>
+      <source>Default</source>
+      <translation>Par défaut</translation>
     </message>
   </context>
   <context>
@@ -70,15 +104,15 @@
     </message>
     <message>
       <source>128 Bytes</source>
-      <translation>128 Bytes</translation>
+      <translation>128 Octets</translation>
     </message>
     <message>
       <source>256 Bytes</source>
-      <translation>256 Bytes</translation>
+      <translation>256 Octets</translation>
     </message>
     <message>
       <source>512 Bytes</source>
-      <translation>512 Bytes</translation>
+      <translation>512 Octets</translation>
     </message>
     <message>
       <source>1 KiB</source>
@@ -146,7 +180,7 @@
     </message>
     <message>
       <source>Famicom Four Players Adapter</source>
-      <translation>Adaptateur Famicom Four Players</translation>
+      <translation>Adaptateur FAMICOM Quatre Joueurs</translation>
     </message>
     <message>
       <source>Vs. System</source>
@@ -163,10 +197,6 @@
     <message>
       <source>Vs. Zapper</source>
       <translation>Vs. Zapper</translation>
-    </message>
-    <message>
-      <source>Zapper</source>
-      <translation>Zapper</translation>
     </message>
     <message>
       <source>Two Zappers</source>
@@ -191,18 +221,6 @@
     <message>
       <source>Family Trainer Side B</source>
       <translation>Family Trainer Face B</translation>
-    </message>
-    <message>
-      <source>Arkanoid Paddle (NES)</source>
-      <translation>Arkanoid Paddle (NES)</translation>
-    </message>
-    <message>
-      <source>Arkanoid Paddle (Famicom)</source>
-      <translation>Arkanoid Paddle (Famicom)</translation>
-    </message>
-    <message>
-      <source>Two Paddles plus Famicom Data Recorder</source>
-      <translation>Deux Paddles plus Famicom Data Recorde</translation>
     </message>
     <message>
       <source>Konami Hyper Shot</source>
@@ -287,18 +305,6 @@
     <message>
       <source>Subor Keyboard</source>
       <translation>Clavier Subor</translation>
-    </message>
-    <message>
-      <source>Subor Keyboard plus 3x8-bit mouse</source>
-      <translation>Souris pour le Clavier Subor plus 3x8-bit</translation>
-    </message>
-    <message>
-      <source>Subor Keyboard plus 24-bit mouse</source>
-      <translation>Souris pour le Clavier Subor plus 24-bit</translation>
-    </message>
-    <message>
-      <source>SNES Mouse</source>
-      <translation>Souris SNES</translation>
     </message>
     <message>
       <source>Multicart</source>
@@ -583,6 +589,62 @@
     <message>
       <source>Reset to defaults</source>
       <translation>Redémarrer par Défaut</translation>
+    </message>
+    <message>
+      <source>Vs. System (1P via $4016)</source>
+      <translation>Vs. System (1P via $4016)</translation>
+    </message>
+    <message>
+      <source>Zapper ($4017)</source>
+      <translation type="unfinished">Zapper ($4017)</translation>
+    </message>
+    <message>
+      <source>Arkanoid Vaus Controller (NES)</source>
+      <translation type="unfinished">Arkanoid Vaus Controller (NES)</translation>
+    </message>
+    <message>
+      <source>Arkanoid Vaus Controller (Famicom)</source>
+      <translation type="unfinished">Arkanoid Vaus Controller (Famicom)</translation>
+    </message>
+    <message>
+      <source>Two Vaus Controllers plus Famicom Data Recorder</source>
+      <translation>Deux Paddles plus Famicom Data Recorde</translation>
+    </message>
+    <message>
+      <source>Subor Keyboard plus mouse (3x8-bit)</source>
+      <translation type="unfinished">Subor Keyboard plus mouse (3x8-bit)</translation>
+    </message>
+    <message>
+      <source>Subor Keyboard plus mouse (24-bit)</source>
+      <translation type="unfinished">Subor Keyboard plus mouse (24-bit)</translation>
+    </message>
+    <message>
+      <source>SNES Mouse ($4017.0)</source>
+      <translation type="unfinished">SNES Mouse ($4017.0)</translation>
+    </message>
+    <message>
+      <source>Unknown Famiclone Keyboard (Golden Key)</source>
+      <translation>Clavier Famiclone Inconnu (Golden Key)</translation>
+    </message>
+    <message>
+      <source>Subor Keyboard plus mouse (24-bit $4017)</source>
+      <translation type="unfinished">Subor Keyboard plus mouse (24-bit $4017)</translation>
+    </message>
+    <message>
+      <source>Port Test</source>
+      <translation type="unfinished">Port Test</translation>
+    </message>
+    <message>
+      <source>Bandai Multi Game Player Gamepad</source>
+      <translation type="unfinished">Bandai Multi Game Player Gamepad</translation>
+    </message>
+    <message>
+      <source>Venom TV Dance Mat</source>
+      <translation type="unfinished">Venom TV Dance Mat</translation>
+    </message>
+    <message>
+      <source>LG TV Remote Control</source>
+      <translation type="unfinished">LG TV Remote Control</translation>
     </message>
   </context>
   <context>
@@ -894,10 +956,6 @@
   <context>
     <name>dlgVsSystem</name>
     <message>
-      <source>Vs System Controls</source>
-      <translation>Contrôles Vs System</translation>
-    </message>
-    <message>
       <source>Left Coin</source>
       <translation>Pièce Gauche</translation>
     </message>
@@ -952,6 +1010,62 @@
     <message>
       <source>Defaults Game Dip Switches</source>
       <translation>Jeu par Défaut Dip Switches</translation>
+    </message>
+    <message>
+      <source>Vs System</source>
+      <translation>Vs System</translation>
+    </message>
+    <message>
+      <source>Coins</source>
+      <translation type="unfinished">Coins</translation>
+    </message>
+    <message>
+      <source>Monitor</source>
+      <translation>Moniteur</translation>
+    </message>
+    <message>
+      <source>Left</source>
+      <translation>Gauche</translation>
+    </message>
+    <message>
+      <source>Right</source>
+      <translation>Droite</translation>
+    </message>
+    <message>
+      <source>12</source>
+      <translation>12</translation>
+    </message>
+    <message>
+      <source>13</source>
+      <translation>13</translation>
+    </message>
+    <message>
+      <source>14</source>
+      <translation>14</translation>
+    </message>
+    <message>
+      <source>15</source>
+      <translation>15</translation>
+    </message>
+    <message>
+      <source>16</source>
+      <translation>16</translation>
+    </message>
+    <message>
+      <source>11</source>
+      <translation>11</translation>
+    </message>
+    <message>
+      <source>10</source>
+      <translation>10</translation>
+    </message>
+    <message>
+      <source>9</source>
+      <translation>9</translation>
+    </message>
+    <message>
+      <source>Game Dip Switches</source>
+      <translation type="unfinished">Game Dip Switches</translation>
     </message>
   </context>
   <context>
@@ -1496,6 +1610,14 @@
       <source>T&amp;ape</source>
       <translation>&amp;K7</translation>
     </message>
+    <message>
+      <source>&amp;Dipswitch</source>
+      <translation type="unfinished">&amp;Dipswitch</translation>
+    </message>
+    <message>
+      <source>Detach &amp;Barcode</source>
+      <translation type="unfinished">Detach &amp;Barcode</translation>
+    </message>
   </context>
   <context>
     <name>nesKeyboardStatusBar</name>
@@ -1691,7 +1813,7 @@
     <message>
       <source>state [cyan]%1[normal] saved successfully</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation>Etat [cyan]%1[normal] sauvegardé avec succès</translation>
+      <translation>État [cyan]%1[normal] sauvegardé avec succès</translation>
     </message>
     <message>
       <source>state [cyan]%1[normal] loaded successfully</source>
@@ -1726,7 +1848,7 @@
     <message>
       <source>[red]error[normal] on write save state</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">[red]error[normal] on write save state</translation>
+      <translation>[red]erreur[normal] d'écriture de sauvegarde d&apos;etat</translation>
     </message>
   </context>
   <context>
@@ -2063,6 +2185,198 @@
     <message>
       <source>Reset parameters to defaults</source>
       <translation>Redémarrer les paramètres par défaut</translation>
+    </message>
+  </context>
+  <context>
+    <name>wdgNTSCLMP88959Filter</name>
+    <message>
+      <source>Scanline</source>
+      <translation type="unfinished">Scanline</translation>
+    </message>
+    <message>
+      <source>MFields</source>
+      <translation>MFields</translation>
+    </message>
+    <message>
+      <source>VBlend</source>
+      <translation>VBlend</translation>
+    </message>
+    <message>
+      <source>Contrast</source>
+      <translation>Contraste</translation>
+    </message>
+    <message>
+      <source>Brightness</source>
+      <translation>Luminosité</translation>
+    </message>
+    <message>
+      <source>White Point</source>
+      <translation type="unfinished">White Point</translation>
+    </message>
+    <message>
+      <source>Black Point</source>
+      <translation type="unfinished">Black Point</translation>
+    </message>
+    <message>
+      <source>Saturation</source>
+      <translation>Saturation</translation>
+    </message>
+    <message>
+      <source>Noise</source>
+      <translation type="unfinished">Noise</translation>
+    </message>
+    <message>
+      <source>Hue</source>
+      <translation>Teinte</translation>
+    </message>
+    <message>
+      <source>Reset parameters to defaults</source>
+      <translation type="unfinished">Reset parameters to defaults</translation>
+    </message>
+  </context>
+  <context>
+    <name>wdgNTSCNESRGBLMP88959Filter</name>
+    <message>
+      <source>Black Point</source>
+      <translation type="unfinished">Black Point</translation>
+    </message>
+    <message>
+      <source>Brightness</source>
+      <translation>Luminosité</translation>
+    </message>
+    <message>
+      <source>Hue</source>
+      <translation>Teinte</translation>
+    </message>
+    <message>
+      <source>Contrast</source>
+      <translation>Contraste</translation>
+    </message>
+    <message>
+      <source>Noise</source>
+      <translation type="unfinished">Noise</translation>
+    </message>
+    <message>
+      <source>White Point</source>
+      <translation type="unfinished">White Point</translation>
+    </message>
+    <message>
+      <source>Scanline</source>
+      <translation type="unfinished">Scanline</translation>
+    </message>
+    <message>
+      <source>VBlend</source>
+      <translation>VBlend</translation>
+    </message>
+    <message>
+      <source>Saturation</source>
+      <translation>Saturation</translation>
+    </message>
+    <message>
+      <source>Reset parameters to defaults</source>
+      <translation type="unfinished">Reset parameters to defaults</translation>
+    </message>
+  </context>
+  <context>
+    <name>wdgPALLMP88959Filter</name>
+    <message>
+      <source>Scanline</source>
+      <translation type="unfinished">Scanline</translation>
+    </message>
+    <message>
+      <source>VBlend</source>
+      <translation>VBlend</translation>
+    </message>
+    <message>
+      <source>Black Point</source>
+      <translation type="unfinished">Black Point</translation>
+    </message>
+    <message>
+      <source>White Point</source>
+      <translation type="unfinished">White Point</translation>
+    </message>
+    <message>
+      <source>Noise</source>
+      <translation type="unfinished">Noise</translation>
+    </message>
+    <message>
+      <source>Color Phase</source>
+      <translation type="unfinished">Color Phase</translation>
+    </message>
+    <message>
+      <source>Brightness</source>
+      <translation type="unfinished">Brightness</translation>
+    </message>
+    <message>
+      <source>Saturation</source>
+      <translation type="unfinished">Saturation</translation>
+    </message>
+    <message>
+      <source>Contrast</source>
+      <translation type="unfinished">Contrast</translation>
+    </message>
+    <message>
+      <source>Chroma Lag</source>
+      <translation type="unfinished">Chroma Lag</translation>
+    </message>
+    <message>
+      <source>Chroma Correction</source>
+      <translation type="unfinished">Chroma Correction</translation>
+    </message>
+    <message>
+      <source>MFields</source>
+      <translation type="unfinished">MFields</translation>
+    </message>
+    <message>
+      <source>Reset parameters to defaults</source>
+      <translation type="unfinished">Reset parameters to defaults</translation>
+    </message>
+  </context>
+  <context>
+    <name>wdgPALNESRGBLMP88959Filter</name>
+    <message>
+      <source>White Point</source>
+      <translation type="unfinished">White Point</translation>
+    </message>
+    <message>
+      <source>Chroma Lag</source>
+      <translation type="unfinished">Chroma Lag</translation>
+    </message>
+    <message>
+      <source>Contrast</source>
+      <translation type="unfinished">Contrast</translation>
+    </message>
+    <message>
+      <source>Chroma Correction</source>
+      <translation type="unfinished">Chroma Correction</translation>
+    </message>
+    <message>
+      <source>Brightness</source>
+      <translation type="unfinished">Brightness</translation>
+    </message>
+    <message>
+      <source>Noise</source>
+      <translation type="unfinished">Noise</translation>
+    </message>
+    <message>
+      <source>Black Point</source>
+      <translation type="unfinished">Black Point</translation>
+    </message>
+    <message>
+      <source>Saturation</source>
+      <translation type="unfinished">Saturation</translation>
+    </message>
+    <message>
+      <source>Scanline</source>
+      <translation type="unfinished">Scanline</translation>
+    </message>
+    <message>
+      <source>VBlend</source>
+      <translation type="unfinished">VBlend</translation>
+    </message>
+    <message>
+      <source>Reset parameters to defaults</source>
+      <translation type="unfinished">Reset parameters to defaults</translation>
     </message>
   </context>
   <context>
@@ -2547,6 +2861,14 @@
     <message>
       <source>0xFF</source>
       <translation>0xFF</translation>
+    </message>
+    <message>
+      <source>Polish</source>
+      <translation>Polonais</translation>
+    </message>
+    <message>
+      <source>Arabic</source>
+      <translation type="unfinished">Arabic</translation>
     </message>
   </context>
   <context>
@@ -3453,7 +3775,7 @@
     </message>
     <message>
       <source>PAL TV3x</source>
-      <translation>AL TV3x</translation>
+      <translation>PAL TV3x</translation>
     </message>
     <message>
       <source>PAL TV4x</source>
@@ -3495,6 +3817,22 @@
       <source>Reset parameters to defaults</source>
       <translation>Redémarrer les paramètres par défaut</translation>
     </message>
+    <message>
+      <source>NTSC CRT LMP88959</source>
+      <translation type="unfinished">NTSC CRT LMP88959</translation>
+    </message>
+    <message>
+      <source>NTSC NES LMP88959</source>
+      <translation type="unfinished">NTSC NES LMP88959</translation>
+    </message>
+    <message>
+      <source>PAL CRT LMP88959</source>
+      <translation type="unfinished">PAL CRT LMP88959</translation>
+    </message>
+    <message>
+      <source>PAL NES LMP88959</source>
+      <translation type="unfinished">PAL NES LMP88959</translation>
+    </message>
   </context>
   <context>
     <name>wdgState</name>
@@ -3508,7 +3846,7 @@
     </message>
     <message>
       <source>Save/Load State</source>
-      <translation>Sauvegarder/Charger un Etat</translation>
+      <translation>Sauvegarder/Charger un État</translation>
     </message>
     <message>
       <source>Load state</source>
