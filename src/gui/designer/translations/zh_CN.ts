@@ -39,6 +39,40 @@
     </message>
   </context>
   <context>
+    <name>dlgDetachBarcode</name>
+    <message>
+      <source>Enter a barcode yourself...</source>
+      <translation type="unfinished">Enter a barcode yourself...</translation>
+    </message>
+    <message>
+      <source>Detach Barcode</source>
+      <translation type="unfinished">Detach Barcode</translation>
+    </message>
+    <message>
+      <source>Apply</source>
+      <translation type="unfinished">Apply</translation>
+    </message>
+  </context>
+  <context>
+    <name>dlgDipswitch</name>
+    <message>
+      <source>Ok</source>
+      <translation>确定</translation>
+    </message>
+    <message>
+      <source>Dipswitch</source>
+      <translation>Dip 开关</translation>
+    </message>
+    <message>
+      <source>Start</source>
+      <translation>开始</translation>
+    </message>
+    <message>
+      <source>Default</source>
+      <translation>默认</translation>
+    </message>
+  </context>
+  <context>
     <name>dlgHeaderEditor</name>
     <message>
       <source>Attention</source>
@@ -62,7 +96,7 @@
     </message>
     <message>
       <source>PRG ROM KiB</source>
-      <translation type="unfinished">PRG ROM KiB</translation>
+      <translation>PRG ROM KiB</translation>
     </message>
     <message>
       <source>None</source>
@@ -82,55 +116,55 @@
     </message>
     <message>
       <source>1 KiB</source>
-      <translation type="unfinished">1 KiB</translation>
+      <translation>1 KiB</translation>
     </message>
     <message>
       <source>2 KiB</source>
-      <translation type="unfinished">2 KiB</translation>
+      <translation>2 KiB</translation>
     </message>
     <message>
       <source>4 KiB</source>
-      <translation type="unfinished">4 KiB</translation>
+      <translation>4 KiB</translation>
     </message>
     <message>
       <source>8 KiB</source>
-      <translation type="unfinished">8 KiB</translation>
+      <translation>8 KiB</translation>
     </message>
     <message>
       <source>16 KiB</source>
-      <translation type="unfinished">16 KiB</translation>
+      <translation>16 KiB</translation>
     </message>
     <message>
       <source>32 KiB</source>
-      <translation type="unfinished">32 KiB</translation>
+      <translation>32 KiB</translation>
     </message>
     <message>
       <source>64 KiB</source>
-      <translation type="unfinished">64 KiB</translation>
+      <translation>64 KiB</translation>
     </message>
     <message>
       <source>128 KiB</source>
-      <translation type="unfinished">128 KiB</translation>
+      <translation>128 KiB</translation>
     </message>
     <message>
       <source>256 KiB</source>
-      <translation type="unfinished">256 KiB</translation>
+      <translation>256 KiB</translation>
     </message>
     <message>
       <source>512 KiB</source>
-      <translation type="unfinished">512 KiB</translation>
+      <translation>512 KiB</translation>
     </message>
     <message>
       <source>1 MiB</source>
-      <translation type="unfinished">1 MiB</translation>
+      <translation>1 MiB</translation>
     </message>
     <message>
       <source>N/A</source>
-      <translation type="unfinished">N/A</translation>
+      <translation>无</translation>
     </message>
     <message>
       <source>Trainer</source>
-      <translation type="unfinished">Trainer</translation>
+      <translation>作弊</translation>
     </message>
     <message>
       <source>Unspecified</source>
@@ -150,11 +184,11 @@
     </message>
     <message>
       <source>Vs. System</source>
-      <translation type="unfinished">Vs. System</translation>
+      <translation>VS 系统</translation>
     </message>
     <message>
       <source>Vs. System (1P via $4017)</source>
-      <translation type="unfinished">Vs. System (1P via $4017)</translation>
+      <translation>VS 系统 (1P 经由 $4017)</translation>
     </message>
     <message>
       <source>Reserved</source>
@@ -162,67 +196,51 @@
     </message>
     <message>
       <source>Vs. Zapper</source>
-      <translation type="unfinished">Vs. Zapper</translation>
-    </message>
-    <message>
-      <source>Zapper</source>
-      <translation>手枪</translation>
+      <translation>VS 手枪</translation>
     </message>
     <message>
       <source>Two Zappers</source>
-      <translation type="unfinished">Two Zappers</translation>
+      <translation>双手枪</translation>
     </message>
     <message>
       <source>Bandai Hyper Shot Lightgun</source>
-      <translation type="unfinished">Bandai Hyper Shot Lightgun</translation>
+      <translation>万代机关枪</translation>
     </message>
     <message>
       <source>Power Pad Side A</source>
-      <translation type="unfinished">Power Pad Side A</translation>
+      <translation>跳舞毯 A 面</translation>
     </message>
     <message>
       <source>Power Pad Side B</source>
-      <translation type="unfinished">Power Pad Side B</translation>
+      <translation>跳舞毯 B 面</translation>
     </message>
     <message>
       <source>Family Trainer Side A</source>
-      <translation type="unfinished">Family Trainer Side A</translation>
+      <translation>家庭训练者 A 面</translation>
     </message>
     <message>
       <source>Family Trainer Side B</source>
-      <translation type="unfinished">Family Trainer Side B</translation>
-    </message>
-    <message>
-      <source>Arkanoid Paddle (NES)</source>
-      <translation type="unfinished">Arkanoid Paddle (NES)</translation>
-    </message>
-    <message>
-      <source>Arkanoid Paddle (Famicom)</source>
-      <translation type="unfinished">Arkanoid Paddle (Famicom)</translation>
-    </message>
-    <message>
-      <source>Two Paddles plus Famicom Data Recorder</source>
-      <translation type="unfinished">Two Paddles plus Famicom Data Recorder</translation>
+      <translation>家庭训练者 B 面</translation>
     </message>
     <message>
       <source>Konami Hyper Shot</source>
-      <translation type="unfinished">Konami Hyper Shot</translation>
+      <translation>科乐美大按钮</translation>
     </message>
     <message>
       <source>Coconuts Pachinko</source>
-      <translation type="unfinished">Coconuts Pachinko</translation>
+      <translation>柏青哥</translation>
     </message>
     <message>
       <source>Exciting Boxing Punching Bag</source>
-      <translation type="unfinished">Exciting Boxing Punching Bag</translation>
+      <translation>刺激拳击袋</translation>
     </message>
     <message>
       <source>Jissen Mahjong Controller</source>
-      <translation type="unfinished">Jissen Mahjong Controller</translation>
+      <translation>实战麻将控制器</translation>
     </message>
     <message>
       <source>Party Tap</source>
-      <translation type="unfinished">Party Tap</translation>
+      <translation>派对分插</translation>
     </message>
     <message>
       <source>Oeka Kids Tablet</source>
@@ -230,23 +248,23 @@
     </message>
     <message>
       <source>Sunsoft Barcode Battler</source>
-      <translation type="unfinished">Sunsoft Barcode Battler</translation>
+      <translation>Sunsoft 条码对战</translation>
     </message>
     <message>
       <source>Miracle Piano Keyboard</source>
-      <translation type="unfinished">Miracle Piano Keyboard</translation>
+      <translation>Miracle 钢琴</translation>
     </message>
     <message>
       <source>Pokkun Moguraa</source>
-      <translation type="unfinished">Pokkun Moguraa</translation>
+      <translation>打地鼠</translation>
     </message>
     <message>
       <source>Top Rider</source>
-      <translation type="unfinished">Top Rider</translation>
+      <translation>骑手凌云</translation>
     </message>
     <message>
       <source>Double-Fisted</source>
-      <translation type="unfinished">Double-Fisted</translation>
+      <translation>双拳</translation>
     </message>
     <message>
       <source>Famicom 3D System</source>
@@ -258,7 +276,7 @@
     </message>
     <message>
       <source>R.O.B. Gyro Set</source>
-      <translation type="unfinished">R.O.B. Gyro Set</translation>
+      <translation>机器人陀螺组件</translation>
     </message>
     <message>
       <source>Famicom Data Recorder</source>
@@ -270,7 +288,7 @@
     </message>
     <message>
       <source>IGS Storage Battle Box</source>
-      <translation type="unfinished">IGS Storage Battle Box</translation>
+      <translation>IGS 存储战斗盒子</translation>
     </message>
     <message>
       <source>Family BASIC Keyboard</source>
@@ -289,18 +307,6 @@
       <translation>小霸王键盘</translation>
     </message>
     <message>
-      <source>Subor Keyboard plus 3x8-bit mouse</source>
-      <translation>小霸王键盘加 3x8 位鼠标</translation>
-    </message>
-    <message>
-      <source>Subor Keyboard plus 24-bit mouse</source>
-      <translation>小霸王键盘加 24 位鼠标</translation>
-    </message>
-    <message>
-      <source>SNES Mouse</source>
-      <translation>SNES 鼠标</translation>
-    </message>
-    <message>
       <source>Multicart</source>
       <translation>多重卡带</translation>
     </message>
@@ -310,15 +316,15 @@
     </message>
     <message>
       <source>RacerMate Bicycle</source>
-      <translation type="unfinished">RacerMate Bicycle</translation>
+      <translation>竞速自行车</translation>
     </message>
     <message>
       <source>U-Force</source>
-      <translation type="unfinished">U-Force</translation>
+      <translation>U-Force</translation>
     </message>
     <message>
       <source>R.O.B. Stack-Up</source>
-      <translation type="unfinished">R.O.B. Stack-Up</translation>
+      <translation>机器人叠塔</translation>
     </message>
     <message>
       <source>City Patrolman Lightgun</source>
@@ -334,23 +340,23 @@
     </message>
     <message>
       <source>Excalibor Sudoku Pad</source>
-      <translation type="unfinished">Excalibor Sudoku Pad</translation>
+      <translation>Excalibor Sudoku 手柄</translation>
     </message>
     <message>
       <source>ABL Pinball</source>
-      <translation type="unfinished">ABL Pinball</translation>
+      <translation>ABL 弹球</translation>
     </message>
     <message>
       <source>Golden Nugget Casino</source>
-      <translation type="unfinished">Golden Nugget Casino</translation>
+      <translation>金块赌场</translation>
     </message>
     <message>
       <source>NTSC</source>
-      <translation type="unfinished">NTSC</translation>
+      <translation>NTSC</translation>
     </message>
     <message>
       <source>PAL</source>
-      <translation type="unfinished">PAL</translation>
+      <translation>PAL</translation>
     </message>
     <message>
       <source>Both</source>
@@ -358,7 +364,7 @@
     </message>
     <message>
       <source>Dendy</source>
-      <translation type="unfinished">Dendy</translation>
+      <translation>Dendy</translation>
     </message>
     <message>
       <source>VS Type</source>
@@ -382,55 +388,55 @@
     </message>
     <message>
       <source>VS PPU</source>
-      <translation type="unfinished">VS PPU</translation>
+      <translation>VS PPU</translation>
     </message>
     <message>
       <source>CHR ROM KiB</source>
-      <translation type="unfinished">CHR ROM KiB</translation>
+      <translation>CHR ROM KiB</translation>
     </message>
     <message>
       <source>NES/Famicom/Dendy</source>
-      <translation type="unfinished">NES/Famicom/Dendy</translation>
+      <translation>NES/Famicom/Dendy</translation>
     </message>
     <message>
       <source>Playchoice 10</source>
-      <translation type="unfinished">Playchoice 10</translation>
+      <translation>Playchoice 10</translation>
     </message>
     <message>
       <source>Famiclone with Decimal Mode</source>
-      <translation type="unfinished">Famiclone with Decimal Mode</translation>
+      <translation>十进制模式盗版红白机</translation>
     </message>
     <message>
       <source>NES/Famicom with EPSM</source>
-      <translation type="unfinished">NES/Famicom with EPSM</translation>
+      <translation>NES/Famicom 和 EPSM</translation>
     </message>
     <message>
       <source>VT01</source>
-      <translation type="unfinished">VT01</translation>
+      <translation>VT01</translation>
     </message>
     <message>
       <source>VT02</source>
-      <translation type="unfinished">VT02</translation>
+      <translation>VT02</translation>
     </message>
     <message>
       <source>VT03</source>
-      <translation type="unfinished">VT03</translation>
+      <translation>VT03</translation>
     </message>
     <message>
       <source>VT09</source>
-      <translation type="unfinished">VT09</translation>
+      <translation>VT09</translation>
     </message>
     <message>
       <source>VT32</source>
-      <translation type="unfinished">VT32</translation>
+      <translation>VT32</translation>
     </message>
     <message>
       <source>VT369</source>
-      <translation type="unfinished">VT369</translation>
+      <translation>VT369</translation>
     </message>
     <message>
       <source>UMC UM6578</source>
-      <translation type="unfinished">UMC UM6578</translation>
+      <translation>UMC UM6578</translation>
     </message>
     <message>
       <source>Famicom Network System</source>
@@ -446,7 +452,7 @@
     </message>
     <message>
       <source>Mapper</source>
-      <translation type="unfinished">Mapper</translation>
+      <translation>Mapper</translation>
     </message>
     <message>
       <source>Normal</source>
@@ -470,7 +476,7 @@
     </message>
     <message>
       <source>Vs. Dual</source>
-      <translation type="unfinished">Vs. Dual</translation>
+      <translation>VS 双系统</translation>
     </message>
     <message>
       <source>Raid on Bungeling Bay</source>
@@ -478,15 +484,15 @@
     </message>
     <message>
       <source>PRG RAM</source>
-      <translation type="unfinished">PRG RAM</translation>
+      <translation>PRG RAM</translation>
     </message>
     <message>
       <source>iNES 1.0</source>
-      <translation type="unfinished">iNES 1.0</translation>
+      <translation>iNES 1.0</translation>
     </message>
     <message>
       <source>NES 2.0</source>
-      <translation type="unfinished">NES 2.0</translation>
+      <translation>NES 2.0</translation>
     </message>
     <message>
       <source>Submapper</source>
@@ -494,55 +500,55 @@
     </message>
     <message>
       <source>RP2C03B</source>
-      <translation type="unfinished">RP2C03B</translation>
+      <translation>RP2C03B</translation>
     </message>
     <message>
       <source>RP2C03G</source>
-      <translation type="unfinished">RP2C03G</translation>
+      <translation>RG2C03G</translation>
     </message>
     <message>
       <source>RP2C04-0001</source>
-      <translation type="unfinished">RP2C04-0001</translation>
+      <translation>RP2C04-0001</translation>
     </message>
     <message>
       <source>RP2C04-0002</source>
-      <translation type="unfinished">RP2C04-0002</translation>
+      <translation>RP2C04-0002</translation>
     </message>
     <message>
       <source>RP2C04-0003</source>
-      <translation type="unfinished">RP2C04-0003</translation>
+      <translation>RP2C04-0003</translation>
     </message>
     <message>
       <source>RP2C04-0004</source>
-      <translation type="unfinished">RP2C04-0004</translation>
+      <translation>RP2C04-0004</translation>
     </message>
     <message>
       <source>RC2C03B</source>
-      <translation type="unfinished">RC2C03B</translation>
+      <translation>RC2C03B</translation>
     </message>
     <message>
       <source>RC2C03C</source>
-      <translation type="unfinished">RC2C03C</translation>
+      <translation>RC2C03C</translation>
     </message>
     <message>
       <source>RC2C05-01</source>
-      <translation type="unfinished">RC2C05-01</translation>
+      <translation>RC2C05-01</translation>
     </message>
     <message>
       <source>RC2C05-02</source>
-      <translation type="unfinished">RC2C05-02</translation>
+      <translation>RC2C05-02</translation>
     </message>
     <message>
       <source>RC2C05-03</source>
-      <translation type="unfinished">RC2C05-03</translation>
+      <translation>RC2C05-03</translation>
     </message>
     <message>
       <source>RC2C05-04</source>
-      <translation type="unfinished">RC2C05-04</translation>
+      <translation>RC2C05-04</translation>
     </message>
     <message>
       <source>RC2C05-05</source>
-      <translation type="unfinished">RC2C05-05</translation>
+      <translation>RC2C05-05</translation>
     </message>
     <message>
       <source>Header</source>
@@ -554,7 +560,7 @@
     </message>
     <message>
       <source>CHR RAM</source>
-      <translation type="unfinished">CHR RAM</translation>
+      <translation>CHR RAM</translation>
     </message>
     <message>
       <source>Input</source>
@@ -583,6 +589,62 @@
     <message>
       <source>Reset to defaults</source>
       <translation>重置为默认</translation>
+    </message>
+    <message>
+      <source>Vs. System (1P via $4016)</source>
+      <translation type="unfinished">Vs. System (1P via $4016)</translation>
+    </message>
+    <message>
+      <source>Zapper ($4017)</source>
+      <translation type="unfinished">Zapper ($4017)</translation>
+    </message>
+    <message>
+      <source>Arkanoid Vaus Controller (NES)</source>
+      <translation type="unfinished">Arkanoid Vaus Controller (NES)</translation>
+    </message>
+    <message>
+      <source>Arkanoid Vaus Controller (Famicom)</source>
+      <translation type="unfinished">Arkanoid Vaus Controller (Famicom)</translation>
+    </message>
+    <message>
+      <source>Two Vaus Controllers plus Famicom Data Recorder</source>
+      <translation type="unfinished">Two Vaus Controllers plus Famicom Data Recorder</translation>
+    </message>
+    <message>
+      <source>Subor Keyboard plus mouse (3x8-bit)</source>
+      <translation type="unfinished">Subor Keyboard plus mouse (3x8-bit)</translation>
+    </message>
+    <message>
+      <source>Subor Keyboard plus mouse (24-bit)</source>
+      <translation type="unfinished">Subor Keyboard plus mouse (24-bit)</translation>
+    </message>
+    <message>
+      <source>SNES Mouse ($4017.0)</source>
+      <translation type="unfinished">SNES Mouse ($4017.0)</translation>
+    </message>
+    <message>
+      <source>Unknown Famiclone Keyboard (Golden Key)</source>
+      <translation type="unfinished">Unknown Famiclone Keyboard (Golden Key)</translation>
+    </message>
+    <message>
+      <source>Subor Keyboard plus mouse (24-bit $4017)</source>
+      <translation type="unfinished">Subor Keyboard plus mouse (24-bit $4017)</translation>
+    </message>
+    <message>
+      <source>Port Test</source>
+      <translation type="unfinished">Port Test</translation>
+    </message>
+    <message>
+      <source>Bandai Multi Game Player Gamepad</source>
+      <translation type="unfinished">Bandai Multi Game Player Gamepad</translation>
+    </message>
+    <message>
+      <source>Venom TV Dance Mat</source>
+      <translation type="unfinished">Venom TV Dance Mat</translation>
+    </message>
+    <message>
+      <source>LG TV Remote Control</source>
+      <translation type="unfinished">LG TV Remote Control</translation>
     </message>
   </context>
   <context>
@@ -894,10 +956,6 @@
   <context>
     <name>dlgVsSystem</name>
     <message>
-      <source>Vs System Controls</source>
-      <translation>街机控制</translation>
-    </message>
-    <message>
       <source>Left Coin</source>
       <translation>左投币</translation>
     </message>
@@ -952,6 +1010,62 @@
     <message>
       <source>Defaults Game Dip Switches</source>
       <translation>默认游戏 Dip 开关</translation>
+    </message>
+    <message>
+      <source>Vs System</source>
+      <translation type="unfinished">Vs System</translation>
+    </message>
+    <message>
+      <source>Coins</source>
+      <translation type="unfinished">Coins</translation>
+    </message>
+    <message>
+      <source>Monitor</source>
+      <translation type="unfinished">Monitor</translation>
+    </message>
+    <message>
+      <source>Left</source>
+      <translation type="unfinished">Left</translation>
+    </message>
+    <message>
+      <source>Right</source>
+      <translation type="unfinished">Right</translation>
+    </message>
+    <message>
+      <source>12</source>
+      <translation type="unfinished">12</translation>
+    </message>
+    <message>
+      <source>13</source>
+      <translation type="unfinished">13</translation>
+    </message>
+    <message>
+      <source>14</source>
+      <translation type="unfinished">14</translation>
+    </message>
+    <message>
+      <source>15</source>
+      <translation type="unfinished">15</translation>
+    </message>
+    <message>
+      <source>16</source>
+      <translation type="unfinished">16</translation>
+    </message>
+    <message>
+      <source>11</source>
+      <translation type="unfinished">11</translation>
+    </message>
+    <message>
+      <source>10</source>
+      <translation type="unfinished">10</translation>
+    </message>
+    <message>
+      <source>9</source>
+      <translation type="unfinished">9</translation>
+    </message>
+    <message>
+      <source>Game Dip Switches</source>
+      <translation type="unfinished">Game Dip Switches</translation>
     </message>
   </context>
   <context>
@@ -1496,6 +1610,14 @@
       <source>T&amp;ape</source>
       <translation>磁带(&amp;A)</translation>
     </message>
+    <message>
+      <source>&amp;Dipswitch</source>
+      <translation type="unfinished">&amp;Dipswitch</translation>
+    </message>
+    <message>
+      <source>Detach &amp;Barcode</source>
+      <translation type="unfinished">Detach &amp;Barcode</translation>
+    </message>
   </context>
   <context>
     <name>nesKeyboardStatusBar</name>
@@ -1726,7 +1848,7 @@
     <message>
       <source>[red]error[normal] on write save state</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">[red]error[normal] on write save state</translation>
+      <translation>写入进度[red]出错[normal]</translation>
     </message>
   </context>
   <context>
@@ -1963,11 +2085,11 @@
     <name>wdgNTSCBisqwitFilter</name>
     <message>
       <source>QWidth</source>
-      <translation type="unfinished">QWidth</translation>
+      <translation>QWidth</translation>
     </message>
     <message>
       <source>YWidth</source>
-      <translation type="unfinished">YWidth</translation>
+      <translation>YWidth</translation>
     </message>
     <message>
       <source>VBlend</source>
@@ -1979,7 +2101,7 @@
     </message>
     <message>
       <source>IWidth</source>
-      <translation type="unfinished">IWidth</translation>
+      <translation>IWidth</translation>
     </message>
     <message>
       <source>Scanline</source>
@@ -2063,6 +2185,198 @@
     <message>
       <source>Reset parameters to defaults</source>
       <translation>恢复默认参数</translation>
+    </message>
+  </context>
+  <context>
+    <name>wdgNTSCLMP88959Filter</name>
+    <message>
+      <source>Scanline</source>
+      <translation type="unfinished">Scanline</translation>
+    </message>
+    <message>
+      <source>MFields</source>
+      <translation type="unfinished">MFields</translation>
+    </message>
+    <message>
+      <source>VBlend</source>
+      <translation type="unfinished">VBlend</translation>
+    </message>
+    <message>
+      <source>Contrast</source>
+      <translation type="unfinished">Contrast</translation>
+    </message>
+    <message>
+      <source>Brightness</source>
+      <translation type="unfinished">Brightness</translation>
+    </message>
+    <message>
+      <source>White Point</source>
+      <translation type="unfinished">White Point</translation>
+    </message>
+    <message>
+      <source>Black Point</source>
+      <translation type="unfinished">Black Point</translation>
+    </message>
+    <message>
+      <source>Saturation</source>
+      <translation type="unfinished">Saturation</translation>
+    </message>
+    <message>
+      <source>Noise</source>
+      <translation type="unfinished">Noise</translation>
+    </message>
+    <message>
+      <source>Hue</source>
+      <translation type="unfinished">Hue</translation>
+    </message>
+    <message>
+      <source>Reset parameters to defaults</source>
+      <translation type="unfinished">Reset parameters to defaults</translation>
+    </message>
+  </context>
+  <context>
+    <name>wdgNTSCNESRGBLMP88959Filter</name>
+    <message>
+      <source>Black Point</source>
+      <translation type="unfinished">Black Point</translation>
+    </message>
+    <message>
+      <source>Brightness</source>
+      <translation type="unfinished">Brightness</translation>
+    </message>
+    <message>
+      <source>Hue</source>
+      <translation type="unfinished">Hue</translation>
+    </message>
+    <message>
+      <source>Contrast</source>
+      <translation type="unfinished">Contrast</translation>
+    </message>
+    <message>
+      <source>Noise</source>
+      <translation type="unfinished">Noise</translation>
+    </message>
+    <message>
+      <source>White Point</source>
+      <translation type="unfinished">White Point</translation>
+    </message>
+    <message>
+      <source>Scanline</source>
+      <translation type="unfinished">Scanline</translation>
+    </message>
+    <message>
+      <source>VBlend</source>
+      <translation type="unfinished">VBlend</translation>
+    </message>
+    <message>
+      <source>Saturation</source>
+      <translation type="unfinished">Saturation</translation>
+    </message>
+    <message>
+      <source>Reset parameters to defaults</source>
+      <translation type="unfinished">Reset parameters to defaults</translation>
+    </message>
+  </context>
+  <context>
+    <name>wdgPALLMP88959Filter</name>
+    <message>
+      <source>Scanline</source>
+      <translation type="unfinished">Scanline</translation>
+    </message>
+    <message>
+      <source>VBlend</source>
+      <translation type="unfinished">VBlend</translation>
+    </message>
+    <message>
+      <source>Black Point</source>
+      <translation type="unfinished">Black Point</translation>
+    </message>
+    <message>
+      <source>White Point</source>
+      <translation type="unfinished">White Point</translation>
+    </message>
+    <message>
+      <source>Noise</source>
+      <translation type="unfinished">Noise</translation>
+    </message>
+    <message>
+      <source>Color Phase</source>
+      <translation type="unfinished">Color Phase</translation>
+    </message>
+    <message>
+      <source>Brightness</source>
+      <translation type="unfinished">Brightness</translation>
+    </message>
+    <message>
+      <source>Saturation</source>
+      <translation type="unfinished">Saturation</translation>
+    </message>
+    <message>
+      <source>Contrast</source>
+      <translation type="unfinished">Contrast</translation>
+    </message>
+    <message>
+      <source>Chroma Lag</source>
+      <translation type="unfinished">Chroma Lag</translation>
+    </message>
+    <message>
+      <source>Chroma Correction</source>
+      <translation type="unfinished">Chroma Correction</translation>
+    </message>
+    <message>
+      <source>MFields</source>
+      <translation type="unfinished">MFields</translation>
+    </message>
+    <message>
+      <source>Reset parameters to defaults</source>
+      <translation type="unfinished">Reset parameters to defaults</translation>
+    </message>
+  </context>
+  <context>
+    <name>wdgPALNESRGBLMP88959Filter</name>
+    <message>
+      <source>White Point</source>
+      <translation type="unfinished">White Point</translation>
+    </message>
+    <message>
+      <source>Chroma Lag</source>
+      <translation type="unfinished">Chroma Lag</translation>
+    </message>
+    <message>
+      <source>Contrast</source>
+      <translation type="unfinished">Contrast</translation>
+    </message>
+    <message>
+      <source>Chroma Correction</source>
+      <translation type="unfinished">Chroma Correction</translation>
+    </message>
+    <message>
+      <source>Brightness</source>
+      <translation type="unfinished">Brightness</translation>
+    </message>
+    <message>
+      <source>Noise</source>
+      <translation type="unfinished">Noise</translation>
+    </message>
+    <message>
+      <source>Black Point</source>
+      <translation type="unfinished">Black Point</translation>
+    </message>
+    <message>
+      <source>Saturation</source>
+      <translation type="unfinished">Saturation</translation>
+    </message>
+    <message>
+      <source>Scanline</source>
+      <translation type="unfinished">Scanline</translation>
+    </message>
+    <message>
+      <source>VBlend</source>
+      <translation type="unfinished">VBlend</translation>
+    </message>
+    <message>
+      <source>Reset parameters to defaults</source>
+      <translation type="unfinished">Reset parameters to defaults</translation>
     </message>
   </context>
   <context>
@@ -2522,31 +2836,39 @@
     </message>
     <message>
       <source>French</source>
-      <translation type="unfinished">French</translation>
+      <translation>法语</translation>
     </message>
     <message>
       <source>German</source>
-      <translation type="unfinished">German</translation>
+      <translation>德语</translation>
     </message>
     <message>
       <source>0x00</source>
-      <translation type="unfinished">0x00</translation>
+      <translation>0x00</translation>
     </message>
     <message>
       <source>Random</source>
-      <translation type="unfinished">Random</translation>
+      <translation>随机</translation>
     </message>
     <message>
       <source>Initial RAM value</source>
-      <translation type="unfinished">Initial RAM value</translation>
+      <translation>RAM 初始值</translation>
     </message>
     <message>
       <source>RAM</source>
-      <translation type="unfinished">RAM</translation>
+      <translation>RAM</translation>
     </message>
     <message>
       <source>0xFF</source>
-      <translation type="unfinished">0xFF</translation>
+      <translation>0xFF</translation>
+    </message>
+    <message>
+      <source>Polish</source>
+      <translation>波兰语</translation>
+    </message>
+    <message>
+      <source>Arabic</source>
+      <translation type="unfinished">Arabic</translation>
     </message>
   </context>
   <context>
@@ -3437,7 +3759,7 @@
     </message>
     <message>
       <source>2xSaI</source>
-      <translation type="unfinished">2xSaI</translation>
+      <translation>2xSaI</translation>
     </message>
     <message>
       <source>Dot Matrix</source>
@@ -3445,19 +3767,19 @@
     </message>
     <message>
       <source>PAL TV1x</source>
-      <translation type="unfinished">PAL TV1x</translation>
+      <translation>PAL TV1x</translation>
     </message>
     <message>
       <source>PAL TV2x</source>
-      <translation type="unfinished">PAL TV2x</translation>
+      <translation>PAL TV2x</translation>
     </message>
     <message>
       <source>PAL TV3x</source>
-      <translation type="unfinished">PAL TV3x</translation>
+      <translation>PAL TV3x</translation>
     </message>
     <message>
       <source>PAL TV4x</source>
-      <translation type="unfinished">PAL TV4x</translation>
+      <translation>PAL TV4x</translation>
     </message>
     <message>
       <source>Super 2xSaI</source>
@@ -3469,31 +3791,47 @@
     </message>
     <message>
       <source>TV2x</source>
-      <translation type="unfinished">TV2x</translation>
+      <translation>TV2x</translation>
     </message>
     <message>
       <source>TV3x</source>
-      <translation type="unfinished">TV3x</translation>
+      <translation>TV3x</translation>
     </message>
     <message>
       <source>TV4x</source>
-      <translation type="unfinished">TV4x</translation>
+      <translation>TV4x</translation>
     </message>
     <message>
       <source>NTSC Bisqwit 2X</source>
-      <translation type="unfinished">NTSC Bisqwit 2X</translation>
+      <translation>NTSC Bisqwit 2X</translation>
     </message>
     <message>
       <source>NTSC Bisqwit 4X</source>
-      <translation type="unfinished">NTSC Bisqwit 4X</translation>
+      <translation>NTSC Bisqwit 4X</translation>
     </message>
     <message>
       <source>NTSC Bisqwit 8X</source>
-      <translation type="unfinished">NTSC Bisqwit 8X</translation>
+      <translation>NTSC Bisqwit 8X</translation>
     </message>
     <message>
       <source>Reset parameters to defaults</source>
       <translation>恢复默认参数</translation>
+    </message>
+    <message>
+      <source>NTSC CRT LMP88959</source>
+      <translation type="unfinished">NTSC CRT LMP88959</translation>
+    </message>
+    <message>
+      <source>NTSC NES LMP88959</source>
+      <translation type="unfinished">NTSC NES LMP88959</translation>
+    </message>
+    <message>
+      <source>PAL CRT LMP88959</source>
+      <translation type="unfinished">PAL CRT LMP88959</translation>
+    </message>
+    <message>
+      <source>PAL NES LMP88959</source>
+      <translation type="unfinished">PAL NES LMP88959</translation>
     </message>
   </context>
   <context>
