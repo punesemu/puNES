@@ -155,6 +155,13 @@ field++;
 ```
 
 ------
+
+### Emulators
+These emulators have this PAL filter as an option:  
+puNES: https://github.com/punesemu/puNES  
+BeesNES: https://github.com/L-Spiro/BeesNES  
+
+------
 If you have any questions feel free to leave a comment on YouTube OR
 join the King's Crook Discord server :)
 

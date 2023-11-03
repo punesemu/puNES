@@ -305,6 +305,26 @@ pal_demodulate(struct PAL_CRT *c, int noise)
     pitch = c->outw * bpp;
     
     rn = c->rn;
+#if !PAL_DO_VSYNC
+    /* determine field before we add noise,
+     * otherwise it's not reliably recoverable
+     */
+    for (i = -VSYNC_WINDOW; i < VSYNC_WINDOW; i++) {
+        line = POSMOD(c->vsync + i, PAL_VRES);
+        sig = c->analog + line * PAL_HRES;
+        s = 0;
+        for (j = 0; j < PAL_HRES; j++) {
+            s += sig[j];
+            if (s <= (125 * SYNC_LEVEL)) {
+                goto found_field;
+            }
+        }
+    }
+found_field:
+    /* if vsync signal was in second half of line, odd field */
+    field = (j > (PAL_HRES / 2));
+    c->vsync = -3;
+#endif
     for (i = 0; i < PAL_INPUT_SIZE; i++) {
         rn = (214019 * rn + 140327895);
 
@@ -315,7 +335,7 @@ pal_demodulate(struct PAL_CRT *c, int noise)
         c->inp[i] = s;
     }
     c->rn = rn;
-
+#if PAL_DO_VSYNC
     /* Look for vertical sync.
      * 
      * This is done by integrating the signal and
@@ -340,13 +360,10 @@ pal_demodulate(struct PAL_CRT *c, int noise)
         }
     }
 vsync_found:
-#if PAL_DO_VSYNC
     c->vsync = line; /* vsync found (or gave up) at this line */
-#else
-    c->vsync = -3;
-#endif
     /* if vsync signal was in second half of line, odd field */
     field = (j > (PAL_HRES / 2));
+#endif
 
 #if PAL_DO_BLOOM
     max_e = (128 + (noise / 2)) * AV_LEN;

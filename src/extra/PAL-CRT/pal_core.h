@@ -26,7 +26,7 @@ extern "C" {
 /* library version */
 #define PAL_MAJOR 1
 #define PAL_MINOR 2
-#define PAL_PATCH 0
+#define PAL_PATCH 1
 
 #define PAL_SYSTEM_PAL    0 /* 'standard' PAL */
 #define PAL_SYSTEM_NES    1 /* decode 6 or 9-bit NES pixels */

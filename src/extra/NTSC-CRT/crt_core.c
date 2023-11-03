@@ -320,6 +320,26 @@ crt_demodulate(struct CRT *v, int noise)
     huecs >>= 11;
 
     rn = v->rn;
+#if !CRT_DO_VSYNC
+    /* determine field before we add noise,
+     * otherwise it's not reliably recoverable
+     */
+    for (i = -CRT_VSYNC_WINDOW; i < CRT_VSYNC_WINDOW; i++) {
+        line = POSMOD(v->vsync + i, CRT_VRES);
+        sig = v->analog + line * CRT_HRES;
+        s = 0;
+        for (j = 0; j < CRT_HRES; j++) {
+            s += sig[j];
+            if (s <= (CRT_VSYNC_THRESH * SYNC_LEVEL)) {
+                goto found_field;
+            }
+        }
+    }
+found_field:
+    /* if vsync signal was in second half of line, odd field */
+    field = (j > (CRT_HRES / 2));
+    v->vsync = -3;
+#endif
 #if ((CRT_SYSTEM == CRT_SYSTEM_NTSCVHS) && CRT_VHS_NOISE)
     line = ((rand() % 8) - 4) + 14;
 #endif
@@ -346,6 +366,7 @@ crt_demodulate(struct CRT *v, int noise)
     }
     v->rn = rn;
 
+#if CRT_DO_VSYNC
     /* Look for vertical sync.
      * 
      * This is done by integrating the signal and
@@ -370,13 +391,11 @@ crt_demodulate(struct CRT *v, int noise)
         }
     }
 vsync_found:
-#if CRT_DO_VSYNC
     v->vsync = line; /* vsync found (or gave up) at this line */
-#else
-    v->vsync = -3;
-#endif
     /* if vsync signal was in second half of line, odd field */
     field = (j > (CRT_HRES / 2));
+#endif
+
 #if CRT_DO_BLOOM
     max_e = (128 + (noise / 2)) * AV_LEN;
     prev_e = (16384 / 8);
