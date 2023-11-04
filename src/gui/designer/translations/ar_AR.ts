@@ -356,7 +356,7 @@
     </message>
     <message>
       <source>PAL</source>
-      <translation>بال</translation>
+      <translation>پال</translation>
     </message>
     <message>
       <source>Both</source>
@@ -740,7 +740,7 @@
     </message>
     <message>
       <source>PPU</source>
-      <translation>و.م.ص</translation>
+      <translation>وِحدة مُعالجة الصُّوَرْ</translation>
     </message>
     <message>
       <source>Cheats</source>
@@ -784,11 +784,11 @@
     </message>
     <message>
       <source>Recording</source>
-      <translation>تسجيل</translation>
+      <translation>التَّسجيل</translation>
     </message>
     <message>
       <source>Toggle the Menu Bar in Fullscreen</source>
-      <translation>تبديل شريط القوائم أثناءَ ملء الشاشة</translation>
+      <translation>إظهار القائمة في ملء الشاشة</translation>
     </message>
     <message>
       <source>Capture/Release Input</source>
@@ -1135,15 +1135,15 @@
     <name>mainWindow</name>
     <message>
       <source>&amp;Insert disk</source>
-      <translation>(&amp;I)إدراج قرص</translation>
+      <translation>إدراج القرص</translation>
     </message>
     <message>
       <source>&amp;Eject disk</source>
-      <translation>(&amp;E)إخراج القرص</translation>
+      <translation>إخراج القرص</translation>
     </message>
     <message>
       <source>&amp;Eject/Insert disk</source>
-      <translation>(&amp;E)إخراج/إدراج القرص</translation>
+      <translation>إخراج/إدراج القرص</translation>
     </message>
     <message>
       <source>All supported formats</source>
@@ -1191,7 +1191,7 @@
     </message>
     <message>
       <source>Compiled</source>
-      <translation>مُجَمَّع</translation>
+      <translation>مُجَمَّع بتاريخ</translation>
     </message>
     <message>
       <source>portable version</source>
@@ -1199,23 +1199,23 @@
     </message>
     <message>
       <source>&amp;Open</source>
-      <translation>(&amp;O)فتح</translation>
+      <translation>فتح</translation>
     </message>
     <message>
       <source>&amp;Quit</source>
-      <translation>(&amp;Q)خروج</translation>
+      <translation>خروج</translation>
     </message>
     <message>
       <source>&amp;Hard Reset</source>
-      <translation>(&amp;H)إعادة تشغيل عَتادية</translation>
+      <translation>إعادة تشغيل عَتادية</translation>
     </message>
     <message>
       <source>&amp;Soft Reset</source>
-      <translation>(&amp;S)إعادة تشغيل جزئية</translation>
+      <translation>إعادة تشغيل جزئية</translation>
     </message>
     <message>
       <source>&amp;Eject/Insert Disk</source>
-      <translation>(&amp;E)إخراج/إدخال القرص</translation>
+      <translation>إخراج/إدخال القرص</translation>
     </message>
     <message>
       <source>Disk 1 side A</source>
@@ -1251,39 +1251,39 @@
     </message>
     <message>
       <source>&amp;Switch sides</source>
-      <translation>(&amp;S)تبديل الجهة</translation>
+      <translation>تبديل الجهة</translation>
     </message>
     <message>
       <source>&amp;Save to file</source>
-      <translation>(&amp;S)حفظ إلى مِلَفّ</translation>
+      <translation>حفظ إلى مِلَفّ</translation>
     </message>
     <message>
       <source>&amp;Load from file</source>
-      <translation>(&amp;L)تحميل من مِلَفّ</translation>
+      <translation>تحميل من مِلَفّ</translation>
     </message>
     <message>
       <source>F&amp;ullscreen</source>
-      <translation>(&amp;F) ملء الشاشة</translation>
+      <translation>ملء الشاشة</translation>
     </message>
     <message>
       <source>&amp;Game Genie Rom Mode</source>
-      <translation>(&amp;G)وضع روم غيم جيني</translation>
+      <translation>وضع روم غيم جيني</translation>
     </message>
     <message>
       <source>S&amp;ave state</source>
-      <translation>(&amp;A) حفظ الحالة</translation>
+      <translation>حفظ الحالة</translation>
     </message>
     <message>
       <source>L&amp;oad state</source>
-      <translation>(&amp;O)تحميل الحالة</translation>
+      <translation>تحميل الحالة</translation>
     </message>
     <message>
       <source>&amp;Increment slot</source>
-      <translation>(&amp;I)الفُتْحَة التالية</translation>
+      <translation>الفُتْحَة التالية</translation>
     </message>
     <message>
       <source>&amp;Decrement slot</source>
-      <translation>(&amp;I)الفُتْحَة السابقة</translation>
+      <translation>الفُتْحَة السابقة</translation>
     </message>
     <message>
       <source>Slot &amp;0</source>
@@ -1331,79 +1331,79 @@
     </message>
     <message>
       <source>&amp;Cheats List Mode</source>
-      <translation>(&amp;C)وضع قائمة الغشّ</translation>
+      <translation>وضع قائمة الغشّ</translation>
     </message>
     <message>
       <source>Cheats &amp;Editor</source>
-      <translation>(&amp;E)محرر الغشّ</translation>
+      <translation>محرر الغشّ</translation>
     </message>
     <message>
       <source>&amp;Disabled</source>
-      <translation>(&amp;D)معطل</translation>
+      <translation>معطل</translation>
     </message>
     <message>
       <source>&amp;Pause</source>
-      <translation>(&amp;P)إيقاف مؤقت</translation>
+      <translation>إيقاف مؤقت</translation>
     </message>
     <message>
       <source>&amp;File</source>
-      <translation>(&amp;F)مِلَفّ</translation>
+      <translation>مِلَفّ</translation>
     </message>
     <message>
       <source>&amp;Recent Roms</source>
-      <translation>(&amp;R)الرومات الأخيرة</translation>
+      <translation>الرومات الأخيرة</translation>
     </message>
     <message>
       <source>&amp;NES</source>
-      <translation>(&amp;N)نيس</translation>
+      <translation>نيس</translation>
     </message>
     <message>
       <source>&amp;Disk Side</source>
-      <translation>(&amp;D)جانب القرص</translation>
+      <translation>جانب القرص</translation>
     </message>
     <message>
       <source>Setti&amp;ngs</source>
-      <translation>(&amp;S)الإعدادات</translation>
+      <translation>الإعدادات</translation>
     </message>
     <message>
       <source>&amp;Video</source>
-      <translation>(&amp;V)فيديو</translation>
+      <translation>الفيديو</translation>
     </message>
     <message>
       <source>&amp;Audio</source>
-      <translation>(&amp;A)صوت</translation>
+      <translation>الصوت</translation>
     </message>
     <message>
       <source>&amp;Input</source>
-      <translation>(&amp;I)التحكم</translation>
+      <translation>التحكم</translation>
     </message>
     <message>
       <source>&amp;Cheats</source>
-      <translation>(&amp;C)الغش</translation>
+      <translation>الغش</translation>
     </message>
     <message>
       <source>&amp;PPU</source>
-      <translation>&amp;و.م.ص</translation>
+      <translation>وِحدة مُعالجة الصُّوَرْ</translation>
     </message>
     <message>
       <source>S&amp;tate</source>
-      <translation>(&amp;T)الحالة</translation>
+      <translation>الحالة</translation>
     </message>
     <message>
       <source>&amp;Help</source>
-      <translation>&amp;مساعدة</translation>
+      <translation>مساعدة</translation>
     </message>
     <message>
       <source>&amp;Turn On</source>
-      <translation>(&amp;T)تشغيل</translation>
+      <translation>تشغيل</translation>
     </message>
     <message>
       <source>&amp;Turn Off</source>
-      <translation>(&amp;T)إيقاف التشغيل</translation>
+      <translation>إيقاف التشغيل</translation>
     </message>
     <message>
       <source>Too&amp;ls</source>
-      <translation>(&amp;L)أدوات</translation>
+      <translation>أدوات</translation>
     </message>
     <message>
       <source>UNIF rom files</source>
@@ -1451,11 +1451,11 @@
     </message>
     <message>
       <source>&amp;General</source>
-      <translation>(&amp;G)العامّة</translation>
+      <translation>العامّة</translation>
     </message>
     <message>
       <source>Save Unalte&amp;red NES screen</source>
-      <translation>(&amp;R)حفظ لقطة الشاشة الأصلية</translation>
+      <translation>حفظ لقطة الشاشة الأصلية</translation>
     </message>
     <message>
       <source>Widgets</source>
@@ -1463,36 +1463,36 @@
     </message>
     <message>
       <source>Start &amp;AUDIO recording</source>
-      <translation>(&amp;A)بَدْء تسجيل صوت</translation>
+      <translation>بَدْء تسجيل صوت</translation>
     </message>
     <message>
       <source>Start &amp;VIDEO recording</source>
-      <translation>(&amp;V)بَدْء تسجيل فيديو</translation>
+      <translation>بَدْء تسجيل فيديو</translation>
     </message>
     <message>
       <source>Stop &amp;AUDIO recording</source>
-      <translation>(&amp;A)إيقاف تسجيل الصوت</translation>
+      <translation>إيقاف تسجيل الصوت</translation>
     </message>
     <message>
       <source>Stop &amp;VIDEO recording</source>
-      <translation>(&amp;V)إيقاف تسجيل الفيديو</translation>
+      <translation>إيقاف تسجيل الفيديو</translation>
     </message>
     <message>
       <source>Start/Stop &amp;AUDIO recording</source>
-      <translation>(&amp;A)بَدْء/إيقاف تسجيل صوت</translation>
+      <translation>بَدْء/إيقاف تسجيل صوت</translation>
     </message>
     <message>
       <source>&amp;Recording</source>
-      <translation>(&amp;R)تسجيل</translation>
+      <translation>التَّسجيل</translation>
     </message>
     <message>
       <source>Start/Stop &amp;VIDEO recording</source>
-      <translation>(&amp;V)بَدْء/إيقاف تسجيل فيديو</translation>
+      <translation>بَدْء/إيقاف تسجيل فيديو</translation>
     </message>
     <message>
       <source>Slot %1 never used</source>
       <extracomment>Refers to the unused save slot. Important: Do not translate the &quot;%1&quot;.</extracomment>
-      <translation>الفتحة %1 لم تُستَعمل</translation>
+      <translation>الفُتحة %1 فارغة</translation>
     </message>
     <message>
       <source>Slot &amp;A</source>
@@ -1504,11 +1504,11 @@
     </message>
     <message>
       <source>&amp;Vs System Controls</source>
-      <translation>(&amp;V)وحدة التحكم بنظام Vs</translation>
+      <translation>وحدة التحكم بنظام Vs</translation>
     </message>
     <message>
       <source>&amp;Joypad/Gamepad Debug</source>
-      <translation>(&amp;J)اختبار وحدة التحكم/ذراع التحكم</translation>
+      <translation>اختبار وحدة التحكم/ذراع التحكم</translation>
     </message>
     <message>
       <source>Fast Forward (hold button)</source>
@@ -1552,7 +1552,7 @@
     </message>
     <message>
       <source>Toggle &amp;Fast Forward</source>
-      <translation>(&amp;F)تبديل التسريع</translation>
+      <translation>(&amp;F)تسريع</translation>
     </message>
     <message>
       <source>&amp;Play</source>
@@ -1564,31 +1564,31 @@
     </message>
     <message>
       <source>&amp;Stop</source>
-      <translation>(&amp;S)إيقاف</translation>
+      <translation>إيقاف</translation>
     </message>
     <message>
       <source>Shout into &amp;Microphone</source>
-      <translation>(&amp;M)أصرخ في الميكروفون</translation>
+      <translation>أصرخ في الميكروفون</translation>
     </message>
     <message>
       <source>Toggle Virtual &amp;Keyboard</source>
-      <translation>(&amp;K)تبديل لوحة المفاتيح الوهمية</translation>
+      <translation>لوحة المفاتيح الوهمية</translation>
     </message>
     <message>
       <source>&amp;Show Log</source>
-      <translation>(&amp;S)عرض السجل</translation>
+      <translation>عرض السجل</translation>
     </message>
     <message>
       <source>Edit Current iNES/NES2.0 &amp;Header</source>
-      <translation>(&amp;H) تعديل الترويسة iNES/NES2.0 الحالية</translation>
+      <translation>تعديل الترويسة iNES/NES2.0 للروم الحالية</translation>
     </message>
     <message>
       <source>Toggle &amp;GUI in window</source>
-      <translation>(&amp;T)إخفاء/إظهار الواجهة</translation>
+      <translation>إخفاء/إظهار الواجهة</translation>
     </message>
     <message>
       <source>Sa&amp;ve Screenshot</source>
-      <translation>(&amp;H) أخذ لقطة شاشة</translation>
+      <translation>أخذ لقطة شاشة</translation>
     </message>
     <message>
       <source>Insert &amp;Coin</source>
@@ -1596,7 +1596,7 @@
     </message>
     <message>
       <source>Open &amp;working folder</source>
-      <translation>(&amp;O)فتح مجلد المحاكي</translation>
+      <translation>فتح مجلد المحاكي</translation>
     </message>
     <message>
       <source>Apply IPS/BPS/XDELTA &amp;Patch</source>
@@ -1604,19 +1604,19 @@
     </message>
     <message>
       <source>Open &amp;config folder</source>
-      <translation>(&amp;O)فتح مجلد المحاكي</translation>
+      <translation>فتح مجلد المحاكي</translation>
     </message>
     <message>
       <source>T&amp;ape</source>
-      <translation>(&amp;A)شريط</translation>
+      <translation>شريط</translation>
     </message>
     <message>
       <source>&amp;Dipswitch</source>
-      <translation>(&amp;D)ديبسويتش</translation>
+      <translation>ديبسويتش</translation>
     </message>
     <message>
       <source>Detach &amp;Barcode</source>
-      <translation>(&amp;B)الرمز الشريطي ديتاتش</translation>
+      <translation>الرمز الشريطي ديتاتش</translation>
     </message>
   </context>
   <context>
@@ -1658,12 +1658,12 @@
     <message>
       <source>start wav recording</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation>بَدْء تسجيل wav</translation>
+      <translation>بَدْء تسجيل واف</translation>
     </message>
     <message>
       <source>stop wav recording</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation>إيقاف تسجيل wav</translation>
+      <translation>إيقاف تسجيل واف</translation>
     </message>
     <message>
       <source>[red]Game Genie rom not found[normal]</source>
@@ -1678,7 +1678,7 @@
     <message>
       <source>[red]Illegal Opcode[normal] [yellow]0x%1[normal] at [yellow]0x%2[normal]</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation>[red]رمز تشغيل غير قانوني[normal][yellow]0x%1[normal]عند[yellow]0x%2[normal]</translation>
+      <translation>[red]رمز تشغيل غير قانوني [normal][yellow]0x%1[normal] عند [yellow]0x%2[normal]</translation>
     </message>
     <message>
       <source>[red]error loading rom[normal]</source>
@@ -1693,7 +1693,7 @@
     <message>
       <source>disk [cyan]%1[normal] side [cyan]%2[normal] [yellow]ejected[normal]</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation>قرص [cyan]%1[normal] جانب [cyan]%2[normal][yellow]تم إخراجه[normal]</translation>
+      <translation>[yellow]تمَ إخراج[normal] القرص [cyan]%1[normal] الجانب [cyan]%2[normal]</translation>
     </message>
     <message>
       <source>you must [yellow]eject[normal] disk first</source>
@@ -1703,17 +1703,17 @@
     <message>
       <source>disk [cyan]%1[normal] side [cyan]%2[normal] [green]inserted[normal]</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation>القرص[cyan]%1[normal]الجانب[cyan]%2[normal][green]تم إدراجه[normal]</translation>
+      <translation>[green]تمَ إدراج [normal]القرص [cyan]%1[normal]الجانب [cyan]%2[normal]</translation>
     </message>
     <message>
       <source>disk [cyan]%1[normal] side [cyan]%2[normal] [brown]selected[normal]</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation>القرص[cyan]%1[normal]الجانب[cyan]%2[normal][brown]تم اختياره[normal]</translation>
+      <translation>[brown]تمَ اختيار [normal]القرص [cyan]%1[normal] الجانب [cyan]%2[normal]</translation>
     </message>
     <message>
       <source>[yellow]mapper[normal] [brown]%1[normal] [yellow]not supported[normal]</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation>[yellow]الماپر[normal][brown]%1[normal][yellow]غير مدعوم[normal]</translation>
+      <translation>[yellow]الماپر [normal][brown]%1[normal][yellow] غير مدعوم[normal]</translation>
     </message>
     <message>
       <source>[red]error loading patch file[normal]</source>
@@ -1798,12 +1798,12 @@
     <message>
       <source>switch on [cyan]%1x%2[normal] at [green]%3Hz[normal]</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation>تبديل [cyan]%1x%2[normal]إلى[green]%3هرتز[normal]</translation>
+      <translation>تبديل إلى [cyan]%1x%2[normal] على اهتزاز [green]%3هرتز[normal]</translation>
     </message>
     <message>
       <source>[cyan]%1[normal] ID sides founds, auto switch [red]disabled[normal]</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation>[cyan]%1[normal]تم العثور على آي دي الجوانب،[red]تم تعطيل[normal]التبديل التلقائي</translation>
+      <translation>[cyan]%1[normal] تم العثور على آي دي الجوانب،[red]تم تعطيل [normal] التبديل التلقائي</translation>
     </message>
     <message>
       <source>[red]error[normal] loading state [cyan]%1[normal], file is corrupted</source>
@@ -1976,7 +1976,7 @@
     </message>
     <message>
       <source>Pro Action Rocky</source>
-      <translation>Pro Action Rocky</translation>
+      <translation>پرو أكشن روكي</translation>
     </message>
     <message>
       <source>Game Genie</source>
@@ -2043,7 +2043,7 @@
     </message>
     <message>
       <source>Submit warning</source>
-      <translation>إرسال تحذير</translation>
+      <translation>انتباه</translation>
     </message>
     <message>
       <source>The code is invalid</source>
@@ -2055,7 +2055,7 @@
     </message>
     <message>
       <source>A description must be entered</source>
-      <translation>إلزامية وصف للغشّ</translation>
+      <translation>تَستَلزِمُ كتابة وصفٍ للغِشّ</translation>
     </message>
     <message>
       <source>Nestopia XML files</source>
@@ -2454,15 +2454,15 @@
     </message>
     <message>
       <source>Low</source>
-      <translation>منخفض</translation>
+      <translation>منخفضة</translation>
     </message>
     <message>
       <source>Medium</source>
-      <translation>متوسط</translation>
+      <translation>متوسطة</translation>
     </message>
     <message>
       <source>High</source>
-      <translation>عالي</translation>
+      <translation>عالية</translation>
     </message>
     <message>
       <source>Record VIDEO on file</source>
@@ -2501,7 +2501,7 @@
     </message>
     <message>
       <source>Rewind</source>
-      <translation>الترجيع</translation>
+      <translation>اللَّفْ</translation>
     </message>
   </context>
   <context>
@@ -2688,7 +2688,7 @@
     </message>
     <message>
       <source>Auto</source>
-      <translation>تلقائي</translation>
+      <translation>تلقائية</translation>
     </message>
     <message>
       <source>NTSC</source>
@@ -2696,7 +2696,7 @@
     </message>
     <message>
       <source>PAL</source>
-      <translation>بال</translation>
+      <translation>پال</translation>
     </message>
     <message>
       <source>Dendy</source>
@@ -2708,7 +2708,7 @@
     </message>
     <message>
       <source>Mode</source>
-      <translation>الوضع</translation>
+      <translation>المنطقة</translation>
     </message>
     <message>
       <source>English</source>
@@ -2772,7 +2772,7 @@
     </message>
     <message>
       <source>Turkish</source>
-      <translation>اللغة التركية</translation>
+      <translation>التركية</translation>
     </message>
     <message>
       <source>Portuguese (Brazil)</source>
@@ -2780,7 +2780,7 @@
     </message>
     <message>
       <source>Off</source>
-      <translation>معطل</translation>
+      <translation>مُعَطَّلَة</translation>
     </message>
     <message>
       <source>2</source>
@@ -2804,7 +2804,7 @@
     </message>
     <message>
       <source>Unlim.</source>
-      <translation>مُطلَق</translation>
+      <translation>مُطلَقَة</translation>
     </message>
     <message>
       <source>2x</source>
@@ -2832,7 +2832,7 @@
     </message>
     <message>
       <source>Use fast forward when loading the disk/side</source>
-      <translation>استعمال التسريع في أثناء تحميل القرص/الجانب</translation>
+      <translation>استعمال التسريع خلالَ تحميل القرص/الجانب</translation>
     </message>
     <message>
       <source>French</source>
@@ -2875,7 +2875,7 @@
     <name>wdgSettingsInput</name>
     <message>
       <source>Disabled</source>
-      <translation>معطَّل</translation>
+      <translation>معطَّلة</translation>
     </message>
     <message>
       <source>Standard Pad</source>
@@ -3098,22 +3098,22 @@
     <message>
       <source>MPEG 1 Video (*.mpg *.mpeg)</source>
       <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
-      <translation>فيديو MPEG 1 (*.mpg *.mpeg)</translation>
+      <translation>فيديو إم بي إي جي 1 (*.mpg *.mpeg)</translation>
     </message>
     <message>
       <source>MPEG 2 Video (*.mpg *.mpeg)</source>
       <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
-      <translation>فيديو MPEG 2 (*.mpg *.mpeg)</translation>
+      <translation>فيديو إم بي إي جي 2 (*.mpg *.mpeg)</translation>
     </message>
     <message>
       <source>MPEG 4 Video (*.mp4)</source>
       <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
-      <translation>فيديو MPEG 4 (*.mp4)</translation>
+      <translation>فيديو إم بي إي جي 4 (*.mp4)</translation>
     </message>
     <message>
       <source>MPEG H264 Video (*.mp4)</source>
       <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
-      <translation>فيديو MPEG H264 (*.mp4)</translation>
+      <translation>فيديو إم بي إي جي إتش.264 (*.mp4)</translation>
     </message>
     <message>
       <source>High Efficiency Video Codec (*.mkv)</source>
@@ -3123,7 +3123,7 @@
     <message>
       <source>WebM Video (*.webm)</source>
       <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
-      <translation>فيديو WebM (*.webm)</translation>
+      <translation>فيديو ويب إم (*.webm)</translation>
     </message>
     <message>
       <source>Windows Media Video (*.wmv)</source>
@@ -3133,37 +3133,37 @@
     <message>
       <source>AVI FF Video (*.avi)</source>
       <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
-      <translation>فيديو AVI FF (*.avi)</translation>
+      <translation>فيديو تداخل الصوت والفيديو إف إف (*.avi)</translation>
     </message>
     <message>
       <source>AVI Video (*.avi)</source>
       <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
-      <translation>فيديو AVI (*.avi)</translation>
+      <translation>فيديو تداخل الصوت والفيديو (*.avi)</translation>
     </message>
     <message>
       <source>WAV Audio (*.wav)</source>
       <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
-      <translation>صوت WAV (*.wav)</translation>
+      <translation>صوت واف (*.wav)</translation>
     </message>
     <message>
       <source>MP3 Audio (*.mp3)</source>
       <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
-      <translation>صوت MP3 (*.mp3)</translation>
+      <translation>صوت إم بي 3 (*.mp3)</translation>
     </message>
     <message>
       <source>AAC Audio (*.aac)</source>
       <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
-      <translation>صوت AAC (*.aac)</translation>
+      <translation>ترميز الصوت المتقدم (*.aac)</translation>
     </message>
     <message>
       <source>Flac Audio (*.flac)</source>
       <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
-      <translation>صوت FLAC (*.flac)</translation>
+      <translation>صوت فلاك (*.flac)</translation>
     </message>
     <message>
       <source>Ogg Audio (*.ogg)</source>
       <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
-      <translation>صوت OGG (*.ogg)</translation>
+      <translation>صوت أُوغ (*.ogg)</translation>
     </message>
     <message>
       <source>Not supported</source>
@@ -3195,47 +3195,47 @@
     </message>
     <message>
       <source>Custom</source>
-      <translation>مُخصّص</translation>
+      <translation>مُخصّصة</translation>
     </message>
     <message>
       <source>256 x 240  (1:1)</source>
-      <translation>256 x 240  (1:1)</translation>
+      <translation>256 × 240 (1:1)</translation>
     </message>
     <message>
       <source>292 x 240  (8:7 NTSC TV)</source>
-      <translation>292 x 240  (8:7 NTSC TV)</translation>
+      <translation>292 × 240 (8:7 إن تي إس سي)</translation>
     </message>
     <message>
       <source>320 x 240  (5:4)</source>
-      <translation>320 x 240  (5:4)</translation>
+      <translation>320 × 240 (5:4)</translation>
     </message>
     <message>
       <source>354 x 240  (11:8 PAL TV)</source>
-      <translation>354 x 240  (11:8 PAL TV)</translation>
+      <translation>354 × 240 (11:8 پال)</translation>
     </message>
     <message>
       <source>512 x 480  (1:1)</source>
-      <translation>512 x 480  (1:1)</translation>
+      <translation>512 × 480 (1:1)</translation>
     </message>
     <message>
       <source>584 x 480  (8:7 NTSC TV)</source>
-      <translation>584 x 480  (8:7 NTSC TV)</translation>
+      <translation>584 × 480 (8:7 إن تي إس سي)</translation>
     </message>
     <message>
       <source>640 x 480  (5:4)</source>
-      <translation>640 x 480  (5:4)</translation>
+      <translation>640 × 480 (5:4)</translation>
     </message>
     <message>
       <source>708 x 480  (11:8 PAL TV)</source>
-      <translation>708 x 480  (11:8 PAL TV)</translation>
+      <translation>708 × 480 (11:8 پال)</translation>
     </message>
     <message>
       <source>768 x 720  (1:1)</source>
-      <translation>768 x 720  (1:1)</translation>
+      <translation>768 × 720 (1:1)</translation>
     </message>
     <message>
       <source>876 x 720  (8:7 NTSC TV)</source>
-      <translation>876 x 720  (8:7 NTSC TV)</translation>
+      <translation>876 × 720 (8:7 إن تي إس سي)</translation>
     </message>
     <message>
       <source>960 x 720  (5:4)</source>
@@ -3243,7 +3243,7 @@
     </message>
     <message>
       <source>1064 x 720  (11:8 PAL TV)</source>
-      <translation>1064 × 720 (11:8 بال تيفي)</translation>
+      <translation>1064 × 720 (11:8 پال)</translation>
     </message>
     <message>
       <source>1024 x 960  (1:1)</source>
@@ -3251,7 +3251,7 @@
     </message>
     <message>
       <source>1170 x 960  (8:7 NTSC TV)</source>
-      <translation>1170 × 960 (8:7 إن تي إس سي تيفي)</translation>
+      <translation>1170 × 960 (8:7 إن تي إس سي)</translation>
     </message>
     <message>
       <source>1280 x 960  (5:4)</source>
@@ -3259,7 +3259,7 @@
     </message>
     <message>
       <source>1418 x 960  (11:8 PAL TV)</source>
-      <translation>1418 × 960 (11:8 بال تيفي)</translation>
+      <translation>1418 × 960 (11:8 پال)</translation>
     </message>
     <message>
       <source>1280 x 720</source>
@@ -3304,7 +3304,7 @@
     <message>
       <source>Opus Audio (*.opus)</source>
       <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
-      <translation>صوت Opus (*.opus)</translation>
+      <translation>صوت أوبوس (*.opus)</translation>
     </message>
   </context>
   <context>
@@ -3315,7 +3315,7 @@
     </message>
     <message>
       <source>HLSL &amp;soft stretch</source>
-      <translation>تمدد لطيف للHLSL</translation>
+      <translation>نعومة</translation>
     </message>
     <message>
       <source>[Select a file]</source>
@@ -3375,7 +3375,7 @@
     </message>
     <message>
       <source>Scale</source>
-      <translation>المقياس</translation>
+      <translation>حجم الشّاشة</translation>
     </message>
     <message>
       <source>** To apply this change restart is needed **</source>
@@ -3399,19 +3399,19 @@
     </message>
     <message>
       <source>11:8 (PAL TV)</source>
-      <translation>11:8 (بال)</translation>
+      <translation>11:8 (پال)</translation>
     </message>
     <message>
       <source>Pixel Aspect Ratio</source>
-      <translation>نسبة أبعاد البكسل</translation>
+      <translation>نسبة أبعاد الشّاشة</translation>
     </message>
     <message>
       <source>Off</source>
-      <translation>معطل</translation>
+      <translation>مُعَطَّلَة</translation>
     </message>
     <message>
       <source>On</source>
-      <translation>مفعل</translation>
+      <translation>مُفَعَّلَة</translation>
     </message>
     <message>
       <source>Default Value</source>
@@ -3423,7 +3423,7 @@
     </message>
     <message>
       <source>PAL/Dendy</source>
-      <translation>بال/ديندي</translation>
+      <translation>پال/ديندي</translation>
     </message>
     <message>
       <source>Right</source>
@@ -3459,7 +3459,7 @@
     </message>
     <message>
       <source>No Shaders</source>
-      <translation>دونَ مظللات</translation>
+      <translation>دونَ مظلل</translation>
     </message>
     <message>
       <source>CRT Dotmask</source>
@@ -3471,7 +3471,7 @@
     </message>
     <message>
       <source>CRT With Curve</source>
-      <translation>CRT متقوس</translation>
+      <translation>CRT معَ اِنحِنَاءَة</translation>
     </message>
     <message>
       <source>Emboss</source>
@@ -3495,7 +3495,7 @@
     </message>
     <message>
       <source>No Filters</source>
-      <translation>دونَ فلاتر</translation>
+      <translation>دونَ فلتر</translation>
     </message>
     <message>
       <source>Scale2X</source>
@@ -3559,7 +3559,7 @@
     </message>
     <message>
       <source>PAL</source>
-      <translation>بال</translation>
+      <translation>پال</translation>
     </message>
     <message>
       <source>Sony CXA2025AS US</source>
@@ -3655,7 +3655,7 @@
     </message>
     <message>
       <source>Disable Red and Green emphasis swap for PAL/Dendy</source>
-      <translation>تعطيل تبديل التركيز الأحمر والأخضر لنظام بال/ديندي</translation>
+      <translation>تعطيل تبديل التركيز الأحمر والأخضر لنظام پال/ديندي</translation>
     </message>
     <message>
       <source>0 degrees</source>
@@ -3703,7 +3703,7 @@
     </message>
     <message>
       <source>Software Filters</source>
-      <translation>فلاتر البرنامَج</translation>
+      <translation>الفلاتر</translation>
     </message>
     <message>
       <source>Shader</source>
@@ -3747,7 +3747,7 @@
     </message>
     <message>
       <source>* applied if supported by the monitor</source>
-      <translation>* يُطبق إذا تم دعمه من قبل الشاشة</translation>
+      <translation>* تُطبق إذا تم دعمها من قبل شاشة العرض</translation>
     </message>
     <message>
       <source>Use integer scaling</source>
