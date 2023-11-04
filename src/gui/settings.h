@@ -914,7 +914,7 @@ static const _settings main_cfg[] = {
 		{0, NULL}
 	},
 	{
-		uL("video"), uL("overscan bordes PAL"), uL("8,8,8,9"),
+		uL("video"), uL("overscan bordes PAL"), uL("1,0,2,2"),
 		uL("# possible values: 0-17" NEWLINE)
 		uL("# format string  : [UP],[DOWN],[LEFT],[RIGHT]"),
 		uL("    --overscan-brd-pal    borders in pixels     : [UP],[DOWN],[LEFT],[RIGHT]"),
