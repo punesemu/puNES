@@ -341,6 +341,7 @@ void wdgSettingsVideo::update_widget(void) {
 	checkBox_Fullscreen_in_window->setChecked(cfg->fullscreen_in_window);
 	checkBox_Use_integer_scaling_in_fullscreen->setChecked(cfg->integer_scaling);
 	checkBox_Stretch_in_fullscreen->setChecked(cfg->stretch);
+	checkBox_Stretch_in_fullscreen->setEnabled(!cfg->integer_scaling);
 #if defined (FULLSCREEN_RESFREQ)
 	if (!gfx.is_wayland) {
 		checkBox_Fullscreen_adaptive_rrate->setEnabled(!checkBox_Fullscreen_in_window->isChecked());
@@ -1358,6 +1359,7 @@ void wdgSettingsVideo::s_integer_in_fullscreen(UNUSED(bool checked)) {
 	if (cfg->fullscreen == FULLSCR) {
 		gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, FALSE, FALSE);
 	}
+	update_widget();
 	emu_thread_continue();
 }
 void wdgSettingsVideo::s_stretch_in_fullscreen(UNUSED(bool checked)) {

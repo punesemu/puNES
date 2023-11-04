@@ -280,7 +280,7 @@ BYTE opengl_context_create(void) {
 				_SCR_ROWS_NOBRD : _SCR_COLUMNS_NOBRD;
 			float mh = (cfg->screen_rotation == ROTATE_90) || (cfg->screen_rotation == ROTATE_270) ?
 				_SCR_COLUMNS_NOBRD : _SCR_ROWS_NOBRD;
-			float ratio = mw / mh, ratio_vm = vmw / vmh;
+			float ratio = mw / mh;
 
 			vp->x = 0;
 			// la distribuzione Devuan 2, al cambio di risoluzione, nel showfullscreen invece che ridimensionare la finestra
@@ -293,30 +293,14 @@ BYTE opengl_context_create(void) {
 
 			if (!cfg->stretch) {
 				if (cfg->integer_scaling) {
-					int factor = (int)(vmw > vmh
-						? (((gfx.screen_rotation == ROTATE_90) || (gfx.screen_rotation == ROTATE_270))
-							? ratio <= ratio_vm : ratio >= ratio_vm) ? vmw / mw : vmh / mh
-						: (((gfx.screen_rotation == ROTATE_90) || (gfx.screen_rotation == ROTATE_270))
-							? ratio <= ratio_vm : ratio >= ratio_vm) ? vmh / mh : vmw / mw);
+					int factor = vmw > vmh ? vmh / mh : vmw / mw;
 
 					vp->w = mw * (float)factor;
 					vp->h = mh * (float)factor;
+				} else if (vmw > vmh) {
+					vp->w = vmh * ratio;
 				} else {
-					if (vmw > vmh) {
-						if (((gfx.screen_rotation == ROTATE_90) || (gfx.screen_rotation == ROTATE_270))
-							? ratio <= ratio_vm : ratio >= ratio_vm) {
-							vp->h = vmw / ratio;
-						} else {
-							vp->w = vmh * ratio;
-						}
-					} else {
-						if (((gfx.screen_rotation == ROTATE_90) || (gfx.screen_rotation == ROTATE_270))
-							? ratio <= ratio_vm : ratio >= ratio_vm) {
-							vp->w = vmw * ratio;
-						} else {
-							vp->h = vmw / ratio;
-						}
-					}
+					vp->h = vmw / ratio;
 				}
 				vp->x += (vmw - vp->w) / 2.0f;
 				vp->y += (vmh - vp->h) / 2.0f;
