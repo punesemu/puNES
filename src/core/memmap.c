@@ -1814,9 +1814,10 @@ void nvram_load_file(void) {
 					(buffer[5] != 'E') ||
 					(buffer[6] != 'S') ||
 					(buffer[7] != 0x00)) {
-					log_error(uL("mapper;error on read battery memory (unknow format)"));
-					fclose(fp);
-					return;
+					fseek(fp, 0, SEEK_SET);
+					//log_error(uL("mapper;error on read battery memory (unknow format)"));
+					//fclose(fp);
+					//return;
 				}
 				if (wram_nvram_size() && wram_nvram_pnt()) {
 					// leggo il contenuto della nvram
@@ -1860,13 +1861,13 @@ void nvram_save_file(void) {
 		fp = ufopen(prg_ram_file, uL("w+b"));
 
 		if (fp) {
-			const BYTE buffer[8] = { 'F', 'H', 'p', 'u', 'N', 'E', 'S', 0x00 };
-
-			if (fwrite(&buffer[0], sizeof(buffer), 1, fp) < 1) {
-				log_error(uL("mapper;error on write battery memory (%s)"), strerror(errno));
-				fclose(fp);
-				return;
-			}
+//			const BYTE buffer[8] = { 'F', 'H', 'p', 'u', 'N', 'E', 'S', 0x00 };
+//
+//			if (fwrite(&buffer[0], sizeof(buffer), 1, fp) < 1) {
+//				log_error(uL("mapper;error on write battery memory (%s)"), strerror(errno));
+//				fclose(fp);
+//				return;
+//			}
 			if (wram_nvram_size() && wram_nvram_pnt()) {
 				// scrivo il contenuto della nvram
 				if (fwrite(wram_nvram_pnt(), wram_nvram_size(), 1, fp) < 1) {
