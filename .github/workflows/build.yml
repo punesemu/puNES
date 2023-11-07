@@ -41,7 +41,6 @@ jobs:
             libswscale-dev \
             libavutil-dev \
             nvidia-cg-dev \
-            qt5-default \
             libqt5svg5-dev \
             qtbase5-dev \
             qtbase5-dev-tools \
@@ -191,6 +190,7 @@ jobs:
             libswscale-dev \
             libavutil-dev \
             nvidia-cg-dev \
+            qt5-default \
             libqt5svg5-dev \
             qtbase5-dev \
             qtbase5-dev-tools \
