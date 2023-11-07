@@ -56,7 +56,7 @@ jobs:
 
   build-appimage:
     runs-on: ${{ matrix.config.os }}
-    name: 'Build AppImage (${{ matrix.config.os }}, ${{ matrix.config.cc }}, ${{ matrix.config.cxx }})'
+    name: 'AppImage (${{ matrix.config.os }}, ${{ matrix.config.cc }}, ${{ matrix.config.cxx }})'
     strategy:
       fail-fast: false
       matrix:
@@ -129,7 +129,7 @@ jobs:
 
   build-windows:
     runs-on: windows-latest
-    name: build (${{ matrix.msystem }}, ${{ matrix.qt5ver }}, ${{ matrix.cc }}, ${{ matrix.cxx }})
+    name: 'Build (${{ matrix.msystem }}, ${{ matrix.qt5ver }}, ${{ matrix.cc }}, ${{ matrix.cxx }})'
     strategy:
       fail-fast: false
       matrix:
