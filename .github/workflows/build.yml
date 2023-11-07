@@ -194,7 +194,8 @@ jobs:
             libqt5svg5-dev \
             qtbase5-dev \
             qtbase5-dev-tools \
-            qttools5-dev
+            qttools5-dev \
+            qt5-image-formats-plugins
 
       - name: 'Build project with ${{ matrix.config.cc }}/${{ matrix.config.cxx }}'
         env:
@@ -217,7 +218,7 @@ jobs:
       - name: 'Create AppDir'
         run: |
           mkdir -p AppDir
-          cmake --install build --prefix AppDir
+          cmake --install build --prefix AppDir/usr
 
       - name: 'Deploy AppImage'
         run: |
