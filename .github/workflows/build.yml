@@ -96,7 +96,7 @@ jobs:
       - name: 'Install linuxdeploy'
         run: |
           wget -c "https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage"
-          chmod a+x linuxdeploy-x86_64.AppImag
+          chmod a+x linuxdeploy-x86_64.AppImage
 
       - name: 'Install linuxdeploy-plugin-qt'
         run: |
