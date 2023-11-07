@@ -21,8 +21,8 @@ jobs:
       matrix:
         config:
           # ubuntu-latest (20.04) don't have qt 5.15 yet
-          - { os: ubuntu-22.04, cc: "gcc", cxx: "g++", opts: "-DENABLE_RELEASE=ON -DENABLE_FFMPEG=ON -DENABLE_OPENGL_CG=ON" }
-          - { os: ubuntu-22.04, cc: "clang", cxx: "clang++", opts: "-DENABLE_RELEASE=ON -DENABLE_FFMPEG=ON -DENABLE_OPENGL_CG=ON" }
+          - { os: ubuntu-22.04, cc: "gcc", cxx: "g++", opts: "-DENABLE_RELEASE:BOOL=ON -DENABLE_FFMPEG:BOOL=ON -DENABLE_OPENGL_CG:BOOL=ON" }
+          - { os: ubuntu-22.04, cc: "clang", cxx: "clang++", opts: "-DENABLE_RELEASE:BOOL=ON -DENABLE_FFMPEG:BOOL=ON -DENABLE_OPENGL_CG:BOOL=ON" }
 
     steps:
       - uses: actions/checkout@v3
@@ -171,7 +171,7 @@ jobs:
       fail-fast: false
       matrix:
         config:
-          - { os: ubuntu-20.04, cc: "gcc", cxx: "g++", env: x86_64, opts: "-DENABLE_RELEASE=ON -DENABLE_FFMPEG=ON -DENABLE_OPENGL_CG=ON" }
+          - { os: ubuntu-20.04, cc: "gcc", cxx: "g++", env: x86_64, opts: "-DENABLE_RELEASE:BOOL=ON -DENABLE_FFMPEG:BOOL=ON -DENABLE_OPENGL_CG:BOOL=ON" }
 
     steps:
       - uses: actions/checkout@v3
@@ -201,6 +201,8 @@ jobs:
         env:
           CC: ${{ matrix.config.cc }}
           CXX: ${{ matrix.config.cxx }}
+          CFLAGS: '-O3 -mmmx -msse -msse2 -msse3 -mfpmath=sse'
+          CXXFLAGS: '-O3 -mmmx -msse -msse2 -msse3 -mfpmath=sse'
         run: |
           cmake -B build -G Ninja ${{ matrix.config.opts }}
           cmake --build build -j2
