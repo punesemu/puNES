@@ -47,7 +47,8 @@ void map_init_219(void) {
 		memset(&nes[0].irqA12, 0x00, sizeof(nes[0].irqA12));
 	}
 
-	memset(&m219, 0x00, sizeof(m219));
+	m219.reg[0] = 0xFF;
+	m219.reg[1] = 0x00;
 
 	init_MMC3(info.reset);
 	MMC3_prg_swap = prg_swap_mmc3_219;
