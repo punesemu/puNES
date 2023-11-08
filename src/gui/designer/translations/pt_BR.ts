@@ -2550,7 +2550,7 @@
     <name>wdgSettingsAudio</name>
     <message>
       <source>Output Devices</source>
-      <translation>Dispositivos de Saída</translation>
+      <translation>Dispositivo de Saída</translation>
     </message>
     <message>
       <source>Sample Rate</source>
