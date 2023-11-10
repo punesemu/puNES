@@ -76,7 +76,7 @@ void map_init_111(void) {
 			sst39sf040_init(gtromtmp.sst39sf040, prgrom_size(), 0xBF, 0xB7, 0x5555, 0x2AAA, 4096);
 		}
 
-		if (info.format != NES_2_0) {
+		if (vram_size(0) < S32K) {
 			vram_set_ram_size(0, S32K);
 		}
 
