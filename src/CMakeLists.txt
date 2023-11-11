@@ -494,7 +494,7 @@ set(core_srcs
 	core/mappers/MMC4.c
 	core/mappers/N118.c
 	core/mappers/OneBus.c
-	core/mappers/opll.c
+	extra/Nuked-OPLL/opll.c
 	core/mappers/serial_devices.cpp
 	core/mappers/serial_devices_interface.cpp
 	core/mappers/SST39SF040.c

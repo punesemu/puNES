@@ -25,7 +25,7 @@
 #include "VRC7_snd.h"
 #include "save_slot.h"
 #include "clock.h"
-#include "opll.h"
+#include "extra/Nuked-OPLL/opll.h"
 
 typedef struct _opll {
 	opll_t chip;
