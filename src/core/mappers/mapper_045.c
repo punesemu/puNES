@@ -63,7 +63,7 @@ void map_init_045(void) {
 }
 void extcl_cpu_wr_mem_045(BYTE nidx, WORD address, BYTE value) {
 	if ((address >= 0x6000) && (address <= 0x7FFF)) {
-		if (!(m045.reg[3] & 0x40) && memmap_adr_is_writable(nidx, MMCPU(address))) {
+		if (!(m045.reg[3] & 0x40)) {
 			m045.reg[m045.index] = value;
 			m045.index = (m045.index + 1) & 0x03;
 			MMC3_prg_fix();
@@ -76,7 +76,7 @@ void extcl_cpu_wr_mem_045(BYTE nidx, WORD address, BYTE value) {
 }
 BYTE extcl_cpu_rd_mem_045(BYTE nidx, WORD address, UNUSED(BYTE openbus)) {
 	if (dipswitch.used && (address >= 0x5000) && (address <= 0x5FFF)) {
-		return (~dipswitch.value & address ? 0x01 : 0x00);
+		return (~dipswitch.value & (address & 0xFFF) ? 0x01 : 0x00);
 	}
 	return (wram_rd(nidx, address));
 }
