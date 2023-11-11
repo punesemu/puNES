@@ -384,7 +384,10 @@ BYTE ines_load_rom(void) {
 			return (EXIT_ERROR);
 		}
 
-		if (rom_mem_ctrl_memcpy_truncated(prgrom_pnt(), &rom, info.mapper.prgrom_size) == EXIT_ERROR) {
+		if (rom_mem_ctrl_memcpy_truncated(
+				// "Galaxian (J) (REV0) [!].nes" ha solo 8k di prgrom
+				prgrom_pnt() + (info.mapper.prgrom_size < S16K ? prgrom_size() - info.mapper.prgrom_size : 0),
+				&rom, info.mapper.prgrom_size) == EXIT_ERROR) {
 			info.prg_truncated = TRUE;
 		}
 
