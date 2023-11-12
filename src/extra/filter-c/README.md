@@ -8,7 +8,7 @@ Features
 * bandpass
 * bandstop
 
-This imlementation is based on algorithm from http://www.exstrom.com/journal/sigproc/
+This imlementation is based on algorithm from [https://exstrom.com/journal/sigproc/dsigproc.html](https://exstrom.com/journal/sigproc/dsigproc.html)
 
 ## Run example
 ```

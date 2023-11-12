@@ -26,7 +26,7 @@ extern "C"{
 #if defined(_WIN32) || defined(__ZEPHYR__)
 #ifdef M_PI
 #undef M_PI
-#define M_PI 3.1415927
+#define M_PI 3.1415927f
 #endif
 #endif
 #endif
