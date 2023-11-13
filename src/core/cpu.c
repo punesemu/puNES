@@ -873,16 +873,16 @@ void cpu_exe_op(BYTE nidx) {
 	case 0x82:                                                                                   // DOP #IMM
 	case 0x89:                                                                                   // DOP #IMM
 	case 0XC2:                                                                                   // DOP #IMM
-	case 0XE2: nes[nidx].c.cpu.PC.w++; break;                                                    // DOP #IMM
+	case 0XE2: IMP(RD_OP, nes[nidx].c.cpu.PC.w++; _RDD;) break;                                  // DOP #IMM
 	case 0x04:                                                                                   // DOP $ZPG
 	case 0x44:                                                                                   // DOP $ZPG
-	case 0x64: ZPG(RD_OP, adr0 = adr0;) break;                                                   // DOP $ZPG
+	case 0x64: ZPG(RD_OP, _RD0;) break;                                                          // DOP $ZPG
 	case 0x14:                                                                                   // DOP $ZPG,X
 	case 0x34:                                                                                   // DOP $ZPG,X
 	case 0x54:                                                                                   // DOP $ZPG,X
 	case 0x74:                                                                                   // DOP $ZPG,X
 	case 0xD4:                                                                                   // DOP $ZPG,X
-	case 0xF4: ZPX(RD_OP, adr0 = adr0;, nes[nidx].c.cpu.XR) break;                               // DOP $ZPG,X
+	case 0xF4: ZPX(RD_OP, _RD0;, nes[nidx].c.cpu.XR) break;                                      // DOP $ZPG,X
 
 	case 0xE7: ZPG(WR_OP, ISC(_RDZPG)) break;                                                    // ISC $ZPG
 	case 0xF7: ZPX(WR_OP, ISC(_RDZPX), nes[nidx].c.cpu.XR) break;                                // ISC $ZPG,X
@@ -940,13 +940,13 @@ void cpu_exe_op(BYTE nidx) {
 	case 0x43: IDX(WR_OP, SRE(_RDIDX)) break;                                                    // SRE ($IND,X)
 	case 0x53: IDY(WR_OP, _CY_(SRE(_RDB),)) break;                                               // SRE ($IND),Y
 
-	case 0x0C: ABS(RD_OP, adr0 = adr0;) break;                                                   // TOP $ABS
+	case 0x0C: ABS(RD_OP, _RD0;) break;                                                          // TOP $ABS
 	case 0x1C:                                                                                   // TOP $ABS,X
 	case 0x3C:                                                                                   // TOP $ABS,X
 	case 0X5C:                                                                                   // TOP $ABS,X
 	case 0X7C:                                                                                   // TOP $ABS,X
 	case 0XDC:                                                                                   // TOP $ABS,X
-	case 0XFC: ABX(RD_OP, _CYW(adr0 = 0;), nes[nidx].c.cpu.XR) break;                            // TOP $ABS,X
+	case 0XFC: ABX(RD_OP, _CYW(), nes[nidx].c.cpu.XR) break;                                     // TOP $ABS,X
 
 	case 0x9C: ABX(WR_OP, SXX(nes[nidx].c.cpu.YR), nes[nidx].c.cpu.XR) break;                    // SYA $ABS,X
 	case 0x9E: ABX(WR_OP, SXX(nes[nidx].c.cpu.XR), nes[nidx].c.cpu.YR) break;                    // SXA $ABS,Y
