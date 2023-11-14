@@ -1270,6 +1270,9 @@ BYTE map_init(void) {
 		case 554:
 			map_init_554();
 			break;
+		case 555:
+			map_init_555();
+			break;
 		case 556:
 			map_init_556();
 			break;

@@ -14,7 +14,7 @@ Changelog:
 - Added full support for the NES 2.0 header format.
 - Added video filter : "NTSC CRT LMP88959" and "NTSC NES LMP88959" (https://github.com/LMP88959/NTSC-CRT, Thx to LMP88959 for is great work).
 - Added video filter : "PAL CRT LMP88959" and "PAL NES LMP88959" (https://github.com/LMP88959/PAL-CRT, Thx to LMP88959 for is great work).
-- Added support to mapper : 100, 122, 157, 272, 291, 311, 334, 362, 366, 384, 421, 446, 471, 551, 552, 561.
+- Added support to mapper : 100, 122, 157, 272, 291, 311, 334, 362, 366, 384, 421, 446, 471, 551, 552, 555, 561.
 - Added support to UNIF mapper : Transformer, UNROM, AMROM, AOROM, LH09, A60AS, T4A54A, FC-28-5027, 150in1A, 212-HONG-KONG, GKCXIN, 113in1JY110, 820561C, M2C52A, S-2009.
 - Added full support for the Detach Barcode Reader of mapper 157.
 - Added support for nes20db.xml and dip.cfg (many thx to NewRisingSun for is for his immense work).

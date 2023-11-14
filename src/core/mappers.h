@@ -401,6 +401,7 @@
 #include "mappers/mapper_547.h"
 #include "mappers/mapper_550.h"
 #include "mappers/mapper_554.h"
+#include "mappers/mapper_555.h"
 #include "mappers/mapper_556.h"
 #include "mappers/mapper_557.h"
 #include "mappers/mapper_558.h"
