@@ -167,6 +167,7 @@
 #include "mappers/mapper_166.h"
 #include "mappers/mapper_167.h"
 #include "mappers/mapper_168.h"
+#include "mappers/mapper_170.h"
 #include "mappers/mapper_171.h"
 #include "mappers/mapper_172.h"
 #include "mappers/mapper_173.h"

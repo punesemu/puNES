@@ -233,6 +233,7 @@ set(core_srcs
 	core/mappers/mapper_166.c
 	core/mappers/mapper_167.c
 	core/mappers/mapper_168.c
+	core/mappers/mapper_170.c
 	core/mappers/mapper_171.c
 	core/mappers/mapper_172.c
 	core/mappers/mapper_173.c
