@@ -102,13 +102,13 @@ void extcl_cpu_every_cycle_555(BYTE nidx) {
 		m555.counter.timer = 0;
 		m555.counter.disabled = FALSE;
 	} else {
-		uint32_t timer = 0x20000000 | (dipswitch.value << 25);
+		uint32_t timer = (dipswitch.value | 0x10) << 25;
 		uint32_t cpu_hz = (uint32_t)machine.cpu_hz;
 
 		if (++m555.counter.timer == timer) {
 			m555.counter.disabled = TRUE;
 		}
-		if ((m555.counter.timer % cpu_hz) == 0) {
+		if (!m555.counter.disabled && ((m555.counter.timer % cpu_hz) == 0)) {
 			uint32_t seconds = (timer - m555.counter.timer) / cpu_hz;
 			uTCHAR buffer[50] = { 0 };
 
