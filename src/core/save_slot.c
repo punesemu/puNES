@@ -318,6 +318,7 @@ BYTE save_slot_operation(BYTE mode, BYTE slot, FILE *fp) {
 		save_slot_ele(mode, slot, nes[nesidx].p.r2001.color_mode);
 		save_slot_ele(mode, slot, nes[nesidx].p.r2001.race.ctrl);
 		save_slot_ele(mode, slot, nes[nesidx].p.r2001.race.value);
+		save_slot_ele(mode, slot, nes[nesidx].p.r2001.grayscale_bit.delay);
 		// r2002
 		save_slot_ele(mode, slot, nes[nesidx].p.r2002.vblank);
 		save_slot_ele(mode, slot, nes[nesidx].p.r2002.sprite0_hit);
@@ -333,6 +334,8 @@ BYTE save_slot_operation(BYTE mode, BYTE slot, FILE *fp) {
 		save_slot_ele(mode, slot, nes[nesidx].p.r2006.changed_from_op);
 		save_slot_ele(mode, slot, nes[nesidx].p.r2006.race.ctrl);
 		save_slot_ele(mode, slot, nes[nesidx].p.r2006.race.value);
+		save_slot_ele(mode, slot, nes[nesidx].p.r2006.second_write.delay);
+		save_slot_ele(mode, slot, nes[nesidx].p.r2006.second_write.value);
 		// r2007
 		save_slot_ele(mode, slot, nes[nesidx].p.r2007.value);
 		// spr_ev
@@ -506,6 +509,8 @@ BYTE save_slot_operation(BYTE mode, BYTE slot, FILE *fp) {
 		}
 	}
 
+	save_slot_ele(mode, slot, dipswitch.value);
+
 	if (fds.info.enabled) {
 		// libero la zona di memoria gia' occupata
 		BYTE old_side_inserted = fds.drive.side_inserted;
@@ -588,14 +593,7 @@ BYTE save_slot_operation(BYTE mode, BYTE slot, FILE *fp) {
 		save_slot_ele(mode, slot, fds.auto_insert.new_side);
 		save_slot_ele(mode, slot, fds.auto_insert.in_game);
 
-		save_slot_ele(mode, slot, nes[0].p.r2006.second_write.delay);
-		save_slot_ele(mode, slot, nes[0].p.r2006.second_write.value);
-
-		save_slot_ele(mode, slot, nes[0].p.r2001.grayscale_bit.delay);
-
 		save_slot_ele(mode, slot, info.lag_frame.consecutive);
-
-		save_slot_ele(mode, slot, dipswitch.value);
 
 		// in caso di ripristino di una salvataggio, se era caricato
 		// un'altro side del disco, devo ricaricarlo.
