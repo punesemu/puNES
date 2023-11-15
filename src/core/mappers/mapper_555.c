@@ -110,10 +110,12 @@ void extcl_cpu_every_cycle_555(BYTE nidx) {
 		}
 		if ((m555.counter.timer % cpu_hz) == 0) {
 			uint32_t seconds = (timer - m555.counter.timer) / cpu_hz;
-			char buffer[50];
+			uTCHAR buffer[50] = { 0 };
 
-			snprintf(buffer, sizeof(buffer), "Time left: %02i:%02i", seconds / 60, seconds % 60);
-			gui_overlay_info_append_subtitle(buffer);
+			if (usnprintf(buffer, usizeof(buffer), uL("Time left: %02d:%02d"),
+					seconds / 60, seconds % 60) <= (int)usizeof(buffer)) {
+				gui_overlay_info_append_subtitle(buffer);
+			}
 		}
 	}
 }
