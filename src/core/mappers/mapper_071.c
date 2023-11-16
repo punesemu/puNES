@@ -18,7 +18,6 @@
 
 #include <string.h>
 #include "mappers.h"
-#include "cpu.h"
 #include "save_slot.h"
 
 INLINE static void prg_fix_071(void);
@@ -73,7 +72,7 @@ INLINE static void prg_fix_071(void) {
 }
 INLINE static void mirroring_fix_071(void) {
 	if (info.mapper.submapper == 1) {
-		if (m071.reg & 0x01) {
+		if (m071.reg & 0x10) {
 			mirroring_SCR1(0);
 		} else {
 			mirroring_SCR0(0);
