@@ -737,7 +737,11 @@ void overlayWidgetFPS::paintEvent(QPaintEvent *event) {
 	painter.begin(this);
 	painter.setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
 	draw_background();
+#if !defined (RELEASE)
 	painter.drawText(dpr_text_rect(dpr_rect()), Qt::AlignCenter, QString("%0 %1").arg((int)old.fps).arg(info.snd_info ? "gps" : "fps"));
+#else
+	painter.drawText(dpr_text_rect(dpr_rect()), Qt::AlignCenter, QString("%0 fps").arg((int)old.fps));
+#endif
 	painter.end();
 }
 
