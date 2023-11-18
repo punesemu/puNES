@@ -759,7 +759,11 @@ void overlayWidgetFPS::update_old_value(void) {
 }
 
 double overlayWidgetFPS::fps_value(void) {
-	return(info.snd_info ? fps.gfx : fps.emu);
+#if !defined (RELEASE)
+	return (info.snd_info ? fps.gfx : fps.emu);
+#else
+	return (fps.emu);
+#endif
 }
 
 // overlayWidgetFrame --------------------------------------------------------------------------------------------------
