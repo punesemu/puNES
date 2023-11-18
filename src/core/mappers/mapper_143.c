@@ -17,7 +17,6 @@
  */
 
 #include "mappers.h"
-#include "cpu.h"
 
 INLINE static void prg_fix_143(void);
 

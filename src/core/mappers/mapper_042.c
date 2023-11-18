@@ -19,7 +19,6 @@
 #include <string.h>
 #include "mappers.h"
 #include "save_slot.h"
-#include "cpu.h"
 
 INLINE static void prg_fix_042_s1(void);
 INLINE static void chr_fix_042_s1(void);

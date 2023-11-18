@@ -18,7 +18,6 @@
 
 #include <string.h>
 #include "mappers.h"
-#include "cpu.h"
 #include "save_slot.h"
 #include "wave_file_interface.h"
 #include "upd7756_interface.h"

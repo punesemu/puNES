@@ -20,7 +20,7 @@
 #include "input/zapper.h"
 #include "gui.h"
 #include "info.h"
-#include "ppu.h"
+#include "nes.h"
 #include "input/mouse.h"
 #include "tas.h"
 #include "palette.h"

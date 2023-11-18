@@ -19,7 +19,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "video/gfx.h"
-#include "ppu.h"
+#include "nes.h"
 #include "gui.h"
 
 #define READINT24(x) ((x)[0] << 16 | (x)[1] << 8 | (x)[2])

@@ -18,7 +18,6 @@
 
 #include <string.h>
 #include "mappers.h"
-#include "irqA12.h"
 #include "save_slot.h"
 
 INLINE static WORD chr_base(int slot);

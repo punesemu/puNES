@@ -18,7 +18,6 @@
 
 #include <string.h>
 #include "mappers.h"
-#include "irql2f.h"
 #include "save_slot.h"
 
 enum _m005_modes { MODE0, MODE1, MODE2, MODE3 };

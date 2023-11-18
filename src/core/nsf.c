@@ -30,14 +30,14 @@
 #include "mappers.h"
 #include "video/gfx.h"
 #include "info.h"
-#include "ppu.h"
-#include "cpu.h"
+#include "nes.h"
 #include "conf.h"
 #include "gui.h"
 #include "audio/blipbuf.h"
 #include "audio/snd.h"
 #include "patcher.h"
 #include "extra/kissfft/kiss_fft.h"
+#include "fps.h"
 
 enum nsf_flags {
 	VERSION,
@@ -550,6 +550,7 @@ void nsf_tick(void) {
 		nsf_main_screen_event();
 		nsf_effect();
 		gfx_draw_screen(0);
+		fps_ppu_inc(0);
 	}
 }
 void extcl_audio_samples_mod_nsf(SWORD *samples, int count) {

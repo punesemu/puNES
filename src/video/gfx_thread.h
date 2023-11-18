@@ -39,6 +39,9 @@ EXTERNC void gfx_thread_quit(void);
 EXTERNC void gfx_thread_lock(void);
 EXTERNC void gfx_thread_unlock(void);
 
+EXTERNC void gfx_ppu_thread_lock(void);
+EXTERNC void gfx_ppu_thread_unlock(void);
+
 EXTERNC void gfx_thread_pause(void);
 EXTERNC void gfx_thread_continue(void);
 

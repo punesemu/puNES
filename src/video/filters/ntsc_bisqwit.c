@@ -24,7 +24,7 @@
 #include <string.h>
 #include "video/gfx.h"
 #include "thread_def.h"
-#include "ppu.h"
+#include "nes.h"
 #include "clock.h"
 
 #define NTSC_BISQWIT_NUM_SLICE 4

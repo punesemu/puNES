@@ -20,7 +20,7 @@
 #define CPU_H_
 
 #include "common.h"
-#include "nes.h"
+#include "input.h"
 
 enum cpu_misc { STACK = 0x0100 };
 enum interrupt_types {
@@ -44,6 +44,75 @@ enum interrupt_types {
 	nes[idx].c.cpu.bf = nes[idx].c.cpu.SR & 0x10;\
 	nes[idx].c.cpu.of = nes[idx].c.cpu.SR & 0x40;\
 	nes[idx].c.cpu.sf = nes[idx].c.cpu.SR & 0x80
+
+typedef struct _cpu {
+	// Processor Registers
+	union _cpu_pc {
+		BYTE b[2];
+		WORD w;
+	} PC;
+	BYTE SP; // Stack Pointer
+	BYTE AR; // Accumulator
+	BYTE XR; // Index Register X
+	BYTE YR; // Index Register Y
+	/* Processor Status Register */
+	BYTE SR; // Status Register
+	BYTE cf; // C (bit 0) - Carry flag
+	BYTE zf; // Z (bit 1) - Zero flag
+	BYTE im; // I (bit 2) - Interrupt mask
+	BYTE df; // D (bit 3) - Decimal flag
+	BYTE bf; // B (bit 4) - Break flag
+	/*            (bit 5) - Always 1 */
+	BYTE of; // O (bit 6) - Overflow flag
+	BYTE sf; // S (bit 7) - Sign flag or N - Negative flag
+	// il codice che identifica l'istruzione
+	WORD opcode;
+	WORD opcode_PC;
+	// il flag che indica se il ciclo della cpu e' dispari
+	BYTE odd_cycle;
+	// cicli cpu dell'istruzione e delle operazioni di lettura e scrittura
+	SWORD cycles;
+	// DMC
+	WORD opcode_cycle;
+	// doppia lettura
+	BYTE double_rd;
+	// doppia scrittura
+	BYTE double_wr;
+	// lettura PRG Ram attiva/disattiva
+	BYTE prg_ram_rd_active;
+	// scrittura PRG Ram attiva/disattiva
+	BYTE prg_ram_wr_active;
+	// i cicli (senza aggiustamenti) impiegati dall'opcode
+	WORD base_opcode_cycles;
+	// buffer di lettura
+	BYTE openbus;
+} _cpu;
+typedef struct _irq {
+	BYTE high;
+	BYTE delay;
+	BYTE before;
+	BYTE inhibit;
+} _irq;
+typedef struct _nmi {
+	BYTE high;
+	BYTE delay;
+	BYTE before;
+	BYTE inhibit;
+	WORD frame_x;
+	// i cicli passati dall'inizio dell'NMI
+	uint32_t cpu_cycles_from_last_nmi;
+} _nmi;
+typedef struct _cpu_input {
+	BYTE r4016;
+	BYTE pindex[PORT_MAX];
+	BYTE fsindex[PORT_BASE];
+} _cpu_input;
+typedef struct _cpu_data {
+	_cpu cpu;
+	_irq irq;
+	_nmi nmi;
+	_cpu_input input;
+} _cpu_data;
 
 #if defined (__cplusplus)
 #define EXTERNC extern "C"

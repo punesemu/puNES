@@ -55,7 +55,7 @@
 #include "c++/l7zip/l7z.h"
 #include "gui.h"
 #include "tas.h"
-#include "ppu.h"
+#include "nes.h"
 #include "video/effects/tv_noise.h"
 #include "debugger.h"
 #include "tape_data_recorder.h"

@@ -19,7 +19,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include "mappers.h"
-#include "irqA12.h"
 #include "save_slot.h"
 #include "emu.h"
 #include "serial_devices_interface.h"

@@ -19,7 +19,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include "mappers.h"
-#include "ppu.h"
 #include "ppu_inline.h"
 
 void map_init_532(void) {

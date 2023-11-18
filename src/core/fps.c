@@ -20,7 +20,8 @@
 #include "fps.h"
 #include "clock.h"
 #include "conf.h"
-#include "ppu.h"
+#include "nes.h"
+#include "video/gfx_thread.h"
 
 #define ff_estimated_ms()\
 	fps.frame.estimated_ms = 1000.0f / (double)(machine.fps * cfg->ff_velocity)
@@ -100,4 +101,10 @@ void fps_max_speed_stop(void) {
 	fps.max_speed = FALSE;
 	fps_max_speed_estimated_ms();
 	ppu_draw_screen_continue();
+}
+
+void fps_ppu_inc(BYTE nidx) {
+	gfx_ppu_thread_lock();
+	nes[nidx].p.fps++;
+	gfx_ppu_thread_unlock();
 }

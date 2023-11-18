@@ -19,7 +19,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "video/gfx.h"
-#include "ppu.h"
+#include "nes.h"
 #include "palette.h"
 #include "conf.h"
 #include "clock.h"

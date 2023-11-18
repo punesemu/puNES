@@ -22,7 +22,7 @@
 #include "common.h"
 #include "dipswitch.h"
 #include "external_calls.h"
-#include "memmap.h"
+#include "nes.h"
 #include "unif.h"
 
 #include "mappers/mapper_000.h"

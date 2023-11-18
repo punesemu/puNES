@@ -18,8 +18,6 @@
 
 #include <string.h>
 #include "mappers.h"
-#include "cpu.h"
-#include "irqA12.h"
 #include "save_slot.h"
 
 INLINE static void prg_fix_413(void);

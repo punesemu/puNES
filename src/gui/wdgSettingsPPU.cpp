@@ -19,7 +19,6 @@
 #include "wdgSettingsPPU.hpp"
 #include "mainWindow.hpp"
 #include "emu_thread.h"
-#include "ppu.h"
 #include "conf.h"
 #include "gui.h"
 #include "settings.h"
@@ -29,8 +28,8 @@ wdgSettingsPPU::wdgSettingsPPU(QWidget *parent) : QWidget(parent) {
 
 	setFocusProxy(checkBox_Hide_Sprites);
 
-	spinBox_VB_Slines->setRange(0, 1000);
-	spinBox_Postrender_Slines->setRange(0, 1000);
+	//spinBox_VB_Slines->setRange(0, 1000);
+	//spinBox_Postrender_Slines->setRange(0, 1000);
 
 	connect(checkBox_Hide_Sprites, SIGNAL(clicked(bool)), this, SLOT(s_hide_sprites(bool)));
 	connect(checkBox_Hide_Background, SIGNAL(clicked(bool)), this, SLOT(s_hide_background(bool)));
@@ -40,8 +39,8 @@ wdgSettingsPPU::wdgSettingsPPU(QWidget *parent) : QWidget(parent) {
 	connect(checkBox_PPU_Overclock, SIGNAL(clicked(bool)), this, SLOT(s_ppu_overclock(bool)));
 	connect(checkBox_Disable_DMC_Control, SIGNAL(clicked(bool)), this, SLOT(s_disable_dmc_control(bool)));
 
-	connect(spinBox_VB_Slines, SIGNAL(valueChanged(int)), this, SLOT(s_overclock_vb_slines(int)));
-	connect(spinBox_Postrender_Slines, SIGNAL(valueChanged(int)), this, SLOT(s_overclock_pr_slines(int)));
+	//connect(spinBox_VB_Slines, SIGNAL(valueChanged(int)), this, SLOT(s_overclock_vb_slines(int)));
+	//connect(spinBox_Postrender_Slines, SIGNAL(valueChanged(int)), this, SLOT(s_overclock_pr_slines(int)));
 
 	connect(pushButton_Reset_Lag_Counter, SIGNAL(clicked(bool)), this, SLOT(s_lag_counter_reset(bool)));
 
@@ -80,15 +79,15 @@ void wdgSettingsPPU::update_widget(void) {
 	checkBox_Disable_DMC_Control->setChecked(cfg->ppu_overclock_dmc_control_disabled);
 	checkBox_Disable_DMC_Control->setEnabled(cfg->ppu_overclock);
 
-	label_VB_Slines->setEnabled(cfg->ppu_overclock);
+	//label_VB_Slines->setEnabled(cfg->ppu_overclock);
 
-	spinBox_VB_Slines->setEnabled(cfg->ppu_overclock);
-	qtHelper::spinbox_set_value(spinBox_VB_Slines, cfg->extra_vb_scanlines);
+	//spinBox_VB_Slines->setEnabled(cfg->ppu_overclock);
+	//qtHelper::spinbox_set_value(spinBox_VB_Slines, cfg->extra_vb_scanlines);
 
-	label_Postrender_Slines->setEnabled(cfg->ppu_overclock);
+	//label_Postrender_Slines->setEnabled(cfg->ppu_overclock);
 
-	spinBox_Postrender_Slines->setEnabled(cfg->ppu_overclock);
-	qtHelper::spinbox_set_value(spinBox_Postrender_Slines, cfg->extra_pr_scanlines);
+	//spinBox_Postrender_Slines->setEnabled(cfg->ppu_overclock);
+	//qtHelper::spinbox_set_value(spinBox_Postrender_Slines, cfg->extra_pr_scanlines);
 
 	comboBox_CPUPPU_Alignment->setCurrentIndex(cfg->ppu_alignment);
 

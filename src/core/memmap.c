@@ -22,7 +22,6 @@
 #include "info.h"
 #include "gui.h"
 #include "tas.h"
-#include "cpu.h"
 #include "mappers.h"
 #include "vs_system.h"
 

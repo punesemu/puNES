@@ -18,7 +18,6 @@
 
 #include <string.h>
 #include "mappers.h"
-#include "irqA12.h"
 
 void prg_swap_mmc3_044(WORD address, WORD value);
 void chr_swap_mmc3_044(WORD address, WORD value);

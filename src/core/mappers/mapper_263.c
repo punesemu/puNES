@@ -19,7 +19,6 @@
 #include <string.h>
 #include "mappers.h"
 #include "info.h"
-#include "irqA12.h"
 
 void map_init_263(void) {
 	EXTCL_AFTER_MAPPER_INIT(MMC3);

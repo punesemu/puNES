@@ -23,7 +23,7 @@
 #include "draw_on_screen.h"
 #undef _DOS_STATIC_
 #include "draw_on_screen_font.h"
-#include "ppu.h"
+#include "nes.h"
 
 static char dos_tags[][10] = {
 	"[normal]",  "[red]",	  "[yellow]",  "[green]",

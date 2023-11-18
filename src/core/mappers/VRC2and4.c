@@ -18,7 +18,6 @@
 
 #include <string.h>
 #include "mappers.h"
-#include "cpu.h"
 #include "save_slot.h"
 
 void (*VRC2and4_prg_fix)(void);

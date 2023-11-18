@@ -19,7 +19,6 @@
 #include <string.h>
 #include "mappers.h"
 #include "info.h"
-#include "irqA12.h"
 
 void prg_swap_mmc3_198(WORD address, WORD value);
 void wram_fix_mmc3_198(void);

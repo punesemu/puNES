@@ -25,7 +25,6 @@
 #include "mappers.h"
 #include "info.h"
 #include "fds.h"
-#include "cpu.h"
 #include "conf.h"
 #include "gui.h"
 

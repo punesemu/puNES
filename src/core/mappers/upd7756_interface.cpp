@@ -2,7 +2,6 @@
 
 #include "upd7756_interface.h"
 #include "upd7756.h"
-
 #define EXTERNC extern "C"
 
 EXTERNC void upd7756_load_sample_rom(unsigned char *data, size_t size) {

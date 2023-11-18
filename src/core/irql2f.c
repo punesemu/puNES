@@ -16,7 +16,7 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#include "irql2f.h"
+#include "nes.h"
 
 void irql2f_tick(BYTE nidx) {
 	if (nes[nidx].irql2f.frame_x != nes[nidx].p.ppu.frame_x) {

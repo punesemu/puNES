@@ -18,7 +18,6 @@
 
 #include <string.h>
 #include "mappers.h"
-#include "ppu.h"
 #include "save_slot.h"
 
 // TODO : aggiungere l'emulazione del floppy disk controller

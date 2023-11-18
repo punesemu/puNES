@@ -19,7 +19,6 @@
 #include <string.h>
 #include "mappers.h"
 #include "info.h"
-#include "irqA12.h"
 #include "gui.h"
 #include "vs_system.h"
 #include "detach_barcode.h"

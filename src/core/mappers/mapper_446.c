@@ -22,7 +22,6 @@
 #include "save_slot.h"
 #include "SST39SF040.h"
 #include "gui.h"
-#include "irqA12.h"
 
 INLINE static void switch_mode(void);
 INLINE static void fix_all(void);

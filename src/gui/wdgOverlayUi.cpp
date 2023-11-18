@@ -29,13 +29,11 @@
 #include "fps.h"
 #include "tas.h"
 #include "info.h"
-#include "input.h"
 #include "input/mouse.h"
 #include "fds.h"
 #include "rewind.h"
 #include "version.h"
-#include "cpu.h"
-#include "ppu.h"
+#include "nes.h"
 #if defined (FULLSCREEN_RESFREQ)
 #include "video/gfx_monitor.h"
 #endif
@@ -308,7 +306,7 @@ void overlay_info_append_qstring(BYTE alignment, const QString &msg) {
 	}
 }
 
-// wdgOverlayUi ------------------------------------------------------------------------------------------------------------------
+// wdgOverlayUi --------------------------------------------------------------------------------------------------------
 
 wdgOverlayUi::wdgOverlayUi(QWidget *parent) : QWidget(parent) {
 	QGraphicsOpacityEffect *op = new QGraphicsOpacityEffect(this);
@@ -523,7 +521,7 @@ void wdgOverlayUi::wdg_clear(overlayWidget *wdg, QRect *qrect, qreal dpr) {
 	}
 }
 
-// overlayWidget -----------------------------------------------------------------------------------------------------------------
+// overlayWidget -------------------------------------------------------------------------------------------------------
 
 overlayWidget::overlayWidget(QWidget *parent) : QWidget(parent) {
 	exchange.draw = false;
@@ -725,13 +723,13 @@ void overlayWidget::s_fade_out_finished(void) {
 	set_opacity(opacity.value);
 }
 
-// overlayWidgetFPS --------------------------------------------------------------------------------------------------------------
+// overlayWidgetFPS ----------------------------------------------------------------------------------------------------
 
 overlayWidgetFPS::overlayWidgetFPS(QWidget *parent) : overlayWidget(parent) {}
 overlayWidgetFPS::~overlayWidgetFPS() = default;
 
 QSize overlayWidgetFPS::sizeHint(void) const {
-	return (QSize((int)dpr_per_int(fontMetrics().size(0, "00 fps").width()) + hpadtot(), minimum_eight()));
+	return (QSize((int)dpr_per_int(fontMetrics().size(0, "000 gps").width()) + hpadtot(), minimum_eight()));
 }
 void overlayWidgetFPS::paintEvent(QPaintEvent *event) {
 	overlayWidget::paintEvent(event);
@@ -739,7 +737,7 @@ void overlayWidgetFPS::paintEvent(QPaintEvent *event) {
 	painter.begin(this);
 	painter.setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
 	draw_background();
-	painter.drawText(dpr_text_rect(dpr_rect()), Qt::AlignCenter, QString("%1 fps").arg((int)old.fps));
+	painter.drawText(dpr_text_rect(dpr_rect()), Qt::AlignCenter, QString("%0 %1").arg((int)old.fps).arg(info.snd_info ? "gps" : "fps"));
 	painter.end();
 }
 
@@ -751,16 +749,20 @@ void overlayWidgetFPS::update_widget(void) {
 	}
 }
 BYTE overlayWidgetFPS::is_to_redraw(void) {
-	if (fps.gfx != old.fps) {
+	if (fps_value() != old.fps) {
 		return (TRUE);
 	}
 	return (FALSE);
 }
 void overlayWidgetFPS::update_old_value(void) {
-	old.fps = fps.gfx;
+	old.fps = fps_value();
 }
 
-// overlayWidgetFrame ------------------------------------------------------------------------------------------------------------
+double overlayWidgetFPS::fps_value(void) {
+	return(info.snd_info ? fps.gfx : fps.emu);
+}
+
+// overlayWidgetFrame --------------------------------------------------------------------------------------------------
 
 overlayWidgetFrame::overlayWidgetFrame(QWidget *parent) : overlayWidget(parent) {
 	old.actual_frame = 0;
@@ -824,7 +826,7 @@ void overlayWidgetFrame::update_info(void) {
 	td.setHtml(txt);
 }
 
-// overlayWidgetFloppy -----------------------------------------------------------------------------------------------------------
+// overlayWidgetFloppy -------------------------------------------------------------------------------------------------
 
 overlayWidgetFloppy::overlayWidgetFloppy(QWidget *parent) : overlayWidget(parent) {}
 overlayWidgetFloppy::~overlayWidgetFloppy() = default;
@@ -870,7 +872,7 @@ void overlayWidgetFloppy::update_widget(void) {
 	}
 }
 
-// overlayWidgetInputPort --------------------------------------------------------------------------------------------------------
+// overlayWidgetInputPort ----------------------------------------------------------------------------------------------
 
 overlayWidgetInputPort::overlayWidgetInputPort(QWidget *parent) : overlayWidget(parent) {
 	input_port = 0;
@@ -1184,7 +1186,7 @@ void overlayWidgetInputPort::draw_mouse_coords(void) {
 	painter.drawText(dpr_text_point(dpr_point(61, 25)), QString("Y: %1").arg(y, 3));
 }
 
-// overlayWidgetRewind -----------------------------------------------------------------------------------------------------------
+// overlayWidgetRewind -------------------------------------------------------------------------------------------------
 
 overlayWidgetRewind::overlayWidgetRewind(QWidget *parent) : overlayWidget(parent) {
 	color.corner = QColor(234, 234, 184);
@@ -1498,7 +1500,7 @@ QImage overlayWidgetRewind::svg_to_image(const QString &resource) {
 	return (image);
 }
 
-// overlayWidgetTAS --------------------------------------------------------------------------------------------------------------
+// overlayWidgetTAS ----------------------------------------------------------------------------------------------------
 
 overlayWidgetTAS::overlayWidgetTAS(QWidget *parent) : overlayWidgetRewind(parent) {
 	color.corner = QColor(211, 215, 207);
@@ -1568,7 +1570,7 @@ QString overlayWidgetTAS::info_short(void) {
 	return (txt);
 }
 
-// overlaySaveSlot ---------------------------------------------------------------------------------------------------------------
+// overlaySaveSlot -----------------------------------------------------------------------------------------------------
 
 overlayWidgetSaveSlot::overlayWidgetSaveSlot(QWidget *parent) : overlayWidget(parent) {
 	color.x1.save = Qt::red;
@@ -1858,7 +1860,7 @@ void overlayWidgetSaveSlot::draw_slots(void) {
 	painter.restore();
 }
 
-// overlayWidgetInfo -------------------------------------------------------------------------------------------------------------
+// overlayWidgetInfo ---------------------------------------------------------------------------------------------------
 
 overlayWidgetInfo::overlayWidgetInfo(QWidget *parent) : overlayWidget(parent) {
 	//base_color.bg = QColor(125, 125, 125);

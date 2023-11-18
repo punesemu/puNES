@@ -18,9 +18,6 @@
 
 #include <string.h>
 #include "mappers.h"
-#include "cpu.h"
-#include "irqA12.h"
-#include "ppu.h"
 #include "save_slot.h"
 #include "ppu_inline.h"
 

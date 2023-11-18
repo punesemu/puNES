@@ -19,7 +19,6 @@
 #include <string.h>
 #include "mappers.h"
 #include "info.h"
-#include "irqA12.h"
 
 void wram_fix_004_mmc6(void);
 

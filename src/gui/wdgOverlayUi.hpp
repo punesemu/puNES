@@ -31,6 +31,8 @@
 #include "clock.h"
 #include "save_slot.h"
 
+// overlayWidget -------------------------------------------------------------------------------------------------------
+
 class overlayWidget : public QWidget {
 	Q_OBJECT
 
@@ -117,6 +119,9 @@ class overlayWidget : public QWidget {
 		virtual void s_fade_in_finished(void);
 		virtual void s_fade_out_finished(void);
 };
+
+// overlayWidgetFPS ----------------------------------------------------------------------------------------------------
+
 class overlayWidgetFPS : public overlayWidget {
 	private:
 		struct _old_values {
@@ -135,7 +140,13 @@ class overlayWidgetFPS : public overlayWidget {
 		void update_widget(void) override;
 		BYTE is_to_redraw(void) override;
 		void update_old_value(void) override;
+
+	private:
+		double fps_value(void);
 };
+
+// overlayWidgetFrame --------------------------------------------------------------------------------------------------
+
 class overlayWidgetFrame : public overlayWidget {
 	private:
 		struct _old_values {
@@ -160,6 +171,9 @@ class overlayWidgetFrame : public overlayWidget {
 	private:
 		void update_info(void);
 };
+
+// overlayWidgetFloppy -------------------------------------------------------------------------------------------------
+
 class overlayWidgetFloppy : public overlayWidget {
 	private:
 		struct _images_floppy {
@@ -180,6 +194,9 @@ class overlayWidgetFloppy : public overlayWidget {
 		void update_dpr(void) override;
 		void update_widget(void) override;
 };
+
+// overlayWidgetInputPort ----------------------------------------------------------------------------------------------
+
 class overlayWidgetInputPort : public overlayWidget {
 	public:
 		int input_port;
@@ -256,6 +273,9 @@ class overlayWidgetInputPort : public overlayWidget {
 		void draw_subor_keyboard_sb97(void);
 		void draw_mouse_coords(void);
 };
+
+// overlayWidgetRewind -------------------------------------------------------------------------------------------------
+
 class overlayWidgetRewind : public overlayWidget {
 	private:
 		struct _images_action {
@@ -349,6 +369,9 @@ class overlayWidgetRewind : public overlayWidget {
 	private:
 		QImage svg_to_image(const QString &resource);
 };
+
+// overlayWidgetTAS ----------------------------------------------------------------------------------------------------
+
 class overlayWidgetTAS : public overlayWidgetRewind {
 	public:
 		explicit overlayWidgetTAS(QWidget *parent = nullptr);
@@ -366,6 +389,9 @@ class overlayWidgetTAS : public overlayWidgetRewind {
 		QString info_long(void) override;
 		QString info_short(void) override;
 };
+
+// overlaySaveSlot -----------------------------------------------------------------------------------------------------
+
 class overlayWidgetSaveSlot : public overlayWidget {
 	private:
 		BYTE save_slot_operation;
@@ -415,6 +441,9 @@ class overlayWidgetSaveSlot : public overlayWidget {
 		void draw_slots_x1(void);
 		void draw_slots(void);
 };
+
+// overlayWidgetInfo ---------------------------------------------------------------------------------------------------
+
 class overlayWidgetInfo : public overlayWidget {
 		Q_OBJECT
 
@@ -449,6 +478,8 @@ class overlayWidgetInfo : public overlayWidget {
 		void s_fade_in_finished(void) override;
 		void s_fade_out_finished(void) override;
 };
+
+// wdgOverlayUi --------------------------------------------------------------------------------------------------------
 
 #include "ui_wdgOverlayUi.h"
 

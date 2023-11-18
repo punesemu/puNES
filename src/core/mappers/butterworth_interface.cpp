@@ -18,7 +18,6 @@
 
 #include "butterworth_interface.h"
 #include "butterworth.h"
-
 #define EXTERNC extern "C"
 
 EXTERNC bfilter butterworth_create(int _n, double s, double f) {

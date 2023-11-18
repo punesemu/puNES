@@ -18,12 +18,9 @@
 
 #include <string.h>
 #include "apu.h"
-#include "ppu.h"
-#include "cpu.h"
 #include "clock.h"
 #include "audio/snd.h"
 #include "fds.h"
-#include "nsf.h"
 #include "conf.h"
 #include "mappers.h"
 #include "info.h"

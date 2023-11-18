@@ -38,8 +38,8 @@ class wdgOpenGL : public QOpenGLWidget {
 
 	private:
 		struct _gui_fps {
-			double count{};
-			double frequency{};
+			double count;
+			double frequency;
 			QElapsedTimer timer;
 		} gfps;
 

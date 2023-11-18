@@ -28,7 +28,6 @@
 #include "cheat.h"
 #include "recent_roms.h"
 #include "patcher.h"
-#include "ppu.h"
 #include "mappers.h"
 #include "tape_data_recorder.h"
 #if defined (WITH_FFMPEG)

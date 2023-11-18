@@ -20,7 +20,6 @@
 #include <stdlib.h>
 #include "mappers.h"
 #include "info.h"
-#include "irqA12.h"
 #include "SST39SF040.h"
 #include "gui.h"
 

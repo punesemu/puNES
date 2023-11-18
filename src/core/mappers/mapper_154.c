@@ -18,7 +18,6 @@
 
 #include <string.h>
 #include "mappers.h"
-#include "cpu.h"
 #include "save_slot.h"
 
 void prg_swap_n118_154(WORD address, WORD value);

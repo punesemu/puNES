@@ -28,7 +28,7 @@
 #include "info.h"
 #include "conf.h"
 #include "emu.h"
-#include "ppu.h"
+#include "nes.h"
 #include "gui.h"
 #include "palette.h"
 #if defined (WITH_FFMPEG)

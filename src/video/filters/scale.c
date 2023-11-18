@@ -17,7 +17,7 @@
  */
 
 #include "video/gfx.h"
-#include "ppu.h"
+#include "nes.h"
 #include "info.h"
 
 #define put_pixel(type, p0, p1) *(type *)(dstpix + (p0) + (p1)) = (type)pixel

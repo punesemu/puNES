@@ -21,7 +21,6 @@
 #include "video/gfx_thread.h"
 #include "conf.h"
 #include "clock.h"
-#include "ppu.h"
 #include "gui.h"
 #include "palette.h"
 #include "paldef.h"

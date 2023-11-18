@@ -17,8 +17,7 @@
  */
 
 #include <string.h>
-#include "cpu.h"
-#include "ppu.h"
+#include "nes.h"
 #include "apu.h"
 #include "cpu_inline.h"
 

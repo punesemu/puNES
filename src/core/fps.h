@@ -30,6 +30,7 @@ enum ff_velocity_values { FF_2X = 2, FF_3X, FF_4X, FF_5X, FF_MAX_SPEED = FF_5X }
 
 typedef struct _fps {
 	double gfx;
+	double emu;
 	BYTE fast_forward;
 	BYTE max_speed;
 	struct _fps_frame {
@@ -59,6 +60,8 @@ EXTERNC void fps_fast_forward_stop(void);
 EXTERNC void fps_max_speed_estimated_ms(void);
 EXTERNC void fps_max_speed_start(void);
 EXTERNC void fps_max_speed_stop(void);
+
+EXTERNC void fps_ppu_inc(BYTE nidx);
 
 #undef EXTERNC
 

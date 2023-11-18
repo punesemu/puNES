@@ -22,8 +22,6 @@
 #include <string.h>
 #include <stdlib.h>
 #include "mappers.h"
-#include "cpu.h"
-#include "ppu.h"
 #include "tas.h"
 #include "save_slot.h"
 #include "gui.h"

@@ -19,7 +19,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include "tv_noise.h"
-#include "ppu.h"
+#include "nes.h"
 #include "conf.h"
 #include "video/gfx.h"
 #include "emu.h"

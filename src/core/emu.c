@@ -27,8 +27,6 @@
 #include "emu.h"
 #include "settings.h"
 #include "clock.h"
-#include "cpu.h"
-#include "ppu.h"
 #include "video/gfx_thread.h"
 #include "mappers.h"
 #include "vs_system.h"
@@ -50,7 +48,6 @@
 #if defined (FULLSCREEN_RESFREQ)
 #include "video/gfx_monitor.h"
 #include "nes20db.h"
-#include "memmap.h"
 #endif
 
 #define RS_SCALE (1.0f / (1.0f + (float)RAND_MAX))
@@ -120,8 +117,9 @@ void emu_frame(void) {
 	if (info.no_rom) {
 		tv_noise_effect(0);
 		gfx_draw_screen(0);
-		emu_frame_sleep();
 		nes[0].p.ppu.frames++;
+		fps_ppu_inc(0);
+		emu_frame_sleep();
 		return;
 	} else if (nsf.state & (NSF_PAUSE | NSF_STOP)) {
 		int i = 0;
@@ -138,6 +136,7 @@ void emu_frame(void) {
 		nsf_main_screen_event();
 		nsf_effect();
 		gfx_draw_screen(0);
+		fps_ppu_inc(0);
 		emu_frame_sleep();
 		return;
 	}
@@ -176,8 +175,9 @@ void emu_frame_debugger(void) {
 			if (info.no_rom) {
 				tv_noise_effect(0);
 				gfx_draw_screen(0);
-				emu_frame_sleep();
 				nes[0].p.ppu.frames++;
+				fps_ppu_inc(0);
+				emu_frame_sleep();
 				return;
 			} else if (nsf.state & (NSF_PAUSE | NSF_STOP)) {
 				int i = 0;
@@ -194,6 +194,7 @@ void emu_frame_debugger(void) {
 				nsf_main_screen_event();
 				nsf_effect();
 				gfx_draw_screen(0);
+				fps_ppu_inc(0);
 				emu_frame_sleep();
 				return;
 			}

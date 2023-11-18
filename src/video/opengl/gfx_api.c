@@ -23,7 +23,7 @@
 #include "video/effects/pause.h"
 #include "opengl.h"
 #include "gui.h"
-#include "ppu.h"
+#include "nes.h"
 #include "info.h"
 
 #if defined (_WIN32)

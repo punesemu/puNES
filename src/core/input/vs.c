@@ -21,7 +21,7 @@
 #include "input/four_score.h"
 #include "conf.h"
 #include "vs_system.h"
-#include "cpu.h"
+#include "nes.h"
 
 BYTE input_wr_reg_vs(BYTE nidx, BYTE value) {
 	if (vs_system.special_mode.type < VS_DS_Normal) {

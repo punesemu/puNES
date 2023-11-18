@@ -21,7 +21,6 @@
 
 #include <stddef.h>
 #include "common.h"
-
 #if defined (__cplusplus)
 #define EXTERNC extern "C"
 #else

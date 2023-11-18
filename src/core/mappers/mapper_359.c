@@ -18,8 +18,6 @@
 
 #include <string.h>
 #include "mappers.h"
-#include "cpu.h"
-#include "ppu.h"
 #include "save_slot.h"
 #include "ppu_inline.h"
 

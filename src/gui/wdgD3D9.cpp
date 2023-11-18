@@ -16,8 +16,12 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
+#include <math.h>
 #include "wdgD3D9.hpp"
 #include "fps.h"
+#include "nes.h"
+#include "emu.h"
+#include "video/gfx_thread.h"
 
 extern "C" void d3d9_draw_scene(void);
 
@@ -42,8 +46,13 @@ void wdgD3D9::paintEvent(UNUSED(QPaintEvent *event)) {
 
 	if (++gfps.count > gfps.frequency) {
 		qint64 ms = gfps.timer.elapsed();
+		BYTE nidx = emu_active_nidx();
 		double sec = (double)ms / 1000.0;
 
+		gfx_ppu_thread_lock();
+		fps.emu = lround(nes[nidx].p.fps / sec);
+		nes[nidx].p.fps = 0;
+		gfx_ppu_thread_unlock();
 		fps.gfx = gfps.count / sec;
 		gfps.count = 0;
 		gfps.timer.start();

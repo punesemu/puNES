@@ -17,7 +17,7 @@
  */
 
 #include "video/gfx.h"
-#include "ppu.h"
+#include "nes.h"
 #include "info.h"
 
 void xBRZ(BYTE nidx) {

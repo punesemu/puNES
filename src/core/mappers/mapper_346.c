@@ -17,7 +17,6 @@
  */
 
 #include "mappers.h"
-#include "cpu.h"
 #include "save_slot.h"
 
 INLINE static void prg_fix_346(void);

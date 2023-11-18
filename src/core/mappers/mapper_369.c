@@ -18,7 +18,6 @@
 
 #include <string.h>
 #include "mappers.h"
-#include "irqA12.h"
 #include "save_slot.h"
 
 void prg_fix_mmc3_369(void);

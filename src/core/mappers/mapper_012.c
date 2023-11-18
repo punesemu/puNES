@@ -19,7 +19,6 @@
 #include <string.h>
 #include "mappers.h"
 #include "save_slot.h"
-#include "irqA12.h"
 
 void prg_swap_mmc3_012(WORD address, WORD value);
 void chr_swap_mmc3_012(WORD address, WORD value);

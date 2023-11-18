@@ -18,7 +18,6 @@
 
 #include <string.h>
 #include "mappers.h"
-#include "cpu.h"
 #include "save_slot.h"
 #include "../../c++/pic16c5x/pic16c5x.h"
 

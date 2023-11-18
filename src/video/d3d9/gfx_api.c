@@ -23,7 +23,7 @@
 #include "video/effects/pause.h"
 #include "d3d9.h"
 #include "gui.h"
-#include "ppu.h"
+#include "nes.h"
 #include "info.h"
 
 BYTE gfx_api_init(void) {

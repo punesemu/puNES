@@ -31,7 +31,7 @@
 #include "nsf.h"
 #include "rewind.h"
 #include "palette.h"
-#include "ppu.h"
+#include "nes.h"
 #if defined (WITH_FFMPEG)
 #include "recording.h"
 #endif

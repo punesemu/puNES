@@ -18,13 +18,11 @@
 
 #include <stdlib.h>
 #include <string.h>
-#include "cpu.h"
 #include "info.h"
 #include "clock.h"
+#include "mappers.h"
 #include "ppu_inline.h"
 #include "video/gfx.h"
-#include "mappers.h"
-#include "irqA12.h"
 #include "conf.h"
 #include "fps.h"
 #include "emu.h"
@@ -925,6 +923,7 @@ void ppu_tick(BYTE nidx) {
 			nes[nidx].p.overclock.DMC_in_use = FALSE;
 			/* incremento il contatore ppu dei frames */
 			nes[nidx].p.ppu.frames++;
+			fps_ppu_inc(nidx);
 			/* azzero frame_y */
 			nes[nidx].p.ppu.frame_y = 0;
 			/* setto il flag che indica che un frame e' stato completato */
@@ -1075,6 +1074,7 @@ BYTE ppu_turn_on(void) {
 			nes[nesidx].p.r2000.size_spr = 8;
 			nes[nesidx].p.r2001.color_mode = PPU_CM_NORMAL;
 		}
+		nes[nesidx].p.fps = 0;
 	}
 	return (EXIT_OK);
 }

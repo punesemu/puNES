@@ -23,7 +23,7 @@
 #include "info.h"
 #include "gui.h"
 #include "conf.h"
-#include "ppu.h"
+#include "nes.h"
 #include "overscan.h"
 #include "video/gfx_thread.h"
 #include "emu_thread.h"

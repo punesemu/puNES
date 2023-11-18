@@ -18,8 +18,7 @@
 
 #include "video/gfx.h"
 #include "palette.h"
-#include "ppu.h"
-#include "info.h"
+#include "nes.h"
 
 uint32_t RGBtoYUV[NUM_COLORS];
 

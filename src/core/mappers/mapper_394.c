@@ -18,7 +18,6 @@
 
 #include <string.h>
 #include "mappers.h"
-#include "irqA12.h"
 #include "save_slot.h"
 
 void prg_swap_jyasic_394(WORD address, DBWORD value);

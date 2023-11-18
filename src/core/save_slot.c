@@ -21,7 +21,6 @@
 #include "save_slot.h"
 #include "mappers.h"
 #include "conf.h"
-#include "ppu.h"
 #include "bck_states.h"
 #include "rewind.h"
 #include "video/gfx.h"

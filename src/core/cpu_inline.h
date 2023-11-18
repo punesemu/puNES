@@ -22,13 +22,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include "clock.h"
-#include "cpu.h"
-#include "input.h"
 #include "mappers.h"
 #include "ppu_inline.h"
 #include "apu.h"
-#include "irqA12.h"
-#include "irql2f.h"
 #include "tas.h"
 #include "fds.h"
 #include "nsf.h"
@@ -39,7 +35,6 @@
 #include "qt.h"
 #include "audio/snd.h"
 #include "tape_data_recorder.h"
-#include "memmap.h"
 
 #define mod_cycles_op(op, vl) nes[nidx].c.cpu.cycles op vl
 #define r2006_during_rendering()\

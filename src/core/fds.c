@@ -26,7 +26,6 @@
 #include "gui.h"
 #include "patcher.h"
 #include "conf.h"
-#include "ppu.h"
 
 #define BIOSFILE "disksys.rom"
 #define DIFFVERSION 1

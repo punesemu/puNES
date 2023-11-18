@@ -18,7 +18,6 @@
 
 #include "wave_file_interface.h"
 #include "waveFile.h"
-
 #define EXTERNC extern "C"
 
 EXTERNC void wavefiles_clear(void) {

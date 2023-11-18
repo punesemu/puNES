@@ -21,7 +21,7 @@
 #include "video/gfx_thread.h"
 #include "video/gfx.h"
 #include "info.h"
-#include "ppu.h"
+#include "nes.h"
 #include "gui.h"
 
 static thread_funct(gfx_thread_loop, void *arg);
@@ -29,6 +29,7 @@ static thread_funct(gfx_thread_loop, void *arg);
 struct _gfx_thread {
 	thread_t thread;
 	thread_mutex_t lock;
+	thread_mutex_t ppu_lock;
 	BYTE in_run;
 	int pause_calls;
 } gfx_thread;
@@ -42,6 +43,10 @@ BYTE gfx_thread_init(void) {
 		log_error(uL("gfx_thread;unable to allocate the gfx mutex"));
 		return (EXIT_ERROR);
 	}
+	if (thread_mutex_init_error(gfx_thread.ppu_lock)) {
+		log_error(uL("gfx_thread;unable to allocate the gfx ppu mutex"));
+		return (EXIT_ERROR);
+	}
 	thread_create(gfx_thread.thread, gfx_thread_loop, NULL);
 	return (EXIT_OK);
 }
@@ -51,6 +56,7 @@ void gfx_thread_quit(void) {
 		thread_free(gfx_thread.thread);
 	}
 	thread_mutex_destroy(gfx_thread.lock);
+	thread_mutex_destroy(gfx_thread.ppu_lock);
 }
 
 void gfx_thread_lock(void) {
@@ -58,6 +64,13 @@ void gfx_thread_lock(void) {
 }
 void gfx_thread_unlock(void) {
 	thread_mutex_unlock(gfx_thread.lock);
+}
+
+void gfx_ppu_thread_lock(void) {
+	thread_mutex_lock(gfx_thread.ppu_lock);
+}
+void gfx_ppu_thread_unlock(void) {
+	thread_mutex_unlock(gfx_thread.ppu_lock);
 }
 
 void gfx_thread_pause(void) {

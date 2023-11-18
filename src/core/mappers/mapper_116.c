@@ -18,7 +18,6 @@
 
 #include <string.h>
 #include "mappers.h"
-#include "irqA12.h"
 #include "save_slot.h"
 
 enum _m116_mappers { M116_MMC3 = 1, M116_VRC2, M116_MMC1 };

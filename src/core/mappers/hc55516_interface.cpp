@@ -18,7 +18,6 @@
 
 #include "hc55516_interface.h"
 #include "hc55516.h"
-
 #define EXTERNC extern "C"
 
 EXTERNC hc55516 hc55516_create(uint32_t clock) {

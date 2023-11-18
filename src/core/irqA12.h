@@ -19,8 +19,16 @@
 #ifndef IRQA12_H_
 #define IRQA12_H_
 
-#include "cpu.h"
-#include "ppu.h"
+#include "common.h"
+
+// in "Mickey's Safari in Letterland" avviene un rising edge
+// all'inizio dell'istruzione (quando legge l'opcode) nell'istruzione in cui
+// viene scritto al registro $2001 quindi qualche ciclo dopo viene effettuata
+// una scrittura nel registro $2006 che ne fa fare un'altro. Il secondo se avviene
+// a pochi cicli cpu dal primo non deve essere considerato.
+enum irqA12_misc_value {
+	irqA12_min_cpu_cycles_prev_rising_edge = 18
+};
 
 #define _irqA12_clock(function)\
 	if (nes[nidx].irqA12.cycles > irqA12_min_cpu_cycles_prev_rising_edge) {\
@@ -60,16 +68,27 @@
 #define irqA12_clock() _irqA12_clock(irqA12_irq_default())
 #define irqA12_mod(function) _irqA12_clock(function)
 
-/*
- * in "Mickey's Safari in Letterland" avviene un rising edge
- * all'inizio dell'istruzione (quando legge l'opcode) nell'istruzione in cui
- * viene scritto al registro $2001 quindi qualche ciclo dopo viene effettuata
- * una scrittura nel registro $2006 che ne fa fare un'altro. Il secondo se avviene
- * a pochi cicli cpu dal primo non deve essere considerato.
- */
-enum irqA12_misc_value {
-	irqA12_min_cpu_cycles_prev_rising_edge = 18
-};
+typedef struct _irqA12 {
+	BYTE present;
+	BYTE delay;
+	BYTE counter;
+	BYTE latch;
+	BYTE reload;
+	BYTE enable;
+	BYTE save_counter;
+	BYTE a12BS;
+	BYTE a12SB;
+	WORD b_adr_old;
+	WORD s_adr_old;
+
+	uint32_t cycles;
+
+	struct _race {
+		BYTE C001;
+		BYTE counter;
+		BYTE reload;
+	} race;
+} _irqA12;
 
 /* questo non e' necessario salvarlo */
 extern BYTE irqA12_delay;

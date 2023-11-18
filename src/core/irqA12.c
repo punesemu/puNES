@@ -16,8 +16,8 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
+#include "nes.h"
 #include "ppu_inline.h"
-#include "irqA12.h"
 
 BYTE irqA12_delay = 0;
 
