@@ -879,7 +879,7 @@
     </message>
     <message>
       <source>In sequence</source>
-      <translation>Na sequencia</translation>
+      <translation>Em sequência</translation>
     </message>
     <message>
       <source>Unset all</source>
@@ -2574,7 +2574,7 @@
     </message>
     <message>
       <source>Channels Delay</source>
-      <translation>Delay de Canais</translation>
+      <translation>Atraso de Canais</translation>
     </message>
     <message>
       <source>Misc</source>
