@@ -1575,7 +1575,7 @@ static const _settings inp_cfg[] = {
 	{uL("shortcuts"), uL("video interpolation"),           uL("0,NULL"),            NULL, NULL, {0, NULL}},
 	{uL("shortcuts"), uL("integer scaling fullscreen"),    uL("Alt+L,NULL"),        NULL, NULL, {0, NULL}},
 	{uL("shortcuts"), uL("stretch fullscreen"),            uL("Alt+P,NULL"),        NULL, NULL, {0, NULL}},
-	{uL("shortcuts"), uL("toggle menubar in fullscreen"),  uL("Alt+M,NULL"),        NULL, NULL, {0, NULL}},
+	{uL("shortcuts"), uL("toggle menubar in fullscreen"),  uL("Esc,NULL"),          NULL, NULL, {0, NULL}},
 	{uL("shortcuts"), uL("toggle capture input"),          uL("ScrollLock,NULL"),   NULL, NULL, {0, NULL}},
 	{uL("shortcuts"), uL("toggle virtual keyboard"),       uL("CTRL+X,NULL"),       NULL, NULL, {0, NULL}},
 	{uL("shortcuts"), uL("audio enable"),                  uL("Alt+A,NULL"),        NULL, NULL, {0, NULL}},

@@ -141,6 +141,25 @@ bool wdgScreen::eventFilter(QObject *obj, QEvent *event) {
 		}
 	}
 
+	// gestione della menubar durante il fullscreen
+	if ((cfg->fullscreen == FULLSCR) && (gfx.type_of_fscreen_in_use == FULLSCR)) {
+		if (event->type() == QEvent::MouseMove) {
+			if (mapFromGlobal(QCursor::pos()).y() <= mainwin->menuBar()->height()) {
+				if (mainwin->menuBar()->isHidden()) {
+					emit mainwin->et_toggle_menubar_from_mouse();
+				}
+			} else {
+				if (mainwin->menuBar()->isVisible() && (mainwin->tmm != (BYTE)mainwin->TOGGLE_MENUBAR_FROM_SHORTCUT)) {
+					emit mainwin->et_toggle_menubar_from_mouse();
+				}
+			}
+		} else if (event->type() == QEvent::Enter) {
+			if (mainwin->menuBar()->isVisible() && (mainwin->tmm != (BYTE)mainwin->TOGGLE_MENUBAR_FROM_SHORTCUT)) {
+				emit mainwin->et_toggle_menubar_from_mouse();
+			}
+		}
+	}
+
 	return (QObject::eventFilter(obj, event));
 }
 void wdgScreen::dragEnterEvent(QDragEnterEvent *event) {
