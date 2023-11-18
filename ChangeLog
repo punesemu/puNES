@@ -23,6 +23,8 @@ Changelog:
   * Windows - directory where the executable is placed.
   if you want to use a more updated version than the one distributed with the emulator, just copy it either in the executable directory or in the working directory of the emulator, which can also be opened from the "File -> Open working directory" menu.
 - Added full support for Vs System (UniSystem and DualSystem).
+- In Fullscreen the menu bar can be accessed by moving the mouse over the top of the screen.
+- Changed the "Toggle menu bar" shortcut to ESC.
 - Windows x86_64: Update to Qt5 5.15.8 (#279).
 - Fixed the management of keyboard input (#317).
 - Fixed map of one keyboard button to multiple controllers (#277).

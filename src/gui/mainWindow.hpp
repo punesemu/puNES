@@ -124,6 +124,13 @@ class mainWindow : public QMainWindow, public Ui::mainWindow {
 	Q_OBJECT
 
 	public:
+		enum _toggle_menubar_mode {
+			TOGGLE_MENUBAR_NONE,
+			TOGGLE_MENUBAR_FROM_SHORTCUT,
+			TOGGLE_MENUBAR_FROM_MOUSEMOVE
+		};
+
+	public:
 		struct _qaction_shcut_extern {
 			QAction *mode_auto;
 			QAction *mode_ntsc;
@@ -165,6 +172,7 @@ class mainWindow : public QMainWindow, public Ui::mainWindow {
 		wdgStatusBar *statusbar;
 		wdgToolBar *toolbar;
 		QShortcut *shortcut[SET_MAX_NUM_SC];
+		BYTE tmm;
 
 	private:
 		struct _shcjoy {
@@ -196,6 +204,7 @@ class mainWindow : public QMainWindow, public Ui::mainWindow {
 		void et_gg_reset(void);
 		void et_vs_reset(void);
 		void et_external_control_windows_show(void);
+		void et_toggle_menubar_from_mouse(void);
 
 	protected:
 #if defined (_WIN32)
@@ -255,6 +264,7 @@ class mainWindow : public QMainWindow, public Ui::mainWindow {
 		void geom_to_cfg(const QRect &geom, _last_geometry *lg);
 		void set_dialog_geom(QRect &geom);
 		int is_shortcut(const QKeyEvent *event);
+		void toggle_menubar(BYTE mode);
 
 	public slots:
 		void s_set_fullscreen(void);
@@ -331,6 +341,7 @@ class mainWindow : public QMainWindow, public Ui::mainWindow {
 		void s_et_gg_reset(void);
 		void s_et_vs_reset(void);
 		void s_et_external_control_windows_show(void);
+		void s_et_toggle_menubar_from_mouse(void);
 };
 
 #endif /* MAINWINDOW_HPP_ */

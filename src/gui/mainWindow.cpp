@@ -90,6 +90,7 @@ mainWindow::mainWindow() : QMainWindow() {
 	fullscreen_resize = false;
 	visibility.menubar = true;
 	visibility.toolbars = true;
+	tmm = (BYTE)TOGGLE_MENUBAR_NONE;
 
 	{
 		QHBoxLayout *layout = new QHBoxLayout(central_widget);
@@ -189,6 +190,7 @@ mainWindow::mainWindow() : QMainWindow() {
 	connect(this, SIGNAL(et_gg_reset()), this, SLOT(s_et_gg_reset()));
 	connect(this, SIGNAL(et_vs_reset()), this, SLOT(s_et_vs_reset()));
 	connect(this, SIGNAL(et_external_control_windows_show()), this, SLOT(s_et_external_control_windows_show()));
+	connect(this, SIGNAL(et_toggle_menubar_from_mouse()), this, SLOT(s_et_toggle_menubar_from_mouse()));
 
 	egds = new timerEgds(this);
 
@@ -561,6 +563,8 @@ void mainWindow::make_reset(int type) {
 	emu_thread_continue();
 }
 void mainWindow::change_rom(const uTCHAR *rom) {
+	bool menubar_is_visible = (cfg->fullscreen == FULLSCR) && (gfx.type_of_fscreen_in_use == FULLSCR) && menubar->isVisible();
+
 	if (info.turn_off) {
 		s_turn_on_off();
 	}
@@ -568,8 +572,14 @@ void mainWindow::change_rom(const uTCHAR *rom) {
 	info.rom.from_load_menu = emu_ustrncpy(info.rom.from_load_menu, (uTCHAR *)rom);
 	gamegenie_reset();
 	gamegenie_free_paths();
+	if (menubar_is_visible) {
+		menubar->setVisible(false);
+	}
 	make_reset(CHANGE_ROM);
 	gui_update();
+	if (menubar_is_visible) {
+		menubar->setVisible(true);
+	}
 	emu_thread_continue();
 }
 void mainWindow::shortcuts(void) {
@@ -1243,6 +1253,18 @@ int mainWindow::is_shortcut(const QKeyEvent *event) {
 	}
 
 	return (-1);
+}
+void mainWindow::toggle_menubar(BYTE mode) {
+	if ((cfg->fullscreen != FULLSCR) || (gfx.type_of_fscreen_in_use != FULLSCR)) {
+		return;
+	}
+
+	emu_thread_pause();
+
+	menubar->setVisible(!menubar->isVisible());
+	tmm = menubar->isVisible() ? mode : (BYTE)TOGGLE_MENUBAR_NONE;
+
+	emu_thread_continue();
 }
 
 void mainWindow::s_set_fullscreen(void) {
@@ -2107,6 +2129,7 @@ void mainWindow::s_fullscreen(void) {
 			toolbar->setVisible(visibility.toolbars);
 		}
 		gfx.type_of_fscreen_in_use = NO_FULLSCR;
+		tmm = (BYTE)TOGGLE_MENUBAR_NONE;
 #if defined (_WIN32)
 		setWindowFlags(window_flags);
 #endif
@@ -2404,15 +2427,7 @@ void mainWindow::s_shcut_rwnd_pause(void) const {
 	toolbar->rewind->toolButton_Pause->click();
 }
 void mainWindow::s_shcut_toggle_menubar(void) {
-	if ((cfg->fullscreen != FULLSCR) || (gfx.type_of_fscreen_in_use != FULLSCR)) {
-		return;
-	}
-
-	emu_thread_pause();
-
-	menubar->setVisible(!menubar->isVisible());
-
-	emu_thread_continue();
+	toggle_menubar(TOGGLE_MENUBAR_FROM_SHORTCUT);
 }
 void mainWindow::s_shcut_toggle_capture_input(void) const {
 	if (nes_keyboard.enabled) {
@@ -2447,6 +2462,9 @@ void mainWindow::s_et_vs_reset(void) {
 }
 void mainWindow::s_et_external_control_windows_show(void) {
 	gui_external_control_windows_show();
+}
+void mainWindow::s_et_toggle_menubar_from_mouse(void) {
+	toggle_menubar(TOGGLE_MENUBAR_FROM_MOUSEMOVE);
 }
 
 // ----------------------------------------------------------------------------------------------
