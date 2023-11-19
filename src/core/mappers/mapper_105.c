@@ -19,17 +19,19 @@
 #include <string.h>
 #include "mappers.h"
 #include "save_slot.h"
+#include "clock.h"
+#include "gui.h"
 
 void prg_fix_mmc1_105(void);
 void prg_swap_mmc1_105(WORD address, WORD value);
 void chr_swap_mmc1_105(WORD address, WORD value);
 
 struct _m105 {
-	uint32_t count;
+	struct _counter_m105 {
+		BYTE disabled;
+		uint32_t timer;
+	} counter;
 } m105;
-struct _m105tmp {
-	uint32_t counter_must_reach;
-} m105tmp;
 
 void map_init_105(void) {
 	EXTCL_AFTER_MAPPER_INIT(MMC1);
@@ -47,19 +49,34 @@ void map_init_105(void) {
 	MMC1_prg_fix = prg_fix_mmc1_105;
 	MMC1_prg_swap = prg_swap_mmc1_105;
 	MMC1_chr_swap = chr_swap_mmc1_105;
-
-	m105tmp.counter_must_reach = (dipswitch.value << 25) | 0x20000000;
 }
 BYTE extcl_save_mapper_105(BYTE mode, BYTE slot, FILE *fp) {
-	save_slot_ele(mode, slot, m105.count);
+	save_slot_ele(mode, slot, m105.counter.timer);
+	save_slot_ele(mode, slot, m105.counter.disabled);
 	return (EXIT_OK);
 }
 void extcl_cpu_every_cycle_105(BYTE nidx) {
 	if (mmc1.reg[1] & 0x10) {
-		m105.count = 0;
+		m105.counter.timer = 0;
+		m105.counter.disabled = FALSE;
 		nes[nidx].c.irq.high &= ~EXT_IRQ;
-	} else if (++m105.count == m105tmp.counter_must_reach) {
-		nes[nidx].c.irq.high |= EXT_IRQ;
+	} else {
+		uint32_t timer = (dipswitch.value | 0x10) << 25;
+		uint32_t cpu_hz = (uint32_t)machine.cpu_hz;
+
+		if (++m105.counter.timer == timer) {
+			m105.counter.disabled = TRUE;
+			nes[nidx].c.irq.high |= EXT_IRQ;
+		}
+		if (!m105.counter.disabled && ((m105.counter.timer % cpu_hz) == 0)) {
+			uint32_t seconds = (timer - m105.counter.timer) / cpu_hz;
+			uTCHAR buffer[50] = { 0 };
+
+			if (usnprintf(buffer, usizeof(buffer), uL("Time left: %02d:%02d"),
+					seconds / 60, seconds % 60) <= (int)usizeof(buffer)) {
+				gui_overlay_info_append_subtitle(buffer);
+			}
+		}
 	}
 }
 
