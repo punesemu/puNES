@@ -383,6 +383,7 @@
 #include "mappers/mapper_512.h"
 #include "mappers/mapper_513.h"
 #include "mappers/mapper_516.h"
+#include "mappers/mapper_517.h"
 #include "mappers/mapper_518.h"
 #include "mappers/mapper_519.h"
 #include "mappers/mapper_521.h"

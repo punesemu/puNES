@@ -450,6 +450,7 @@ set(core_srcs
 	core/mappers/mapper_513.c
 	core/mappers/mapper_516.c
 	core/mappers/mapper_518.c
+	core/mappers/mapper_517.c
 	core/mappers/mapper_519.c
 	core/mappers/mapper_521.c
 	core/mappers/mapper_522.c
