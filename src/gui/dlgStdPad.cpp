@@ -53,6 +53,9 @@ dlgStdPad::dlgStdPad(QWidget *parent, _cfg_port *cfg_port) : QDialog(parent) {
 	setAttribute(Qt::WA_DeleteOnClose);
 	setFocusProxy(tabWidget_kbd_joy);
 
+	frame_kbd_buttons->setLayoutDirection(Qt::LeftToRight);
+	frame_joy_buttons->setLayoutDirection(Qt::LeftToRight);
+
 	groupBox_controller->setStyleSheet(group_title_bold_stylesheet());
 	groupBox_Misc->setStyleSheet(group_title_bold_stylesheet());
 

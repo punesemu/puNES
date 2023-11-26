@@ -28,7 +28,10 @@
 wdgRotateScreen::wdgRotateScreen(QWidget *parent) : QWidget(parent) {
 	setupUi(this);
 
+	widget_directions->setLayoutDirection(Qt::LeftToRight);
+
 	gridLayout->setHorizontalSpacing(SPACING);
+	horizontalLayout_directions->setSpacing(SPACING);
 
 	connect(pushButton_left, SIGNAL(clicked(bool)), this, SLOT(s_rotate_to_left(bool)));
 	connect(pushButton_right, SIGNAL(clicked(bool)), this, SLOT(s_rotate_to_right(bool)));

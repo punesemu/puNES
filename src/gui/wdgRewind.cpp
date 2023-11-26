@@ -33,7 +33,10 @@ wdgRewind::wdgRewind(QWidget *parent) : QWidget(parent) {
 
 	setupUi(this);
 
+	widget_buttons->setLayoutDirection(Qt::LeftToRight);
+
 	gridLayout->setHorizontalSpacing(SPACING);
+	horizontalLayout_buttons->setSpacing(SPACING);
 
 	connect(toolButton_Fast_Backward, SIGNAL(clicked(bool)), this, SLOT(s_fast_backward(bool)));
 	connect(toolButton_Step_Backward, SIGNAL(clicked(bool)), this, SLOT(s_step_backward(bool)));

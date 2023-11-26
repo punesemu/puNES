@@ -26,115 +26,7 @@
    <property name="bottomMargin">
     <number>0</number>
    </property>
-   <item row="1" column="4">
-    <widget class="QToolButton" name="toolButton_Step_Forward">
-     <property name="toolTip">
-      <string>Forward (single frame)</string>
-     </property>
-     <property name="text">
-      <string notr="true">&gt;</string>
-     </property>
-     <property name="icon">
-      <iconset resource="resources.qrc">
-       <normaloff>:/icon/icons/rwnd_step_forward.svgz</normaloff>:/icon/icons/rwnd_step_forward.svgz</iconset>
-     </property>
-     <property name="checkable">
-      <bool>true</bool>
-     </property>
-     <property name="autoRepeat">
-      <bool>true</bool>
-     </property>
-    </widget>
-   </item>
-   <item row="1" column="1">
-    <widget class="QToolButton" name="toolButton_Step_Backward">
-     <property name="toolTip">
-      <string>Rewind (single frame)</string>
-     </property>
-     <property name="text">
-      <string notr="true">&lt;</string>
-     </property>
-     <property name="icon">
-      <iconset resource="resources.qrc">
-       <normaloff>:/icon/icons/rwnd_step_backward.svgz</normaloff>:/icon/icons/rwnd_step_backward.svgz</iconset>
-     </property>
-     <property name="checkable">
-      <bool>true</bool>
-     </property>
-     <property name="autoRepeat">
-      <bool>true</bool>
-     </property>
-    </widget>
-   </item>
-   <item row="1" column="3">
-    <widget class="QToolButton" name="toolButton_Pause">
-     <property name="toolTip">
-      <string>Pause</string>
-     </property>
-     <property name="text">
-      <string notr="true">Pause</string>
-     </property>
-     <property name="icon">
-      <iconset resource="resources.qrc">
-       <normaloff>:/icon/icons/rwnd_pause.svgz</normaloff>:/icon/icons/rwnd_pause.svgz</iconset>
-     </property>
-     <property name="checkable">
-      <bool>true</bool>
-     </property>
-    </widget>
-   </item>
-   <item row="1" column="5">
-    <widget class="QToolButton" name="toolButton_Fast_Forward">
-     <property name="toolTip">
-      <string>Fast forward (from 1x to 8x)</string>
-     </property>
-     <property name="text">
-      <string notr="true">&gt;&gt;</string>
-     </property>
-     <property name="icon">
-      <iconset resource="resources.qrc">
-       <normaloff>:/icon/icons/rwnd_fast_forward.svgz</normaloff>:/icon/icons/rwnd_fast_forward.svgz</iconset>
-     </property>
-     <property name="checkable">
-      <bool>true</bool>
-     </property>
-    </widget>
-   </item>
-   <item row="1" column="0">
-    <widget class="QToolButton" name="toolButton_Fast_Backward">
-     <property name="toolTip">
-      <string>Fast rewind (from 1x to 8x)</string>
-     </property>
-     <property name="text">
-      <string notr="true">&lt;&lt;</string>
-     </property>
-     <property name="icon">
-      <iconset resource="resources.qrc">
-       <normaloff>:/icon/icons/rwnd_fast_backward.svgz</normaloff>:/icon/icons/rwnd_fast_backward.svgz</iconset>
-     </property>
-     <property name="checkable">
-      <bool>true</bool>
-     </property>
-    </widget>
-   </item>
-   <item row="1" column="2">
-    <widget class="QToolButton" name="toolButton_Play">
-     <property name="toolTip">
-      <string>Play</string>
-     </property>
-     <property name="text">
-      <string notr="true">Play</string>
-     </property>
-     <property name="icon">
-      <iconset resource="resources.qrc">
-       <normaloff>:/icon/icons/rwnd_play.svgz</normaloff>:/icon/icons/rwnd_play.svgz</iconset>
-     </property>
-     <property name="checkable">
-      <bool>false</bool>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="0" colspan="6">
+   <item row="0" column="0" colspan="2">
     <widget class="QLabel" name="label_title">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
@@ -150,16 +42,134 @@
      </property>
     </widget>
    </item>
+   <item row="1" column="0">
+    <widget class="QWidget" name="widget_buttons" native="true">
+     <layout class="QHBoxLayout" name="horizontalLayout_buttons">
+      <property name="leftMargin">
+       <number>0</number>
+      </property>
+      <property name="topMargin">
+       <number>0</number>
+      </property>
+      <property name="rightMargin">
+       <number>0</number>
+      </property>
+      <property name="bottomMargin">
+       <number>0</number>
+      </property>
+      <item>
+       <widget class="QToolButton" name="toolButton_Fast_Backward">
+        <property name="toolTip">
+         <string>Fast rewind (from 1x to 8x)</string>
+        </property>
+        <property name="text">
+         <string notr="true">&lt;&lt;</string>
+        </property>
+        <property name="icon">
+         <iconset resource="resources.qrc">
+          <normaloff>:/icon/icons/rwnd_fast_backward.svgz</normaloff>:/icon/icons/rwnd_fast_backward.svgz</iconset>
+        </property>
+        <property name="checkable">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QToolButton" name="toolButton_Step_Backward">
+        <property name="toolTip">
+         <string>Rewind (single frame)</string>
+        </property>
+        <property name="text">
+         <string notr="true">&lt;</string>
+        </property>
+        <property name="icon">
+         <iconset resource="resources.qrc">
+          <normaloff>:/icon/icons/rwnd_step_backward.svgz</normaloff>:/icon/icons/rwnd_step_backward.svgz</iconset>
+        </property>
+        <property name="checkable">
+         <bool>true</bool>
+        </property>
+        <property name="autoRepeat">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QToolButton" name="toolButton_Play">
+        <property name="toolTip">
+         <string>Play</string>
+        </property>
+        <property name="text">
+         <string notr="true">Play</string>
+        </property>
+        <property name="icon">
+         <iconset resource="resources.qrc">
+          <normaloff>:/icon/icons/rwnd_play.svgz</normaloff>:/icon/icons/rwnd_play.svgz</iconset>
+        </property>
+        <property name="checkable">
+         <bool>false</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QToolButton" name="toolButton_Pause">
+        <property name="toolTip">
+         <string>Pause</string>
+        </property>
+        <property name="text">
+         <string notr="true">Pause</string>
+        </property>
+        <property name="icon">
+         <iconset resource="resources.qrc">
+          <normaloff>:/icon/icons/rwnd_pause.svgz</normaloff>:/icon/icons/rwnd_pause.svgz</iconset>
+        </property>
+        <property name="checkable">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QToolButton" name="toolButton_Step_Forward">
+        <property name="toolTip">
+         <string>Forward (single frame)</string>
+        </property>
+        <property name="text">
+         <string notr="true">&gt;</string>
+        </property>
+        <property name="icon">
+         <iconset resource="resources.qrc">
+          <normaloff>:/icon/icons/rwnd_step_forward.svgz</normaloff>:/icon/icons/rwnd_step_forward.svgz</iconset>
+        </property>
+        <property name="checkable">
+         <bool>true</bool>
+        </property>
+        <property name="autoRepeat">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QToolButton" name="toolButton_Fast_Forward">
+        <property name="toolTip">
+         <string>Fast forward (from 1x to 8x)</string>
+        </property>
+        <property name="text">
+         <string notr="true">&gt;&gt;</string>
+        </property>
+        <property name="icon">
+         <iconset resource="resources.qrc">
+          <normaloff>:/icon/icons/rwnd_fast_forward.svgz</normaloff>:/icon/icons/rwnd_fast_forward.svgz</iconset>
+        </property>
+        <property name="checkable">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
   </layout>
  </widget>
- <tabstops>
-  <tabstop>toolButton_Fast_Backward</tabstop>
-  <tabstop>toolButton_Step_Backward</tabstop>
-  <tabstop>toolButton_Play</tabstop>
-  <tabstop>toolButton_Pause</tabstop>
-  <tabstop>toolButton_Step_Forward</tabstop>
-  <tabstop>toolButton_Fast_Forward</tabstop>
- </tabstops>
  <resources>
   <include location="resources.qrc"/>
  </resources>

@@ -319,6 +319,8 @@ wdgOverlayUi::wdgOverlayUi(QWidget *parent) : QWidget(parent) {
 
 	setupUi(this);
 
+	setLayoutDirection(Qt::LeftToRight);
+
 	overlayInfo->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
 	overlayFPS->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
 	overlayFloppy->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);

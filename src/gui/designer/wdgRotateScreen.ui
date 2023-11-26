@@ -39,20 +39,6 @@
      </property>
     </widget>
    </item>
-   <item row="3" column="0">
-    <widget class="QPushButton" name="pushButton_left">
-     <property name="toolTip">
-      <string>Rotate the screen 90 degrees to the left</string>
-     </property>
-     <property name="text">
-      <string notr="true"/>
-     </property>
-     <property name="icon">
-      <iconset resource="resources.qrc">
-       <normaloff>:/icon/icons/rotate_left.svgz</normaloff>:/icon/icons/rotate_left.svgz</iconset>
-     </property>
-    </widget>
-   </item>
    <item row="2" column="2">
     <widget class="QLabel" name="label_desc">
      <property name="toolTip">
@@ -63,20 +49,6 @@
      </property>
      <property name="alignment">
       <set>Qt::AlignCenter</set>
-     </property>
-    </widget>
-   </item>
-   <item row="3" column="1">
-    <widget class="QPushButton" name="pushButton_right">
-     <property name="toolTip">
-      <string>Rotate the screen 90 degrees to the Right</string>
-     </property>
-     <property name="text">
-      <string notr="true"/>
-     </property>
-     <property name="icon">
-      <iconset resource="resources.qrc">
-       <normaloff>:/icon/icons/rotate_right.svgz</normaloff>:/icon/icons/rotate_right.svgz</iconset>
      </property>
     </widget>
    </item>
@@ -94,10 +66,58 @@
      </property>
     </widget>
    </item>
+   <item row="3" column="0" colspan="2">
+    <widget class="QWidget" name="widget_directions" native="true">
+     <layout class="QHBoxLayout" name="horizontalLayout_directions">
+      <property name="leftMargin">
+       <number>0</number>
+      </property>
+      <property name="topMargin">
+       <number>0</number>
+      </property>
+      <property name="rightMargin">
+       <number>0</number>
+      </property>
+      <property name="bottomMargin">
+       <number>0</number>
+      </property>
+      <item>
+       <widget class="QPushButton" name="pushButton_left">
+        <property name="toolTip">
+         <string>Rotate the screen 90 degrees to the left</string>
+        </property>
+        <property name="text">
+         <string notr="true"/>
+        </property>
+        <property name="icon">
+         <iconset resource="resources.qrc">
+          <normaloff>:/icon/icons/rotate_left.svgz</normaloff>:/icon/icons/rotate_left.svgz</iconset>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pushButton_right">
+        <property name="toolTip">
+         <string>Rotate the screen 90 degrees to the Right</string>
+        </property>
+        <property name="text">
+         <string notr="true"/>
+        </property>
+        <property name="icon">
+         <iconset resource="resources.qrc">
+          <normaloff>:/icon/icons/rotate_right.svgz</normaloff>:/icon/icons/rotate_right.svgz</iconset>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
   </layout>
  </widget>
  <tabstops>
   <tabstop>pushButton_left</tabstop>
+  <tabstop>pushButton_right</tabstop>
+  <tabstop>pushButton_flip</tabstop>
  </tabstops>
  <resources>
   <include location="resources.qrc"/>
