@@ -134,9 +134,9 @@ void extcl_cpu_wr_mem_LZ93D50(BYTE nidx, WORD address, BYTE value) {
 		}
 	}
 }
-BYTE extcl_cpu_rd_mem_LZ93D50(BYTE nidx, WORD address, UNUSED(BYTE openbus)) {
+BYTE extcl_cpu_rd_mem_LZ93D50(BYTE nidx, WORD address, BYTE openbus) {
 	if ((address >= 0x6000) && (address <= 0x7FFF) && lz93d50tmp.eeprom) {
-		return (eeprom_i2c_get_data(lz93d50tmp.eeprom) * 0x10) | (wram_rd(nidx, address) & 0xEF);
+		return (eeprom_i2c_get_data(lz93d50tmp.eeprom) * 0x10) | (openbus & 0xEF);
 	}
 	return (wram_rd(nidx, address));
 }
