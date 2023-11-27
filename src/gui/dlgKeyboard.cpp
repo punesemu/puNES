@@ -800,6 +800,8 @@ wdgKeyboard::wdgKeyboard(QWidget *parent) : QWidget(parent) {
 	columns = 0;
 	delay.set = 2;
 	delay.unset = 1;
+
+	setLayoutDirection(Qt::LeftToRight);
 }
 wdgKeyboard::~wdgKeyboard() = default;
 
