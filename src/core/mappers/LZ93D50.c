@@ -126,6 +126,7 @@ void extcl_cpu_wr_mem_LZ93D50(BYTE nidx, WORD address, BYTE value) {
 					eeprom_i2c_set_pins(lz93d50tmp.eeprom, FALSE, ((value & 0x20) >> 5), ((value & 0x40) >> 6));
 				} else {
 					lz93d50.wram_enabled = (value & 0x20) >> 5;
+					LZ93D50_wram_fix();
 				}
 				return;
 			default:
@@ -133,11 +134,11 @@ void extcl_cpu_wr_mem_LZ93D50(BYTE nidx, WORD address, BYTE value) {
 		}
 	}
 }
-BYTE extcl_cpu_rd_mem_LZ93D50(UNUSED(BYTE nidx), WORD address, BYTE openbus) {
+BYTE extcl_cpu_rd_mem_LZ93D50(BYTE nidx, WORD address, UNUSED(BYTE openbus)) {
 	if ((address >= 0x6000) && (address <= 0x7FFF) && lz93d50tmp.eeprom) {
-		return (eeprom_i2c_get_data(lz93d50tmp.eeprom) * 0x10) | (openbus & 0xEF);
+		return (eeprom_i2c_get_data(lz93d50tmp.eeprom) * 0x10) | (wram_rd(nidx, address) & 0xEF);
 	}
-	return (openbus);
+	return (wram_rd(nidx, address));
 }
 BYTE extcl_save_mapper_LZ93D50(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, lz93d50.prg);
