@@ -34,8 +34,7 @@ void map_init_159(void) {
 	EXTCL_CPU_RD_MEM(LZ93D50);
 	EXTCL_SAVE_MAPPER(LZ93D50);
 	EXTCL_CPU_EVERY_CYCLE(LZ93D50);
-	mapper.internal_struct[0] = (BYTE *)&lz93d50;
-	mapper.internal_struct_size[0] = sizeof(lz93d50);
+	map_internal_struct_init((BYTE *)&lz93d50, sizeof(lz93d50));
 
 	init_LZ93D50(FALSE, info.reset);
 	LZ93D50_prg_swap = prg_swap_lz93d50_159;

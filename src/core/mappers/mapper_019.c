@@ -45,8 +45,7 @@ void map_init_019(void) {
 	EXTCL_CPU_EVERY_CYCLE(019);
 	EXTCL_BATTERY_IO(019);
 	EXTCL_APU_TICK(019);
-	mapper.internal_struct[0] = (BYTE *)&m019;
-	mapper.internal_struct_size[0] = sizeof(m019);
+	map_internal_struct_init((BYTE *)&m019, sizeof(m019));
 
 	if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
 		memmap_wram_region_init(0, S2K);

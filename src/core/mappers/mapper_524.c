@@ -36,10 +36,8 @@ void map_init_524(void) {
 	EXTCL_CPU_RD_MEM(VRC2and4);
 	EXTCL_SAVE_MAPPER(524);
 	EXTCL_CPU_EVERY_CYCLE(524);
-	mapper.internal_struct[0] = (BYTE *)&m524;
-	mapper.internal_struct_size[0] = sizeof(m524);
-	mapper.internal_struct[1] = (BYTE *)&vrc2and4;
-	mapper.internal_struct_size[1] = sizeof(vrc2and4);
+	map_internal_struct_init((BYTE *)&m524, sizeof(m524));
+	map_internal_struct_init((BYTE *)&vrc2and4, sizeof(vrc2and4));
 
 	if (info.reset >= HARD) {
 		memset(&m524, 0x00, sizeof(m524));

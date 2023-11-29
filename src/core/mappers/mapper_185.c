@@ -32,8 +32,7 @@ void map_init_185() {
 	EXTCL_AFTER_MAPPER_INIT(185);
 	EXTCL_CPU_WR_MEM(185);
 	EXTCL_SAVE_MAPPER(185);
-	mapper.internal_struct[0] = (BYTE *)&m185;
-	mapper.internal_struct_size[0] = sizeof(m185);
+	map_internal_struct_init((BYTE *)&m185, sizeof(m185));
 
 	if ((info.mapper.submapper & 0x0C) != 0x04) {
 		EXTCL_RD_R2007(185);

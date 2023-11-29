@@ -42,10 +42,8 @@ void map_init_111(void) {
 		EXTCL_AFTER_MAPPER_INIT(MMC1);
 		EXTCL_CPU_WR_MEM(111_MMC1);
 		EXTCL_SAVE_MAPPER(111_MMC1);
-		mapper.internal_struct[0] = (BYTE*)&m111;
-		mapper.internal_struct_size[0] = sizeof(m111);
-		mapper.internal_struct[1] = (BYTE *)&mmc1;
-		mapper.internal_struct_size[1] = sizeof(mmc1);
+		map_internal_struct_init((BYTE *)&m111, sizeof(m111));
+		map_internal_struct_init((BYTE *)&mmc1, sizeof(mmc1));
 
 		if (info.reset >= HARD) {
 			memset(&m111, 0x00, sizeof(m111));
@@ -62,8 +60,7 @@ void map_init_111(void) {
 		EXTCL_SAVE_MAPPER(111_GTROM);
 		EXTCL_CPU_EVERY_CYCLE(111_GTROM);
 		EXTCL_BATTERY_IO(111_GTROM);
-		mapper.internal_struct[0] = (BYTE*)&m111;
-		mapper.internal_struct_size[0] = sizeof(m111);
+		map_internal_struct_init((BYTE *)&m111, sizeof(m111));
 
 		if (info.reset >= HARD) {
 			m111.reg = 0xFF;

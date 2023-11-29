@@ -346,8 +346,7 @@ void map_init_006(void) {
 	EXTCL_PPU_256_TO_319(006);
 	EXTCL_PPU_320_TO_34X(006);
 	EXTCL_UPDATE_R2006(006);
-	mapper.internal_struct[0] = (BYTE *)&m006;
-	mapper.internal_struct_size[0] = sizeof(m006);
+	map_internal_struct_init((BYTE *)&m006, sizeof(m006));
 
 	m006tmp.chr = NULL;
 

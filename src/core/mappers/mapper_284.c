@@ -40,8 +40,7 @@ void map_init_284(void) {
 	EXTCL_SAVE_MAPPER(284);
 	EXTCL_RD_NMT(284);
 	EXTCL_CPU_EVERY_CYCLE(284);
-	mapper.internal_struct[0] = (BYTE *)&m284;
-	mapper.internal_struct_size[0] = sizeof(m284);
+	map_internal_struct_init((BYTE *)&m284, sizeof(m284));
 
 	m284.control = 0;
 	m284.prg = 0;

@@ -131,16 +131,11 @@ void map_init_446(void) {
 	EXTCL_PPU_320_TO_34X(446);
 	EXTCL_UPDATE_R2006(446);
 	EXTCL_BATTERY_IO(446);
-	mapper.internal_struct[0] = (BYTE *)&m446;
-	mapper.internal_struct_size[0] = sizeof(m446);
-	mapper.internal_struct[1] = (BYTE *)&mmc3;
-	mapper.internal_struct_size[1] = sizeof(mmc3);
-	mapper.internal_struct[2] = (BYTE *)&mmc1;
-	mapper.internal_struct_size[2] = sizeof(mmc1);
-	mapper.internal_struct[3] = (BYTE *)&vrc2and4;
-	mapper.internal_struct_size[3] = sizeof(vrc2and4);
-	mapper.internal_struct[4] = (BYTE *)&vrc6;
-	mapper.internal_struct_size[4] = sizeof(vrc6);
+	map_internal_struct_init((BYTE *)&m446, sizeof(m446));
+	map_internal_struct_init((BYTE *)&mmc3, sizeof(mmc3));
+	map_internal_struct_init((BYTE *)&mmc1, sizeof(mmc1));
+	map_internal_struct_init((BYTE *)&vrc2and4, sizeof(vrc2and4));
+	map_internal_struct_init((BYTE *)&vrc6, sizeof(vrc6));
 
 	if (info.reset >= HARD) {
 		memset(&m446, 0x00, sizeof(m446));

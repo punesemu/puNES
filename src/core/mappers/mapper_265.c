@@ -31,8 +31,7 @@ void map_init_265(void) {
 	EXTCL_AFTER_MAPPER_INIT(265);
 	EXTCL_CPU_WR_MEM(265);
 	EXTCL_SAVE_MAPPER(265);
-	mapper.internal_struct[0] = (BYTE *)&m265;
-	mapper.internal_struct_size[0] = sizeof(m265);
+	map_internal_struct_init((BYTE *)&m265, sizeof(m265));
 
 	memset(&m265, 0x00, sizeof(m265));
 }

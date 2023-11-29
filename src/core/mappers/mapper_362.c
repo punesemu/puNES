@@ -34,10 +34,8 @@ void map_init_362(void) {
 	EXTCL_SAVE_MAPPER(362);
 	EXTCL_CPU_EVERY_CYCLE(VRC2and4);
 	EXTCL_RD_CHR(362);
-	mapper.internal_struct[0] = (BYTE *)&m362;
-	mapper.internal_struct_size[0] = sizeof(m362);
-	mapper.internal_struct[1] = (BYTE *)&vrc2and4;
-	mapper.internal_struct_size[1] = sizeof(vrc2and4);
+	map_internal_struct_init((BYTE *)&m362, sizeof(m362));
+	map_internal_struct_init((BYTE *)&vrc2and4, sizeof(vrc2and4));
 
 	init_VRC2and4(VRC24_VRC4, 0x01, 0x02, FALSE, info.reset);
 	VRC2and4_prg_swap = prg_swap_vrc2and4_362;

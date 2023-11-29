@@ -29,8 +29,7 @@ void map_init_024(void) {
 	EXTCL_SAVE_MAPPER(VRC6);
 	EXTCL_CPU_EVERY_CYCLE(VRC6);
 	EXTCL_APU_TICK(VRC6);
-	mapper.internal_struct[0] = (BYTE *)&vrc6;
-	mapper.internal_struct_size[0] = sizeof(vrc6);
+	map_internal_struct_init((BYTE *)&vrc6, sizeof(vrc6));
 
 	init_VRC6(0x01, 0x02, info.reset);
 	VRC6_prg_swap = prg_swap_vrc6_024;

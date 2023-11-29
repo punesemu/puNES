@@ -27,8 +27,7 @@ void map_init_136(void) {
 	EXTCL_CPU_WR_MEM(136);
 	EXTCL_CPU_RD_MEM(136);
 	EXTCL_SAVE_MAPPER(JV001);
-	mapper.internal_struct[0] = (BYTE *)&jv001;
-	mapper.internal_struct_size[0] = sizeof(jv001);
+	map_internal_struct_init((BYTE *)&jv001, sizeof(jv001));
 
 	init_JV001(info.reset);
 	JV001_prg_fix = prg_fix_jv001_136;

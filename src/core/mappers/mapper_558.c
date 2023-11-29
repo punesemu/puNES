@@ -37,8 +37,7 @@ void map_init_558(void) {
 	EXTCL_CPU_WR_MEM(558);
 	EXTCL_CPU_RD_MEM(558);
 	EXTCL_SAVE_MAPPER(558);
-	mapper.internal_struct[0] = (BYTE *)&m558;
-	mapper.internal_struct_size[0] = sizeof(m558);
+	map_internal_struct_init((BYTE *)&m558, sizeof(m558));
 
 	memset(&m558, 0x00, sizeof(m558));
 

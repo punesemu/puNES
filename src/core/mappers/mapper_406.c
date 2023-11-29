@@ -44,8 +44,7 @@ void map_init_406(void) {
 	EXTCL_PPU_320_TO_34X(MMC3);
 	EXTCL_UPDATE_R2006(MMC3);
 	EXTCL_IRQ_A12_CLOCK(406);
-	mapper.internal_struct[0] = (BYTE *)&mmc3;
-	mapper.internal_struct_size[0] = sizeof(mmc3);
+	map_internal_struct_init((BYTE *)&mmc3, sizeof(mmc3));
 
 	if (info.reset >= HARD) {
 		memset(&nes[0].irqA12, 0x00, sizeof(nes[0].irqA12));

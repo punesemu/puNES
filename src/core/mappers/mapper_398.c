@@ -33,10 +33,8 @@ void map_init_398(void) {
 	EXTCL_SAVE_MAPPER(398);
 	EXTCL_CPU_EVERY_CYCLE(VRC2and4);
 	EXTCL_RD_CHR(398);
-	mapper.internal_struct[0] = (BYTE *)&m398;
-	mapper.internal_struct_size[0] = sizeof(m398);
-	mapper.internal_struct[1] = (BYTE *)&vrc2and4;
-	mapper.internal_struct_size[1] = sizeof(vrc2and4);
+	map_internal_struct_init((BYTE *)&m398, sizeof(m398));
+	map_internal_struct_init((BYTE *)&vrc2and4, sizeof(vrc2and4));
 
 	memset(&m398, 0x00, sizeof(m398));
 

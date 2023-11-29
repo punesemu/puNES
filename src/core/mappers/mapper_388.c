@@ -39,8 +39,7 @@ void map_init_388(void) {
 	EXTCL_PPU_256_TO_319(JYASIC);
 	EXTCL_PPU_320_TO_34X(JYASIC);
 	EXTCL_UPDATE_R2006(JYASIC);
-	mapper.internal_struct[0] = (BYTE *)&jyasic;
-	mapper.internal_struct_size[0] = sizeof(jyasic);
+	map_internal_struct_init((BYTE *)&jyasic, sizeof(jyasic));
 
 	init_JYASIC(FALSE, info.reset);
 	JYASIC_prg_swap = prg_swap_jyasic_388;

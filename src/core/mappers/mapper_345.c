@@ -37,10 +37,8 @@ void map_init_345(void) {
 	EXTCL_PPU_256_TO_319(MMC3);
 	EXTCL_PPU_320_TO_34X(MMC3);
 	EXTCL_UPDATE_R2006(MMC3);
-	mapper.internal_struct[0] = (BYTE *)&m345;
-	mapper.internal_struct_size[0] = sizeof(m345);
-	mapper.internal_struct[1] = (BYTE *)&mmc3;
-	mapper.internal_struct_size[1] = sizeof(mmc3);
+	map_internal_struct_init((BYTE *)&m345, sizeof(m345));
+	map_internal_struct_init((BYTE *)&mmc3, sizeof(mmc3));
 
 	// Ho trovato questa nota:
 	// Note: Cabal leaves the APU in a bad state so that

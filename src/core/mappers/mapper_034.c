@@ -51,8 +51,7 @@ void map_init_034(void) {
 			EXTCL_AFTER_MAPPER_INIT(034_s1);
 			EXTCL_CPU_WR_MEM(034_s1);
 			EXTCL_SAVE_MAPPER(034_s1);
-			mapper.internal_struct[0] = (BYTE *)&m034;
-			mapper.internal_struct_size[0] = sizeof(m034);
+			map_internal_struct_init((BYTE *)&m034, sizeof(m034));
 
 			if (info.reset >= HARD) {
 				memset(&m034, 0x00, sizeof(m034));
@@ -64,8 +63,7 @@ void map_init_034(void) {
 			EXTCL_AFTER_MAPPER_INIT(034_s2);
 			EXTCL_CPU_WR_MEM(034_s2);
 			EXTCL_SAVE_MAPPER(034_s2);
-			mapper.internal_struct[0] = (BYTE *)&m034;
-			mapper.internal_struct_size[0] = sizeof(m034);
+			map_internal_struct_init((BYTE *)&m034, sizeof(m034));
 
 			if (info.reset >= HARD) {
 				memset(&m034, 0x00, sizeof(m034));
@@ -75,8 +73,7 @@ void map_init_034(void) {
 			EXTCL_AFTER_MAPPER_INIT(034_nstcl);
 			EXTCL_CPU_WR_MEM(034_nstcl);
 			EXTCL_SAVE_MAPPER(034_nstcl);
-			mapper.internal_struct[0] = (BYTE *)&m034;
-			mapper.internal_struct_size[0] = sizeof(m034);
+			map_internal_struct_init((BYTE *)&m034, sizeof(m034));
 
 			if (info.reset >= HARD) {
 				memset(&m034, 0x00, sizeof(m034));

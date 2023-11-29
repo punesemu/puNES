@@ -26,17 +26,13 @@
 #include "draw_on_screen.h"
 
 void map_init_NSF(void) {
-	BYTE internal_struct = 0;
-
 	EXTCL_AFTER_MAPPER_INIT(NSF);
 	EXTCL_SAVE_MAPPER(NSF);
 	EXTCL_LENGTH_CLOCK(NSF);
 	EXTCL_ENVELOPE_CLOCK(NSF);
 	EXTCL_APU_TICK(NSF);
 	EXTCL_AUDIO_SAMPLES_MOD(nsf);
-	mapper.internal_struct[internal_struct] = (BYTE *)&nsf;
-	mapper.internal_struct_size[internal_struct] = sizeof(nsf);
-	internal_struct++;
+	map_internal_struct_init((BYTE *)&nsf, sizeof(nsf));
 
 	if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
 		memmap_prg_region_init(0, S4K);
@@ -90,45 +86,27 @@ void map_init_NSF(void) {
 	nsf.rate.count = nsf.rate.reload;
 
 	if (nsf.sound_chips.vrc6) {
-		mapper.internal_struct[internal_struct] = (BYTE *)&vrc6;
-		mapper.internal_struct_size[internal_struct] = sizeof(vrc6);
-		internal_struct++;
-
+		map_internal_struct_init((BYTE *)&vrc6, sizeof(vrc6));
 		init_NSF_VRC6(0x01, 0x02);
 	}
 	if (nsf.sound_chips.vrc7) {
-		mapper.internal_struct[internal_struct] = (BYTE *)&vrc7;
-		mapper.internal_struct_size[internal_struct] = sizeof(vrc7);
-		internal_struct++;
-
+		map_internal_struct_init((BYTE *)&vrc7, sizeof(vrc7));
 		init_NSF_VRC7(0x10, 0x20);
 	}
 	if (nsf.sound_chips.fds) {
-		mapper.internal_struct[internal_struct] = (BYTE *)&fds;
-		mapper.internal_struct_size[internal_struct] = sizeof(fds);
-		internal_struct++;
-
+		map_internal_struct_init((BYTE *)&fds, sizeof(fds));
 		map_init_NSF_FDS();
 	}
 	if (nsf.sound_chips.mmc5) {
-		mapper.internal_struct[internal_struct] = (BYTE *)&m005;
-		mapper.internal_struct_size[internal_struct] = sizeof(m005);
-		internal_struct++;
-
+		map_internal_struct_init((BYTE *)&m005, sizeof(m005));
 		map_init_NSF_005();
 	}
 	if (nsf.sound_chips.namco163) {
-		mapper.internal_struct[internal_struct] = (BYTE *)&m019;
-		mapper.internal_struct_size[internal_struct] = sizeof(m019);
-		internal_struct++;
-
+		map_internal_struct_init((BYTE *)&m019, sizeof(m019));
 		map_init_NSF_N163();
 	}
 	if (nsf.sound_chips.sunsoft5b) {
-		mapper.internal_struct[internal_struct] = (BYTE *)&fme7;
-		mapper.internal_struct_size[internal_struct] = sizeof(fme7);
-		internal_struct++;
-
+		map_internal_struct_init((BYTE *)&fme7, sizeof(fme7));
 		init_NSF_FME7();
 	}
 

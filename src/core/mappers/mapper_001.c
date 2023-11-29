@@ -29,8 +29,7 @@ void map_init_001(void) {
 	EXTCL_CPU_WR_MEM(MMC1);
 	EXTCL_CPU_RD_RAM(001);
 	EXTCL_SAVE_MAPPER(MMC1);
-	mapper.internal_struct[0] = (BYTE *)&mmc1;
-	mapper.internal_struct_size[0] = sizeof(mmc1);
+	map_internal_struct_init((BYTE *)&mmc1, sizeof(mmc1));
 
 	if (info.format != NES_2_0) {
 		if (!chrrom_size()) {

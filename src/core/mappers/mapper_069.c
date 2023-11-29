@@ -28,8 +28,7 @@ void map_init_069(void) {
 	EXTCL_SAVE_MAPPER(FME7);
 	EXTCL_CPU_EVERY_CYCLE(FME7);
 	EXTCL_APU_TICK(FME7);
-	mapper.internal_struct[0] = (BYTE *)&fme7;
-	mapper.internal_struct_size[0] = sizeof(fme7);
+	map_internal_struct_init((BYTE *)&fme7, sizeof(fme7));
 
 	init_FME7(info.reset);
 	FME7_prg_swap = prg_swap_fme7_069;

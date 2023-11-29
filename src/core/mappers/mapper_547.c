@@ -50,8 +50,7 @@ void map_init_547(void) {
 	EXTCL_WR_NMT(547);
 	EXTCL_RD_NMT(547);
 	EXTCL_RD_CHR(547);
-	mapper.internal_struct[0] = (BYTE *)&m547;
-	mapper.internal_struct_size[0] = sizeof(m547);
+	map_internal_struct_init((BYTE *)&m547, sizeof(m547));
 
 	if (info.reset >= HARD) {
 		memset(&m547, 0x00, sizeof(m547));

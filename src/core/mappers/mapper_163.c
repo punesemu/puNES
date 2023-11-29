@@ -44,8 +44,7 @@ void map_init_163(void) {
 	EXTCL_PPU_000_TO_255(163);
 	EXTCL_PPU_256_TO_319(163);
 	EXTCL_PPU_320_TO_34X(163);
-	mapper.internal_struct[0] = (BYTE *)&m163;
-	mapper.internal_struct_size[0] = sizeof(m163);
+	map_internal_struct_init((BYTE *)&m163, sizeof(m163));
 
 	memset(&m163, 0x00, sizeof(m163));
 

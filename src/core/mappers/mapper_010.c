@@ -28,8 +28,7 @@ void map_init_010(void) {
 	EXTCL_SAVE_MAPPER(MMC4);
 	EXTCL_AFTER_RD_CHR(MMC4);
 	EXTCL_UPDATE_R2006(MMC4);
-	mapper.internal_struct[0] = (BYTE *)&mmc4;
-	mapper.internal_struct_size[0] = sizeof(mmc4);
+	map_internal_struct_init((BYTE *)&mmc4, sizeof(mmc4));
 
 	init_MMC4(info.reset);
 	MMC4_prg_swap = prg_swap_mmc4_010;

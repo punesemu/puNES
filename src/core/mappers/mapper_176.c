@@ -49,8 +49,7 @@ void map_init_176(void) {
 	EXTCL_PPU_256_TO_319(MMC3);
 	EXTCL_PPU_320_TO_34X(MMC3);
 	EXTCL_UPDATE_R2006(MMC3);
-	mapper.internal_struct[0] = (BYTE *)&m176;
-	mapper.internal_struct_size[0] = sizeof(m176);
+	map_internal_struct_init((BYTE *)&m176, sizeof(m176));
 
 	if (info.format != NES_2_0) {
 		if (info.mapper.battery) {

@@ -37,8 +37,7 @@ void map_init_471(void) {
 	EXTCL_PPU_256_TO_319(471);
 	EXTCL_PPU_320_TO_34X(471);
 	EXTCL_UPDATE_R2006(471);
-	mapper.internal_struct[0] = (BYTE *)&m471;
-	mapper.internal_struct_size[0] = sizeof(m471);
+	map_internal_struct_init((BYTE *)&m471, sizeof(m471));
 
 	if (info.reset >= HARD) {
 		m471.reg = 0;

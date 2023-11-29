@@ -31,9 +31,7 @@ BYTE map_init(void) {
 	// di default la routine di salvataggio
 	// di una possibile struttura interna
 	// di dati della mapper e' NULL.
-	for (unsigned int i = 0; i < LENGTH(mapper.internal_struct); i++) {
-		mapper.internal_struct[i] = 0;
-	}
+	map_internal_struct_quit();
 	// disabilito gli accessori
 	for (int nesidx = 0; nesidx < NES_CHIPS_MAX; nesidx++) {
 		nes[nesidx].irqA12.present = FALSE;
@@ -1370,4 +1368,15 @@ void map_quit(void) {
 	if (extcl_mapper_quit) {
 		extcl_mapper_quit();
 	}
+}
+
+void map_internal_struct_init(BYTE *strct, size_t size) {
+	if (mapper.structs.count < INT_STRUCT) {
+		mapper.structs.s[mapper.structs.count].data = strct;
+		mapper.structs.s[mapper.structs.count].size = size;
+		mapper.structs.count++;
+	}
+}
+void map_internal_struct_quit(void) {
+	memset(&mapper.structs, 0x00, sizeof(_mapper_int_structs));
 }

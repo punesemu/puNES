@@ -60,8 +60,7 @@ void map_init_064(void) {
 	EXTCL_PPU_320_TO_34X(064);
 	EXTCL_UPDATE_R2006(064);
 	EXTCL_CPU_EVERY_CYCLE(064);
-	mapper.internal_struct[0] = (BYTE *)&m064;
-	mapper.internal_struct_size[0] = sizeof(m064);
+	map_internal_struct_init((BYTE *)&m064, sizeof(m064));
 
 	if (info.reset >= HARD) {
 		memset(&m064, 0x00, sizeof(m064));

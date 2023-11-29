@@ -471,7 +471,7 @@ BYTE save_slot_operation(BYTE mode, BYTE slot, FILE *fp) {
 
 	// mapper
 	save_slot_ele(mode, slot, mapper.mirroring);
-	if (mapper.internal_struct[0]) {
+	if (mapper.structs.count) {
 		extcl_save_mapper(mode, slot, fp);
 	}
 

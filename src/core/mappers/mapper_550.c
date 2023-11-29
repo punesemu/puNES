@@ -31,10 +31,8 @@ void map_init_550(void) {
 	EXTCL_AFTER_MAPPER_INIT(MMC1);
 	EXTCL_CPU_WR_MEM(550);
 	EXTCL_SAVE_MAPPER(550);
-	mapper.internal_struct[0] = (BYTE *)&m550;
-	mapper.internal_struct_size[0] = sizeof(m550);
-	mapper.internal_struct[1] = (BYTE *)&mmc1;
-	mapper.internal_struct_size[1] = sizeof(mmc1);
+	map_internal_struct_init((BYTE *)&m550, sizeof(m550));
+	map_internal_struct_init((BYTE *)&mmc1, sizeof(mmc1));
 
 	memset(&m550, 0x00, sizeof(m550));
 

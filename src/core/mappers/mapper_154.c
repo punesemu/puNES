@@ -33,10 +33,8 @@ void map_init_154(void) {
 	EXTCL_AFTER_MAPPER_INIT(154);
 	EXTCL_CPU_WR_MEM(154);
 	EXTCL_SAVE_MAPPER(154);
-	mapper.internal_struct[0] = (BYTE *)&m154;
-	mapper.internal_struct_size[0] = sizeof(m154);
-	mapper.internal_struct[1] = (BYTE *)&n118;
-	mapper.internal_struct_size[1] = sizeof(n118);
+	map_internal_struct_init((BYTE *)&m154, sizeof(m154));
+	map_internal_struct_init((BYTE *)&n118, sizeof(n118));
 
 	if (info.reset >= HARD) {
 		memset(&m154, 0x00, sizeof(m154));

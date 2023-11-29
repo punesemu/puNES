@@ -27,8 +27,7 @@ void map_init_173(void) {
 	EXTCL_CPU_WR_MEM(173);
 	EXTCL_CPU_RD_MEM(173);
 	EXTCL_SAVE_MAPPER(TXC);
-	mapper.internal_struct[0] = (BYTE *)&txc;
-	mapper.internal_struct_size[0] = sizeof(txc);
+	map_internal_struct_init((BYTE *)&txc, sizeof(txc));
 
 	init_TXC(info.reset);
 	TXC_prg_fix = prg_fix_txc_173;

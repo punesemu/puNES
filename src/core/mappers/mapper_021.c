@@ -27,8 +27,7 @@ void map_init_021(void) {
 	EXTCL_CPU_WR_MEM(VRC2and4);
 	EXTCL_SAVE_MAPPER(VRC2and4);
 	EXTCL_CPU_EVERY_CYCLE(VRC2and4);
-	mapper.internal_struct[0] = (BYTE *)&vrc2and4;
-	mapper.internal_struct_size[0] = sizeof(vrc2and4);
+	map_internal_struct_init((BYTE *)&vrc2and4, sizeof(vrc2and4));
 
 	switch (info.mapper.submapper) {
 		default:

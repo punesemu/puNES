@@ -52,8 +52,7 @@ void map_init_005(void) {
 	EXTCL_LENGTH_CLOCK(005);
 	EXTCL_ENVELOPE_CLOCK(005);
 	EXTCL_APU_TICK(005);
-	mapper.internal_struct[0] = (BYTE *)&m005;
-	mapper.internal_struct_size[0] = sizeof(m005);
+	map_internal_struct_init((BYTE *)&m005, sizeof(m005));
 
 	if (info.reset >= HARD) {
 		memset(&m005, 0x00, sizeof(m005));

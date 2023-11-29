@@ -35,12 +35,9 @@ void map_init_528(void) {
 	EXTCL_SAVE_MAPPER(528);
 	EXTCL_CPU_EVERY_CYCLE(VRC7);
 	EXTCL_APU_TICK(FME7);
-	mapper.internal_struct[0] = (BYTE *)&m528;
-	mapper.internal_struct_size[0] = sizeof(m528);
-	mapper.internal_struct[1] = (BYTE *)&fme7;
-	mapper.internal_struct_size[1] = sizeof(fme7);
-	mapper.internal_struct[2] = (BYTE *)&vrc7;
-	mapper.internal_struct_size[2] = sizeof(vrc7);
+	map_internal_struct_init((BYTE *)&m528, sizeof(m528));
+	map_internal_struct_init((BYTE *)&fme7, sizeof(fme7));
+	map_internal_struct_init((BYTE *)&vrc7, sizeof(vrc7));
 
 	memset(&m528, 0x00, sizeof(m528));
 

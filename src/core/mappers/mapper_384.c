@@ -32,10 +32,8 @@ void map_init_384(void) {
 	EXTCL_CPU_WR_MEM(384);
 	EXTCL_SAVE_MAPPER(384);
 	EXTCL_CPU_EVERY_CYCLE(VRC2and4);
-	mapper.internal_struct[0] = (BYTE *)&m384;
-	mapper.internal_struct_size[0] = sizeof(m384);
-	mapper.internal_struct[1] = (BYTE *)&vrc2and4;
-	mapper.internal_struct_size[1] = sizeof(vrc2and4);
+	map_internal_struct_init((BYTE *)&m384, sizeof(m384));
+	map_internal_struct_init((BYTE *)&vrc2and4, sizeof(vrc2and4));
 
 	memset(&m384, 0x00, sizeof(m384));
 

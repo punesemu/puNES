@@ -26,8 +26,7 @@ void map_init_142(void) {
 	EXTCL_CPU_WR_MEM(KS202);
 	EXTCL_SAVE_MAPPER(KS202);
 	EXTCL_CPU_EVERY_CYCLE(KS202);
-	mapper.internal_struct[0] = (BYTE *)&ks202;
-	mapper.internal_struct_size[0] = sizeof(ks202);
+	map_internal_struct_init((BYTE *)&ks202, sizeof(ks202));
 
 	init_KS202(info.reset);
 	KS202_prg_swap = prg_swap_ks202_142;

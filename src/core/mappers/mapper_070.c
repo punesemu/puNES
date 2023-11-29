@@ -30,8 +30,7 @@ void map_init_070(void) {
 	EXTCL_AFTER_MAPPER_INIT(070);
 	EXTCL_CPU_WR_MEM(070);
 	EXTCL_SAVE_MAPPER(070);
-	mapper.internal_struct[0] = (BYTE *)&m070;
-	mapper.internal_struct_size[0] = sizeof(m070);
+	map_internal_struct_init((BYTE *)&m070, sizeof(m070));
 
 	if (info.reset >= HARD) {
 		m070.reg = 0;

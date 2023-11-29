@@ -39,8 +39,7 @@ void map_init_417(void) {
 	EXTCL_CPU_WR_MEM(417);
 	EXTCL_SAVE_MAPPER(417);
 	EXTCL_CPU_EVERY_CYCLE(417);
-	mapper.internal_struct[0] = (BYTE *)&m417;
-	mapper.internal_struct_size[0] = sizeof(m417);
+	map_internal_struct_init((BYTE *)&m417, sizeof(m417));
 
 	memset(&m417, 0x00, sizeof(m417));
 }

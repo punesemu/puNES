@@ -28,8 +28,7 @@ void map_init_009(void) {
 	EXTCL_SAVE_MAPPER(MMC2);
 	EXTCL_AFTER_RD_CHR(MMC2);
 	EXTCL_UPDATE_R2006(MMC2);
-	mapper.internal_struct[0] = (BYTE *)&mmc2;
-	mapper.internal_struct_size[0] = sizeof(mmc2);
+	map_internal_struct_init((BYTE *)&mmc2, sizeof(mmc2));
 
 	init_MMC2(info.reset);
 	MMC2_prg_swap = prg_swap_mmc2_009;

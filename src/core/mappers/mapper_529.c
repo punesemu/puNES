@@ -35,8 +35,7 @@ void map_init_529(void) {
 	EXTCL_CPU_RD_MEM(529);
 	EXTCL_SAVE_MAPPER(VRC2and4);
 	EXTCL_CPU_EVERY_CYCLE(VRC2and4);
-	mapper.internal_struct[0] = (BYTE *)&vrc2and4;
-	mapper.internal_struct_size[0] = sizeof(vrc2and4);
+	map_internal_struct_init((BYTE *)&vrc2and4, sizeof(vrc2and4));
 
 	init_VRC2and4(VRC24_VRC4, 0x04, 0x08, TRUE, info.reset);
 	VRC2and4_prg_fix = prg_fix_vrc2and4_529;

@@ -30,8 +30,7 @@ void map_init_336(void) {
 	EXTCL_AFTER_MAPPER_INIT(336);
 	EXTCL_CPU_WR_MEM(336);
 	EXTCL_SAVE_MAPPER(336);
-	mapper.internal_struct[0] = (BYTE *)&m336;
-	mapper.internal_struct_size[0] = sizeof(m336);
+	map_internal_struct_init((BYTE *)&m336, sizeof(m336));
 
 	memset(&m336, 0x00, sizeof(m336));
 }

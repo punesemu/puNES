@@ -34,8 +34,7 @@ void map_init_347(void) {
 	EXTCL_AFTER_MAPPER_INIT(347);
 	EXTCL_CPU_WR_MEM(347);
 	EXTCL_SAVE_MAPPER(347);
-	mapper.internal_struct[0] = (BYTE *)&m347;
-	mapper.internal_struct_size[0] = sizeof(m347);
+	map_internal_struct_init((BYTE *)&m347, sizeof(m347));
 
 	if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
 		memmap_prg_region_init(0, S1K);

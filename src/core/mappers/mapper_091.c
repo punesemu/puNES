@@ -50,8 +50,7 @@ void map_init_091(void) {
 	} else {
 		EXTCL_PPU_256_TO_319(091);
 	}
-	mapper.internal_struct[0] = (BYTE *)&m091;
-	mapper.internal_struct_size[0] = sizeof(m091);
+	map_internal_struct_init((BYTE *)&m091, sizeof(m091));
 
 	memset(&m091, 0x00, sizeof(m091));
 

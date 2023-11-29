@@ -32,8 +32,7 @@ void map_init_352(void) {
 	EXTCL_AFTER_MAPPER_INIT(352);
 	EXTCL_CPU_WR_MEM(352);
 	EXTCL_SAVE_MAPPER(352);
-	mapper.internal_struct[0] = (BYTE *)&m352;
-	mapper.internal_struct_size[0] = sizeof(m352);
+	map_internal_struct_init((BYTE *)&m352, sizeof(m352));
 
 	if (info.reset >= HARD) {
 		m352.chip = 0;

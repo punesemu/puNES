@@ -43,8 +43,7 @@ void map_init_413(void) {
 	EXTCL_PPU_320_TO_34X(MMC3);
 	EXTCL_UPDATE_R2006(MMC3);
 	EXTCL_IRQ_A12_CLOCK(413);
-	mapper.internal_struct[0] = (BYTE *)&m413;
-	mapper.internal_struct_size[0] = sizeof(m413);
+	map_internal_struct_init((BYTE *)&m413, sizeof(m413));
 
 	if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
 		memmap_prg_region_init(0, S4K);

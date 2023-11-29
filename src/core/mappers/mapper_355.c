@@ -170,8 +170,7 @@ void map_init_355(void) {
 	EXTCL_CPU_RD_MEM(355);
 	EXTCL_SAVE_MAPPER(355);
 	EXTCL_CPU_EVERY_CYCLE(355);
-	mapper.internal_struct[0] = (BYTE *)&m355;
-	mapper.internal_struct_size[0] = sizeof(m355);
+	map_internal_struct_init((BYTE *)&m355, sizeof(m355));
 
 	memset(&m355, 0x00, sizeof(m355));
 

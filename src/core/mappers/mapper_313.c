@@ -47,10 +47,8 @@ void map_init_313(void) {
 	EXTCL_PPU_256_TO_319(MMC3);
 	EXTCL_PPU_320_TO_34X(MMC3);
 	EXTCL_UPDATE_R2006(MMC3);
-	mapper.internal_struct[0] = (BYTE *)&m313;
-	mapper.internal_struct_size[0] = sizeof(m313);
-	mapper.internal_struct[1] = (BYTE *)&mmc3;
-	mapper.internal_struct_size[1] = sizeof(mmc3);
+	map_internal_struct_init((BYTE *)&m313, sizeof(m313));
+	map_internal_struct_init((BYTE *)&mmc3, sizeof(mmc3));
 
 	memset(&nes[0].irqA12, 0x00, sizeof(nes[0].irqA12));
 

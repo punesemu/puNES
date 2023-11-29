@@ -34,10 +34,8 @@ void map_init_559(void) {
 	EXTCL_CPU_WR_MEM(559);
 	EXTCL_SAVE_MAPPER(559);
 	EXTCL_CPU_EVERY_CYCLE(VRC2and4);
-	mapper.internal_struct[0] = (BYTE *)&m559;
-	mapper.internal_struct_size[0] = sizeof(m559);
-	mapper.internal_struct[1] = (BYTE *)&vrc2and4;
-	mapper.internal_struct_size[1] = sizeof(vrc2and4);
+	map_internal_struct_init((BYTE *)&m559, sizeof(m559));
+	map_internal_struct_init((BYTE *)&vrc2and4, sizeof(vrc2and4));
 
 	if (info.reset >= HARD) {
 		m559.prg = 0xFE;

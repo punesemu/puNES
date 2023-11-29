@@ -30,8 +30,7 @@ void map_init_429(void) {
 	EXTCL_AFTER_MAPPER_INIT(429);
 	EXTCL_CPU_WR_MEM(429);
 	EXTCL_SAVE_MAPPER(429);
-	mapper.internal_struct[0] = (BYTE *)&m429;
-	mapper.internal_struct_size[0] = sizeof(m429);
+	map_internal_struct_init((BYTE *)&m429, sizeof(m429));
 
 	m429.reg = 0x04;
 }

@@ -57,14 +57,10 @@ void map_init_351(void) {
 	EXTCL_PPU_256_TO_319(351);
 	EXTCL_PPU_320_TO_34X(351);
 	EXTCL_UPDATE_R2006(351);
-	mapper.internal_struct[0] = (BYTE *)&m351;
-	mapper.internal_struct_size[0] = sizeof(m351);
-	mapper.internal_struct[1] = (BYTE *)&mmc3;
-	mapper.internal_struct_size[1] = sizeof(mmc3);
-	mapper.internal_struct[2] = (BYTE *)&vrc2and4;
-	mapper.internal_struct_size[2] = sizeof(vrc2and4);
-	mapper.internal_struct[1] = (BYTE *)&mmc1;
-	mapper.internal_struct_size[1] = sizeof(mmc1);
+	map_internal_struct_init((BYTE *)&m351, sizeof(m351));
+	map_internal_struct_init((BYTE *)&mmc3, sizeof(mmc3));
+	map_internal_struct_init((BYTE *)&vrc2and4, sizeof(vrc2and4));
+	map_internal_struct_init((BYTE *)&mmc1, sizeof(mmc1));
 
 	memset(&nes[0].irqA12, 0x00, sizeof(nes[0].irqA12));
 	memset(&m351, 0x00, sizeof(m351));

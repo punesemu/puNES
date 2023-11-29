@@ -36,8 +36,7 @@ void map_init_560(void) {
 	EXTCL_RD_CHR(560);
 	EXTCL_WR_NMT(560);
 	EXTCL_RD_NMT(560);
-	mapper.internal_struct[0] = (BYTE *)&m560;
-	mapper.internal_struct_size[0] = sizeof(m560);
+	map_internal_struct_init((BYTE *)&m560, sizeof(m560));
 
 	memset(&m560, 0x00, sizeof(m560));
 

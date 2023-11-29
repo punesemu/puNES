@@ -34,8 +34,7 @@ void map_init_400(void) {
 	EXTCL_AFTER_MAPPER_INIT(400);
 	EXTCL_CPU_WR_MEM(400);
 	EXTCL_SAVE_MAPPER(400);
-	mapper.internal_struct[0] = (BYTE *)&m400;
-	mapper.internal_struct_size[0] = sizeof(m400);
+	map_internal_struct_init((BYTE *)&m400, sizeof(m400));
 
 	memset(&m400, 0x00, sizeof(m400));
 	m400.reg[0] = 0x80;

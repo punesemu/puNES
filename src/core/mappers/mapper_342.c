@@ -290,8 +290,7 @@ void map_init_342(void) {
 	EXTCL_PPU_000_TO_34X(342);
 	EXTCL_AFTER_RD_CHR(342);
 	EXTCL_UPDATE_R2006(342);
-	mapper.internal_struct[0] = (BYTE *)&m342;
-	mapper.internal_struct_size[0] = sizeof(m342);
+	map_internal_struct_init((BYTE *)&m342, sizeof(m342));
 
 	memset(&m342, 0x00, sizeof(m342));
 

@@ -36,8 +36,7 @@ void map_init_016(void) {
 			EXTCL_CPU_WR_MEM(LZ93D50);
 			EXTCL_SAVE_MAPPER(LZ93D50);
 			EXTCL_CPU_EVERY_CYCLE(LZ93D50);
-			mapper.internal_struct[0] = (BYTE *)&lz93d50;
-			mapper.internal_struct_size[0] = sizeof(lz93d50);
+			map_internal_struct_init((BYTE *)&lz93d50, sizeof(lz93d50));
 
 			init_LZ93D50(TRUE, info.reset);
 			LZ93D50_prg_swap = prg_swap_lz93d50_016;
@@ -57,8 +56,7 @@ void map_init_016(void) {
 			EXTCL_CPU_WR_MEM(FCG);
 			EXTCL_SAVE_MAPPER(FCG);
 			EXTCL_CPU_EVERY_CYCLE(FCG);
-			mapper.internal_struct[0] = (BYTE *)&fcg;
-			mapper.internal_struct_size[0] = sizeof(fcg);
+			map_internal_struct_init((BYTE *)&fcg, sizeof(fcg));
 
 			init_FCG(info.reset);
 			FCG_prg_swap = prg_swap_fcg_016;
@@ -71,8 +69,7 @@ void map_init_016(void) {
 			EXTCL_CPU_RD_MEM(LZ93D50);
 			EXTCL_SAVE_MAPPER(LZ93D50);
 			EXTCL_CPU_EVERY_CYCLE(LZ93D50);
-			mapper.internal_struct[0] = (BYTE *)&lz93d50;
-			mapper.internal_struct_size[0] = sizeof(lz93d50);
+			map_internal_struct_init((BYTE *)&lz93d50, sizeof(lz93d50));
 
 			init_LZ93D50(FALSE, info.reset);
 			LZ93D50_prg_swap = prg_swap_lz93d50_016;

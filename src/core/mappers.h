@@ -432,16 +432,27 @@
 #include "mappers/VRC7.h"
 
 enum mappers_op_battery { RD_BAT, WR_BAT };
+enum mappers_internal_struct { INT_STRUCT = 10 };
 
+typedef struct _mapper_int_struct {
+	BYTE *data;
+	size_t size;
+} _mapper_int_struct;
+typedef struct _mapper_int_structs {
+	unsigned int count;
+	_mapper_int_struct s[INT_STRUCT];
+} _mapper_int_structs;
 typedef struct _mapper {
 	BYTE mirroring;
-	BYTE *internal_struct[10];
-	WORD internal_struct_size[10];
+	_mapper_int_structs structs;
 } _mapper;
 
 extern _mapper mapper;
 
 BYTE map_init(void);
 void map_quit(void);
+
+void map_internal_struct_init(BYTE *strct, size_t size);
+void map_internal_struct_quit(void);
 
 #endif /* MAPPERS_H_ */

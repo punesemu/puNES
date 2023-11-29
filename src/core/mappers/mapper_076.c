@@ -26,8 +26,7 @@ void map_init_076(void) {
 	EXTCL_AFTER_MAPPER_INIT(N118);
 	EXTCL_CPU_WR_MEM(N118);
 	EXTCL_SAVE_MAPPER(N118);
-	mapper.internal_struct[0] = (BYTE *)&n118;
-	mapper.internal_struct_size[0] = sizeof(n118);
+	map_internal_struct_init((BYTE *)&n118, sizeof(n118));
 
 	init_N118(info.reset);
 	N118_prg_swap = prg_swap_n118_076;

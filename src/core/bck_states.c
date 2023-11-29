@@ -119,9 +119,9 @@ void bck_states_op_keyframe(BYTE mode, void *data, size_t *index, uint64_t *size
 
 	// mapper
 	bck_states_on_struct(mode, mapper, data, (*index), (*size_buff))
-	for (unsigned int i = 0; i < LENGTH(mapper.internal_struct); i++) {
-		if (mapper.internal_struct[i]) {
-			bck_states_on_mem(mode, mapper.internal_struct[i], mapper.internal_struct_size[i], data, (*index), (*size_buff))
+	for (unsigned int i = 0; i < mapper.structs.count; i++) {
+		if (mapper.structs.s[i].data) {
+			bck_states_on_mem(mode, mapper.structs.s[i].data, mapper.structs.s[i].size, data, (*index), (*size_buff))
 		}
 	}
 

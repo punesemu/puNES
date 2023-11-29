@@ -34,8 +34,7 @@ void map_init_096(void) {
 	EXTCL_SAVE_MAPPER(096);
 	EXTCL_UPDATE_R2006(096);
 	EXTCL_RD_NMT(096);
-	mapper.internal_struct[0] = (BYTE *)&m096;
-	mapper.internal_struct_size[0] = sizeof(m096);
+	map_internal_struct_init((BYTE *)&m096, sizeof(m096));
 
 	if (info.reset >= HARD) {
 		memset(&m096, 0x00, sizeof(m096));

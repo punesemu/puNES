@@ -47,12 +47,9 @@ void map_init_556(void) {
 	EXTCL_PPU_256_TO_319(556);
 	EXTCL_PPU_320_TO_34X(556);
 	EXTCL_UPDATE_R2006(556);
-	mapper.internal_struct[0] = (BYTE *)&m556;
-	mapper.internal_struct_size[0] = sizeof(m556);
-	mapper.internal_struct[1] = (BYTE *)&mmc3;
-	mapper.internal_struct_size[1] = sizeof(mmc3);
-	mapper.internal_struct[2] = (BYTE *)&vrc2and4;
-	mapper.internal_struct_size[2] = sizeof(vrc2and4);
+	map_internal_struct_init((BYTE *)&m556, sizeof(m556));
+	map_internal_struct_init((BYTE *)&mmc3, sizeof(mmc3));
+	map_internal_struct_init((BYTE *)&vrc2and4, sizeof(vrc2and4));
 
 	if (info.reset >= HARD) {
 		memset(&nes[0].irqA12, 0x00, sizeof(nes[0].irqA12));

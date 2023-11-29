@@ -28,8 +28,7 @@ void map_init_085(void) {
 	EXTCL_SAVE_MAPPER(VRC7);
 	EXTCL_CPU_EVERY_CYCLE(VRC7);
 	EXTCL_APU_TICK(VRC7);
-	mapper.internal_struct[0] = (BYTE *)&vrc7;
-	mapper.internal_struct_size[0] = sizeof(vrc7);
+	map_internal_struct_init((BYTE *)&vrc7, sizeof(vrc7));
 
 	switch(info.mapper.submapper) {
 		case 1:
