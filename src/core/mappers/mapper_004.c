@@ -43,6 +43,11 @@ void map_init_004(void) {
 
 		init_MMC3(info.reset);
 
+		// Mickey Mouse III - Dream Balloon (Japan) [T-En by NikcDC v1.1] [n].nes
+		if ((info.crc32.total == 0x762653B1) && (wram_size() < S8K)) {
+			wram_set_ram_size(S8K);
+		}
+
 		switch (info.mapper.submapper) {
 			case 1:
 				EXTCL_CPU_RD_MEM(004_mmc6);
