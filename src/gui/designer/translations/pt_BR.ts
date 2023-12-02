@@ -46,11 +46,11 @@
     </message>
     <message>
       <source>Detach Barcode</source>
-      <translation type="unfinished">Detach Barcode</translation>
+      <translation>Destacar Código de Barras</translation>
     </message>
     <message>
       <source>Apply</source>
-      <translation type="unfinished">Apply</translation>
+      <translation>Aplicar</translation>
     </message>
   </context>
   <context>
@@ -592,43 +592,43 @@
     </message>
     <message>
       <source>Vs. System (1P via $4016)</source>
-      <translation type="unfinished">Vs. System (1P via $4016)</translation>
+      <translation>Vs. System (1P via $4016)</translation>
     </message>
     <message>
       <source>Zapper ($4017)</source>
-      <translation type="unfinished">Zapper ($4017)</translation>
+      <translation>Zapper ($4017)</translation>
     </message>
     <message>
       <source>Arkanoid Vaus Controller (NES)</source>
-      <translation type="unfinished">Arkanoid Vaus Controller (NES)</translation>
+      <translation>Controle Arkanoid Vaus (NES)</translation>
     </message>
     <message>
       <source>Arkanoid Vaus Controller (Famicom)</source>
-      <translation type="unfinished">Arkanoid Vaus Controller (Famicom)</translation>
+      <translation>Controle Arkanoid Vaus (Famicom)</translation>
     </message>
     <message>
       <source>Two Vaus Controllers plus Famicom Data Recorder</source>
-      <translation type="unfinished">Two Vaus Controllers plus Famicom Data Recorder</translation>
+      <translation>Dois Controles Vaus mais Famicom Data Recorder</translation>
     </message>
     <message>
       <source>Subor Keyboard plus mouse (3x8-bit)</source>
-      <translation type="unfinished">Subor Keyboard plus mouse (3x8-bit)</translation>
+      <translation>Teclado Subor mais mouse (3x8-bit)</translation>
     </message>
     <message>
       <source>Subor Keyboard plus mouse (24-bit)</source>
-      <translation type="unfinished">Subor Keyboard plus mouse (24-bit)</translation>
+      <translation>Teclado Subor mais mouse (24-bit)</translation>
     </message>
     <message>
       <source>SNES Mouse ($4017.0)</source>
-      <translation type="unfinished">SNES Mouse ($4017.0)</translation>
+      <translation>Mouse SNES ($4017.0)</translation>
     </message>
     <message>
       <source>Unknown Famiclone Keyboard (Golden Key)</source>
-      <translation type="unfinished">Unknown Famiclone Keyboard (Golden Key)</translation>
+      <translation>Teclado Famiclone Desconhecido (Golden Key)</translation>
     </message>
     <message>
       <source>Subor Keyboard plus mouse (24-bit $4017)</source>
-      <translation type="unfinished">Subor Keyboard plus mouse (24-bit $4017)</translation>
+      <translation>Teclado Subor mais mouse (24-bit $4017)</translation>
     </message>
     <message>
       <source>Port Test</source>
@@ -1363,7 +1363,7 @@
     </message>
     <message>
       <source>Setti&amp;ngs</source>
-      <translation>Confi&amp;gurações</translation>
+      <translation>&amp;Configurações</translation>
     </message>
     <message>
       <source>&amp;Video</source>
@@ -1463,7 +1463,7 @@
     </message>
     <message>
       <source>Start &amp;AUDIO recording</source>
-      <translation>Iniciar gravação de Á&amp;UDIO</translation>
+      <translation>Iniciar gr&amp;avação de ÁUDIO</translation>
     </message>
     <message>
       <source>Start &amp;VIDEO recording</source>
