@@ -350,7 +350,14 @@ BYTE emu_load_rom(void) {
 		uTCHAR *ext = emu_ctrl_rom_ext(info.rom.file);
 
 		if (!ustrcasecmp(ext, uL(".fds"))) {
-			if (fds_load_rom() == EXIT_ERROR) {
+			if (fds_load_rom(FDS_FORMAT) == EXIT_ERROR) {
+				info.rom.file[0] = 0;
+				info.rom.change_rom[0] = 0;
+				goto elaborate_rom_file;
+			}
+			emu_recent_roms_add(&recent_roms_permit_add, info.rom.file);
+		} else if (!ustrcasecmp(ext, uL(".qd"))) {
+			if (fds_load_rom(QD_FORMAT) == EXIT_ERROR) {
 				info.rom.file[0] = 0;
 				info.rom.change_rom[0] = 0;
 				goto elaborate_rom_file;
@@ -967,6 +974,10 @@ void emu_info_rom(void) {
 		return;
 	} else if (info.header.format == FDS_FORMAT) {
 		log_close_box(uL("FDS"));
+		fds_info();
+		return;
+	} else if (info.header.format == QD_FORMAT) {
+		log_close_box(uL("Quick Disk"));
 		fds_info();
 		return;
 	} else {

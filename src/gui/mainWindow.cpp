@@ -1042,6 +1042,8 @@ void mainWindow::update_menu_file(void) {
 				action->setIcon(QIcon(":/icon/icons/nsf_file.svgz"));
 			} else if (!rom.suffix().compare("fds", Qt::CaseInsensitive)) {
 				action->setIcon(QIcon(":/icon/icons/fds_file.svgz"));
+			} else if (!rom.suffix().compare("qd", Qt::CaseInsensitive)) {
+				action->setIcon(QIcon(":/icon/icons/fds_file.svgz"));
 			} else if (!rom.suffix().compare("fm2", Qt::CaseInsensitive)) {
 				action->setIcon(QIcon(":/icon/icons/fm2_file.svgz"));
 			} else {
@@ -1355,7 +1357,7 @@ void mainWindow::s_open(void) {
 	filters.append(tr("Compressed files"));
 	filters.append(tr("Nes rom files"));
 	filters.append(tr("UNIF rom files"));
-	filters.append(tr("FDS image files"));
+	filters.append(tr("Floppy Disk image files"));
 	filters.append(tr("NSF rom files"));
 	filters.append(tr("NSFE rom files"));
 	filters.append(tr("TAS movie files"));
@@ -1363,20 +1365,20 @@ void mainWindow::s_open(void) {
 
 	if (l7z_present()) {
 		if ((l7z_control_ext(uL(".rar")) == EXIT_OK)) {
-			filters[0].append(" (*.zip *.ZIP *.7z *.7Z *.rar *.RAR *.nes *.NES *.unf *.UNF *.unif *.UNIF *.nsf *.NSF *.nsfe *.NSFE *.fds *.FDS *.fm2 *.FM2)");
+			filters[0].append(" (*.zip *.ZIP *.7z *.7Z *.rar *.RAR *.nes *.NES *.unf *.UNF *.unif *.UNIF *.fds *.FDS *.qd *.QD *.nsf *.NSF *.nsfe *.NSFE *.fm2 *.FM2)");
 			filters[1].append(" (*.zip *.ZIP *.7z *.7Z *.rar *.RAR)");
 		} else {
-			filters[0].append(" (*.zip *.ZIP *.7z *.7Z *.nes *.NES *.fds *.FDS *.nsf *.NSF *.nsfe *.NSFE *.fm2 *.FM2)");
+			filters[0].append(" (*.zip *.ZIP *.7z *.7Z *.nes *.NES *.unf *.UNF *.unif *.UNIF *.fds *.FDS *.qd *.QD *.nsf *.NSF *.nsfe *.NSFE *.fm2 *.FM2)");
 			filters[1].append(" (*.zip *.ZIP *.7z *.7Z)");
 		}
 	} else {
-		filters[0].append(" (*.zip *.ZIP *.nes *.NES *.unf *.UNF *.unif *.UNIF *.fds *.FDS *.nsf *.NSF *.nsfe *.NSFE *.fm2 *.FM2)");
+		filters[0].append(" (*.zip *.ZIP *.nes *.NES *.unf *.UNF *.unif *.UNIF *.fds *.FDS *.qd *.QD *.nsf *.NSF *.nsfe *.NSFE *.fm2 *.FM2)");
 		filters[1].append(" (*.zip *.ZIP)");
 	}
 
 	filters[2].append(" (*.nes *.NES)");
 	filters[3].append(" (*.unf *.UNF *.unif *.UNIF)");
-	filters[4].append(" (*.fds *.FDS)");
+	filters[4].append(" (*.fds *.FDS *.qd *.QD)");
 	filters[5].append(" (*.nsf *.NSF)");
 	filters[6].append(" (*.nsfe *.NSFE)");
 	filters[7].append(" (*.fm2 *.FM2)");

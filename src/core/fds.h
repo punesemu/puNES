@@ -19,29 +19,33 @@
 #ifndef FDS_H_
 #define FDS_H_
 
+#include <stdio.h>
 #include "common.h"
 
 enum fds_formats { FDS_FORMAT_RAW, FDS_FORMAT_FDS };
+enum fds_write_mode { FDS_WR_DIFF_FILE, FDS_WR_ORIGINAL_FILE };
 enum fds_operations { FDS_OP_NONE, FDS_OP_READ, FDS_OP_WRITE };
-enum fds_disk_memory_operations { FDS_DISK_MEMSET, FDS_DISK_MEMCPY };
 enum fds_disk_operations {
-	FDS_DISK_COUNT,
 	FDS_DISK_INSERT,
 	FDS_DISK_EJECT,
-	/*
-	 * e' importante che tutte le modalita'
-	 * SELECT siano dopo la FDS_DISK_SELECT.
-	 */
+	// e' importante che tutte le modalita'
+	// SELECT siano dopo la FDS_DISK_SELECT.
 	FDS_DISK_SELECT,
 	FDS_DISK_SELECT_AND_INSERT,
 	FDS_DISK_SELECT_FROM_REWIND
+};
+enum fds_gaps {
+	FDS_GAP_START = 28300 / 8,
+	FDS_GAP_BLOCK = 1016 / 8,
+	FDS_GAP_END = 2000,
 };
 enum fds_block_type {
 	BL_DISK_INFO = 1,
 	BL_FILE_AMOUNT,
 	BL_FILE_HEADER,
 	BL_FILE_DATA,
-	DISK_SIDE_SIZE = 65500
+	DISK_FDS_SIDE_SIZE = 65500,
+	DISK_QD_SIDE_SIZE = 65536
 };
 enum fds_misc {
 	FDS_DISK_GAP = 0x0100,
@@ -57,12 +61,19 @@ enum fds_misc {
 #define fds_reset_envelope_counter(env) (fds.snd.envelope.speed << 3) * (fds.snd.env.speed + 1)
 #define fds_sweep_bias(val) (SBYTE)((val & 0x7F) << 1) / 2;
 
+typedef struct _fds_info_side {
+	BYTE side;
+	WORD *data;
+	uint32_t size;
+	uint32_t last_position;
+} _fds_info_side;
 typedef struct _fds {
-	// generali
 	struct _fds_info {
 		BYTE enabled;
 		BYTE *data;
+		WORD *image;
 		FILE *diff;
+		BYTE writings_occurred;
 		BYTE total_sides;
 		BYTE expcted_side;
 		BYTE type;
@@ -70,35 +81,14 @@ typedef struct _fds {
 		BYTE last_operation;
 		BYTE bios_first_run;
 		BYTE frame_insert;
-		struct _fds_info_sides {
-			uint32_t size;
-			uint32_t files;
-		} sides[20];
+		_fds_info_side sides[20];
 	} info;
-	// side
 	struct _fds_side {
-		struct _fds_side_block_1 {
-			uint32_t position;
-		} block_1;
-		struct _fds_side_block_2 {
-			uint32_t position;
-			BYTE tot_files;
-		} block_2;
-		struct _fds_side_file {
-			struct _fds_side_file_block_3 {
-				uint32_t position;
-				uint32_t length;
-			} block_3;
-			struct _fds_side_file_block_4 {
-				uint32_t position;
-			} block_4;
-		} file[0xFF];
 		struct _fds_side_change {
 			BYTE new_side;
 			uint32_t delay;
 		} change;
-		WORD *data;
-		uint32_t counted_files;
+		_fds_info_side *info;
 	} side;
 	// le variabili da salvare nei savestate
 	struct _fds_drive {
@@ -114,11 +104,9 @@ typedef struct _fds {
 		BYTE enabled_snd_reg;
 		BYTE data_readed;
 		BYTE data_to_write;
-		/*
-		 * anche se continuo a salvarlo nel save_slot.c, questa
-		 * variabile non e' piu' utilizzata. quindi se servisse
-		 * potrebbe essere riciclata per qualche altra cosa.
-		 */
+		// anche se continuo a salvarlo nel save_slot.c, questa
+		// variabile non e' piu' utilizzata. quindi se servisse
+		// potrebbe essere riciclata per qualche altra cosa.
 		BYTE transfer_flag;
 		BYTE motor_on;
 		BYTE transfer_reset;
@@ -149,11 +137,11 @@ typedef struct _fds {
 			BYTE index;
 			int32_t counter;
 
-		/* ------------------------------------------------------- */
-		/* questi valori non e' necessario salvarli nei savestates */
-		/* ------------------------------------------------------- */
-		/* */ BYTE clocked;                                     /* */
-		/* ------------------------------------------------------- */
+			// -------------------------------------------------------
+			// questi valori non e' necessario salvarli nei savestates
+			// -------------------------------------------------------
+			BYTE clocked;
+			// -------------------------------------------------------
 		} wave;
 		struct _fds_snd_envelope {
 			BYTE speed;
@@ -223,12 +211,15 @@ extern _fds fds;
 
 EXTERNC void fds_init(void);
 EXTERNC void fds_quit(void);
-EXTERNC BYTE fds_load_rom(void);
+EXTERNC BYTE fds_load_rom(BYTE type);
 EXTERNC BYTE fds_load_bios(void);
 EXTERNC void fds_info(void);
 EXTERNC void fds_info_side(BYTE side);
 EXTERNC void fds_disk_op(WORD type, BYTE side_to_insert, BYTE quiet);
-EXTERNC void fds_diff_op(BYTE mode, uint32_t position, WORD value);
+EXTERNC void fds_diff_op(BYTE side, BYTE mode, uint32_t position, WORD value);
+EXTERNC uint32_t fds_disk_side_size(void);
+EXTERNC uint32_t fds_image_side_size(void);
+EXTERNC uint32_t fds_image_side_bytes(void);
 
 #undef EXTERNC
 

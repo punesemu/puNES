@@ -74,9 +74,10 @@ typedef struct _uncompress_storage {
 
 static const _uncompress_extension uncompress_exts[] = {
 	{ UNCOMPRESS_TYPE_ROM, uL(".nes")  },
-	{ UNCOMPRESS_TYPE_ROM, uL(".fds")  },
 	{ UNCOMPRESS_TYPE_ROM, uL(".unf")  },
 	{ UNCOMPRESS_TYPE_ROM, uL(".unif") },
+	{ UNCOMPRESS_TYPE_ROM, uL(".fds")  },
+	{ UNCOMPRESS_TYPE_ROM, uL(".qd")   },
 	{ UNCOMPRESS_TYPE_ROM, uL(".nsf")  },
 	{ UNCOMPRESS_TYPE_ROM, uL(".nsfe") },
 	{ UNCOMPRESS_TYPE_PATCH, uL(".ips") },

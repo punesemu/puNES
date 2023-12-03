@@ -86,6 +86,7 @@ wdgSettingsGeneral::wdgSettingsGeneral(QWidget *parent) : QWidget(parent) {
 	connect(pushButton_FDS_Bios, SIGNAL(clicked(bool)), this, SLOT(s_fds_bios_file(bool)));
 	connect(pushButton_FDS_Bios_clear, SIGNAL(clicked(bool)), this, SLOT(s_fds_bios_file_clear(bool)));
 
+	connect(comboBox_FDS_Write_mode, SIGNAL(activated(int)), this, SLOT(s_fds_write_mode(int)));
 	connect(checkBox_FDS_disk1sideA_at_reset, SIGNAL(clicked(bool)), this, SLOT(s_fds_disk1sideA_at_reset(bool)));
 	connect(checkBox_FDS_switch_side_automatically, SIGNAL(clicked(bool)), this, SLOT(s_fds_switch_side_automatically(bool)));
 	connect(checkBox_FDS_fast_forward, SIGNAL(clicked(bool)), this, SLOT(s_fds_fast_forward(bool)));
@@ -119,6 +120,7 @@ void wdgSettingsGeneral::showEvent(UNUSED(QShowEvent *event)) {
 	icon_General_misc->setPixmap(QIcon(":/icon/icons/misc.svgz").pixmap(dim, dim));
 	icon_Game_Genie_rom_file->setPixmap(QIcon(":/icon/icons/bios.svgz").pixmap(dim, dim));
 	icon_FDS_Bios->setPixmap(QIcon(":/icon/icons/bios.svgz").pixmap(dim, dim));
+	icon_FDS_Write_mode->setPixmap(QIcon(":/icon/icons/pencil.svgz").pixmap(dim, dim));
 }
 
 void wdgSettingsGeneral::retranslateUi(QWidget *wdgSettingsGeneral) {
@@ -152,6 +154,7 @@ void wdgSettingsGeneral::update_widget(void) {
 		lineEdit_FDS_Bios->setText(tr("[Select a file]"));
 	}
 
+	comboBox_FDS_Write_mode->setCurrentIndex(cfg->fds_write_mode);
 	checkBox_FDS_disk1sideA_at_reset->setChecked(cfg->fds_disk1sideA_at_reset);
 	checkBox_FDS_switch_side_automatically->setChecked(cfg->fds_switch_side_automatically);
 	checkBox_FDS_fast_forward->setChecked(cfg->fds_fast_forward);
@@ -512,7 +515,7 @@ void wdgSettingsGeneral::s_fds_bios_file(UNUSED(bool checked)) {
 	filters[0].append(" (*.*)");
 
 	file = QFileDialog::getOpenFileName(this, tr("Select FDS BIOS file"),
-			QFileInfo(uQString(cfg->fds_bios_file)).dir().absolutePath(), filters.join(";;"));
+		QFileInfo(uQString(cfg->fds_bios_file)).dir().absolutePath(), filters.join(";;"));
 
 	if (!file.isNull()) {
 		QFileInfo fileinfo(file);
@@ -531,6 +534,11 @@ void wdgSettingsGeneral::s_fds_bios_file(UNUSED(bool checked)) {
 void wdgSettingsGeneral::s_fds_bios_file_clear(UNUSED(bool checked)) {
 	umemset(cfg->fds_bios_file, 0x00, usizeof(cfg->fds_bios_file));
 	update_widget();
+}
+void wdgSettingsGeneral::s_fds_write_mode(int index) {
+	emu_thread_pause();
+	cfg->fds_write_mode = index;
+	emu_thread_continue();
 }
 void wdgSettingsGeneral::s_fds_disk1sideA_at_reset(UNUSED(bool checked)) {
 	emu_thread_pause();

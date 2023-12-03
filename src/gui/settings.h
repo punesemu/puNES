@@ -32,6 +32,7 @@
 #include "rewind.h"
 #include "palette.h"
 #include "nes.h"
+#include "fds.h"
 #if defined (WITH_FFMPEG)
 #include "recording.h"
 #endif
@@ -139,6 +140,7 @@ enum set_element {
 	SET_NSF_PLAYER_EFFECT,
 	SET_NSF_PLAYER_NSFE_PLAYLIST,
 	SET_NSF_PLAYER_NSFE_FADEOUT,
+	SET_FDS_WRITE_MODE,
 	SET_FDS_DISK1SIDEA_AT_RESET,
 	SET_FDS_SWITCH_SIDE_AUTOMATICALLY,
 	SET_FDS_FAST_FORWARD,
@@ -698,8 +700,8 @@ static const _opt opt_nsf_player_effect[] = {
 };
 #if defined (WITH_FFMPEG)
 static const _opt opt_recording_format_type[] = {
-	{NULL, uL("video")  , REC_FORMAT_VIDEO},
-	{NULL, uL("audio")  , REC_FORMAT_AUDIO}
+	{NULL, uL("video"), REC_FORMAT_VIDEO},
+	{NULL, uL("audio"), REC_FORMAT_AUDIO}
 };
 static const _opt opt_recording_audio_format[] = {
 	{NULL, uL("mp3")  , REC_FORMAT_AUDIO_MP3},
@@ -758,6 +760,10 @@ static const _opt opt_toolbar_area[] = {
 	{NULL, uL("bottom"), TLB_BOTTOM},
 	{NULL, uL("right") , TLB_RIGHT}
 };
+static const _opt opt_fds_write_mode[] = {
+	{NULL, uL("diff file"), FDS_WR_DIFF_FILE},
+	{NULL, uL("original file"), FDS_WR_ORIGINAL_FILE}
+};
 
 static const _opt opt_slot_pgs[] = {
 	{NULL, uL("0"), 0},
@@ -794,10 +800,10 @@ static const _opt opt_pad_type[] = {
 	{NULL, uL("3rdparty"), CTRL_PAD_3RD_PARTY}
 };
 static const _opt opt_vk_size[] = {
-	{NULL, uL("1.0x")    , VK_SIZE_10X},
-	{NULL, uL("1.5x")    , VK_SIZE_15X},
-	{NULL, uL("2.0x")    , VK_SIZE_20X},
-	{NULL, uL("2.5x")    , VK_SIZE_25X}
+	{NULL, uL("1.0x"), VK_SIZE_10X},
+	{NULL, uL("1.5x"), VK_SIZE_15X},
+	{NULL, uL("2.0x"), VK_SIZE_20X},
+	{NULL, uL("2.5x"), VK_SIZE_25X}
 };
 
 static const _settings main_cfg[] = {
@@ -1410,6 +1416,12 @@ static const _settings main_cfg[] = {
 		uL("# possible values: yes, no"),
 		NULL,
 		{LENGTH(opt_no_yes), opt_no_yes}
+	},
+	{
+		uL("fds"), uL("write mode"), uL("diff file"),
+		uL("# possible values: diff file, original file"),
+		NULL,
+		{LENGTH(opt_fds_write_mode), opt_fds_write_mode}
 	},
 	{
 		uL("fds"), uL("disk 1 sida A at reset"), uL("yes"),

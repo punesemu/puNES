@@ -852,6 +852,7 @@ void objSet::to_cfg(const QString &group) {
 	}
 
 	if ((group == "fds") || (group == "all")) {
+		int_to_val(SET_FDS_WRITE_MODE, cfg_from_file.fds_write_mode);
 		int_to_val(SET_FDS_DISK1SIDEA_AT_RESET, cfg_from_file.fds_disk1sideA_at_reset);
 		int_to_val(SET_FDS_SWITCH_SIDE_AUTOMATICALLY, cfg_from_file.fds_switch_side_automatically);
 		int_to_val(SET_FDS_FAST_FORWARD, cfg_from_file.fds_fast_forward);
@@ -989,6 +990,7 @@ void objSet::fr_cfg(const QString &group) {
 	}
 
 	if ((group == "fds") || (group == "all")) {
+		cfg_from_file.fds_write_mode = val_to_int(SET_FDS_WRITE_MODE);
 		cfg_from_file.fds_disk1sideA_at_reset = val_to_int(SET_FDS_DISK1SIDEA_AT_RESET);
 		cfg_from_file.fds_switch_side_automatically = val_to_int(SET_FDS_SWITCH_SIDE_AUTOMATICALLY);
 		cfg_from_file.fds_fast_forward = val_to_int(SET_FDS_FAST_FORWARD);

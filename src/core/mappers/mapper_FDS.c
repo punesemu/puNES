@@ -55,9 +55,9 @@ void map_init_FDS(void) {
 
 	nes[0].c.cpu.SP = 0xFF;
 	nes[0].c.cpu.SR = 0x30;
-	/* disassemblo il Processor Status Register */
+	// disassemblo il Processor Status Register
 	disassemble_SR(0);
-	/* setto il flag di disabilitazione dell'irq */
+	// setto il flag di disabilitazione dell'irq
 	nes[0].c.irq.inhibit = nes[0].c.cpu.im;
 }
 void map_init_NSF_FDS(void) {
@@ -107,12 +107,12 @@ BYTE extcl_cpu_rd_mem_FDS(BYTE nidx, WORD address, UNUSED(BYTE openbus)) {
 				for (a = 0; a < fds.info.total_sides; a++) {
 					BYTE finded = TRUE;
 
-					position = (a * DISK_SIDE_SIZE);
+					position = (a * fds_disk_side_size());
 
 					if (fds.info.type == FDS_FORMAT_FDS) {
 						position += 16;
 					}
-					if ((position + DISK_SIDE_SIZE) > fds.info.total_size) {
+					if ((position + fds_disk_side_size()) > fds.info.total_size) {
 						finded = FALSE;
 					} else {
 						unsigned int b = 0;
@@ -206,7 +206,7 @@ void extcl_cpu_every_cycle_FDS(BYTE nidx) {
 		gui_max_speed_stop();
 	}
 
-	/* IRQ handler */
+	// IRQ handler
 	if (fds.drive.enabled_dsk_reg && fds.drive.irq_timer_enabled) {
 		if (fds.drive.irq_timer_counter) {
 			fds.drive.irq_timer_counter--;
@@ -222,7 +222,7 @@ void extcl_cpu_every_cycle_FDS(BYTE nidx) {
 		}
 	}
 
-	/* se c'e' un delay aspetto */
+	// se c'e' un delay aspetto
 	if (fds.side.change.delay > 0) {
 		if (!(--fds.side.change.delay)) {
 			fds_disk_op(FDS_DISK_SELECT_AND_INSERT, fds.side.change.new_side, FALSE);
@@ -231,13 +231,13 @@ void extcl_cpu_every_cycle_FDS(BYTE nidx) {
 		return;
 	}
 
-	/* no disco, no party */
+	// no disco, no party
 	if (fds.drive.disk_ejected) {
 		fds.drive.delay = 1000;
 		return;
 	}
 
-	/* il motore non e' avviato */
+	// il motore non e' avviato
 	if (!fds.drive.motor_on) {
 		fds.drive.disk_position = 0;
 		fds.drive.gap_ended = FALSE;
@@ -246,7 +246,7 @@ void extcl_cpu_every_cycle_FDS(BYTE nidx) {
 		return;
 	}
 
-	/* se c'e' un delay aspetto */
+	// se c'e' un delay aspetto
 	if ((fds.drive.delay > 0) && --fds.drive.delay) {
 		return;
 	}
@@ -258,30 +258,28 @@ void extcl_cpu_every_cycle_FDS(BYTE nidx) {
 		return;
 	}
 
-	/* se c'e' una richiesta di invio crc i prossimi due bytes lo saranno */
+	// se c'e' una richiesta di invio crc i prossimi due bytes lo saranno
 	if (!fds.drive.crc_char && fds.drive.crc_control) {
 		fds.drive.crc_char = 2;
 	}
 
 	if (fds.drive.read_mode) {
-		/* read */
-		fds.drive.data_readed = data = fds.side.data[fds.drive.disk_position];
+		// read
+		fds.drive.data_readed = data = fds.side.info->data[fds.drive.disk_position];
 	} else {
-		/* write */
+		// write
 		if (!fds.drive.drive_ready) {
 			data = FDS_DISK_GAP;
 		} else if (fds.drive.crc_char) {
 			data = FDS_DISK_CRC_CHAR1;
 		} else {
-			data = fds.side.data[fds.drive.disk_position];
+			data = fds.side.info->data[fds.drive.disk_position];
 		}
 	}
 
-	/*
-	 * se non sono piu' nel gap vuol dire che ho trasferito
-	 * 8 bit di dati quindi setto il flag corrispondente e
-	 * se e' abilitato l'irq del disco, lo setto.
-	 */
+	// se non sono piu' nel gap vuol dire che ho trasferito
+	// 8 bit di dati quindi setto il flag corrispondente e
+	// se e' abilitato l'irq del disco, lo setto.
 	if (fds.drive.gap_ended) {
 		if (fds.drive.irq_disk_enabled) {
 			fds.drive.irq_disk_high = 0x02;
@@ -290,22 +288,40 @@ void extcl_cpu_every_cycle_FDS(BYTE nidx) {
 
 		if (!fds.drive.read_mode) {
 			uint32_t position = (fds.drive.disk_position - 2);
-			WORD *dst = fds.side.data + position;
+			WORD *dst = &fds.side.info->data[position];
 
 			if (((*dst) == 0x0100) && (fds.drive.data_to_write == 0x00)) {
 				(*dst) = 0x0100;
-			} else if (((*dst) == 0x0180) && (fds.drive.data_to_write == 0x80)) {
+			} else if ((fds.drive.data_to_write == 0x80) &&
+				(((*dst) == 0x0180) || (position == fds.side.info->last_position))) {
 				(*dst) = 0x0180;
+				if (position >= fds.side.info->last_position) {
+					fds_diff_op(fds.side.info->side, FDS_OP_WRITE, position, (*dst));
+				}
 			} else if (fds.drive.crc_char) {
 				if (fds.drive.crc_char == 2) {
 					(*dst) = FDS_DISK_CRC_CHAR1;
 				} else {
 					(*dst) = FDS_DISK_CRC_CHAR2;
 				}
+				if (position >= fds.side.info->last_position) {
+					fds_diff_op(fds.side.info->side, FDS_OP_WRITE, position, (*dst));
+					if ((*dst) == FDS_DISK_CRC_CHAR2) {
+						for (uint32_t i = 0; i < FDS_GAP_BLOCK; i++) {
+							uint32_t p = position + 1 + i;
+
+							if (p < fds_disk_side_size()) {
+								fds.side.info->data[p] = FDS_DISK_GAP;
+								fds_diff_op(fds.side.info->side, FDS_OP_WRITE, p, FDS_DISK_GAP);
+							}
+						}
+					}
+				}
 			} else {
 				(*dst) = fds.drive.data_to_write;
-				fds_diff_op(FDS_OP_WRITE, position, fds.drive.data_to_write);
+				fds_diff_op(fds.side.info->side, FDS_OP_WRITE, position, fds.drive.data_to_write);
 			}
+			data = (*dst);
 			fds.info.last_operation = FDS_OP_WRITE;
 		} else if (!fds.info.last_operation) {
 			fds.info.last_operation = FDS_OP_READ;
@@ -342,7 +358,7 @@ void extcl_cpu_every_cycle_FDS(BYTE nidx) {
 		fds.auto_insert.delay.eject = FDS_OP_SIDE_DELAY;
 	} else {
 		fds.drive.end_of_head = FALSE;
-		/* il delay per riuscire a leggere i prossimi 8 bit */
+		// il delay per riuscire a leggere i prossimi 8 bit
 		fds.drive.delay = 149;
 	}
 }
@@ -390,27 +406,25 @@ void extcl_apu_tick_FDS(void) {
 			fds.snd.sweep.bias += ((BYTE)adj == 8 ? 0 : adj);
 			fds.snd.sweep.bias = fds_sweep_bias(fds.snd.sweep.bias)
 
-			/*
-			// vecchia gestione
-			{
-				SWORD temp, temp2, a, d;
-				temp = fds.snd.sweep.bias * fds.snd.sweep.gain;
-
-				a = 64;
-				d = 0;
-
-				if (temp <= 0) {
-					d = 15;
-				} else if (temp < 3040) { //95 * 32
-					a = 66;
-					d = -31;
-				}
-
-				temp2 = a + (SBYTE)((temp - d) / 16 - a);
-
-				fds.snd.modulation.mod = freq * temp2 / 64;
-			}
-			*/
+//			// vecchia gestione
+//			{
+//				SWORD temp, temp2, a, d;
+//				temp = fds.snd.sweep.bias * fds.snd.sweep.gain;
+//
+//				a = 64;
+//				d = 0;
+//
+//				if (temp <= 0) {
+//					d = 15;
+//				} else if (temp < 3040) { //95 * 32
+//					a = 66;
+//					d = -31;
+//				}
+//
+//				temp2 = a + (SBYTE)((temp - d) / 16 - a);
+//
+//				fds.snd.modulation.mod = freq * temp2 / 64;
+//			}
 
 			// from https://www.nesdev.org/wiki/FDS_audio
 			// and https://forums.nesdev.org/viewtopic.php?p=232662#p232662
@@ -466,8 +480,8 @@ void extcl_apu_tick_FDS(void) {
 		if (fds.snd.wave.counter < 0) {
 			WORD level = (fds.snd.volume.gain < 32 ? fds.snd.volume.gain : 32) * volume_wave[fds.snd.wave.volume];
 
-			/* valore massimo dell'output (63 * (39 * 32)) = 78624 */
-			/*fds.snd.main.output = (fds.snd.wave.data[fds.snd.wave.index] * level) >> 4;*/
+			// valore massimo dell'output (63 * (39 * 32)) = 78624
+//			fds.snd.main.output = (fds.snd.wave.data[fds.snd.wave.index] * level) >> 4;
 			fds.snd.main.output = (fds.snd.wave.data[fds.snd.wave.index] * level) >> 3;
 
 			fds.snd.wave.counter += 65536;

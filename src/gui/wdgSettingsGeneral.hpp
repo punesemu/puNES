@@ -55,6 +55,7 @@ class wdgSettingsGeneral : public QWidget, public Ui::wdgSettingsGeneral {
 		void s_initial_ram_value(bool checked);
 		void s_fds_bios_file(bool checked);
 		void s_fds_bios_file_clear(bool checked);
+		void s_fds_write_mode(int index);
 		void s_fds_disk1sideA_at_reset(bool checked);
 		void s_fds_switch_side_automatically(bool checked);
 		void s_fds_fast_forward(bool checked);

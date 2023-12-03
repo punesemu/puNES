@@ -2,8 +2,11 @@ Changelog:
 0.111 (Bug fixes release)
 - Rewritten mappers : All.
 - Rewritten WRAM, VRAM, PRGROM, CHROM and Nametebles management.
+- Rewritten FDS support.
+  Furthermore, an option has been added to select the mode for write operations. Until now, all writes were stored on an external file (to preserve the integrity of the disk image), now it's possible to choose to write them directly to the FDS/QD file (making it portable to other emulators as well).
 - Rewritten the format and management of save states.
   WARNING save states of version 0.110 or earlier are no longer compatible.
+- Added support to Quick Disk format.
 - Added an option for RAM initialization (#276).
   It's possible to choose between three values:
   * 0x00
