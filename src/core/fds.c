@@ -417,7 +417,6 @@ void fds_diff_op(BYTE side, BYTE mode, uint32_t position, WORD value) {
 	fds.info.writings_occurred = TRUE;
 
 	if (mode == FDS_OP_WRITE) {
-		_fds_info_side *is = &fds.info.sides[side];
 		_fds_diff_ele in = { 0 }, out = { 0 };
 		uint32_t version = DIFFVERSION;
 
@@ -444,10 +443,6 @@ void fds_diff_op(BYTE side, BYTE mode, uint32_t position, WORD value) {
 		}
 		// senza questo in windows non funziona correttamente
 		fflush(fds.info.diff);
-
-		if (position >= is->last_position) {
-			is->last_position = position + 1;
-		}
 	} else if (mode == FDS_OP_READ) {
 		WORD *dst = &fds.info.image[side * fds_image_side_size()];
 		_fds_diff_ele ele = { 0 };

@@ -290,12 +290,15 @@ void extcl_cpu_every_cycle_FDS(BYTE nidx) {
 			uint32_t position = (fds.drive.disk_position - 2);
 			WORD *dst = &fds.side.info->data[position];
 
+			// quando inizia la scrittura il bios scrive sempre
+			// prima un GAP, seguito da un MARK seguito dal blocco che verrà chiuso dai CRC.
+			// il last_position devo aggiornarlo solo con i CRC e i GAP che seguono.
 			if (((*dst) == 0x0100) && (fds.drive.data_to_write == 0x00)) {
 				(*dst) = 0x0100;
 			} else if ((fds.drive.data_to_write == 0x80) &&
 				(((*dst) == 0x0180) || (position == fds.side.info->last_position))) {
 				(*dst) = 0x0180;
-				if (position >= fds.side.info->last_position) {
+				if (position == fds.side.info->last_position) {
 					fds_diff_op(fds.side.info->side, FDS_OP_WRITE, position, (*dst));
 				}
 			} else if (fds.drive.crc_char) {
@@ -306,6 +309,7 @@ void extcl_cpu_every_cycle_FDS(BYTE nidx) {
 				}
 				if (position >= fds.side.info->last_position) {
 					fds_diff_op(fds.side.info->side, FDS_OP_WRITE, position, (*dst));
+					fds.info.sides[fds.side.info->side].last_position = position + 1;
 					if ((*dst) == FDS_DISK_CRC_CHAR2) {
 						for (uint32_t i = 0; i < FDS_GAP_BLOCK; i++) {
 							uint32_t p = position + 1 + i;
@@ -313,6 +317,7 @@ void extcl_cpu_every_cycle_FDS(BYTE nidx) {
 							if (p < fds_disk_side_size()) {
 								fds.side.info->data[p] = FDS_DISK_GAP;
 								fds_diff_op(fds.side.info->side, FDS_OP_WRITE, p, FDS_DISK_GAP);
+								fds.info.sides[fds.side.info->side].last_position = p + 1;
 							}
 						}
 					}
