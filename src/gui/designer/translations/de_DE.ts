@@ -1158,10 +1158,6 @@
       <translation>NES Rom Dateien</translation>
     </message>
     <message>
-      <source>FDS image files</source>
-      <translation>FDS Abbild Dateien</translation>
-    </message>
-    <message>
       <source>TAS movie files</source>
       <translation>TAS Filmdateien</translation>
     </message>
@@ -1618,6 +1614,10 @@
       <source>Detach &amp;Barcode</source>
       <translation type="unfinished">Detach &amp;Barcode</translation>
     </message>
+    <message>
+      <source>Floppy Disk image files</source>
+      <translation type="unfinished">Floppy Disk image files</translation>
+    </message>
   </context>
   <context>
     <name>nesKeyboardStatusBar</name>
@@ -1849,6 +1849,11 @@
       <source>[red]error[normal] on write save state</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
       <translation type="unfinished">[red]error[normal] on write save state</translation>
+    </message>
+    <message>
+      <source>auto switch [red]disabled[normal], game not compatible</source>
+      <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
+      <translation type="unfinished">auto switch [red]disabled[normal], game not compatible</translation>
     </message>
   </context>
   <context>
@@ -2869,6 +2874,18 @@
     <message>
       <source>Arabic</source>
       <translation type="unfinished">Arabic</translation>
+    </message>
+    <message>
+      <source>Write mode</source>
+      <translation type="unfinished">Write mode</translation>
+    </message>
+    <message>
+      <source>Write to a separate file (Default)</source>
+      <translation type="unfinished">Write to a separate file (Default)</translation>
+    </message>
+    <message>
+      <source>Write to the original FDS/QD file</source>
+      <translation type="unfinished">Write to the original FDS/QD file</translation>
     </message>
   </context>
   <context>
