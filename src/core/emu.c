@@ -1435,7 +1435,7 @@ void emu_info_rom(void) {
 	}
 
 	ischanged(info.header.prgrom_size != info.mapper.prgrom_size);
-	log_info_box(uL("PRG 8k rom;%-4lu [ %08X %ld ]%s%s"),
+	log_info_box(uL("PRG 8k rom;%-4lu [ 0x%08X %ld ]%s%s"),
 		prgrom_banks(S8K),
 		info.crc32.prg,
 		info.mapper.prgrom_size,
@@ -1447,7 +1447,7 @@ void emu_info_rom(void) {
 			int chip = 0;
 
 			for (chip = 0; chip < prgrom.chips.amount; chip++) {
-				log_info_box(uL(" 8k chip %d;%-4lu [ %08X %ld ]"),
+				log_info_box(uL(" 8k chip %d;%-4lu [ 0x%08X %ld ]"),
 					chip, prgrom_chip_size(chip) / 0x2000,
 					emu_crc32((void *)prgrom_chip(chip), prgrom_chip_size(chip)),
 					prgrom_chip_size(chip));
@@ -1457,7 +1457,7 @@ void emu_info_rom(void) {
 
 	if (chrrom_size()) {
 		ischanged(info.header.chrrom_size != info.mapper.chrrom_size);
-		log_info_box(uL("CHR 4k vrom;%-4lu [ %08X %ld ]%s%s"),
+		log_info_box(uL("CHR 4k vrom;%-4lu [ 0x%08X %ld ]%s%s"),
 			chrrom_banks(S4K),
 			info.crc32.chr,
 			info.mapper.chrrom_size,
@@ -1469,7 +1469,7 @@ void emu_info_rom(void) {
 				int chip = 0;
 
 				for (chip = 0; chip < chrrom.chips.amount; chip++) {
-					log_info_box(uL(" 4k chip %d;%-4lu [ %08X %ld ]"),
+					log_info_box(uL(" 4k chip %d;%-4lu [ 0x%08X %ld ]"),
 						chip, chrrom_chip_size(chip) / 0x1000,
 						emu_crc32((void *)chrrom_chip(chip), chrrom_chip_size(chip)),
 						chrrom_chip_size(chip));
@@ -1479,9 +1479,9 @@ void emu_info_rom(void) {
 	}
 
 	if (miscrom.trainer.in_use) {
-		log_info_box(uL("trainer;yes  [ %08X ]"), info.crc32.trainer);
+		log_info_box(uL("trainer;yes  [ 0x%08X ]"), info.crc32.trainer);
 	} else if (miscrom_size()) {
-		log_info_box(uL("MISC chips;%-4lu [ %08X %ld ]%s"),
+		log_info_box(uL("MISC chips;%-4lu [ 0x%08X %ld ]%s"),
 			(long)miscrom.chips,
 			info.crc32.misc,
 			miscrom_size(),
@@ -1498,7 +1498,7 @@ void emu_info_rom(void) {
 #undef ischanged
 #undef ifchanged
 
-	log_info_box(uL("CRC32;%08X"), info.crc32.total);
+	log_info_box(uL("CRC32;0x%08X"), info.crc32.total);
 
 	log_info_box(uL("CPU/PPU alig.;PPU %d/%d, CPU %d/%d"),
 		ppu_alignment.ppu, (machine.ppu_divide - 1),

@@ -1158,10 +1158,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>FDS image files</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>TAS movie files</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1618,6 +1614,10 @@
         <source>Detach &amp;Barcode</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Floppy Disk image files</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>nesKeyboardStatusBar</name>
@@ -1847,6 +1847,11 @@
     </message>
     <message>
         <source>[red]error[normal] on write save state</source>
+        <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>auto switch [red]disabled[normal], game not compatible</source>
         <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
         <translation type="unfinished"></translation>
     </message>
@@ -2868,6 +2873,18 @@
     </message>
     <message>
         <source>Arabic</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Write mode</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Write to a separate file (Default)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Write to the original FDS/QD file</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

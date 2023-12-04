@@ -25,6 +25,7 @@
 #include "gui.h"
 #include "patcher.h"
 #include "conf.h"
+#include "../../c++/crc/crc.h"
 
 #define BIOSFILE "disksys.rom"
 #define DIFFVERSION 1
@@ -50,9 +51,11 @@ typedef struct _fds_sinfo {
 		} block3;
 		struct _fds_side_file_block4 {
 			uint32_t position;
+			uint32_t crc32;
 		} block4;
 	} file[0xFF];
 	uint32_t counted_files;
+	uint32_t crc32prg;
 } _fds_sinfo;
 typedef struct _fds_diff_ele {
 	BYTE side;
@@ -62,6 +65,7 @@ typedef struct _fds_diff_ele {
 
 void fds_to_image(void);
 void fds_from_image(void);
+void fds_control_autoinsert(_fds_sinfo *sinfo);
 void fds_diff_file_name(uTCHAR *dst, size_t lenght);
 void fds_image_sinfo(BYTE side, _fds_sinfo *sinfo);
 void fds_image_memset(WORD *dst, WORD value, uint32_t lenght);
@@ -291,7 +295,7 @@ fds_load_bios_founded:
 void fds_info(void) {
 	log_info_box_open(uL("sides;"));
 	if (fds.info.expcted_side != fds.info.total_sides) {
-		log_close_box(uL("expected %d, finded %d"),  fds.info.expcted_side, fds.info.total_sides);
+		log_close_box(uL("expected %d, finded %d"), fds.info.expcted_side, fds.info.total_sides);
 	} else {
 		log_close_box(uL("%d"), fds.info.total_sides);
 	}
@@ -299,28 +303,36 @@ void fds_info(void) {
 		_fds_sinfo sinfo = { 0 };
 
 		fds_image_sinfo(side, &sinfo);
-		log_info_box(uL("FDS side %d;vrt size %d, files %d"), side, fds.info.sides[side].size, sinfo.counted_files);
+		log_info_box(uL("FDS side %d;prg crc 0x%08X, vrt size %d, files %3d, counted %3d"), side,
+			sinfo.crc32prg,
+			fds.info.sides[side].size,
+			sinfo.block2.files,
+			sinfo.counted_files);
+		// controllo se disabilitare l'autoinsert
+		fds_control_autoinsert(&sinfo);
 	}
 }
 void fds_info_side(BYTE side) {
 	_fds_sinfo sinfo = { 0 };
 
 	fds_image_sinfo(side, &sinfo);
-	log_info(uL("FDS side %d;disk %d, side %X, name %3s, version %d"), side,
+	log_info(uL("FDS side %d;disk %d, side %X, name %3s, version %d, vsize %d, prg crc 0x%08X"), side,
 		sinfo.block1.dnumber,
 		sinfo.block1.snumber + 0x0A,
 		sinfo.block1.name,
-		sinfo.block1.gversion);
-	log_info_box(uL("vrt disk size;%d"), fds.info.sides[side].size);
+		sinfo.block1.gversion,
+		fds.info.sides[side].size,
+		sinfo.crc32prg);
 	log_info_box(uL("block 1;pos %5d"), sinfo.block1.position);
 	log_info_box(uL("block 2;pos %5d, files %d, counted %d"),
 		sinfo.block2.position,
 		sinfo.block2.files,
 		sinfo.counted_files);
 	for (uint32_t i = 0; i < sinfo.counted_files; i++) {
-		log_info_box(uL("file %d;name %8s, size %5d, 0x%04X (b3 : %5d) (b4 : %5d)"), i,
+		log_info_box(uL("file %d;name %8s, size %5d, crc 0x%08X, 0x%04X (b3 : %5d) (b4 : %5d)"), i,
 			sinfo.file[i].block3.name,
 			sinfo.file[i].block3.length,
+			sinfo.file[i].block4.crc32,
 			sinfo.file[i].block3.length,
 			sinfo.file[i].block3.position,
 			sinfo.file[i].block4.position);
@@ -698,6 +710,16 @@ void fds_from_image(void) {
 		uremove(diff);
 	}
 }
+void fds_control_autoinsert(_fds_sinfo *sinfo) {
+	// NB : il crc32prg da controllare deve essere sempre quello
+	// del disco dove non vengono scritti i dati di salvataggio
+
+	// Gall Force - Eternal Story (Japan).fds - disk 0 side A
+	if (!strncmp((char *)&sinfo->block1.name[0], "GAL", 3) && (sinfo->crc32prg == 0xC5D1EC5D)) {
+		fds.auto_insert.disabled = TRUE;
+		gui_overlay_info_append_msg_precompiled(39, NULL);
+	}
+}
 void fds_diff_file_name(uTCHAR *dst, size_t lenght) {
 	uTCHAR ext[10], basename[255], *last_dot = NULL;
 
@@ -793,9 +815,12 @@ void fds_image_sinfo(BYTE side, _fds_sinfo *sinfo) {
 						sizeof(sinfo->file[file].block3.name));
 					// type
 					sinfo->file[file].block3.type = src[position + 0x0F];
+					sinfo->crc32prg = emu_crc32_continue((void *)&src[position], blength * sizeof(WORD), sinfo->crc32prg);
 					break;
 				case 4:
 					sinfo->file[file].block4.position = size;
+					sinfo->file[file].block4.crc32 = emu_crc32((void *)&src[position + 1], flength * sizeof(WORD));
+					sinfo->crc32prg = emu_crc32_continue((void *)&src[position], blength * sizeof(WORD), sinfo->crc32prg);
 					sinfo->counted_files++;
 					break;
 				default:
