@@ -20,56 +20,42 @@
 #include "mappers.h"
 #include "save_slot.h"
 
-INLINE static void prg_fix_185(void);
-INLINE static void chr_fix_185(void);
-
 struct _m185 {
 	BYTE reg;
-	BYTE ppu_read_count;
+	BYTE r2007_read_count;
 } m185;
 
 void map_init_185() {
-	EXTCL_AFTER_MAPPER_INIT(185);
 	EXTCL_CPU_WR_MEM(185);
 	EXTCL_SAVE_MAPPER(185);
+	EXTCL_RD_CHR(185);
 	map_internal_struct_init((BYTE *)&m185, sizeof(m185));
 
 	if ((info.mapper.submapper & 0x0C) != 0x04) {
 		EXTCL_RD_R2007(185);
 	}
 
-	memset(&m185, 0x00, sizeof(m185));
-}
-void extcl_after_mapper_init_185(void) {
-	prg_fix_185();
-	chr_fix_185();
+	if (info.reset >= HARD) {
+		memset(&m185, 0x00, sizeof(m185));
+	}
 }
 void extcl_cpu_wr_mem_185(UNUSED(BYTE nidx), UNUSED(WORD address), BYTE value) {
+	value &= prgrom_rd(nidx, address);
 	m185.reg = value;
-	chr_fix_185();
 }
 BYTE extcl_save_mapper_185(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m185.reg);
-	save_slot_ele(mode, slot, m185.ppu_read_count);
+	save_slot_ele(mode, slot, m185.r2007_read_count);
 	return (EXIT_OK);
 }
 void extcl_rd_r2007_185(UNUSED(BYTE nidx)) {
-	if (m185.ppu_read_count < 2) {
-		m185.ppu_read_count++;
-		chr_fix_185();
+	if (m185.r2007_read_count < 2) {
+		m185.r2007_read_count++;
 	}
 }
-
-INLINE static void prg_fix_185(void) {
-	memmap_auto_32k(0, MMCPU(0x8000), 0);
-}
-INLINE static void chr_fix_185(void) {
-	BYTE enabled = TRUE;
-
+BYTE extcl_rd_chr_185(BYTE nidx, WORD address) {
 	if ((info.mapper.submapper & 0x0C) == 0x04) {
-		enabled = (m185.reg & 0x03) == (info.mapper.submapper & 0x03);
-	} else {
-		enabled = (m185.ppu_read_count >= 2);
+		return ((m185.reg & 0x03) == (info.mapper.submapper & 0x03) ? chr_rd(nidx, address) : 0xFF);
 	}
-	memmap_auto_wp_8k(0, MMPPU(0x0000), 0, enabled, enabled);
+	return (m185.r2007_read_count >= 2 ? chr_rd(nidx, address) : 0xFF);
 }
