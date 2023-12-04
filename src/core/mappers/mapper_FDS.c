@@ -132,12 +132,13 @@ BYTE extcl_cpu_rd_mem_FDS(BYTE nidx, WORD address, UNUSED(BYTE openbus)) {
 					}
 				}
 				// casi :
-				// * count == 0
-				//   non faccio nulla ("Mr. Gold - Kinsan in the Space (19xx)()(J).fds")
-				// * count == 1
-				//   avvio il meccanismo di auto insert
-				// * count > 1
-				//   disabilito l'auto insert
+				// - count == 0 : non faccio nulla
+				//   Mr. Gold - Kinsan in the Space (19xx)()(J).fds
+				// - count  > 1 : disabilito l'auto insert
+				//   Akumajou Dracula (Japan) (Rev 1).fds
+				//   Akumajou Dracula v1.0 (1986)(Konami)(J).fds
+				//   Akumajou Dracula *.fds
+				// - count == 1 : avvio il meccanismo di auto insert
 				if (count > 1) {
 					fds.auto_insert.disabled = TRUE;
 					gui_overlay_info_append_msg_precompiled(29, &count);
