@@ -36,8 +36,11 @@ enum fds_disk_operations {
 };
 enum fds_gaps {
 	FDS_GAP_START = 28300 / 8,
+	// 1016 bit di gap alla fine di ogni blocco.
+	// Note : con 976 funziona correttamente la read del disco ma non e'
+	// sufficiente per la write.
 	FDS_GAP_BLOCK = 1016 / 8,
-	FDS_GAP_END = 2000,
+	FDS_GAP_END = 0
 };
 enum fds_block_type {
 	BL_DISK_INFO = 1,
@@ -52,8 +55,8 @@ enum fds_misc {
 	FDS_DISK_BLOCK_MARK = 0x0180,
 	FDS_DISK_CRC_CHAR1 = 0x0155,
 	FDS_DISK_CRC_CHAR2 = 0x01AA,
-	FDS_OP_SIDE_DELAY = 3000000,
-	FDS_AUTOINSERT_OP_SIDE_DELAY = 1550000,
+	FDS_OP_SIDE_DELAY = 2500000,
+	FDS_AUTOINSERT_OP_SIDE_DELAY = 1200000,
 	FDS_AUTOINSERT_R4032_MAX_CHECKS = 150
 };
 
@@ -217,6 +220,9 @@ EXTERNC void fds_info(void);
 EXTERNC void fds_info_side(BYTE side);
 EXTERNC void fds_disk_op(WORD type, BYTE side_to_insert, BYTE quiet);
 EXTERNC void fds_diff_op(BYTE side, BYTE mode, uint32_t position, WORD value);
+EXTERNC BYTE fds_from_image(uTCHAR *file, BYTE format, BYTE type);
+EXTERNC BYTE fds_image_to_file(uTCHAR *file);
+EXTERNC uint32_t fds_disk_side_size_format(BYTE format);
 EXTERNC uint32_t fds_disk_side_size(void);
 EXTERNC uint32_t fds_image_side_size(void);
 EXTERNC uint32_t fds_image_side_bytes(void);

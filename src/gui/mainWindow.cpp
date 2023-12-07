@@ -202,6 +202,9 @@ mainWindow::mainWindow() : QMainWindow() {
 #if !defined (WITH_FFMPEG)
 	action_Recording->setVisible(false);
 #endif
+#if !defined (DEBUG)
+	action_Current_state_to_puNES_image->setVisible(false);
+#endif
 
 	adjustSize();
 
@@ -882,6 +885,9 @@ void mainWindow::connect_menu_signals(void) {
 	connect_action(action_Disk_4_side_B, 7, SLOT(s_disk_side()));
 	connect_action(action_Switch_sides, 0xFFF, SLOT(s_disk_side()));
 	connect_action(action_Eject_Insert_Disk, SLOT(s_eject_disk()));
+	connect_action(action_Current_state_to_FDS, 0, SLOT(s_export_fds_image()));
+	connect_action(action_Current_state_to_Quick_Disk, 1, SLOT(s_export_fds_image()));
+	connect_action(action_Current_state_to_puNES_image, 2, SLOT(s_export_fds_image()));
 	connect_action(action_Tape_Play, SLOT(s_tape_play()));
 	connect_action(action_Tape_Record, SLOT(s_tape_record()));
 	connect_action(action_Tape_Stop, SLOT(s_tape_stop()));
@@ -1164,10 +1170,12 @@ void mainWindow::update_fds_menu(void) {
 		ctrl_disk_side(action_Disk_4_side_A);
 		ctrl_disk_side(action_Disk_4_side_B);
 		action_Eject_Insert_Disk->setEnabled(true);
+		menu_Export_Current_state->setEnabled(true);
 	} else {
 		action_text(action_Eject_Insert_Disk, tr("&Eject/Insert disk"), sc);
 		menu_Disk_Side->setEnabled(false);
 		action_Eject_Insert_Disk->setEnabled(false);
+		menu_Export_Current_state->setEnabled(false);
 	}
 }
 void mainWindow::update_tape_menu(void) {
@@ -1563,6 +1571,69 @@ void mainWindow::s_eject_disk(void) {
 	}
 	emu_thread_continue();
 	update_menu_nes();
+}
+void mainWindow::s_export_fds_image(void) {
+	int format = QVariant(((QObject *)sender())->property("myValue")).toInt();
+	QStringList filters;
+	QString file;
+
+	emu_thread_pause();
+
+	switch(format) {
+		default:
+		case 0:
+			format = 0;
+			filters.append(tr("FDS Format Disk"));
+			filters[0].append(" (*.fds *.FDS)");
+			break;
+		case 1:
+			filters.append(tr("Quick Disk Format Disk"));
+			filters[0].append(" (*.qd *.QD)");
+			break;
+		case 2:
+			filters.append(tr("puNES image"));
+			filters[0].append(" (*.image)");
+			break;
+	}
+
+	filters.append(tr("All files"));
+	filters[1].append(" (*.*)");
+
+	file = QFileDialog::getSaveFileName(this, tr("Exports the current state of the disk"),
+		uQString(gui.last_open_path), filters.join(";;"));
+
+	if (!file.isNull()) {
+		QFileInfo fileinfo(file);
+		BYTE rc = EXIT_ERROR;
+
+		if (fileinfo.suffix().isEmpty()) {
+			switch(format) {
+				default:
+				case 0:
+					fileinfo.setFile(QString(file) + ".fds");
+					break;
+				case 1:
+					fileinfo.setFile(QString(file) + ".qd");
+					break;
+				case 2:
+					fileinfo.setFile(QString(file) + ".image");
+					break;
+			}
+		}
+		if (format < 2) {
+			rc = fds_from_image(uQStringCD(fileinfo.absoluteFilePath()),
+				format == 0 ? FDS_FORMAT : QD_FORMAT,
+				format == 0 ? FDS_FORMAT_FDS : FDS_FORMAT_RAW);
+		} else {
+			rc = fds_image_to_file(uQStringCD(fileinfo.absoluteFilePath()));
+		}
+		if (rc == EXIT_ERROR) {
+			QMessageBox::critical(this, tr("Error on export state"),
+				tr("Impossible write %0.").arg(fileinfo.fileName()), QMessageBox::Ok);
+		}
+	}
+
+	emu_thread_continue();
 }
 void mainWindow::s_start_stop_audio_recording(void) {
 	if (info.no_rom) {

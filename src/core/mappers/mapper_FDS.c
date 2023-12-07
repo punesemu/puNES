@@ -143,7 +143,7 @@ BYTE extcl_cpu_rd_mem_FDS(BYTE nidx, WORD address, UNUSED(BYTE openbus)) {
 					fds.auto_insert.disabled = TRUE;
 					gui_overlay_info_append_msg_precompiled(29, &count);
 				} else if (count == 1) {
-					if (side != fds.drive.side_inserted) {
+					if ((side != fds.drive.side_inserted) || fds.drive.disk_ejected) {
 						fds.auto_insert.rE445.in_run = TRUE;
 						fds.auto_insert.new_side = side;
 						fds.auto_insert.delay.side = FDS_AUTOINSERT_OP_SIDE_DELAY;
@@ -191,8 +191,6 @@ void extcl_cpu_every_cycle_FDS(BYTE nidx) {
 		}
 		if (!fds.auto_insert.delay.eject & (fds.auto_insert.delay.dummy == -1) & (fds.auto_insert.r4032.checks > 20)) {
 			fds.auto_insert.delay.eject = -1;
-			fds.auto_insert.r4032.frames = 0;
-			fds.auto_insert.r4032.checks = 0;
 			fds.auto_insert.delay.dummy = FDS_OP_SIDE_DELAY;
 			fds_disk_op(FDS_DISK_EJECT, 0, TRUE);
 			gui_update_fds_menu();
@@ -208,6 +206,10 @@ void extcl_cpu_every_cycle_FDS(BYTE nidx) {
 	}
 
 	// IRQ handler
+	if (fds.drive.irq_timer_delay && !(--fds.drive.irq_timer_delay)) {
+		fds.drive.irq_timer_high = 0x01;
+		nes[nidx].c.irq.high |= FDS_TIMER_IRQ;
+	}
 	if (fds.drive.enabled_dsk_reg && fds.drive.irq_timer_enabled) {
 		if (fds.drive.irq_timer_counter) {
 			fds.drive.irq_timer_counter--;
@@ -218,8 +220,7 @@ void extcl_cpu_every_cycle_FDS(BYTE nidx) {
 			} else {
 				fds.drive.irq_timer_enabled = FALSE;
 			}
-			fds.drive.irq_timer_high = 0x01;
-			nes[nidx].c.irq.high |= FDS_TIMER_IRQ;
+			fds.drive.irq_timer_delay = 1;
 		}
 	}
 
@@ -234,7 +235,6 @@ void extcl_cpu_every_cycle_FDS(BYTE nidx) {
 
 	// no disco, no party
 	if (fds.drive.disk_ejected) {
-		fds.drive.delay = 1000;
 		return;
 	}
 
@@ -243,7 +243,6 @@ void extcl_cpu_every_cycle_FDS(BYTE nidx) {
 		fds.drive.disk_position = 0;
 		fds.drive.gap_ended = FALSE;
 		fds.drive.scan = FALSE;
-		fds.drive.delay = 1;
 		return;
 	}
 
@@ -252,7 +251,7 @@ void extcl_cpu_every_cycle_FDS(BYTE nidx) {
 		return;
 	}
 
-	if (fds.drive.transfer_reset) {
+	if (!fds.drive.transfer_reset) {
 		fds.drive.scan = TRUE;
 	}
 	if (!fds.drive.scan) {
@@ -351,7 +350,6 @@ void extcl_cpu_every_cycle_FDS(BYTE nidx) {
 		fds.drive.disk_position = 0;
 		fds.drive.gap_ended = FALSE;
 		fds.drive.delay = 900000;
-		fds.drive.motor_on = FALSE;
 		// FDS interessati :
 		// - 19 Neunzehn (1988)(Soft Pro)(J).fds
 		//   visto che il controllo del r4032 e' mooooolto lento, l'eject forzato alla fine del disco
@@ -496,3 +494,216 @@ void extcl_apu_tick_FDS(void) {
 		}
 	}
 }
+
+//void extcl_cpu_every_cycle_FDSv2(BYTE nidx) {
+//	BYTE max_speed = cfg->fds_fast_forward &
+//		((fds.drive.scan & (info.lag_frame.consecutive > MIN_LAG_FRAMES)) | !fds.auto_insert.in_game);
+//	WORD data = 0;
+//
+//	// auto insert
+//	if (fds_auto_insert_enabled()) {
+//#define df_max_speed (cfg->fds_fast_forward & (info.lag_frame.consecutive > MIN_LAG_FRAMES))
+//		if (fds.auto_insert.delay.eject > 0) {
+//			fds.auto_insert.delay.eject--;
+//			max_speed = df_max_speed & (fds.auto_insert.delay.eject > 0);
+//		} else if (fds.auto_insert.delay.dummy > 0) {
+//			if (--fds.auto_insert.delay.dummy == 0) {
+//
+//				printf("auto_insert 0 : FDS_DISK_INSERT : %d\n", fds.auto_insert.delay.side);
+//
+//				fds.auto_insert.delay.dummy = -1;
+//				fds_disk_op(FDS_DISK_INSERT, 0, TRUE);
+//				gui_update_fds_menu();
+//			}
+//			max_speed = df_max_speed & (fds.auto_insert.delay.dummy > 0);
+//		} else if (fds.auto_insert.delay.side > 0) {
+//			if (--fds.auto_insert.delay.side == 0) {
+//				fds.auto_insert.delay.side = -1;
+//				fds.side.change.new_side = fds.auto_insert.new_side;
+//				fds.side.change.delay = FDS_OP_SIDE_DELAY;
+//
+//				printf("auto_insert 1 : FDS_DISK_EJECT\n");
+//
+//				fds_disk_op(FDS_DISK_EJECT, 0, TRUE);
+//				gui_update_fds_menu();
+//			}
+//			max_speed = df_max_speed & (fds.auto_insert.delay.side > 0);
+//		}
+//		if (!fds.auto_insert.delay.eject & (fds.auto_insert.delay.dummy == -1) & (fds.auto_insert.r4032.checks > 20)) {
+//			fds.auto_insert.delay.eject = -1;
+//			fds.auto_insert.delay.dummy = FDS_OP_SIDE_DELAY;
+//
+//			printf("auto_insert 2 : FDS_DISK_EJECT\n");
+//
+//			fds_disk_op(FDS_DISK_EJECT, 0, TRUE);
+//			gui_update_fds_menu();
+//			max_speed = df_max_speed;
+//		}
+//#undef df_max_speed
+//	}
+//
+//	if (max_speed & !fds.info.bios_first_run) {
+//		gui_max_speed_start();
+//	} else {
+//		gui_max_speed_stop();
+//	}
+//
+//	// IRQ handler
+// 	if (fds.drive.irq_timer_delay && !(--fds.drive.irq_timer_delay)) {
+//		fds.drive.irq_timer_high = 0x01;
+//		nes[nidx].c.irq.high |= FDS_TIMER_IRQ;
+//	}
+//	if (fds.drive.enabled_dsk_reg && fds.drive.irq_timer_enabled) {
+//		if (fds.drive.irq_timer_counter) {
+//			fds.drive.irq_timer_counter--;
+//		}
+//		if (!fds.drive.irq_timer_counter) {
+//			if (fds.drive.irq_timer_reload_enabled) {
+//				fds.drive.irq_timer_counter = fds.drive.irq_timer_reload;
+//			} else {
+//				fds.drive.irq_timer_enabled = FALSE;
+//			}
+//			fds.drive.irq_timer_delay = 1;
+//		}
+//	}
+//
+//	// se c'e' un delay aspetto
+//	if (fds.side.change.delay > 0) {
+//		if (!(--fds.side.change.delay)) {
+//
+//			printf("auto_insert 3 : FDS_DISK_SELECT_AND_INSERT\n");
+//
+//			fds_disk_op(FDS_DISK_SELECT_AND_INSERT, fds.side.change.new_side, FALSE);
+//			gui_update_fds_menu();
+//		}
+//		return;
+//	}
+//
+//	// no disco, no party
+//	if (fds.drive.disk_ejected) {
+//		return;
+//	}
+//
+//	if (!fds.drive.motor_on) {
+//		fds.drive.disk_position = 0;
+//		fds.drive.gap_ended = FALSE;
+//		return;
+//	}
+//
+//	fds.drive.scan = !fds.drive.transfer_reset;
+//
+//	if ((fds.drive.delay > 0) && --fds.drive.delay) {
+//		return;
+//	}
+//
+//	if (fds.drive.scan) {
+//		// se c'e' una richiesta di invio crc i prossimi due bytes lo saranno
+//		if (!fds.drive.crc_char && fds.drive.crc_control) {
+//			fds.drive.crc_char = 2;
+//		}
+//
+//		if (fds.drive.read_mode) {
+//			// read
+//			fds.drive.data_readed = data = fds.side.info->data[fds.drive.disk_position];
+//		} else {
+//			// write
+//			if (!fds.drive.drive_ready) {
+//				data = FDS_DISK_GAP;
+//			} else if (fds.drive.crc_char) {
+//				data = FDS_DISK_CRC_CHAR1;
+//			} else {
+//				data = fds.side.info->data[fds.drive.disk_position];
+//			}
+//		}
+//
+//		// se non sono piu' nel gap vuol dire che ho trasferito
+//		// 8 bit di dati quindi setto il flag corrispondente e
+//		// se e' abilitato l'irq del disco, lo setto.
+//		if (fds.drive.gap_ended) {
+//			if (fds.drive.irq_disk_enabled) {
+//				fds.drive.irq_disk_high = 0x02;
+//				nes[nidx].c.irq.high |= FDS_DISK_IRQ;
+//			}
+//
+//			if (!fds.drive.read_mode) {
+//				uint32_t position = (fds.drive.disk_position - 2);
+//				WORD *dst = &fds.side.info->data[position];
+//
+//				// quando inizia la scrittura il bios scrive sempre
+//				// prima un GAP, seguito da un MARK seguito dal blocco che verrà chiuso dai CRC.
+//				// il last_position devo aggiornarlo solo con i CRC e i GAP che seguono.
+//				if (((*dst) == 0x0100) && (fds.drive.data_to_write == 0x00)) {
+//					(*dst) = 0x0100;
+//				} else if ((fds.drive.data_to_write == 0x80) &&
+//						   (((*dst) == 0x0180) || (position == fds.side.info->last_position))) {
+//					(*dst) = 0x0180;
+//					if (position == fds.side.info->last_position) {
+//						fds_diff_op(fds.side.info->side, FDS_OP_WRITE, position, (*dst));
+//					}
+//				} else if (fds.drive.crc_char) {
+//					if (fds.drive.crc_char == 2) {
+//						(*dst) = FDS_DISK_CRC_CHAR1;
+//					} else {
+//						(*dst) = FDS_DISK_CRC_CHAR2;
+//					}
+//					if (position >= fds.side.info->last_position) {
+//						fds_diff_op(fds.side.info->side, FDS_OP_WRITE, position, (*dst));
+//						fds.info.sides[fds.side.info->side].last_position = position + 1;
+//						if ((*dst) == FDS_DISK_CRC_CHAR2) {
+//							for (uint32_t i = 0; i < FDS_GAP_BLOCK; i++) {
+//								uint32_t p = position + 1 + i;
+//
+//								if (p < fds_disk_side_size()) {
+//									fds.side.info->data[p] = FDS_DISK_GAP;
+//									fds_diff_op(fds.side.info->side, FDS_OP_WRITE, p, FDS_DISK_GAP);
+//									fds.info.sides[fds.side.info->side].last_position = p + 1;
+//								}
+//							}
+//						}
+//					}
+//				} else {
+//					(*dst) = fds.drive.data_to_write;
+//					fds_diff_op(fds.side.info->side, FDS_OP_WRITE, position, fds.drive.data_to_write);
+//				}
+//				data = (*dst);
+//				fds.info.last_operation = FDS_OP_WRITE;
+//			} else if (!fds.info.last_operation) {
+//				fds.info.last_operation = FDS_OP_READ;
+//			}
+//		}
+//
+//		if (data != FDS_DISK_GAP) {
+//			fds.drive.gap_ended = TRUE;
+//		}
+//
+//		if (fds.drive.crc_char && !(--fds.drive.crc_char)) {
+//			fds.drive.gap_ended = fds.drive.crc_control = FALSE;
+//		}
+//
+//		if (!fds.drive.drive_ready) {
+//			fds.drive.gap_ended = FALSE;
+//		}
+//	}
+//	if (++fds.drive.disk_position >= fds.info.sides[fds.drive.side_inserted].size) {
+//		fds.drive.end_of_head = END_OF_HEAD;
+//		fds.drive.disk_position = 0;
+//		fds.drive.gap_ended = FALSE;
+//		fds.drive.delay = 900000;
+//		//fds.drive.motor_on = FALSE;
+//		// FDS interessati :
+//		// - 19 Neunzehn (1988)(Soft Pro)(J).fds
+//		//   visto che il controllo del r4032 e' mooooolto lento, l'eject forzato alla fine del disco
+//		//   costringe la rom al richiamo della funzione del bios $E445.
+//		// - Dandy (19xx)(Pony Canyon)(J).fds
+//		//   dopo aver selezionato il nome del personaggio, puo' capitare che il disco sia disinserito a causa di
+//		//   di eject e che dia un "error 01" che comunque verra' subito corretto dall'insert automatico seguente.
+//		// - Zelda no Densetsu - The Hyrule Fantasy (1986)(Nintendo)(J).fds
+//		//   stesso discorso fatto per Dandy (19xx)(Pony Canyon)(J).fds.
+//		fds.auto_insert.delay.eject = FDS_OP_SIDE_DELAY;
+//		printf("%03d fds.drive.disk_position >= fds.info.sides[fds.drive.side_inserted].size\n", fds.drive.scan);
+//	} else {
+//		fds.drive.end_of_head = FALSE;
+//		// il delay per riuscire a leggere i prossimi 8 bit
+//		fds.drive.delay = 149;
+//	}
+//}

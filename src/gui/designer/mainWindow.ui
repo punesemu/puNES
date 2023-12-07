@@ -91,6 +91,18 @@
      <addaction name="action_Tape_Record"/>
      <addaction name="action_Tape_Stop"/>
     </widget>
+    <widget class="QMenu" name="menu_Export_Current_state">
+     <property name="title">
+      <string>E&amp;xport current state of Disk/Disks</string>
+     </property>
+     <property name="icon">
+      <iconset resource="resources.qrc">
+       <normaloff>:/icon/icons/fds_export.svg</normaloff>:/icon/icons/fds_export.svg</iconset>
+     </property>
+     <addaction name="action_Current_state_to_FDS"/>
+     <addaction name="action_Current_state_to_Quick_Disk"/>
+     <addaction name="action_Current_state_to_puNES_image"/>
+    </widget>
     <addaction name="action_Turn_Off"/>
     <addaction name="action_Hard_Reset"/>
     <addaction name="action_Soft_Reset"/>
@@ -101,6 +113,7 @@
     <addaction name="separator"/>
     <addaction name="menu_Disk_Side"/>
     <addaction name="action_Eject_Insert_Disk"/>
+    <addaction name="menu_Export_Current_state"/>
     <addaction name="separator"/>
     <addaction name="menu_Tape"/>
     <addaction name="separator"/>
@@ -773,6 +786,21 @@
    </property>
    <property name="text">
     <string>Detach &amp;Barcode</string>
+   </property>
+  </action>
+  <action name="action_Current_state_to_FDS">
+   <property name="text">
+    <string>to &amp;FDS Format</string>
+   </property>
+  </action>
+  <action name="action_Current_state_to_Quick_Disk">
+   <property name="text">
+    <string>to Quick Disk Format</string>
+   </property>
+  </action>
+  <action name="action_Current_state_to_puNES_image">
+   <property name="text">
+    <string>to puNES image</string>
    </property>
   </action>
  </widget>

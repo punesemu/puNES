@@ -599,59 +599,58 @@ INLINE static void nsf_rd_mem(BYTE nidx, WORD address, BYTE made_tick) {
 }
 INLINE static BYTE fds_rd_mem(BYTE nidx, WORD address, BYTE made_tick) {
 	if (address >= 0x8000) {
-		/* eseguo un tick hardware */
+		// eseguo un tick hardware
 		if (made_tick) {
 			tick_hw(nidx, 1);
 		}
-		/* leggo */
+		// leggo
 		nes[nidx].c.cpu.openbus = extcl_cpu_rd_mem(nidx, address, nes[nidx].c.cpu.openbus);
 		return (TRUE);
 	}
 	if (address >= 0x6000) {
-		/* eseguo un tick hardware */
+		// eseguo un tick hardware
 		if (made_tick) {
 			tick_hw(nidx, 1);
 		}
-		/* leggo */
+		// leggo
 		nes[nidx].c.cpu.openbus = wram_rd(nidx, address);
 		return (TRUE);
 	}
 	if (fds.drive.enabled_dsk_reg && ((address >= 0x4030) && (address <= 0x4033))) {
-		/* eseguo un tick hardware */
+		// eseguo un tick hardware
 		tick_hw(nidx, 1);
 
 		if (address == 0x4030) {
-			/*
-			 * 7  bit  0
-			 * ---------
-			 * IExB xxTD
-			 * ||||   ||
-			 * ||||   |+- Timer Interrupt (1: an IRQ occurred)
-			 * ||||   +-- Byte transfer flag. Set every time 8 bits
-			 * ||||         have been transfered between the RAM adaptor & disk
-			 * ||||         drive (service $4024/$4031).
-			 * ||||         Reset when $4024, $4031, or $4030 has been serviced.
-			 * |||+------ CRC control (0: CRC passed; 1: CRC error)
-			 * |+-------- End of Head (1 when disk head is on the most inner track)
-			 * +--------- Disk Data Read/Write Enable (1 when disk is readable/writable)
-			 */
-			/* azzero */
+			// 7  bit  0
+			// ---------
+			// IExB xxTD
+			// ||||   ||
+			// ||||   |+- Timer Interrupt (1: an IRQ occurred)
+			// ||||   +-- Byte transfer flag. Set every time 8 bits
+			// ||||         have been transfered between the RAM adaptor & disk
+			// ||||         drive (service $4024/$4031).
+			// ||||         Reset when $4024, $4031, or $4030 has been serviced.
+			// |||+------ CRC control (0: CRC passed; 1: CRC error)
+			// |+-------- End of Head (1 when disk head is on the most inner track)
+			// +--------- Disk Data Read/Write Enable (1 when disk is readable/writable)
+
+			// azzero
 			nes[nidx].c.cpu.openbus = 0;
-			/* bit 0 (timer irq) */
+			// bit 0 (timer irq)
 			nes[nidx].c.cpu.openbus |= fds.drive.irq_timer_high;
-			/* bit 1 (trasfer flag) */
+			// bit 1 (trasfer flag)
 			nes[nidx].c.cpu.openbus |= fds.drive.irq_disk_high;
-			/* bit 2 e 3 non settati */
-			/* TODO : bit 4 (CRC control : 0 passato, 1 errore) */
-			/* bit 5 non settato */
-			/* TODO : bit 6 (end of head) */
+			// bit 2 e 3 non settati
+			// TODO : bit 4 (CRC control : 0 passato, 1 errore)
+			// bit 5 non settato
+			// TODO : bit 6 (end of head)
 			nes[nidx].c.cpu.openbus |= fds.drive.end_of_head;
 			//fds.drive.end_of_head = FALSE;
-			/* TODO : bit 7 (disk data read/write enable (1 when disk is readable/writable) */
-			/* devo disabilitare sia il timer IRQ ... */
+			// TODO : bit 7 (disk data read/write enable (1 when disk is readable/writable)
+			// devo disabilitare sia il timer IRQ ...
 			fds.drive.irq_timer_high = FALSE;
 			nes[nidx].c.irq.high &= ~FDS_TIMER_IRQ;
-			/* che il disk IRQ */
+			// che il disk IRQ
 			fds.drive.irq_disk_high = FALSE;
 			nes[nidx].c.irq.high &= ~FDS_DISK_IRQ;
 #if !defined (RELEASE)
@@ -662,35 +661,38 @@ INLINE static BYTE fds_rd_mem(BYTE nidx, WORD address, BYTE made_tick) {
 		if (address == 0x4031) {
 			nes[nidx].c.cpu.openbus = fds.drive.data_readed;
 #if !defined (RELEASE)
-			/*
-			printf("0x%04X 0x%02X [0x%04X] 0x%04X %d %d %d\n", address, nes[nidx].c.cpu.openbus,
-				fds.side.data[fds.drive.disk_position], nes[nidx].c.cpu.opcode_PC, fds.drive.disk_position,
-				fds.info.sides_size[fds.drive.side_inserted], nes[nidx].c.irq.high);
-			*/
+			//printf("0x%04X 0x%02X [0x%04X] 0x%04X %d %d\n", address, nes[nidx].c.cpu.openbus,
+			//	fds.info.sides[fds.drive.side_inserted].data[fds.drive.disk_position], nes[nidx].c.cpu.opcode_PC,
+			//	fds.drive.disk_position, nes[nidx].c.irq.high);
 #endif
-			/* devo disabilitare il disk IRQ */
+			// devo disabilitare il disk IRQ
 			fds.drive.irq_disk_high = FALSE;
 			nes[nidx].c.irq.high &= ~FDS_DISK_IRQ;
 			return (TRUE);
 		}
 		if (address == 0x4032) {
-			/*
-			 * 7  bit  0
-			 * ---------
-			 * xxxx xPRS
-			 *       |||
-			 *       ||+- Disk flag (0: Disk inserted; 1: Disk not inserted)
-			 *       |+-- Ready flag (0: Disk read; 1: Disk not ready)
-			 *       +--- Protect flag (0: Not write protected; 1: Write protected or disk ejected)
-			 */
+			// 7  bit  0
+			// ---------
+			// xxxx xPRS
+			//       |||
+			//       ||+- Disk flag (0: Disk inserted; 1: Disk not inserted)
+			//       |+-- Ready flag (0: Disk ready; 1: Disk not ready)
+			//       +--- Protect flag (0: Not write protected; 1: Write protected or disk ejected)
 			nes[nidx].c.cpu.openbus &= ~0x07;
 
 			if (fds.drive.disk_ejected) {
 				nes[nidx].c.cpu.openbus |= 0x07;
-			} else if (!fds.drive.scan) {
+			} else if (fds.drive.end_of_head | fds.drive.transfer_reset) {
 				nes[nidx].c.cpu.openbus |= 0x02;
 			}
-
+#if !defined (RELEASE)
+			//printf("%5d - %3d - %3d : 0x%04X 0x%02X %d %d %d %d\n",
+			//	nes[nidx].p.ppu.frames,
+			//	nes[nidx].p.ppu.frame_y,
+			//	nes[nidx].p.ppu.frame_x,
+			//	address, nes[nidx].c.cpu.openbus, fds.drive.disk_ejected, fds.drive.scan,
+			//	fds.drive.delay, fds.drive.disk_position);
+#endif
 			if (fds_auto_insert_enabled()) {
 				if ((nes[nidx].p.ppu.frames - fds.auto_insert.r4032.frames) < 100) {
 					if ((++fds.auto_insert.r4032.checks > FDS_AUTOINSERT_R4032_MAX_CHECKS) &&
@@ -702,7 +704,7 @@ INLINE static BYTE fds_rd_mem(BYTE nidx, WORD address, BYTE made_tick) {
 						// - Bishojou SF Alien Battle (19xx)(Hacker International)(J)(Unl)[b].fds
 						// senza questo controllo entrambi gli fds potrebbero rimanere in attesa
 						// del cambio side senza che l'auto insert avvenga visto che l'END_OF_HEAD
-						// è stato raggiunto prima.
+						// e' stato raggiunto prima.
 						fds.auto_insert.r4032.checks = 0;
 						fds.auto_insert.delay.eject = FDS_OP_SIDE_DELAY;
 					}
@@ -711,59 +713,53 @@ INLINE static BYTE fds_rd_mem(BYTE nidx, WORD address, BYTE made_tick) {
 				}
 				fds.auto_insert.r4032.frames = nes[nidx].p.ppu.frames;
 			}
-
 			return (TRUE);
 		}
 		if (address == 0x4033) {
-			/*
-			 * 7  bit  0
-			 * ---------
-			 * BIII IIII
-			 * |||| ||||
-			 * |+++-++++- Input from expansion terminal where there's a shutter
-			 * |            on the back of the ram card.
-			 * +--------- Battery status (0: Good; 1: Voltage is low).
-			 */
+			// 7  bit  0
+			// ---------
+			// BIII IIII
+			// |||| ||||
+			// |+++-++++- Input from expansion terminal where there's a shutter
+			// |            on the back of the ram card.
+			// +--------- Battery status (0: Good; 1: Voltage is low).
 			nes[nidx].c.cpu.openbus = fds.drive.data_external_connector & 0x80;
 			return (TRUE);
 		}
 	}
 	if (fds.drive.enabled_snd_reg) {
 		if ((address >= 0x4040) && (address <= 0x407F)) {
-			/* eseguo un tick hardware */
+			// eseguo un tick hardware
 			tick_hw(nidx, 1);
-			/*
-			 * 7  bit  0  (read/write)
-			 * ---- ----
-			 * OOSS SSSS
-			 * |||| ||||
-			 * ||++-++++- Sample
-			 * ++-------- Returns 01 on read, likely from open bus
-			 */
+			// 7  bit  0  (read/write)
+			// ---- ----
+			// OOSS SSSS
+			// |||| ||||
+			// ||++-++++- Sample
+			// ++-------- Returns 01 on read, likely from open bus
 			// When writing is disabled ($4089.7), reading anywhere in 4040-407F returns the value at the current wave position.
 			nes[nidx].c.cpu.openbus = (fds.snd.wave.writable ? fds.snd.wave.data[address & 0x3F] : fds.snd.wave.data[fds.snd.wave.index]) |
 				(nes[nidx].c.cpu.openbus & 0xC0);
 			return (TRUE);
 		}
 		if (address == 0x4090) {
-			/* eseguo un tick hardware */
+			// eseguo un tick hardware
 			tick_hw(nidx, 1);
 			nes[nidx].c.cpu.openbus = (fds.snd.volume.gain & 0x3F) | (nes[nidx].c.cpu.openbus & 0xC0);
 			return (TRUE);
 		}
 		if (address == 0x4092) {
-			/* eseguo un tick hardware */
+			// eseguo un tick hardware
 			tick_hw(nidx, 1);
 			nes[nidx].c.cpu.openbus = (fds.snd.sweep.gain & 0x3F) | (nes[nidx].c.cpu.openbus & 0xC0);
 			return (TRUE);
 		}
 	}
 	if (address > 0x4017) {
-		/* eseguo un tick hardware */
+		// eseguo un tick hardware/
 		tick_hw(nidx, 1);
 		return (TRUE);
 	}
-
 	return (FALSE);
 }
 
@@ -1796,91 +1792,78 @@ INLINE static void nsf_wr_mem(BYTE nidx, WORD address, BYTE value) {
 }
 INLINE static BYTE fds_wr_mem(BYTE nidx, WORD address, BYTE value) {
 	if (address >= 0x8000) {
-		/* eseguo un tick hardware */
+		// eseguo un tick hardware
 		tick_hw(nidx, 1);
-		/* scrivo */
+		// scrivo
 		prgrom_wr(nidx, address, value);
 		return (TRUE);
 	}
 	if (address >= 0x6000) {
-		/* eseguo un tick hardware */
+		// eseguo un tick hardware
 		tick_hw(nidx, 1);
-		/* scrivo */
+		// scrivo
 		wram_wr(nidx, address, value);
 		return (TRUE);
 	}
 	if ((address >= 0x4020) && (address <= 0x4026)) {
-		/* eseguo un tick hardware */
+		// eseguo un tick hardware
 		tick_hw(nidx, 1);
-
 #if !defined (RELEASE)
-		/*if (address == 0x4025) {
-			printf("0x%04X 0x%02X %d\n", address, value, fds.drive.enabled_dsk_reg);
-		} else {
-			if (fds.drive.disk_position)
-			printf("0x%04X 0x%02X 0x%04X %d 0x%02X %d\n", address, value, nes[nidx].c.cpu.opcode_PC,
-				fds.drive.disk_position - 1, fds.side.data[fds.drive.disk_position - 1], nes[nidx].p.ppu.frames);
-		}*/
+		//if (address == 0x4025) {
+		//	printf("0x%04X 0x%02X %d\n", address, value, fds.drive.enabled_dsk_reg);
+		//} else {
+		//	if (fds.drive.disk_position)
+		//	printf("0x%04X 0x%02X 0x%04X %d 0x%02X %d\n", address, value, nes[nidx].c.cpu.opcode_PC,
+		//		fds.drive.disk_position - 1, fds.side.data[fds.drive.disk_position - 1], nes[nidx].p.ppu.frames);
+		//}
 #endif
-
 		if (address == 0x4020) {
-			/*
-			 * 7  bit  0
-			 * ---------
-			 * LLLL LLLL
-			 * |||| ||||
-			 * ++++-++++- 8 LSB of IRQ timer
-			 */
+			// 7  bit  0
+			// ---------
+			// LLLL LLLL
+			// |||| ||||
+			// ++++-++++- 8 LSB of IRQ timer
 			fds.drive.irq_timer_reload = (fds.drive.irq_timer_reload & 0xFF00) | value;
-			fds.drive.irq_timer_high = FALSE;
-			nes[nidx].c.irq.high &= ~FDS_TIMER_IRQ;
 			return (TRUE);
 		}
 		if (address == 0x4021) {
-			/*
-			 * 7  bit  0
-			 * ---------
-			 * LLLL LLLL
-			 * |||| ||||
-			 * ++++-++++- 8 MSB of IRQ timer
-			 */
+			// 7  bit  0
+			// ---------
+			// LLLL LLLL
+			// |||| ||||
+			// ++++-++++- 8 MSB of IRQ timer
 			fds.drive.irq_timer_reload = (value << 8) | (fds.drive.irq_timer_reload & 0x00FF);
-			fds.drive.irq_timer_high = FALSE;
-			nes[nidx].c.irq.high &= ~FDS_TIMER_IRQ;
 			return (TRUE);
 		}
 		if (address == 0x4022) {
-			/*
-			 * 7  bit  0
-			 * ---------
-			 * xxxx xxER
-			 *        ||
-			 *        |+- IRQ Reload Flag
-			 *        +-- IRQ Enabled
-			 */
+			// 7  bit  0
+			// ---------
+			// xxxx xxER
+			//        ||
+			//        |+- IRQ Reload Flag
+			//        +-- IRQ Enabled
 			if (fds.drive.enabled_dsk_reg) {
 				fds.drive.irq_timer_reload_enabled = value & 0x01;
 				fds.drive.irq_timer_enabled = value & 0x02;
 			}
-
 			if (fds.drive.irq_timer_enabled) {
 				fds.drive.irq_timer_counter = fds.drive.irq_timer_reload;
 			} else {
 				fds.drive.irq_timer_high = FALSE;
 				nes[nidx].c.irq.high &= ~FDS_TIMER_IRQ;
 			}
-
 			return (TRUE);
 		}
 		if (address == 0x4023) {
-			/*
-			 * 7  bit  0
-			 * ---------
-			 * xxxx xxSD
-			 *        ||
-			 *        |+- Enable disk I/O registers
-			 *        +-- Enable sound I/O registers
-			 */
+			// 7  bit  0
+			// ---------
+			// xxxx xxSD
+			//        ||
+			//        |+- Enable disk I/O registers
+			//        +-- Enable sound I/O registers
+#if !defined (RELEASE)
+			//printf("0x%04X 0x%02X %d %d\n", address, value, fds.drive.disk_ejected, fds.drive.delay);
+#endif
 			fds.drive.enabled_dsk_reg = value & 0x01;
 			fds.drive.enabled_snd_reg = value & 0x02;
 
@@ -1888,7 +1871,6 @@ INLINE static BYTE fds_wr_mem(BYTE nidx, WORD address, BYTE value) {
 				fds.drive.irq_timer_high = FALSE;
 				nes[nidx].c.irq.high &= ~FDS_TIMER_IRQ;
 			}
-
 			return (TRUE);
 		}
 		if (address == 0x4024) {
@@ -1898,28 +1880,33 @@ INLINE static BYTE fds_wr_mem(BYTE nidx, WORD address, BYTE value) {
 			return (TRUE);
 		}
 		if (address == 0x4025) {
-			/*
-			 * 7  bit  0
-			 * ---------
-			 * IS1B MRTD
-			 * |||| ||||
-			 * |||| |||+- Drive Motor Control
-			 * |||| |||     0: Stop motor
-			 * |||| |||     1: Turn on motor
-			 * |||| ||+-- Transfer Reset
-			 * |||| ||      Set 1 to reset transfer timing to the initial state.
-			 * |||| |+--- Read / Write mode
-			 * |||| |     (0: write; 1: read)
-			 * |||| +---- Mirroring (0: horizontal; 1: vertical)
-			 * |||+------ CRC control (set during CRC calculation of transfer)
-			 * ||+------- Always set to '1'
-			 * |+-------- Read/Write Start
-			 * |            Turn on motor.  Set to 1 when the drive becomes ready for read/write
-			 * +--------- Interrupt Transfer
-			 *              0: Transfer without using IRQ
-			 *              1: Enable IRQ when the drive becomes ready for
-			 */
-
+			// 7  bit  0
+			// ---------
+			// IS1B MRTD
+			// |||| ||||
+			// |||| |||+- Drive Motor Control
+			// |||| |||     0: Stop motor
+			// |||| |||     1: Turn on motor
+			// |||| ||+-- Transfer Reset
+			// |||| ||      Set 1 to reset transfer timing to the initial state.
+			// |||| |+--- Read / Write mode
+			// |||| |     (0: write; 1: read)
+			// |||| +---- Mirroring (0: horizontal; 1: vertical)
+			// |||+------ CRC control (set during CRC calculation of transfer)
+			// ||+------- Always set to '1'
+			// |+-------- Read/Write Start
+			// |            Turn on motor.  Set to 1 when the drive becomes ready for read/write
+			// +--------- Interrupt Transfer
+			//              0: Transfer without using IRQ
+			//              1: Enable IRQ when the drive becomes ready for
+#if !defined (RELEASE)
+			//printf("%5d - %3d - %3d : 0x%04X 0x%02X %d %d %d %d\n",
+			//	nes[nidx].p.ppu.frames,
+			//	nes[nidx].p.ppu.frame_y,
+			//	nes[nidx].p.ppu.frame_x,
+			//	address, value, fds.drive.disk_ejected, fds.drive.scan,
+			//	fds.drive.delay, fds.drive.disk_position);
+#endif
 			if (!fds.drive.enabled_dsk_reg) {
 				return (TRUE);
 			}
@@ -1927,7 +1914,7 @@ INLINE static BYTE fds_wr_mem(BYTE nidx, WORD address, BYTE value) {
 			fds.drive.motor_on = value & 0x01;
 			fds.drive.transfer_reset = value & 0x02;
 
-			/* TODO : penso che sia corretto */
+			// TODO : penso che sia corretto
 			if (fds.drive.read_mode != (value & 0x04)) {
 				fds.drive.gap_ended = FALSE;
 			}
@@ -1956,7 +1943,7 @@ INLINE static BYTE fds_wr_mem(BYTE nidx, WORD address, BYTE value) {
 		}
 	}
 	if ((address >= 0x4040) && (address <= 0x408A)) {
-		/* eseguo un tick hardware */
+		// eseguo un tick hardware
 		tick_hw(nidx, 1);
 
 		if (fds.drive.enabled_snd_reg) {
@@ -2036,7 +2023,7 @@ INLINE static BYTE fds_wr_mem(BYTE nidx, WORD address, BYTE value) {
 		}
 	}
 	if (address > 0x4017) {
-		/* eseguo un tick hardware */
+		// eseguo un tick hardware
 		tick_hw(nidx, 1);
 		return (TRUE);
 	}
