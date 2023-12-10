@@ -28,7 +28,7 @@
 #include "../../c++/crc/crc.h"
 
 #define BIOSFILE "disksys.rom"
-#define DIFFVERSION 1
+#define DIFFVERSION 2
 
 typedef struct _fds_sinfo {
 	struct _fds_side_block1 {
@@ -369,6 +369,7 @@ fds_disk_op_start:
 			fds.drive.disk_position = 0;
 			fds.drive.gap_ended = FALSE;
 			fds.drive.disk_ejected = FALSE;
+			fds.drive.at_least_one_scan = FALSE;
 			fds.auto_insert.r4032.frames = 0;
 			fds.auto_insert.r4032.checks = 0;
 			if (!quiet) {
@@ -417,6 +418,7 @@ fds_disk_op_start:
 void fds_diff_op(BYTE side, BYTE mode, uint32_t position, WORD value) {
 	if (!fds.info.diff) {
 		uTCHAR file[LENGTH_FILE_NAME_LONG];
+		uint32_t version = 0;
 
 		fds_diff_file_name(&file[0], usizeof(file));
 		fds.info.diff = ufopen(file, uL("r+b"));
@@ -428,6 +430,13 @@ void fds_diff_op(BYTE side, BYTE mode, uint32_t position, WORD value) {
 				fclose(fds.info.diff);
 				// lo riapro in modalita' rb+
 				fds.info.diff = ufopen(file, uL("r+b"));
+			}
+		}
+		if (fds.info.diff) {
+			// leggo la versione del file
+			if ((fread(&version, sizeof(uint32_t), 1, fds.info.diff) < 1) || (version < DIFFVERSION)) {
+				fclose(fds.info.diff);
+				fds.info.diff = ufopen(file, uL("w+b"));
 			}
 		}
 	}

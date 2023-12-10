@@ -639,7 +639,7 @@ INLINE static BYTE fds_rd_mem(BYTE nidx, WORD address, BYTE made_tick) {
 			// bit 0 (timer irq)
 			nes[nidx].c.cpu.openbus |= fds.drive.irq_timer_high;
 			// bit 1 (trasfer flag)
-			nes[nidx].c.cpu.openbus |= fds.drive.irq_disk_high;
+			nes[nidx].c.cpu.openbus |= fds.drive.transfer_flag;
 			// bit 2 e 3 non settati
 			// TODO : bit 4 (CRC control : 0 passato, 1 errore)
 			// bit 5 non settato
@@ -647,11 +647,11 @@ INLINE static BYTE fds_rd_mem(BYTE nidx, WORD address, BYTE made_tick) {
 			nes[nidx].c.cpu.openbus |= fds.drive.end_of_head;
 			//fds.drive.end_of_head = FALSE;
 			// TODO : bit 7 (disk data read/write enable (1 when disk is readable/writable)
+			fds.drive.transfer_flag = FALSE;
 			// devo disabilitare sia il timer IRQ ...
 			fds.drive.irq_timer_high = FALSE;
 			nes[nidx].c.irq.high &= ~FDS_TIMER_IRQ;
 			// che il disk IRQ
-			fds.drive.irq_disk_high = FALSE;
 			nes[nidx].c.irq.high &= ~FDS_DISK_IRQ;
 #if !defined (RELEASE)
 			//printf("0x%04X 0x%02X %d\n", address, nes[nidx].c.cpu.openbus, nes[nidx].c.irq.high);
@@ -665,8 +665,8 @@ INLINE static BYTE fds_rd_mem(BYTE nidx, WORD address, BYTE made_tick) {
 			//	fds.info.sides[fds.drive.side_inserted].data[fds.drive.disk_position], nes[nidx].c.cpu.opcode_PC,
 			//	fds.drive.disk_position, nes[nidx].c.irq.high);
 #endif
+			fds.drive.transfer_flag = FALSE;
 			// devo disabilitare il disk IRQ
-			fds.drive.irq_disk_high = FALSE;
 			nes[nidx].c.irq.high &= ~FDS_DISK_IRQ;
 			return (TRUE);
 		}
@@ -1875,7 +1875,7 @@ INLINE static BYTE fds_wr_mem(BYTE nidx, WORD address, BYTE value) {
 		}
 		if (address == 0x4024) {
 			fds.drive.data_to_write = value;
-			fds.drive.irq_disk_high = FALSE;
+			fds.drive.transfer_flag = FALSE;
 			nes[nidx].c.irq.high &= ~FDS_DISK_IRQ;
 			return (TRUE);
 		}
@@ -1914,10 +1914,10 @@ INLINE static BYTE fds_wr_mem(BYTE nidx, WORD address, BYTE value) {
 			fds.drive.motor_on = value & 0x01;
 			fds.drive.transfer_reset = value & 0x02;
 
-			// TODO : penso che sia corretto
-			if (fds.drive.read_mode != (value & 0x04)) {
-				fds.drive.gap_ended = FALSE;
-			}
+//			 TODO : penso che sia corretto
+//			if (fds.drive.read_mode != (value & 0x04)) {
+//				fds.drive.gap_ended = FALSE;
+//			}
 			fds.drive.read_mode = value & 0x04;
 			fds.drive.mirroring = value & 0x08;
 			if (fds.drive.mirroring) {
@@ -1930,7 +1930,6 @@ INLINE static BYTE fds_wr_mem(BYTE nidx, WORD address, BYTE value) {
 			fds.drive.drive_ready = value & 0x40;
 			fds.drive.irq_disk_enabled = value & 0x80;
 
-			fds.drive.irq_disk_high = FALSE;
 			nes[nidx].c.irq.high &= ~FDS_DISK_IRQ;
 			return (TRUE);
 		}

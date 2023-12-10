@@ -535,7 +535,7 @@ BYTE save_slot_operation(BYTE mode, BYTE slot, FILE *fp) {
 		save_slot_ele(mode, slot, fds.drive.unknow);
 		save_slot_ele(mode, slot, fds.drive.drive_ready);
 		save_slot_ele(mode, slot, fds.drive.irq_disk_enabled);
-		save_slot_ele(mode, slot, fds.drive.irq_disk_high);
+		save_slot_ele(mode, slot, fds.drive.at_least_one_scan);
 		save_slot_ele(mode, slot, fds.drive.irq_timer_enabled);
 		save_slot_ele(mode, slot, fds.drive.irq_timer_reload_enabled);
 		save_slot_ele(mode, slot, fds.drive.irq_timer_high);

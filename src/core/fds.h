@@ -39,7 +39,8 @@ enum fds_gaps {
 	// 1016 bit di gap alla fine di ogni blocco.
 	// Note : con 976 funziona correttamente la read del disco ma non e'
 	// sufficiente per la write.
-	FDS_GAP_BLOCK = 1016 / 8,
+	//FDS_GAP_BLOCK = 1016 / 8, //976 / 8,
+	FDS_GAP_BLOCK = 976 / 8,
 	FDS_GAP_END = 0
 };
 enum fds_block_type {
@@ -51,12 +52,14 @@ enum fds_block_type {
 	DISK_QD_SIDE_SIZE = 65536
 };
 enum fds_misc {
+	//FDS_8BIT_DELAY = 149, //20 * 8,
+	FDS_8BIT_DELAY = 22 * 8,
 	FDS_DISK_GAP = 0x0100,
 	FDS_DISK_BLOCK_MARK = 0x0180,
 	FDS_DISK_CRC_CHAR1 = 0x0155,
 	FDS_DISK_CRC_CHAR2 = 0x01AA,
-	FDS_OP_SIDE_DELAY = 2500000,
-	FDS_AUTOINSERT_OP_SIDE_DELAY = 1200000,
+	FDS_OP_SIDE_DELAY = 2800000,
+	FDS_AUTOINSERT_OP_SIDE_DELAY = 100,
 	FDS_AUTOINSERT_R4032_MAX_CHECKS = 150
 };
 
@@ -119,7 +122,7 @@ typedef struct _fds {
 		BYTE unknow;
 		BYTE drive_ready;
 		BYTE irq_disk_enabled;
-		BYTE irq_disk_high;
+		BYTE at_least_one_scan;
 		BYTE irq_timer_enabled;
 		BYTE irq_timer_reload_enabled;
 		BYTE irq_timer_high;
