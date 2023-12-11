@@ -1251,11 +1251,11 @@
     </message>
     <message>
       <source>&amp;Save to file</source>
-      <translation>Salvar em a&amp;rquivo</translation>
+      <translation>Sal&amp;var em arquivo</translation>
     </message>
     <message>
       <source>&amp;Load from file</source>
-      <translation>Carregar de &amp;arquivo</translation>
+      <translation>Carre&amp;gar de arquivo</translation>
     </message>
     <message>
       <source>F&amp;ullscreen</source>
