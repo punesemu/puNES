@@ -143,7 +143,7 @@ BYTE extcl_cpu_rd_mem_FDS(BYTE nidx, WORD address, UNUSED(BYTE openbus)) {
 					fds.auto_insert.disabled = TRUE;
 					gui_overlay_info_append_msg_precompiled(29, &count);
 				} else if (count == 1) {
-					if (side != fds.drive.side_inserted) {
+					if ((side != fds.drive.side_inserted) || fds.drive.disk_ejected) {
 						fds.auto_insert.rE445.in_run = TRUE;
 						fds.auto_insert.new_side = side;
 						fds.auto_insert.delay.side = FDS_AUTOINSERT_OP_SIDE_DELAY;
@@ -247,6 +247,8 @@ void extcl_cpu_every_cycle_FDS(BYTE nidx) {
 		fds.drive.at_least_one_scan = FALSE;
 		fds.drive.disk_position = 0;
 		fds.drive.gap_ended = FALSE;
+		// "Akuu Senki Raijin (Japan) (Disk Writer)" ne ha bisogno
+		// per non sporcare lo screen.
 		if (fds.drive.delay < FDS_8BIT_DELAY) {
 			fds.drive.delay = FDS_8BIT_DELAY;
 		}
@@ -356,7 +358,7 @@ void extcl_cpu_every_cycle_FDS(BYTE nidx) {
 		fds.drive.end_of_head = END_OF_HEAD;
 		fds.drive.disk_position = 0;
 		fds.drive.gap_ended = FALSE;
-		fds.drive.delay = FDS_8BIT_DELAY;
+		fds.drive.delay = 65536 * 8;
 		// FDS interessati :
 		// - 19 Neunzehn (1988)(Soft Pro)(J).fds
 		//   visto che il controllo del r4032 e' mooooolto lento, l'eject forzato alla fine del disco

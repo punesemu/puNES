@@ -756,9 +756,13 @@ void fds_to_image(void) {
 void fds_control_autoinsert(_fds_sinfo *sinfo) {
 	// NB : il crc32prg da controllare deve essere sempre quello
 	// del disco dove non vengono scritti i dati di salvataggio
-
-	// Gall Force - Eternal Story (Japan).fds - disk 0 side A
 	if (!strncmp((char *)&sinfo->block1.name[0], "GAL", 3) && (sinfo->crc32prg == 0xC5D1EC5D)) {
+		// Gall Force - Eternal Story (Japan) - disk 0 side A
+		fds.auto_insert.disabled = TRUE;
+		gui_overlay_info_append_msg_precompiled(39, NULL);
+	} else if (!strncmp((char *)&sinfo->block1.name[0], "KOM", 3) &&
+		((sinfo->crc32prg == 0x2B24787F) || (sinfo->crc32prg == 0x14F219C5))) {
+		// Koneko Monogatari - The Adventures of Chatran (Japan) - disk 0 side A oppure disk 0 side B
 		fds.auto_insert.disabled = TRUE;
 		gui_overlay_info_append_msg_precompiled(39, NULL);
 	}
