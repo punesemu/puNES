@@ -185,7 +185,7 @@ void extcl_cpu_wr_mem_OneBus(BYTE nidx, WORD address, BYTE value) {
 }
 BYTE extcl_cpu_rd_mem_OneBus(BYTE nidx, WORD address, UNUSED(BYTE openbus)) {
 	if ((address >= 0x4100) && (address <= 0x4FFF)) {
-		switch(address & 0x0FFF) {
+		switch (address & 0x0FFF) {
 			case 0x140: case 0x141: case 0x142: case 0x143: case 0x144: case 0x145: case 0x146: case 0x147:
 			case 0x148: case 0x149: case 0x14A: case 0x14B: case 0x14C: case 0x14D: case 0x14E: case 0x14F:
 			case 0x150: case 0x151: case 0x152: case 0x153: case 0x154: case 0x155: case 0x156: case 0x157:

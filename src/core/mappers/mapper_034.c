@@ -45,7 +45,7 @@ void map_init_034(void) {
 		type = 2;
 	}
 
-	switch(type) {
+	switch (type) {
 		default:
 		case 1: // NINA-01
 			EXTCL_AFTER_MAPPER_INIT(034_s1);

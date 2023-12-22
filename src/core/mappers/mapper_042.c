@@ -57,7 +57,7 @@ void map_init_042(void) {
 		}
 	}
 
-	switch(info.mapper.submapper) {
+	switch (info.mapper.submapper) {
 		default:
 		case 1:
 			EXTCL_AFTER_MAPPER_INIT(042_s1);

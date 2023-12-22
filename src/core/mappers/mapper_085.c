@@ -30,7 +30,7 @@ void map_init_085(void) {
 	EXTCL_APU_TICK(VRC7);
 	map_internal_struct_init((BYTE *)&vrc7, sizeof(vrc7));
 
-	switch(info.mapper.submapper) {
+	switch (info.mapper.submapper) {
 		case 1:
 			init_VRC7(0x08, 0x20, info.reset);
 			break;

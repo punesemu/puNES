@@ -66,7 +66,7 @@ BYTE extcl_cpu_rd_mem_517(BYTE nidx, WORD address, UNUSED(BYTE openbus)) {
 		BYTE result = 0;
 
 		if (address == 0x6000) {
-			switch(m517.adc.state) {
+			switch (m517.adc.state) {
 				case 0:
 					m517.adc.state = 1;
 					result = 0;

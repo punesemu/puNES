@@ -380,6 +380,7 @@ set(core_srcs
 	core/mappers/mapper_351.c
 	core/mappers/mapper_352.c
 	core/mappers/mapper_353.c
+	core/mappers/mapper_354.c
 	core/mappers/mapper_355.c
 	core/mappers/mapper_356.c
 	core/mappers/mapper_357.c

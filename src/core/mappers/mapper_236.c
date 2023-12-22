@@ -67,7 +67,7 @@ BYTE extcl_save_mapper_236(BYTE mode, BYTE slot, FILE *fp) {
 INLINE static void prg_fix_236(void) {
 	WORD bank = chrrom_size() ? (m236.reg[1] & 0x0F) : (m236.reg[1] & 0x07) | (m236.reg[0] << 3);
 
-	switch(m236.reg[1] & 0x30) {
+	switch (m236.reg[1] & 0x30) {
 		case 0x00:
 		case 0x10:
 			memmap_auto_16k(0, MMCPU(0x8000), bank);

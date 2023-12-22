@@ -314,6 +314,7 @@
 #include "mappers/mapper_351.h"
 #include "mappers/mapper_352.h"
 #include "mappers/mapper_353.h"
+#include "mappers/mapper_354.h"
 #include "mappers/mapper_355.h"
 #include "mappers/mapper_356.h"
 #include "mappers/mapper_357.h"
