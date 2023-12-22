@@ -19,6 +19,7 @@
 #include <string.h>
 #include "input/nsf_mouse.h"
 #include "input/mouse.h"
+#include "input/standard_controller.h"
 #include "nsf.h"
 
 struct _nsf_mouse {
@@ -43,11 +44,13 @@ void input_add_event_nsf_mouse(UNUSED(BYTE index)) {
 	}
 
 	if (nsf_mouse.pressed) {
-		port->data[LEFT] = RELEASED;
-		port->data[START] = RELEASED;
-		port->data[SELECT] = RELEASED;
-		port->data[BUT_A] = RELEASED;
-		port->data[RIGHT] = RELEASED;
+		_port *prt = &port[PORT1];
+
+		input_data_set_standard_controller(LEFT, RELEASED, prt);
+		input_data_set_standard_controller(START, RELEASED, prt);
+		input_data_set_standard_controller(SELECT, RELEASED, prt);
+		input_data_set_standard_controller(BUT_A, RELEASED, prt);
+		input_data_set_standard_controller(RIGHT, RELEASED, prt);
 		nsf_mouse.pressed = FALSE;
 	}
 }

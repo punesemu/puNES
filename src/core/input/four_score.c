@@ -46,10 +46,10 @@ BYTE input_rd_reg_four_score(BYTE nidx, BYTE openbus, BYTE nport) {
 	BYTE value = 0;
 
 	if (nes[nidx].c.input.fsindex[nport] < 8) {
-		value = input_permit_updown_leftright(index, nport);
+		value = !!port[nport].data.treated[index];
 		nes[nidx].c.input.fsindex[nport]++;
 	} else if (nes[nidx].c.input.fsindex[nport] < 16) {
-		value = input_permit_updown_leftright(index, nport + 2);
+		value = !!port[nport + 2].data.treated[index];
 		nes[nidx].c.input.fsindex[nport]++;
 	} else if (nes[nidx].c.input.fsindex[nport] < 24) {
 		value = (four_score[nport].signature >> (23 - nes[nidx].c.input.fsindex[nport])) & 0x01;
@@ -75,10 +75,10 @@ BYTE input_rd_reg_four_score_vs(BYTE nidx, BYTE openbus, BYTE nport) {
 		np ^= 0x01;
 	}
 	if (nes[nidx].c.input.fsindex[nport] < 8) {
-		value = protection ? PRESSED : input_permit_updown_leftright(index, np);
+		value = protection ? PRESSED : !!port[np].data.treated[index];
 		nes[nidx].c.input.fsindex[nport]++;
 	} else if (nes[nidx].c.input.fsindex[nport] < 16) {
-		value = protection ? PRESSED : input_permit_updown_leftright(index, np + 2);
+		value = protection ? PRESSED : !!port[np + 2].data.treated[index];
 		nes[nidx].c.input.fsindex[nport]++;
 	} else if (nes[nidx].c.input.fsindex[nport] < 24) {
 		value = (four_score[np].signature >> (23 - nes[nidx].c.input.fsindex[nport])) & 0x01;

@@ -1545,6 +1545,15 @@ void emu_save_header_info(void) {
 BYTE emu_active_nidx(void) {
 	return (vs_system.special_mode.type == VS_DS_Normal ? cfg->vs_monitor : 0);
 }
+void emu_invert_bytes(BYTE *b0, BYTE *b1) {
+	BYTE tmp = (*b0);
+
+	(*b0) = (*b1);
+	(*b1) = tmp;
+}
+double emu_ms_to_cpu_cycles(double ms) {
+	return ((machine.cpu_hz * 0.001f) * ms);
+}
 
 INLINE static void emu_frame_started(void) {
 	info.lag_frame.next = TRUE;

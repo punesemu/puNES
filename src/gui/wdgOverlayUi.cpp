@@ -36,6 +36,8 @@
 #include "nes.h"
 #if defined (FULLSCREEN_RESFREQ)
 #include "video/gfx_monitor.h"
+#include "input/standard_controller.h"
+
 #endif
 
 void overlay_info_append_qstring(BYTE alignment, const QString &msg);
@@ -1005,7 +1007,7 @@ BYTE overlayWidgetInputPort::is_to_redraw(void) {
 	switch (type) {
 		case CTRL_STANDARD:
 			for (i = 0; i < 8; i++) {
-				if (old.std_controller.data[i] != port[input_port].data[i]) {
+				if (old.std_controller.data[i] != port[input_port].data.treated[i]) {
 					return (TRUE);
 				}
 			}
@@ -1037,16 +1039,20 @@ BYTE overlayWidgetInputPort::is_to_redraw(void) {
 }
 void overlayWidgetInputPort::update_old_value(void) {
 	switch (type) {
-		case CTRL_STANDARD:
-			old.std_controller.data[UP] = port[input_port].data[UP];
-			old.std_controller.data[DOWN] = port[input_port].data[DOWN];
-			old.std_controller.data[LEFT] = port[input_port].data[LEFT];
-			old.std_controller.data[RIGHT] = port[input_port].data[RIGHT];
-			old.std_controller.data[SELECT] = port[input_port].data[SELECT];
-			old.std_controller.data[START] = port[input_port].data[START];
-			old.std_controller.data[BUT_B] = port[input_port].data[BUT_B];
-			old.std_controller.data[BUT_A] = port[input_port].data[BUT_A];
+		case CTRL_STANDARD: {
+			_input_lfud_standard_controller axes;
+
+			input_rotate_standard_controller(&axes);
+			old.std_controller.data[axes.up] = port[input_port].data.treated[axes.up];
+			old.std_controller.data[axes.down] = port[input_port].data.treated[axes.down];
+			old.std_controller.data[axes.left] = port[input_port].data.treated[axes.left];
+			old.std_controller.data[axes.right] = port[input_port].data.treated[axes.right];
+			old.std_controller.data[SELECT] = port[input_port].data.treated[SELECT];
+			old.std_controller.data[START] = port[input_port].data.treated[START];
+			old.std_controller.data[BUT_B] = port[input_port].data.treated[BUT_B];
+			old.std_controller.data[BUT_A] = port[input_port].data.treated[BUT_A];
 			break;
+		}
 		case CTRL_ZAPPER:
 			old.mouse.left = gmouse.left;
 			old.mouse.x = gmouse.x;

@@ -198,6 +198,7 @@ void bck_states_op_input_port(BYTE id, BYTE mode, void *data, size_t *index, uin
 		bck_states_on_struct(mode, nes[nesidx].c.input.pindex, data, (*index), (*size_buff))
 		bck_states_on_struct(mode, nes[nesidx].c.input.fsindex, data, (*index), (*size_buff))
 	}
-	bck_states_on_struct(mode, port[id].data, data, (*index), (*size_buff))
+	bck_states_on_struct(mode, port[id].data.raw, data, (*index), (*size_buff))
+	bck_states_on_struct(mode, port[id].data.treated, data, (*index), (*size_buff))
 	bck_states_on_struct(mode, port[id].turbo, data, (*index), (*size_buff))
 }

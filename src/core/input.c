@@ -55,8 +55,6 @@ _port_funct port_funct[PORT_MAX];
 _nes_keyboard nes_keyboard;
 _generic_keyboard generic_keyboard;
 _mic mic;
-_ctrl_input_permit_updown_leftright cipu[PORT_MAX];
-_ctrl_input_permit_updown_leftright cipl[PORT_MAX];
 
 BYTE (*input_wr_reg)(BYTE nidx, BYTE value);
 BYTE (*input_rd_reg[2])(BYTE nidx, BYTE openbus, BYTE nport);
@@ -115,8 +113,8 @@ void input_init(BYTE set_cursor) {
 		SET_DECODE_EVENT(a, NULL);
 		SET_ADD_EVENT(a, NULL);
 
-		memset(&cipu[a], 0x00, sizeof(_ctrl_input_permit_updown_leftright));
-		memset(&cipl[a], 0x00, sizeof(_ctrl_input_permit_updown_leftright));
+		port[a].permit.up_or_down = 0x00;
+		port[a].permit.left_or_right = 0x00;
 
 		// NSF
 		if (nsf.enabled) {
@@ -212,13 +210,13 @@ void input_init(BYTE set_cursor) {
 				state = PRESSED;
 			}
 
-			for (unsigned int b = 0; b < LENGTH(port[a].data); b++) {
+			for (unsigned int b = 0; b < LENGTH(port[a].data.raw); b++) {
 				if (b < 8) {
 					if (info.reset >= HARD) {
-						port[a].data[b] = RELEASED;
+						input_data_set_standard_controller(b, RELEASED, &port[a]);
 					}
 				} else {
-					port[a].data[b] = state;
+					input_data_set_standard_controller(b, state, &port[a]);
 				}
 			}
 		}
@@ -283,64 +281,8 @@ void input_init(BYTE set_cursor) {
 }
 
 void input_wr_disabled(UNUSED(BYTE nidx), UNUSED(const BYTE *value), UNUSED(BYTE nport)) {}
-void input_rd_disabled(UNUSED(BYTE nidx), UNUSED(BYTE *value), UNUSED(BYTE nport),	UNUSED(BYTE shift)) {}
+void input_rd_disabled(UNUSED(BYTE nidx), UNUSED(BYTE *value), UNUSED(BYTE nport), UNUSED(BYTE shift)) {}
 
-BYTE input_permit_updown_leftright(BYTE index, BYTE nport) {
-	_ctrl_input_permit_updown_leftright *cip = NULL;
-	static BYTE delay = 5;
-	BYTE value[2] = { 0 };
-	BYTE axe[2] = { 0 };
-
-	if (cfg->input.permit_updown_leftright) {
-		return (port[nport].data[index]);
-	}
-	if ((index == LEFT) || (index == RIGHT)) {
-		axe[0] = LEFT;
-		axe[1] = RIGHT;
-		cip = &cipl[nport];
-	} else if ((index == UP) || (index == DOWN)) {
-		axe[0] = UP;
-		axe[1] = DOWN;
-		cip = &cipu[nport];
-	} else {
-		return (port[nport].data[index]);
-	}
-	value[0] = port[nport].data[axe[0]];
-	value[1] = port[nport].data[axe[1]];
-	if (!cip->delay) {
-		if (cip->axe != FALSE) {
-			if (((cip->axe == axe[0]) && !port[nport].data[axe[0]]) ||
-				((cip->axe == axe[1]) && !port[nport].data[axe[1]])) {
-				cip->delay = delay;
-			}
-		} else {
-			if (!(port[nport].data[axe[0]] | port[nport].data[axe[1]])) {
-				cip->axe = FALSE;
-			} else if (port[nport].data[axe[0]] & port[nport].data[axe[1]]) {
-				if (cip->axe == FALSE) {
-					cip->axe = axe[0];
-				}
-			} else if (port[nport].data[axe[0]]) {
-				cip->axe = axe[0];
-			} else if (port[nport].data[axe[1]]) {
-				cip->axe = axe[1];
-			} else {
-				cip->axe = FALSE;
-			}
-		}
-	} else {
-		cip->delay--;
-		if (!cip->delay) {
-			cip->axe = FALSE;
-		}
-	}
-	if (cip->axe == axe[0]) {
-		value[1] = RELEASED;
-	} else if (cip->axe == axe[1]) {
-		value[0] = RELEASED;
-	}
-	return (index == axe[0] ? value[0] : value[1]);
-}
 BYTE input_draw_target(void) {
 	int i = 0;
 

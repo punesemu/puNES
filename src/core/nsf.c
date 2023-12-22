@@ -38,6 +38,7 @@
 #include "patcher.h"
 #include "extra/kissfft/kiss_fft.h"
 #include "fps.h"
+#include "input/standard_controller.h"
 
 enum nsf_flags {
 	VERSION,
@@ -659,6 +660,7 @@ void nsf_main_screen(void) {
 	nsf_main_screen_event();
 }
 void nsf_main_screen_event(void) {
+	_port *prt = &port[PORT1];
 	int reset = FALSE;
 
 	if (!(nsf.state & NSF_CHANGE_SONG) &&
@@ -671,7 +673,7 @@ void nsf_main_screen_event(void) {
 	}
 
 	// gestione eventi
-	if (port[PORT1].data[START] == PRESSED) {
+	if (prt->data.treated[START] == PRESSED) {
 		switch (nsf.state & 0x07) {
 			case NSF_STOP:
 				nsf.state = NSF_PLAY | NSF_CHANGE_SONG;
@@ -689,26 +691,26 @@ void nsf_main_screen_event(void) {
 				nsf.timers.update_only_diff = TRUE;
 				break;
 		}
-		port[PORT1].data[START] = RELEASED;
-	} else if (port[PORT1].data[BUT_A] == PRESSED) {
+		input_data_set_standard_controller(START, RELEASED, prt);
+	} else if (prt->data.treated[BUT_A] == PRESSED) {
 		nsf.state = NSF_STOP;
 		nsf.timers.update_only_diff = TRUE;
 		nsf.timers.song = 0;
-		port[PORT1].data[BUT_A] = RELEASED;
+		input_data_set_standard_controller(BUT_A, RELEASED, prt);
 		reset = TRUE;
-	} else if (port[PORT1].data[UP] == PRESSED) {
+	} else if (prt->data.treated[UP] == PRESSED) {
 		cfg->nsf_player_effect++;
 		if (cfg->nsf_player_effect >= NSF_EFFECTS) {
 			cfg->nsf_player_effect = 0;
 		}
-		port[PORT1].data[UP] = RELEASED;
-	} else if (port[PORT1].data[DOWN] == PRESSED) {
+		input_data_set_standard_controller(UP, RELEASED, prt);
+	} else if (prt->data.treated[DOWN] == PRESSED) {
 		cfg->nsf_player_effect--;
 		if (cfg->nsf_player_effect > NSF_EFFECTS) {
 			cfg->nsf_player_effect = NSF_EFFECTS - 1;
 		}
-		port[PORT1].data[DOWN] = RELEASED;
-	} else if (port[PORT1].data[LEFT] == PRESSED) {
+		input_data_set_standard_controller(DOWN, RELEASED, prt);
+	} else if (prt->data.treated[LEFT] == PRESSED) {
 		if (nsf.state & NSF_PAUSE) {
 			nsf.state = NSF_STOP;
 			nsf_change_song(LEFT, NSF_PREV);
@@ -718,7 +720,7 @@ void nsf_main_screen_event(void) {
 			nsf_change_song(LEFT, NSF_RESTART_SONG);
 		}
 		reset = TRUE;
-	} else if (port[PORT1].data[RIGHT] == PRESSED) {
+	} else if (prt->data.treated[RIGHT] == PRESSED) {
 		if (nsf.state & NSF_PAUSE) {
 			nsf.state = NSF_STOP;
 		}
@@ -737,6 +739,7 @@ void nsf_main_screen_event(void) {
 
 void nsf_controls_mouse_in_gui(int x_mouse, int y_mouse) {
 	int x = 0, y = 0, w = 0, h = 0, wc = 0;
+	_port *prt = &port[PORT1];
 
 #define nsf_c_x1(ctr) (x + 2 + (wc * (ctr)))
 #define nsf_c_x2(ctr) (nsf_c_x1(ctr) + (wc - 1))
@@ -750,14 +753,14 @@ void nsf_controls_mouse_in_gui(int x_mouse, int y_mouse) {
 
 	if (((x_mouse >= nsf_c_x1(NSF_GUI_COMMANDS_PREV)) && (x_mouse <= nsf_c_x2(NSF_GUI_COMMANDS_PREV))) &&
 		((y_mouse >= nsf_c_y1(NSF_GUI_COMMANDS_PREV)) && (y_mouse <= nsf_c_y2(NSF_GUI_COMMANDS_PREV)))) {
-		port->data[LEFT] = PRESSED;
+		input_data_set_standard_controller(LEFT, PRESSED, prt);
 		nsf.timers.button[LEFT] = 0;
 		return;
 	}
 	if (((x_mouse >= nsf_c_x1(NSF_GUI_COMMANDS_PLAY)) && (x_mouse <= nsf_c_x2(NSF_GUI_COMMANDS_PLAY))) &&
 		((y_mouse >= nsf_c_y1(NSF_GUI_COMMANDS_PLAY)) && (y_mouse <= nsf_c_y2(NSF_GUI_COMMANDS_PLAY)))) {
 		if (!(nsf.state & NSF_PLAY)) {
-			port->data[START] = PRESSED;
+			input_data_set_standard_controller(START, PRESSED, prt);
 			nsf.timers.button[START] = 0;
 		}
 		return;
@@ -765,20 +768,20 @@ void nsf_controls_mouse_in_gui(int x_mouse, int y_mouse) {
 	if (((x_mouse >= nsf_c_x1(NSF_GUI_COMMANDS_PAUSE)) && (x_mouse <= nsf_c_x2(NSF_GUI_COMMANDS_PAUSE))) &&
 		((y_mouse >= nsf_c_y1(NSF_GUI_COMMANDS_PAUSE)) && (y_mouse <= nsf_c_y2(NSF_GUI_COMMANDS_PAUSE)))) {
 		if (nsf.state & NSF_PLAY) {
-			port->data[START] = PRESSED;
+			input_data_set_standard_controller(START, PRESSED, prt);
 			nsf.timers.button[START] = 0;
 		}
 		return;
 	}
 	if (((x_mouse >= nsf_c_x1(NSF_GUI_COMMANDS_STOP)) && (x_mouse <= nsf_c_x2(NSF_GUI_COMMANDS_STOP))) &&
 		((y_mouse >= nsf_c_y1(NSF_GUI_COMMANDS_STOP)) && (y_mouse <= nsf_c_y2(NSF_GUI_COMMANDS_STOP)))) {
-		port->data[BUT_A] = PRESSED;
+		input_data_set_standard_controller(BUT_A, PRESSED, prt);
 		nsf.timers.button[BUT_A] = 0;
 		return;
 	}
 	if (((x_mouse >= nsf_c_x1(NSF_GUI_COMMANDS_NEXT)) && (x_mouse <= nsf_c_x2(NSF_GUI_COMMANDS_NEXT))) &&
 		((y_mouse >= nsf_c_y1(NSF_GUI_COMMANDS_NEXT)) && (y_mouse <= nsf_c_y2(NSF_GUI_COMMANDS_NEXT)))) {
-		port->data[RIGHT] = PRESSED;
+		input_data_set_standard_controller(RIGHT, PRESSED, prt);
 		nsf.timers.button[RIGHT] = 0;
 		return;
 	}
@@ -794,7 +797,7 @@ void nsf_controls_mouse_in_gui(int x_mouse, int y_mouse) {
 #define nsf_c_y2() (nsf.effect_coords.y2)
 
 	if (((x_mouse >= nsf_c_x1()) && (x_mouse <= nsf_c_x2())) && ((y_mouse >= nsf_c_y1()) && (y_mouse <= nsf_c_y2()))) {
-		port->data[UP] = PRESSED;
+		input_data_set_standard_controller(UP, PRESSED, prt);
 		nsf.timers.button[UP] = 0;
 		return;
 	}
@@ -810,7 +813,7 @@ void nsf_controls_mouse_in_gui(int x_mouse, int y_mouse) {
 #define nsf_c_y2() (nsf.effect_coords.y2)
 
 	if (((x_mouse >= nsf_c_x1()) && (x_mouse <= nsf_c_x2())) && ((y_mouse >= nsf_c_y1()) && (y_mouse <= nsf_c_y2()))) {
-		port->data[DOWN] = PRESSED;
+		input_data_set_standard_controller(DOWN, PRESSED, prt);
 		nsf.timers.button[DOWN] = 0;
 		return;
 	}
@@ -1262,6 +1265,7 @@ static void nsf_change_current_song(unsigned int mode) {
 }
 static void nsf_draw_controls(void) {
 	int i = 0, x = 0, y = 0, w = 0, h = 0, wc = 0;
+	_port *prt = &port[PORT1];
 
 	// titolo nsf - artista - copyright
 	{
@@ -1302,7 +1306,7 @@ static void nsf_draw_controls(void) {
 		doscolor(color), doscolor(color), doscolor(color));\
 	dos_text(x + 1 + (wc * (ctr)) + ((wc - 8) / 2), y + ((h - 8) / 2), str)
 
-		if (port[PORT1].data[LEFT] == PRESSED) {
+		if (prt->data.treated[LEFT] == PRESSED) {
 			nsf_dc_box_ctrl(NSF_GUI_COMMANDS_PREV, DOS_GRAY, "[bck][gray][brown][prev]")
 		} else {
 			nsf_dc_box_ctrl(NSF_GUI_COMMANDS_PREV, DOS_BLACK, "[bck][black][prev]")
@@ -1322,7 +1326,7 @@ static void nsf_draw_controls(void) {
 		} else {
 			nsf_dc_box_ctrl(NSF_GUI_COMMANDS_STOP, DOS_BLACK, "[bck][black][stop]")
 		}
-		if (port[PORT1].data[RIGHT] == PRESSED) {
+		if (prt->data.treated[RIGHT] == PRESSED) {
 			nsf_dc_box_ctrl(NSF_GUI_COMMANDS_NEXT, DOS_GRAY, "[bck][gray][brown][next]")
 		} else {
 			nsf_dc_box_ctrl(NSF_GUI_COMMANDS_NEXT, DOS_BLACK, "[bck][black][next]")

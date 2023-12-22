@@ -102,7 +102,14 @@ typedef struct _port {
 
 	// standard controller
 	BYTE type_pad;
-	BYTE data[INPUT_DECODE_COUNTS];
+	struct _port_data {
+		BYTE raw[INPUT_DECODE_COUNTS];
+		BYTE treated[8];
+	} data;
+	struct permit_updown_leftright {
+		BYTE up_or_down;
+		BYTE left_or_right;
+	} permit;
 	// turbo buttons
 	_turbo_button turbo[2];
 } _port;
@@ -138,10 +145,6 @@ typedef struct _nes_keyboard {
 	WORD totals;
 	BYTE matrix[NES_KEYBOARD_MAX_KEYS];
 } _nes_keyboard;
-typedef struct _ctrl_input_permit_updown_leftright {
-	BYTE axe;
-	int delay;
-} _ctrl_input_permit_updown_leftright;
 
 extern _port port[PORT_MAX];
 extern _port_funct port_funct[PORT_MAX];
@@ -149,8 +152,6 @@ extern _arkanoid arkanoid[PORT_BASE];
 extern _nes_keyboard nes_keyboard;
 extern _generic_keyboard generic_keyboard;
 extern _mic mic;
-extern _ctrl_input_permit_updown_leftright cipu[PORT_MAX];
-extern _ctrl_input_permit_updown_leftright cipl[PORT_MAX];
 
 extern BYTE (*input_wr_reg)(BYTE nidx, BYTE value);
 extern BYTE (*input_rd_reg[2])(BYTE nidx, BYTE openbus, BYTE nport);
@@ -166,7 +167,6 @@ EXTERNC void input_init(BYTE set_cursor);
 EXTERNC void input_wr_disabled(BYTE nidx, const BYTE *value, BYTE nport);
 EXTERNC void input_rd_disabled(BYTE nidx, BYTE *value, BYTE nport, BYTE shift);
 
-EXTERNC BYTE input_permit_updown_leftright(BYTE index, BYTE nport);
 EXTERNC BYTE input_draw_target();
 
 #undef EXTERNC

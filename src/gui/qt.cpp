@@ -80,6 +80,7 @@ Q_IMPORT_PLUGIN(QSvgPlugin)
 #include "d3d9.h"
 #endif
 #include "cmd_line.h"
+#include "input/standard_controller.h"
 
 INLINE void gui_init_os(void);
 INLINE uTCHAR *gui_home(void);
@@ -662,9 +663,11 @@ void gui_max_speed_stop(void) {
 void gui_decode_all_input_events(void) {
 	if (info.clean_input_data) {
 		for (unsigned int a = PORT1; a < PORT_MAX; a++) {
-			for (unsigned int b = 0; b < LENGTH(port[a].data); b++) {
+			_port *prt = &port[a];
+
+			for (unsigned int b = 0; b < LENGTH(prt->data.raw); b++) {
 				if (b < 8) {
-					port[a].data[b] = RELEASED;
+					input_data_set_standard_controller(b, RELEASED, prt);
 				}
 			}
 			info.clean_input_data = FALSE;

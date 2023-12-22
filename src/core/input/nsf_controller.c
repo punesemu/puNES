@@ -19,6 +19,7 @@
 #include "input/nsf_controller.h"
 #include "gui.h"
 #include "nsf.h"
+#include "input/standard_controller.h"
 
 void input_add_event_nsf_controller(BYTE index) {
 	js_jdev_read_port(&jsp[index], &port[index]);
@@ -30,43 +31,43 @@ BYTE input_decode_event_nsf_controller(BYTE mode, BYTE autorepeat, DBWORD event,
 
 	if (event == prt->input[type][BUT_A]) {
 		if (!prt->turbo[TURBOA].active) {
-			prt->data[BUT_A] = mode;
+			input_data_set_standard_controller(BUT_A, mode, prt);
 		}
 		nsf.timers.button[BUT_A] = 0;
 		return (EXIT_OK);
 	} else if (event == prt->input[type][BUT_B]) {
 		if (!prt->turbo[TURBOB].active) {
-			prt->data[BUT_B] = mode;
+			input_data_set_standard_controller(BUT_B, mode, prt);
 		}
 		nsf.timers.button[BUT_B] = 0;
 		return (EXIT_OK);
 	} else if (event == prt->input[type][SELECT]) {
-		prt->data[SELECT] = mode;
+		input_data_set_standard_controller(SELECT, mode, prt);
 		nsf.timers.button[SELECT] = 0;
 		return (EXIT_OK);
 	} else if (event == prt->input[type][START]) {
-		prt->data[START] = mode;
+		input_data_set_standard_controller(START, mode, prt);
 		nsf.timers.button[START] = 0;
 		return (EXIT_OK);
 	} else if (event == prt->input[type][UP]) {
-		prt->data[UP] = mode;
+		input_data_set_standard_controller(UP, mode, prt);
 		nsf.timers.button[UP] = 0;
 		return (EXIT_OK);
 	} else if (event == prt->input[type][DOWN]) {
-		prt->data[DOWN] = mode;
+		input_data_set_standard_controller(DOWN, mode, prt);
 		nsf.timers.button[DOWN] = 0;
 		return (EXIT_OK);
 	} else if (event == prt->input[type][LEFT]) {
+		input_data_set_standard_controller(LEFT, mode, prt);
 		if (mode == PRESSED) {
-			prt->data[RIGHT] = RELEASED;
+			input_data_set_standard_controller(RIGHT, RELEASED, prt);
 		}
-		prt->data[LEFT] = mode;
 		nsf.timers.button[LEFT] = 0;
 		return (EXIT_OK);
 	} else if (event == prt->input[type][RIGHT]) {
-		prt->data[RIGHT] = mode;
+		input_data_set_standard_controller(RIGHT, mode, prt);
 		if (mode == PRESSED) {
-			prt->data[LEFT] = RELEASED;
+			input_data_set_standard_controller(LEFT, RELEASED, prt);
 		}
 		nsf.timers.button[RIGHT] = 0;
 		return (EXIT_OK);

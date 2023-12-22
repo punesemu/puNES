@@ -25,6 +25,7 @@
 #include "objSettings.hpp"
 #include "clock.h"
 #include "gui.h"
+#include "input/standard_controller.h"
 
 #define SPT(ind) QString(std_pad_input_type[ind])
 #define SPB(ind) QString(std_pad_button[ind])
@@ -588,7 +589,7 @@ void dlgStdPad::s_combobox_controller_type_activated(int index) {
 		state = PRESSED;
 	}
 	for (i = 8; i < INPUT_DECODE_COUNTS; i++) {
-		data.cfg.port.data[i] = state;
+		input_data_set_standard_controller(i, state, &data.cfg.port);
 	}
 }
 void dlgStdPad::s_slider_td_value_changed(int value) {

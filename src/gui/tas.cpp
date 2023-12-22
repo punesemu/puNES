@@ -22,9 +22,7 @@
 #include "emu.h"
 #include "info.h"
 #include "gui.h"
-
-#define tas_set_data_port_ctrlstd(prt, dt)\
-	prt.data[dt] = tas.il[tas.index].prt[dt]
+#include "input/standard_controller.h"
 
 INLINE static void tas_increment_index(void);
 
@@ -354,14 +352,16 @@ void tas_frame_FM2(void) {
 
 	for (i = PORT1; i < PORT_MAX; i++) {
 		if (port[i].type == CTRL_STANDARD) {
-			tas_set_data_port_ctrlstd(port[i], BUT_A);
-			tas_set_data_port_ctrlstd(port[i], BUT_B);
-			tas_set_data_port_ctrlstd(port[i], SELECT);
-			tas_set_data_port_ctrlstd(port[i], START);
-			tas_set_data_port_ctrlstd(port[i], UP);
-			tas_set_data_port_ctrlstd(port[i], DOWN);
-			tas_set_data_port_ctrlstd(port[i], LEFT);
-			tas_set_data_port_ctrlstd(port[i], RIGHT);
+			_port *prt = &port[i];
+
+			input_data_set_standard_controller(BUT_A, tas.il[tas.index].port[i][BUT_A], prt);
+			input_data_set_standard_controller(BUT_B, tas.il[tas.index].port[i][BUT_B], prt);
+			input_data_set_standard_controller(SELECT, tas.il[tas.index].port[i][SELECT], prt);
+			input_data_set_standard_controller(START, tas.il[tas.index].port[i][START], prt);
+			input_data_set_standard_controller(UP, tas.il[tas.index].port[i][UP], prt);
+			input_data_set_standard_controller(DOWN, tas.il[tas.index].port[i][DOWN], prt);
+			input_data_set_standard_controller(LEFT, tas.il[tas.index].port[i][LEFT], prt);
+			input_data_set_standard_controller(RIGHT, tas.il[tas.index].port[i][RIGHT], prt);
 		} else if (port[i].type == CTRL_ZAPPER) {
 			gmouse.x = tas.il[tas.index].port[i][0];
 			gmouse.y = tas.il[tas.index].port[i][1];

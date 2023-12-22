@@ -21,12 +21,31 @@
 
 #include "input.h"
 
-void input_wr_standard_controller(BYTE nidx, const BYTE *value, BYTE nport);
-void input_rd_standard_controller(BYTE nidx, BYTE *value, BYTE nport, BYTE shift);
+typedef struct _input_lfud_standard_controller {
+	BYTE left;
+	BYTE right;
+	BYTE up;
+	BYTE down;
+} _input_lfud_standard_controller;
 
-void input_add_event_standard_controller(BYTE index);
-BYTE input_decode_event_standard_controller(BYTE mode, BYTE autorepeat, DBWORD event, BYTE type, _port *prt);
+#if defined (__cplusplus)
+#define EXTERNC extern "C"
+#else
+#define EXTERNC
+#endif
 
-void input_rd_standard_controller_vs(BYTE nidx, BYTE *value, BYTE nport, BYTE shift);
+EXTERNC void input_wr_standard_controller(BYTE nidx, const BYTE *value, BYTE nport);
+EXTERNC void input_rd_standard_controller(BYTE nidx, BYTE *value, BYTE nport, BYTE shift);
+
+EXTERNC void input_add_event_standard_controller(BYTE index);
+EXTERNC BYTE input_decode_event_standard_controller(BYTE mode, BYTE autorepeat, DBWORD event, BYTE type, _port *prt);
+
+EXTERNC void input_rd_standard_controller_vs(BYTE nidx, BYTE *value, BYTE nport, BYTE shift);
+
+EXTERNC void input_data_set_standard_controller(BYTE index, BYTE value, _port *prt);
+EXTERNC void input_rotate_standard_controller(_input_lfud_standard_controller *lfud);
+EXTERNC void input_updown_leftright_standard_controller(BYTE index, BYTE src, BYTE opposite, _port *prt);
+
+#undef EXTERNC
 
 #endif /* INPUT_STANDARD_CONTROLLER_H_ */
