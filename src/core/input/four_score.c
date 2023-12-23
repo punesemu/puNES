@@ -20,6 +20,7 @@
 #include "vs_system.h"
 #include "nes.h"
 #include "info.h"
+#include "input/standard_controller.h"
 
 struct _four_score {
 	BYTE signature;
@@ -46,9 +47,11 @@ BYTE input_rd_reg_four_score(BYTE nidx, BYTE openbus, BYTE nport) {
 	BYTE value = 0;
 
 	if (nes[nidx].c.input.fsindex[nport] < 8) {
+		input_updown_leftright_standard_controller(index, nport);
 		value = !!port[nport].data.treated[index];
 		nes[nidx].c.input.fsindex[nport]++;
 	} else if (nes[nidx].c.input.fsindex[nport] < 16) {
+		input_updown_leftright_standard_controller(index, nport + 2);
 		value = !!port[nport + 2].data.treated[index];
 		nes[nidx].c.input.fsindex[nport]++;
 	} else if (nes[nidx].c.input.fsindex[nport] < 24) {
@@ -75,9 +78,11 @@ BYTE input_rd_reg_four_score_vs(BYTE nidx, BYTE openbus, BYTE nport) {
 		np ^= 0x01;
 	}
 	if (nes[nidx].c.input.fsindex[nport] < 8) {
+		input_updown_leftright_standard_controller(index, np);
 		value = protection ? PRESSED : !!port[np].data.treated[index];
 		nes[nidx].c.input.fsindex[nport]++;
 	} else if (nes[nidx].c.input.fsindex[nport] < 16) {
+		input_updown_leftright_standard_controller(index, np + 2);
 		value = protection ? PRESSED : !!port[np + 2].data.treated[index];
 		nes[nidx].c.input.fsindex[nport]++;
 	} else if (nes[nidx].c.input.fsindex[nport] < 24) {

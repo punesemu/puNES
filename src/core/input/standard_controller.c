@@ -27,12 +27,15 @@
 
 INLINE static void input_turbo_buttons_standard_controller(_port *prt);
 
+_permit_updown_leftright_standard_controller permit;
+
 void input_wr_standard_controller(BYTE nidx, const BYTE *value, BYTE nport) {
 	if ((nes[nidx].c.input.r4016 & 0x01) || ((*value) & 0x01)) {
 		nes[nidx].c.input.pindex[nport] = 0;
 	}
 }
 void input_rd_standard_controller(BYTE nidx, BYTE *value, BYTE nport, BYTE shift) {
+	input_updown_leftright_standard_controller(nes[nidx].c.input.pindex[nport], nport);
 	(*value) = !!port[nport].data.treated[nes[nidx].c.input.pindex[nport]] << shift;
 	// Se $4016 e' a 1 leggo solo lo stato del primo pulsante
 	// del controller. Quando verra' scritto 0 nel $4016
@@ -71,19 +74,15 @@ BYTE input_decode_event_standard_controller(BYTE mode, BYTE autorepeat, DBWORD e
 		return (EXIT_OK);
 	} else if (event == prt->input[type][UP]) {
 		input_data_set_standard_controller(axes.up, mode, prt);
-		input_updown_leftright_standard_controller(UP, axes.up, axes.down, prt);
 		return (EXIT_OK);
 	} else if (event == prt->input[type][DOWN]) {
 		input_data_set_standard_controller(axes.down, mode, prt);
-		input_updown_leftright_standard_controller(DOWN, axes.down, axes.up, prt);
 		return (EXIT_OK);
 	} else if (event == prt->input[type][LEFT]) {
 		input_data_set_standard_controller(axes.left, mode, prt);
-		input_updown_leftright_standard_controller(LEFT, axes.left, axes.right, prt);
 		return (EXIT_OK);
 	} else if (event == prt->input[type][RIGHT]) {
 		input_data_set_standard_controller(axes.right, mode, prt);
-		input_updown_leftright_standard_controller(RIGHT, axes.right, axes.left, prt);
 		return (EXIT_OK);
 	} else if (event == prt->input[type][TRB_A]) {
 		prt->turbo[TURBOA].mode = mode;
@@ -114,6 +113,7 @@ void input_rd_standard_controller_vs(BYTE nidx, BYTE *value, BYTE nport, BYTE sh
 	} else if (info.mapper.expansion == EXP_VS_1P_R4017) {
 		np ^= 0x01;
 	}
+	input_updown_leftright_standard_controller(index, nport);
 	(*value) = (protection ? PRESSED : !!port[nport].data.treated[index]) << shift;
 	// Se $4016 e' a 1 leggo solo lo stato del primo pulsante
 	// del controller. Quando verra' scritto 0 nel $4016
@@ -166,29 +166,64 @@ void input_rotate_standard_controller(_input_lfud_standard_controller *lfud) {
 		}
 	}
 }
-void input_updown_leftright_standard_controller(BYTE index, BYTE src, BYTE opposite, _port *prt) {
-	BYTE *axis = NULL;
+void input_updown_leftright_standard_controller(BYTE index, BYTE nport) {
+	_permit_axes_standard_controller *pa = NULL;
+	static BYTE delay = 5;
+	BYTE value[2] = { 0 };
+	BYTE axis[2] = { 0 };
 
 	if (cfg->input.permit_updown_leftright) {
 		return;
 	}
 	if ((index == LEFT) || (index == RIGHT)) {
-		axis = &prt->permit.left_or_right;
+		axis[0] = LEFT;
+		axis[1] = RIGHT;
+		pa = &permit.left_or_right[nport];
 	} else if ((index == UP) || (index == DOWN)) {
-		axis = &prt->permit.up_or_down;
+		axis[0] = UP;
+		axis[1] = DOWN;
+		pa = &permit.up_or_down[nport];
 	} else {
 		return;
 	}
-	if ((*axis) == FALSE) {
-		(*axis) = prt->data.raw[src] ? src : opposite;
-	} else if (((*axis) == src) && (prt->data.raw[src] == RELEASED)) {
-		(*axis) = prt->data.raw[opposite] ? opposite : FALSE;
-		prt->data.treated[opposite] = prt->data.raw[opposite];
+	value[0] = port[nport].data.raw[axis[0]];
+	value[1] = port[nport].data.raw[axis[1]];
+	if (!pa->delay) {
+		if (pa->axis != FALSE) {
+			if (((pa->axis == axis[0]) && !port[nport].data.raw[axis[0]]) ||
+				((pa->axis == axis[1]) && !port[nport].data.raw[axis[1]])) {
+				pa->delay = delay;
+			}
+		} else {
+			if (!(port[nport].data.raw[axis[0]] | port[nport].data.raw[axis[1]])) {
+				pa->axis = FALSE;
+			} else if (port[nport].data.raw[axis[0]] & port[nport].data.raw[axis[1]]) {
+				if (pa->axis == FALSE) {
+					pa->axis = axis[0];
+				}
+			} else if (port[nport].data.raw[axis[0]]) {
+				pa->axis = axis[0];
+			} else if (port[nport].data.raw[axis[1]]) {
+				pa->axis = axis[1];
+			} else {
+				pa->axis = FALSE;
+			}
+		}
+	} else {
+		pa->delay--;
+		if (!pa->delay) {
+			pa->axis = FALSE;
+		}
 	}
-	if ((*axis) == src) {
-		prt->data.treated[opposite] = RELEASED;
-	} else if ((*axis) == opposite) {
-		prt->data.treated[src] = RELEASED;
+	if (pa->axis == axis[0]) {
+		value[1] = RELEASED;
+	} else if (pa->axis == axis[1]) {
+		value[0] = RELEASED;
+	}
+	if (index == axis[0]) {
+		port[nport].data.treated[axis[0]] = value[0];
+	} else {
+		port[nport].data.treated[axis[1]] = value[1];
 	}
 }
 

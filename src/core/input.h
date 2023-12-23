@@ -106,10 +106,7 @@ typedef struct _port {
 		BYTE raw[INPUT_DECODE_COUNTS];
 		BYTE treated[8];
 	} data;
-	struct permit_updown_leftright {
-		BYTE up_or_down;
-		BYTE left_or_right;
-	} permit;
+
 	// turbo buttons
 	_turbo_button turbo[2];
 } _port;

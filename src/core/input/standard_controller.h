@@ -27,6 +27,16 @@ typedef struct _input_lfud_standard_controller {
 	BYTE up;
 	BYTE down;
 } _input_lfud_standard_controller;
+typedef struct _permit_axes_standard_controller {
+	BYTE axis;
+	BYTE delay;
+} _permit_axes_standard_controller;
+typedef struct _permit_updown_leftright_standard_controller {
+	_permit_axes_standard_controller up_or_down[PORT_MAX];
+	_permit_axes_standard_controller left_or_right[PORT_MAX];
+} _permit_updown_leftright_standard_controller;
+
+extern _permit_updown_leftright_standard_controller permit;
 
 #if defined (__cplusplus)
 #define EXTERNC extern "C"
@@ -44,7 +54,7 @@ EXTERNC void input_rd_standard_controller_vs(BYTE nidx, BYTE *value, BYTE nport,
 
 EXTERNC void input_data_set_standard_controller(BYTE index, BYTE value, _port *prt);
 EXTERNC void input_rotate_standard_controller(_input_lfud_standard_controller *lfud);
-EXTERNC void input_updown_leftright_standard_controller(BYTE index, BYTE src, BYTE opposite, _port *prt);
+EXTERNC void input_updown_leftright_standard_controller(BYTE index, BYTE nport);
 
 #undef EXTERNC
 

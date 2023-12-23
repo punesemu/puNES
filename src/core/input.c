@@ -113,8 +113,8 @@ void input_init(BYTE set_cursor) {
 		SET_DECODE_EVENT(a, NULL);
 		SET_ADD_EVENT(a, NULL);
 
-		port[a].permit.up_or_down = 0x00;
-		port[a].permit.left_or_right = 0x00;
+		memset(&permit.left_or_right[a], 0x00, sizeof(_permit_axes_standard_controller));
+		memset(&permit.up_or_down[a], 0x00, sizeof(_permit_axes_standard_controller));
 
 		// NSF
 		if (nsf.enabled) {
@@ -318,3 +318,5 @@ INLINE static void input_init_generic_keyboard(void) {
 	nes_keyboard.enabled = FALSE;
 	memset(&generic_keyboard, 0x00, sizeof(generic_keyboard));
 }
+
+
