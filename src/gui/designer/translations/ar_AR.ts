@@ -1616,7 +1616,7 @@
     </message>
     <message>
       <source>Floppy Disk image files</source>
-      <translation type="unfinished">Floppy Disk image files</translation>
+      <translation>ملفات صورة القرص المرن</translation>
     </message>
   </context>
   <context>
@@ -1853,7 +1853,7 @@
     <message>
       <source>auto switch [red]disabled[normal], game not compatible</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">auto switch [red]disabled[normal], game not compatible</translation>
+      <translation>تبديل تلقائي [red]معطل[normal]، اللعبة ليست متوافقة</translation>
     </message>
   </context>
   <context>
@@ -2877,15 +2877,15 @@
     </message>
     <message>
       <source>Write mode</source>
-      <translation type="unfinished">Write mode</translation>
+      <translation>نمط الكتابة</translation>
     </message>
     <message>
       <source>Write to a separate file (Default)</source>
-      <translation type="unfinished">Write to a separate file (Default)</translation>
+      <translation>الكتابة إلى ملف منفصل (افتراضي)</translation>
     </message>
     <message>
       <source>Write to the original FDS/QD file</source>
-      <translation type="unfinished">Write to the original FDS/QD file</translation>
+      <translation>كتابة إلى الملف الأصلي FDS/QD</translation>
     </message>
   </context>
   <context>
