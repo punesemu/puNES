@@ -511,31 +511,32 @@ BYTE save_slot_operation(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, dipswitch.value);
 
 	if (fds.info.enabled) {
-		// libero la zona di memoria gia' occupata
 		BYTE old_side_inserted = fds.drive.side_inserted;
 
 		// salvo, leggo o conto quello che serve
 		save_slot_ele(mode, slot, fds.drive.disk_position);
-		save_slot_ele(mode, slot, fds.drive.delay);
+		save_slot_ele(mode, slot, fds.drive.delay_insert);
+		save_slot_ele(mode, slot, fds.drive.delay_8bit);
 		save_slot_ele(mode, slot, fds.drive.disk_ejected);
 		save_slot_ele(mode, slot, fds.drive.side_inserted);
-		save_slot_ele(mode, slot, fds.drive.gap_ended);
+		save_slot_ele(mode, slot, fds.drive.mark_finded);
+		save_slot_ele(mode, slot, fds.drive.end_of_head);
 		save_slot_ele(mode, slot, fds.drive.scan);
-		save_slot_ele(mode, slot, fds.drive.crc_char);
+		save_slot_ele(mode, slot, fds.drive.crc_control);
+		save_slot_ele(mode, slot, fds.drive.crc);
 		save_slot_ele(mode, slot, fds.drive.enabled_dsk_reg);
 		save_slot_ele(mode, slot, fds.drive.enabled_snd_reg);
-		save_slot_ele(mode, slot, fds.drive.data_readed);
-		save_slot_ele(mode, slot, fds.drive.data_to_write);
+		save_slot_ele(mode, slot, fds.drive.data_io);
+		save_slot_ele(mode, slot, fds.drive.data_available);
 		save_slot_ele(mode, slot, fds.drive.transfer_flag);
-		save_slot_ele(mode, slot, fds.drive.motor_on);
 		save_slot_ele(mode, slot, fds.drive.transfer_reset);
-		save_slot_ele(mode, slot, fds.drive.read_mode);
+		save_slot_ele(mode, slot, fds.drive.motor_on);
+		save_slot_ele(mode, slot, fds.drive.motor_started);
+		save_slot_ele(mode, slot, fds.drive.io_mode);
 		save_slot_ele(mode, slot, fds.drive.mirroring);
-		save_slot_ele(mode, slot, fds.drive.crc_control);
 		save_slot_ele(mode, slot, fds.drive.unknow);
 		save_slot_ele(mode, slot, fds.drive.drive_ready);
 		save_slot_ele(mode, slot, fds.drive.irq_disk_enabled);
-		save_slot_ele(mode, slot, fds.drive.at_least_one_scan);
 		save_slot_ele(mode, slot, fds.drive.irq_timer_enabled);
 		save_slot_ele(mode, slot, fds.drive.irq_timer_reload_enabled);
 		save_slot_ele(mode, slot, fds.drive.irq_timer_high);
@@ -581,15 +582,11 @@ BYTE save_slot_operation(BYTE mode, BYTE slot, FILE *fp) {
 		save_slot_ele(mode, slot, fds.auto_insert.r4032.frames);
 		save_slot_ele(mode, slot, fds.auto_insert.r4032.checks);
 
-		save_slot_ele(mode, slot, fds.auto_insert.delay.eject);
 		save_slot_ele(mode, slot, fds.auto_insert.delay.dummy);
-		save_slot_ele(mode, slot, fds.auto_insert.delay.side);
 
 		save_slot_ele(mode, slot, fds.auto_insert.rE445.in_run);
-		save_slot_ele(mode, slot, fds.auto_insert.rE445.count);
 
 		save_slot_ele(mode, slot, fds.auto_insert.disabled);
-		save_slot_ele(mode, slot, fds.auto_insert.new_side);
 		save_slot_ele(mode, slot, fds.auto_insert.in_game);
 
 		save_slot_ele(mode, slot, info.lag_frame.consecutive);

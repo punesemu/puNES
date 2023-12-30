@@ -122,6 +122,8 @@ static const char *info_messages_precompiled[] = {
 /* 38 */ QT_TRANSLATE_NOOP("overlayWidgetInfo", "[red]error[normal] on write save state"),
 //: Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2
 /* 39 */ QT_TRANSLATE_NOOP("overlayWidgetInfo", "auto switch [red]disabled[normal], game not compatible"),
+//: Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2
+/* 40 */ QT_TRANSLATE_NOOP("overlayWidgetInfo", "auto switch [red]disabled[normal], single-sided disk"),
 };
 
 typedef struct _overlay_info_message {

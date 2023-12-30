@@ -885,9 +885,10 @@ void mainWindow::connect_menu_signals(void) {
 	connect_action(action_Disk_4_side_B, 7, SLOT(s_disk_side()));
 	connect_action(action_Switch_sides, 0xFFF, SLOT(s_disk_side()));
 	connect_action(action_Eject_Insert_Disk, SLOT(s_eject_disk()));
-	connect_action(action_Current_state_to_FDS, 0, SLOT(s_export_fds_image()));
-	connect_action(action_Current_state_to_Quick_Disk, 1, SLOT(s_export_fds_image()));
-	connect_action(action_Current_state_to_puNES_image, 2, SLOT(s_export_fds_image()));
+	connect_action(action_Current_state_to_FDS_with_Header, 0, SLOT(s_export_fds_image()));
+	connect_action(action_Current_state_to_FDS_without_Header, 1, SLOT(s_export_fds_image()));
+	connect_action(action_Current_state_to_Quick_Disk, 2, SLOT(s_export_fds_image()));
+	connect_action(action_Current_state_to_puNES_image, 3, SLOT(s_export_fds_image()));
 	connect_action(action_Tape_Play, SLOT(s_tape_play()));
 	connect_action(action_Tape_Record, SLOT(s_tape_record()));
 	connect_action(action_Tape_Stop, SLOT(s_tape_stop()));
@@ -1554,7 +1555,8 @@ void mainWindow::s_disk_side(void) {
 		fds_disk_op(FDS_DISK_SELECT, side, FALSE);
 	} else {
 		fds.side.change.new_side = side;
-		fds.side.change.delay = FDS_OP_SIDE_DELAY;
+		fds.side.change.delay = fds.info.cycles_dummy_delay;
+		fds.auto_insert.delay.dummy = 0;
 		fds_disk_op(FDS_DISK_EJECT, 0, FALSE);
 	}
 
@@ -1579,18 +1581,18 @@ void mainWindow::s_export_fds_image(void) {
 
 	emu_thread_pause();
 
-	switch(format) {
+	switch (format) {
 		default:
 		case 0:
-			format = 0;
+		case 1:
 			filters.append(tr("FDS Format Disk"));
 			filters[0].append(" (*.fds *.FDS)");
 			break;
-		case 1:
+		case 2:
 			filters.append(tr("Quick Disk Format Disk"));
 			filters[0].append(" (*.qd *.QD)");
 			break;
-		case 2:
+		case 3:
 			filters.append(tr("puNES image"));
 			filters[0].append(" (*.image)");
 			break;
@@ -1607,22 +1609,23 @@ void mainWindow::s_export_fds_image(void) {
 		BYTE rc = EXIT_ERROR;
 
 		if (fileinfo.suffix().isEmpty()) {
-			switch(format) {
+			switch (format) {
 				default:
 				case 0:
+				case 1:
 					fileinfo.setFile(QString(file) + ".fds");
 					break;
-				case 1:
+				case 2:
 					fileinfo.setFile(QString(file) + ".qd");
 					break;
-				case 2:
+				case 3:
 					fileinfo.setFile(QString(file) + ".image");
 					break;
 			}
 		}
-		if (format < 2) {
-			rc = fds_from_image(uQStringCD(fileinfo.absoluteFilePath()),
-				format == 0 ? FDS_FORMAT : QD_FORMAT,
+		if (format < 3) {
+			rc = fds_from_image_to_file(uQStringCD(fileinfo.absoluteFilePath()),
+				format == 2 ? QD_FORMAT : FDS_FORMAT,
 				format == 0 ? FDS_FORMAT_FDS : FDS_FORMAT_RAW);
 		} else {
 			rc = fds_image_to_file(uQStringCD(fileinfo.absoluteFilePath()));

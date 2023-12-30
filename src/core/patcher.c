@@ -312,7 +312,7 @@ static BYTE patcher_ips(_rom_mem *patch, _rom_mem *rom) {
 		BYTE ch = 0;
 
 		address = patcher_3byte(patch);
-		if ((address == -1) || (address == 0x454f46)) {
+		if ((address == -1) || (address == 0x454F46)) {
 			break;
 		}
 
@@ -352,9 +352,7 @@ static BYTE patcher_ips(_rom_mem *patch, _rom_mem *rom) {
 		}
 
 		if (rle) {
-			SDBWORD i = 0;
-
-			for (i = 0; i < len; i++) {
+			for (SDBWORD i = 0; i < len; i++) {
 				blk[address + i] = ch;
 			}
 		} else {

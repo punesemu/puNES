@@ -99,7 +99,8 @@
       <iconset resource="resources.qrc">
        <normaloff>:/icon/icons/fds_export.svgz</normaloff>:/icon/icons/fds_export.svgz</iconset>
      </property>
-     <addaction name="action_Current_state_to_FDS"/>
+     <addaction name="action_Current_state_to_FDS_with_Header"/>
+     <addaction name="action_Current_state_to_FDS_without_Header"/>
      <addaction name="action_Current_state_to_Quick_Disk"/>
      <addaction name="action_Current_state_to_puNES_image"/>
     </widget>
@@ -788,19 +789,24 @@
     <string>Detach &amp;Barcode</string>
    </property>
   </action>
-  <action name="action_Current_state_to_FDS">
+  <action name="action_Current_state_to_FDS_with_Header">
    <property name="text">
-    <string>to &amp;FDS Format</string>
+    <string>to &amp;FDS Format (with Header)</string>
    </property>
   </action>
   <action name="action_Current_state_to_Quick_Disk">
    <property name="text">
-    <string>to Quick Disk Format</string>
+    <string>to &amp;Quick Disk Format</string>
    </property>
   </action>
   <action name="action_Current_state_to_puNES_image">
    <property name="text">
     <string>to puNES image</string>
+   </property>
+  </action>
+  <action name="action_Current_state_to_FDS_without_Header">
+   <property name="text">
+    <string>to F&amp;DS Format (without Header)</string>
    </property>
   </action>
  </widget>

@@ -1412,7 +1412,7 @@ static int ffmpeg_audio_select_samplerate(const AVCodec *codec) {
 	const int *p = NULL;
 
 	if (!codec->supported_samplerates) {
-		switch(codec->id) {
+		switch (codec->id) {
 			case AV_CODEC_ID_PCM_S16LE:
 			case AV_CODEC_ID_PCM_S16BE:
 			case AV_CODEC_ID_PCM_S16LE_PLANAR:
@@ -1474,7 +1474,7 @@ static uint64_t ffmpeg_audio_select_channel_layout(const AVCodec *codec) {
 	int best_nb_channels = 0;
 
 	if (!codec->channel_layouts) {
-		switch(codec->id) {
+		switch (codec->id) {
 			case AV_CODEC_ID_PCM_S16LE:
 			case AV_CODEC_ID_PCM_S16BE:
 			case AV_CODEC_ID_PCM_S16LE_PLANAR:
@@ -1549,7 +1549,7 @@ static int ffmpeg_audio_select_channel_layout(const AVCodec *codec, AVChannelLay
 	int best_nb_channels = 0;
 
 	if (!codec->ch_layouts) {
-		switch(codec->id) {
+		switch (codec->id) {
 			case AV_CODEC_ID_PCM_S16LE:
 			case AV_CODEC_ID_PCM_S16BE:
 			case AV_CODEC_ID_PCM_S16LE_PLANAR:

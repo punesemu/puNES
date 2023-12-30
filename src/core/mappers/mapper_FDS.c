@@ -28,8 +28,6 @@
 #include "conf.h"
 #include "gui.h"
 
-enum { TRANSFERED_8BIT = 0x02, END_OF_HEAD = 0x40, MIN_LAG_FRAMES = 20 };
-
 static const SBYTE modulation_table[8] = { 0, 1, 2, 4, 8, -4, -2, -1 };
 static const BYTE volume_wave[4] = { 36, 24, 17, 14 };
 
@@ -40,9 +38,9 @@ void map_init_FDS(void) {
 	EXTCL_APU_TICK(FDS);
 
 	memset (&fds.auto_insert, 0x00, sizeof(fds.auto_insert));
-	fds.auto_insert.delay.eject = -1;
-	fds.auto_insert.delay.dummy = -1;
-	fds.auto_insert.delay.side = -1;
+	fds.drive.transfer_reset = 0x02;
+	fds.drive.io_mode = 0x04;
+	fds.drive.drive_ready = 0x40;
 
 	if (cfg->fds_disk1sideA_at_reset) {
 		fds_disk_op(FDS_DISK_EJECT, 0, TRUE);
@@ -76,22 +74,24 @@ void extcl_after_mapper_init_FDS(void) {
 	memmap_prgrom_8k(0, MMCPU(0xE000), 0);
 }
 BYTE extcl_cpu_rd_mem_FDS(BYTE nidx, WORD address, UNUSED(BYTE openbus)) {
-	// 0xE18B : NMI entry point
-	// [$0100]: PC action on NMI. set to $C0 on reset
-	// When NMI occurs while $100 & $C0 != 0, it typically means that the game is starting.
-	if ((address == 0xE18B) & !fds.auto_insert.in_game & ((cpu_rd_mem_dbg(nidx, 0x100) & 0xC0) != 0)) {
-		fds.auto_insert.in_game = TRUE;
-	} else if (address == 0xE445) {
-		// Address          : 0xE445
-		// Name             : CheckDiskHeader
-		// Input parameters : Pointer to 10 byte string at $00
-		// Description      : Compares the first 10 bytes on the disk coming after the FDS string, to 10
-		//                    bytes pointed to by Ptr($00). To bypass the checking of any byte, a -1 can be placed in the
-		//                    equivelant place in the compare string. Otherwise, if the comparison fails, an appropriate error
-		//                    will be generated.
-		if (fds_auto_insert_enabled() & !fds.auto_insert.rE445.in_run) {
-			// i primi due passaggi sono del bios e li ignoro
-			if (fds.auto_insert.rE445.count > 1) {
+	switch (address) {
+		case 0xE188:
+			// 0xE18B : NMI entry point
+			// [$0100]: PC action on NMI. set to $C0 on reset
+			// When NMI occurs while $100 & $C0 != 0, it typically means that the game is starting.
+			if (!fds.auto_insert.in_game & ((cpu_rd_mem_dbg(nidx, 0x100) & 0xC0) != 0)) {
+				fds.auto_insert.in_game = TRUE;
+			}
+			break;
+		case 0xE445:
+			// Address          : 0xE445
+			// Name             : CheckDiskHeader
+			// Input parameters : Pointer to 10 byte string at $00
+			// Description      : Compares the first 10 bytes on the disk coming after the FDS string, to 10
+			//                    bytes pointed to by Ptr($00). To bypass the checking of any byte, a -1 can be placed in the
+			//                    equivelant place in the compare string. Otherwise, if the comparison fails, an appropriate error
+			//                    will be generated.
+			if (fds_auto_insert_enabled() & !fds.auto_insert.rE445.in_run) {
 				WORD adr = cpu_rd_mem_dbg(nidx, 0) | (cpu_rd_mem_dbg(nidx, 1) << 8);
 				BYTE string[10], side = 0xFF;
 				uint32_t position = 0;
@@ -108,7 +108,6 @@ BYTE extcl_cpu_rd_mem_FDS(BYTE nidx, WORD address, UNUSED(BYTE openbus)) {
 					BYTE finded = TRUE;
 
 					position = (a * fds_disk_side_size());
-
 					if (fds.info.type == FDS_FORMAT_FDS) {
 						position += 16;
 					}
@@ -145,61 +144,63 @@ BYTE extcl_cpu_rd_mem_FDS(BYTE nidx, WORD address, UNUSED(BYTE openbus)) {
 				} else if (count == 1) {
 					if ((side != fds.drive.side_inserted) || fds.drive.disk_ejected) {
 						fds.auto_insert.rE445.in_run = TRUE;
-						fds.auto_insert.new_side = side;
-						fds.auto_insert.delay.side = FDS_AUTOINSERT_OP_SIDE_DELAY;
+						fds.side.change.new_side = side;
+						fds.side.change.delay = emu_ms_to_cpu_cycles(1);
+						fds.auto_insert.delay.dummy = 0;
+						if (!fds.drive.disk_ejected) {
+							fds_disk_op(FDS_DISK_EJECT, 0, TRUE);
+							gui_update_fds_menu();
+						}
 					}
 					if (side > 0) {
 						fds.auto_insert.in_game = TRUE;
 					}
-					fds.auto_insert.delay.eject = -1;
-					fds.auto_insert.delay.dummy = -1;
+					fds.auto_insert.delay.dummy = 0;
 				}
-			} else {
-				fds.auto_insert.rE445.count++;
 			}
-		}
+			break;
+		case 0xEF44:
+			// Wait after disk insertion
+			if (cfg->fds_fast_forward) {
+				nes[nidx].c.cpu.PC.w += 2;
+				address = nes[nidx].c.cpu.PC.w - 1;
+			}
+			break;
+		case 0xEFAF:
+			// Wait license
+			if (cfg->fds_fast_forward) {
+				nes[nidx].c.cpu.AR = 0;
+				nes[nidx].c.cpu.PC.w += 2;
+				address = nes[nidx].c.cpu.PC.w - 1;
+			}
+			break;
+		case 0xF46E:
+			// License check
+			if (cfg->fds_fast_forward) {
+				nes[nidx].c.cpu.PC.w += 2;
+				address = nes[nidx].c.cpu.PC.w - 1;
+			}
+			break;
 	}
 	return (prgrom_rd(nidx, address));
 }
 void extcl_cpu_every_cycle_FDS(BYTE nidx) {
 	BYTE max_speed = cfg->fds_fast_forward &
-		((fds.drive.scan & (info.lag_frame.consecutive > MIN_LAG_FRAMES)) | !fds.auto_insert.in_game);
-	WORD data = 0;
+		((fds.side.change.delay | fds.drive.delay_insert) || !fds.auto_insert.in_game ||
+		(fds.drive.scan & (info.lag_frame.consecutive > FDS_MIN_LAG_FRAMES)) ||
+		(fds.auto_insert.r4032.checks > 5));
 
 	// auto insert
-	if (fds_auto_insert_enabled()) {
-#define df_max_speed (cfg->fds_fast_forward & (info.lag_frame.consecutive > MIN_LAG_FRAMES))
-		if (fds.auto_insert.delay.eject > 0) {
-			fds.auto_insert.delay.eject--;
-			max_speed = df_max_speed & (fds.auto_insert.delay.eject > 0);
-		} else if (fds.auto_insert.delay.dummy > 0) {
-			if (--fds.auto_insert.delay.dummy == 0) {
-				fds.auto_insert.delay.dummy = -1;
-				fds_disk_op(FDS_DISK_INSERT, 0, TRUE);
-				gui_update_fds_menu();
-			}
-			max_speed = df_max_speed & (fds.auto_insert.delay.dummy > 0);
-		} else if (fds.auto_insert.delay.side > 0) {
-			if (--fds.auto_insert.delay.side == 0) {
-				fds.auto_insert.delay.side = -1;
-				fds.side.change.new_side = fds.auto_insert.new_side;
-				fds.side.change.delay = FDS_AUTOINSERT_OP_SIDE_DELAY;
-				fds_disk_op(FDS_DISK_EJECT, 0, TRUE);
-				gui_update_fds_menu();
-			}
-			max_speed = df_max_speed & (fds.auto_insert.delay.side > 0);
-		}
-		if (!fds.auto_insert.delay.eject & (fds.auto_insert.delay.dummy == -1) & (fds.auto_insert.r4032.checks > 20)) {
-			fds.auto_insert.delay.eject = -1;
-			fds.auto_insert.delay.dummy = FDS_OP_SIDE_DELAY;
-			fds_disk_op(FDS_DISK_EJECT, 0, TRUE);
+	if (fds_auto_insert_enabled() && (fds.auto_insert.delay.dummy > 0)) {
+		if (!(--fds.auto_insert.delay.dummy)) {
+			fds_disk_op(FDS_DISK_INSERT, fds.drive.side_inserted, TRUE);
 			gui_update_fds_menu();
-			max_speed = df_max_speed;
+		} else {
+			max_speed = cfg->fds_fast_forward && fds.auto_insert.end_of_head.disabled;
 		}
-#undef df_max_speed
 	}
 
-	if (max_speed & !fds.info.bios_first_run) {
+	if (max_speed) {
 		gui_max_speed_start();
 	} else {
 		gui_max_speed_stop();
@@ -235,149 +236,101 @@ void extcl_cpu_every_cycle_FDS(BYTE nidx) {
 
 	// no disco, no party
 	if (fds.drive.disk_ejected) {
-		fds.drive.at_least_one_scan = FALSE;
-		if (fds.drive.delay < FDS_8BIT_DELAY) {
-			fds.drive.delay = FDS_8BIT_DELAY;
-		}
 		return;
 	}
 
-	// il motore non e' avviato
-	if (!fds.drive.motor_on) {
-		fds.drive.at_least_one_scan = FALSE;
+	if (fds.drive.delay_insert) {
+		fds.drive.delay_insert--;
+		return;
+	}
+
+	if (!fds.drive.motor_on && !fds.drive.motor_started) {
 		fds.drive.disk_position = 0;
-		fds.drive.gap_ended = FALSE;
-		// "Akuu Senki Raijin (Japan) (Disk Writer)" ne ha bisogno
-		// per non sporcare lo screen.
-		if (fds.drive.delay < FDS_8BIT_DELAY) {
-			fds.drive.delay = FDS_8BIT_DELAY;
-		}
+		fds.drive.mark_finded = FALSE;
 		return;
 	}
 
 	// se c'e' un delay aspetto
-	if ((fds.drive.delay > 0) && --fds.drive.delay) {
+	if ((fds.drive.delay_8bit > 0) && --fds.drive.delay_8bit) {
 		return;
 	}
 
 	fds.drive.scan = !fds.drive.transfer_reset;
 	fds.info.last_operation = FDS_OP_NONE;
+	fds.drive.data_available = FALSE;
 
 	if (fds.drive.scan) {
-		// se c'e' una richiesta di invio crc i prossimi due bytes lo saranno
-		if (!fds.drive.crc_char && fds.drive.crc_control) {
-			fds.drive.crc_char = 2;
-		}
+		BYTE data = 0, transfer = FALSE;
 
-		if (fds.drive.read_mode) {
+		data = fds.side.info->data[fds.drive.disk_position];
+
+		if (fds.drive.io_mode) {
 			// read
-			data = fds.side.info->data[fds.drive.disk_position];
+			if (fds.drive.drive_ready) {
+				if (fds.drive.mark_finded) {
+					transfer = TRUE;
+					fds.drive.crc = fds_crc_byte(fds.drive.crc, data);
+				} else if (data == FDS_DISK_BLOCK_MARK) {
+					fds.drive.mark_finded = TRUE;
+					fds.drive.crc = 0;
+					fds.drive.crc = fds_crc_byte(fds.drive.crc, data);
+				}
+			}
 		} else {
-			// write
 			if (!fds.drive.drive_ready) {
 				data = FDS_DISK_GAP;
-			} else if (fds.drive.crc_char) {
-				data = FDS_DISK_CRC_CHAR1;
+				fds.drive.crc = 0;
 			} else {
-				data = fds.side.info->data[fds.drive.disk_position];
+				if (fds.drive.crc_control) {
+					data = fds.drive.crc >> 0;
+					fds.drive.crc >>= 8;
+				} else {
+					data = fds.drive.data_io;
+					fds.drive.crc = fds_crc_byte(fds.drive.crc, data);
+				}
 			}
+			transfer = TRUE;
 		}
 
-		// se non sono piu' nel gap vuol dire che ho trasferito
-		// 8 bit di dati quindi setto il flag corrispondente e
-		// se e' abilitato l'irq del disco, lo setto.
-		if (fds.drive.gap_ended) {
-			fds.drive.transfer_flag = 0x02;
-			fds.drive.at_least_one_scan = TRUE;
+		fds.auto_insert.r4032.frames = 0;
+		fds.auto_insert.r4032.checks = 0;
+
+		if (transfer) {
+			fds.drive.data_available = 0x80;
 
 			if (fds.drive.irq_disk_enabled) {
+				fds.drive.transfer_flag = 0x02;
 				nes[nidx].c.irq.high |= FDS_DISK_IRQ;
 			}
-
-			if (fds.drive.read_mode) {
-				fds.drive.data_readed = data;
+			if (fds.drive.io_mode) {
+				fds.drive.data_io = data;
 				fds.info.last_operation = FDS_OP_READ;
 			} else {
-				uint32_t position = (fds.drive.disk_position - 2);
-				WORD *dst = &fds.side.info->data[position];
-
-				// quando inizia la scrittura il bios scrive sempre
-				// prima un GAP, seguito da un MARK seguito dal blocco che verrà chiuso dai CRC.
-				// il last_position devo aggiornarlo solo con i CRC e i GAP che seguono.
-				if (((*dst) == 0x0100) && (fds.drive.data_to_write == 0x00)) {
-					(*dst) = 0x0100;
-				} else if ((fds.drive.data_to_write == 0x80) &&
-					(((*dst) == 0x0180) || (position == fds.side.info->last_position))) {
-					(*dst) = 0x0180;
-					if (position == fds.side.info->last_position) {
-						fds_diff_op(fds.side.info->side, FDS_OP_WRITE, position, (*dst));
-					}
-				} else if (fds.drive.crc_char) {
-					if (fds.drive.crc_char == 2) {
-						(*dst) = FDS_DISK_CRC_CHAR1;
-					} else {
-						(*dst) = FDS_DISK_CRC_CHAR2;
-					}
-					if (position >= fds.side.info->last_position) {
-						fds_diff_op(fds.side.info->side, FDS_OP_WRITE, position, (*dst));
-						fds.info.sides[fds.side.info->side].last_position = position + 1;
-						if ((*dst) == FDS_DISK_CRC_CHAR2) {
-							for (uint32_t i = 0; i < FDS_GAP_BLOCK; i++) {
-								uint32_t p = position + 1 + i;
-
-								if (p < fds_disk_side_size()) {
-									fds.side.info->data[p] = FDS_DISK_GAP;
-									fds_diff_op(fds.side.info->side, FDS_OP_WRITE, p, FDS_DISK_GAP);
-									fds.info.sides[fds.side.info->side].last_position = p + 1;
-								}
-							}
-						}
-					}
-				} else {
-					(*dst) = fds.drive.data_to_write;
-					fds_diff_op(fds.side.info->side, FDS_OP_WRITE, position, fds.drive.data_to_write);
-				}
-				data = (*dst);
+				fds.side.info->data[fds.drive.disk_position] = data;
+				fds.info.writings_occurred = TRUE;
 				fds.info.last_operation = FDS_OP_WRITE;
 			}
 		}
-
-		if (data != FDS_DISK_GAP) {
-			fds.drive.gap_ended = TRUE;
-		}
-
-		if (fds.drive.crc_char && !(--fds.drive.crc_char)) {
-			fds.drive.gap_ended = fds.drive.crc_control = FALSE;
-		}
-
-		if (!fds.drive.drive_ready) {
-			fds.drive.gap_ended = FALSE;
-		}
 	}
-	if (++fds.drive.disk_position >= fds.info.sides[fds.drive.side_inserted].size) {
-		fds.drive.end_of_head = END_OF_HEAD;
-		fds.drive.disk_position = 0;
-		fds.drive.gap_ended = FALSE;
-		fds.drive.delay = 65536 * 8;
-		// FDS interessati :
-		// - 19 Neunzehn (1988)(Soft Pro)(J).fds
-		//   visto che il controllo del r4032 e' mooooolto lento, l'eject forzato alla fine del disco
-		//   costringe la rom al richiamo della funzione del bios $E445.
-		// - Dandy (19xx)(Pony Canyon)(J).fds
-		//   dopo aver selezionato il nome del personaggio, puo' capitare che il disco sia disinserito a causa di
-		//   di eject e che dia un "error 01" che comunque verra' subito corretto dall'insert automatico seguente.
-		// - Zelda no Densetsu - The Hyrule Fantasy (1986)(Nintendo)(J).fds
-		//   stesso discorso fatto per Dandy (19xx)(Pony Canyon)(J).fds.
-		if (fds_auto_insert_enabled() && !fds.drive.at_least_one_scan &&
-			(fds.auto_insert.delay.eject == -1) && !fds.side.change.delay &&
-			(fds.auto_insert.delay.dummy == -1)) {
-			fds.auto_insert.delay.eject = FDS_AUTOINSERT_OP_SIDE_DELAY;
+	if (fds.drive.scan || fds.drive.motor_started) {
+		if (++fds.drive.disk_position >= fds.info.sides[fds.drive.side_inserted].size) {
+			fds.drive.end_of_head = 0x40;
+			fds.drive.disk_position = 0;
+			fds.drive.transfer_reset = FALSE;
+			if (fds.drive.motor_started) {
+				fds.drive.motor_on = FALSE;
+				fds.drive.motor_started = FALSE;
+				if (fds_auto_insert_enabled() && !fds.auto_insert.end_of_head.disabled && !fds.auto_insert.delay.dummy) {
+					fds_disk_op(FDS_DISK_EJECT, 0, TRUE);
+					gui_update_fds_menu();
+					fds.auto_insert.delay.dummy = fds.info.cycles_dummy_delay;
+				}
+			}
+		} else {
+			fds.drive.end_of_head = FALSE;
+			// il delay per riuscire a leggere i prossimi 8 bit
+			fds.drive.delay_8bit = fds.info.cycles_8bit_delay;
 		}
-		fds.drive.at_least_one_scan = FALSE;
-	} else {
-		fds.drive.end_of_head = FALSE;
-		// il delay per riuscire a leggere i prossimi 8 bit
-		fds.drive.delay = FDS_8BIT_DELAY;
 	}
 }
 void extcl_apu_tick_FDS(void) {

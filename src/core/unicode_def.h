@@ -71,6 +71,7 @@ typedef wchar_t uTCHAR;
 #define ustrchr wcschr
 #define ustrdup _wcsdup
 #define usscanf swscanf_s
+#define ustrstr wcsstr
 
 // linux, bsd
 #else
@@ -119,6 +120,7 @@ typedef char uTCHAR;
 #define ustrchr strchr
 #define ustrdup strdup
 #define usscanf sscanf
+#define ustrstr strstr
 
 #endif
 

@@ -633,25 +633,23 @@ INLINE static BYTE fds_rd_mem(BYTE nidx, WORD address, BYTE made_tick) {
 			// |||+------ CRC control (0: CRC passed; 1: CRC error)
 			// |+-------- End of Head (1 when disk head is on the most inner track)
 			// +--------- Disk Data Read/Write Enable (1 when disk is readable/writable)
-
-			// azzero
-			nes[nidx].c.cpu.openbus = 0;
 			// bit 0 (timer irq)
-			nes[nidx].c.cpu.openbus |= fds.drive.irq_timer_high;
+			nes[nidx].c.cpu.openbus = fds.drive.irq_timer_high;
 			// bit 1 (trasfer flag)
 			nes[nidx].c.cpu.openbus |= fds.drive.transfer_flag;
 			// bit 2 e 3 non settati
 			// TODO : bit 4 (CRC control : 0 passato, 1 errore)
+			nes[nidx].c.cpu.openbus |= (fds.drive.crc ? 0x10 : 0x00);
 			// bit 5 non settato
-			// TODO : bit 6 (end of head)
+			// bit 6 (end of head)
 			nes[nidx].c.cpu.openbus |= fds.drive.end_of_head;
-			//fds.drive.end_of_head = FALSE;
-			// TODO : bit 7 (disk data read/write enable (1 when disk is readable/writable)
-			fds.drive.transfer_flag = FALSE;
+			// bit 7 (disk data read/write enable (1 when disk is readable/writable))
+			nes[nidx].c.cpu.openbus |= fds.drive.data_available;
 			// devo disabilitare sia il timer IRQ ...
 			fds.drive.irq_timer_high = FALSE;
 			nes[nidx].c.irq.high &= ~FDS_TIMER_IRQ;
 			// che il disk IRQ
+			fds.drive.transfer_flag = FALSE;
 			nes[nidx].c.irq.high &= ~FDS_DISK_IRQ;
 #if !defined (RELEASE)
 			//printf("0x%04X 0x%02X %d\n", address, nes[nidx].c.cpu.openbus, nes[nidx].c.irq.high);
@@ -659,15 +657,16 @@ INLINE static BYTE fds_rd_mem(BYTE nidx, WORD address, BYTE made_tick) {
 			return (TRUE);
 		}
 		if (address == 0x4031) {
-			nes[nidx].c.cpu.openbus = fds.drive.data_readed;
+			nes[nidx].c.cpu.openbus = fds.drive.data_io;
+			fds.drive.data_available = FALSE;
+			// devo disabilitare il disk IRQ
+			fds.drive.transfer_flag = FALSE;
+			nes[nidx].c.irq.high &= ~FDS_DISK_IRQ;
 #if !defined (RELEASE)
 			//printf("0x%04X 0x%02X [0x%04X] 0x%04X %d %d\n", address, nes[nidx].c.cpu.openbus,
 			//	fds.info.sides[fds.drive.side_inserted].data[fds.drive.disk_position], nes[nidx].c.cpu.opcode_PC,
 			//	fds.drive.disk_position, nes[nidx].c.irq.high);
 #endif
-			fds.drive.transfer_flag = FALSE;
-			// devo disabilitare il disk IRQ
-			nes[nidx].c.irq.high &= ~FDS_DISK_IRQ;
 			return (TRUE);
 		}
 		if (address == 0x4032) {
@@ -685,33 +684,42 @@ INLINE static BYTE fds_rd_mem(BYTE nidx, WORD address, BYTE made_tick) {
 			} else if (fds.drive.end_of_head | fds.drive.transfer_reset) {
 				nes[nidx].c.cpu.openbus |= 0x02;
 			}
+			nes[nidx].c.cpu.openbus |= fds.info.write_protected;
+
 #if !defined (RELEASE)
 			//printf("%5d - %3d - %3d : 0x%04X 0x%02X %d %d %d %d\n",
 			//	nes[nidx].p.ppu.frames,
 			//	nes[nidx].p.ppu.frame_y,
 			//	nes[nidx].p.ppu.frame_x,
 			//	address, nes[nidx].c.cpu.openbus, fds.drive.disk_ejected, fds.drive.scan,
-			//	fds.drive.delay, fds.drive.disk_position);
+			//	fds.drive.delay_insert, fds.drive.disk_position);
 #endif
-			if (fds_auto_insert_enabled()) {
-				if ((nes[nidx].p.ppu.frames - fds.auto_insert.r4032.frames) < 100) {
-					if ((++fds.auto_insert.r4032.checks > FDS_AUTOINSERT_R4032_MAX_CHECKS) &&
-						(fds.auto_insert.delay.side == -1) &&
-						(fds.auto_insert.delay.eject == -1) &&
-						(fds.auto_insert.delay.dummy == -1)) {
-						// FDS interessati :
-						// - Ao no Senritsu (1987)(Gakken)(J).fds
-						// - Bishojou SF Alien Battle (19xx)(Hacker International)(J)(Unl)[b].fds
-						// senza questo controllo entrambi gli fds potrebbero rimanere in attesa
-						// del cambio side senza che l'auto insert avvenga visto che l'END_OF_HEAD
-						// e' stato raggiunto prima.
-						fds.auto_insert.r4032.checks = 0;
-						fds.auto_insert.delay.eject = FDS_OP_SIDE_DELAY;
-					}
-				} else {
-					fds.auto_insert.r4032.checks = 0;
+			if (fds_auto_insert_enabled() && !fds.auto_insert.r4032.disabled && !fds.auto_insert.delay.dummy) {
+				if (!fds.auto_insert.r4032.frames) {
+					fds.auto_insert.r4032.frames = nes[nidx].p.ppu.frames;
 				}
-				fds.auto_insert.r4032.frames = nes[nidx].p.ppu.frames;
+				{
+					int diff = (nes[nidx].p.ppu.frames - fds.auto_insert.r4032.frames);
+
+					if (diff > 10) {
+						if (diff < 70) {
+							if (!fds.drive.scan && (++fds.auto_insert.r4032.checks > FDS_AUTOINSERT_R4032_MAX_CHECKS)) {
+								// - 19 Neunzehn (1988)(Soft Pro)(J).fds (il controllo del r4032 e' mooooolto lento)
+								// - Dandy (19xx)(Pony Canyon)(J).fds
+								// - Zelda no Densetsu - The Hyrule Fantasy (1986)(Nintendo)(J).fds
+								// - Ao no Senritsu (1987)(Gakken)(J).fds
+								// - Bishojou SF Alien Battle (19xx)(Hacker International)(J)(Unl)[b].fds
+								fds_disk_op(FDS_DISK_EJECT, 0, TRUE);
+								gui_update_fds_menu();
+								fds.auto_insert.delay.dummy = fds.info.cycles_dummy_delay;
+							}
+							fds.auto_insert.r4032.frames = nes[nidx].p.ppu.frames;
+						} else {
+							fds.auto_insert.r4032.frames = 0;
+							fds.auto_insert.r4032.checks = 0;
+						}
+					}
+				}
 			}
 			return (TRUE);
 		}
@@ -1808,15 +1816,6 @@ INLINE static BYTE fds_wr_mem(BYTE nidx, WORD address, BYTE value) {
 	if ((address >= 0x4020) && (address <= 0x4026)) {
 		// eseguo un tick hardware
 		tick_hw(nidx, 1);
-#if !defined (RELEASE)
-		//if (address == 0x4025) {
-		//	printf("0x%04X 0x%02X %d\n", address, value, fds.drive.enabled_dsk_reg);
-		//} else {
-		//	if (fds.drive.disk_position)
-		//	printf("0x%04X 0x%02X 0x%04X %d 0x%02X %d\n", address, value, nes[nidx].c.cpu.opcode_PC,
-		//		fds.drive.disk_position - 1, fds.side.data[fds.drive.disk_position - 1], nes[nidx].p.ppu.frames);
-		//}
-#endif
 		if (address == 0x4020) {
 			// 7  bit  0
 			// ---------
@@ -1832,7 +1831,7 @@ INLINE static BYTE fds_wr_mem(BYTE nidx, WORD address, BYTE value) {
 			// LLLL LLLL
 			// |||| ||||
 			// ++++-++++- 8 MSB of IRQ timer
-			fds.drive.irq_timer_reload = (value << 8) | (fds.drive.irq_timer_reload & 0x00FF);
+			fds.drive.irq_timer_reload = (fds.drive.irq_timer_reload & 0x00FF) | (value << 8);
 			return (TRUE);
 		}
 		if (address == 0x4022) {
@@ -1845,12 +1844,12 @@ INLINE static BYTE fds_wr_mem(BYTE nidx, WORD address, BYTE value) {
 			if (fds.drive.enabled_dsk_reg) {
 				fds.drive.irq_timer_reload_enabled = value & 0x01;
 				fds.drive.irq_timer_enabled = value & 0x02;
-			}
-			if (fds.drive.irq_timer_enabled) {
-				fds.drive.irq_timer_counter = fds.drive.irq_timer_reload;
-			} else {
-				fds.drive.irq_timer_high = FALSE;
-				nes[nidx].c.irq.high &= ~FDS_TIMER_IRQ;
+				if (fds.drive.irq_timer_enabled) {
+					fds.drive.irq_timer_counter = fds.drive.irq_timer_reload;
+				} else {
+					fds.drive.irq_timer_high = FALSE;
+					nes[nidx].c.irq.high &= ~FDS_TIMER_IRQ;
+				}
 			}
 			return (TRUE);
 		}
@@ -1866,7 +1865,6 @@ INLINE static BYTE fds_wr_mem(BYTE nidx, WORD address, BYTE value) {
 #endif
 			fds.drive.enabled_dsk_reg = value & 0x01;
 			fds.drive.enabled_snd_reg = value & 0x02;
-
 			if (!fds.drive.enabled_dsk_reg) {
 				fds.drive.irq_timer_high = FALSE;
 				nes[nidx].c.irq.high &= ~FDS_TIMER_IRQ;
@@ -1874,9 +1872,19 @@ INLINE static BYTE fds_wr_mem(BYTE nidx, WORD address, BYTE value) {
 			return (TRUE);
 		}
 		if (address == 0x4024) {
-			fds.drive.data_to_write = value;
+			if (fds.drive.enabled_dsk_reg) {
+				fds.drive.data_io = value;
+				fds.drive.data_available = FALSE;
+			}
 			fds.drive.transfer_flag = FALSE;
 			nes[nidx].c.irq.high &= ~FDS_DISK_IRQ;
+#if !defined (RELEASE)
+			//printf("%5d - %3d - %3d : 0x%04X 0x%02X %d %d\n",
+			//	nes[nidx].p.ppu.frames,
+			//	nes[nidx].p.ppu.frame_y,
+			//	nes[nidx].p.ppu.frame_x,
+			//	address, value, fds.drive.disk_position, fds.drive.io_mode);
+#endif
 			return (TRUE);
 		}
 		if (address == 0x4025) {
@@ -1904,32 +1912,43 @@ INLINE static BYTE fds_wr_mem(BYTE nidx, WORD address, BYTE value) {
 			//	nes[nidx].p.ppu.frames,
 			//	nes[nidx].p.ppu.frame_y,
 			//	nes[nidx].p.ppu.frame_x,
-			//	address, value, fds.drive.disk_ejected, fds.drive.scan,
-			//	fds.drive.delay, fds.drive.disk_position);
+			//	address, value, fds.drive.motor_on, fds.drive.scan,
+			//	fds.drive.delay_insert, fds.drive.disk_position);
 #endif
-			if (!fds.drive.enabled_dsk_reg) {
-				return (TRUE);
+			if (fds.drive.enabled_dsk_reg) {
+				fds.drive.motor_on = value & 0x01;
+				if (!fds.drive.transfer_reset && (value & 0x02)) {
+					fds.drive.motor_started = TRUE;
+				}
+				fds.drive.transfer_reset = value & 0x02;
+				if (!fds.drive.transfer_reset || !fds.drive.motor_on) {
+					fds.drive.motor_started = FALSE;
+				}
+				fds.drive.io_mode = value & 0x04;
+				fds.drive.mirroring = value & 0x08;
+				if (fds.drive.mirroring) {
+					mirroring_H(nidx);
+				} else {
+					mirroring_V(nidx);
+				}
+				// If we are writing and a CRC value is about to be written (rising edge on bit 4),
+				// feed two empty bytes to the CRC routine to yield the correct value.
+				if (!fds.drive.crc_control && (value & 0x10) && !fds.drive.io_mode) {
+					fds.drive.crc = fds_crc_byte(fds.drive.crc, FDS_DISK_GAP);
+					fds.drive.crc = fds_crc_byte(fds.drive.crc, FDS_DISK_GAP);
+				}
+				fds.drive.crc_control = value & 0x10;
+				fds.drive.unknow = value & 0x20;
+				fds.drive.drive_ready = value & 0x40;
+				if (!fds.drive.drive_ready) {
+					fds.drive.mark_finded = FALSE;
+				}
+				fds.drive.irq_disk_enabled = value & 0x80;
+
+				// "Akuu Senki Raijin (Japan) (Disk Writer)" (sporcare lo screen).
+				fds.drive.delay_8bit = fds.info.cycles_8bit_delay;
 			}
-
-			fds.drive.motor_on = value & 0x01;
-			fds.drive.transfer_reset = value & 0x02;
-
-//			 TODO : penso che sia corretto
-//			if (fds.drive.read_mode != (value & 0x04)) {
-//				fds.drive.gap_ended = FALSE;
-//			}
-			fds.drive.read_mode = value & 0x04;
-			fds.drive.mirroring = value & 0x08;
-			if (fds.drive.mirroring) {
-				mirroring_H(nidx);
-			} else {
-				mirroring_V(nidx);
-			}
-			fds.drive.crc_control = value & 0x10;
-			fds.drive.unknow = value & 0x20;
-			fds.drive.drive_ready = value & 0x40;
-			fds.drive.irq_disk_enabled = value & 0x80;
-
+			fds.drive.transfer_flag = FALSE;
 			nes[nidx].c.irq.high &= ~FDS_DISK_IRQ;
 			return (TRUE);
 		}
