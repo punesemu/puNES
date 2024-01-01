@@ -317,6 +317,8 @@ void extcl_cpu_every_cycle_FDS(BYTE nidx) {
 			fds.drive.end_of_head = 0x40;
 			fds.drive.disk_position = 0;
 			fds.drive.transfer_reset = FALSE;
+			// Bishoujo Alien Battle (Japan) (Unl).fds non esegue la routine a  0xE188
+			fds.auto_insert.in_game = TRUE;
 			if (fds.drive.motor_started) {
 				fds.drive.motor_on = FALSE;
 				fds.drive.motor_started = FALSE;
