@@ -25,6 +25,7 @@
 #include "gui.h"
 #include "patcher.h"
 #include "conf.h"
+#include "emu.h"
 #include "../../c++/crc/crc.h"
 
 #define BIOSFILE "disksys.rom"
@@ -86,7 +87,8 @@ typedef struct _fds_info_block {
 	BYTE kgk;
 } _fds_info_block;
 
-BYTE fds_to_image(void);
+BYTE fds_to_image(_fds_info *finfo);
+void fds_free_fds_info(void);
 BYTE fds_examine_block(const BYTE *src, uint32_t position, _fds_info_block *fb);
 void fds_control_autoinsert(_fds_sinfo *sinfo);
 void fds_diff_file_name(uTCHAR *dst, size_t lenght);
@@ -96,8 +98,8 @@ void fds_image_memcpy(const BYTE *src, BYTE *dst, uint32_t lenght);
 void fds_image_memcpy_ASCII(const BYTE *src, BYTE *dst, size_t lenght);
 WORD fds_crc_block(const BYTE *src, uint32_t lenght);
 BYTE *fds_from_image_to_mem(BYTE format, BYTE type, size_t *size);
-BYTE *fds_read_ips(BYTE *data, const size_t size, const char *file);
-BYTE fds_create_ips(const BYTE *d1, const size_t size1, const BYTE *d2, const size_t size2, const char *file);
+BYTE *fds_read_ips(BYTE *data, const size_t size, const uTCHAR *file);
+BYTE fds_create_ips(const BYTE *d1, const size_t size1, const BYTE *d2, const size_t size2, const uTCHAR *file);
 
 _fds fds;
 
@@ -114,31 +116,7 @@ void fds_init(void) {
 	fds.drive.enabled_snd_reg = 0x02;
 }
 void fds_quit(void) {
-	if (fds.info.image) {
-		// se richiesto, sovrascrivo il file originale
-		if (fds.info.writings_occurred) {
-			uTCHAR file[LENGTH_FILE_NAME_LONG];
-
-			fds_diff_file_name(&file[0], usizeof(file));
-			if (cfg->fds_write_mode == FDS_WR_ORIGINAL_FILE) {
-				fds_from_image_to_file(info.rom.file, fds.info.format, fds.info.type);
-			} else {
-				size_t size = 0;
-				BYTE *mfds = fds_from_image_to_mem(fds.info.format, fds.info.type, &size);
-
-				if (!mfds || fds_create_ips(fds.info.data, fds.info.total_size, mfds, size, file)) {
-					log_error(uL("FDS;error on writing diff file"));
-				}
-				if (mfds) {
-					free(mfds);
-				}
-			}
-		}
-		free(fds.info.image);
-	}
-	if (fds.info.data) {
-		free(fds.info.data);
-	}
+	fds_free_fds_info();
 	fds_init();
 }
 BYTE fds_load_rom(BYTE format) {
@@ -152,7 +130,7 @@ BYTE fds_load_rom(BYTE format) {
 
 		if (format == QD_FORMAT) {
 			ustrncpy(&rom_ext[0][0], uL(".qd\0"), usizeof(rom_ext[0]));
-			ustrncpy(&rom_ext[0][0], uL(".QD\0"), usizeof(rom_ext[0]));
+			ustrncpy(&rom_ext[1][0], uL(".QD\0"), usizeof(rom_ext[0]));
 		}
 
 		fp = ufopen(info.rom.file, uL("rb"));
@@ -188,7 +166,7 @@ BYTE fds_load_rom(BYTE format) {
 		fseek(fp, 0L, SEEK_SET);
 
 		rom.data = (BYTE *)malloc(rom.size);
-		if (rom.data == NULL) {
+		if (!rom.data) {
 			fclose(fp);
 			return (EXIT_ERROR);
 		}
@@ -226,7 +204,7 @@ BYTE fds_load_rom(BYTE format) {
 	} else {
 		fds.info.type = FDS_FORMAT_RAW;
 		// il numero di disk sides
-		fds.info.total_sides = fds.info.total_size / fds_disk_side_size();
+		fds.info.total_sides = fds.info.total_size / fds_disk_side_size(format);
 		if (!fds.info.total_sides) {
 			fds.info.total_sides = 1;
 		}
@@ -242,13 +220,13 @@ BYTE fds_load_rom(BYTE format) {
 	fds.info.cycles_dummy_delay = emu_ms_to_cpu_cycles(FDS_OP_SIDE_MS_DELAY);
 
 	// converto nel mio formato immagine
-	if (fds_to_image()) {
+	if (fds_to_image(&fds.info)) {
 		return (EXIT_ERROR);
 	}
 
 	// inserisco il primo
 	fds.info.frame_insert = nes[0].p.ppu.frames;
-	fds.info.bios.first_run = !cfg->fds_disk1sideA_at_reset;
+	fds.bios.first_run = !cfg->fds_disk1sideA_at_reset;
 	fds_disk_op(cfg->fds_disk1sideA_at_reset ? FDS_DISK_SELECT_AND_INSERT : FDS_DISK_SELECT, 0, FALSE);
 
 	info.cpu_rw_extern = TRUE;
@@ -280,48 +258,47 @@ BYTE fds_load_bios(void) {
 	// ordine di ricerca:
 
 	// 1) file specificato dall'utente
-	umemset(fds.info.bios.file, 0x00, usizeof(fds.info.bios.file));
-	usnprintf(fds.info.bios.file, usizeof(fds.info.bios.file), uL("" uPs("")), cfg->fds_bios_file);
-	bios = ufopen(fds.info.bios.file, uL("rb"));
+	umemset(fds.bios.file, 0x00, usizeof(fds.bios.file));
+	usnprintf(fds.bios.file, usizeof(fds.bios.file), uL("" uPs("")), cfg->fds_bios_file);
+	bios = ufopen(fds.bios.file, uL("rb"));
 	if (bios) {
 		goto fds_load_bios_founded;
 	}
 
 	// 2) directory di lavoro
-	umemset(fds.info.bios.file, 0x00, usizeof(fds.info.bios.file));
-	ustrncpy(fds.info.bios.file, uL("" BIOSFILE), usizeof(fds.info.bios.file));
-	bios = ufopen(fds.info.bios.file, uL("rb"));
+	umemset(fds.bios.file, 0x00, usizeof(fds.bios.file));
+	ustrncpy(fds.bios.file, uL("" BIOSFILE), usizeof(fds.bios.file));
+	bios = ufopen(fds.bios.file, uL("rb"));
 	if (bios) {
 		goto fds_load_bios_founded;
 	}
 
 	// 3) directory contenente il file fds
-	umemset(fds.info.bios.file, 0x00, usizeof(fds.info.bios.file));
-	ustrncpy(fds.info.bios.file, info.rom.file, usizeof(fds.info.bios.file));
+	umemset(fds.bios.file, 0x00, usizeof(fds.bios.file));
+	ustrncpy(fds.bios.file, info.rom.file, usizeof(fds.bios.file));
 	// rintraccio l'ultimo '.' nel nome
 #if defined (_WIN32)
-	lastSlash = ustrrchr(fds.info.bios.file, uL('\\'));
+	lastSlash = ustrrchr(fds.bios.file, uL('\\'));
 	if (lastSlash) {
 		(*(lastSlash + 1)) = 0x00;
 	}
 #else
-	lastSlash = ustrrchr(fds.info.bios.file, uL('/'));
+	lastSlash = ustrrchr(fds.bios.file, uL('/'));
 	if (lastSlash) {
 		(*(lastSlash + 1)) = 0x00;
 	}
 #endif
 	// aggiungo il nome del file
-	ustrcat(fds.info.bios.file, uL("" BIOSFILE));
-	bios = ufopen(fds.info.bios.file, uL("rb"));
+	ustrcat(fds.bios.file, uL("" BIOSFILE));
+	bios = ufopen(fds.bios.file, uL("rb"));
 	if (bios) {
 		goto fds_load_bios_founded;
 	}
 
 	// 4) directory puNES/bios
-	umemset(fds.info.bios.file, 0x00, usizeof(fds.info.bios.file));
-	usnprintf(fds.info.bios.file, usizeof(fds.info.bios.file),
-		uL("" uPs("") BIOS_FOLDER "/" BIOSFILE), gui_data_folder());
-	bios = ufopen(fds.info.bios.file, uL("rb"));
+	umemset(fds.bios.file, 0x00, usizeof(fds.bios.file));
+	usnprintf(fds.bios.file, usizeof(fds.bios.file), uL("" uPs("") BIOS_FOLDER "/" BIOSFILE), gui_data_folder());
+	bios = ufopen(fds.bios.file, uL("rb"));
 	if (bios) {
 		goto fds_load_bios_founded;
 	}
@@ -344,7 +321,122 @@ fds_load_bios_founded:
 
 	fclose(bios);
 
-	fds.info.bios.crc32 = emu_crc32((void *)prgrom_pnt(), prgrom_size());
+	fds.bios.crc32 = emu_crc32((void *)prgrom_pnt(), prgrom_size());
+
+	return (EXIT_OK);
+}
+BYTE fds_change_disk(uTCHAR *path) {
+	uTCHAR file[LENGTH_FILE_NAME_LONG], *ext = NULL;
+	_uncompress_archive *archive = NULL;
+	BYTE found = FALSE, rc = 0;
+	size_t position = 0;
+	_fds_info finfo;
+	FILE *fp = NULL;
+
+	memset(&finfo, 0x00, sizeof(_fds_info));
+	umemset(&file[0], 0x00, usizeof(file));
+	ustrncpy(file, path, usizeof(file) - 1);
+
+	archive = uncompress_archive_alloc(file, &rc);
+
+	if (rc == UNCOMPRESS_EXIT_OK) {
+		if (archive->floppy_disk.count > 0) {
+			switch ((rc = uncompress_archive_extract_file(archive, UNCOMPRESS_TYPE_FLOPPY_DISK))) {
+				case UNCOMPRESS_EXIT_OK:
+					umemset(&file[0], 0x00, usizeof(file));
+					ustrncpy(file, uncompress_archive_extracted_file_name(archive, UNCOMPRESS_TYPE_FLOPPY_DISK), usizeof(file) - 1);
+					found = TRUE;
+					break;
+				default:
+				case UNCOMPRESS_EXIT_ERROR_ON_UNCOMP:
+					break;
+			}
+		}
+		uncompress_archive_free(archive);
+	} else if (rc == UNCOMPRESS_EXIT_IS_NOT_COMP) {
+		found = TRUE;
+	}
+
+	if (!found) {
+		return (EXIT_ERROR);
+	}
+
+	ext = emu_ctrl_rom_ext(file);
+
+	if (!ustrcasecmp(ext, uL(".fds"))) {
+		finfo.format = FDS_FORMAT;
+	} else if (!ustrcasecmp(ext, uL(".qd"))) {
+		finfo.format = QD_FORMAT;
+	} else {
+		return (EXIT_ERROR);
+	}
+
+	fp = ufopen(file, uL("rb"));
+	if (!fp) {
+		return (EXIT_ERROR);
+	}
+
+	fseek(fp, 0L, SEEK_END);
+	finfo.total_size = ftell(fp);
+	fseek(fp, 0L, SEEK_SET);
+
+	finfo.data = (BYTE *)malloc(finfo.total_size);
+	if (!finfo.data) {
+		fclose(fp);
+		return (EXIT_ERROR);
+	}
+	if (fread(finfo.data, 1, finfo.total_size, fp) != finfo.total_size) {
+		fclose(fp);
+		free(finfo.data);
+		return (EXIT_ERROR);
+	}
+	fclose(fp);
+
+	if ((finfo.data[position++] == 'F') &&
+		(finfo.data[position++] == 'D') &&
+		(finfo.data[position++] == 'S') &&
+		(finfo.data[position++] == '\32')) {
+		finfo.type = FDS_FORMAT_FDS;
+		// il numero di disk sides
+		finfo.total_sides = finfo.data[position++];
+	} else {
+		finfo.type = FDS_FORMAT_RAW;
+		// il numero di disk sides
+		finfo.total_sides = finfo.total_size / fds_disk_side_size(finfo.format);
+		if (!finfo.total_sides) {
+			finfo.total_sides = 1;
+		}
+		// mi riposiziono all'inizio
+		position = 0;
+	}
+
+	finfo.expcted_sides = finfo.total_sides;
+	finfo.write_protected = 0x00;
+	finfo.enabled = fds.info.enabled;
+	finfo.cycles_8bit_delay = fds.info.cycles_8bit_delay;
+	finfo.cycles_dummy_delay = fds.info.cycles_dummy_delay;
+
+	// converto nel mio formato immagine
+	if (fds_to_image(&finfo)) {
+		free(finfo.data);
+		if (finfo.image) {
+			free(finfo.image);
+		}
+		return (EXIT_ERROR);
+	}
+
+	finfo.frame_insert = nes[0].p.ppu.frames;
+
+	info.format = finfo.format;
+	ustrncpy(info.rom.file, file, usizeof(info.rom.file));
+
+	fds_free_fds_info();
+	memcpy(&fds.info, &finfo, sizeof(_fds_info));
+	fds_info();
+
+	fds.side.change.new_side = 0;
+	fds.side.change.delay = fds.info.cycles_dummy_delay;
+	fds_disk_op(FDS_DISK_EJECT, 0, FALSE);
 
 	return (EXIT_OK);
 }
@@ -353,12 +445,12 @@ void fds_info(void) {
 
 	log_info_open(uL("bios;"));
 	umemset(buffer, 0x00, usizeof(buffer));
-	gui_utf_basename((uTCHAR *)fds.info.bios.file, buffer, usizeof(buffer) - 1);
-	log_close(uL("" uPs("") ", crc32 : 0x%08X"), buffer, fds.info.bios.crc32);
+	gui_utf_basename((uTCHAR *)fds.bios.file, buffer, usizeof(buffer) - 1);
+	log_close(uL("" uPs("") ", crc32 : 0x%08X"), buffer, fds.bios.crc32);
 
 	log_info_box_open(uL("folder;"));
 	umemset(buffer, 0x00, usizeof(buffer));
-	gui_utf_dirname((uTCHAR *)fds.info.bios.file, buffer, usizeof(buffer) - 1);
+	gui_utf_dirname((uTCHAR *)fds.bios.file, buffer, usizeof(buffer) - 1);
 	log_close_box(uL("" uPs("")), buffer);
 
 	log_info_open(uL("sides;"));
@@ -433,7 +525,7 @@ fds_disk_op_start:
 				}
 				return;
 			}
-			fds.info.bios.first_run = FALSE;
+			fds.bios.first_run = FALSE;
 			fds.drive.disk_position = 0;
 			fds.drive.mark_finded = FALSE;
 			fds.drive.disk_ejected = FALSE;
@@ -548,22 +640,19 @@ WORD fds_crc_byte(WORD base, BYTE data) {
 	}
 	return (base);
 }
-uint32_t fds_disk_side_size_format(BYTE format) {
+uint32_t fds_disk_side_size(BYTE format) {
 	return (format == QD_FORMAT ? DISK_QD_SIDE_SIZE : DISK_FDS_SIDE_SIZE);
-}
-uint32_t fds_disk_side_size(void) {
-	return (fds_disk_side_size_format(fds.info.format));
 }
 uint32_t fds_image_side_size(void) {
 	return (FDS_IMAGE_SIDE_SIZE);
 }
 
-BYTE fds_to_image(void) {
-	BYTE *mfds = NULL, *pointer = fds.info.data;
+BYTE fds_to_image(_fds_info *finfo) {
+	BYTE *mfds = NULL, *pointer = finfo->data;
 
-	if (fds.info.image) {
-		free(fds.info.image);
-		fds.info.image = NULL;
+	if (finfo->image) {
+		free(finfo->image);
+		finfo->image = NULL;
 	}
 
 	// applico la diff
@@ -572,21 +661,21 @@ BYTE fds_to_image(void) {
 
 		fds_diff_file_name(&file[0], usizeof(file));
 		if (emu_file_exist(file) == EXIT_OK) {
-			mfds = malloc(fds.info.total_size);
+			mfds = malloc(finfo->total_size);
 			if (mfds) {
-				memcpy(mfds, fds.info.data, fds.info.total_size);
-				mfds = fds_read_ips(mfds, fds.info.total_size, file);
+				memcpy(mfds, finfo->data, finfo->total_size);
+				mfds = fds_read_ips(mfds, finfo->total_size, file);
 			}
 			if (!mfds) {
 				log_error(uL("FDS;error on reading diff file"));
 			} else {
 				pointer = mfds;
-				fds.info.writings_occurred = TRUE;
+				finfo->writings_occurred = TRUE;
 			}
 		}
 	}
 
-	for (BYTE side = 0; side < fds.info.total_sides; side++) {
+	for (BYTE side = 0; side < finfo->total_sides; side++) {
 		uint32_t position = 0, size = 0;
 		_fds_info_block fib = { 0 };
 		_fds_info_side *is = NULL;
@@ -594,16 +683,16 @@ BYTE fds_to_image(void) {
 		BYTE *dst = NULL;
 		uint32_t header = 0;
 
-		if (fds.info.type == FDS_FORMAT_FDS) {
+		if (finfo->type == FDS_FORMAT_FDS) {
 			header = 16;
 		}
 
-		fds.info.protection.autodetect = TRUE;
-		fds.info.protection.magic_card_trainer = FALSE;
-		fds.info.protection.quick_hunter = FALSE;
-		fds.info.protection.ouji = FALSE;
-		fds.info.protection.kgk = FALSE;
-		position = side * fds_disk_side_size() + header;
+		finfo->protection.autodetect = TRUE;
+		finfo->protection.magic_card_trainer = FALSE;
+		finfo->protection.quick_hunter = FALSE;
+		finfo->protection.ouji = FALSE;
+		finfo->protection.kgk = FALSE;
+		position = side * fds_disk_side_size(finfo->format) + header;
 
 		// "Bishoujo Mahjong Club (Japan) (Unl).fds"
 		// "Bodycon Quest I - Girls Exposed (Japan) (Unl) [T-En by DvD Translations Rev A] [n].fds"
@@ -612,25 +701,25 @@ BYTE fds_to_image(void) {
 		// "Golf, The - Bishoujo Classic (Japan) (Unl).fds"
 		// "Otocky (Japan) (Beta) (1986-04-15).fds"
 		// la dimensione dell'immeagine finale e' superiore a 65500
-		fds.info.image = realloc((void *)fds.info.image, (side + 1) * fds_image_side_size());
+		finfo->image = realloc((void *)finfo->image, (side + 1) * fds_image_side_size());
 		src = &pointer[position];
-		dst = &fds.info.image[side * fds_image_side_size()];
+		dst = &finfo->image[side * fds_image_side_size()];
 		memset(dst, FDS_DISK_GAP, fds_image_side_size());
-		is = &fds.info.sides[side];
+		is = &finfo->sides[side];
 		position = 0;
 
 		fds_image_memset(&dst[size], FDS_DISK_GAP, FDS_GAP_START);
 		size += FDS_GAP_START;
 
-		for (position = 0; position < fds_disk_side_size();) {
+		for (position = 0; position < fds_disk_side_size(finfo->format);) {
 			fds_examine_block(src, position, &fib);
-			fds.info.protection.magic_card_trainer = fib.magic_card_trainer;
-			fds.info.protection.quick_hunter = fib.quick_hunter;
-			fds.info.protection.ouji = fib.ouji;
-			fds.info.protection.kgk = fib.kgk;
+			finfo->protection.magic_card_trainer = fib.magic_card_trainer;
+			finfo->protection.quick_hunter = fib.quick_hunter;
+			finfo->protection.ouji = fib.ouji;
+			finfo->protection.kgk = fib.kgk;
 
-			if (fds.info.protection.quick_hunter | fds.info.protection.kgk | fds.info.protection.ouji) {
-				fds.info.write_protected = 0x04;
+			if (finfo->protection.quick_hunter | finfo->protection.kgk | finfo->protection.ouji) {
+				finfo->write_protected = 0x04;
 			}
 			// in "Tobidase Daisakusen (1987)(Square)(J).fds" esiste un file nascosto
 			// esattamente dopo l'ultimo file "riconosciuto" dal file system.
@@ -644,16 +733,16 @@ BYTE fds_to_image(void) {
 			// "Akumajou Dracula v1.02 (1986)(Konami)(J).fds" il cui disco e' "sporco").
 			if (fib.stop) {
 				// gestione trainer e protezioni (blocco aggiuntivo)
-				if (fds.info.protection.magic_card_trainer || fds.info.protection.kgk || fds.info.protection.quick_hunter) {
-					BYTE btype = fds.info.protection.magic_card_trainer
+				if (finfo->protection.magic_card_trainer || finfo->protection.kgk || finfo->protection.quick_hunter) {
+					BYTE btype = finfo->protection.magic_card_trainer
 						? 0x05
-						: fds.info.protection.kgk ? 0x12 : fds.info.protection.quick_hunter ? 0x00 : 0x00;
+						: finfo->protection.kgk ? 0x12 : finfo->protection.quick_hunter ? 0x00 : 0x00;
 					uint32_t cpos = 0, cblength = 0;
 					WORD crc = 0;
 
-					fib.blength = fds.info.protection.magic_card_trainer
+					fib.blength = finfo->protection.magic_card_trainer
 						? 0x200
-						: fds.info.protection.kgk ? 0x500 : fds.info.protection.quick_hunter ? 0x3000 : 0;
+						: finfo->protection.kgk ? 0x500 : finfo->protection.quick_hunter ? 0x3000 : 0;
 					// indico l'inizio del blocco
 					fds_image_memset(&dst[size], FDS_DISK_BLOCK_MARK, 1);
 					size += 1;
@@ -661,7 +750,7 @@ BYTE fds_to_image(void) {
 					cpos = size;
 					cblength = fib.blength;
 					// nell'fds originale manca il tipo di blocco (0x00)
-					if (fds.info.protection.quick_hunter) {
+					if (finfo->protection.quick_hunter) {
 						fds_image_memset(&dst[size], btype, 1);
 						size += 1;
 						cblength += 1;
@@ -717,16 +806,16 @@ BYTE fds_to_image(void) {
 					size += FDS_GAP_FILE_BLOCK;
 				}
 			}
-			position += (fib.blength + (fds.info.format == QD_FORMAT ? 2 : 0));
+			position += (fib.blength + (finfo->format == QD_FORMAT ? 2 : 0));
 		}
 
 		if (!fib.bl1) {
-			fds.info.total_sides = side;
-			if (!fds.info.total_sides) {
-				free(fds.info.image);
-				fds.info.image = NULL;
+			finfo->total_sides = side;
+			if (!finfo->total_sides) {
+				free(finfo->image);
+				finfo->image = NULL;
 			} else {
-				fds.info.image = realloc((void *)fds.info.image, fds.info.total_sides * fds_image_side_size());
+				finfo->image = realloc((void *)finfo->image, finfo->total_sides * fds_image_side_size());
 			}
 			continue;
 		}
@@ -741,13 +830,40 @@ BYTE fds_to_image(void) {
 		is->size = size;
 	}
 	// ultimo passaggio
-	for (BYTE side = 0; side < fds.info.total_sides; side++) {
-		fds.info.sides[side].data = &fds.info.image[side * fds_image_side_size()];
+	for (BYTE side = 0; side < finfo->total_sides; side++) {
+		finfo->sides[side].data = &finfo->image[side * fds_image_side_size()];
 	}
 	if (mfds) {
 		free(mfds);
 	}
 	return (EXIT_OK);
+}
+void fds_free_fds_info(void) {
+	if (fds.info.image) {
+		// se richiesto, sovrascrivo il file originale
+		if (fds.info.writings_occurred) {
+			uTCHAR file[LENGTH_FILE_NAME_LONG];
+
+			fds_diff_file_name(&file[0], usizeof(file));
+			if (cfg->fds_write_mode == FDS_WR_ORIGINAL_FILE) {
+				fds_from_image_to_file(info.rom.file, fds.info.format, fds.info.type);
+			} else {
+				size_t size = 0;
+				BYTE *mfds = fds_from_image_to_mem(fds.info.format, fds.info.type, &size);
+
+				if (!mfds || fds_create_ips(fds.info.data, fds.info.total_size, mfds, size, file)) {
+					log_error(uL("FDS;error on writing diff file"));
+				}
+				if (mfds) {
+					free(mfds);
+				}
+			}
+		}
+		free(fds.info.image);
+	}
+	if (fds.info.data) {
+		free(fds.info.data);
+	}
 }
 BYTE fds_examine_block(const BYTE *src, uint32_t position, _fds_info_block *fib) {
 	switch (src[position]) {
@@ -919,7 +1035,7 @@ void fds_image_sinfo(BYTE side, _fds_sinfo *sinfo) {
 
 	memset(sinfo, 0x00, sizeof(_fds_sinfo));
 
-	for (position = 0; position < fds_disk_side_size();) {
+	for (position = 0; position < fds_disk_side_size(fds.info.format);) {
 		BYTE block = src[position];
 		uint32_t blength = 1;
 		BYTE stop = FALSE;
@@ -1036,7 +1152,7 @@ WORD fds_crc_block(const BYTE *src, uint32_t lenght) {
 BYTE *fds_from_image_to_mem(BYTE format, BYTE type, size_t *size) {
 	BYTE *mfds = NULL;
 
-	(*size) = (type == FDS_FORMAT_FDS ? 16 : 0) + fds_disk_side_size_format(format) * fds.info.total_sides;
+	(*size) = (type == FDS_FORMAT_FDS ? 16 : 0) + fds_disk_side_size(format) * fds.info.total_sides;
 
 	// alloco la zona di memoria
 	mfds = malloc((*size));
@@ -1059,7 +1175,7 @@ BYTE *fds_from_image_to_mem(BYTE format, BYTE type, size_t *size) {
 		_fds_info_block fib = { 0 };
 		WORD crc = 0;
 
-		length = (type == FDS_FORMAT_FDS ? 16 : 0) + (fds_disk_side_size_format(format) * side);
+		length = (type == FDS_FORMAT_FDS ? 16 : 0) + (fds_disk_side_size(format) * side);
 
 		for (position = 0; position < fds_image_side_size();) {
 			if ((src[position] == FDS_DISK_GAP) || (src[position] == FDS_DISK_BLOCK_MARK)) {
@@ -1073,7 +1189,7 @@ BYTE *fds_from_image_to_mem(BYTE format, BYTE type, size_t *size) {
 			}
 
 			if (src[position]) {
-				if ((total_size + fib.blength + (format == QD_FORMAT ? 2 : 0)) < fds_disk_side_size_format(format)) {
+				if ((total_size + fib.blength + (format == QD_FORMAT ? 2 : 0)) < fds_disk_side_size(format)) {
 					// troncato
 					for (unsigned int i = 0; i < fib.blength; i++) {
 						mfds[length] = src[position];
@@ -1096,9 +1212,9 @@ BYTE *fds_from_image_to_mem(BYTE format, BYTE type, size_t *size) {
 	}
 	return (mfds);
 }
-BYTE *fds_read_ips(BYTE *data, size_t size, const char *file) {
+BYTE *fds_read_ips(BYTE *data, size_t size, const uTCHAR *file) {
 	size_t fsize = 0, fpos = 0, mpos = 0;
-	FILE *fp = fopen(file, "rb");
+	FILE *fp = ufopen(file, uL("rb"));
 	uint32_t counter = 0;
 	BYTE rc = EXIT_OK;
 	char header[5];
@@ -1207,8 +1323,8 @@ BYTE *fds_read_ips(BYTE *data, size_t size, const char *file) {
 	}
 	return (data);
 }
-BYTE fds_create_ips(const BYTE *d1, const size_t size1, const BYTE *d2, const size_t size2, const char *file) {
-	FILE *fp = fopen(file, "w+b");
+BYTE fds_create_ips(const BYTE *d1, const size_t size1, const BYTE *d2, const size_t size2, const uTCHAR *file) {
+	FILE *fp = ufopen(file, uL("w+b"));
 	uint32_t counter = 0;
 	size_t i = 0, fsize = 0;
 
@@ -1318,7 +1434,7 @@ BYTE fds_create_ips(const BYTE *d1, const size_t size1, const BYTE *d2, const si
 	fclose(fp);
 
 	if (!counter) {
-		remove(file);
+		uremove(file);
 	}
 	return (EXIT_OK);
 }

@@ -22,9 +22,10 @@
 #include "common.h"
 
 enum uncompress_type {
-	UNCOMPRESS_TYPE_ROM,
-	UNCOMPRESS_TYPE_PATCH,
-	UNCOMPRESS_TYPE_ALL
+	UNCOMPRESS_TYPE_ROM = 0x01 << 0,
+	UNCOMPRESS_TYPE_FLOPPY_DISK = 0x01 << 1,
+	UNCOMPRESS_TYPE_PATCH = 0x01 << 2,
+	UNCOMPRESS_TYPE_ALL = 0x01 << 7
 };
 enum uncompress_exit_states {
 	UNCOMPRESS_EXIT_OK = EXIT_OK,
@@ -41,7 +42,6 @@ typedef struct _uncompress_extension {
 	BYTE type;
 	uTCHAR e[10];
 } _uncompress_extension;
-
 typedef struct _uncompress_archive_item {
 	BYTE type;
 	uint32_t index;
@@ -58,9 +58,9 @@ typedef struct _uncompress_archive {
 	uTCHAR *file;
 	_uncompress_archive_items_list list;
 	_uncompress_archive_type_info rom;
+	_uncompress_archive_type_info floppy_disk;
 	_uncompress_archive_type_info patch;
 } _uncompress_archive;
-
 typedef struct _uncompress_storage_item {
 	BYTE type;
 	uTCHAR *archive;
@@ -76,8 +76,8 @@ static const _uncompress_extension uncompress_exts[] = {
 	{ UNCOMPRESS_TYPE_ROM, uL(".nes")  },
 	{ UNCOMPRESS_TYPE_ROM, uL(".unf")  },
 	{ UNCOMPRESS_TYPE_ROM, uL(".unif") },
-	{ UNCOMPRESS_TYPE_ROM, uL(".fds")  },
-	{ UNCOMPRESS_TYPE_ROM, uL(".qd")   },
+	{ UNCOMPRESS_TYPE_ROM | UNCOMPRESS_TYPE_FLOPPY_DISK, uL(".fds")  },
+	{ UNCOMPRESS_TYPE_ROM | UNCOMPRESS_TYPE_FLOPPY_DISK, uL(".qd")   },
 	{ UNCOMPRESS_TYPE_ROM, uL(".nsf")  },
 	{ UNCOMPRESS_TYPE_ROM, uL(".nsfe") },
 	{ UNCOMPRESS_TYPE_PATCH, uL(".ips") },

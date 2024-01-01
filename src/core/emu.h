@@ -54,6 +54,7 @@ EXTERNC void emu_save_header_info(void);
 EXTERNC BYTE emu_active_nidx(void);
 EXTERNC void emu_invert_bytes(BYTE *b0, BYTE *b1);
 EXTERNC double emu_ms_to_cpu_cycles(double ms);
+EXTERNC uTCHAR *emu_ctrl_rom_ext(uTCHAR *file);
 
 #undef EXTERNC
 

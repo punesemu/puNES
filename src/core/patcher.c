@@ -89,7 +89,7 @@ BYTE patcher_ctrl_if_exist(uTCHAR *patch) {
 
 		if (rc == UNCOMPRESS_EXIT_OK) {
 			if (archive->patch.count > 0) {
-				switch ((rc = uncompress_archive_extract_file(archive,UNCOMPRESS_TYPE_PATCH))) {
+				switch ((rc = uncompress_archive_extract_file(archive, UNCOMPRESS_TYPE_PATCH))) {
 					case UNCOMPRESS_EXIT_OK:
 						ustrncpy(file, uncompress_archive_extracted_file_name(archive, UNCOMPRESS_TYPE_PATCH), usizeof(file) - 1);
 						found = TRUE;

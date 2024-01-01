@@ -237,6 +237,9 @@ void wdgScreen::dropEvent(QDropEvent *event) {
 		}
 
 		mainwin->change_rom(rom);
+		if (is_rom) {
+			ustrncpy(gui.last_open_path, uQStringCD(fileinfo.absolutePath()), usizeof(gui.last_open_path) - 1);
+		}
 		activateWindow();
 		gui_set_focus();
 		return;

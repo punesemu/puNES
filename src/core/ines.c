@@ -81,7 +81,7 @@ BYTE ines_load_rom(void) {
 		fseek(fp, 0L, SEEK_SET);
 
 		rom.data = (BYTE *)malloc(rom.size);
-		if (rom.data == NULL) {
+		if (!rom.data) {
 			fclose(fp);
 			return (EXIT_ERROR);
 		}

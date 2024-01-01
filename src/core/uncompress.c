@@ -50,10 +50,8 @@ _uncompress_storage uncstorage;
 
 BYTE uncompress_init(void) {
 	l7z_init();
-
 	uncstorage.count = 0;
 	uncstorage.item = NULL;
-
 	return (EXIT_OK);
 }
 void uncompress_quit(void) {
@@ -68,7 +66,6 @@ void uncompress_quit(void) {
 		uremove(sitem->file);
 		free(sitem->file);
 	}
-
 	if (uncstorage.item) {
 		free(uncstorage.item);
 	}
@@ -81,7 +78,7 @@ _uncompress_archive *uncompress_archive_alloc(uTCHAR *file, BYTE *rc) {
 
 	// rintraccio l'ultimo '.' nel nome
 	ext = ustrrchr(file, uL('.'));
-	if (ext == NULL) {
+	if (!ext) {
 		(*rc) = UNCOMPRESS_EXIT_IS_NOT_COMP;
 		return (NULL);
 	}
@@ -122,6 +119,9 @@ _uncompress_archive *uncompress_archive_alloc(uTCHAR *file, BYTE *rc) {
 	archive->rom.count = 0;
 	archive->rom.storage_index = UNCOMPRESS_NO_FILE_SELECTED;
 
+	archive->floppy_disk.count = 0;
+	archive->floppy_disk.storage_index = UNCOMPRESS_NO_FILE_SELECTED;
+
 	archive->patch.count = 0;
 	archive->patch.storage_index = UNCOMPRESS_NO_FILE_SELECTED;
 
@@ -137,26 +137,25 @@ _uncompress_archive *uncompress_archive_alloc(uTCHAR *file, BYTE *rc) {
 	return (archive);
 }
 void uncompress_archive_free(_uncompress_archive *archive) {
-	if (archive == NULL) {
+	if (!archive) {
 		return;
 	}
-
 	if (archive->file) {
 		free(archive->file);
 		archive->file = NULL;
 	}
-
 	if (archive->list.item) {
 		free(archive->list.item);
 		archive->list.item = NULL;
 	}
-
 	free(archive);
 }
 uint32_t uncompress_archive_counter(_uncompress_archive *archive, BYTE type) {
 	switch (type) {
 		case UNCOMPRESS_TYPE_ROM:
 			return (archive->rom.count);
+		case UNCOMPRESS_TYPE_FLOPPY_DISK:
+			return (archive->floppy_disk.count);
 		case UNCOMPRESS_TYPE_PATCH:
 			return (archive->patch.count);
 		default:
@@ -185,7 +184,6 @@ BYTE uncompress_archive_extract_file(_uncompress_archive *archive, BYTE type) {
 			}
 			break;
 	}
-
 	return (rc);
 }
 _uncompress_archive_item *uncompress_archive_find_item(_uncompress_archive *archive, uint32_t selected, BYTE type) {
@@ -194,14 +192,12 @@ _uncompress_archive_item *uncompress_archive_find_item(_uncompress_archive *arch
 	for (i = 0; i < archive->list.count; i++) {
 		_uncompress_archive_item *aitem = &archive->list.item[i];
 
-		if ((type != UNCOMPRESS_TYPE_ALL) && (aitem->type != type)) {
+		if ((type != UNCOMPRESS_TYPE_ALL) && !(aitem->type & type)) {
 			continue;
 		}
-
 		if (index == selected) {
 			return (aitem);
 		}
-
 		index++;
 	}
 	return (NULL);
@@ -214,6 +210,9 @@ uTCHAR *uncompress_archive_extracted_file_name(_uncompress_archive *archive, BYT
 		case UNCOMPRESS_TYPE_ALL:
 		case UNCOMPRESS_TYPE_ROM:
 			selected = archive->rom.storage_index;
+			break;
+		case UNCOMPRESS_TYPE_FLOPPY_DISK:
+			selected = archive->floppy_disk.storage_index;
 			break;
 		case UNCOMPRESS_TYPE_PATCH:
 			selected = archive->patch.storage_index;
@@ -236,7 +235,7 @@ uTCHAR *uncompress_storage_archive_name(uTCHAR *file) {
 	for (i = 0; i < uncstorage.count; i++) {
 		_uncompress_storage_item *sitem = &uncstorage.item[i];
 
-		if (ustrcmp(file, sitem->file) == 0) {
+		if (!ustrcmp(file, sitem->file)) {
 			return (sitem->archive);
 		}
 	}
@@ -251,7 +250,7 @@ uint32_t uncompress_storage_add_to_list(_uncompress_archive *archive, _uncompres
 	for (i = 0; i < uncstorage.count; i++) {
 		si = &uncstorage.item[i];
 
-		if (ustrcmp(file, si->file) == 0) {
+		if (!ustrcmp(file, si->file)) {
 			found = TRUE;
 			break;
 		}
@@ -286,7 +285,6 @@ static uTCHAR *uncompress_storage_index_file_name(uint32_t index) {
 	if (index >= uncstorage.count) {
 		return (NULL);
 	}
-
 	return (sitem->file);
 }
 
@@ -320,15 +318,24 @@ static BYTE mz_zip_examine_archive(_uncompress_archive *archive) {
 		for (b = 0; b < LENGTH(uncompress_exts); b++) {
 			char *ext = strrchr(file_stat.m_filename, '.');
 
-			if ((ext != NULL) && (strcasecmp(ext, (uTCHAR *)uncompress_exts[b].e) == 0)) {
+			if (ext && !strcasecmp(ext, (uTCHAR *)uncompress_exts[b].e)) {
 				_uncompress_archive_items_list *list = &archive->list;
 				_uncompress_archive_item *item = NULL;
+				BYTE found = FALSE;
 
-				if (uncompress_exts[b].type == UNCOMPRESS_TYPE_ROM) {
+				if (uncompress_exts[b].type & UNCOMPRESS_TYPE_ROM) {
 					archive->rom.count++;
-				} else if (uncompress_exts[b].type == UNCOMPRESS_TYPE_PATCH) {
+					found = TRUE;
+				}
+				if (uncompress_exts[b].type & UNCOMPRESS_TYPE_FLOPPY_DISK) {
+					archive->floppy_disk.count++;
+					found = TRUE;
+				}
+				if (uncompress_exts[b].type & UNCOMPRESS_TYPE_PATCH) {
 					archive->patch.count++;
-				} else {
+					found = TRUE;
+				}
+				if (!found) {
 					continue;
 				}
 
@@ -357,7 +364,7 @@ static BYTE mz_zip_extract_from_archive(_uncompress_archive *archive, uint32_t s
 	_uncompress_archive_item *aitem = NULL;
 
 	aitem = uncompress_archive_find_item(archive, selected, type);
-	if (aitem == NULL) {
+	if (!aitem) {
 		return (UNCOMPRESS_EXIT_ERROR_ON_UNCOMP);
 	}
 
@@ -388,6 +395,9 @@ static BYTE mz_zip_extract_from_archive(_uncompress_archive *archive, uint32_t s
 			case UNCOMPRESS_TYPE_ROM:
 				archive->rom.storage_index = storage_index;
 				break;
+			case UNCOMPRESS_TYPE_FLOPPY_DISK:
+				archive->floppy_disk.storage_index = storage_index;
+				break;
 			case UNCOMPRESS_TYPE_PATCH:
 				archive->patch.storage_index = storage_index;
 				break;
@@ -405,7 +415,7 @@ static uTCHAR *mz_zip_item_file_name(_uncompress_archive *archive, uint32_t sele
 	_uncompress_archive_item *aitem = NULL;
 
 	aitem = uncompress_archive_find_item(archive, selected, type);
-	if (aitem == NULL) {
+	if (!aitem) {
 		return (NULL);
 	}
 

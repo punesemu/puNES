@@ -284,12 +284,21 @@ BYTE l7z_examine_archive(_uncompress_archive *archive) {
 		for (b = 0; b < LENGTH(uncompress_exts); b++) {
 			if (ustrcasecmp(ext, (uTCHAR *)uncompress_exts[b].e) == 0) {
 				_uncompress_archive_items_list *list = &archive->list;
+				BYTE found = FALSE;
 
-				if (uncompress_exts[b].type == UNCOMPRESS_TYPE_ROM) {
+				if (uncompress_exts[b].type & UNCOMPRESS_TYPE_ROM) {
 					archive->rom.count++;
-				} else if (uncompress_exts[b].type == UNCOMPRESS_TYPE_PATCH) {
+					found = TRUE;
+				}
+				if (uncompress_exts[b].type & UNCOMPRESS_TYPE_FLOPPY_DISK) {
+					archive->floppy_disk.count++;
+					found = TRUE;
+				}
+				if (uncompress_exts[b].type & UNCOMPRESS_TYPE_PATCH) {
 					archive->patch.count++;
-				} else {
+					found = TRUE;
+				}
+				if (!found) {
 					continue;
 				}
 
@@ -358,6 +367,9 @@ BYTE l7z_extract_from_archive(_uncompress_archive *archive, uint32_t selected, B
 			case UNCOMPRESS_TYPE_ALL:
 			case UNCOMPRESS_TYPE_ROM:
 				archive->rom.storage_index = storage_index;
+				break;
+			case UNCOMPRESS_TYPE_FLOPPY_DISK:
+				archive->floppy_disk.storage_index = storage_index;
 				break;
 			case UNCOMPRESS_TYPE_PATCH:
 				archive->patch.storage_index = storage_index;

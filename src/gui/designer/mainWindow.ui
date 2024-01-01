@@ -114,6 +114,7 @@
     <addaction name="separator"/>
     <addaction name="menu_Disk_Side"/>
     <addaction name="action_Eject_Insert_Disk"/>
+    <addaction name="action_Change_Disk"/>
     <addaction name="menu_Export_Current_state"/>
     <addaction name="separator"/>
     <addaction name="menu_Tape"/>
@@ -807,6 +808,15 @@
   <action name="action_Current_state_to_FDS_without_Header">
    <property name="text">
     <string>to F&amp;DS Format (without Header)</string>
+   </property>
+  </action>
+  <action name="action_Change_Disk">
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/icon/icons/fds_change_disk.svgz</normaloff>:/icon/icons/fds_change_disk.svgz</iconset>
+   </property>
+   <property name="text">
+    <string>C&amp;hange Disk</string>
    </property>
   </action>
  </widget>

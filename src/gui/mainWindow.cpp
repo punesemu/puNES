@@ -885,6 +885,7 @@ void mainWindow::connect_menu_signals(void) {
 	connect_action(action_Disk_4_side_B, 7, SLOT(s_disk_side()));
 	connect_action(action_Switch_sides, 0xFFF, SLOT(s_disk_side()));
 	connect_action(action_Eject_Insert_Disk, SLOT(s_eject_disk()));
+	connect_action(action_Change_Disk, SLOT(s_change_disk()));
 	connect_action(action_Current_state_to_FDS_with_Header, 0, SLOT(s_export_fds_image()));
 	connect_action(action_Current_state_to_FDS_without_Header, 1, SLOT(s_export_fds_image()));
 	connect_action(action_Current_state_to_Quick_Disk, 2, SLOT(s_export_fds_image()));
@@ -1171,11 +1172,13 @@ void mainWindow::update_fds_menu(void) {
 		ctrl_disk_side(action_Disk_4_side_A);
 		ctrl_disk_side(action_Disk_4_side_B);
 		action_Eject_Insert_Disk->setEnabled(true);
+		action_Change_Disk->setEnabled(true);
 		menu_Export_Current_state->setEnabled(true);
 	} else {
 		action_text(action_Eject_Insert_Disk, tr("&Eject/Insert disk"), sc);
 		menu_Disk_Side->setEnabled(false);
 		action_Eject_Insert_Disk->setEnabled(false);
+		action_Change_Disk->setEnabled(false);
 		menu_Export_Current_state->setEnabled(false);
 	}
 }
@@ -1573,6 +1576,46 @@ void mainWindow::s_eject_disk(void) {
 	}
 	emu_thread_continue();
 	update_menu_nes();
+}
+void mainWindow::s_change_disk(void) {
+	QStringList filters;
+	QString file;
+
+	emu_thread_pause();
+
+	filters.append(tr("All supported formats"));
+	filters.append(tr("Compressed files"));
+	filters.append(tr("Floppy Disk image files"));
+	filters.append(tr("All files"));
+
+	if (l7z_present()) {
+		if ((l7z_control_ext(uL(".rar")) == EXIT_OK)) {
+			filters[0].append(" (*.zip *.ZIP *.7z *.7Z *.rar *.RAR *.fds *.FDS *.qd *.QD)");
+			filters[1].append(" (*.zip *.ZIP *.7z *.7Z *.rar *.RAR)");
+		} else {
+			filters[0].append(" (*.zip *.ZIP *.7z *.7Z *.fds *.FDS *.qd *.QD)");
+			filters[1].append(" (*.zip *.ZIP *.7z *.7Z)");
+		}
+	} else {
+		filters[0].append(" (*.zip *.ZIP *.fds *.FDS *.qd *.QD)");
+		filters[1].append(" (*.zip *.ZIP)");
+	}
+	filters[2].append(" (*.fds *.FDS *.qd *.QD)");
+	filters[3].append(" (*.*)");
+
+	file = QFileDialog::getOpenFileName(this, tr("Open FLoppy Disk Image"),
+		uQString(info.rom.compress_file[0] ? &info.rom.compress_file[0] : &gui.last_open_path[0]), filters.join(";;"));
+
+	if (!file.isNull()) {
+		QFileInfo fileinfo(file);
+
+		if (!fds_change_disk(uQStringCD(fileinfo.absoluteFilePath()))) {
+			ustrncpy(gui.last_open_path, uQStringCD(fileinfo.absolutePath()), usizeof(gui.last_open_path) - 1);
+			update_window();
+		};
+	}
+
+	emu_thread_continue();
 }
 void mainWindow::s_export_fds_image(void) {
 	int format = QVariant(((QObject *)sender())->property("myValue")).toInt();

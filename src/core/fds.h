@@ -58,7 +58,7 @@ enum fds_misc {
 
 // 147 cicli (secondo vari test è questo il numero preciso)
 #define FDS_8BIT_MS_DELAY 0.0825f
-#define fds_auto_insert_enabled() (cfg->fds_switch_side_automatically & !fds.auto_insert.disabled & !fds.info.bios.first_run)
+#define fds_auto_insert_enabled() (cfg->fds_switch_side_automatically & !fds.auto_insert.disabled & !fds.bios.first_run)
 #define fds_reset_envelope_counter(env) (fds.snd.envelope.speed << 3) * (fds.snd.env.speed + 1)
 #define fds_sweep_bias(val) (SBYTE)((val & 0x7F) << 1) / 2;
 
@@ -79,26 +79,27 @@ typedef struct _fds_info_protection {
 	BYTE ouji;
 	BYTE kgk;
 } _fds_info_protection;
+typedef struct _fds_info {
+	BYTE enabled;
+	BYTE *data;
+	BYTE *image;
+	BYTE write_protected;
+	BYTE writings_occurred;
+	BYTE total_sides;
+	BYTE expcted_sides;
+	BYTE format;
+	BYTE type;
+	uint32_t total_size;
+	BYTE last_operation;
+	BYTE frame_insert;
+	uint32_t cycles_8bit_delay;
+	uint32_t cycles_dummy_delay;
+	_fds_info_protection protection;
+	_fds_info_side sides[20];
+} _fds_info;
 typedef struct _fds {
-	struct _fds_info {
-		BYTE enabled;
-		BYTE *data;
-		BYTE *image;
-		BYTE write_protected;
-		BYTE writings_occurred;
-		BYTE total_sides;
-		BYTE expcted_sides;
-		BYTE format;
-		BYTE type;
-		uint32_t total_size;
-		BYTE last_operation;
-		BYTE frame_insert;
-		uint32_t cycles_8bit_delay;
-		uint32_t cycles_dummy_delay;
-		_fds_info_protection protection;
-		_fds_info_bios bios;
-		_fds_info_side sides[20];
-	} info;
+	_fds_info info;
+	_fds_info_bios bios;
 	struct _fds_side {
 		struct _fds_side_change {
 			BYTE new_side;
@@ -227,14 +228,14 @@ EXTERNC void fds_init(void);
 EXTERNC void fds_quit(void);
 EXTERNC BYTE fds_load_rom(BYTE format);
 EXTERNC BYTE fds_load_bios(void);
+EXTERNC BYTE fds_change_disk(uTCHAR *path);
 EXTERNC void fds_info(void);
 EXTERNC void fds_info_side(BYTE side);
 EXTERNC void fds_disk_op(WORD type, BYTE side_to_insert, BYTE quiet);
 EXTERNC BYTE fds_from_image_to_file(uTCHAR *file, BYTE format, BYTE type);
 EXTERNC BYTE fds_image_to_file(uTCHAR *file);
 EXTERNC WORD fds_crc_byte(WORD base, BYTE data);
-EXTERNC uint32_t fds_disk_side_size_format(BYTE format);
-EXTERNC uint32_t fds_disk_side_size(void);
+EXTERNC uint32_t fds_disk_side_size(BYTE format);
 EXTERNC uint32_t fds_image_side_size(void);
 
 #undef EXTERNC

@@ -50,6 +50,7 @@ typedef struct _info {
 	struct _info_rom {
 		uTCHAR file[LENGTH_FILE_NAME_LONG];
 		uTCHAR change_rom[LENGTH_FILE_NAME_LONG];
+		uTCHAR compress_file[LENGTH_FILE_NAME_LONG];
 		uTCHAR *from_load_menu;
 	} rom;
 	struct _info_mapper {

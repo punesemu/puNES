@@ -287,6 +287,7 @@ class mainWindow : public QMainWindow, public Ui::mainWindow {
 		void s_shout_into_mic(void);
 		void s_disk_side(void);
 		void s_eject_disk(void);
+		void s_change_disk(void);
 		void s_export_fds_image(void);
 		void s_start_stop_audio_recording(void);
 #if defined (WITH_FFMPEG)

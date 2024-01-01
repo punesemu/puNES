@@ -47,6 +47,13 @@ dlgUncomp::dlgUncomp(QWidget *parent, void *uncompress_archive, BYTE type) : QDi
 			tableWidget_Selection->setHorizontalHeaderItem(0, header);
 			break;
 		}
+		case UNCOMPRESS_TYPE_FLOPPY_DISK: {
+			QTableWidgetItem *header = new QTableWidgetItem(tr("which Floppy Disk image do you want to load?"));
+
+			header->setTextAlignment(Qt::AlignHCenter);
+			tableWidget_Selection->setHorizontalHeaderItem(0, header);
+			break;
+		}
 		case UNCOMPRESS_TYPE_PATCH: {
 			QTableWidgetItem *header = new QTableWidgetItem(tr("which PATCH do you want to apply?"));
 

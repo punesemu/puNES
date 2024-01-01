@@ -61,7 +61,6 @@ INLINE static void emu_frame_finished(void);
 INLINE static void emu_frame_sleep(void);
 
 static BYTE emu_ctrl_if_rom_exist(void);
-static uTCHAR *emu_ctrl_rom_ext(uTCHAR *file);
 static void emu_recent_roms_add(BYTE *add, uTCHAR *file);
 
 void emu_quit(void) {
@@ -329,7 +328,7 @@ BYTE emu_load_rom(void) {
 
 	gui_egds_stop_unnecessary();
 
-	elaborate_rom_file:
+elaborate_rom_file:
 	info.format = HEADER_UNKOWN;
 	info.no_rom = FALSE;
 	info.cpu_rw_extern = FALSE;
@@ -1554,6 +1553,23 @@ void emu_invert_bytes(BYTE *b0, BYTE *b1) {
 double emu_ms_to_cpu_cycles(double ms) {
 	return ((machine.cpu_hz * 0.001f) * ms);
 }
+uTCHAR *emu_ctrl_rom_ext(uTCHAR *file) {
+	uTCHAR name_file[255], *last_dot = NULL;
+	static uTCHAR ext[10];
+
+	gui_utf_basename(file, name_file, usizeof(name_file));
+
+	last_dot = ustrrchr(name_file, uL('.'));
+
+	if (last_dot == NULL) {
+		ustrncpy((uTCHAR *)ext, uL(".nes"), usizeof(ext) - 1);
+	} else {
+		// salvo l'estensione del file
+		ustrncpy((uTCHAR *)ext, last_dot, usizeof(ext) - 1);
+	}
+
+	return (ext);
+}
 
 INLINE static void emu_frame_started(void) {
 	info.lag_frame.next = TRUE;
@@ -1617,6 +1633,8 @@ INLINE static void emu_frame_sleep(void) {
 static BYTE emu_ctrl_if_rom_exist(void) {
 	BYTE found = FALSE;
 
+	umemset(info.rom.compress_file, 0x00, usizeof(info.rom.compress_file));
+
 	if (info.rom.from_load_menu) {
 		ustrncpy(info.rom.change_rom, info.rom.from_load_menu, usizeof(info.rom.change_rom));
 		info.rom.change_rom[usizeof(info.rom.change_rom) - 1] = 0x00;
@@ -1657,6 +1675,7 @@ static BYTE emu_ctrl_if_rom_exist(void) {
 			if (is_rom) {
 				switch ((rc = uncompress_archive_extract_file(archive, UNCOMPRESS_TYPE_ROM))) {
 					case UNCOMPRESS_EXIT_OK:
+						ustrncpy(info.rom.compress_file, archive->file, usizeof(info.rom.compress_file) - 1);
 						ustrncpy(info.rom.change_rom, uncompress_archive_extracted_file_name(archive, UNCOMPRESS_TYPE_ROM),
 							usizeof(info.rom.change_rom) - 1);
 						found = TRUE;
@@ -1715,23 +1734,6 @@ static BYTE emu_ctrl_if_rom_exist(void) {
 	}
 
 	return (EXIT_OK);
-}
-static uTCHAR *emu_ctrl_rom_ext(uTCHAR *file) {
-	static uTCHAR ext[10];
-	uTCHAR name_file[255], *last_dot = NULL;
-
-	gui_utf_basename(file, name_file, usizeof(name_file));
-
-	last_dot = ustrrchr(name_file, uL('.'));
-
-	if (last_dot == NULL) {
-		ustrncpy((uTCHAR *)ext, uL(".nes"), usizeof(ext) - 1);
-	} else {
-		// salvo l'estensione del file
-		ustrncpy((uTCHAR *)ext, last_dot, usizeof(ext) - 1);
-	}
-
-	return (ext);
 }
 static void emu_recent_roms_add(BYTE *add, uTCHAR *file) {
 	if ((*add)) {
