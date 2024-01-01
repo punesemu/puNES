@@ -872,17 +872,19 @@ static BYTE ffmpeg_video_add_stream_format_mpeg1(void) {
 
 	ffmpeg_video_mpeg_quality(video);
 
+#if LIBAVCODEC_VERSION_INT < AV_VERSION_INT(60, 31, 102)
 	// setto il VBV buffer
 	{
 		AVCPBProperties *props = NULL;
 
 		props = (AVCPBProperties *)av_stream_new_side_data(video->avs, AV_PKT_DATA_CPB_PROPERTIES, sizeof(*props));
-		props->buffer_size = 7360 * 1024;
+		props->buffer_size = 224 * 1024;
 		props->max_bitrate = 0;
 		props->min_bitrate = 0;
 		props->avg_bitrate = 0;
 		props->vbv_delay = UINT64_MAX;
 	}
+#endif
 
 	video->avcc->max_b_frames = 1;
 	video->avcc->mb_decision = 2;
@@ -891,6 +893,31 @@ static BYTE ffmpeg_video_add_stream_format_mpeg1(void) {
 	if (ffmpeg_stream_open(video, NULL, TRUE) == EXIT_ERROR) {
 		return (EXIT_ERROR);
 	}
+
+#if LIBAVCODEC_VERSION_INT >= AV_VERSION_INT(60, 31, 102)
+	// setto il VBV buffer ma sol odopo il avcodec_parameters_from_context() che avviene nel ffmpeg_stream_open()
+	{
+		const AVPacketSideData *sd = av_packet_side_data_get(video->avs->codecpar->coded_side_data,
+			video->avs->codecpar->nb_coded_side_data, AV_PKT_DATA_CPB_PROPERTIES);
+		AVCPBProperties *props = NULL;
+
+		if (!sd) {
+			sd = av_packet_side_data_new(&video->avs->codecpar->coded_side_data,
+				&video->avs->codecpar->nb_coded_side_data, AV_PKT_DATA_CPB_PROPERTIES, sizeof(*props), 0);
+			props = (AVCPBProperties *)sd->data;
+			props->buffer_size = 224 * 1024;
+			props->max_bitrate = 0;
+			props->min_bitrate = 0;
+			props->avg_bitrate = 0;
+			props->vbv_delay = UINT64_MAX;
+		} else {
+			props = (AVCPBProperties *)sd->data;
+			if (!props->buffer_size) {
+				props->buffer_size = 224 * 1024;
+			}
+		}
+	}
+#endif
 
 	return (EXIT_OK);
 }
@@ -906,17 +933,19 @@ static BYTE ffmpeg_video_add_stream_format_mpeg2(void) {
 
 	ffmpeg_video_mpeg_quality(video);
 
+#if LIBAVCODEC_VERSION_INT < AV_VERSION_INT(60, 31, 102)
 	// setto il VBV buffer
 	{
 		AVCPBProperties *props = NULL;
 
 		props = (AVCPBProperties *)av_stream_new_side_data(video->avs, AV_PKT_DATA_CPB_PROPERTIES, sizeof(*props));
-		props->buffer_size = 7360 * 1024;
+		props->buffer_size = 224 * 1024;
 		props->max_bitrate = 0;
 		props->min_bitrate = 0;
 		props->avg_bitrate = 0;
 		props->vbv_delay = UINT64_MAX;
 	}
+#endif
 
 	video->avcc->max_b_frames = 2;
 	video->avcc->thread_count = FFMIN(8, gui_hardware_concurrency());
@@ -924,6 +953,32 @@ static BYTE ffmpeg_video_add_stream_format_mpeg2(void) {
 	if (ffmpeg_stream_open(video, NULL, TRUE) == EXIT_ERROR) {
 		return (EXIT_ERROR);
 	}
+
+#if LIBAVCODEC_VERSION_INT >= AV_VERSION_INT(60, 31, 102)
+	// setto il VBV buffer ma sol odopo il avcodec_parameters_from_context() che avviene nel ffmpeg_stream_open()
+	{
+		const AVPacketSideData *sd = av_packet_side_data_get(video->avs->codecpar->coded_side_data,
+			video->avs->codecpar->nb_coded_side_data, AV_PKT_DATA_CPB_PROPERTIES);
+		AVCPBProperties *props = NULL;
+
+		if (!sd) {
+			sd = av_packet_side_data_new(&video->avs->codecpar->coded_side_data,
+				&video->avs->codecpar->nb_coded_side_data, AV_PKT_DATA_CPB_PROPERTIES, sizeof(*props), 0);
+
+			props = (AVCPBProperties *)sd->data;
+			props->buffer_size = 224 * 1024;
+			props->max_bitrate = 0;
+			props->min_bitrate = 0;
+			props->avg_bitrate = 0;
+			props->vbv_delay = UINT64_MAX;
+		} else {
+			props = (AVCPBProperties *)sd->data;
+			if (!props->buffer_size) {
+				props->buffer_size = 224 * 1024;
+			}
+		}
+	}
+#endif
 
 	return (EXIT_OK);
 }
