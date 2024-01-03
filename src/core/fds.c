@@ -37,6 +37,8 @@ typedef struct _fds_sinfo {
 		WORD gversion;
 		WORD snumber;
 		WORD dnumber;
+		BYTE manufacturing[3];
+		BYTE rewritten[3];
 	} block1;
 	struct _fds_side_block2 {
 		uint32_t position;
@@ -78,7 +80,6 @@ typedef struct _fds_info_block {
 	WORD flength_ppu;
 	BYTE ftype;
 	BYTE files;
-	BYTE bl1;
 	BYTE stop;
 	int count2000;
 	BYTE magic_card_trainer;
@@ -88,6 +89,7 @@ typedef struct _fds_info_block {
 } _fds_info_block;
 
 BYTE fds_to_image(_fds_info *finfo);
+uTCHAR *fds_bcd_data(BYTE *bcd);
 void fds_free_fds_info(void);
 BYTE fds_examine_block(const BYTE *src, uint32_t position, _fds_info_block *fb);
 void fds_control_autoinsert(_fds_sinfo *sinfo);
@@ -197,12 +199,12 @@ BYTE fds_load_rom(BYTE format) {
 	if ((rom.data[rom.position++] == 'F') &&
 		(rom.data[rom.position++] == 'D') &&
 		(rom.data[rom.position++] == 'S') &&
-		(rom.data[rom.position++] == '\32')) {
-		fds.info.type = FDS_FORMAT_FDS;
+		(rom.data[rom.position++] == 0x1A)) {
+		fds.info.type = FDS_TYPE_FDS;
 		// il numero di disk sides
 		fds.info.total_sides = rom.data[rom.position++];
 	} else {
-		fds.info.type = FDS_FORMAT_RAW;
+		fds.info.type = FDS_TYPE_RAW;
 		// il numero di disk sides
 		fds.info.total_sides = fds.info.total_size / fds_disk_side_size(format);
 		if (!fds.info.total_sides) {
@@ -325,8 +327,39 @@ fds_load_bios_founded:
 
 	return (EXIT_OK);
 }
-BYTE fds_change_disk(uTCHAR *path) {
-	uTCHAR file[LENGTH_FILE_NAME_LONG], *ext = NULL;
+BYTE fds_create_empty_disk(BYTE format, BYTE type, BYTE double_side, uTCHAR *file) {
+	BYTE total_sides = double_side ? 2 : 1, *mfds = NULL;
+	size_t size = (type == FDS_TYPE_FDS ? 16 : 0) + (fds_disk_side_size(format) * total_sides);
+	FILE *fp = NULL;
+	BYTE rc = EXIT_OK;
+
+	fp = ufopen(file, uL("w+b"));
+	if (!fp) {
+		return (EXIT_ERROR);
+	}
+
+	mfds = (BYTE *)malloc(size);
+	if (!mfds) {
+		fclose(fp);
+		return (EXIT_ERROR);
+	}
+	memset(mfds, 0x00, size);
+
+	if (type == FDS_TYPE_FDS) {
+		memcpy(&mfds[0], "FDS", 3);
+		mfds[3] = 0x1A;
+		mfds[4] = 0x01;
+	}
+
+	if (fwrite(mfds, size, 1, fp) < 1) {
+		rc = EXIT_ERROR;
+	}
+	fclose(fp);
+	free(mfds);
+	return (rc);
+}
+BYTE fds_change_disk(uTCHAR *file) {
+	uTCHAR path[LENGTH_FILE_NAME_LONG], *ext = NULL;
 	_uncompress_archive *archive = NULL;
 	BYTE found = FALSE, rc = 0;
 	size_t position = 0;
@@ -334,17 +367,17 @@ BYTE fds_change_disk(uTCHAR *path) {
 	FILE *fp = NULL;
 
 	memset(&finfo, 0x00, sizeof(_fds_info));
-	umemset(&file[0], 0x00, usizeof(file));
-	ustrncpy(file, path, usizeof(file) - 1);
+	umemset(&path[0], 0x00, usizeof(path));
+	ustrncpy(path, file, usizeof(path) - 1);
 
-	archive = uncompress_archive_alloc(file, &rc);
+	archive = uncompress_archive_alloc(path, &rc);
 
 	if (rc == UNCOMPRESS_EXIT_OK) {
 		if (archive->floppy_disk.count > 0) {
 			switch ((rc = uncompress_archive_extract_file(archive, UNCOMPRESS_TYPE_FLOPPY_DISK))) {
 				case UNCOMPRESS_EXIT_OK:
-					umemset(&file[0], 0x00, usizeof(file));
-					ustrncpy(file, uncompress_archive_extracted_file_name(archive, UNCOMPRESS_TYPE_FLOPPY_DISK), usizeof(file) - 1);
+					umemset(&path[0], 0x00, usizeof(path));
+					ustrncpy(path, uncompress_archive_extracted_file_name(archive, UNCOMPRESS_TYPE_FLOPPY_DISK), usizeof(path) - 1);
 					found = TRUE;
 					break;
 				default:
@@ -361,7 +394,7 @@ BYTE fds_change_disk(uTCHAR *path) {
 		return (EXIT_ERROR);
 	}
 
-	ext = emu_ctrl_rom_ext(file);
+	ext = emu_ctrl_rom_ext(path);
 
 	if (!ustrcasecmp(ext, uL(".fds"))) {
 		finfo.format = FDS_FORMAT;
@@ -371,7 +404,7 @@ BYTE fds_change_disk(uTCHAR *path) {
 		return (EXIT_ERROR);
 	}
 
-	fp = ufopen(file, uL("rb"));
+	fp = ufopen(path, uL("rb"));
 	if (!fp) {
 		return (EXIT_ERROR);
 	}
@@ -395,12 +428,12 @@ BYTE fds_change_disk(uTCHAR *path) {
 	if ((finfo.data[position++] == 'F') &&
 		(finfo.data[position++] == 'D') &&
 		(finfo.data[position++] == 'S') &&
-		(finfo.data[position++] == '\32')) {
-		finfo.type = FDS_FORMAT_FDS;
+		(finfo.data[position++] == 0x1A)) {
+		finfo.type = FDS_TYPE_FDS;
 		// il numero di disk sides
 		finfo.total_sides = finfo.data[position++];
 	} else {
-		finfo.type = FDS_FORMAT_RAW;
+		finfo.type = FDS_TYPE_RAW;
 		// il numero di disk sides
 		finfo.total_sides = finfo.total_size / fds_disk_side_size(finfo.format);
 		if (!finfo.total_sides) {
@@ -428,7 +461,7 @@ BYTE fds_change_disk(uTCHAR *path) {
 	finfo.frame_insert = nes[0].p.ppu.frames;
 
 	info.format = finfo.format;
-	ustrncpy(info.rom.file, file, usizeof(info.rom.file));
+	ustrncpy(info.rom.file, path, usizeof(info.rom.file));
 
 	fds_free_fds_info();
 	memcpy(&fds.info, &finfo, sizeof(_fds_info));
@@ -446,7 +479,7 @@ void fds_info(void) {
 	log_info_open(uL("bios;"));
 	umemset(buffer, 0x00, usizeof(buffer));
 	gui_utf_basename((uTCHAR *)fds.bios.file, buffer, usizeof(buffer) - 1);
-	log_close(uL("" uPs("") ", crc32 : 0x%08X"), buffer, fds.bios.crc32);
+	log_close(uL("" uPs("") ", crc : 0x%08X"), buffer, fds.bios.crc32);
 
 	log_info_box_open(uL("folder;"));
 	umemset(buffer, 0x00, usizeof(buffer));
@@ -463,11 +496,17 @@ void fds_info(void) {
 		_fds_sinfo sinfo = { 0 };
 
 		fds_image_sinfo(side, &sinfo);
-		log_info_box(uL("FDS side %d;prg crc32 0x%08X, vrt size %d, files %3d, counted %3d"), side,
-			sinfo.crc32prg,
-			fds.info.sides[side].size,
+		log_info(uL("FDS side %d;disk %d, side %X, name %3s, version %d, files %d, counted %d"), side,
+			sinfo.block1.dnumber,
+			sinfo.block1.snumber + 0x0A,
+			sinfo.block1.name,
+			sinfo.block1.gversion,
 			sinfo.block2.files,
 			sinfo.counted_files);
+		log_info_box(uL(";@ " uPs("") ", written " uPs("") ", crc 0x%08X"),
+			fds_bcd_data(&sinfo.block1.manufacturing[0]),
+			fds_bcd_data(&sinfo.block1.rewritten[0]),
+			sinfo.crc32prg);
 		// controllo se disabilitare l'autoinsert
 		fds_control_autoinsert(&sinfo);
 #if !defined (RELEASE)
@@ -479,12 +518,15 @@ void fds_info_side(BYTE side) {
 	_fds_sinfo sinfo = { 0 };
 
 	fds_image_sinfo(side, &sinfo);
-	log_info(uL("FDS side %d;disk %d, side %X, name %3s, version %d, vsize %d, prg crc32 0x%08X"), side,
+	log_info(uL("FDS side %d;disk %d, side %X, name %3s, version %d, vsize %d"), side,
 		sinfo.block1.dnumber,
 		sinfo.block1.snumber + 0x0A,
 		sinfo.block1.name,
 		sinfo.block1.gversion,
-		fds.info.sides[side].size,
+		fds.info.sides[side].size);
+	log_info_box(uL("info;@ " uPs("") ", written " uPs("") ", crc 0x%08X"),
+		fds_bcd_data(&sinfo.block1.manufacturing[0]),
+		fds_bcd_data(&sinfo.block1.rewritten[0]),
 		sinfo.crc32prg);
 	log_info_box(uL("block 1;pos %5d"), sinfo.block1.position);
 	log_info_box(uL("block 2;pos %5d, files %d, counted %d"),
@@ -492,7 +534,7 @@ void fds_info_side(BYTE side) {
 		sinfo.block2.files,
 		sinfo.counted_files);
 	for (uint32_t i = 0; i < sinfo.counted_files; i++) {
-		log_info_box(uL("file %d;name %8s, size %5d, crc32 0x%08X, 0x%04X (b3 : %5d) (b4 : %5d)"), i,
+		log_info_box(uL("file %d;name %8s, size %5d, crc 0x%08X, 0x%04X (b3 : %5d) (b4 : %5d)"), i,
 			sinfo.file[i].block3.name,
 			sinfo.file[i].block3.length,
 			sinfo.file[i].block4.crc32,
@@ -553,7 +595,7 @@ fds_disk_op_start:
 			break;
 	}
 
-	if ((info.reset != CHANGE_ROM) && (type >= FDS_DISK_SELECT)) {
+	if (((info.reset != CHANGE_ROM) || fds.info.total_sides == 1) && (type >= FDS_DISK_SELECT)) {
 		if (fds.info.frame_insert != nes[0].p.ppu.frames) {
 			fds.info.frame_insert = nes[0].p.ppu.frames;
 			fds_info_side(side_to_insert);
@@ -590,7 +632,7 @@ BYTE fds_from_image_to_file(uTCHAR *file, BYTE format, BYTE type) {
 	if (fp) {
 		// lo chiudo
 		fclose(fp);
-		// lo riapro in modalita' rb+
+		// lo riapro in modalita' w+b
 		fp = ufopen(file, uL("w+b"));
 	} else {
 		free(mfds);
@@ -683,7 +725,7 @@ BYTE fds_to_image(_fds_info *finfo) {
 		BYTE *dst = NULL;
 		uint32_t header = 0;
 
-		if (finfo->type == FDS_FORMAT_FDS) {
+		if (finfo->type == FDS_TYPE_FDS) {
 			header = 16;
 		}
 
@@ -809,17 +851,6 @@ BYTE fds_to_image(_fds_info *finfo) {
 			position += (fib.blength + (finfo->format == QD_FORMAT ? 2 : 0));
 		}
 
-		if (!fib.bl1) {
-			finfo->total_sides = side;
-			if (!finfo->total_sides) {
-				free(finfo->image);
-				finfo->image = NULL;
-			} else {
-				finfo->image = realloc((void *)finfo->image, finfo->total_sides * fds_image_side_size());
-			}
-			continue;
-		}
-
 		is->side = side;
 
 		if (size < fds_image_side_size()) {
@@ -837,6 +868,30 @@ BYTE fds_to_image(_fds_info *finfo) {
 		free(mfds);
 	}
 	return (EXIT_OK);
+}
+uTCHAR *fds_bcd_data(BYTE *bcd) {
+	static uTCHAR date[13];
+
+	if ((!bcd[0] && !bcd[1] && !bcd[2]) || ((bcd[0] == 0xFF) && (bcd[1] == 0xFF) && (bcd[2] == 0xFF))) {
+		usnprintf(&date[0], usizeof(date), uL("__-__-____"));
+	} else {
+		int year = ((bcd[0] >> 4) * 10) + (bcd[0] & 0x0F);
+		int month = ((bcd[1] >> 4) * 10) + (bcd[1] & 0x0F);
+		int day = ((bcd[2] >> 4) * 10) + (bcd[2] & 0x0F);
+
+		if (year < 55) {
+			// Heisei period
+			year += 1988;
+		} else if (year >= 80) {
+			// Western calendar
+			year += 1900;
+		} else {
+			// Showa period
+			year += 1925;
+		}
+		usnprintf(&date[0], usizeof(date), uL("%02d-%02d-%04d"), day, month, year);
+	}
+	return (&date[0]);
 }
 void fds_free_fds_info(void) {
 	if (fds.info.image) {
@@ -875,7 +930,6 @@ BYTE fds_examine_block(const BYTE *src, uint32_t position, _fds_info_block *fib)
 			fib->magic_card_trainer = FALSE;
 			fib->count2000 = 0;
 			fib->blength = 56;
-			fib->bl1 = TRUE;
 			return (TRUE);
 		case BL_FILE_AMOUNT:
 			// il numero dei file nel disco
@@ -1036,9 +1090,8 @@ void fds_image_sinfo(BYTE side, _fds_sinfo *sinfo) {
 	memset(sinfo, 0x00, sizeof(_fds_sinfo));
 
 	for (position = 0; position < fds_disk_side_size(fds.info.format);) {
-		BYTE block = src[position];
+		BYTE block = src[position], stop = FALSE;;
 		uint32_t blength = 1;
-		BYTE stop = FALSE;
 
 		switch (block) {
 			case BL_DISK_INFO:
@@ -1086,6 +1139,14 @@ void fds_image_sinfo(BYTE side, _fds_sinfo *sinfo) {
 					sinfo->block1.snumber = src[position + 0x15];
 					// disk number
 					sinfo->block1.dnumber = src[position + 0x16];
+					// manufacturing date
+					sinfo->block1.manufacturing[0] = src[position + 0x1F];
+					sinfo->block1.manufacturing[1] = src[position + 0x20];
+					sinfo->block1.manufacturing[2] = src[position + 0x21];
+					// rewritten disk date
+					sinfo->block1.rewritten[0] = src[position + 0x2C];
+					sinfo->block1.rewritten[1] = src[position + 0x2D];
+					sinfo->block1.rewritten[2] = src[position + 0x2E];
 					break;
 				case 2:
 					sinfo->block2.position = size;
@@ -1152,7 +1213,7 @@ WORD fds_crc_block(const BYTE *src, uint32_t lenght) {
 BYTE *fds_from_image_to_mem(BYTE format, BYTE type, size_t *size) {
 	BYTE *mfds = NULL;
 
-	(*size) = (type == FDS_FORMAT_FDS ? 16 : 0) + fds_disk_side_size(format) * fds.info.total_sides;
+	(*size) = (type == FDS_TYPE_FDS ? 16 : 0) + fds_disk_side_size(format) * fds.info.total_sides;
 
 	// alloco la zona di memoria
 	mfds = malloc((*size));
@@ -1162,7 +1223,7 @@ BYTE *fds_from_image_to_mem(BYTE format, BYTE type, size_t *size) {
 	}
 	memset(mfds, 0x00, (*size));
 
-	if (type == FDS_FORMAT_FDS) {
+	if (type == FDS_TYPE_FDS) {
 		memcpy(&mfds[0], "FDS", 3);
 		mfds[3] = 0x1A;
 		mfds[4] = fds.info.total_sides;
@@ -1175,7 +1236,7 @@ BYTE *fds_from_image_to_mem(BYTE format, BYTE type, size_t *size) {
 		_fds_info_block fib = { 0 };
 		WORD crc = 0;
 
-		length = (type == FDS_FORMAT_FDS ? 16 : 0) + (fds_disk_side_size(format) * side);
+		length = (type == FDS_TYPE_FDS ? 16 : 0) + (fds_disk_side_size(format) * side);
 
 		for (position = 0; position < fds_image_side_size();) {
 			if ((src[position] == FDS_DISK_GAP) || (src[position] == FDS_DISK_BLOCK_MARK)) {

@@ -21,7 +21,7 @@
 
 #include "common.h"
 
-enum fds_formats { FDS_FORMAT_RAW, FDS_FORMAT_FDS };
+enum fds_formats { FDS_TYPE_RAW, FDS_TYPE_FDS };
 enum fds_write_mode { FDS_WR_DIFF_FILE, FDS_WR_ORIGINAL_FILE };
 enum fds_operations { FDS_OP_NONE, FDS_OP_READ, FDS_OP_WRITE };
 enum fds_disk_operations {
@@ -46,9 +46,6 @@ enum fds_block_type {
 enum fds_misc {
 	FDS_DISK_GAP = 0x00,
 	FDS_DISK_BLOCK_MARK = 0x80,
-	// Aspic (1988)(Bothtec)(J) necessita di almeno 1500 ms
-	// Pulsar no Hikari - Space Wars Simulation (Japan) di almeno 1600 ms
-	FDS_OP_SIDE_MS_DELAY = 1600,
 	FDS_AUTOINSERT_R4032_MAX_CHECKS = 7,
 	FDS_MIN_LAG_FRAMES = 20,
 	FDS_IMAGE_SIDE_SIZE = 75500,
@@ -56,8 +53,17 @@ enum fds_misc {
 	DISK_QD_SIDE_SIZE = 65536
 };
 
-// 147 cicli (secondo vari test è questo il numero preciso)
-#define FDS_8BIT_MS_DELAY 0.0825f
+// https://www.chrismcovell.com/fds-lister.html
+// The theoretical ideal data rate for FDS disks is said to be 96400 bits per second, or 12050 bytes/sec.
+// Inverted, that's 1 byte every 82.988 microseconds.  With the Famicom CPU having a clock period of 559 ns/cycle,
+// there should be a new byte coming in to the FDS RAM adaptor every 148.46 (~hex $94) CPU clock cycles.
+// At an average of 1 byte every 147-150 CPU cycles that I get on my newly-"calibrated" disk drive, that comes pretty
+// close to the ideal data rate of 148 listed above.
+#define FDS_8BIT_MS_DELAY 0.082988f
+// Aspic (1988)(Bothtec)(J) necessita di almeno 1500 ms
+// Pulsar no Hikari - Space Wars Simulation (Japan) di almeno 1600 ms
+#define FDS_OP_SIDE_MS_DELAY 1600.0f
+
 #define fds_auto_insert_enabled() (cfg->fds_switch_side_automatically & !fds.auto_insert.disabled & !fds.bios.first_run)
 #define fds_reset_envelope_counter(env) (fds.snd.envelope.speed << 3) * (fds.snd.env.speed + 1)
 #define fds_sweep_bias(val) (SBYTE)((val & 0x7F) << 1) / 2;
@@ -228,7 +234,8 @@ EXTERNC void fds_init(void);
 EXTERNC void fds_quit(void);
 EXTERNC BYTE fds_load_rom(BYTE format);
 EXTERNC BYTE fds_load_bios(void);
-EXTERNC BYTE fds_change_disk(uTCHAR *path);
+EXTERNC BYTE fds_create_empty_disk(BYTE format, BYTE type, BYTE double_side, uTCHAR *file);
+EXTERNC BYTE fds_change_disk(uTCHAR *file);
 EXTERNC void fds_info(void);
 EXTERNC void fds_info_side(BYTE side);
 EXTERNC void fds_disk_op(WORD type, BYTE side_to_insert, BYTE quiet);

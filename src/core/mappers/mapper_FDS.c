@@ -108,7 +108,7 @@ BYTE extcl_cpu_rd_mem_FDS(BYTE nidx, WORD address, UNUSED(BYTE openbus)) {
 					BYTE finded = TRUE;
 
 					position = (a * fds_disk_side_size(fds.info.format));
-					if (fds.info.type == FDS_FORMAT_FDS) {
+					if (fds.info.type == FDS_TYPE_FDS) {
 						position += 16;
 					}
 					if ((position + fds_disk_side_size(fds.info.format)) > fds.info.total_size) {
