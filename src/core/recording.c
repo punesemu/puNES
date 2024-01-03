@@ -878,7 +878,7 @@ static BYTE ffmpeg_video_add_stream_format_mpeg1(void) {
 		AVCPBProperties *props = NULL;
 
 		props = (AVCPBProperties *)av_stream_new_side_data(video->avs, AV_PKT_DATA_CPB_PROPERTIES, sizeof(*props));
-		props->buffer_size = 224 * 1024;
+		props->buffer_size = 1835 * 1024;
 		props->max_bitrate = 0;
 		props->min_bitrate = 0;
 		props->avg_bitrate = 0;
@@ -905,7 +905,7 @@ static BYTE ffmpeg_video_add_stream_format_mpeg1(void) {
 			sd = av_packet_side_data_new(&video->avs->codecpar->coded_side_data,
 				&video->avs->codecpar->nb_coded_side_data, AV_PKT_DATA_CPB_PROPERTIES, sizeof(*props), 0);
 			props = (AVCPBProperties *)sd->data;
-			props->buffer_size = 224 * 1024;
+			props->buffer_size = 1835 * 1024;
 			props->max_bitrate = 0;
 			props->min_bitrate = 0;
 			props->avg_bitrate = 0;
@@ -913,7 +913,7 @@ static BYTE ffmpeg_video_add_stream_format_mpeg1(void) {
 		} else {
 			props = (AVCPBProperties *)sd->data;
 			if (!props->buffer_size) {
-				props->buffer_size = 224 * 1024;
+				props->buffer_size = 1835 * 1024;
 			}
 		}
 	}
@@ -939,7 +939,7 @@ static BYTE ffmpeg_video_add_stream_format_mpeg2(void) {
 		AVCPBProperties *props = NULL;
 
 		props = (AVCPBProperties *)av_stream_new_side_data(video->avs, AV_PKT_DATA_CPB_PROPERTIES, sizeof(*props));
-		props->buffer_size = 224 * 1024;
+		props->buffer_size = 1835 * 1024;
 		props->max_bitrate = 0;
 		props->min_bitrate = 0;
 		props->avg_bitrate = 0;
@@ -964,9 +964,8 @@ static BYTE ffmpeg_video_add_stream_format_mpeg2(void) {
 		if (!sd) {
 			sd = av_packet_side_data_new(&video->avs->codecpar->coded_side_data,
 				&video->avs->codecpar->nb_coded_side_data, AV_PKT_DATA_CPB_PROPERTIES, sizeof(*props), 0);
-
 			props = (AVCPBProperties *)sd->data;
-			props->buffer_size = 224 * 1024;
+			props->buffer_size = 1835 * 1024;
 			props->max_bitrate = 0;
 			props->min_bitrate = 0;
 			props->avg_bitrate = 0;
@@ -974,7 +973,7 @@ static BYTE ffmpeg_video_add_stream_format_mpeg2(void) {
 		} else {
 			props = (AVCPBProperties *)sd->data;
 			if (!props->buffer_size) {
-				props->buffer_size = 224 * 1024;
+				props->buffer_size = 1835 * 1024;
 			}
 		}
 	}
