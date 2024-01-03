@@ -1669,7 +1669,7 @@ void mainWindow::s_export_fds_image(void) {
 		if (format < 3) {
 			rc = fds_from_image_to_file(uQStringCD(fileinfo.absoluteFilePath()),
 				format == 2 ? QD_FORMAT : FDS_FORMAT,
-				format == 0 ? FDS_FORMAT_FDS : FDS_FORMAT_RAW);
+				format == 0 ? FDS_TYPE_FDS : FDS_TYPE_RAW);
 		} else {
 			rc = fds_image_to_file(uQStringCD(fileinfo.absoluteFilePath()));
 		}
