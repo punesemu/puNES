@@ -1007,6 +1007,10 @@ void fds_control_autoinsert(_fds_sinfo *sinfo) {
 		{ "KOM", { 0xE9A457BF, 0x7791A2DD, 0x00, 0x00 }, TRUE, TRUE, TRUE },
 		// Koneko Monogatari - The Adventures of Chatran (Japan) (Sample) (1986-07-03)
 		{ "KOM", { 0x8C457E04, 0xCB25E05C, 0x00, 0x00 }, TRUE, TRUE, TRUE },
+		// Puzzle Boys (Japan) (Disk Writer)
+		{ "PUZ", { 0x2385D83D, 0x64488AFD, 0x00, 0x00 }, TRUE, TRUE, TRUE },
+		// Puzzle Boys (Japan) (Disk Writer) [T-En by DvD Translations Rev A]
+		{ "PUZ", { 0x876DD60C, 0xD487A70E, 0x00, 0x00 }, TRUE, TRUE, TRUE },
 		// Samurai Sword (Japan)
 		{ "SMU", { 0xD0B342F5, 0xE46A6E3E, 0x00, 0x00 }, TRUE, TRUE, TRUE },
 		// Samurai Sword (Japan) [T-En by Mute v1.0]
@@ -1025,10 +1029,6 @@ void fds_control_autoinsert(_fds_sinfo *sinfo) {
 		{ "EGL", { 0xBB887262, 0xC9915867, 0x00, 0x00 }, FALSE, TRUE, FALSE },
 		// Igo - Kyuu Roban Taikyoku (Japan)
 		{ "IGO", { 0x1E8B0151, 0xF7130E20, 0x00, 0x00 }, FALSE, TRUE, FALSE },
-		// Puzzle Boys (Japan) (Disk Writer)
-		{ "PUZ", { 0x2385D83D, 0x64488AFD, 0x00, 0x00 }, FALSE, TRUE, FALSE },
-		// Puzzle Boys (Japan) (Disk Writer) [T-En by DvD Translations Rev A]
-		{ "PUZ", { 0x876DD60C, 0xD487A70E, 0x00, 0x00 }, FALSE, TRUE, FALSE },
 		// Time Twist - Rekishi no Katasumi de (1991)(Nintendo)(J)
 		{ "TT1", { 0x6D6014C1, 0x145A90B2, 0xBFB019B9, 0x636083C1 }, FALSE, TRUE, FALSE },
 	};
