@@ -809,6 +809,10 @@ void gui_detach_barcode_change_rom(void) {
 	qt.dbarcode->change_rom();
 }
 
+void gui_unsupported_hardware(void) {
+	qt.mwin->unsupported_hardware();
+}
+
 #if defined (WITH_OPENGL)
 void gui_wdgopengl_make_current(void) {
 	if (gui.start) {

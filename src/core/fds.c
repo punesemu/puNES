@@ -1036,6 +1036,13 @@ void fds_control_autoinsert(_fds_sinfo *sinfo) {
 	fds.auto_insert.r4032.disabled = FALSE;
 	fds.auto_insert.end_of_head.disabled = TRUE;
 
+	// Souseiki Fammy - ROM-QD for 256K+64K (Japan) (Unl)
+	if (!strncmp((char *)&sinfo->block1.name[0], "ILE", 3) &&
+		((sinfo->crc32prg == 0x01218B9D) || (sinfo->crc32prg == 0xF1BCA55D))) {
+		fds.auto_insert.disabled = TRUE;
+		gui_unsupported_hardware();
+		return;
+	}
 	if (fds.info.total_sides == 1) {
 		// auto insert disabilitato
 		fds.auto_insert.disabled = TRUE;

@@ -856,6 +856,12 @@ void mainWindow::open_dkeyb(BYTE mode) {
 	dlgkeyb->switch_mode(mode);
 	dlgkeyb->show();
 }
+void mainWindow::unsupported_hardware(void) {
+	QMessageBox::warning(this,
+		tr("Warning"),
+		tr("This rom requires unsupported hardware to function correctly."),
+		QMessageBox::Ok);
+}
 
 void mainWindow::connect_menu_signals(void) {
 	// File

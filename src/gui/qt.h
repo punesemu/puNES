@@ -297,6 +297,8 @@ EXTERNC void gui_vs_system_insert_coin(void);
 
 EXTERNC void gui_detach_barcode_change_rom(void);
 
+EXTERNC void gui_unsupported_hardware(void);
+
 EXTERNC void gui_nes_keyboard(void);
 EXTERNC void gui_nes_keyboard_paste_event(void);
 EXTERNC void gui_nes_keyboard_frame_finished(void);

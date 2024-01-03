@@ -240,6 +240,7 @@ class mainWindow : public QMainWindow, public Ui::mainWindow {
 		void shout_into_mic(BYTE mode);
 		void hold_fast_forward(BYTE mode);
 		void open_dkeyb(BYTE mode);
+		void unsupported_hardware(void);
 
 	private:
 		void connect_menu_signals(void);
