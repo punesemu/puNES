@@ -37,7 +37,12 @@ void map_init_FDS(void) {
 	EXTCL_CPU_EVERY_CYCLE(FDS);
 	EXTCL_APU_TICK(FDS);
 
-	memset (&fds.auto_insert, 0x00, sizeof(fds.auto_insert));
+	fds.auto_insert.r4032.checks = 0;
+	fds.auto_insert.r4032.frames = 0;
+	fds.auto_insert.delay.dummy = 0;
+	fds.auto_insert.rE445.in_run = FALSE;
+	fds.auto_insert.in_game = FALSE;
+
 	fds.drive.transfer_reset = 0x02;
 	fds.drive.io_mode = 0x04;
 	fds.drive.drive_ready = 0x40;
