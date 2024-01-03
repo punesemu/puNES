@@ -26,6 +26,8 @@
 #include "patcher.h"
 #include "conf.h"
 #include "emu.h"
+#include "rewind.h"
+#include "save_slot.h"
 #include "../../c++/crc/crc.h"
 
 #define BIOSFILE "disksys.rom"
@@ -466,6 +468,12 @@ BYTE fds_change_disk(uTCHAR *file) {
 	fds_free_fds_info();
 	memcpy(&fds.info, &finfo, sizeof(_fds_info));
 	fds_info();
+
+	if (rewind_init()) {
+		return (EXIT_ERROR);
+	}
+
+	save_slot_count_load();
 
 	fds.side.change.new_side = 0;
 	fds.side.change.delay = fds.info.cycles_dummy_delay;

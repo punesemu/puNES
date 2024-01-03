@@ -179,13 +179,13 @@ BYTE extcl_cpu_rd_mem_FDS(BYTE nidx, WORD address, UNUSED(BYTE openbus)) {
 				address = nes[nidx].c.cpu.PC.w - 1;
 			}
 			break;
-		case 0xF46E:
-			// License check
-			if (cfg->fds_fast_forward) {
-				nes[nidx].c.cpu.PC.w += 2;
-				address = nes[nidx].c.cpu.PC.w - 1;
-			}
-			break;
+//		case 0xF46E:
+//			// License check
+//			if (cfg->fds_fast_forward) {
+//				nes[nidx].c.cpu.PC.w += 2;
+//				address = nes[nidx].c.cpu.PC.w - 1;
+//			}
+//			break;
 	}
 	return (prgrom_rd(nidx, address));
 }
