@@ -43,7 +43,7 @@ static uTCHAR *(*uncompress_item_file_name)(_uncompress_archive *archive, uint32
 // zip
 static BYTE mz_zip_examine_archive(_uncompress_archive *archive);
 static BYTE mz_zip_extract_from_archive(_uncompress_archive *archive, uint32_t selected, BYTE type);
-static uTCHAR *mz_zip_item_file_name(_uncompress_archive *archive, uint32_t selected, BYTE type);
+static char *mz_zip_item_file_name(_uncompress_archive *archive, uint32_t selected, BYTE type);
 #endif
 
 _uncompress_storage uncstorage;
@@ -360,7 +360,7 @@ static BYTE mz_zip_examine_archive(_uncompress_archive *archive) {
 }
 static BYTE mz_zip_extract_from_archive(_uncompress_archive *archive, uint32_t selected, BYTE type) {
 	mz_zip_archive mzarchive;
-	uTCHAR file[LENGTH_FILE_NAME_LONG];
+	char file[LENGTH_FILE_NAME_LONG], basename[255];
 	_uncompress_archive_item *aitem = NULL;
 
 	aitem = uncompress_archive_find_item(archive, selected, type);
@@ -377,7 +377,8 @@ static BYTE mz_zip_extract_from_archive(_uncompress_archive *archive, uint32_t s
 
 	mz_zip_reader_get_filename(&mzarchive, aitem->index, file, sizeof(file));
 
-	snprintf(file, sizeof(file), "%s/%s", gui_temp_folder(), basename(file));
+	gui_utf_basename(&file[0], basename, sizeof(basename));
+	snprintf(file, sizeof(file), "%s/%s", gui_temp_folder(), basename);
 
 	if (!mz_zip_reader_extract_to_file(&mzarchive, aitem->index, file, 0)) {
 		log_error(uL("uncompress;unzip file failed!"));
@@ -409,8 +410,8 @@ static BYTE mz_zip_extract_from_archive(_uncompress_archive *archive, uint32_t s
 
 	return (UNCOMPRESS_EXIT_OK);
 }
-static uTCHAR *mz_zip_item_file_name(_uncompress_archive *archive, uint32_t selected, BYTE type) {
-	static uTCHAR file[LENGTH_FILE_NAME_LONG];
+static char *mz_zip_item_file_name(_uncompress_archive *archive, uint32_t selected, BYTE type) {
+	static char file[LENGTH_FILE_NAME_LONG];
 	mz_zip_archive mzarchive;
 	_uncompress_archive_item *aitem = NULL;
 
