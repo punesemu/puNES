@@ -1055,7 +1055,8 @@ void fds_control_autoinsert(_fds_sinfo *sinfo) {
 		gui_overlay_info_append_msg_precompiled(39, NULL);
 		return;
 	}
-	if (ustrstr(info.rom.file, uL(" Zenpen ")) || ustrstr(info.rom.file, uL(" Kouhen "))) {
+	if (ustrstr(info.rom.file, uL("Zenpen")) || ustrstr(info.rom.file, uL("Kouhen")) ||
+		ustrstr(info.rom.file, uL("Disk 1")) || ustrstr(info.rom.file, uL("Disk 2"))) {
 		// auto insert disabilitato
 		fds.auto_insert.disabled = TRUE;
 		gui_overlay_info_append_msg_precompiled(39, NULL);
