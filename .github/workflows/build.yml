@@ -2,6 +2,8 @@ name: build
 
 on:
   push:
+    tags:
+      - 'v*'
     branches:
       - master
   pull_request:
@@ -25,7 +27,9 @@ jobs:
           - { os: ubuntu-22.04, cc: "clang", cxx: "clang++", opts: "-DENABLE_RELEASE:BOOL=ON -DENABLE_FFMPEG:BOOL=ON -DENABLE_OPENGL_CG:BOOL=ON" }
 
     steps:
-      - uses: actions/checkout@v3
+      - name: 'Checkout'
+        uses: actions/checkout@v3
+
       - name: 'Install dependencies'
         run: |
           sudo apt-get update -qq
@@ -68,14 +72,22 @@ jobs:
       CXX: ${{ matrix.config.cxx }}
       CFLAGS: '-O3 -mmmx -msse -msse2 -msse3 -mfpmath=sse'
       CXXFLAGS: '-O3 -mmmx -msse -msse2 -msse3 -mfpmath=sse'
-      oglopts: '-DENABLE_RELEASE:BOOL=ON -DENABLE_GIT_INFO:BOOL=ON -DENABLE_FFMPEG:BOOL=ON -DENABLE_OPENGL_CG:BOOL=ON'
-      d3dopts: '-DENABLE_RELEASE:BOOL=ON -DENABLE_GIT_INFO:BOOL=ON -DENABLE_FFMPEG:BOOL=ON -DENABLE_OPENGL:BOOL=OFF'
+      oglopts: '-DENABLE_RELEASE:BOOL=ON -DENABLE_FFMPEG:BOOL=ON -DENABLE_OPENGL_CG:BOOL=ON'
+      d3dopts: '-DENABLE_RELEASE:BOOL=ON -DENABLE_FFMPEG:BOOL=ON -DENABLE_OPENGL:BOOL=OFF'
 
     steps:
       - name: 'Checkout'
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
+
+      - name: 'Set WIP env'
+        if: github.ref == 'refs/heads/master'
+        run: echo "git_info=-DENABLE_GIT_INFO:BOOL=ON" >> "$GITHUB_ENV"
+
+      - name: 'Set release env'
+        if: startsWith(github.ref, 'refs/tags/v')
+        run: echo "git_info=-DENABLE_GIT_INFO:BOOL=OFF" >> "$GITHUB_ENV"
 
       - name: 'Setup ${{ matrix.env }} environment'
         uses: msys2/setup-msys2@v2
@@ -125,7 +137,7 @@ jobs:
         shell: msys2 {0}
         working-directory: build\d3d9
         run: |
-          Qt5_DIR='/${{ matrix.msystem }}/lib/qt5/cmake/Qt5' cmake -S ../../ -G Ninja ${{ env.d3dopts }} ${{ matrix.opts }}
+          Qt5_DIR='/${{ matrix.msystem }}/lib/qt5/cmake/Qt5' cmake -S ../../ -G Ninja ${{ env.d3dopts }} ${{ env.git_info }} ${{ matrix.opts }}
           cmake --build . -j3
           strip src/punes.exe
 
@@ -133,11 +145,11 @@ jobs:
         shell: msys2 {0}
         working-directory: build\opengl
         run: |
-          Qt5_DIR='/${{ matrix.msystem }}/lib/qt5/cmake/Qt5' cmake -S ../../ -G Ninja ${{ env.oglopts }} ${{ matrix.opts }}
+          Qt5_DIR='/${{ matrix.msystem }}/lib/qt5/cmake/Qt5' cmake -S ../../ -G Ninja ${{ env.oglopts }} ${{ env.git_info }} ${{ matrix.opts }}
           cmake --build . -j3
           strip src/punes.exe
 
-      - name: 'Build artifacts'
+      - name: 'Prepare artifacts'
         shell: msys2 {0}
         working-directory: artifacts
         run: |
@@ -153,13 +165,13 @@ jobs:
           cp ../build/opengl/src/punes.exe opengl/.
 
       - name: 'Upload d3d9 artifact'
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: punes${{ matrix.bit }}.wip.d3d9
           path: artifacts\d3d9\*.*
 
       - name: 'Upload opengl artifact'
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: punes${{ matrix.bit }}.wip.opengl
           path: artifacts\opengl\*.*
@@ -171,10 +183,12 @@ jobs:
       fail-fast: false
       matrix:
         config:
-          - { os: ubuntu-20.04, cc: "gcc", cxx: "g++", env: x86_64, opts: "-DENABLE_RELEASE:BOOL=ON -DENABLE_GIT_INFO:BOOL=ON -DENABLE_FFMPEG:BOOL=ON -DENABLE_OPENGL_CG:BOOL=ON" }
+          - { os: ubuntu-20.04, cc: "gcc", cxx: "g++", env: x86_64, opts: "-DENABLE_RELEASE:BOOL=ON -DENABLE_FFMPEG:BOOL=ON -DENABLE_OPENGL_CG:BOOL=ON" }
 
     steps:
-      - uses: actions/checkout@v3
+      - name: 'Checkout'
+        uses: actions/checkout@v3
+
       - name: 'Install dependencies'
         run: |
           sudo apt-get update -qq
@@ -197,6 +211,14 @@ jobs:
             qttools5-dev \
             qt5-image-formats-plugins
 
+      - name: 'Set WIP env'
+        if: github.ref == 'refs/heads/master'
+        run: echo "git_info=-DENABLE_GIT_INFO:BOOL=ON" >> "$GITHUB_ENV"
+
+      - name: 'Set release env'
+        if: startsWith(github.ref, 'refs/tags/v')
+        run: echo "git_info=-DENABLE_GIT_INFO:BOOL=OFF" >> "$GITHUB_ENV"
+
       - name: 'Build project with ${{ matrix.config.cc }}/${{ matrix.config.cxx }}'
         env:
           CC: ${{ matrix.config.cc }}
@@ -204,7 +226,7 @@ jobs:
           CFLAGS: '-O3 -mmmx -msse -msse2 -msse3 -mfpmath=sse'
           CXXFLAGS: '-O3 -mmmx -msse -msse2 -msse3 -mfpmath=sse'
         run: |
-          cmake -B build -G Ninja ${{ matrix.config.opts }}
+          cmake -B build -G Ninja ${{ matrix.config.opts }} ${{ env.git_info }}
           cmake --build build -j2
 
       - name: 'Install linuxdeploy'
@@ -234,7 +256,56 @@ jobs:
           limit-access-to-actor: true
 
       - name: 'Upload AppImage'
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: puNES-${{ matrix.config.env }}.AppImage
           path: puNES*.AppImage
+
+  release:
+    runs-on: ubuntu-latest
+    needs: [build-windows, build-appimage]
+    if: startsWith(github.ref, 'refs/tags/v')
+    name: 'Prepare Release'
+
+    steps:
+      - name: 'Checkout'
+        uses: actions/checkout@v3
+
+      - name: 'Download artifacts'
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+          pattern: puNES*
+          merge-multiple: true
+      - run: ls -R artifact
+
+      - name: 'Set version and generate changelog'
+        run: |
+          ver=${{ github.ref_name }}
+          ver=${ver#v}
+          echo "version=-$ver" >> "$GITHUB_ENV"
+          body=$'<h1>Changelog</h1>\n\n'
+          body=$body$(sed -n '/Changelog:/,/^\s*$/p' ChangeLog | sed '1,2d')
+          echo "$body" > ${{ github.workspace }}-ChangeLog.md
+
+      - name: 'Rename artifacts'
+        shell: bash
+        run: |
+          mv artifacts/punes32.wip.d3d9.zip artifacts/punes-${{ env.version }}-i686-win-d3d9.zip
+          mv artifacts/punes32.wip.opengl.zip artifacts/punes-${{ env.version }}-i686-win-opengl.zip
+          mv artifacts/punes64.wip.d3d9.zip artifacts/punes-${{ env.version }}-x86_64-win-d3d9.zip
+          mv artifacts/punes64.wip.opengl.zip artifacts/punes-${{ env.version }}-x86_64-win-opengl.zip
+
+      - name: 'Prepare GitHub release'
+        uses: softprops/action-gh-release@v1
+        with:
+          token: ${{ secrets.CUSTOM_GITHUB_TOKEN }}
+          body_path: ${{ github.workspace }}-ChangeLog.md
+          draft: true
+          fail_on_unmatched_files: true
+          files: |
+            artifacts/puNES-x86_64.AppImage
+            artifacts/punes-${{ env.version }}-i686-win-d3d9.zip
+            artifacts/punes-${{ env.version }}-i686-win-opengl.zip
+            artifacts/punes-${{ env.version }}-x86_64-win-d3d9.zip
+            artifacts/punes-${{ env.version }}-x86_64-win-opengl.zip
