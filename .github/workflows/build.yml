@@ -279,8 +279,6 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           path: artifacts
-          pattern: pu*
-          merge-multiple: true
       - run: ls -R artifacts
 
       - name: 'Set version and generate changelog'
@@ -292,13 +290,18 @@ jobs:
           body=$body$(sed -n '/Changelog:/,/^\s*$/p' ChangeLog | sed '1,2d')
           echo "$body" > ${{ github.workspace }}-ChangeLog.md
 
-      - name: 'Rename artifacts'
+      - name: 'Create Assets'
         shell: bash
         run: |
-          mv artifacts/punes32.wip.d3d9.zip artifacts/punes-${{ env.version }}-i686-win-d3d9.zip
-          mv artifacts/punes32.wip.opengl.zip artifacts/punes-${{ env.version }}-i686-win-opengl.zip
-          mv artifacts/punes64.wip.d3d9.zip artifacts/punes-${{ env.version }}-x86_64-win-d3d9.zip
-          mv artifacts/punes64.wip.opengl.zip artifacts/punes-${{ env.version }}-x86_64-win-opengl.zip
+          mv artifacts/puNES-x86_64.AppImage/puNES-x86_64.AppImage artifacts/puNES-${{ env.version }}-x86_64.AppImage
+          for bit in 32 64 ; do
+            arch=$((bit == 32 ? "i686" : "x86_64"))
+            for i in d3d9 opengl ; do
+              folder=punes${bit}.wip.${i}
+              mv artifacts/${folder}/punes.exe artifacts/${folder}/punes${bit}.exe
+              zip -9j artifacts/punes-${{ env.version }}-${arch}-${i}.zip artifacts/${folder}/*
+            done
+          done
 
       - name: 'Prepare GitHub release'
         uses: softprops/action-gh-release@v1
@@ -308,7 +311,7 @@ jobs:
           draft: true
           fail_on_unmatched_files: true
           files: |
-            artifacts/puNES-x86_64.AppImage
+            artifacts/puNES-${{ env.version }}-x86_64.AppImage
             artifacts/punes-${{ env.version }}-i686-win-d3d9.zip
             artifacts/punes-${{ env.version }}-i686-win-opengl.zip
             artifacts/punes-${{ env.version }}-x86_64-win-d3d9.zip
