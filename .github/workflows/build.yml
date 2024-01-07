@@ -279,9 +279,9 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           path: artifacts
-          pattern: puNES*
+          pattern: pu*.zip
           merge-multiple: true
-      - run: ls -R artifact
+      - run: ls -R artifacts
 
       - name: 'Set version and generate changelog'
         run: |
