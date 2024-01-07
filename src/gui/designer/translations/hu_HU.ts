@@ -12,15 +12,15 @@
     <name>dlgAbout</name>
     <message>
       <source>portable version</source>
-      <translation type="unfinished">portable version</translation>
+      <translation>hordozható verzió</translation>
     </message>
     <message>
       <source>Nintendo Entertainment System Emulator</source>
-      <translation type="unfinished">Nintendo Entertainment System Emulator</translation>
+      <translation>Nintendo Entertainment System Emulator</translation>
     </message>
     <message>
       <source>Compiled</source>
-      <translation type="unfinished">Compiled</translation>
+      <translation>Forgatva</translation>
     </message>
   </context>
   <context>
