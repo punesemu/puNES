@@ -12,15 +12,15 @@
     <name>dlgAbout</name>
     <message>
       <source>portable version</source>
-      <translation type="unfinished">portable version</translation>
+      <translation>نسخة محمولة</translation>
     </message>
     <message>
       <source>Nintendo Entertainment System Emulator</source>
-      <translation type="unfinished">Nintendo Entertainment System Emulator</translation>
+      <translation>مُحاكي نينتندو إنترتينمنت سيستم</translation>
     </message>
     <message>
       <source>Compiled</source>
-      <translation type="unfinished">Compiled</translation>
+      <translation>مُجَمَّع بتاريخ</translation>
     </message>
   </context>
   <context>
