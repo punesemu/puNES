@@ -40,7 +40,7 @@
 #define GITLAB      "https://gitlab.com/FHorse/puNES"
 #define DONATE      "https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=QPPXNRL5NAHDC"
 
-#define COPYRIGTH   " 2023 by " AUTHOR
+#define COPYRIGTH   " 2024 by " AUTHOR
 #define COPYRANSI   "(C)" COPYRIGTH
 #define COPYRUTF8   "&#169;" COPYRIGTH
 
