@@ -602,6 +602,8 @@ set(gui_srcs
 	gui/cgp.cpp
 	gui/cmd_line.cpp
 	gui/dipswitch.cpp
+	gui/dlgAbout.cpp
+	gui/dlgAbout.hpp
 	gui/dlgCmdLineHelp.cpp
 	gui/dlgCmdLineHelp.hpp
 	gui/dlgDetachBarcode.cpp

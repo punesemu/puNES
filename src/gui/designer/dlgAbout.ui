@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>dlgAbout</class>
+ <widget class="QDialog" name="dlgAbout">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>400</width>
+    <height>151</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string notr="true">About</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout_dlgAbout">
+   <property name="spacing">
+    <number>24</number>
+   </property>
+   <item>
+    <layout class="QVBoxLayout" name="verticalLayout_Icon_Text">
+     <property name="spacing">
+      <number>24</number>
+     </property>
+     <item>
+      <widget class="QLabel" name="icon_About">
+       <property name="text">
+        <string notr="true">Icon</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <layout class="QVBoxLayout" name="verticalLayout_Text">
+       <property name="spacing">
+        <number>12</number>
+       </property>
+       <item>
+        <widget class="QLabel" name="label_Text">
+         <property name="text">
+          <string notr="true">Text</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_Informative">
+         <property name="text">
+          <string notr="true">Informative</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <widget class="QPushButton" name="pushButton_Ok">
+     <property name="text">
+      <string notr="true">Ok</string>
+     </property>
+     <property name="icon">
+      <iconset resource="resources.qrc">
+       <normaloff>:/icon/icons/confirm.svgz</normaloff>:/icon/icons/confirm.svgz</iconset>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources>
+  <include location="resources.qrc"/>
+ </resources>
+ <connections/>
+</ui>

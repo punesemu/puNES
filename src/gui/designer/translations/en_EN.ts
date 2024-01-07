@@ -9,6 +9,21 @@
     </message>
 </context>
 <context>
+    <name>dlgAbout</name>
+    <message>
+        <source>portable version</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Nintendo Entertainment System Emulator</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Compiled</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>dlgCfgNSCode</name>
     <message>
         <source>Default</source>
@@ -952,6 +967,10 @@
         <source>None</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>which Floppy Disk image do you want to load?</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>dlgVsSystem</name>
@@ -1179,18 +1198,6 @@
     </message>
     <message>
         <source>Open save state</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Nintendo Entertainment System Emulator</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Compiled</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>portable version</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1618,6 +1625,66 @@
         <source>Floppy Disk image files</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Warning</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>This rom requires unsupported hardware to function correctly.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Open FLoppy Disk Image</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>FDS Format Disk</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Quick Disk Format Disk</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>puNES image</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Exports the current state of the disk</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error on export state</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Impossible write %0.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>to &amp;FDS Format (with Header)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>to &amp;Quick Disk Format</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>to puNES image</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>to F&amp;DS Format (without Header)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>C&amp;hange Disk</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>E&amp;xport current state of Disk/Disks</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>nesKeyboardStatusBar</name>
@@ -1852,6 +1919,11 @@
     </message>
     <message>
         <source>auto switch [red]disabled[normal], game not compatible</source>
+        <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>auto switch [red]disabled[normal], single-sided disk</source>
         <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
         <translation type="unfinished"></translation>
     </message>
