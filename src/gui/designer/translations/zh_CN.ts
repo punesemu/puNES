@@ -9,6 +9,21 @@
     </message>
   </context>
   <context>
+    <name>dlgAbout</name>
+    <message>
+      <source>portable version</source>
+      <translation>便携版</translation>
+    </message>
+    <message>
+      <source>Nintendo Entertainment System Emulator</source>
+      <translation>任天堂娱乐系统模拟器</translation>
+    </message>
+    <message>
+      <source>Compiled</source>
+      <translation>编译于</translation>
+    </message>
+  </context>
+  <context>
     <name>dlgCfgNSCode</name>
     <message>
       <source>Default</source>
@@ -42,15 +57,15 @@
     <name>dlgDetachBarcode</name>
     <message>
       <source>Enter a barcode yourself...</source>
-      <translation type="unfinished">Enter a barcode yourself...</translation>
+      <translation>请输入您自己的条码...</translation>
     </message>
     <message>
       <source>Detach Barcode</source>
-      <translation type="unfinished">Detach Barcode</translation>
+      <translation>Detach 条码</translation>
     </message>
     <message>
       <source>Apply</source>
-      <translation type="unfinished">Apply</translation>
+      <translation>应用</translation>
     </message>
   </context>
   <context>
@@ -600,51 +615,51 @@
     </message>
     <message>
       <source>Arkanoid Vaus Controller (NES)</source>
-      <translation type="unfinished">Arkanoid Vaus Controller (NES)</translation>
+      <translation>Arkanoid Vaus 控制器 (NES)</translation>
     </message>
     <message>
       <source>Arkanoid Vaus Controller (Famicom)</source>
-      <translation type="unfinished">Arkanoid Vaus Controller (Famicom)</translation>
+      <translation>Arkanoid Vaus 控制器 (Famicom)</translation>
     </message>
     <message>
       <source>Two Vaus Controllers plus Famicom Data Recorder</source>
-      <translation type="unfinished">Two Vaus Controllers plus Famicom Data Recorder</translation>
+      <translation>双摇杆加 Famicom 数据记录器</translation>
     </message>
     <message>
       <source>Subor Keyboard plus mouse (3x8-bit)</source>
-      <translation type="unfinished">Subor Keyboard plus mouse (3x8-bit)</translation>
+      <translation>小霸王键盘加鼠标 (3x8 位)</translation>
     </message>
     <message>
       <source>Subor Keyboard plus mouse (24-bit)</source>
-      <translation type="unfinished">Subor Keyboard plus mouse (24-bit)</translation>
+      <translation>小霸王键盘加鼠标 (24 位)</translation>
     </message>
     <message>
       <source>SNES Mouse ($4017.0)</source>
-      <translation type="unfinished">SNES Mouse ($4017.0)</translation>
+      <translation>SNES 鼠标 ($4017.0)</translation>
     </message>
     <message>
       <source>Unknown Famiclone Keyboard (Golden Key)</source>
-      <translation type="unfinished">Unknown Famiclone Keyboard (Golden Key)</translation>
+      <translation>未知的 Fami 克隆键盘 (黄金按键)</translation>
     </message>
     <message>
       <source>Subor Keyboard plus mouse (24-bit $4017)</source>
-      <translation type="unfinished">Subor Keyboard plus mouse (24-bit $4017)</translation>
+      <translation>小霸王键盘加鼠标 (24 位 $4017)</translation>
     </message>
     <message>
       <source>Port Test</source>
-      <translation type="unfinished">Port Test</translation>
+      <translation>端口测试</translation>
     </message>
     <message>
       <source>Bandai Multi Game Player Gamepad</source>
-      <translation type="unfinished">Bandai Multi Game Player Gamepad</translation>
+      <translation>万代多玩家游戏手柄</translation>
     </message>
     <message>
       <source>Venom TV Dance Mat</source>
-      <translation type="unfinished">Venom TV Dance Mat</translation>
+      <translation>Venom TV 跳舞毯</translation>
     </message>
     <message>
       <source>LG TV Remote Control</source>
-      <translation type="unfinished">LG TV Remote Control</translation>
+      <translation>LG TV 遥控器</translation>
     </message>
   </context>
   <context>
@@ -952,6 +967,10 @@
       <source>None</source>
       <translation>无</translation>
     </message>
+    <message>
+      <source>which Floppy Disk image do you want to load?</source>
+      <translation type="unfinished">which Floppy Disk image do you want to load?</translation>
+    </message>
   </context>
   <context>
     <name>dlgVsSystem</name>
@@ -1017,19 +1036,19 @@
     </message>
     <message>
       <source>Coins</source>
-      <translation type="unfinished">Coins</translation>
+      <translation>硬币</translation>
     </message>
     <message>
       <source>Monitor</source>
-      <translation type="unfinished">Monitor</translation>
+      <translation>显示器</translation>
     </message>
     <message>
       <source>Left</source>
-      <translation type="unfinished">Left</translation>
+      <translation>左</translation>
     </message>
     <message>
       <source>Right</source>
-      <translation type="unfinished">Right</translation>
+      <translation>右</translation>
     </message>
     <message>
       <source>12</source>
@@ -1065,7 +1084,7 @@
     </message>
     <message>
       <source>Game Dip Switches</source>
-      <translation type="unfinished">Game Dip Switches</translation>
+      <translation>游戏 Dip 开关</translation>
     </message>
   </context>
   <context>
@@ -1158,10 +1177,6 @@
       <translation>NES ROM 文件</translation>
     </message>
     <message>
-      <source>FDS image files</source>
-      <translation>FDS 镜像文件</translation>
-    </message>
-    <message>
       <source>TAS movie files</source>
       <translation>TAS 电影文件</translation>
     </message>
@@ -1184,18 +1199,6 @@
     <message>
       <source>Open save state</source>
       <translation>打开进度文件</translation>
-    </message>
-    <message>
-      <source>Nintendo Entertainment System Emulator</source>
-      <translation>任天堂娱乐系统模拟器</translation>
-    </message>
-    <message>
-      <source>Compiled</source>
-      <translation>编译于</translation>
-    </message>
-    <message>
-      <source>portable version</source>
-      <translation>便携版</translation>
     </message>
     <message>
       <source>&amp;Open</source>
@@ -1612,11 +1615,75 @@
     </message>
     <message>
       <source>&amp;Dipswitch</source>
-      <translation type="unfinished">&amp;Dipswitch</translation>
+      <translation>Dip 开关(&amp;D)</translation>
     </message>
     <message>
       <source>Detach &amp;Barcode</source>
-      <translation type="unfinished">Detach &amp;Barcode</translation>
+      <translation>Detach 条码(&amp;B)</translation>
+    </message>
+    <message>
+      <source>Floppy Disk image files</source>
+      <translation>软盘映像文件</translation>
+    </message>
+    <message>
+      <source>Warning</source>
+      <translation type="unfinished">Warning</translation>
+    </message>
+    <message>
+      <source>This rom requires unsupported hardware to function correctly.</source>
+      <translation type="unfinished">This rom requires unsupported hardware to function correctly.</translation>
+    </message>
+    <message>
+      <source>Open FLoppy Disk Image</source>
+      <translation type="unfinished">Open FLoppy Disk Image</translation>
+    </message>
+    <message>
+      <source>FDS Format Disk</source>
+      <translation type="unfinished">FDS Format Disk</translation>
+    </message>
+    <message>
+      <source>Quick Disk Format Disk</source>
+      <translation type="unfinished">Quick Disk Format Disk</translation>
+    </message>
+    <message>
+      <source>puNES image</source>
+      <translation type="unfinished">puNES image</translation>
+    </message>
+    <message>
+      <source>Exports the current state of the disk</source>
+      <translation type="unfinished">Exports the current state of the disk</translation>
+    </message>
+    <message>
+      <source>Error on export state</source>
+      <translation type="unfinished">Error on export state</translation>
+    </message>
+    <message>
+      <source>Impossible write %0.</source>
+      <translation type="unfinished">Impossible write %0.</translation>
+    </message>
+    <message>
+      <source>to &amp;FDS Format (with Header)</source>
+      <translation type="unfinished">to &amp;FDS Format (with Header)</translation>
+    </message>
+    <message>
+      <source>to &amp;Quick Disk Format</source>
+      <translation type="unfinished">to &amp;Quick Disk Format</translation>
+    </message>
+    <message>
+      <source>to puNES image</source>
+      <translation type="unfinished">to puNES image</translation>
+    </message>
+    <message>
+      <source>to F&amp;DS Format (without Header)</source>
+      <translation type="unfinished">to F&amp;DS Format (without Header)</translation>
+    </message>
+    <message>
+      <source>C&amp;hange Disk</source>
+      <translation type="unfinished">C&amp;hange Disk</translation>
+    </message>
+    <message>
+      <source>E&amp;xport current state of Disk/Disks</source>
+      <translation type="unfinished">E&amp;xport current state of Disk/Disks</translation>
     </message>
   </context>
   <context>
@@ -1849,6 +1916,16 @@
       <source>[red]error[normal] on write save state</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
       <translation>写入进度[red]出错[normal]</translation>
+    </message>
+    <message>
+      <source>auto switch [red]disabled[normal], game not compatible</source>
+      <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
+      <translation>自动切换 [red]关闭[normal],游戏不兼容</translation>
+    </message>
+    <message>
+      <source>auto switch [red]disabled[normal], single-sided disk</source>
+      <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
+      <translation type="unfinished">auto switch [red]disabled[normal], single-sided disk</translation>
     </message>
   </context>
   <context>
@@ -2191,7 +2268,7 @@
     <name>wdgNTSCLMP88959Filter</name>
     <message>
       <source>Scanline</source>
-      <translation type="unfinished">Scanline</translation>
+      <translation>扫描线</translation>
     </message>
     <message>
       <source>MFields</source>
@@ -2203,85 +2280,85 @@
     </message>
     <message>
       <source>Contrast</source>
-      <translation type="unfinished">Contrast</translation>
+      <translation>对比度</translation>
     </message>
     <message>
       <source>Brightness</source>
-      <translation type="unfinished">Brightness</translation>
+      <translation>亮度</translation>
     </message>
     <message>
       <source>White Point</source>
-      <translation type="unfinished">White Point</translation>
+      <translation>白点</translation>
     </message>
     <message>
       <source>Black Point</source>
-      <translation type="unfinished">Black Point</translation>
+      <translation>黑点</translation>
     </message>
     <message>
       <source>Saturation</source>
-      <translation type="unfinished">Saturation</translation>
+      <translation>饱和度</translation>
     </message>
     <message>
       <source>Noise</source>
-      <translation type="unfinished">Noise</translation>
+      <translation>噪点</translation>
     </message>
     <message>
       <source>Hue</source>
-      <translation type="unfinished">Hue</translation>
+      <translation>色调</translation>
     </message>
     <message>
       <source>Reset parameters to defaults</source>
-      <translation type="unfinished">Reset parameters to defaults</translation>
+      <translation>重置参数为默认值</translation>
     </message>
   </context>
   <context>
     <name>wdgNTSCNESRGBLMP88959Filter</name>
     <message>
       <source>Black Point</source>
-      <translation type="unfinished">Black Point</translation>
+      <translation>黑点</translation>
     </message>
     <message>
       <source>Brightness</source>
-      <translation type="unfinished">Brightness</translation>
+      <translation>亮度</translation>
     </message>
     <message>
       <source>Hue</source>
-      <translation type="unfinished">Hue</translation>
+      <translation>色调</translation>
     </message>
     <message>
       <source>Contrast</source>
-      <translation type="unfinished">Contrast</translation>
+      <translation>对比度</translation>
     </message>
     <message>
       <source>Noise</source>
-      <translation type="unfinished">Noise</translation>
+      <translation>噪点</translation>
     </message>
     <message>
       <source>White Point</source>
-      <translation type="unfinished">White Point</translation>
+      <translation>白点</translation>
     </message>
     <message>
       <source>Scanline</source>
-      <translation type="unfinished">Scanline</translation>
+      <translation>扫描线</translation>
     </message>
     <message>
       <source>VBlend</source>
-      <translation type="unfinished">VBlend</translation>
+      <translation/>
     </message>
     <message>
       <source>Saturation</source>
-      <translation type="unfinished">Saturation</translation>
+      <translation>饱和度</translation>
     </message>
     <message>
       <source>Reset parameters to defaults</source>
-      <translation type="unfinished">Reset parameters to defaults</translation>
+      <translation>重置参数为默认值</translation>
     </message>
   </context>
   <context>
     <name>wdgPALLMP88959Filter</name>
     <message>
       <source>Scanline</source>
-      <translation type="unfinished">Scanline</translation>
+      <translation>扫描线</translation>
     </message>
     <message>
       <source>VBlend</source>
@@ -2289,39 +2366,39 @@
     </message>
     <message>
       <source>Black Point</source>
-      <translation type="unfinished">Black Point</translation>
+      <translation>黑点</translation>
     </message>
     <message>
       <source>White Point</source>
-      <translation type="unfinished">White Point</translation>
+      <translation>白点</translation>
     </message>
     <message>
       <source>Noise</source>
-      <translation type="unfinished">Noise</translation>
+      <translation/>
     </message>
     <message>
       <source>Color Phase</source>
-      <translation type="unfinished">Color Phase</translation>
+      <translation>色阶</translation>
     </message>
     <message>
       <source>Brightness</source>
-      <translation type="unfinished">Brightness</translation>
+      <translation>亮度</translation>
     </message>
     <message>
       <source>Saturation</source>
-      <translation type="unfinished">Saturation</translation>
+      <translation>饱和度</translation>
     </message>
     <message>
       <source>Contrast</source>
-      <translation type="unfinished">Contrast</translation>
+      <translation>对比度</translation>
     </message>
     <message>
       <source>Chroma Lag</source>
-      <translation type="unfinished">Chroma Lag</translation>
+      <translation>色度滞后</translation>
     </message>
     <message>
       <source>Chroma Correction</source>
-      <translation type="unfinished">Chroma Correction</translation>
+      <translation>色度校正</translation>
     </message>
     <message>
       <source>MFields</source>
@@ -2329,46 +2406,46 @@
     </message>
     <message>
       <source>Reset parameters to defaults</source>
-      <translation type="unfinished">Reset parameters to defaults</translation>
+      <translation>重置参数为默认值</translation>
     </message>
   </context>
   <context>
     <name>wdgPALNESRGBLMP88959Filter</name>
     <message>
       <source>White Point</source>
-      <translation type="unfinished">White Point</translation>
+      <translation>白点</translation>
     </message>
     <message>
       <source>Chroma Lag</source>
-      <translation type="unfinished">Chroma Lag</translation>
+      <translation>色度滞后</translation>
     </message>
     <message>
       <source>Contrast</source>
-      <translation type="unfinished">Contrast</translation>
+      <translation>对比度</translation>
     </message>
     <message>
       <source>Chroma Correction</source>
-      <translation type="unfinished">Chroma Correction</translation>
+      <translation>色度校正</translation>
     </message>
     <message>
       <source>Brightness</source>
-      <translation type="unfinished">Brightness</translation>
+      <translation>亮度</translation>
     </message>
     <message>
       <source>Noise</source>
-      <translation type="unfinished">Noise</translation>
+      <translation>噪点</translation>
     </message>
     <message>
       <source>Black Point</source>
-      <translation type="unfinished">Black Point</translation>
+      <translation>黑点</translation>
     </message>
     <message>
       <source>Saturation</source>
-      <translation type="unfinished">Saturation</translation>
+      <translation>饱和度</translation>
     </message>
     <message>
       <source>Scanline</source>
-      <translation type="unfinished">Scanline</translation>
+      <translation>扫描线</translation>
     </message>
     <message>
       <source>VBlend</source>
@@ -2376,7 +2453,7 @@
     </message>
     <message>
       <source>Reset parameters to defaults</source>
-      <translation type="unfinished">Reset parameters to defaults</translation>
+      <translation>重置参数为默认值</translation>
     </message>
   </context>
   <context>
@@ -2868,7 +2945,19 @@
     </message>
     <message>
       <source>Arabic</source>
-      <translation type="unfinished">Arabic</translation>
+      <translation>阿拉伯语</translation>
+    </message>
+    <message>
+      <source>Write mode</source>
+      <translation>写入模式</translation>
+    </message>
+    <message>
+      <source>Write to a separate file (Default)</source>
+      <translation>写入到一个单独的文件(默认)</translation>
+    </message>
+    <message>
+      <source>Write to the original FDS/QD file</source>
+      <translation>写入到原始的 FDS/QD 文件</translation>
     </message>
   </context>
   <context>
