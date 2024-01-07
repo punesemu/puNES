@@ -279,7 +279,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           path: artifacts
-          pattern: pu*.zip
+          pattern: pu*
           merge-multiple: true
       - run: ls -R artifacts
 
