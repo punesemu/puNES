@@ -259,7 +259,7 @@ jobs:
         with:
           limit-access-to-actor: true
 
-      - name: 'Upload AppImage'
+      - name: 'Upload artifact'
         uses: actions/upload-artifact@v4
         with:
           name: puNES-${{ matrix.config.env }}.AppImage
@@ -285,20 +285,22 @@ jobs:
         run: |
           ver=${{ github.ref_name }}
           ver=${ver#v}
-          echo "version=-$ver" >> "$GITHUB_ENV"
+          echo "version=$ver" >> "$GITHUB_ENV"
           body=$'<h1>Changelog</h1>\n\n'
           body=$body$(sed -n '/Changelog:/,/^\s*$/p' ChangeLog | sed '1,2d')
           echo "$body" > ${{ github.workspace }}-ChangeLog.md
 
-      - name: 'Create Assets'
+      - name: 'Create assets'
         shell: bash
         run: |
+          echo "create artifacts/puNES-${{ env.version }}-x86_64.AppImage"
           mv artifacts/puNES-x86_64.AppImage/puNES-x86_64.AppImage artifacts/puNES-${{ env.version }}-x86_64.AppImage
           for bit in 32 64 ; do
-            arch=$((bit == 32 ? "i686" : "x86_64"))
+            arch=$( [ "$bit" == "32" ] && echo "i686" || echo "x86_64" )
             for i in d3d9 opengl ; do
               folder=punes${bit}.wip.${i}
               mv artifacts/${folder}/punes.exe artifacts/${folder}/punes${bit}.exe
+              echo "create artifacts/punes-${{ env.version }}-${arch}-${i}.zip"
               zip -9j artifacts/punes-${{ env.version }}-${arch}-${i}.zip artifacts/${folder}/*
             done
           done
