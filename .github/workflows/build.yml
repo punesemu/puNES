@@ -293,7 +293,7 @@ jobs:
       - name: 'Create assets'
         shell: bash
         run: |
-          echo "create artifacts/puNES-${{ env.version }}-x86_64.AppImage"
+          echo "create puNES-${{ env.version }}-x86_64.AppImage"
           mv artifacts/puNES-x86_64.AppImage/puNES-x86_64.AppImage artifacts/puNES-${{ env.version }}-x86_64.AppImage
           for bit in 32 64 ; do
             arch=$( [ "$bit" == "32" ] && echo "i686" || echo "x86_64" )
@@ -301,7 +301,7 @@ jobs:
               folder=punes${bit}.wip.${i}
               out="punes-${{ env.version }}-${arch}-win-${i}.zip"
               mv artifacts/${folder}/punes.exe artifacts/${folder}/punes${bit}.exe
-              echo "create artifacts/${out}"
+              echo "create ${out}"
               zip -9j artifacts/${out} artifacts/${folder}/*
             done
           done
