@@ -299,9 +299,10 @@ jobs:
             arch=$( [ "$bit" == "32" ] && echo "i686" || echo "x86_64" )
             for i in d3d9 opengl ; do
               folder=punes${bit}.wip.${i}
+              out="punes-${{ env.version }}-${arch}-win-${i}.zip"
               mv artifacts/${folder}/punes.exe artifacts/${folder}/punes${bit}.exe
-              echo "create artifacts/punes-${{ env.version }}-${arch}-${i}.zip"
-              zip -9j artifacts/punes-${{ env.version }}-${arch}-${i}.zip artifacts/${folder}/*
+              echo "create artifacts/${out}"
+              zip -9j artifacts/${out} artifacts/${folder}/*
             done
           done
 
