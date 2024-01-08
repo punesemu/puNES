@@ -309,7 +309,6 @@ jobs:
       - name: 'Prepare GitHub release'
         uses: softprops/action-gh-release@v1
         with:
-          token: ${{ secrets.CUSTOM_GITHUB_TOKEN }}
           body_path: ${{ github.workspace }}-ChangeLog.md
           draft: true
           fail_on_unmatched_files: true
