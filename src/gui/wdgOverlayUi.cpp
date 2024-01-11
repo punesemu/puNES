@@ -235,8 +235,8 @@ void gui_overlay_info_append_msg_precompiled_with_alignment(BYTE alignment, int 
 			msg = msg.arg(a1);
 			break;
 		case 19:
-			a1 = QString("%1").arg(cfg->extra_vb_scanlines);
-			a2 = QString("%1").arg(cfg->extra_pr_scanlines);
+			a1 = QString("%1").arg(cfg->oclock->extra_slines.vblank);
+			a2 = QString("%1").arg(cfg->oclock->extra_slines.postrender);
 			msg = msg.arg(a1, a2);
 			break;
 		case 22:

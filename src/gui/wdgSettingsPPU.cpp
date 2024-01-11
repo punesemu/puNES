@@ -28,19 +28,59 @@ wdgSettingsPPU::wdgSettingsPPU(QWidget *parent) : QWidget(parent) {
 
 	setFocusProxy(checkBox_Hide_Sprites);
 
-	spinBox_VB_Slines->setRange(0, 1000);
-	spinBox_Postrender_Slines->setRange(0, 1000);
+	groupBox_Overclock_Pergame_setting->setStyleSheet(group_title_and_button_stylesheet());
+	groupBox_Overclock_Def_value->setStyleSheet(group_title_and_button_stylesheet());
+	groupBox_Pergame_Slines->setStyleSheet(group_title_bold_stylesheet());
+	groupBox_Def_Slines->setStyleSheet(group_title_bold_stylesheet());
 
 	connect(checkBox_Hide_Sprites, SIGNAL(clicked(bool)), this, SLOT(s_hide_sprites(bool)));
 	connect(checkBox_Hide_Background, SIGNAL(clicked(bool)), this, SLOT(s_hide_background(bool)));
 	connect(checkBox_Unlimited_Sprites, SIGNAL(clicked(bool)), this, SLOT(s_unlimited_sprites(bool)));
 	connect(checkBox_Unlimited_Sprites_Auto, SIGNAL(clicked(bool)), this, SLOT(s_unlimited_sprites_auto(bool)));
 
-	connect(checkBox_PPU_Overclock, SIGNAL(clicked(bool)), this, SLOT(s_ppu_overclock(bool)));
-	connect(checkBox_Disable_DMC_Control, SIGNAL(clicked(bool)), this, SLOT(s_disable_dmc_control(bool)));
+	pushButton_Overclock_Pergame_setting_on->setProperty("mtype", QVariant(PERGAME_ON));
+	pushButton_Overclock_Pergame_setting_off->setProperty("mtype", QVariant(PERGAME_OFF));
+	pushButton_Overclock_Pergame_setting_use_def->setProperty("mtype", QVariant(PERGAME_DEFAULT));
 
-	connect(spinBox_VB_Slines, SIGNAL(valueChanged(int)), this, SLOT(s_overclock_vb_slines(int)));
-	connect(spinBox_Postrender_Slines, SIGNAL(valueChanged(int)), this, SLOT(s_overclock_pr_slines(int)));
+	connect(pushButton_Overclock_Pergame_setting_on, SIGNAL(toggled(bool)), this, SLOT(s_overclock(bool)));
+	connect(pushButton_Overclock_Pergame_setting_off, SIGNAL(toggled(bool)), this, SLOT(s_overclock(bool)));
+	connect(pushButton_Overclock_Pergame_setting_use_def, SIGNAL(toggled(bool)), this, SLOT(s_overclock(bool)));
+
+	pushButton_Overclock_Def_value_on->setProperty("mtype", QVariant(PERGAME_ON));
+	pushButton_Overclock_Def_value_off->setProperty("mtype", QVariant(PERGAME_OFF));
+
+	connect(pushButton_Overclock_Def_value_on, SIGNAL(toggled(bool)), this, SLOT(s_overclock_def_value(bool)));
+	connect(pushButton_Overclock_Def_value_off, SIGNAL(toggled(bool)), this, SLOT(s_overclock_def_value(bool)));
+
+	spinBox_Pergame_VB_Slines->setRange(0, 1000);
+	spinBox_Pergame_Postrender_Slines->setRange(0, 1000);
+
+	spinBox_Pergame_VB_Slines->setProperty("mtype", QVariant(0));
+	pushButton_Pergame_VB_Slines->setProperty("mtype", QVariant(0));
+	spinBox_Pergame_Postrender_Slines->setProperty("mtype", QVariant(0));
+	pushButton_Pergame_Postrender_Slines->setProperty("mtype", QVariant(0));
+	checkBox_Pergame_Disable_DMC_Control->setProperty("mtype", QVariant(0));
+
+	connect(spinBox_Pergame_VB_Slines, SIGNAL(valueChanged(int)), this, SLOT(s_overclock_vb_slines(int)));
+	connect(pushButton_Pergame_VB_Slines, SIGNAL(clicked(bool)), this, SLOT(s_overclock_vb_slines_reset(bool)));
+	connect(spinBox_Pergame_Postrender_Slines, SIGNAL(valueChanged(int)), this, SLOT(s_overclock_pr_slines(int)));
+	connect(pushButton_Pergame_Postrender_Slines, SIGNAL(clicked(bool)), this, SLOT(s_overclock_pr_slines_reset(bool)));
+	connect(checkBox_Pergame_Disable_DMC_Control, SIGNAL(clicked(bool)), this, SLOT(s_overclock_disable_dmc_control(bool)));
+
+	spinBox_Def_VB_Slines->setRange(0, 1000);
+	spinBox_Def_Postrender_Slines->setRange(0, 1000);
+
+	spinBox_Def_VB_Slines->setProperty("mtype", QVariant(1));
+	pushButton_Def_VB_Slines->setProperty("mtype", QVariant(1));
+	spinBox_Def_Postrender_Slines->setProperty("mtype", QVariant(1));
+	pushButton_Def_Postrender_Slines->setProperty("mtype", QVariant(1));
+	checkBox_Def_Disable_DMC_Control->setProperty("mtype", QVariant(1));
+
+	connect(spinBox_Def_VB_Slines, SIGNAL(valueChanged(int)), this, SLOT(s_overclock_vb_slines(int)));
+	connect(pushButton_Def_VB_Slines, SIGNAL(clicked(bool)), this, SLOT(s_overclock_vb_slines_reset(bool)));
+	connect(spinBox_Def_Postrender_Slines, SIGNAL(valueChanged(int)), this, SLOT(s_overclock_pr_slines(int)));
+	connect(pushButton_Def_Postrender_Slines, SIGNAL(clicked(bool)), this, SLOT(s_overclock_pr_slines_reset(bool)));
+	connect(checkBox_Def_Disable_DMC_Control, SIGNAL(clicked(bool)), this, SLOT(s_verclock_disable_dmc_control(bool)));
 
 	connect(pushButton_Reset_Lag_Counter, SIGNAL(clicked(bool)), this, SLOT(s_lag_counter_reset(bool)));
 
@@ -74,20 +114,8 @@ void wdgSettingsPPU::update_widget(void) {
 	checkBox_Unlimited_Sprites_Auto->setEnabled(cfg->unlimited_sprites);
 	checkBox_Unlimited_Sprites_Auto->setChecked(cfg->unlimited_sprites_auto);
 
-	checkBox_PPU_Overclock->setChecked(cfg->ppu_overclock);
-
-	checkBox_Disable_DMC_Control->setChecked(cfg->ppu_overclock_dmc_control_disabled);
-	checkBox_Disable_DMC_Control->setEnabled(cfg->ppu_overclock);
-
-	label_VB_Slines->setEnabled(cfg->ppu_overclock);
-
-	spinBox_VB_Slines->setEnabled(cfg->ppu_overclock);
-	qtHelper::spinbox_set_value(spinBox_VB_Slines, cfg->extra_vb_scanlines);
-
-	label_Postrender_Slines->setEnabled(cfg->ppu_overclock);
-
-	spinBox_Postrender_Slines->setEnabled(cfg->ppu_overclock);
-	qtHelper::spinbox_set_value(spinBox_Postrender_Slines, cfg->extra_pr_scanlines);
+	overclock_set();
+	overclock_slines_set();
 
 	comboBox_CPUPPU_Alignment->setCurrentIndex(cfg->ppu_alignment);
 
@@ -95,6 +123,47 @@ void wdgSettingsPPU::update_widget(void) {
 }
 void wdgSettingsPPU::lag_counter_update(void) {
 	lineEdit_Lag_Counter->setText(QString("%1").arg(info.lag_frame.totals));
+}
+
+void wdgSettingsPPU::overclock_set(void) {
+	// per-game
+	groupBox_Pergame_Slines->setEnabled(cfg->oclock_all.pergame.enabled == PERGAME_ON);
+
+	qtHelper::pushbutton_set_checked(pushButton_Overclock_Pergame_setting_on, false);
+	qtHelper::pushbutton_set_checked(pushButton_Overclock_Pergame_setting_off, false);
+	qtHelper::pushbutton_set_checked(pushButton_Overclock_Pergame_setting_use_def, false);
+	switch (cfg->oclock_all.pergame.enabled) {
+		case PERGAME_ON:
+			qtHelper::pushbutton_set_checked(pushButton_Overclock_Pergame_setting_on, true);
+			break;
+		default:
+		case PERGAME_OFF:
+			qtHelper::pushbutton_set_checked(pushButton_Overclock_Pergame_setting_off, true);
+			break;
+		case PERGAME_DEFAULT:
+			qtHelper::pushbutton_set_checked(pushButton_Overclock_Pergame_setting_use_def, true);
+			break;
+	}
+	// default
+	groupBox_Def_Slines->setEnabled((cfg->oclock_all.pergame.enabled == PERGAME_DEFAULT) &&
+		(cfg->oclock_all.def.enabled == PERGAME_ON));
+
+	qtHelper::pushbutton_set_checked(pushButton_Overclock_Def_value_on, false);
+	qtHelper::pushbutton_set_checked(pushButton_Overclock_Def_value_off, false);
+	if (cfg->oclock_all.def.enabled == PERGAME_ON) {
+		qtHelper::pushbutton_set_checked(pushButton_Overclock_Def_value_on, true);
+	} else {
+		qtHelper::pushbutton_set_checked(pushButton_Overclock_Def_value_off, true);
+	}
+}
+void  wdgSettingsPPU::overclock_slines_set(void) {
+	qtHelper::spinbox_set_value(spinBox_Pergame_VB_Slines, cfg->oclock_all.pergame.extra_slines.vblank);
+	qtHelper::spinbox_set_value(spinBox_Pergame_Postrender_Slines, cfg->oclock_all.pergame.extra_slines.postrender);
+	qtHelper::checkbox_set_checked(checkBox_Pergame_Disable_DMC_Control, cfg->oclock_all.pergame.dmc_control_disabled);
+
+	qtHelper::spinbox_set_value(spinBox_Def_VB_Slines, cfg->oclock_all.def.extra_slines.vblank);
+	qtHelper::spinbox_set_value(spinBox_Def_Postrender_Slines, cfg->oclock_all.def.extra_slines.postrender);
+	qtHelper::checkbox_set_checked(checkBox_Def_Disable_DMC_Control, cfg->oclock_all.def.dmc_control_disabled);
 }
 
 void wdgSettingsPPU::s_hide_sprites(UNUSED(bool checked)) {
@@ -118,36 +187,75 @@ void wdgSettingsPPU::s_unlimited_sprites_auto(UNUSED(bool checked)) {
 	cfg->unlimited_sprites_auto = !cfg->unlimited_sprites_auto;
 	emu_thread_continue();
 }
-void wdgSettingsPPU::s_ppu_overclock(UNUSED(bool checked)) {
-	emu_thread_pause();
-	cfg->ppu_overclock = !cfg->ppu_overclock;
-	ppu_overclock(0, TRUE);
-	ppu_overclock(1, TRUE);
-	emu_thread_continue();
-	settings_pgs_save();
-	update_widget();
+void wdgSettingsPPU::s_overclock(bool checked) {
+	if (checked) {
+		emu_thread_pause();
+		cfg->oclock_all.pergame.enabled = QVariant(((QPushButton *)sender())->property("mtype")).toInt();
+		cfg->oclock = cfg->oclock_all.pergame.enabled == PERGAME_DEFAULT
+			? &cfg->oclock_all.def
+			: &cfg->oclock_all.pergame;
+		ppu_overclock(0, TRUE);
+		ppu_overclock(1, TRUE);
+		settings_pgs_save();
+		emu_thread_continue();
+	}
+	overclock_set();
 }
-void wdgSettingsPPU::s_disable_dmc_control(UNUSED(bool checked)) {
-	emu_thread_pause();
-	cfg->ppu_overclock_dmc_control_disabled = !cfg->ppu_overclock_dmc_control_disabled;
-	emu_thread_continue();
-	settings_pgs_save();
+void wdgSettingsPPU::s_overclock_def_value(bool checked) {
+	if (checked) {
+		emu_thread_pause();
+		cfg->oclock_all.def.enabled = QVariant(((QPushButton *)sender())->property("mtype")).toInt();
+		cfg->oclock = cfg->oclock_all.pergame.enabled == PERGAME_DEFAULT
+			? &cfg->oclock_all.def
+			: &cfg->oclock_all.pergame;
+		ppu_overclock(0, TRUE);
+		ppu_overclock(1, TRUE);
+		settings_pgs_save();
+		emu_thread_continue();
+	}
+	overclock_set();
 }
 void wdgSettingsPPU::s_overclock_vb_slines(int i) {
+	_config_overclock *oclock = QVariant(((QPushButton *)sender())->property("mtype")).toInt() == 0
+		? &cfg->oclock_all.pergame
+		: &cfg->oclock_all.def;
+
 	emu_thread_pause();
-	cfg->extra_vb_scanlines = i;
+	oclock->extra_slines.vblank = i;
 	ppu_overclock(0, FALSE);
 	ppu_overclock(1, FALSE);
-	emu_thread_continue();
 	settings_pgs_save();
+	emu_thread_continue();
+}
+void wdgSettingsPPU::s_overclock_vb_slines_reset(UNUSED(bool checked)) {
+	s_overclock_vb_slines(0);
+	overclock_slines_set();
 }
 void wdgSettingsPPU::s_overclock_pr_slines(int i) {
+	_config_overclock *oclock = QVariant(((QPushButton *)sender())->property("mtype")).toInt() == 0
+		? &cfg->oclock_all.pergame
+		: &cfg->oclock_all.def;
+
 	emu_thread_pause();
-	cfg->extra_pr_scanlines = i;
+	oclock->extra_slines.postrender = i;
 	ppu_overclock(0, FALSE);
 	ppu_overclock(1, FALSE);
-	emu_thread_continue();
 	settings_pgs_save();
+	emu_thread_continue();
+}
+void wdgSettingsPPU::s_overclock_pr_slines_reset(UNUSED(bool checked)) {
+	s_overclock_pr_slines(0);
+	overclock_slines_set();
+}
+void wdgSettingsPPU::s_overclock_disable_dmc_control(UNUSED(bool checked)) {
+	_config_overclock *oclock = QVariant(((QPushButton *)sender())->property("mtype")).toInt() == 0
+		? &cfg->oclock_all.pergame
+		: &cfg->oclock_all.def;
+
+	emu_thread_pause();
+	oclock->dmc_control_disabled = !oclock->dmc_control_disabled;
+	settings_pgs_save();
+	emu_thread_continue();
 }
 void wdgSettingsPPU::s_lag_counter_reset(UNUSED(bool checked)) {
 	emu_thread_pause();

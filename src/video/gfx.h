@@ -93,7 +93,6 @@ enum shader_type {
 	SHADER_FILE,
 	SHADER_LAST = SHADER_FILE,
 };
-enum overcan_type { OSCAN_OFF, OSCAN_ON, OSCAN_DEFAULT };
 enum gfx_info_type { CURRENT, NO_OVERSCAN, MONITOR, VIDEO_MODE, PASS0, FSCR_RESIZE, TOT_GFX_INFO_TYPE };
 enum no_change { NO_CHANGE = 255 };
 enum gfx_rotate_type { ROTATE_0, ROTATE_90, ROTATE_180, ROTATE_270, ROTATE_MAX };

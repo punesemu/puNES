@@ -22,6 +22,14 @@
 #include "apu.h"
 #include "input.h"
 
+typedef struct _config_overclock {
+	BYTE enabled;
+	BYTE dmc_control_disabled;
+	struct config_overclock_extra_slines {
+		WORD vblank;
+		WORD postrender;
+	} extra_slines;
+} _config_overclock;
 typedef struct _last_geometry {
 	int x, y;
 	int w, h;
@@ -85,11 +93,7 @@ typedef struct _config {
 	BYTE bck_pause;
 	WORD language;
 	int dipswitch;
-	BYTE ppu_overclock;
-	BYTE ppu_overclock_dmc_control_disabled;
 	BYTE ppu_alignment;
-	WORD extra_vb_scanlines;
-	WORD extra_pr_scanlines;
 	BYTE save_battery_ram_file;
 	BYTE multiple_instances;
 	BYTE nsf_player_effect;
@@ -104,6 +108,12 @@ typedef struct _config {
 
 	_config_input input;
 	_config_apu apu;
+	_config_overclock *oclock;
+
+	struct _config_overclock_all {
+		_config_overclock def;
+		_config_overclock pergame;
+	} oclock_all;
 #if defined (WITH_FFMPEG)
 	struct _config_recording {
 		BYTE last_type;

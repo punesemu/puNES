@@ -136,6 +136,10 @@ enum set_element {
 	SET_HIDE_BACKGROUND,
 	SET_UNLIMITED_SPRITES,
 	SET_UNLIMITED_SPRITES_AUTO,
+	SET_PPU_OVERCLOCK,
+	SET_PPU_OVERCLOCK_7BIT,
+	SET_PPU_OVERCLOCK_VB_SCLINE,
+	SET_PPU_OVERCLOCK_PR_SCLINE,
 	SET_PPU_ALIGNMENT,
 	SET_NSF_PLAYER_EFFECT,
 	SET_NSF_PLAYER_NSFE_PLAYLIST,
@@ -561,10 +565,10 @@ static const _opt opt_par[] = {
 	{NULL, uL("8:7") , PAR87},
 	{NULL, uL("11:8"), PAR118}
 };
-static const _opt opt_oscan[] = {
-	{NULL, uL("off")    , OSCAN_OFF},
-	{NULL, uL("on")     , OSCAN_ON},
-	{NULL, uL("default"), OSCAN_DEFAULT}
+static const _opt opt_pergame[] = {
+	{NULL, uL("off")    , PERGAME_OFF},
+	{NULL, uL("on")     , PERGAME_ON},
+	{NULL, uL("default"), PERGAME_DEFAULT}
 };
 static const _opt opt_filter[] = {
 	{uL("no filter")        , uL("none")         , NO_FILTER},
@@ -910,7 +914,7 @@ static const _settings main_cfg[] = {
 		uL("video"), uL("overscan default"), uL("off"),
 		uL("# possible values: on, off"),
 		uL("-o, --overscan            default overscan      : on, off"),
-		{LENGTH(opt_oscan), opt_oscan}
+		{LENGTH(opt_pergame), opt_pergame}
 	},
 	{
 		uL("video"), uL("overscan bordes NTSC"), uL("8,8,8,9"),
@@ -1394,6 +1398,30 @@ static const _settings main_cfg[] = {
 		{LENGTH(opt_no_yes), opt_no_yes}
 	},
 	{
+		uL("ppu"), uL("ppu overclock default"), uL("off"),
+		uL("# possible values: on, off"),
+		NULL,
+		{LENGTH(opt_pergame), opt_pergame}
+	},
+	{
+		uL("ppu"), uL("disable 7bit sample control"), uL("no"),
+		uL("# possible values: yes, no"),
+		NULL,
+		{LENGTH(opt_no_yes), opt_no_yes}
+	},
+	{
+		uL("ppu"), uL("extra vblank scanlines"), uL("0"),
+		uL("# possible values: [0 - 1000]"),
+		NULL,
+		{0, NULL}
+	},
+	{
+		uL("ppu"), uL("extra postrender scanlines"), uL("0"),
+		uL("# possible values: [0 - 1000]"),
+		NULL,
+		{0, NULL}
+	},
+	{
 		uL("ppu"), uL("cpu ppu alignment"), uL("default"),
 		uL("# possible values: default, randomize, increment at reset"),
 		NULL,
@@ -1519,7 +1547,7 @@ static const _settings pgs_cfg[] = {
 		uL("video"), uL("overscan"), uL("default"),
 		uL("# possible values: on, off, default"),
 		NULL,
-		{LENGTH(opt_oscan), opt_oscan}
+		{LENGTH(opt_pergame), opt_pergame}
 	},
 	{
 		uL("system"), uL("dipswitch"), uL("-1"),
@@ -1528,25 +1556,25 @@ static const _settings pgs_cfg[] = {
 		{0, NULL}
 	},
 	{
-		uL("system"), uL("ppu overclock"), uL("no"),
+		uL("ppu"), uL("ppu overclock"), uL("default"),
+		uL("# possible values: on, off, default"),
+		NULL,
+		{LENGTH(opt_pergame), opt_pergame}
+	},
+	{
+		uL("ppu"), uL("disable 7bit sample control"), uL("no"),
 		uL("# possible values: yes, no"),
 		NULL,
 		{LENGTH(opt_no_yes), opt_no_yes}
 	},
 	{
-		uL("system"), uL("disable 7bit sample control"), uL("no"),
-		uL("# possible values: yes, no"),
-		NULL,
-		{LENGTH(opt_no_yes), opt_no_yes}
-	},
-	{
-		uL("system"), uL("extra vblank scanlines"), uL("0"),
+		uL("ppu"), uL("extra vblank scanlines"), uL("0"),
 		uL("# possible values: [0 - 1000]"),
 		NULL,
 		{0, NULL}
 	},
 	{
-		uL("system"), uL("extra postrender scanlines"), uL("0"),
+		uL("ppu"), uL("extra postrender scanlines"), uL("0"),
 		uL("# possible values: [0 - 1000]"),
 		NULL,
 		{0, NULL}

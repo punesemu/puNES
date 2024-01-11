@@ -142,7 +142,9 @@ void settings_pgs_parse(void) {
 	s.pgs = new objPgs(s.cfg, PGSFILENAME, LSET_PGS);
 	s.pgs->setup();
 
-	if (cfg->ppu_overclock) {
+	cfg->oclock = cfg->oclock_all.pergame.enabled == PERGAME_DEFAULT ? &cfg->oclock_all.def : &cfg->oclock_all.pergame;
+
+	if (cfg->oclock->enabled == PERGAME_ON) {
 		gui_overlay_info_append_msg_precompiled(19, nullptr);
 	}
 }

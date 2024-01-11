@@ -1086,9 +1086,9 @@ void ppu_overclock(BYTE nidx, BYTE reset_dmc_in_use) {
 	nes[nidx].p.overclock.sclines.vb = 0;
 	nes[nidx].p.overclock.sclines.pr = 0;
 
-	if (cfg->ppu_overclock) {
-		nes[nidx].p.overclock.sclines.vb = cfg->extra_vb_scanlines;
-		nes[nidx].p.overclock.sclines.pr = cfg->extra_pr_scanlines;
+	if (cfg->oclock && (cfg->oclock->enabled == PERGAME_ON)) {
+		nes[nidx].p.overclock.sclines.vb = cfg->oclock->extra_slines.vblank;
+		nes[nidx].p.overclock.sclines.pr = cfg->oclock->extra_slines.postrender;
 	}
 
 	nes[nidx].p.overclock.sclines.total = nes[nidx].p.overclock.sclines.vb + nes[nidx].p.overclock.sclines.pr;

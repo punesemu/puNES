@@ -66,16 +66,16 @@ wdgSettingsVideo::wdgSettingsVideo(QWidget *parent) : QWidget(parent) {
 	connect(pushButton_Scale_5x, SIGNAL(toggled(bool)), this, SLOT(s_scale(bool)));
 	connect(pushButton_Scale_6x, SIGNAL(toggled(bool)), this, SLOT(s_scale(bool)));
 
-	pushButton_Oscan_pergame_setting_on->setProperty("mtype", QVariant(OSCAN_ON));
-	pushButton_Oscan_pergame_setting_off->setProperty("mtype", QVariant(OSCAN_OFF));
-	pushButton_Oscan_pergame_setting_use_def->setProperty("mtype", QVariant(OSCAN_DEFAULT));
+	pushButton_Oscan_pergame_setting_on->setProperty("mtype", QVariant(PERGAME_ON));
+	pushButton_Oscan_pergame_setting_off->setProperty("mtype", QVariant(PERGAME_OFF));
+	pushButton_Oscan_pergame_setting_use_def->setProperty("mtype", QVariant(PERGAME_DEFAULT));
 
 	connect(pushButton_Oscan_pergame_setting_on, SIGNAL(toggled(bool)), this, SLOT(s_oscan(bool)));
 	connect(pushButton_Oscan_pergame_setting_off, SIGNAL(toggled(bool)), this, SLOT(s_oscan(bool)));
 	connect(pushButton_Oscan_pergame_setting_use_def, SIGNAL(toggled(bool)), this, SLOT(s_oscan(bool)));
 
-	pushButton_Oscan_def_value_on->setProperty("mtype", QVariant(OSCAN_ON));
-	pushButton_Oscan_def_value_off->setProperty("mtype", QVariant(OSCAN_OFF));
+	pushButton_Oscan_def_value_on->setProperty("mtype", QVariant(PERGAME_ON));
+	pushButton_Oscan_def_value_off->setProperty("mtype", QVariant(PERGAME_OFF));
 
 	connect(pushButton_Oscan_def_value_on, SIGNAL(toggled(bool)), this, SLOT(s_oscan_def_value(bool)));
 	connect(pushButton_Oscan_def_value_off, SIGNAL(toggled(bool)), this, SLOT(s_oscan_def_value(bool)));
@@ -411,14 +411,14 @@ void wdgSettingsVideo::oscan_set(void) {
 	qtHelper::pushbutton_set_checked(pushButton_Oscan_pergame_setting_off, false);
 	qtHelper::pushbutton_set_checked(pushButton_Oscan_pergame_setting_use_def, false);
 	switch (cfg->oscan) {
-		case OSCAN_ON:
+		case PERGAME_ON:
 			qtHelper::pushbutton_set_checked(pushButton_Oscan_pergame_setting_on, true);
 			break;
 		default:
-		case OSCAN_OFF:
+		case PERGAME_OFF:
 			qtHelper::pushbutton_set_checked(pushButton_Oscan_pergame_setting_off, true);
 			break;
-		case OSCAN_DEFAULT:
+		case PERGAME_DEFAULT:
 			qtHelper::pushbutton_set_checked(pushButton_Oscan_pergame_setting_use_def, true);
 			break;
 	}
@@ -426,7 +426,7 @@ void wdgSettingsVideo::oscan_set(void) {
 void wdgSettingsVideo::oscan_def_value_set(void) {
 	qtHelper::pushbutton_set_checked(pushButton_Oscan_def_value_on, false);
 	qtHelper::pushbutton_set_checked(pushButton_Oscan_def_value_off, false);
-	if (cfg->oscan_default == OSCAN_ON) {
+	if (cfg->oscan_default == PERGAME_ON) {
 		qtHelper::pushbutton_set_checked(pushButton_Oscan_def_value_on, true);
 	} else {
 		qtHelper::pushbutton_set_checked(pushButton_Oscan_def_value_off, true);
@@ -894,7 +894,7 @@ void wdgSettingsVideo::s_oscan_def_value(bool checked) {
 	if (checked) {
 		emu_thread_pause();
 		cfg->oscan_default = QVariant(((QPushButton *)sender())->property("mtype")).toInt();
-		if (cfg->oscan == OSCAN_DEFAULT) {
+		if (cfg->oscan == PERGAME_DEFAULT) {
 			gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, FALSE);
 		}
 		emu_thread_continue();

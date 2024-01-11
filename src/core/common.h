@@ -54,6 +54,7 @@ enum exit_type { EXIT_OK, EXIT_ERROR };
 enum lower_value { LOWER, UPPER };
 enum machine_mode { AUTO, NTSC, PAL, DENDY, DEFAULT = 255 };
 enum initial_ram_value_type { IRV_0X00, IRV_0XFF, IRV_RANDOM };
+enum overcan_type { PERGAME_OFF, PERGAME_ON, PERGAME_DEFAULT };
 enum console_type {
 	REGULAR_NES,
 	VS_SYSTEM,

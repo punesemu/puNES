@@ -3,7 +3,8 @@ Changelog:
 - Rewritten mappers : All.
 - Rewritten WRAM, VRAM, PRGROM, CHROM and Nametebles management.
 - Rewritten FDS support.
-  Furthermore, an option has been added to select the mode for write operations. Until now, all writes were stored on an external file (to preserve the integrity of the disk image), now it's possible to choose to write them directly to the FDS/QD file (making it portable to other emulators as well).
+  * Furthermore, an option has been added to select the mode for write operations. Until now, all writes were stored on an external file (diff file) to preserve the integrity of the disk image, now it's possible to choose to write them directly to the FDS/QD file (making it portable to other emulators as well).
+  * Changed the format of the diff file, now I use the IPS format (which can always be applied to the original image).
 - Rewritten the format and management of save states.
   WARNING save states of version 0.110 or earlier are no longer compatible.
 - Added support to Quick Disk format.
@@ -11,7 +12,8 @@ Changelog:
   It's possible to choose between three values:
   * 0x00
   * 0xFF (default)
-  * Randomize.
+  * Randomize
+- Added the possibility to set default values for PPU overclocking to be applied for all roms in addition to the per-game ones already used.
 - Added Arabic translation (thx to Chipsum).
 - Added Polish translation (thx to elektronicznypank).
 - Added full support for the NES 2.0 header format.

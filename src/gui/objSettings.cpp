@@ -956,6 +956,10 @@ void objSet::to_cfg(const QString &group) {
 		int_to_val(SET_HIDE_BACKGROUND, cfg_from_file.hide_background);
 		int_to_val(SET_UNLIMITED_SPRITES, cfg_from_file.unlimited_sprites);
 		int_to_val(SET_UNLIMITED_SPRITES_AUTO, cfg_from_file.unlimited_sprites_auto);
+		int_to_val(SET_PPU_OVERCLOCK, cfg_from_file.oclock_all.def.enabled);
+		int_to_val(SET_PPU_OVERCLOCK_7BIT, cfg_from_file.oclock_all.def.dmc_control_disabled);
+		int_to_val(SET_PPU_OVERCLOCK_VB_SCLINE, cfg_from_file.oclock_all.def.extra_slines.vblank);
+		int_to_val(SET_PPU_OVERCLOCK_PR_SCLINE, cfg_from_file.oclock_all.def.extra_slines.postrender);
 		int_to_val(SET_PPU_ALIGNMENT, cfg_from_file.ppu_alignment);
 	}
 
@@ -1094,6 +1098,10 @@ void objSet::fr_cfg(const QString &group) {
 		cfg_from_file.hide_background = val_to_int(SET_HIDE_BACKGROUND);
 		cfg_from_file.unlimited_sprites = val_to_int(SET_UNLIMITED_SPRITES);
 		cfg_from_file.unlimited_sprites_auto = val_to_int(SET_UNLIMITED_SPRITES_AUTO);
+		cfg_from_file.oclock_all.def.enabled = val_to_int(SET_PPU_OVERCLOCK);
+		cfg_from_file.oclock_all.def.dmc_control_disabled = val_to_int(SET_PPU_OVERCLOCK_7BIT);
+		cfg_from_file.oclock_all.def.extra_slines.vblank = val_to_int(SET_PPU_OVERCLOCK_VB_SCLINE);
+		cfg_from_file.oclock_all.def.extra_slines.postrender = val_to_int(SET_PPU_OVERCLOCK_PR_SCLINE);
 		cfg_from_file.ppu_alignment = val_to_int(SET_PPU_ALIGNMENT);
 	}
 
@@ -1128,7 +1136,7 @@ void objSet::after_the_defaults() {
 	gfx.scale_before_fscreen = cfg_from_file.scale;
 
 	save_slot.slot_in_use = 0;
-	cfg_from_file.oscan = OSCAN_DEFAULT;
+	cfg_from_file.oscan = PERGAME_DEFAULT;
 
 	if (cfg_from_file.cheat_mode == GAMEGENIE_MODE) {
 		gamegenie_check_rom_present(TRUE);
@@ -1651,20 +1659,20 @@ void objPgs::to_cfg(UNUSED(const QString &group)) {
 	cpy_utchar_to_val(SET_PGS_FILE_SAVE, cfg_from_file.save_file);
 	int_to_val(SET_PGS_OVERSCAN, cfg_from_file.oscan);
 	int_to_val(SET_PGS_DIPSWITCH, cfg_from_file.dipswitch);
-	int_to_val(SET_PGS_PPU_OVERCLOCK, cfg_from_file.ppu_overclock);
-	int_to_val(SET_PGS_PPU_OVERCLOCK_7BIT, cfg_from_file.ppu_overclock_dmc_control_disabled);
-	int_to_val(SET_PGS_PPU_OVERCLOCK_VB_SCLINE, cfg_from_file.extra_vb_scanlines);
-	int_to_val(SET_PGS_PPU_OVERCLOCK_PR_SCLINE, cfg_from_file.extra_pr_scanlines);
+	int_to_val(SET_PGS_PPU_OVERCLOCK, cfg_from_file.oclock_all.pergame.enabled);
+	int_to_val(SET_PGS_PPU_OVERCLOCK_7BIT, cfg_from_file.oclock_all.pergame.dmc_control_disabled);
+	int_to_val(SET_PGS_PPU_OVERCLOCK_VB_SCLINE, cfg_from_file.oclock_all.pergame.extra_slines.vblank);
+	int_to_val(SET_PGS_PPU_OVERCLOCK_PR_SCLINE, cfg_from_file.oclock_all.pergame.extra_slines.postrender);
 }
 void objPgs::fr_cfg(UNUSED(const QString &group)) {
 	save_slot.slot_in_use = val_to_int(SET_PGS_SLOT);
 	cpy_val_to_utchar(SET_PGS_FILE_SAVE, cfg_from_file.save_file, usizeof(cfg_from_file.save_file));
 	cfg_from_file.oscan = val_to_int(SET_PGS_OVERSCAN);
 	cfg_from_file.dipswitch = val_to_int(SET_PGS_DIPSWITCH);
-	cfg_from_file.ppu_overclock = val_to_int(SET_PGS_PPU_OVERCLOCK);
-	cfg_from_file.ppu_overclock_dmc_control_disabled = val_to_int(SET_PGS_PPU_OVERCLOCK_7BIT);
-	cfg_from_file.extra_vb_scanlines = val_to_int(SET_PGS_PPU_OVERCLOCK_VB_SCLINE);
-	cfg_from_file.extra_pr_scanlines = val_to_int(SET_PGS_PPU_OVERCLOCK_PR_SCLINE);
+	cfg_from_file.oclock_all.pergame.enabled = val_to_int(SET_PGS_PPU_OVERCLOCK);
+	cfg_from_file.oclock_all.pergame.dmc_control_disabled = val_to_int(SET_PGS_PPU_OVERCLOCK_7BIT);
+	cfg_from_file.oclock_all.pergame.extra_slines.vblank = val_to_int(SET_PGS_PPU_OVERCLOCK_VB_SCLINE);
+	cfg_from_file.oclock_all.pergame.extra_slines.postrender = val_to_int(SET_PGS_PPU_OVERCLOCK_PR_SCLINE);
 }
 
 // ----------------------------------------- Input ---------------------------------------

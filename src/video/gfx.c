@@ -105,7 +105,7 @@ void gfx_set_screen(BYTE scale, DBWORD filter, DBWORD shader, BYTE fullscreen, B
 		gfx.rows = SCR_COLUMNS;
 		gfx.lines = SCR_ROWS;
 
-		if (overscan.enabled == OSCAN_DEFAULT) {
+		if (overscan.enabled == PERGAME_DEFAULT) {
 			overscan.enabled = cfg->oscan_default;
 		}
 		if (overscan.enabled) {

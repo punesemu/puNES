@@ -1518,7 +1518,7 @@ INLINE static void apu_wr_reg(BYTE nidx, WORD address, BYTE value) {
 				r4011.cycles = r4011.frames = 0;
 				r4011.value = value;
 
-				if (!nsf.enabled && cfg->ppu_overclock && !cfg->ppu_overclock_dmc_control_disabled && value) {
+				if (!nsf.enabled && (cfg->oclock->enabled == PERGAME_ON) && !cfg->oclock->dmc_control_disabled && value) {
 					nes[nidx].p.overclock.DMC_in_use = TRUE;
 					nes[nidx].p.ppu_sclines.total = machine.total_lines;
 					nes[nidx].p.ppu_sclines.vint = machine.vint_lines;
@@ -1529,7 +1529,7 @@ INLINE static void apu_wr_reg(BYTE nidx, WORD address, BYTE value) {
 			if (address == 0x4012) {
 				DMC.address_start = (value << 6) | 0xC000;
 
-				if (!nsf.enabled && cfg->ppu_overclock && !cfg->ppu_overclock_dmc_control_disabled && value) {
+				if (!nsf.enabled && (cfg->oclock->enabled == PERGAME_ON) && !cfg->oclock->dmc_control_disabled && value) {
 					nes[nidx].p.overclock.DMC_in_use = FALSE;
 					ppu_overclock_update()
 					ppu_overclock_control()
@@ -1540,7 +1540,7 @@ INLINE static void apu_wr_reg(BYTE nidx, WORD address, BYTE value) {
 				/* sample length */
 				DMC.length = (value << 4) | 0x01;
 
-				if (!nsf.enabled && cfg->ppu_overclock && !cfg->ppu_overclock_dmc_control_disabled && value) {
+				if (!nsf.enabled && (cfg->oclock->enabled == PERGAME_ON) && !cfg->oclock->dmc_control_disabled && value) {
 					nes[nidx].p.overclock.DMC_in_use = FALSE;
 					ppu_overclock_update()
 					ppu_overclock_control()

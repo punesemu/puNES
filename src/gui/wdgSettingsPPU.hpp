@@ -37,15 +37,22 @@ class wdgSettingsPPU : public QWidget, public Ui::wdgSettingsPPU {
 		void update_widget(void);
 		void lag_counter_update(void);
 
+	private:
+		void overclock_set(void);
+		void overclock_slines_set(void);
+
 	private slots:
 		void s_hide_sprites(bool checked);
 		void s_hide_background(bool checked);
 		void s_unlimited_sprites(bool checked);
 		void s_unlimited_sprites_auto(bool checked);
-		void s_ppu_overclock(bool checked);
-		void s_disable_dmc_control(bool checked);
+		void s_overclock(bool checked);
+		void s_overclock_def_value(bool checked);
 		void s_overclock_vb_slines(int i);
+		void s_overclock_vb_slines_reset(bool checked);
 		void s_overclock_pr_slines(int i);
+		void s_overclock_pr_slines_reset(bool checked);
+		void s_overclock_disable_dmc_control(bool checked);
 		void s_lag_counter_reset(bool checked);
 		void s_cpuppu_aligment(int index);
 };

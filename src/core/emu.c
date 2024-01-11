@@ -530,8 +530,6 @@ BYTE emu_turn_on(void) {
 	info.lag_frame.totals = 0;
 	info.lag_frame.consecutive = 0;
 
-	cfg->extra_vb_scanlines = cfg->extra_pr_scanlines = 0;
-
 	vs_system.watchdog.next = vs_system_wd_next()
 
 	info.r2002_jump_first_vblank = FALSE;
