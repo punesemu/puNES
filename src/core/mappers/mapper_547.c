@@ -230,7 +230,7 @@ INLINE static void wram_fix_547(void) {
 	wram_swap_547(0x7000, m547.reg[1]);
 }
 INLINE static void wram_swap_547(WORD address, WORD value) {
-	memmap_auto_4k(0, MMCPU(address), (value & 0x01) | ((value & 0x80) >> 2));
+	memmap_auto_4k(0, MMCPU(address), ((value & 0x08) >> 2) | (value & 0x01));
 }
 INLINE static void mirroring_fix_547(void) {
 	if (m547.reg[10] & 0x02) {
