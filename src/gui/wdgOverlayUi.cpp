@@ -328,6 +328,7 @@ wdgOverlayUi::wdgOverlayUi(QWidget *parent) : QWidget(parent) {
 
 	overlayInfo->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
 	overlayFPS->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
+	overlayFastForward->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
 	overlayFloppy->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
 	overlayFrame->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
 	overlayRewind->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
@@ -416,6 +417,7 @@ void wdgOverlayUi::update_widget(void) {
 	overlayInfo->update_widget();
 	overlayFPS->update_widget();
 	overlayFrame->update_widget();
+	overlayFastForward->update_widget();
 	overlayFloppy->update_widget();
 	overlayRewind->update_widget();
 	overlayTAS->update_widget();
@@ -839,6 +841,39 @@ void overlayWidgetFrame::update_info(void) {
 	txt += color_string(QString("%1").arg(info.lag_frame.totals), info.lag_frame.actual ? shared_color.lag : shared_color.no_lag);
 
 	td.setHtml(txt);
+}
+
+// overlayWidgetFastForward---------------------------------------------------------------------------------------------
+
+overlayWidgetFastForward::overlayWidgetFastForward(QWidget *parent) : overlayWidget(parent) {}
+overlayWidgetFastForward::~overlayWidgetFastForward() = default;
+
+QSize overlayWidgetFastForward::sizeHint(void) const {
+	return (QSize(icon.size().width() + hpadtot(), minimum_eight()));
+}
+void overlayWidgetFastForward::paintEvent(QPaintEvent *event) {
+	const QPointF coords = QPointF(((qreal)rect().width() - (qreal)(icon.size().width())) / 2.0,
+		((qreal)rect().height() - (qreal)icon.size().height()) / 2.0);
+
+	overlayWidget::paintEvent(event);
+
+	painter.begin(this);
+	painter.setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
+	if (fps.max_speed | fps.fast_forward) {
+		painter.drawImage(coords, icon);
+	}
+	painter.end();
+}
+
+void overlayWidgetFastForward::update_dpr(void) {
+	icon = dpr_image(":/pics/pics/overlay_fastforward_blue.png");
+}
+void overlayWidgetFastForward::update_widget(void) {
+	if (cfg->txt_on_screen & (fps.max_speed | fps.fast_forward) & !info.turn_off) {
+		show_widget();
+	} else {
+		hide();
+	}
 }
 
 // overlayWidgetFloppy -------------------------------------------------------------------------------------------------

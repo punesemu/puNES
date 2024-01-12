@@ -200,6 +200,16 @@
       </widget>
      </item>
      <item>
+      <widget class="overlayWidgetFastForward" name="overlayFastForward" native="true">
+       <property name="minimumSize">
+        <size>
+         <width>16</width>
+         <height>16</height>
+        </size>
+       </property>
+      </widget>
+     </item>
+     <item>
       <widget class="overlayWidgetFrame" name="overlayFrame" native="true">
        <property name="minimumSize">
         <size>
@@ -268,6 +278,12 @@
   </customwidget>
   <customwidget>
    <class>overlayWidgetFrame</class>
+   <extends>QWidget</extends>
+   <header>wdgOverlayUi.hpp</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>overlayWidgetFastForward</class>
    <extends>QWidget</extends>
    <header>wdgOverlayUi.hpp</header>
    <container>1</container>

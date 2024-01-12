@@ -21,6 +21,7 @@
 #include "clock.h"
 #include "conf.h"
 #include "nes.h"
+#include "gui.h"
 #include "video/gfx_thread.h"
 
 #define ff_estimated_ms()\
@@ -67,6 +68,7 @@ void fps_fast_forward_start(void) {
 	ppu_draw_screen_pause();
 	fps.fast_forward = TRUE;
 	fps_fast_forward_estimated_ms();
+	gui_update();
 }
 void fps_fast_forward_stop(void) {
 	if (!fps.fast_forward) {
@@ -75,6 +77,7 @@ void fps_fast_forward_stop(void) {
 	fps.fast_forward = FALSE;
 	fps_fast_forward_estimated_ms();
 	ppu_draw_screen_continue();
+	gui_update();
 }
 
 void fps_max_speed_estimated_ms(void) {
@@ -93,6 +96,7 @@ void fps_max_speed_start(void) {
 	ppu_draw_screen_pause();
 	fps.max_speed = TRUE;
 	fps_max_speed_estimated_ms();
+	gui_update();
 }
 void fps_max_speed_stop(void) {
 	if (!fps.max_speed) {
@@ -100,6 +104,7 @@ void fps_max_speed_stop(void) {
 	}
 	fps.max_speed = FALSE;
 	fps_max_speed_estimated_ms();
+	gui_update();
 	ppu_draw_screen_continue();
 }
 

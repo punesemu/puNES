@@ -13,6 +13,7 @@ Changelog:
   * 0x00
   * 0xFF (default)
   * Randomize
+- Added a screen icon that shows when fast forward is active.
 - Added the possibility to set default values for PPU overclocking to be applied for all roms in addition to the per-game ones already used.
 - Added Arabic translation (thx to Chipsum).
 - Added Polish translation (thx to elektronicznypank).

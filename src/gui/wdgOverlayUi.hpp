@@ -172,6 +172,25 @@ class overlayWidgetFrame : public overlayWidget {
 		void update_info(void);
 };
 
+// overlayWidgetFastForward --------------------------------------------------------------------------------------------
+
+class overlayWidgetFastForward : public overlayWidget {
+	private:
+		QImage icon;
+
+	public:
+		explicit overlayWidgetFastForward(QWidget *parent = nullptr);
+		~overlayWidgetFastForward() override;
+
+	protected:
+		QSize sizeHint(void) const override;
+		void paintEvent(QPaintEvent *event) override;
+
+	public:
+		void update_dpr(void) override;
+		void update_widget(void) override;
+};
+
 // overlayWidgetFloppy -------------------------------------------------------------------------------------------------
 
 class overlayWidgetFloppy : public overlayWidget {
