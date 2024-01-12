@@ -866,7 +866,7 @@ void overlayWidgetFastForward::paintEvent(QPaintEvent *event) {
 }
 
 void overlayWidgetFastForward::update_dpr(void) {
-	icon = dpr_image(":/pics/pics/overlay_fastforward_blue.png");
+	icon = dpr_image(":/pics/pics/overlay_fastforward_gray.png");
 }
 void overlayWidgetFastForward::update_widget(void) {
 	if (cfg->txt_on_screen & (fps.max_speed | fps.fast_forward) & !info.turn_off) {
