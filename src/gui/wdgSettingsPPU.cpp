@@ -80,7 +80,7 @@ wdgSettingsPPU::wdgSettingsPPU(QWidget *parent) : QWidget(parent) {
 	connect(pushButton_Def_VB_Slines, SIGNAL(clicked(bool)), this, SLOT(s_overclock_vb_slines_reset(bool)));
 	connect(spinBox_Def_Postrender_Slines, SIGNAL(valueChanged(int)), this, SLOT(s_overclock_pr_slines(int)));
 	connect(pushButton_Def_Postrender_Slines, SIGNAL(clicked(bool)), this, SLOT(s_overclock_pr_slines_reset(bool)));
-	connect(checkBox_Def_Disable_DMC_Control, SIGNAL(clicked(bool)), this, SLOT(s_verclock_disable_dmc_control(bool)));
+	connect(checkBox_Def_Disable_DMC_Control, SIGNAL(clicked(bool)), this, SLOT(s_overclock_disable_dmc_control(bool)));
 
 	connect(pushButton_Reset_Lag_Counter, SIGNAL(clicked(bool)), this, SLOT(s_lag_counter_reset(bool)));
 
