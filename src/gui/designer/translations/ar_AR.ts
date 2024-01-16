@@ -1675,15 +1675,15 @@
     </message>
     <message>
       <source>to F&amp;DS Format (without Header)</source>
-      <translation type="unfinished">to F&amp;DS Format (without Header)</translation>
+      <translation>الى صيغة FDS (بدون الترويسة)</translation>
     </message>
     <message>
       <source>C&amp;hange Disk</source>
-      <translation type="unfinished">C&amp;hange Disk</translation>
+      <translation>تغيير القرص</translation>
     </message>
     <message>
       <source>E&amp;xport current state of Disk/Disks</source>
-      <translation type="unfinished">E&amp;xport current state of Disk/Disks</translation>
+      <translation>تصدير الحالة الحالية للقرص/الأقراص</translation>
     </message>
   </context>
   <context>
@@ -1925,7 +1925,7 @@
     <message>
       <source>auto switch [red]disabled[normal], single-sided disk</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">auto switch [red]disabled[normal], single-sided disk</translation>
+      <translation>التبديل التلقائي [red]معطل[normal]، جهة قرص واحدة</translation>
     </message>
   </context>
   <context>
