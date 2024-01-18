@@ -26,6 +26,11 @@
 #endif
 #endif
 
+// FHorse
+#if defined(RELEASE)
+#undef RELEASE
+#endif
+
 #define _PI_ 3.14159265358979323846264338327950288
 
 #define OPLL_TONE_NUM 3
