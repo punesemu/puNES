@@ -2335,26 +2335,18 @@ INLINE static void mapper23_cpu_every_cycle(BYTE nidx) {
 INLINE static void mapper24_cpu_every_cycle(BYTE nidx) {
 	// Mapper #23 - VRC2/4
 	if (m342.vrc4.irq.control & 0x02) {
-		if (m342.vrc4.irq.control & 0x04) {
+		m342.vrc4.irq.prescaler++;
+		if ((!(m342.vrc4.irq.prescaler_counter & 0x02) && (m342.vrc4.irq.prescaler == 114))
+			|| ((m342.vrc4.irq.prescaler_counter & 0x02) && (m342.vrc4.irq.prescaler == 113))) {
+			m342.vrc4.irq.prescaler = 0;
+			m342.vrc4.irq.prescaler_counter++;
+			if (m342.vrc4.irq.prescaler_counter == 3) {
+				m342.vrc4.irq.prescaler_counter = 0;
+			}
 			m342.vrc4.irq.value++;
 			if (m342.vrc4.irq.value == 0) {
 				m342.vrc4.irq.value = m342.vrc4.irq.latch;
 				nes[nidx].c.irq.high |= EXT_IRQ;
-			}
-		} else {
-			m342.vrc4.irq.prescaler++;
-			if ((!(m342.vrc4.irq.prescaler_counter & 0x02) && (m342.vrc4.irq.prescaler == 114))
-				|| ((m342.vrc4.irq.prescaler_counter & 0x02) && (m342.vrc4.irq.prescaler == 113))) {
-				m342.vrc4.irq.prescaler = 0;
-				m342.vrc4.irq.prescaler_counter++;
-				if (m342.vrc4.irq.prescaler_counter == 3) {
-					m342.vrc4.irq.prescaler_counter = 0;
-				}
-				m342.vrc4.irq.value++;
-				if (m342.vrc4.irq.value == 0) {
-					m342.vrc4.irq.value = m342.vrc4.irq.latch;
-					nes[nidx].c.irq.high |= EXT_IRQ;
-				}
 			}
 		}
 	}
