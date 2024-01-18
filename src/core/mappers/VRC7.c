@@ -38,6 +38,7 @@ struct _vrc7tmp {
 // promemoria
 //void map_init_VRC7(BYTE revision) {
 //	EXTCL_AFTER_MAPPER_INIT(VRC7);
+//	EXTCL_MAPPER_QUIT(VRC7);
 //	EXTCL_CPU_WR_MEM(VRC7);
 //	EXTCL_SAVE_MAPPER(VRC7);
 //	EXTCL_CPU_EVERY_CYCLE(VRC7);
@@ -49,6 +50,9 @@ void extcl_after_mapper_init_VRC7(void) {
 	VRC7_chr_fix();
 	VRC7_wram_fix();
 	VRC7_mirroring_fix();
+}
+void extcl_mapper_quit_VRC7(void) {
+	opll_quit();
 }
 void extcl_cpu_wr_mem_VRC7(BYTE nidx, WORD address, BYTE value) {
 	WORD bank = address & 0xF000;
@@ -118,7 +122,6 @@ BYTE extcl_save_mapper_VRC7(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, vrc7.irq.count);
 	save_slot_ele(mode, slot, vrc7.irq.prescaler);
 	save_slot_ele(mode, slot, vrc7.irq.delay);
-
 	return (opll_save(mode, slot, fp));
 }
 void extcl_cpu_every_cycle_VRC7(BYTE nidx) {

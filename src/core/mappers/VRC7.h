@@ -39,6 +39,7 @@ typedef struct _vrc7 {
 extern _vrc7 vrc7;
 
 void extcl_after_mapper_init_VRC7(void);
+void extcl_mapper_quit_VRC7(void);
 void extcl_cpu_wr_mem_VRC7(BYTE nidx, WORD address, BYTE value);
 BYTE extcl_save_mapper_VRC7(BYTE mode, BYTE slot, FILE *fp);
 void extcl_cpu_every_cycle_VRC7(BYTE nidx);

@@ -16,64 +16,111 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 /*
+ *  Thx to okaxaki for his project "A YM2413 emulator written in C."
+ *  https://github.com/digital-sound-antiques/emu2413
  *  Thx to Nuke.YKT for his project "Cycle-accurate emulation of Yamaha OPLL":
  *  https://github.com/nukeykt/Nuked-OPLL
- *
- ***********************************************************************************
  */
 
 #include "VRC7_snd.h"
 #include "save_slot.h"
-#include "clock.h"
-#include "extra/Nuked-OPLL/opll.h"
+#include "snd.h"
+#include "extra/emu2413/emu2413.h"
 
 typedef struct _opll {
-	opll_t chip;
-	int32_t out;
-	int32_t next;
-	double tick;
-	double freq;
+	SWORD out;
+	BYTE tick;
 } _opll;
 
+OPLL *chip = NULL;
 _opll opll;
 
-void opll_reset() {
-	OPLL_Reset(&opll.chip, opll_type_ds1001);
+void opll_quit(void) {
+	if (chip) {
+		OPLL_delete(chip);
+		chip = NULL;
+	}
+}
+void opll_reset(void) {
+	opll_quit();
+	chip = OPLL_new(3579545, snd.samplerate);
+	OPLL_setChipType(chip, OPLL_VRC7_TONE);
+	OPLL_set_rate(chip, 49716);
+	OPLL_resetPatch(chip, OPLL_VRC7_TONE);
 	opll.out = 0;
-	opll.next = 0;
-	opll.freq = machine.cpu_hz / (double)3580000.0f;
 	opll.tick = 0;
 }
 void opll_write_reg(uint32_t reg, uint8_t value) {
-	OPLL_Write(&opll.chip, reg, value);
+	OPLL_writeIO(chip, reg, value);
 }
 void opll_update(void) {
-	opll.tick += opll.freq;
-
-	while (opll.tick > 1.0f) {
-		int32_t buffer[2];
-
-		opll.tick -= 1.0f;
-		OPLL_Clock(&opll.chip, buffer);
-		opll.next += buffer[0];
-		opll.next += buffer[1];
-		if (opll.chip.cycles == 0) {
-			opll.out = opll.next;
-			opll.next = 0;
+	if (++opll.tick == 36) {
+		opll.tick = 0;
+		opll.out = OPLL_calc(chip);
+		if (opll.out > 4096) {
+			opll.out = 4096;
+		} else if (opll.out < -4096) {
+			opll.out = -4096;
 		}
 	}
 }
 BYTE opll_save(BYTE mode, BYTE slot, FILE *fp) {
-	opll_patch_t *patchrom = (opll_patch_t *)opll.chip.patchrom;
+	save_slot_ele(mode, slot, chip->adr);
+	save_slot_ele(mode, slot, chip->inp_step);
+	save_slot_ele(mode, slot, chip->out_step);
+	save_slot_ele(mode, slot, chip->out_time);
+	save_slot_ele(mode, slot, chip->reg);
+	save_slot_ele(mode, slot, chip->test_flag);
+	save_slot_ele(mode, slot, chip->slot_key_status);
+	save_slot_ele(mode, slot, chip->rhythm_mode);
+	save_slot_ele(mode, slot, chip->eg_counter);
+	save_slot_ele(mode, slot, chip->pm_phase);
+	save_slot_ele(mode, slot, chip->am_phase);
+	save_slot_ele(mode, slot, chip->lfo_am);
+	save_slot_ele(mode, slot, chip->noise);
+	save_slot_ele(mode, slot, chip->short_noise);
+	save_slot_ele(mode, slot, chip->patch_number);
+	for (unsigned int i = 0; i < LENGTH(chip->slot); i++) {
+		save_slot_ele(mode, slot, chip->slot[i].number);
+		save_slot_ele(mode, slot, chip->slot[i].type);
+		save_slot_ele(mode, slot, chip->slot[i].output);
+		save_slot_ele(mode, slot, chip->slot[i].pg_phase);
+		save_slot_ele(mode, slot, chip->slot[i].pg_out);
+		save_slot_ele(mode, slot, chip->slot[i].pg_keep);
+		save_slot_ele(mode, slot, chip->slot[i].blk_fnum);
+		save_slot_ele(mode, slot, chip->slot[i].fnum);
+		save_slot_ele(mode, slot, chip->slot[i].blk);
+		save_slot_ele(mode, slot, chip->slot[i].eg_state);
+		save_slot_ele(mode, slot, chip->slot[i].volume);
+		save_slot_ele(mode, slot, chip->slot[i].key_flag);
+		save_slot_ele(mode, slot, chip->slot[i].sus_flag);
+		save_slot_ele(mode, slot, chip->slot[i].tll);
+		save_slot_ele(mode, slot, chip->slot[i].rks);
+		save_slot_ele(mode, slot, chip->slot[i].eg_rate_h);
+		save_slot_ele(mode, slot, chip->slot[i].eg_rate_l);
+		save_slot_ele(mode, slot, chip->slot[i].eg_shift);
+		save_slot_ele(mode, slot, chip->slot[i].eg_out);
+	}
+	for (unsigned int i = 0; i < LENGTH(chip->patch); i++) {
+		uint8_t patchrom[8] = { 0 };
 
-	opll.chip.patchrom = NULL;
-	save_slot_ele(mode, slot, opll.chip);
+		save_slot_ele(mode, slot, patchrom);
+		if (mode == SAVE_SLOT_SAVE) {
+			OPLL_patchToDump(&chip->patch[i], &patchrom[0]);
+		} else if (mode == SAVE_SLOT_SAVE) {
+			OPLL_dumpToPatch(&patchrom[0], &chip->patch[i]);
+		}
+	}
+	save_slot_ele(mode, slot, chip->pan);
+	save_slot_ele(mode, slot, chip->pan_fine);
+	save_slot_ele(mode, slot, chip->mask);
+	if (mode == SAVE_SLOT_READ) {
+		OPLL_forceRefresh(chip);
+	}
 	save_slot_ele(mode, slot, opll.out);
-	save_slot_ele(mode, slot, opll.next);
 	save_slot_ele(mode, slot, opll.tick);
-	opll.chip.patchrom = patchrom;
 	return (EXIT_OK);
 }
 SWORD opll_calc(void) {
-	return ((SWORD)opll.out);
+	return (opll.out);
 }

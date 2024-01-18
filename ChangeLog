@@ -7,6 +7,9 @@ Changelog:
   * Changed the format of the diff file, now I use the IPS format (which can always be applied to the original image).
 - Rewritten the format and management of save states.
   WARNING save states of version 0.110 or earlier are no longer compatible.
+- Rewritten the audio of the VRC7.
+  Implemented the project "A YM2413 emulator written in C" of okaxaki :
+  * https://github.com/digital-sound-antiques/emu2413
 - Added support to Quick Disk format.
 - Added an option for RAM initialization (#276).
   It's possible to choose between three values:

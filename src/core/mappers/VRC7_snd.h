@@ -22,7 +22,8 @@
 #include <stdio.h>
 #include "common.h"
 
-void opll_reset();
+void opll_quit(void);
+void opll_reset(void);
 void opll_write_reg(uint32_t reg, uint8_t value);
 void opll_update(void);
 BYTE opll_save(BYTE mode, BYTE slot, FILE *fp);
