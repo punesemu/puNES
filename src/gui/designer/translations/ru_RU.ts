@@ -65,14 +65,14 @@
     </message>
     <message>
       <source>Apply</source>
-      <translation type="unfinished">Apply</translation>
+      <translation>Применить</translation>
     </message>
   </context>
   <context>
     <name>dlgDipswitch</name>
     <message>
       <source>Ok</source>
-      <translation type="unfinished">Ok</translation>
+      <translation>Ок</translation>
     </message>
     <message>
       <source>Dipswitch</source>
@@ -1052,35 +1052,35 @@
     </message>
     <message>
       <source>12</source>
-      <translation type="unfinished">12</translation>
+      <translation>12</translation>
     </message>
     <message>
       <source>13</source>
-      <translation type="unfinished">13</translation>
+      <translation>13</translation>
     </message>
     <message>
       <source>14</source>
-      <translation type="unfinished">14</translation>
+      <translation>14</translation>
     </message>
     <message>
       <source>15</source>
-      <translation type="unfinished">15</translation>
+      <translation>15</translation>
     </message>
     <message>
       <source>16</source>
-      <translation type="unfinished">16</translation>
+      <translation>16</translation>
     </message>
     <message>
       <source>11</source>
-      <translation type="unfinished">11</translation>
+      <translation>11</translation>
     </message>
     <message>
       <source>10</source>
-      <translation type="unfinished">10</translation>
+      <translation>10</translation>
     </message>
     <message>
       <source>9</source>
-      <translation type="unfinished">9</translation>
+      <translation>9</translation>
     </message>
     <message>
       <source>Game Dip Switches</source>
@@ -2347,7 +2347,7 @@
     </message>
     <message>
       <source>Saturation</source>
-      <translation type="unfinished">Saturation</translation>
+      <translation>Насыщенность</translation>
     </message>
     <message>
       <source>Reset parameters to defaults</source>
@@ -2421,7 +2421,7 @@
     </message>
     <message>
       <source>Contrast</source>
-      <translation type="unfinished">Contrast</translation>
+      <translation>Контраст</translation>
     </message>
     <message>
       <source>Chroma Correction</source>
@@ -2429,11 +2429,11 @@
     </message>
     <message>
       <source>Brightness</source>
-      <translation type="unfinished">Brightness</translation>
+      <translation>Яркость</translation>
     </message>
     <message>
       <source>Noise</source>
-      <translation type="unfinished">Noise</translation>
+      <translation>Шум</translation>
     </message>
     <message>
       <source>Black Point</source>
@@ -2441,7 +2441,7 @@
     </message>
     <message>
       <source>Saturation</source>
-      <translation type="unfinished">Saturation</translation>
+      <translation>Насыщенность</translation>
     </message>
     <message>
       <source>Scanline</source>
@@ -2453,7 +2453,7 @@
     </message>
     <message>
       <source>Reset parameters to defaults</source>
-      <translation type="unfinished">Reset parameters to defaults</translation>
+      <translation>Вернуть значения по умолчанию</translation>
     </message>
   </context>
   <context>
@@ -2941,11 +2941,11 @@
     </message>
     <message>
       <source>Polish</source>
-      <translation type="unfinished">Polish</translation>
+      <translation>Polski</translation>
     </message>
     <message>
       <source>Arabic</source>
-      <translation type="unfinished">Arabic</translation>
+      <translation>العربيّة</translation>
     </message>
     <message>
       <source>Write mode</source>
@@ -3908,19 +3908,19 @@
     </message>
     <message>
       <source>NTSC CRT LMP88959</source>
-      <translation type="unfinished">NTSC CRT LMP88959</translation>
+      <translation>NTSC CRT LMP88959</translation>
     </message>
     <message>
       <source>NTSC NES LMP88959</source>
-      <translation type="unfinished">NTSC NES LMP88959</translation>
+      <translation>NTSC NES LMP88959</translation>
     </message>
     <message>
       <source>PAL CRT LMP88959</source>
-      <translation type="unfinished">PAL CRT LMP88959</translation>
+      <translation>PAL CRT LMP88959</translation>
     </message>
     <message>
       <source>PAL NES LMP88959</source>
-      <translation type="unfinished">PAL NES LMP88959</translation>
+      <translation>PAL NES LMP88959</translation>
     </message>
   </context>
   <context>
