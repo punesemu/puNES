@@ -57,7 +57,7 @@
     <name>dlgDetachBarcode</name>
     <message>
       <source>Enter a barcode yourself...</source>
-      <translation type="unfinished">Enter a barcode yourself...</translation>
+      <translation>Введите штрих-код...</translation>
     </message>
     <message>
       <source>Detach Barcode</source>
@@ -84,7 +84,7 @@
     </message>
     <message>
       <source>Default</source>
-      <translation type="unfinished">Default</translation>
+      <translation>По умолчанию</translation>
     </message>
   </context>
   <context>
@@ -607,11 +607,11 @@
     </message>
     <message>
       <source>Vs. System (1P via $4016)</source>
-      <translation type="unfinished">Vs. System (1P via $4016)</translation>
+      <translation>Vs. System (1P через $4016)</translation>
     </message>
     <message>
       <source>Zapper ($4017)</source>
-      <translation type="unfinished">Zapper ($4017)</translation>
+      <translation>Пистолет ($4017)</translation>
     </message>
     <message>
       <source>Arkanoid Vaus Controller (NES)</source>
@@ -627,15 +627,15 @@
     </message>
     <message>
       <source>Subor Keyboard plus mouse (3x8-bit)</source>
-      <translation type="unfinished">Subor Keyboard plus mouse (3x8-bit)</translation>
+      <translation>Клавиатура Сюбор плюс мышь (3x8-бит)</translation>
     </message>
     <message>
       <source>Subor Keyboard plus mouse (24-bit)</source>
-      <translation type="unfinished">Subor Keyboard plus mouse (24-bit)</translation>
+      <translation>Клавиатура Сюбор плюс мышь (24-бит)</translation>
     </message>
     <message>
       <source>SNES Mouse ($4017.0)</source>
-      <translation type="unfinished">SNES Mouse ($4017.0)</translation>
+      <translation>Мышь SNES ($4017.0)</translation>
     </message>
     <message>
       <source>Unknown Famiclone Keyboard (Golden Key)</source>
@@ -643,7 +643,7 @@
     </message>
     <message>
       <source>Subor Keyboard plus mouse (24-bit $4017)</source>
-      <translation type="unfinished">Subor Keyboard plus mouse (24-bit $4017)</translation>
+      <translation>Клавиатура Сюбор плюс мышь (24-бит $4017)</translation>
     </message>
     <message>
       <source>Port Test</source>
@@ -1032,11 +1032,11 @@
     </message>
     <message>
       <source>Vs System</source>
-      <translation type="unfinished">Vs System</translation>
+      <translation>Vs. System</translation>
     </message>
     <message>
       <source>Coins</source>
-      <translation type="unfinished">Coins</translation>
+      <translation>Монеты</translation>
     </message>
     <message>
       <source>Monitor</source>
@@ -1647,7 +1647,7 @@
     </message>
     <message>
       <source>puNES image</source>
-      <translation type="unfinished">puNES image</translation>
+      <translation>Образ puNES</translation>
     </message>
     <message>
       <source>Exports the current state of the disk</source>
@@ -2268,82 +2268,82 @@
     <name>wdgNTSCLMP88959Filter</name>
     <message>
       <source>Scanline</source>
-      <translation type="unfinished">Scanline</translation>
+      <translation>Строки развертки</translation>
     </message>
     <message>
       <source>MFields</source>
-      <translation type="unfinished">MFields</translation>
+      <translation>MFields</translation>
     </message>
     <message>
       <source>VBlend</source>
-      <translation type="unfinished">VBlend</translation>
+      <translation>VBlend</translation>
     </message>
     <message>
       <source>Contrast</source>
-      <translation type="unfinished">Contrast</translation>
+      <translation>Контраст</translation>
     </message>
     <message>
       <source>Brightness</source>
-      <translation type="unfinished">Brightness</translation>
+      <translation>Яркость</translation>
     </message>
     <message>
       <source>White Point</source>
-      <translation type="unfinished">White Point</translation>
+      <translation>Точка белого</translation>
     </message>
     <message>
       <source>Black Point</source>
-      <translation type="unfinished">Black Point</translation>
+      <translation>Точка черного</translation>
     </message>
     <message>
       <source>Saturation</source>
-      <translation type="unfinished">Saturation</translation>
+      <translation>Насыщенность</translation>
     </message>
     <message>
       <source>Noise</source>
-      <translation type="unfinished">Noise</translation>
+      <translation>Шум</translation>
     </message>
     <message>
       <source>Hue</source>
-      <translation type="unfinished">Hue</translation>
+      <translation>Тон</translation>
     </message>
     <message>
       <source>Reset parameters to defaults</source>
-      <translation type="unfinished">Reset parameters to defaults</translation>
+      <translation>Вернуть значения по умолчанию</translation>
     </message>
   </context>
   <context>
     <name>wdgNTSCNESRGBLMP88959Filter</name>
     <message>
       <source>Black Point</source>
-      <translation type="unfinished">Black Point</translation>
+      <translation>Точка черного</translation>
     </message>
     <message>
       <source>Brightness</source>
-      <translation type="unfinished">Brightness</translation>
+      <translation>Яркость</translation>
     </message>
     <message>
       <source>Hue</source>
-      <translation type="unfinished">Hue</translation>
+      <translation>Тон</translation>
     </message>
     <message>
       <source>Contrast</source>
-      <translation type="unfinished">Contrast</translation>
+      <translation>Контраст</translation>
     </message>
     <message>
       <source>Noise</source>
-      <translation type="unfinished">Noise</translation>
+      <translation>Шум</translation>
     </message>
     <message>
       <source>White Point</source>
-      <translation type="unfinished">White Point</translation>
+      <translation>Точка белого</translation>
     </message>
     <message>
       <source>Scanline</source>
-      <translation type="unfinished">Scanline</translation>
+      <translation>Строки развертки</translation>
     </message>
     <message>
       <source>VBlend</source>
-      <translation type="unfinished">VBlend</translation>
+      <translation>VBlend</translation>
     </message>
     <message>
       <source>Saturation</source>
@@ -2351,30 +2351,30 @@
     </message>
     <message>
       <source>Reset parameters to defaults</source>
-      <translation type="unfinished">Reset parameters to defaults</translation>
+      <translation>Вернуть значения по умолчанию</translation>
     </message>
   </context>
   <context>
     <name>wdgPALLMP88959Filter</name>
     <message>
       <source>Scanline</source>
-      <translation type="unfinished">Scanline</translation>
+      <translation>Строки развертки</translation>
     </message>
     <message>
       <source>VBlend</source>
-      <translation type="unfinished">VBlend</translation>
+      <translation>VBlend</translation>
     </message>
     <message>
       <source>Black Point</source>
-      <translation type="unfinished">Black Point</translation>
+      <translation>Точка черного</translation>
     </message>
     <message>
       <source>White Point</source>
-      <translation type="unfinished">White Point</translation>
+      <translation>Точка белого</translation>
     </message>
     <message>
       <source>Noise</source>
-      <translation type="unfinished">Noise</translation>
+      <translation>Шум</translation>
     </message>
     <message>
       <source>Color Phase</source>
@@ -2382,15 +2382,15 @@
     </message>
     <message>
       <source>Brightness</source>
-      <translation type="unfinished">Brightness</translation>
+      <translation>Яркость</translation>
     </message>
     <message>
       <source>Saturation</source>
-      <translation type="unfinished">Saturation</translation>
+      <translation>Насыщенность</translation>
     </message>
     <message>
       <source>Contrast</source>
-      <translation type="unfinished">Contrast</translation>
+      <translation>Контраст</translation>
     </message>
     <message>
       <source>Chroma Lag</source>
@@ -2398,22 +2398,22 @@
     </message>
     <message>
       <source>Chroma Correction</source>
-      <translation type="unfinished">Chroma Correction</translation>
+      <translation>Цветокоррекция</translation>
     </message>
     <message>
       <source>MFields</source>
-      <translation type="unfinished">MFields</translation>
+      <translation>MFields</translation>
     </message>
     <message>
       <source>Reset parameters to defaults</source>
-      <translation type="unfinished">Reset parameters to defaults</translation>
+      <translation>Вернуть значения по умолчанию</translation>
     </message>
   </context>
   <context>
     <name>wdgPALNESRGBLMP88959Filter</name>
     <message>
       <source>White Point</source>
-      <translation type="unfinished">White Point</translation>
+      <translation>Точка белого</translation>
     </message>
     <message>
       <source>Chroma Lag</source>
@@ -2425,7 +2425,7 @@
     </message>
     <message>
       <source>Chroma Correction</source>
-      <translation type="unfinished">Chroma Correction</translation>
+      <translation>Цветокоррекция</translation>
     </message>
     <message>
       <source>Brightness</source>
@@ -2437,7 +2437,7 @@
     </message>
     <message>
       <source>Black Point</source>
-      <translation type="unfinished">Black Point</translation>
+      <translation>Точка черного</translation>
     </message>
     <message>
       <source>Saturation</source>
@@ -2445,11 +2445,11 @@
     </message>
     <message>
       <source>Scanline</source>
-      <translation type="unfinished">Scanline</translation>
+      <translation>Строки развертки</translation>
     </message>
     <message>
       <source>VBlend</source>
-      <translation type="unfinished">VBlend</translation>
+      <translation>VBlend</translation>
     </message>
     <message>
       <source>Reset parameters to defaults</source>
@@ -2949,15 +2949,15 @@
     </message>
     <message>
       <source>Write mode</source>
-      <translation type="unfinished">Write mode</translation>
+      <translation>Точка белого</translation>
     </message>
     <message>
       <source>Write to a separate file (Default)</source>
-      <translation type="unfinished">Write to a separate file (Default)</translation>
+      <translation>Записать в отдельный файл (по умолчанию)</translation>
     </message>
     <message>
       <source>Write to the original FDS/QD file</source>
-      <translation type="unfinished">Write to the original FDS/QD file</translation>
+      <translation>Записать в исходный файл FDS/QD</translation>
     </message>
   </context>
   <context>
