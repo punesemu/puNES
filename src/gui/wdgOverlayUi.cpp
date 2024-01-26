@@ -516,7 +516,7 @@ void wdgOverlayUi::wdg_clear(overlayWidget *wdg, QRect *qrect, qreal dpr) {
 		erase = true;
 	}
 
-	if (erase) {
+	if (clear && erase) {
 		_gfx_rect rect;
 
 		update_texture = TRUE;
