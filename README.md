@@ -50,16 +50,16 @@ If you want buy me a beer : <span class="badge-paypal"><a href="https://www.payp
 :camera: Screenshots
 -----------
 <p align="center">
-  <img src="https://user-images.githubusercontent.com/14859058/208288696-b3a5494c-6c0f-4cf3-a339-bffe52806e09.png" width="400" alt="puNES main window"/>
-  <img src="https://user-images.githubusercontent.com/14859058/208289018-e26ecb19-92d8-449f-8c35-77f67f8c8911.png" width="400" alt="puNES NSFE Player"/>
-  <img src="https://user-images.githubusercontent.com/14859058/208288805-fff96548-ebc1-4cef-b8ce-a813f0ccf27e.png" width="400" alt="puNES Slot Preview"/>
-  <img src="https://user-images.githubusercontent.com/14859058/135748722-ea73e6b3-db6b-4cf2-b13d-755ca4824975.png" width="400" alt="puNES General Settings"/>
-  <img src="https://user-images.githubusercontent.com/14859058/140854472-60a88023-e719-4637-9289-08991a367ddd.png" width="400" alt="puNES Video Filters Settings"/>
-  <img src="https://user-images.githubusercontent.com/14859058/202864520-bdd84d5c-646e-40c0-84be-5ff2d225d015.png" width="400" alt="puNES Cheat Editor"/>
-  <img src="https://user-images.githubusercontent.com/14859058/208847541-778fb8fb-e070-432f-baf1-fb67cf13f3c5.png" width="400" alt="puNES Xbox360 Standard Controller Settings"/>
-  <img src="https://user-images.githubusercontent.com/14859058/208848284-0c30ff3f-d6f3-415d-87b1-e408e5454bba.png" width="400" alt="puNES PS4 Standard Controller Settings"/>
-  <img src="https://user-images.githubusercontent.com/14859058/196442457-e799ee41-17cd-46bf-821e-7532b85c304e.png" width="800" alt="puNES Family BASIC Virtual Keyboard"/>
-  <img src="https://user-images.githubusercontent.com/14859058/197157708-e2eab47e-001c-4e18-9df8-eb46fb106980.png" width="800" alt="puNES Subor Virtual Keyboard"/>
+  <img src="https://github.com/punesemu/puNES/assets/14859058/435ad06b-ec4d-4601-84d1-bf444281afe2" width="400" alt="puNES main window"/>
+  <img src="https://github.com/punesemu/puNES/assets/14859058/575392c3-0960-4075-b08d-d72dc3219d30" width="400" alt="puNES NSFE Player"/>
+  <img src="https://github.com/punesemu/puNES/assets/14859058/da5db672-86e4-4345-a944-687587d04391" width="400" alt="puNES Slot Preview"/>
+  <img src="https://github.com/punesemu/puNES/assets/14859058/ac74652d-d71d-4378-9dd0-cd894b133ae7" width="400" alt="puNES General Settings"/>
+  <img src="https://github.com/punesemu/puNES/assets/14859058/1db1eacd-7e67-45c2-9512-ea24553987f5" width="400" alt="puNES Video Filters Settings"/>
+  <img src="https://github.com/punesemu/puNES/assets/14859058/b309a584-e3ba-487e-9cd7-ca78d1997ac8" width="400" alt="puNES Cheat Editor"/>
+  <img src="https://github.com/punesemu/puNES/assets/14859058/d115817b-b802-4d75-bdce-3df9efda929c" width="400" alt="puNES Xbox360 Standard Controller Settings"/>
+  <img src="https://github.com/punesemu/puNES/assets/14859058/ffc4ba31-6899-4385-b0c1-59f7bf5764a2" width="400" alt="puNES PS4 Standard Controller Settings"/>
+  <img src="https://github.com/punesemu/puNES/assets/14859058/315dbca5-ea3b-4390-b91b-9b7b0028af88" width="800" alt="puNES Family BASIC Virtual Keyboard"/>
+  <img src="https://github.com/punesemu/puNES/assets/14859058/1347fde5-bcc5-46d2-8e68-1e4875759a6e" width="800" alt="puNES Subor Virtual Keyboard"/>
 </p>
 
 :keyboard: Configuration
