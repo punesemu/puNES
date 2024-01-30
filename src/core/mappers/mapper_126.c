@@ -26,6 +26,9 @@ void chr_swap_mmc3_126(WORD address, WORD value);
 struct _m126 {
 	BYTE reg[4];
 } m126;
+struct _m126tmp {
+	BYTE oldumps;
+} m126tmp;
 
 void map_init_126(void) {
 	EXTCL_AFTER_MAPPER_INIT(MMC3);
@@ -43,6 +46,7 @@ void map_init_126(void) {
 
 	memset(&nes[0].irqA12, 0x00, sizeof(nes[0].irqA12));
 	memset(&m126, 0x00, sizeof(m126));
+	memset(&m126tmp, 0x00, sizeof(m126tmp));
 
 	init_MMC3(HARD);
 	MMC3_prg_swap = prg_swap_mmc3_126;
@@ -53,6 +57,21 @@ void map_init_126(void) {
 
 	nes[0].irqA12.present = TRUE;
 	irqA12_delay = (info.mapper.id == 534) ? 2: 1;
+
+	if (// Gamezone 118-in-1 (AT-207).nes
+		(info.crc32.prg == 0xAFF462ED) ||
+		// Power Joy Classic TV Game 84-in-1 (PJ-008).nes
+		(info.crc32.prg == 0x6FCBC309) ||
+		// 1998 4000000-in-1 (BS-400 PCB).nes
+		(info.crc32.prg == 0xB1082DE6) ||
+		// 700000-in-1 (BS-400 PCB).nes
+		(info.crc32.prg == 0xB5EC8A0A) ||
+		// 3000000-in-1 (BS-300 PCB).nes
+		(info.crc32.prg == 0xA4AEEA4A) ||
+		// (GD-106) 18-in-1.nes
+		(info.crc32.prg == 0x9E54027F)) {
+		m126tmp.oldumps = TRUE;
+	}
 }
 void extcl_cpu_wr_mem_126(BYTE nidx, WORD address, BYTE value) {
 	if ((address >= 0x6000) && (address <= 0x7FFF)) {
@@ -119,10 +138,11 @@ void prg_swap_mmc3_126(WORD address, WORD value) {
 	prg_swap_MMC3_base(address, ((base & ~mask) | (value & mask)));
 }
 void chr_swap_mmc3_126(WORD address, WORD value) {
-	WORD base = info.mapper.id == 126 ?
-		((m126.reg[0] & 0x08) << 4) | ((m126.reg[0] & 0x20) << 3) | ((m126.reg[0] & 0x10) << 5) :
-		((m126.reg[0] & 0x38) << 4);
-	WORD mask = (~m126.reg[0] & 0x80) | 0x7F;
+	BYTE reg0 = m126.reg[0] ^ (m126tmp.oldumps ? 0x00 : 0x20);
+	WORD base = info.mapper.id == 126
+		? ((reg0 & 0x08) << 4) | ((reg0 & 0x20) << 3) | ((reg0 & 0x10) << 5)
+		: ((reg0 & 0x38) << 4);
+	WORD mask = (~reg0 & 0x80) | 0x7F;
 
 	if (m126.reg[3] & 0x10) {
 		base = ((m126.reg[2] & (mask >> 3)) | (base >> 3)) << 3;
