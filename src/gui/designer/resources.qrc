@@ -1,6 +1,5 @@
 <RCC>
   <qresource prefix="icon">
-    <file>resources.qrc</file>
     <file>icons/application.png</file>
     <file>icons/audio.svgz</file>
     <file>icons/audio_output.svgz</file>
@@ -258,12 +257,39 @@
     <file>pics/overlay_zapper_bang.png</file>
     <file>pics/overlay_controller_start.png</file>
     <file>pics/overlay_controller_up.png</file>
+    <file>pics/nsf_player.png</file>
+    <file>pics/nsf_next_no_press.png</file>
+    <file>pics/nsf_next_press.png</file>
+    <file>pics/nsf_pause_no_press.png</file>
+    <file>pics/nsf_pause_press.png</file>
+    <file>pics/nsf_play_no_press.png</file>
+    <file>pics/nsf_play_press.png</file>
+    <file>pics/nsf_prev_no_press.png</file>
+    <file>pics/nsf_prev_press.png</file>
+    <file>pics/nsf_stop_no_press.png</file>
+    <file>pics/nsf_stop_press.png</file>
+    <file>pics/controller.png</file>
+    <file>pics/controller_right.png</file>
+    <file>pics/controller_left.png</file>
+    <file>pics/controller_up.png</file>
+    <file>pics/controller_start.png</file>
+    <file>pics/controller_button_a.png</file>
+    <file>pics/controller_mouse.png</file>
+    <file>pics/nsf_arrow_left.png</file>
+    <file>pics/nsf_arrow_right.png</file>
   </qresource>
   <qresource prefix="pointers">
     <file>pointers/target_32x32.xpm</file>
     <file>pointers/target_48x48.xpm</file>
   </qresource>
   <qresource prefix="fonts">
-    <file>fonts/Blocktopia.ttf</file>
+    <file>fonts/t0-11-uni_fixed.ttf</file>
+    <file>fonts/t0-12-uni_fixed.ttf</file>
+    <file>fonts/t0-13-uni_fixed.ttf</file>
+    <file>fonts/t0-14-uni_fixed.ttf</file>
+    <file>fonts/pixelated.ttf</file>
+    <file>fonts/pixelmix.ttf</file>
+    <file>fonts/Commodore Pixelized v1.2.ttf</file>
+    <file>fonts/lemon_fixed.ttf</file>
   </qresource>
 </RCC>

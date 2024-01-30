@@ -20,12 +20,13 @@
 #define NSF_H_
 
 #include "common.h"
+#include "draw_on_screen.h"
 #include "input.h"
 
 enum nsf_mode {
 	NSF_NTSC_MODE,
 	NSF_PAL_MODE,
-	NSF_DUAL_MODE
+	NSF_DENDY_MODE
 };
 enum nsf_states {
 	NSF_STOP = 0x01,
@@ -36,20 +37,33 @@ enum nsf_states {
 	NSF_PREV = 0x200,
 	NSF_RESTART_SONG = 0x400,
 };
-enum nsf_routine_bytes {
-	NSF_R_SONG = 1,
-	NSF_R_TYPE = 3,
-	NSF_R_INIT_LO = 5,
-	NSF_R_INIT_HI = 6,
-	NSF_R_PLAY_LO = 12,
-	NSF_R_PLAY_HI = 13,
-	NSF_R_JMP_PLAY = 15,
-	NSF_R_PLAY = 0x0B,
-	NSF_R_LOOP = 0x0E,
-	NSF_R_PLAY_INST = 0x250B,
-	NSF_R_START = 0x2500,
-	NSF_R_END = 0x2510,
-	NSF_R_MASK = 0x001F,
+enum nsf_routine_addresses {
+	NSF_ROUTINE_SIZE = 0x50,
+	NSF_ROUTINE_START = 0x2500,
+	NSF_ROUTINE_END = NSF_ROUTINE_START + (NSF_ROUTINE_SIZE - 1),
+	NSF_ROUTINE_CLEAR_ALL = 0x2518,
+	NSF_ROUTINE_LOOP = 0x254D,
+	NSF_ROUTINE_NMI = 0x2500,
+	NSF_ROUTINE_NMI_RTI = 0x2514,
+	NSF_ROUTINE_NORMAL = 0x2536,
+	NSF_ROUTINE_NSF_INIT = 0x2525,
+	NSF_ROUTINE_RESET = 0x2515,
+	NSF_ROUTINE_YES_PLAY = 0x2521,
+
+	NSF_DATA_SIZE = 0x0B,
+	NSF_DATA_START = 0x2600,
+	NSF_DATA_END = NSF_DATA_START + (NSF_DATA_SIZE - 1),
+	NSF_DATA_INIT_LO = NSF_DATA_START + 0x00,
+	NSF_DATA_INIT_HI = NSF_DATA_START + 0x01,
+	NSF_DATA_PLAY_LO = NSF_DATA_START + 0x02,
+	NSF_DATA_PLAY_HI = NSF_DATA_START + 0x03,
+	NSF_DATA_IRQ_SUPPORT = NSF_DATA_START + 0x04,
+	NSF_DATA_NON_RETURNING_INIT = NSF_DATA_START + 0x05,
+	NSF_DATA_SUPPRESS_PLAY = NSF_DATA_START + 0x06,
+	NSF_DATA_CURRENT_SONG = NSF_DATA_START + 0x07,
+	NSF_DATA_TYPE = NSF_DATA_START + 0x08,
+	NSF_DATA_LOOP_LO = NSF_DATA_START + 0x09,
+	NSF_DATA_LOOP_HI = NSF_DATA_START + 0x0A,
 };
 enum nsf_effect_types {
 	NSF_EFFECT_BARS,
@@ -64,49 +78,8 @@ enum nsf_effect_types {
 typedef struct _nsf_info_song {
 	int32_t time;
 	int32_t fade;
-	char *track_label;
+	uTCHAR *track_label;
 } _nsf_info_song;
-typedef struct _nsf_text_scroll {
-	int x, y;
-	int rows;
-	char buffer[2048];
-	char string[1024];
-	double timer;
-	double reload;
-	int velocity;
-	int pixel_len;
-	int pixel;
-} _nsf_text_scroll;
-typedef struct _nsf_text_curtain_line {
-	char *text;
-	int length;
-} _nsf_text_curtain_line;
-typedef struct _nsf_text_curtain {
-	int x, y;
-	int count;
-	int index;
-	int rows;
-	BYTE pause;
-	double timer;
-	_nsf_text_curtain_line *line;
-	struct _nsf_text_curtain_borders {
-		int left;
-		int right;
-		int bottom;
-		int top;
-	} borders;
-	struct _nsf_text_curtain_reload {
-		double r1;
-		double r2;
-	} reload;
-	struct _nsf_redraw {
-		BYTE all;
-		int left;
-		int right;
-		int bottom;
-		int top;
-	} redraw;
-} _nsf_text_curtain;
 typedef struct _nsf_effect_coords {
 	int x1, x2;
 	int y1, y2;
@@ -116,16 +89,19 @@ typedef struct _nsf_effect_coords {
 typedef struct _nsf {
 	BYTE enabled;
 	BYTE version;
-	BYTE draw_mask_frames;
 	BYTE type;
 	BYTE state;
-	BYTE made_tick;
-	DBWORD frames;
+	const BYTE *routine;
 
 	struct _nsf_rate {
 		DBWORD count;
 		DBWORD reload;
 	} rate;
+	struct _nsf_nmi {
+		BYTE in_use;
+		DBWORD count;
+		DBWORD reload;
+	} nmi;
 	struct _nsf_songs {
 		BYTE total;
 		BYTE starting;
@@ -136,18 +112,19 @@ typedef struct _nsf {
 		WORD load;
 		WORD init;
 		WORD play;
+		WORD loop;
 	} adr;
 	struct _nsf_info {
-		char *track_label;
-		char *auth;
-		char *name;
-		char *artist;
-		char *copyright;
-		char *ripper;
+		uTCHAR *name;
+		uTCHAR *artist;
+		uTCHAR *copyright;
+		uTCHAR *ripper;
+		uTCHAR *text;
 	} info;
 	struct _nsf_play_speed {
 		WORD ntsc;
 		WORD pal;
+		WORD dendy;
 	} play_speed;
 	struct _nsf_bankswitch {
 		BYTE enabled;
@@ -161,11 +138,6 @@ typedef struct _nsf {
 		BYTE namco163;
 		BYTE sunsoft5b;
 	} sound_chips;
-	struct _nsf_routine {
-		BYTE prg[17];
-		BYTE INT_NMI;
-		BYTE INT_RESET;
-	} routine;
 	struct _nsf_timers {
 		BYTE update_only_diff;
 		double button[INPUT_DECODE_COUNTS];
@@ -183,46 +155,120 @@ typedef struct _nsf {
 		BYTE starting;
 		uint32_t count;
 	} playlist;
-	struct _nsf_text {
-		BYTE *data;
-		BYTE index;
-		uint32_t count;
-	} text;
 	struct _nsf_options {
 		BYTE visual_duration;
 	} options;
 
+	_dos_text_scroll scroll_info_nsf;
+	_dos_text_scroll scroll_title_song;
+	_dos_text_curtain curtain_info;
+	_dos_text_curtain curtain_title_song;
 	_nsf_info_song *info_song;
 	_nsf_info_song current_song;
 	_nsf_effect_coords effect_coords;
 	_nsf_effect_coords effect_bars_coords;
-	_nsf_text_scroll scroll_info_nsf;
-	_nsf_text_scroll scroll_title_song;
-	_nsf_text_curtain curtain_title_song;
-	_nsf_text_curtain curtain_info;
 } _nsf;
+typedef struct _nsf2 {
+	int32_t prg_size;
+	struct _nsf2_features {
+		BYTE irq_support;
+		BYTE non_returning_init;
+		BYTE suppressed_PLAY;
+		BYTE metadata;
+	} features;
+	struct _nsf2_irq {
+		BYTE enable;
+		WORD reload;
+		WORD counter;
+		BYTE vector[2];
+	} irq;
+} _nsf2;
 
 #if defined (_NSF_STATIC_)
-static char nsf_default_label[] = {"<?>"};
-static const BYTE nsf_routine[17] = {
-//	0     1
-	0xA9, 0x00,       // 0x2500 : LDA [current song]
-//	2     3
-	0xA2, 0x00,       // 0x2502 : LDX [PAL or NTSC]
-//	4     5     6
-	0x20, 0x00, 0x00, // 0x2504 : JSR [address init routine]
-//	7
-	0x78,             // 0x2507 : SEI
-//	8     9     10
-	0x4C, 0x0E, 0x25, // 0x2508 : JMP 0x250E
-//	11    12    13
-	0x20, 0x00, 0x00, // 0x250B : JSR [address play routine]
-//	14    15    16
-	0x4C, 0x00, 0x25  // 0x250E : JMP [0x250B / 0x250E]
+static char nsf_default_label[] = "<?>";
+static const BYTE nsf_routine[NSF_ROUTINE_SIZE] = {
+/*
+;$2600-$2601 - INIT address
+;$2602-$2603 - PLAY address
+;$2604       - IRQ support
+;$2605       - non-returning init
+;$2606       - suppress PLAY
+;$2607       - current song
+;$2608       - PAL or NTSC
+;$2609-$260A - loop address
+
+.org $2500
+NMI:        PHA
+            LDA $2605
+            BEQ NMI_END
+NMI_NRET:   TXA
+            PHA
+            TYA
+            PHA
+            SEI
+            JSR _PLAY
+            CLI
+            PLA
+            TAY
+            PLA
+            TAX
+NMI_END:    PLA
+NMI_RTI:    RTI
+RESET:      JMP LOOP
+CLEAR_ALL:  RTS
+_INIT:      JMP ($2600)
+_PLAY:      LDA $2606
+            BNE _NO_PLAY
+_YES_PLAY   JMP ($2602)
+_NO_PLAY:   RTS
+NSF_INIT:   JSR CLEAR_ALL
+            LDA $2607
+            LDX $2608
+            LDY $2605
+            BNE INIT_NRET
+            JSR _INIT
+NORMAL:     JSR _PLAY
+            JMP LOOP
+INIT_NRET:  LDY #$80
+            JSR _INIT
+            CLI
+            LDA $2607
+            LDX $2608
+            LDY #$81
+            JSR _INIT
+LOOP:       JMP ($2609)
+.end
+
+CLEAR_ALL         $2518
+INIT_NRET         $253C
+LOOP              $254D
+NMI               $2500
+NMI_END           $2513
+NMI_NRET          $2506
+NMI_RTI           $2514
+NORMAL            $2536
+NSF_INIT          $2525
+RESET             $2515
+_INIT             $2519
+_NO_PLAY          $2524
+_PLAY             $251C
+_YES_PLAY         $2521
+*/
+	0x48, 0xAD, 0x05, 0x26, 0xF0, 0x0D, 0x8A, 0x48,
+	0x98, 0x48, 0x78, 0x20, 0x1C, 0x25, 0x58, 0x68,
+	0xA8, 0x68, 0xAA, 0x68, 0x40, 0x4C, 0x4D, 0x25,
+	0x60, 0x6C, 0x00, 0x26, 0xAD, 0x06, 0x26, 0xD0,
+	0x03, 0x6C, 0x02, 0x26, 0x60, 0x20, 0x18, 0x25,
+	0xAD, 0x07, 0x26, 0xAE, 0x08, 0x26, 0xAC, 0x05,
+	0x26, 0xD0, 0x09, 0x20, 0x19, 0x25, 0x20, 0x1C,
+	0x25, 0x4C, 0x4D, 0x25, 0xA0, 0x80, 0x20, 0x19,
+	0x25, 0x58, 0xAD, 0x07, 0x26, 0xAE, 0x08, 0x26,
+	0xA0, 0x81, 0x20, 0x19, 0x25, 0x6C, 0x09, 0x26
 };
 #endif
 
 extern _nsf nsf;
+extern _nsf2 nsf2;
 
 #if defined (__cplusplus)
 #define EXTERNC extern "C"
@@ -237,7 +283,6 @@ EXTERNC void nsf_info(void);
 EXTERNC BYTE nsf_load_rom(void);
 EXTERNC void nsf_after_load_rom(void);
 EXTERNC void nsf_init_tune(void);
-EXTERNC void nsf_tick(void);
 EXTERNC void extcl_audio_samples_mod_nsf(SWORD *samples, int count);
 
 EXTERNC void nsf_reset_prg(void);

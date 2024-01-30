@@ -472,42 +472,25 @@ INLINE static void nsf_rd_mem(BYTE nidx, WORD address, BYTE made_tick) {
 		}
 		switch (address) {
 			case 0xFFFA:
-				if (nsf.routine.INT_NMI) {
-					nsf.routine.INT_NMI--;
-					if (nsf.state & NSF_CHANGE_SONG) {
-						nes[nidx].c.cpu.openbus = 0x00;
-						snd_reset_buffers();
-						nsf_reset();
-					} else {
-						nes[nidx].c.cpu.openbus = 0x0E;
-					}
-					return;
+				if (nsf.state & NSF_CHANGE_SONG) {
+					nes[nidx].c.cpu.openbus = NSF_ROUTINE_NSF_INIT & 0xFF;
+				} else {
+					nes[nidx].c.cpu.openbus = NSF_ROUTINE_NMI & 0xFF;
 				}
-				break;
+				return;
 			case 0xFFFB:
-				if (nsf.routine.INT_NMI) {
-					nsf.routine.INT_NMI--;
-					nes[nidx].c.cpu.openbus = 0x25;
-					snd_reset_buffers();
-					nsf_reset();
-					return;
-				}
-				break;
+				nes[nidx].c.cpu.openbus = NSF_ROUTINE_START >> 8;
+				return;
 			case 0xFFFC:
-				if (nsf.routine.INT_RESET) {
-					nsf.routine.INT_RESET--;
-					nes[nidx].c.cpu.openbus = 0x08;
-					snd_reset_buffers();
-					nsf_reset();
-					return;
-				}
-				break;
+				nes[nidx].c.cpu.openbus = NSF_ROUTINE_RESET & 0xFF;
+				return;
 			case 0xFFFD:
-				if (nsf.routine.INT_RESET) {
-					nsf.routine.INT_RESET--;
-					nes[nidx].c.cpu.openbus = 0x25;
-					snd_reset_buffers();
-					nsf_reset();
+				nes[nidx].c.cpu.openbus = NSF_ROUTINE_RESET >> 8;
+				return;
+			case 0xFFFE:
+			case 0xFFFF:
+				if (nsf2.features.irq_support) {
+					nes[nidx].c.cpu.openbus = nsf2.irq.vector[address & 0x01];
 					return;
 				}
 				break;
@@ -526,10 +509,30 @@ INLINE static void nsf_rd_mem(BYTE nidx, WORD address, BYTE made_tick) {
 		return;
 	}
 	// APU
-	if (address == 0x4015) {
+	if ((address >= 0x4000) && (address <= 0x4015)) {
 		nes[nidx].c.cpu.openbus = apu_rd_reg(nidx, address);
 		tick_hw(nidx, 1);
 		return;
+	}
+	// IRQ
+	if (nsf2.features.irq_support) {
+		if (address == 0x401B) {
+			nes[nidx].c.cpu.openbus = nsf2.irq.reload & 0xFF;
+			tick_hw(nidx, 1);
+			return;
+		}
+		if (address == 0x401C) {
+			nes[nidx].c.cpu.openbus = nsf2.irq.reload >> 8;
+			tick_hw(nidx, 1);
+			return;
+		}
+		if (address == 0x401D) {
+			nes[nidx].c.cpu.openbus = !!(nes[nidx].c.irq.high & EXT_IRQ) << 7;
+			nes[nidx].c.irq.high &= ~EXT_IRQ;
+			nes[nidx].c.cpu.openbus = (nes[nidx].c.cpu.openbus & 0x80) | !!(nes[nidx].c.irq.high & EXT_IRQ);
+			tick_hw(nidx, 1);
+			return;
+		}
 	}
 	// FDS
 	if (nsf.sound_chips.fds) {
@@ -577,24 +580,78 @@ INLINE static void nsf_rd_mem(BYTE nidx, WORD address, BYTE made_tick) {
 		return;
 	}
 	// NSF Player Routine
-	if ((address >= NSF_R_START) && (address <= NSF_R_END)) {
-		if (made_tick) {
-			tick_hw(nidx, 1);
-		}
+	if (made_tick) {
+		tick_hw(nidx, 1);
+	}
 
-		switch (address) {
-			case 0x2500:
-				nsf_init_tune();
-				break;
-			case NSF_R_PLAY_INST:
-				nsf.routine.prg[NSF_R_JMP_PLAY] = NSF_R_LOOP;
-				break;
-			default:
-				break;
+	if ((address >= NSF_ROUTINE_START) && (address <= NSF_ROUTINE_END)) {
+		if (nes[nidx].c.cpu.opcode_PC == address) {
+			switch (address) {
+				case NSF_ROUTINE_NMI:
+					nsf.nmi.in_use = TRUE;
+					break;
+				case NSF_ROUTINE_NMI_RTI:
+					nsf.nmi.in_use = FALSE;
+					break;
+				case NSF_ROUTINE_RESET:
+					break;
+				case NSF_ROUTINE_CLEAR_ALL:
+					snd_reset_buffers();
+					nsf_reset();
+					break;
+				case NSF_ROUTINE_YES_PLAY:
+					nsf.adr.loop = NSF_ROUTINE_LOOP;
+					nsf.rate.count = nsf.rate.reload;
+					if (!cfg->apu.channel[APU_MASTER]) {
+						extcl_audio_samples_mod_nsf(NULL, 0);
+					}
+					break;
+				case NSF_ROUTINE_NSF_INIT:
+					nsf_init_tune();
+					break;
+				default:
+					break;
+			}
 		}
-
-		nes[nidx].c.cpu.openbus = nsf.routine.prg[address & NSF_R_MASK];
+		nes[nidx].c.cpu.openbus = nsf.routine[address & 0xFF];
 		return;
+	}
+	if ((address >= NSF_DATA_START) && (address <= NSF_DATA_END)) {
+		switch (address) {
+			case NSF_DATA_INIT_LO:
+				nes[nidx].c.cpu.openbus = nsf.adr.init;
+				return;
+			case NSF_DATA_INIT_HI:
+				nes[nidx].c.cpu.openbus = nsf.adr.init >> 8;
+				return;
+			case NSF_DATA_PLAY_LO:
+				nes[nidx].c.cpu.openbus = nsf.adr.play;
+				return;
+			case NSF_DATA_PLAY_HI:
+				nes[nidx].c.cpu.openbus = nsf.adr.play >> 8;
+				return;
+			case NSF_DATA_IRQ_SUPPORT:
+				nes[nidx].c.cpu.openbus = nsf2.features.irq_support;
+				return;
+			case NSF_DATA_NON_RETURNING_INIT:
+				nes[nidx].c.cpu.openbus = nsf2.features.non_returning_init;
+				return;
+			case NSF_DATA_SUPPRESS_PLAY:
+				nes[nidx].c.cpu.openbus = nsf2.features.suppressed_PLAY;
+				return;
+			case NSF_DATA_CURRENT_SONG:
+				nes[nidx].c.cpu.openbus = nsf.songs.current;
+				return;
+			case NSF_DATA_TYPE:
+				nes[nidx].c.cpu.openbus = nsf.type;
+				return;
+			case NSF_DATA_LOOP_LO:
+				nes[nidx].c.cpu.openbus = nsf.adr.loop;
+				return;
+			case NSF_DATA_LOOP_HI:
+				nes[nidx].c.cpu.openbus = nsf.adr.loop >> 8;
+				return;
+		}
 	}
 }
 INLINE static BYTE fds_rd_mem(BYTE nidx, WORD address, BYTE made_tick) {
@@ -906,9 +963,7 @@ void cpu_wr_mem(BYTE nidx, WORD address, BYTE value) {
 	if (address < 0x8000) {
 		/* eseguo un tick hardware */
 		tick_hw(nidx, 1);
-
 		wram_wr(nidx, address, value);
-
 		if (info.mapper.extend_wr) {
 			extcl_cpu_wr_mem(nidx, address, value);
 		}
@@ -1635,6 +1690,12 @@ INLINE static void nsf_wr_mem(BYTE nidx, WORD address, BYTE value) {
 	// Ram
 	if (address >= 0x8000) {
 		tick_hw(nidx, 1);
+		if (nsf2.features.irq_support) {
+			if (address >= 0xFFFE) {
+				nsf2.irq.vector[address & 0x01] = value;
+				return;
+			}
+		}
 
 		if (nsf.sound_chips.vrc6) {
 			switch (address) {
@@ -1695,6 +1756,11 @@ INLINE static void nsf_wr_mem(BYTE nidx, WORD address, BYTE value) {
 		return;
 	}
 	// APU
+	if ((address >= 0x4000) && (address <= 0x4013)) {
+		apu_wr_reg(nidx, address, value);
+		tick_hw(nidx, 1);
+		return;
+	}
 	if (address == 0x4015) {
 		apu_wr_reg(nidx, address, value);
 		tick_hw(nidx, 1);
@@ -1704,6 +1770,24 @@ INLINE static void nsf_wr_mem(BYTE nidx, WORD address, BYTE value) {
 		tick_hw(nidx, 1);
 		apu_wr_reg(nidx, address, value);
 		return;
+	}
+	// IRQ
+	if (nsf2.features.irq_support) {
+		if (address == 0x401B) {
+			nsf2.irq.reload = (nsf2.irq.reload & 0xFF00) | value;
+			tick_hw(nidx, 1);
+			return;
+		}
+		if (address == 0x401C) {
+			nsf2.irq.reload = (nsf2.irq.reload & 0x00FF) | (value << 8);
+			tick_hw(nidx, 1);
+			return;
+		}
+		if (address == 0x401D) {
+			nsf2.irq.enable = value & 0x01;
+			tick_hw(nidx, 1);
+			return;
+		}
 	}
 	// FDS
 	if (nsf.sound_chips.fds && (address >= 0x4040) && (address <= 0x408A)) {
@@ -2078,24 +2162,12 @@ INLINE static void tick_hw(BYTE nidx, BYTE value) {
 	}
 
 	tick_hw_start:
-	if (nsf.enabled) {
-		if (nsf.made_tick) {
-			nes[nidx].c.cpu.opcode_cycle++;
-			nes[nidx].c.nmi.before = nes[nidx].c.nmi.high;
-			nes[nidx].c.irq.before = nes[nidx].c.irq.high;
-			nsf_tick();
-
-			apu_tick(&value);
-			nes[nidx].c.cpu.odd_cycle = !nes[nidx].c.cpu.odd_cycle;
-			value--;
-			mod_cycles_op(-=, 1);
-		}
-		return;
-	}
 	nes[nidx].c.cpu.opcode_cycle++;
 	nes[nidx].c.nmi.before = nes[nidx].c.nmi.high;
 	nes[nidx].c.irq.before = nes[nidx].c.irq.high;
-	ppu_tick(nidx);
+	if (!nsf.enabled) {
+		ppu_tick(nidx);
+	}
 
 	if (nidx == 0) {
 		if (!nes[nidx].p.overclock.in_extra_sclines) {

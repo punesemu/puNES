@@ -83,7 +83,7 @@ enum _nes_chips_info {
 /* le dimesioni dello screen da renderizzare */
 enum screen_dimension { SCR_ROWS = 240, SCR_COLUMNS = 256 };
 enum type_of_system_info { HEADER, DATABASE };
-enum header_type { iNES_1_0, NES_2_0, UNIF_FORMAT, FDS_FORMAT, QD_FORMAT, NSF_FORMAT, NSFE_FORMAT, HEADER_UNKOWN };
+enum header_type { iNES_1_0, NES_2_0, UNIF_FORMAT, FDS_FORMAT, QD_FORMAT, NSF_FORMAT, NSF2_FORMAT, NSFE_FORMAT, HEADER_UNKOWN };
 enum length_file_name_type {
 	LENGTH_FILE_NAME      = 512,
 	LENGTH_FILE_NAME_MID  = 1024,

@@ -801,10 +801,6 @@ BYTE emu_reset(BYTE type) {
 	info.reset = FALSE;
 	info.start_frame_0 = TRUE;
 
-	if ((info.format == NSF_FORMAT) || (info.format == NSFE_FORMAT)) {
-		nsf.draw_mask_frames = 2;
-	}
-
 	if (info.pause_from_gui) {
 		emu_pause((info.pause_from_gui = FALSE));
 	}
@@ -881,6 +877,7 @@ void emu_ctrl_doublebuffer(void) {
 			info.doublebuffer = TRUE;
 			break;
 		case NSF_FORMAT:
+		case NSF2_FORMAT:
 		case NSFE_FORMAT:
 			info.doublebuffer = FALSE;
 			break;
@@ -965,6 +962,10 @@ void emu_info_rom(void) {
 		log_close_box(uL("NSF"));
 		nsf_info();
 		return;
+	} else if (info.header.format == NSF2_FORMAT) {
+		log_close_box(uL("NSF2"));
+		nsf_info();
+		return;
 	} else if (info.header.format == NSFE_FORMAT) {
 		log_close_box(uL("NSFE"));
 		nsfe_info();
@@ -985,8 +986,7 @@ void emu_info_rom(void) {
 #define ischanged(a) changed = (a); at_least_one_change = changed ? TRUE : at_least_one_change
 #define ifchanged() (changed ? " *" : "")
 
-	log_info_box(uL("nes20db;%s"),
-		info.mapper.nes20db.in_use ? "yes" : "no");
+	log_info_box(uL("nes20db;%s"), info.mapper.nes20db.in_use ? "yes" : "no");
 
 	{
 		log_info_box_open(uL("console type;"));

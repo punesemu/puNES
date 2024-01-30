@@ -517,7 +517,6 @@ set(core_srcs
 	core/cheat.c
 	core/cpu.c
 	core/detach_barcode.c
-	core/draw_on_screen.c
 	core/emu.c
 	core/emu_thread.c
 	core/external_calls.c
@@ -628,6 +627,7 @@ set(gui_srcs
 	gui/dlgVsSystem.hpp
 	gui/dlgWizard.cpp
 	gui/dlgWizard.hpp
+	gui/draw_on_screen.cpp
 	gui/mainApplication.cpp
 	gui/mainApplication.hpp
 	gui/mainWindow.cpp

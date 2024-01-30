@@ -183,6 +183,8 @@ EXTERNC BYTE gui_control_instance(void);
 EXTERNC BYTE gui_create(void);
 EXTERNC void gui_start(void);
 
+EXTERNC size_t gui_utf8_to_utchar(char *input, uTCHAR **output, size_t max_size);
+
 EXTERNC const uTCHAR *gui_home_folder(void);
 EXTERNC const uTCHAR *gui_application_folder(void);
 EXTERNC const uTCHAR *gui_config_folder(void);

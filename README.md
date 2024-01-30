@@ -1,7 +1,7 @@
 <p align="center">
   <img src="https://user-images.githubusercontent.com/14859058/132302943-a466d3d5-75c2-4bac-b0b2-7f0aeb8c058d.png" alt="puNES"/><br>
 </p>
-<h3 align="center">Qt-based Nintendo Entertainment System emulator and NSF/NSFe Music Player</h3>
+<h3 align="center">Qt-based Nintendo Entertainment System emulator and NSF/NSF2/NSFe Music Player</h3>
 
 <p align="center">
   <a href="https://github.com/punesemu/puNES/releases/latest">

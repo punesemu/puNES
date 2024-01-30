@@ -250,6 +250,8 @@ void dlgLog::lappend(const uTCHAR *utxt, va_list ap) {
 	static uTCHAR tmp[1024];
 
 	uvsnprintf(tmp, usizeof(tmp), utxt, ap);
+	va_end(ap);
+
 	buffer.tmp += uQString(tmp);
 }
 void dlgLog::lnewline(void) {

@@ -212,7 +212,31 @@ BYTE gui_create(void) {
 	QSurfaceFormat::setDefaultFormat(fmt);
 #endif
 
-	QFontDatabase::addApplicationFont(":/fonts/fonts/Blocktopia.ttf");
+	// Thx to https://people.mpi-inf.mpg.de/~uwe/misc/uw-ttyp0/
+	// "Ttyp0_11" (unicode 11px)
+	QFontDatabase::addApplicationFont(":/fonts/fonts/t0-11-uni_fixed.ttf");
+	// "Ttyp0_12" (unicode 12px)
+	QFontDatabase::addApplicationFont(":/fonts/fonts/t0-12-uni_fixed.ttf");
+	// "Ttyp0_13" (unicode 13px)
+	QFontDatabase::addApplicationFont(":/fonts/fonts/t0-13-uni_fixed.ttf");
+	// "Ttyp0_14" (unicode 14px)
+	QFontDatabase::addApplicationFont(":/fonts/fonts/t0-14-uni_fixed.ttf");
+
+	// Thx to Skylar Park
+	// "Pixelated" (8px very small)
+	QFontDatabase::addApplicationFont(":/fonts/fonts/pixelated.ttf");
+
+	// Thx to https://andrewtyler.gumroad.com/
+	// "pixelmix" (8px)
+	QFontDatabase::addApplicationFont(":/fonts/fonts/pixelmix.ttf");
+
+	// Thx to https://github.com/cmvnd/fonts
+	// "lemon_10" (10px)
+	QFontDatabase::addApplicationFont(":/fonts/fonts/lemon_fixed.ttf");
+
+	// Thx to http://www.devincook.com/
+	// "Commodore 64 Pixelized" (10px)
+	QFontDatabase::addApplicationFont(":/fonts/fonts/Commodore Pixelized v1.2.ttf");
 
 	qt.mwin = new mainWindow();
 	qt.screen = qt.mwin->wscreen;
@@ -288,6 +312,25 @@ void gui_start(void) {
 	mainApplication::exec();
 }
 
+size_t gui_utf8_to_utchar(char *input, uTCHAR **output, size_t max_size) {
+	QString s = QString::fromUtf8(input);
+	size_t size = s.toUtf8().size();
+	uTCHAR *buff = NULL;
+
+	if (size && (size <= max_size)) {
+		QByteArray array = uQByteArrayFromString(s);
+		size_t asize = array.length();
+
+		buff = asize ? (uTCHAR *)malloc(asize + sizeof(uTCHAR)) : NULL;
+		if (buff) {
+			memset(buff, 0x00, asize + sizeof(uTCHAR));
+			memcpy(buff, uQByteArrayCD(array), asize);
+		}
+	}
+	(*output) = buff;
+	return (buff ? size + 1: 0);
+}
+
 const uTCHAR *gui_home_folder(void) {
 	return (gui_home());
 }
@@ -346,7 +389,7 @@ void gui_set_window_size(void) {
 	int w = gfx.w[VIDEO_MODE], h = gfx.h[VIDEO_MODE];
 	bool toolbar = false;
 
-#if defined (_WIN32)
+#if defined (_WIN64)
 	if (gfx.type_of_fscreen_in_use == FULLSCR_IN_WINDOW) {
 		return;
 	}

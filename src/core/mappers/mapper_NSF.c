@@ -23,11 +23,13 @@
 #include "save_slot.h"
 #include "gui.h"
 #include "conf.h"
-#include "draw_on_screen.h"
+#include "video/gfx.h"
+#include "fps.h"
 
 void map_init_NSF(void) {
 	EXTCL_AFTER_MAPPER_INIT(NSF);
 	EXTCL_SAVE_MAPPER(NSF);
+	EXTCL_CPU_EVERY_CYCLE(NSF);
 	EXTCL_LENGTH_CLOCK(NSF);
 	EXTCL_ENVELOPE_CLOCK(NSF);
 	EXTCL_APU_TICK(NSF);
@@ -38,52 +40,49 @@ void map_init_NSF(void) {
 		memmap_prg_region_init(0, S4K);
 	}
 
-	nsf.made_tick = FALSE;
-
 	if (info.reset >= HARD) {
 		if (cfg->nsf_player_nsfe_playlist && (nsf.playlist.count > 0)) {
 			nsf.songs.current = nsf.playlist.starting;
 			nsf.playlist.index = 0;
 
-			nsf.scroll_info_nsf.pixel = 0;
-
-			nsf.scroll_title_song.pixel = 0;
-
 			nsf.curtain_title_song.index = 0;
 			nsf.curtain_title_song.pause = FALSE;
 			nsf.curtain_title_song.redraw.all = TRUE;
-			nsf.curtain_title_song.redraw.bottom = 0;
 			nsf.curtain_title_song.timer = nsf.curtain_title_song.reload.r1;
-			nsf.curtain_title_song.borders.bottom = 0;
 
 			nsf.curtain_info.index = 0;
 			nsf.curtain_info.pause = FALSE;
 			nsf.curtain_info.redraw.all = TRUE;
-			nsf.curtain_info.redraw.bottom = 0;
 			nsf.curtain_info.timer = nsf.curtain_info.reload.r1;
-			nsf.curtain_info.borders.bottom = 0;
 		} else {
 			nsf.songs.current = nsf.songs.starting - 1;
 		}
 	}
 
-	nsf.frames = 0;
-
-	nsf.made_tick = TRUE;
 	nsf.state = NSF_PLAY | NSF_CHANGE_SONG;
 
-	nsf.routine.INT_NMI = 2;
-	nsf.routine.INT_RESET = 2;
+	{
+		double rate = 0, nmi_rate = 0;
 
-	nsf.draw_mask_frames = 2;
-
-	if (machine.type == NTSC) {
-		nsf.rate.reload = (DBWORD)(machine.cpu_hz / (1000000.0f / (double)nsf.play_speed.ntsc));
-	} else {
-		nsf.rate.reload = (DBWORD)(machine.cpu_hz / (1000000.0f / (double)nsf.play_speed.pal));
+		if (machine.type == NTSC) {
+			rate = nsf.play_speed.ntsc;
+			nmi_rate = 0x40FF;
+		} else if (machine.type == DENDY) {
+			rate = nsf.play_speed.dendy;
+			nmi_rate = 0x4E1D;
+		} else {
+			rate = nsf.play_speed.pal;
+			nmi_rate = 0x4E1D;
+		}
+		nsf.rate.reload = (DBWORD)(machine.cpu_hz / (1000000.0f / rate));
+		nsf.nmi.reload = (DBWORD)(machine.cpu_hz / (1000000.0f / nmi_rate));
 	}
 
 	nsf.rate.count = nsf.rate.reload;
+	nsf.nmi.count = nsf.rate.reload;
+	nsf.nmi.in_use = FALSE;
+
+	nsf.adr.loop = NSF_ROUTINE_LOOP;
 
 	if (nsf.sound_chips.vrc6) {
 		map_internal_struct_init((BYTE *)&vrc6, sizeof(vrc6));
@@ -110,24 +109,32 @@ void map_init_NSF(void) {
 		init_NSF_FME7();
 	}
 
+	nsf2.irq.enable = 0;
+	nsf2.irq.reload = 0;
+	nsf2.irq.counter = 0;
+
 	nsf_main_screen();
 }
 void extcl_after_mapper_init_NSF(void) {
+	info.disable_tick_hw = TRUE;
 	nsf_reset_prg();
+	// For convenience, before INIT the host system should initialize the IRQ vector RAM with the starting contents of $FFFE-$FFFF
+	nsf2.irq.vector[0] = prgrom_rd(0, 0xFFFE);
+	nsf2.irq.vector[1] = prgrom_rd(0, 0xFFFF);
+	info.disable_tick_hw = FALSE;
 }
 BYTE extcl_save_mapper_NSF(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, nsf.type);
 	save_slot_ele(mode, slot, nsf.state);
-	save_slot_ele(mode, slot, nsf.made_tick);
-	save_slot_ele(mode, slot, nsf.frames);
 
 	save_slot_ele(mode, slot, nsf.rate.count);
 
+	save_slot_ele(mode, slot, nsf.nmi.in_use);
+	save_slot_ele(mode, slot, nsf.nmi.count);
+
 	save_slot_ele(mode, slot, nsf.songs.current);
 
-	save_slot_ele(mode, slot, nsf.routine.prg);
-	save_slot_ele(mode, slot, nsf.routine.INT_NMI);
-	save_slot_ele(mode, slot, nsf.routine.INT_RESET);
+	save_slot_ele(mode, slot, nsf.adr.loop);
 
 	save_slot_ele(mode, slot, nsf.timers.button);
 	save_slot_ele(mode, slot, nsf.timers.total_rom);
@@ -140,21 +147,18 @@ BYTE extcl_save_mapper_NSF(BYTE mode, BYTE slot, FILE *fp) {
 
 	save_slot_ele(mode, slot, nsf.playlist.index);
 
+	if (nsf2.features.irq_support) {
+		save_slot_ele(mode, slot, nsf2.irq.enable);
+		save_slot_ele(mode, slot, nsf2.irq.reload);
+		save_slot_ele(mode, slot, nsf2.irq.counter);
+		save_slot_ele(mode, slot, nsf2.irq.vector);
+	}
+
 	if (mode == SAVE_SLOT_READ) {
 		nsf_reset_song_title();
 		nsf_reset_timers();
-
 		nsf.curtain_title_song.redraw.all = TRUE;
-		nsf.curtain_title_song.redraw.bottom = nsf.curtain_title_song.borders.bottom;
-		if (nsf.curtain_title_song.pause) {
-			nsf.curtain_title_song.redraw.bottom = dospf(1);
-		}
-
 		nsf.curtain_info.redraw.all = TRUE;
-		nsf.curtain_info.redraw.bottom = nsf.curtain_info.borders.bottom;
-		if (nsf.curtain_info.pause) {
-			nsf.curtain_info.redraw.bottom = dospf(1);
-		}
 	}
 
 	if (nsf.sound_chips.vrc6) {
@@ -209,6 +213,37 @@ BYTE extcl_save_mapper_NSF(BYTE mode, BYTE slot, FILE *fp) {
 
 	return (EXIT_OK);
 }
+void extcl_cpu_every_cycle_NSF(BYTE nidx) {
+	if (nsf.nmi.count && (--nsf.nmi.count == 0)) {
+		nsf.nmi.count = nsf.nmi.reload;
+
+		nes[0].c.nmi.high = !nsf.nmi.in_use;
+		nes[0].p.ppu.odd_frame = !nes[0].p.ppu.odd_frame;
+		nes[0].p.ppu.frames++;
+
+		info.exec_cpu_op.b[0] = FALSE;
+
+		nsf_main_screen_event();
+		nsf_effect();
+		gfx_draw_screen(0);
+		fps_ppu_inc(0);
+	}
+	if (nsf.rate.count && (--nsf.rate.count == 0)) {
+		if (!nsf2.features.non_returning_init) {
+			nsf.adr.loop = NSF_ROUTINE_NORMAL;
+		}
+	}
+	if (nsf2.irq.enable) {
+		nsf2.irq.counter--;
+		if (nsf2.irq.counter == 0) {
+			nsf2.irq.counter = nsf2.irq.reload;
+			nes[nidx].c.irq.high |= EXT_IRQ;
+		}
+	} else {
+		nsf2.irq.counter = nsf2.irq.reload;
+	}
+}
+
 void extcl_length_clock_NSF(void) {
 	if (nsf.sound_chips.mmc5) {
 		extcl_length_clock_005();
