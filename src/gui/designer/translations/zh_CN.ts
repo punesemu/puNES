@@ -3146,10 +3146,6 @@
       <translation>不限制精灵</translation>
     </message>
     <message>
-      <source>Enable Extra Scanlines</source>
-      <translation>启用额外扫描线</translation>
-    </message>
-    <message>
       <source>Hide Sprites</source>
       <translation>隐藏精灵</translation>
     </message>
@@ -3180,6 +3176,26 @@
     <message>
       <source>Automatically restores the limit when necessary to prevent graphical glitches</source>
       <translation>必要时自动恢复限制以避免图像出问题</translation>
+    </message>
+    <message>
+      <source>Per-Game</source>
+      <translation type="unfinished">Per-Game</translation>
+    </message>
+    <message>
+      <source>Per-Game Overclock Setting</source>
+      <translation type="unfinished">Per-Game Overclock Setting</translation>
+    </message>
+    <message>
+      <source>On</source>
+      <translation type="unfinished">On</translation>
+    </message>
+    <message>
+      <source>Off</source>
+      <translation type="unfinished">Off</translation>
+    </message>
+    <message>
+      <source>Default Value</source>
+      <translation type="unfinished">Default Value</translation>
     </message>
   </context>
   <context>
