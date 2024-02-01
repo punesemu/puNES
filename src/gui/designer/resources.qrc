@@ -268,12 +268,20 @@
     <file>pics/nsf_prev_press.png</file>
     <file>pics/nsf_stop_no_press.png</file>
     <file>pics/nsf_stop_press.png</file>
+    <file>pics/nsf_mute_no_press.png</file>
+    <file>pics/nsf_mute_press.png</file>
+    <file>pics/nsf_repeat_song_no_press.png</file>
+    <file>pics/nsf_repeat_song_press.png</file>
+    <file>pics/authors_note_no_press.png</file>
+    <file>pics/authors_note_press.png</file>
     <file>pics/controller.png</file>
     <file>pics/controller_right.png</file>
     <file>pics/controller_left.png</file>
     <file>pics/controller_up.png</file>
     <file>pics/controller_start.png</file>
+    <file>pics/controller_select.png</file>
     <file>pics/controller_button_a.png</file>
+    <file>pics/controller_button_b.png</file>
     <file>pics/controller_mouse.png</file>
     <file>pics/nsf_arrow_left.png</file>
     <file>pics/nsf_arrow_right.png</file>

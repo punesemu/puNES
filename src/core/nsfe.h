@@ -20,8 +20,26 @@
 #define NSFE_H_
 
 #include "common.h"
+#include "rom_mem.h"
+
+enum nsfe_phase_type { NSFE_COUNT, NSFE_READ };
 
 BYTE nsfe_load_rom(void);
 void nsfe_info(void);
+
+BYTE nsfe_NONE(_rom_mem *rom, BYTE phase);
+BYTE nsfe_INFO(_rom_mem *rom, BYTE phase);
+BYTE nsfe_DATA(_rom_mem *rom, BYTE phase);
+BYTE nsfe_BANK(_rom_mem *rom, BYTE phase);
+BYTE nsfe_RATE(_rom_mem *rom, BYTE phase);
+BYTE nsfe_NSF2(_rom_mem *rom, BYTE phase);
+BYTE nsfe_plst(_rom_mem *rom, BYTE phase);
+BYTE nsfe_time(_rom_mem *rom, BYTE phase);
+BYTE nsfe_fade(_rom_mem *rom, BYTE phase);
+BYTE nsfe_tlbl(_rom_mem *rom, BYTE phase);
+BYTE nsfe_taut(_rom_mem *rom, BYTE phase);
+BYTE nsfe_auth(_rom_mem *rom, BYTE phase);
+BYTE nsfe_text(_rom_mem *rom, BYTE phase);
+BYTE nsfe_regn(_rom_mem *rom, BYTE phase);
 
 #endif /* NSFE_H_ */

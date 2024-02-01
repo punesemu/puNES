@@ -46,11 +46,12 @@ void input_add_event_nsf_mouse(UNUSED(BYTE index)) {
 	if (nsf_mouse.pressed) {
 		_port *prt = &port[PORT1];
 
-		input_data_set_standard_controller(LEFT, RELEASED, prt);
 		input_data_set_standard_controller(START, RELEASED, prt);
 		input_data_set_standard_controller(SELECT, RELEASED, prt);
-		input_data_set_standard_controller(BUT_A, RELEASED, prt);
+		input_data_set_standard_controller(LEFT, RELEASED, prt);
 		input_data_set_standard_controller(RIGHT, RELEASED, prt);
+		input_data_set_standard_controller(BUT_A, RELEASED, prt);
+		input_data_set_standard_controller(BUT_B, RELEASED, prt);
 		nsf_mouse.pressed = FALSE;
 	}
 }

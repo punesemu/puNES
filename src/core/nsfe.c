@@ -19,17 +19,15 @@
 #include <string.h>
 #include <stdlib.h>
 #include "nsfe.h"
-#include "rom_mem.h"
 #define _NSF_STATIC_
 #include "nsf.h"
 #undef _NSF_STATIC_
-#include "info.h"
 #include "mappers.h"
+#include "info.h"
 #include "gui.h"
 #include "audio/blipbuf.h"
 #include "patcher.h"
 
-enum nsfe_phase_type { NSFE_COUNT, NSFE_READ };
 enum nsfe_flags {
 	LOAD_ADR_LO,
 	LOAD_ADR_HI,
@@ -43,27 +41,6 @@ enum nsfe_flags {
 	STARTING_SONGS,
 	TOTAL_FL
 };
-
-BYTE nsfe_NONE(_rom_mem *rom, BYTE phase);
-BYTE nsfe_INFO(_rom_mem *rom, BYTE phase);
-BYTE nsfe_DATA(_rom_mem *rom, BYTE phase);
-BYTE nsfe_BANK(_rom_mem *rom, BYTE phase);
-BYTE nsfe_RATE(_rom_mem *rom, BYTE phase);
-BYTE nsfe_NSF2(_rom_mem *rom, BYTE phase);
-BYTE nsfe_plst(_rom_mem *rom, BYTE phase);
-BYTE nsfe_time(_rom_mem *rom, BYTE phase);
-BYTE nsfe_fade(_rom_mem *rom, BYTE phase);
-BYTE nsfe_tlbl(_rom_mem *rom, BYTE phase);
-BYTE nsfe_auth(_rom_mem *rom, BYTE phase);
-BYTE nsfe_text(_rom_mem *rom, BYTE phase);
-BYTE nsfe_regn(_rom_mem *rom, BYTE phase);
-
-struct _nsfe {
-	struct _nsfe_chunk {
-		uint32_t length;
-		char id[4];
-	} chunk;
-} nsfe;
 
 BYTE nsfe_load_rom(void) {
 	_rom_mem rom;
@@ -135,70 +112,75 @@ BYTE nsfe_load_rom(void) {
 		for (phase = NSFE_COUNT; phase <= NSFE_READ; phase++) {
 			rom.position = 4;
 
-			while ((rom.position + sizeof(nsfe.chunk)) <= rom.size) {
-				rom_mem_memcpy(&nsfe.chunk, &rom, sizeof(nsfe.chunk));
+			while ((rom.position + sizeof(nsf.chunk)) <= rom.size) {
+				rom_mem_memcpy(&nsf.chunk, &rom, sizeof(nsf.chunk));
 
-				if (strncmp(nsfe.chunk.id, "INFO", 4) == 0) {
+				if (strncmp(nsf.chunk.id, "INFO", 4) == 0) {
 					if (nsfe_INFO(&rom, phase) == EXIT_ERROR) {
 						free(rom.data);
 						return (EXIT_ERROR);
 					}
-				} else if (strncmp(nsfe.chunk.id, "DATA", 4) == 0) {
+				} else if (strncmp(nsf.chunk.id, "DATA", 4) == 0) {
 					if (nsfe_DATA(&rom, phase) == EXIT_ERROR) {
 						free(rom.data);
 						return (EXIT_ERROR);
 					}
-				} else if (strncmp(nsfe.chunk.id, "NEND", 4) == 0) {
+				} else if (strncmp(nsf.chunk.id, "NEND", 4) == 0) {
 					if (nsfe_NONE(&rom, phase) == EXIT_ERROR) {
 						free(rom.data);
 						return (EXIT_ERROR);
 					}
-				} else if (strncmp(nsfe.chunk.id, "BANK", 4) == 0) {
+				} else if (strncmp(nsf.chunk.id, "BANK", 4) == 0) {
 					if (nsfe_BANK(&rom, phase)) {
 						free(rom.data);
 						return (EXIT_ERROR);
 					}
-				} else if (strncmp(nsfe.chunk.id, "RATE", 4) == 0) {
+				} else if (strncmp(nsf.chunk.id, "RATE", 4) == 0) {
 					if (nsfe_RATE(&rom, phase)) {
 						free(rom.data);
 						return (EXIT_ERROR);
 					}
-				} else if (strncmp(nsfe.chunk.id, "NSF2", 4) == 0) {
+				} else if (strncmp(nsf.chunk.id, "NSF2", 4) == 0) {
 					if (nsfe_NSF2(&rom, phase)) {
 						free(rom.data);
 						return (EXIT_ERROR);
 					}
-				} else if (strncmp(nsfe.chunk.id, "plst", 4) == 0) {
+				} else if (strncmp(nsf.chunk.id, "plst", 4) == 0) {
 					if (nsfe_plst(&rom, phase) == EXIT_ERROR) {
 						free(rom.data);
 						return (EXIT_ERROR);
 					}
-				} else if (strncmp(nsfe.chunk.id, "time", 4) == 0) {
+				} else if (strncmp(nsf.chunk.id, "time", 4) == 0) {
 					if (nsfe_time(&rom, phase) == EXIT_ERROR) {
 						free(rom.data);
 						return (EXIT_ERROR);
 					}
-				} else if (strncmp(nsfe.chunk.id, "fade", 4) == 0) {
+				} else if (strncmp(nsf.chunk.id, "fade", 4) == 0) {
 					if (nsfe_fade(&rom, phase) == EXIT_ERROR) {
 						free(rom.data);
 						return (EXIT_ERROR);
 					}
-				} else if (strncmp(nsfe.chunk.id, "tlbl", 4) == 0) {
+				} else if (strncmp(nsf.chunk.id, "tlbl", 4) == 0) {
 					if (nsfe_tlbl(&rom, phase) == EXIT_ERROR) {
 						free(rom.data);
 						return (EXIT_ERROR);
 					}
-				} else if (strncmp(nsfe.chunk.id, "auth", 4) == 0) {
+				} else if (strncmp(nsf.chunk.id, "taut", 4) == 0) {
+					if (nsfe_taut(&rom, phase) == EXIT_ERROR) {
+						free(rom.data);
+						return (EXIT_ERROR);
+					}
+				} else if (strncmp(nsf.chunk.id, "auth", 4) == 0) {
 					if (nsfe_auth(&rom, phase) == EXIT_ERROR) {
 						free(rom.data);
 						return (EXIT_ERROR);
 					}
-				} else if (strncmp(nsfe.chunk.id, "text", 4) == 0) {
+				} else if (strncmp(nsf.chunk.id, "text", 4) == 0) {
 					if (nsfe_text(&rom, phase) == EXIT_ERROR) {
 						free(rom.data);
 						return (EXIT_ERROR);
 					}
-				} else if (strncmp(nsfe.chunk.id, "regn", 4) == 0) {
+				} else if (strncmp(nsf.chunk.id, "regn", 4) == 0) {
 					if (nsfe_regn(&rom, phase) == EXIT_ERROR) {
 						free(rom.data);
 						return (EXIT_ERROR);
@@ -310,7 +292,7 @@ void nsfe_info(void) {
 	log_info_box(uL("artist;" uPs("") ""), nsf.info.artist);
 	log_info_box(uL("copyright;" uPs("") ""), nsf.info.copyright);
 	log_info_box(uL("ripper;" uPs("") ""), nsf.info.ripper);
-	log_info_box(uL("text;" uPs("") ""), nsf.info.text);
+	log_info_box(uL("text;" uPs("") ""), nsf.info.text ? uL("yes") : uL("no"));
 	log_info_box_open(uL("playlist;"));
 	for (tmp = 0; tmp < nsf.playlist.count; tmp++) {
 		if (tmp == 0) {
@@ -329,21 +311,21 @@ void nsfe_info(void) {
 
 BYTE nsfe_NONE(_rom_mem *rom, BYTE phase) {
 	if (phase == NSFE_COUNT) {
-		if ((rom->position + nsfe.chunk.length) > rom->size) {
+		if ((rom->position + nsf.chunk.length) > rom->size) {
 			return (EXIT_ERROR);
 		}
-		rom->position += nsfe.chunk.length;
+		rom->position += nsf.chunk.length;
 		return (EXIT_OK);
 	}
 
-	rom->position += nsfe.chunk.length;
+	rom->position += nsf.chunk.length;
 
 	return (EXIT_OK);
 }
 BYTE nsfe_INFO(_rom_mem *rom, BYTE phase) {
 	BYTE flags[TOTAL_FL];
 
-	if (nsfe.chunk.length < TOTAL_FL) {
+	if (nsf.chunk.length < TOTAL_FL) {
 		return (EXIT_ERROR);
 	}
 
@@ -393,41 +375,41 @@ BYTE nsfe_DATA(_rom_mem *rom, BYTE phase) {
 	uint32_t padding = nsf.adr.load & 0x0FFF;
 
 	if (phase == NSFE_COUNT) {
-		if ((rom->position + nsfe.chunk.length) > rom->size) {
+		if ((rom->position + nsf.chunk.length) > rom->size) {
 			return (EXIT_ERROR);
 		}
-		rom->position += nsfe.chunk.length;
+		rom->position += nsf.chunk.length;
 		return (EXIT_OK);
 	}
 
-	prgrom_set_size(((((size_t)nsfe.chunk.length + padding) / S4K) +
-		((((size_t)nsfe.chunk.length + padding) % S4K) ? 1 : 0)) * S4K);
+	prgrom_set_size(((((size_t)nsf.chunk.length + padding) / S4K) +
+		((((size_t)nsf.chunk.length + padding) % S4K) ? 1 : 0)) * S4K);
 
 	if (prgrom_init(0xF2) == EXIT_ERROR) {
 		free(rom->data);
 		return (EXIT_ERROR);
 	}
 
-	rom_mem_memcpy(prgrom_pnt() + padding, rom, nsfe.chunk.length);
+	rom_mem_memcpy(prgrom_pnt() + padding, rom, nsf.chunk.length);
 
 	return (EXIT_OK);
 }
 BYTE nsfe_BANK(_rom_mem *rom, BYTE phase) {
-	if (nsfe.chunk.length > 8) {
-		nsfe.chunk.length = 8;
+	if (nsf.chunk.length > 8) {
+		nsf.chunk.length = 8;
 	}
 
 	if (phase == NSFE_COUNT) {
-		if ((rom->position + nsfe.chunk.length) > rom->size) {
+		if ((rom->position + nsf.chunk.length) > rom->size) {
 			return (EXIT_ERROR);
 		}
-		rom->position += nsfe.chunk.length;
+		rom->position += nsf.chunk.length;
 		return (EXIT_OK);
 	}
 
 	memset(&nsf.bankswitch.banks[0], 0x00, sizeof(nsf.bankswitch.banks));
 
-	rom_mem_memcpy(&nsf.bankswitch.banks, rom, nsfe.chunk.length);
+	rom_mem_memcpy(&nsf.bankswitch.banks, rom, nsf.chunk.length);
 
 	if (nsf.bankswitch.banks[0] | nsf.bankswitch.banks[1] | nsf.bankswitch.banks[2] |
 		nsf.bankswitch.banks[3] | nsf.bankswitch.banks[4] | nsf.bankswitch.banks[5] |
@@ -441,26 +423,26 @@ BYTE nsfe_RATE(_rom_mem *rom, BYTE phase) {
 	BYTE *rate = NULL;
 
 	if (phase == NSFE_COUNT) {
-		if ((rom->position + nsfe.chunk.length) > rom->size) {
+		if ((rom->position + nsf.chunk.length) > rom->size) {
 			return (EXIT_ERROR);
 		}
-		rom->position += nsfe.chunk.length;
+		rom->position += nsf.chunk.length;
 		return (EXIT_OK);
 	}
 
-	rate = (BYTE *)malloc(nsfe.chunk.length);
+	rate = (BYTE *)malloc(nsf.chunk.length);
 	if (rate) {
-		memset(rate, 0x00, nsfe.chunk.length);
-		rom_mem_memcpy(rate, rom, nsfe.chunk.length);
-		if (nsfe.chunk.length >= 2) {
+		memset(rate, 0x00, nsf.chunk.length);
+		rom_mem_memcpy(rate, rom, nsf.chunk.length);
+		if (nsf.chunk.length >= 2) {
 			nsf.play_speed.ntsc = rate[0];
 			nsf.play_speed.ntsc |= (rate[1] << 8);
 		}
-		if (nsfe.chunk.length >= 4) {
+		if (nsf.chunk.length >= 4) {
 			nsf.play_speed.pal = rate[2];
 			nsf.play_speed.pal |= (rate[3] << 8);
 		}
-		if (nsfe.chunk.length >= 6) {
+		if (nsf.chunk.length >= 6) {
 			nsf.play_speed.dendy = rate[4];
 			nsf.play_speed.dendy |= (rate[5] << 8);
 		}
@@ -473,10 +455,10 @@ BYTE nsfe_NSF2(_rom_mem *rom, BYTE phase) {
 	BYTE tmp = 0;
 
 	if (phase == NSFE_COUNT) {
-		if ((rom->position + nsfe.chunk.length) > rom->size) {
+		if ((rom->position + nsf.chunk.length) > rom->size) {
 			return (EXIT_ERROR);
 		}
-		rom->position += nsfe.chunk.length;
+		rom->position += nsf.chunk.length;
 		return (EXIT_OK);
 	}
 
@@ -496,23 +478,23 @@ BYTE nsfe_NSF2(_rom_mem *rom, BYTE phase) {
 }
 BYTE nsfe_plst(_rom_mem *rom, BYTE phase) {
 	if (phase == NSFE_COUNT) {
-		if ((rom->position + nsfe.chunk.length) > rom->size) {
+		if ((rom->position + nsf.chunk.length) > rom->size) {
 			return (EXIT_ERROR);
 		}
-		rom->position += nsfe.chunk.length;
+		rom->position += nsf.chunk.length;
 		return (EXIT_OK);
 	}
 
-	nsf.playlist.data = (BYTE *)malloc(nsfe.chunk.length);
+	nsf.playlist.data = (BYTE *)malloc(nsf.chunk.length);
 	if (!nsf.playlist.data) {
 		log_error(uL("nsfe;out of memory"));
 		return (EXIT_ERROR);
 	}
 
-	rom_mem_memcpy(nsf.playlist.data, rom, nsfe.chunk.length);
+	rom_mem_memcpy(nsf.playlist.data, rom, nsf.chunk.length);
 
 	nsf.playlist.index = 0;
-	nsf.playlist.count = nsfe.chunk.length;
+	nsf.playlist.count = nsf.chunk.length;
 	nsf.playlist.starting = nsf.playlist.data[0];
 
 	return (EXIT_OK);
@@ -521,14 +503,14 @@ BYTE nsfe_time(_rom_mem *rom, BYTE phase) {
 	unsigned int i = 0, total = 0;
 
 	if (phase == NSFE_COUNT) {
-		if ((rom->position + nsfe.chunk.length) > rom->size) {
+		if ((rom->position + nsf.chunk.length) > rom->size) {
 			return (EXIT_ERROR);
 		}
-		rom->position += nsfe.chunk.length;
+		rom->position += nsf.chunk.length;
 		return (EXIT_OK);
 	}
 
-	total = nsfe.chunk.length / 4;
+	total = nsf.chunk.length / 4;
 
 	if (total > nsf.songs.total) {
 		total = nsf.songs.total;
@@ -538,10 +520,10 @@ BYTE nsfe_time(_rom_mem *rom, BYTE phase) {
 		_nsf_info_song *song = &nsf.info_song[i];
 
 		rom_mem_memcpy(&song->time, rom, 4);
-		nsfe.chunk.length -= 4;
+		nsf.chunk.length -= 4;
 	}
 
-	rom->position += nsfe.chunk.length;
+	rom->position += nsf.chunk.length;
 
 	return (EXIT_OK);
 }
@@ -549,14 +531,14 @@ BYTE nsfe_fade(_rom_mem *rom, BYTE phase) {
 	unsigned int i = 0, total = 0;
 
 	if (phase == NSFE_COUNT) {
-		if ((rom->position + nsfe.chunk.length) > rom->size) {
+		if ((rom->position + nsf.chunk.length) > rom->size) {
 			return (EXIT_ERROR);
 		}
-		rom->position += nsfe.chunk.length;
+		rom->position += nsf.chunk.length;
 		return (EXIT_OK);
 	}
 
-	total = nsfe.chunk.length / 4;
+	total = nsf.chunk.length / 4;
 
 	if (total > nsf.songs.total) {
 		total = nsf.songs.total;
@@ -566,10 +548,10 @@ BYTE nsfe_fade(_rom_mem *rom, BYTE phase) {
 		_nsf_info_song *song = &nsf.info_song[i];
 
 		rom_mem_memcpy(&song->fade, rom, 4);
-		nsfe.chunk.length -= 4;
+		nsf.chunk.length -= 4;
 	}
 
-	rom->position += nsfe.chunk.length;
+	rom->position += nsf.chunk.length;
 
 	return (EXIT_OK);
 }
@@ -578,21 +560,21 @@ BYTE nsfe_tlbl(_rom_mem *rom, BYTE phase) {
 	char *src = NULL;
 
 	if (phase == NSFE_COUNT) {
-		if ((rom->position + nsfe.chunk.length) > rom->size) {
+		if ((rom->position + nsf.chunk.length) > rom->size) {
 			return (EXIT_ERROR);
 		}
-		rom->position += nsfe.chunk.length;
+		rom->position += nsf.chunk.length;
 		return (EXIT_OK);
 	}
 
-	src = (char *)malloc(nsfe.chunk.length + 1);
+	src = (char *)malloc(nsf.chunk.length + 1);
 	if (!src) {
 		log_error(uL("nsfe;out of memory"));
 		return (EXIT_ERROR);
 	}
 
-	memset(src, 0x00, nsfe.chunk.length + 1);
-	rom_mem_memcpy(src, rom, nsfe.chunk.length);
+	memset(src, 0x00, nsf.chunk.length + 1);
+	rom_mem_memcpy(src, rom, nsf.chunk.length);
 
 	for (int i = 0; i < nsf.songs.total; i++) {
 		_nsf_info_song *song = &nsf.info_song[i];
@@ -601,12 +583,48 @@ BYTE nsfe_tlbl(_rom_mem *rom, BYTE phase) {
 		if (song->track_label) {
 			free(song->track_label);
 		}
-		if (index < nsfe.chunk.length) {
-			size = gui_utf8_to_utchar(&src[0] + index, &song->track_label, nsfe.chunk.length - index);
+		if (index < nsf.chunk.length) {
+			size = gui_utf8_to_utchar(&src[0] + index, &song->track_label, nsf.chunk.length - index);
 			index += size;
 		}
 		if (!size) {
 			size = gui_utf8_to_utchar(&nsf_default_label[0], &song->track_label, strlen(nsf_default_label));
+		}
+	}
+	free(src);
+	return (EXIT_OK);
+}
+BYTE nsfe_taut(_rom_mem *rom, BYTE phase) {
+	size_t index = 0;
+	char *src = NULL;
+
+	if (phase == NSFE_COUNT) {
+		if ((rom->position + nsf.chunk.length) > rom->size) {
+			return (EXIT_ERROR);
+		}
+		rom->position += nsf.chunk.length;
+		return (EXIT_OK);
+	}
+
+	src = (char *)malloc(nsf.chunk.length + 1);
+	if (!src) {
+		log_error(uL("nsfe;out of memory"));
+		return (EXIT_ERROR);
+	}
+
+	memset(src, 0x00, nsf.chunk.length + 1);
+	rom_mem_memcpy(src, rom, nsf.chunk.length);
+
+	for (int i = 0; i < nsf.songs.total; i++) {
+		_nsf_info_song *song = &nsf.info_song[i];
+		size_t size = 0;
+
+		if (song->author) {
+			free(song->author);
+		}
+		if (index < nsf.chunk.length) {
+			size = gui_utf8_to_utchar(&src[0] + index, &song->author, nsf.chunk.length - index);
+			index += size;
 		}
 	}
 	free(src);
@@ -618,21 +636,21 @@ BYTE nsfe_auth(_rom_mem *rom, BYTE phase) {
 	size_t index = 0;
 
 	if (phase == NSFE_COUNT) {
-		if ((rom->position + nsfe.chunk.length) > rom->size) {
+		if ((rom->position + nsf.chunk.length) > rom->size) {
 			return (EXIT_ERROR);
 		}
-		rom->position += nsfe.chunk.length;
+		rom->position += nsf.chunk.length;
 		return (EXIT_OK);
 	}
 
-	src = (char *)malloc(nsfe.chunk.length + 1);
+	src = (char *)malloc(nsf.chunk.length + 1);
 	if (!src) {
 		log_error(uL("nsfe;out of memory"));
 		return (EXIT_ERROR);
 	}
 
-	memset(src, 0x00, nsfe.chunk.length + 1);
-	rom_mem_memcpy(src, rom, nsfe.chunk.length);
+	memset(src, 0x00, nsf.chunk.length + 1);
+	rom_mem_memcpy(src, rom, nsf.chunk.length);
 
 	for (int i = 0; i < 4; i++) {
 		size_t size = 0;
@@ -665,8 +683,8 @@ BYTE nsfe_auth(_rom_mem *rom, BYTE phase) {
 			default:
 				continue;
 		}
-		if (index < nsfe.chunk.length) {
-			size = gui_utf8_to_utchar(&src[0] + index, dst, nsfe.chunk.length - index);
+		if (index < nsf.chunk.length) {
+			size = gui_utf8_to_utchar(&src[0] + index, dst, nsf.chunk.length - index);
 			index += size;
 		}
 		if (!size) {
@@ -680,26 +698,26 @@ BYTE nsfe_text(_rom_mem *rom, BYTE phase) {
 	char *src = NULL;
 
 	if (phase == NSFE_COUNT) {
-		if ((rom->position + nsfe.chunk.length) > rom->size) {
+		if ((rom->position + nsf.chunk.length) > rom->size) {
 			return (EXIT_ERROR);
 		}
-		rom->position += nsfe.chunk.length;
+		rom->position += nsf.chunk.length;
 		return (EXIT_OK);
 	}
 
-	src = (char *)malloc(nsfe.chunk.length + 1);
+	src = (char *)malloc(nsf.chunk.length + 1);
 	if (!src) {
 		log_error(uL("nsfe;out of memory"));
 		return (EXIT_ERROR);
 	}
 
-	memset(src, 0x00, nsfe.chunk.length + 1);
-	rom_mem_memcpy(src, rom, nsfe.chunk.length);
+	memset(src, 0x00, nsf.chunk.length + 1);
+	rom_mem_memcpy(src, rom, nsf.chunk.length);
 
 	if (nsf.info.text) {
 		free(nsf.info.text);
 	}
-	gui_utf8_to_utchar(&src[0], &nsf.info.text, nsfe.chunk.length);
+	gui_utf8_to_utchar(&src[0], &nsf.info.text, nsf.chunk.length);
 	free(src);
 	return (EXIT_OK);
 }
@@ -707,18 +725,18 @@ BYTE nsfe_regn(_rom_mem *rom, BYTE phase) {
 	BYTE *regn = NULL;
 
 	if (phase == NSFE_COUNT) {
-		if ((rom->position + nsfe.chunk.length) > rom->size) {
+		if ((rom->position + nsf.chunk.length) > rom->size) {
 			return (EXIT_ERROR);
 		}
-		rom->position += nsfe.chunk.length;
+		rom->position += nsf.chunk.length;
 		return (EXIT_OK);
 	}
 
-	regn = (BYTE *)malloc(nsfe.chunk.length);
+	regn = (BYTE *)malloc(nsf.chunk.length);
 	if (regn) {
-		memset(regn, 0x00, nsfe.chunk.length);
-		rom_mem_memcpy(regn, rom, nsfe.chunk.length);
-		if (nsfe.chunk.length >= 1) {
+		memset(regn, 0x00, nsf.chunk.length);
+		rom_mem_memcpy(regn, rom, nsf.chunk.length);
+		if (nsf.chunk.length >= 1) {
 			switch (regn[0] & 0x03) {
 				default:
 				case 0:
@@ -732,7 +750,7 @@ BYTE nsfe_regn(_rom_mem *rom, BYTE phase) {
 					break;
 			}
 		}
-		if (nsfe.chunk.length >= 2) {
+		if (nsf.chunk.length >= 2) {
 			switch (regn[1] & 0x03) {
 				default:
 				case 0:

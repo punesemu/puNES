@@ -91,6 +91,7 @@ mainWindow::mainWindow() : QMainWindow() {
 	visibility.menubar = true;
 	visibility.toolbars = true;
 	tmm = (BYTE)TOGGLE_MENUBAR_NONE;
+	nsf_author_note.dlg = NULL;
 
 	{
 		QHBoxLayout *layout = new QHBoxLayout(central_widget);
@@ -191,6 +192,8 @@ mainWindow::mainWindow() : QMainWindow() {
 	connect(this, SIGNAL(et_vs_reset()), this, SLOT(s_et_vs_reset()));
 	connect(this, SIGNAL(et_external_control_windows_show()), this, SLOT(s_et_external_control_windows_show()));
 	connect(this, SIGNAL(et_toggle_menubar_from_mouse()), this, SLOT(s_et_toggle_menubar_from_mouse()));
+	connect(this, SIGNAL(et_nsf_author_note_open(const uTCHAR *)), this, SLOT(s_et_nsf_author_note_open(const uTCHAR *)));
+	connect(this, SIGNAL(et_nsf_author_note_close()), this, SLOT(s_et_nsf_author_note_close()));
 
 	egds = new timerEgds(this);
 
@@ -2443,6 +2446,10 @@ void mainWindow::s_exec_message(void) {
 
 	emu_pause(FALSE);
 }
+void mainWindow::s_nsf_author_note_close(void) {
+	nsf_author_note.geom = nsf_author_note.dlg->geometry();
+	nsf_author_note.dlg = NULL;
+}
 
 void mainWindow::s_shcut_mode(void) {
 	int mode = QVariant(((QObject *)sender())->property("myValue")).toInt();
@@ -2555,6 +2562,27 @@ void mainWindow::s_et_external_control_windows_show(void) {
 }
 void mainWindow::s_et_toggle_menubar_from_mouse(void) {
 	toggle_menubar(TOGGLE_MENUBAR_FROM_MOUSEMOVE);
+}
+void mainWindow::s_et_nsf_author_note_open(const uTCHAR *string) {
+	if (!nsf_author_note.dlg) {
+		QString sstring = uQString(string);
+
+		nsf_author_note.dlg = new dlgCmdLineHelp(this, "", "Author's Note", uQStringCD(sstring));
+		nsf_author_note.dlg->setModal(false);
+		if (!nsf_author_note.geom.isEmpty()) {
+			nsf_author_note.dlg->setGeometry(nsf_author_note.geom);
+		}
+		nsf_author_note.dlg->setModal(false);
+
+		connect(nsf_author_note.dlg, SIGNAL(et_close()), this, SLOT(s_nsf_author_note_close()));
+
+		nsf_author_note.dlg->show();
+	}
+}
+void mainWindow::s_et_nsf_author_note_close(void) {
+	if (nsf_author_note.dlg) {
+		nsf_author_note.dlg->close();
+	}
 }
 
 // ----------------------------------------------------------------------------------------------

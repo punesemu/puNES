@@ -41,6 +41,7 @@
 #include "wdgScreen.hpp"
 #include "wdgStatusBar.hpp"
 #include "wdgToolBar.hpp"
+#include "dlgCmdLineHelp.hpp"
 
 class toUpValidator: public QValidator {
 	public:
@@ -189,6 +190,10 @@ class mainWindow : public QMainWindow, public Ui::mainWindow {
 			QMutex mutex;
 			QString message;
 		} secondary_instance;
+		struct _nsf_author_note {
+			dlgCmdLineHelp *dlg;
+			QRect geom;
+		} nsf_author_note;
 		QTranslator *translator;
 		QTranslator *qtTranslator;
 		bool setup_in_out_fullscreen;
@@ -205,6 +210,8 @@ class mainWindow : public QMainWindow, public Ui::mainWindow {
 		void et_vs_reset(void);
 		void et_external_control_windows_show(void);
 		void et_toggle_menubar_from_mouse(void);
+		void et_nsf_author_note_open(const uTCHAR *string);
+		void et_nsf_author_note_close(void);
 
 	protected:
 #if defined (_WIN32)
@@ -320,6 +327,7 @@ class mainWindow : public QMainWindow, public Ui::mainWindow {
 		void s_shcjoy_read_timer(void);
 		void s_received_message(quint32 instanceId, const QByteArray &message);
 		void s_exec_message(void);
+		void s_nsf_author_note_close(void);
 
 	private slots:
 		void s_shcut_mode(void);
@@ -345,6 +353,8 @@ class mainWindow : public QMainWindow, public Ui::mainWindow {
 		void s_et_vs_reset(void);
 		void s_et_external_control_windows_show(void);
 		void s_et_toggle_menubar_from_mouse(void);
+		void s_et_nsf_author_note_open(const uTCHAR *string);
+		void s_et_nsf_author_note_close(void);
 };
 
 #endif /* MAINWINDOW_HPP_ */

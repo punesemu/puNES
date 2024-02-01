@@ -22,7 +22,10 @@
 #include "version.h"
 #include "gui.h"
 
-dlgCmdLineHelp::dlgCmdLineHelp(QWidget *parent, const QString &name) : QDialog(parent) {
+dlgCmdLineHelp::dlgCmdLineHelp(QWidget *parent, const QString name, const QString title, const uTCHAR *usage_string) : QDialog(parent) {
+	init(name, title, usage_string);
+}
+dlgCmdLineHelp::dlgCmdLineHelp(QWidget *parent, const QString name) : QDialog(parent) {
 	uTCHAR *usage_string;
 	const uTCHAR *istructions = {
 			uL("Usage: %%1 [options] file...\n\n")
@@ -133,11 +136,21 @@ dlgCmdLineHelp::dlgCmdLineHelp(QWidget *parent, const QString &name) : QDialog(p
 			main_cfg[SET_REWIND_MINUTES].hlp,
 			main_cfg[SET_ONLYCMDLINE_HIDDEN_GUI].hlp
 	);
+	init(name, uQString(uL("" NAME " Command Line Help")), usage_string);
+	free(usage_string);
+}
+dlgCmdLineHelp::~dlgCmdLineHelp() = default;
 
+void dlgCmdLineHelp::closeEvent( QCloseEvent* event ) {
+	emit et_close();
+	QDialog::closeEvent(event);
+}
+
+void dlgCmdLineHelp::init(const QString name, const QString title, const uTCHAR *usage_string) {
 	setupUi(this);
 
 	setAttribute(Qt::WA_DeleteOnClose);
-	setWindowTitle(uQString(uL("" NAME " Command Line Help")));
+	setWindowTitle(title);
 
 	if (font().pointSize() > 9) {
 		QFont font;
@@ -146,13 +159,14 @@ dlgCmdLineHelp::dlgCmdLineHelp(QWidget *parent, const QString &name) : QDialog(p
 		setFont(font);
 	}
 
-	textEdit_cmdLineHelp->setHtml("<pre>" + uQString(usage_string).arg(name) + "</pre>");
+	if (name.isEmpty()) {
+		textEdit_cmdLineHelp->setHtml("<pre>" + uQString(usage_string) + "</pre>");
+	} else {
+		textEdit_cmdLineHelp->setHtml("<pre>" + uQString(usage_string).arg(name) + "</pre>");
+	}
 
 	connect(pushButton_Close, SIGNAL(clicked(bool)), this, SLOT(s_close_clicked(bool)));
-
-	free(usage_string);
 }
-dlgCmdLineHelp::~dlgCmdLineHelp() = default;
 
 void dlgCmdLineHelp::s_close_clicked(UNUSED(bool checked)) {
 	close();

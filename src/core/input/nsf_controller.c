@@ -32,14 +32,14 @@ BYTE input_decode_event_nsf_controller(BYTE mode, BYTE autorepeat, DBWORD event,
 	if (event == prt->input[type][BUT_A]) {
 		if (!prt->turbo[TURBOA].active) {
 			input_data_set_standard_controller(BUT_A, mode, prt);
+			nsf.timers.button[BUT_A] = 1;
 		}
-		nsf.timers.button[BUT_A] = 0;
 		return (EXIT_OK);
 	} else if (event == prt->input[type][BUT_B]) {
 		if (!prt->turbo[TURBOB].active) {
 			input_data_set_standard_controller(BUT_B, mode, prt);
+			nsf.timers.button[BUT_B] = 1;
 		}
-		nsf.timers.button[BUT_B] = 0;
 		return (EXIT_OK);
 	} else if (event == prt->input[type][SELECT]) {
 		input_data_set_standard_controller(SELECT, mode, prt);

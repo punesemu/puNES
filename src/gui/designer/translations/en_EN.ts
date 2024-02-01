@@ -3146,10 +3146,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Enable Extra Scanlines</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Hide Sprites</source>
         <translation type="unfinished"></translation>
     </message>
@@ -3179,6 +3175,26 @@
     </message>
     <message>
         <source>Automatically restores the limit when necessary to prevent graphical glitches</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Per-Game</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Per-Game Overclock Setting</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>On</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Off</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Default Value</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

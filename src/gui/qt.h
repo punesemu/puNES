@@ -246,6 +246,7 @@ EXTERNC void gui_mainwindow_before_set_res(void);
 EXTERNC void *gui_wdgrewind_get_ptr(void);
 EXTERNC void gui_wdgrewind_play(void);
 
+EXTERNC void gui_emit_cmdlinehelp(BYTE type);
 EXTERNC void gui_emit_et_reset(BYTE type);
 EXTERNC void gui_emit_et_gg_reset(void);
 EXTERNC void gui_emit_et_vs_reset(void);
@@ -253,6 +254,11 @@ EXTERNC void gui_emit_et_external_control_windows_show(void);
 
 EXTERNC void gui_max_speed_start(void);
 EXTERNC void gui_max_speed_stop(void);
+
+EXTERNC void gui_nsf_author_note_open(const uTCHAR *string);
+EXTERNC void gui_nsf_author_note_close(void);
+
+EXTERNC void gui_toggle_audio(void);
 
 EXTERNC void gui_decode_all_input_events(void);
 

@@ -79,6 +79,7 @@ typedef struct _nsf_info_song {
 	int32_t time;
 	int32_t fade;
 	uTCHAR *track_label;
+	uTCHAR *author;
 } _nsf_info_song;
 typedef struct _nsf_effect_coords {
 	int x1, x2;
@@ -93,6 +94,10 @@ typedef struct _nsf {
 	BYTE state;
 	const BYTE *routine;
 
+	struct _nsf_chunk {
+		uint32_t length;
+		char id[4];
+	} chunk;
 	struct _nsf_rate {
 		DBWORD count;
 		DBWORD reload;
@@ -159,6 +164,11 @@ typedef struct _nsf {
 		BYTE visual_duration;
 	} options;
 
+
+	BYTE authors_note;
+	BYTE mute;
+	BYTE repeat_song;
+
 	_dos_text_scroll scroll_info_nsf;
 	_dos_text_scroll scroll_title_song;
 	_dos_text_curtain curtain_info;
@@ -169,7 +179,7 @@ typedef struct _nsf {
 	_nsf_effect_coords effect_bars_coords;
 } _nsf;
 typedef struct _nsf2 {
-	int32_t prg_size;
+	uint32_t prg_size;
 	struct _nsf2_features {
 		BYTE irq_support;
 		BYTE non_returning_init;

@@ -703,6 +703,19 @@ void gui_max_speed_stop(void) {
 	qt.mwin->qaction_extern.max_speed.stop->only_one_trigger();
 }
 
+void gui_nsf_author_note_open(const uTCHAR *string) {
+	emit qt.mwin->et_nsf_author_note_open(string);
+}
+void gui_nsf_author_note_close(void) {
+	if (qt.mwin) {
+		emit qt.mwin->et_nsf_author_note_close();
+	}
+}
+
+void gui_toggle_audio(void) {
+	qt.mwin->qaction_shcut.audio_enable->trigger();
+}
+
 void gui_decode_all_input_events(void) {
 	if (info.clean_input_data) {
 		for (unsigned int a = PORT1; a < PORT_MAX; a++) {
