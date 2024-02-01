@@ -3146,10 +3146,6 @@
       <translation>Sınırsız Spritelar</translation>
     </message>
     <message>
-      <source>Enable Extra Scanlines</source>
-      <translation>Ekstra Tarama Satırlarını Etkinleştir</translation>
-    </message>
-    <message>
       <source>Hide Sprites</source>
       <translation>Spriteları gizle</translation>
     </message>
@@ -3180,6 +3176,26 @@
     <message>
       <source>Automatically restores the limit when necessary to prevent graphical glitches</source>
       <translation>Grafik hatalarını önlemek için gerektiğinde sınırı otomatik olarak geri yükler</translation>
+    </message>
+    <message>
+      <source>Per-Game</source>
+      <translation type="unfinished">Per-Game</translation>
+    </message>
+    <message>
+      <source>Per-Game Overclock Setting</source>
+      <translation type="unfinished">Per-Game Overclock Setting</translation>
+    </message>
+    <message>
+      <source>On</source>
+      <translation type="unfinished">On</translation>
+    </message>
+    <message>
+      <source>Off</source>
+      <translation type="unfinished">Off</translation>
+    </message>
+    <message>
+      <source>Default Value</source>
+      <translation type="unfinished">Default Value</translation>
     </message>
   </context>
   <context>
