@@ -97,8 +97,8 @@ typedef struct _config {
 	BYTE save_battery_ram_file;
 	BYTE multiple_instances;
 	BYTE nsf_player_effect;
-	BYTE nsf_player_nsfe_playlist;
-	BYTE nsf_player_nsfe_fadeout;
+	BYTE nsf_player_playlist;
+	BYTE nsf_player_nsf_fadeout;
 #if defined (FULLSCREEN_RESFREQ)
 	BYTE adaptive_rrate;
 	int fullscreen_res_w;

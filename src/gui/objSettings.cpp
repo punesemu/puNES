@@ -965,8 +965,8 @@ void objSet::to_cfg(const QString &group) {
 
 	if ((group == "nsf player") || (group == "all")) {
 		int_to_val(SET_NSF_PLAYER_EFFECT, cfg_from_file.nsf_player_effect);
-		int_to_val(SET_NSF_PLAYER_NSFE_PLAYLIST, cfg_from_file.nsf_player_nsfe_playlist);
-		int_to_val(SET_NSF_PLAYER_NSFE_FADEOUT, cfg_from_file.nsf_player_nsfe_fadeout);
+		int_to_val(SET_NSF_PLAYER_NSF_PLAYLIST, cfg_from_file.nsf_player_playlist);
+		int_to_val(SET_NSF_PLAYER_NSF_FADEOUT, cfg_from_file.nsf_player_nsf_fadeout);
 	}
 
 #if defined (WITH_FFMPEG)
@@ -1107,8 +1107,8 @@ void objSet::fr_cfg(const QString &group) {
 
 	if ((group == "nsf player") || (group == "all")) {
 		cfg_from_file.nsf_player_effect = val_to_int(SET_NSF_PLAYER_EFFECT);
-		cfg_from_file.nsf_player_nsfe_playlist = val_to_int(SET_NSF_PLAYER_NSFE_PLAYLIST);
-		cfg_from_file.nsf_player_nsfe_fadeout = val_to_int(SET_NSF_PLAYER_NSFE_FADEOUT);
+		cfg_from_file.nsf_player_playlist = val_to_int(SET_NSF_PLAYER_NSF_PLAYLIST);
+		cfg_from_file.nsf_player_nsf_fadeout = val_to_int(SET_NSF_PLAYER_NSF_FADEOUT);
 	}
 
 #if defined (WITH_FFMPEG)

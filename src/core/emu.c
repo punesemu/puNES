@@ -968,7 +968,7 @@ void emu_info_rom(void) {
 		return;
 	} else if (info.header.format == NSFE_FORMAT) {
 		log_close_box(uL("NSFE"));
-		nsfe_info();
+		nsf_info();
 		return;
 	} else if (info.header.format == FDS_FORMAT) {
 		log_close_box(uL("FDS"));

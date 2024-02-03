@@ -25,7 +25,6 @@
 enum nsfe_phase_type { NSFE_COUNT, NSFE_READ };
 
 BYTE nsfe_load_rom(void);
-void nsfe_info(void);
 
 BYTE nsfe_NONE(_rom_mem *rom, BYTE phase);
 BYTE nsfe_INFO(_rom_mem *rom, BYTE phase);

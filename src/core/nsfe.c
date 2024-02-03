@@ -228,31 +228,14 @@ BYTE nsfe_load_rom(void) {
 			return (EXIT_ERROR);
 		}
 
-		{
-			switch (nsf.type & 0x03) {
-				case NSF_NTSC_MODE:
-					info.machine[DATABASE] = NTSC;
-					break;
-				case NSF_PAL_MODE:
-					info.machine[DATABASE] = PAL;
-					break;
-				case NSF_DENDY_MODE:
-					info.machine[DATABASE] = DENDY;
-					break;
-				default:
-					nsf.type = NSF_NTSC_MODE;
-					info.machine[DATABASE] = NTSC;
-					break;
-			}
-			if (!nsf.play_speed.ntsc) {
-				nsf.play_speed.ntsc = 0x40FF;
-			}
-			if (!nsf.play_speed.pal) {
-				nsf.play_speed.pal = 0x4E1D;
-			}
-			if (!nsf.play_speed.dendy) {
-				nsf.play_speed.dendy = nsf.play_speed.pal;
-			}
+		if (!nsf.play_speed.ntsc) {
+			nsf.play_speed.ntsc = 0x40FF;
+		}
+		if (!nsf.play_speed.pal) {
+			nsf.play_speed.pal = 0x4E1D;
+		}
+		if (!nsf.play_speed.dendy) {
+			nsf.play_speed.dendy = nsf.play_speed.pal;
 		}
 
 		ram_set_size(0, S2K);
@@ -284,29 +267,6 @@ BYTE nsfe_load_rom(void) {
 	nsf_after_load_rom();
 
 	return (EXIT_OK);
-}
-void nsfe_info(void) {
-	uint32_t tmp = 0;
-
-	log_info_box(uL("name;" uPs("") ""), nsf.info.name);
-	log_info_box(uL("artist;" uPs("") ""), nsf.info.artist);
-	log_info_box(uL("copyright;" uPs("") ""), nsf.info.copyright);
-	log_info_box(uL("ripper;" uPs("") ""), nsf.info.ripper);
-	log_info_box(uL("text;" uPs("") ""), nsf.info.text ? uL("yes") : uL("no"));
-	log_info_box_open(uL("playlist;"));
-	for (tmp = 0; tmp < nsf.playlist.count; tmp++) {
-		if (tmp == 0) {
-			log_append(uL("%d"), nsf.playlist.data[tmp]);
-		} else {
-			log_append(uL(", %d"), nsf.playlist.data[tmp]);
-		}
-	}
-	log_close_box(uL(""));
-	for (tmp = 0; tmp < nsf.songs.total; tmp++) {
-		_nsf_info_song *song = &nsf.info_song[tmp];
-
-		log_info_box(uL("%d;%-7d %-7d " uPs("") ""), tmp, song->time, song->fade, song->track_label);
-	}
 }
 
 BYTE nsfe_NONE(_rom_mem *rom, BYTE phase) {
@@ -342,12 +302,13 @@ BYTE nsfe_INFO(_rom_mem *rom, BYTE phase) {
 	switch (flags[PAL_NTSC_BITS] & 0x03) {
 		default:
 		case 0:
-			nsf.type = NSF_NTSC_MODE;
+			nsf.region.preferred = NSF_NTSC_MODE;
 			break;
 		case 1:
-			nsf.type = NSF_PAL_MODE;
+			nsf.region.preferred = NSF_PAL_MODE;
 			break;
 	}
+	nsf.region.supported = flags[PAL_NTSC_BITS] & 0x02 ? 0x03 : nsf.region.preferred == NSF_NTSC_MODE ? 0x01 : 0x02;
 
 	nsf.sound_chips.vrc6 = flags[EXTRA_SOUND_CHIPS] & 0x01;
 	nsf.sound_chips.vrc7 = flags[EXTRA_SOUND_CHIPS] & 0x02;
@@ -469,7 +430,6 @@ BYTE nsfe_NSF2(_rom_mem *rom, BYTE phase) {
 	// bit 4: if set, this NSF may use the IRQ support features
 	// bit 5: if set, the non-returning INIT playback feature will be used
 	// bit 6: if set, the PLAY subroutine will not be used
-	// bit 7: if set, the appended NSFe metadata may contain a mandatory chunk required for playback
 	nsf2.features.irq_support = !!(tmp & 0x10);
 	nsf2.features.non_returning_init = !!(tmp & 0x20);
 	nsf2.features.suppressed_PLAY = !!(tmp & 0x40);
@@ -519,6 +479,7 @@ BYTE nsfe_time(_rom_mem *rom, BYTE phase) {
 	for (i = 0; i < total; i++) {
 		_nsf_info_song *song = &nsf.info_song[i];
 
+		song->use_timer = TRUE;
 		rom_mem_memcpy(&song->time, rom, 4);
 		nsf.chunk.length -= 4;
 	}
@@ -732,35 +693,34 @@ BYTE nsfe_regn(_rom_mem *rom, BYTE phase) {
 		return (EXIT_OK);
 	}
 
+	nsf.region.supported = 0x01;
+	nsf.region.preferred = NSF_NTSC_MODE;
+
 	regn = (BYTE *)malloc(nsf.chunk.length);
 	if (regn) {
 		memset(regn, 0x00, nsf.chunk.length);
 		rom_mem_memcpy(regn, rom, nsf.chunk.length);
 		if (nsf.chunk.length >= 1) {
-			switch (regn[0] & 0x03) {
-				default:
-				case 0:
-					nsf.type = NSF_NTSC_MODE;
-					break;
-				case 1:
-					nsf.type = NSF_PAL_MODE;
-					break;
-				case 2:
-					nsf.type = NSF_DENDY_MODE;
-					break;
+			nsf.region.supported = regn[0] & 0x07;
+			if (nsf.region.supported == 0x01) {
+				nsf.region.preferred = NSF_NTSC_MODE;
+			} else if (nsf.region.supported == 0x02) {
+				nsf.region.preferred = NSF_PAL_MODE;
+			} else if (nsf.region.supported == 0x03) {
+				nsf.region.preferred = NSF_DENDY_MODE;
 			}
 		}
 		if (nsf.chunk.length >= 2) {
 			switch (regn[1] & 0x03) {
 				default:
 				case 0:
-					nsf.type = NSF_NTSC_MODE;
+					nsf.region.preferred = NSF_NTSC_MODE;
 					break;
 				case 1:
-					nsf.type = NSF_PAL_MODE;
+					nsf.region.preferred = NSF_PAL_MODE;
 					break;
 				case 2:
-					nsf.type = NSF_DENDY_MODE;
+					nsf.region.preferred = NSF_DENDY_MODE;
 					break;
 			}
 		}

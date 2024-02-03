@@ -26,6 +26,8 @@
 #include "video/gfx.h"
 #include "fps.h"
 
+INLINE static void select_region(void);
+
 void map_init_NSF(void) {
 	EXTCL_AFTER_MAPPER_INIT(NSF);
 	EXTCL_SAVE_MAPPER(NSF);
@@ -41,7 +43,7 @@ void map_init_NSF(void) {
 	}
 
 	if (info.reset >= HARD) {
-		if (cfg->nsf_player_nsfe_playlist && (nsf.playlist.count > 0)) {
+		if (cfg->nsf_player_playlist && (nsf.playlist.count > 0)) {
 			nsf.songs.current = nsf.playlist.starting;
 			nsf.playlist.index = 0;
 
@@ -61,23 +63,23 @@ void map_init_NSF(void) {
 
 	nsf.state = NSF_PLAY | NSF_CHANGE_SONG;
 
-	{
-		double rate = 0, nmi_rate = 0;
-
-		if (machine.type == NTSC) {
-			rate = nsf.play_speed.ntsc;
-			nmi_rate = 0x40FF;
-		} else if (machine.type == DENDY) {
-			rate = nsf.play_speed.dendy;
-			nmi_rate = 0x4E1D;
-		} else {
-			rate = nsf.play_speed.pal;
-			nmi_rate = 0x4E1D;
-		}
-		nsf.rate.reload = (DBWORD)(machine.cpu_hz / (1000000.0f / rate));
-		nsf.nmi.reload = (DBWORD)(machine.cpu_hz / (1000000.0f / nmi_rate));
+	switch (cfg->mode) {
+		default:
+		case AUTO:
+			nsf.type = nsf.region.preferred;
+			break;
+		case NTSC:
+			nsf.type = nsf.region.supported & 0x01 ? nsf.type = NSF_NTSC_MODE : nsf.region.preferred;
+			break;
+		case PAL:
+			nsf.type = nsf.region.supported & 0x02 ? nsf.type = NSF_PAL_MODE : nsf.region.preferred;
+			break;
+		case DENDY:
+			nsf.type = nsf.region.supported & 0x04 ? nsf.type = NSF_DENDY_MODE : nsf.region.preferred;
+			break;
 	}
 
+	select_region();
 	nsf.rate.count = nsf.rate.reload;
 	nsf.nmi.count = nsf.rate.reload;
 	nsf.nmi.in_use = FALSE;
@@ -155,6 +157,7 @@ BYTE extcl_save_mapper_NSF(BYTE mode, BYTE slot, FILE *fp) {
 	}
 
 	if (mode == SAVE_SLOT_READ) {
+		select_region();
 		nsf_reset_song_title();
 		nsf_reset_timers();
 		nsf.curtain_title_song.redraw.all = TRUE;
@@ -273,4 +276,38 @@ void extcl_apu_tick_NSF(void) {
 	if (nsf.sound_chips.sunsoft5b) {
 		extcl_apu_tick_FME7();
 	}
+}
+
+
+INLINE static void select_region(void) {
+	double rate = 0, nmi_rate = 0;
+
+	switch (nsf.type & 0x03) {
+		case NSF_NTSC_MODE:
+			info.machine[DATABASE] = NTSC;
+			break;
+		case NSF_PAL_MODE:
+			info.machine[DATABASE] = PAL;
+			break;
+		case NSF_DENDY_MODE:
+			info.machine[DATABASE] = DENDY;
+			break;
+		default:
+			nsf.type = NSF_NTSC_MODE;
+			info.machine[DATABASE] = NTSC;
+			break;
+	}
+
+	if (machine.type == NTSC) {
+		rate = nsf.play_speed.ntsc;
+		nmi_rate = 0x40FF;
+	} else if (machine.type == DENDY) {
+		rate = nsf.play_speed.dendy;
+		nmi_rate = 0x4E1D;
+	} else {
+		rate = nsf.play_speed.pal;
+		nmi_rate = 0x4E1D;
+	}
+	nsf.rate.reload = (DBWORD)(machine.cpu_hz / (1000000.0f / rate));
+	nsf.nmi.reload = (DBWORD)(machine.cpu_hz / (1000000.0f / nmi_rate));
 }

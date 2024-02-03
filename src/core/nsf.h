@@ -76,6 +76,7 @@ enum nsf_effect_types {
 };
 
 typedef struct _nsf_info_song {
+	BYTE use_timer;
 	int32_t time;
 	int32_t fade;
 	uTCHAR *track_label;
@@ -92,8 +93,14 @@ typedef struct _nsf {
 	BYTE version;
 	BYTE type;
 	BYTE state;
+	BYTE authors_note;
+	BYTE repeat_song;
 	const BYTE *routine;
 
+	struct _nsf_region {
+		BYTE supported;
+		BYTE preferred;
+	} region;
 	struct _nsf_chunk {
 		uint32_t length;
 		char id[4];
@@ -164,11 +171,6 @@ typedef struct _nsf {
 		BYTE visual_duration;
 	} options;
 
-
-	BYTE authors_note;
-	BYTE mute;
-	BYTE repeat_song;
-
 	_dos_text_scroll scroll_info_nsf;
 	_dos_text_scroll scroll_title_song;
 	_dos_text_curtain curtain_info;
@@ -204,7 +206,7 @@ static const BYTE nsf_routine[NSF_ROUTINE_SIZE] = {
 ;$2605       - non-returning init
 ;$2606       - suppress PLAY
 ;$2607       - current song
-;$2608       - PAL or NTSC
+;$2608       - NTSC, PAL or DANDY
 ;$2609-$260A - loop address
 
 .org $2500
