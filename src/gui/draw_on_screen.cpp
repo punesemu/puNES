@@ -16,7 +16,7 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#include <QtGui/QImage>
+#include <QtGui/QImageReader>
 #include <QtGui/QFontMetrics>
 #include <QtGui/QPainter>
 #include <QtCore/QTextStream>
@@ -550,13 +550,13 @@ void dos_image(BYTE nidx,int ppu_x, int ppu_y, int rect_x, int rect_y, int rect_
 }
 
 int dos_image_w(const uTCHAR *resource) {
-	return (QImage(uQString(resource)).width());
+	return (QImageReader(uQString(resource)).size().width());
 }
 int dos_image_h(const uTCHAR *resource) {
-	return (QImage(uQString(resource)).height());
+	return (QImageReader(uQString(resource)).size().height());
 }
 void dos_image_size(int *w, int *h, const uTCHAR *resource) {
-	QSize size = QImage(uQString(resource)).size();
+	QSize size = QImageReader(uQString(resource)).size();
 
 	if (w) {
 		(*w) = size.width();
