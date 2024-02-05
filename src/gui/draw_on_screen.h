@@ -102,6 +102,7 @@ typedef struct _dos_text_curtain {
 
 EXTERNC void dos_text(BYTE nidx, int ppu_x, int ppu_y, int img_x, int img_y, int img_w, int img_h,
 	const WORD fg_def, const WORD bg_def, const uTCHAR *font_family, const int font_size, const uTCHAR *fmt, ...);
+
 EXTERNC void dos_text_scroll_tick(BYTE nidx, int ppu_x, int ppu_y, const WORD fg_def, const WORD bg_def,
 	const uTCHAR *font_family, const int font_size, _dos_text_scroll *scroll, const uTCHAR *fmt, ...);
 

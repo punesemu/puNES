@@ -1359,14 +1359,12 @@ static void nsf_draw_controls(void) {
 			uL("[cyan]" uPs("") "[white] - [yellow]" uPs("") "[white] - " uPs("") ""),
 			nsf.info.name, nsf.info.artist, nsf.info.copyright);
 	}
-
 	// player
 	{
 		if (nes[0].p.ppu.frames == 0) {
 			y = 33;
 			dos_hline(0, 0, y, SCR_COLUMNS, DOS_BROWN);
-			dos_text(0, DOS_ALIGNHCENTER, y - 4, 0, 0, -1, -1, DOS_RED, DOS_BLACK,
-				uL("pixelmix"), 8, uL(" Player "));
+			dos_text(0, DOS_ALIGNHCENTER, y - 4, 0, 0, -1, -1, DOS_RED, DOS_BLACK, uL("pixelmix"), 8, uL(" Player "));
 			dos_image(0, NSF_GUI_PPUX, NSF_GUI_PPUY, 0, 0, -1, -1, uL(":/pics/pics/nsf_player.png"));
 		}
 		// note dell'autore
@@ -1416,11 +1414,11 @@ static void nsf_draw_controls(void) {
 					uL("" uPs("") ""),
 					nsf_print_time(timer, nsf.info_song && nsf.current_song.use_timer && !nsf.options.visual_duration, fg_ok));
 				ttimer2 = timer;
+				bg = !nsf.info_song || !nsf.current_song.use_timer || nsf.options.visual_duration ? DOS_TL02 : DOS_TL03;
+				dos_box(0, NSF_GUI_TIMERS_3_PPUX, NSF_GUI_TIMERS_3_PPUY + 2, 2, 2, bg, bg, bg);
+				bg = !nsf.info_song || !nsf.current_song.use_timer || !nsf.options.visual_duration ? DOS_TL02 : DOS_TL03;
+				dos_box(0, NSF_GUI_TIMERS_3_PPUX, NSF_GUI_TIMERS_3_PPUY + 6, 2, 2, bg, bg, bg);
 			}
-			bg = !nsf.info_song || !nsf.current_song.use_timer || nsf.options.visual_duration ? DOS_TL02 : DOS_TL03;
-			dos_box(0, NSF_GUI_TIMERS_3_PPUX, NSF_GUI_TIMERS_3_PPUY + 2, 2, 2, bg, bg, bg);
-			bg = !nsf.info_song || !nsf.current_song.use_timer || !nsf.options.visual_duration ? DOS_TL02 : DOS_TL03;
-			dos_box(0, NSF_GUI_TIMERS_3_PPUX, NSF_GUI_TIMERS_3_PPUY + 6, 2, 2, bg, bg, bg);
 		}
 		// canzoni
 		{
@@ -1439,7 +1437,6 @@ static void nsf_draw_controls(void) {
 					DOS_ALIGNHCENTER, 0, NSF_GUI_SONGS_W, NSF_GUI_SONGS_H, fg, bg, uL("lemon_10"), 10, buff);
 				scurrent = nsf.songs.current;
 			}
-
 			if (nsf.playlist.count > 0) {
 				if (force || (spindex != nsf.playlist.index)) {
 					condition = !cfg->nsf_player_playlist;

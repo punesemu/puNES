@@ -114,7 +114,7 @@ static QList<_dos_tag_ele> dos_tags = {
 
 void dos_text(BYTE nidx, int ppu_x, int ppu_y, int rect_x, int rect_y, int rect_w, int rect_h,
 	const WORD fg_def, const WORD bg_def, const uTCHAR *font_family, const int font_size, const uTCHAR *fmt, ...) {
-	uint mask0 = qRgb(255, 255, 255), mask1 = qRgb(0, 0, 0);
+	static uint mask0 = qRgb(255, 255, 255), mask1 = qRgb(0, 0, 0);
 	QFont font(uQString(font_family));
 	WORD fg = fg_def, bg = bg_def;
 	QString line;
@@ -133,7 +133,6 @@ void dos_text(BYTE nidx, int ppu_x, int ppu_y, int rect_x, int rect_y, int rect_
 
 	{
 		int char_x = 0, wpixels = 0, hpixels = 0;
-		QVector<QRgb> v = { mask0, mask1 };
 		QFontMetrics fontMetrics(font);
 		QString subimage = "";
 		bool is_bck_tag = false;
@@ -156,8 +155,7 @@ void dos_text(BYTE nidx, int ppu_x, int ppu_y, int rect_x, int rect_y, int rect_
 		}
 
 		QImage mask(rect_w, rect_h, QImage::Format_Mono);
-		v << mask0 << mask1;
-		mask.setColorTable(v);
+		mask.setColorTable(QVector<QRgb>{ mask0, mask1 });
 		// nero
 		mask.fill(1);
 
@@ -276,6 +274,7 @@ void dos_text(BYTE nidx, int ppu_x, int ppu_y, int rect_x, int rect_y, int rect_
 		}
 	}
 }
+
 void dos_text_scroll_tick(BYTE nidx, int ppu_x, int ppu_y, const WORD fg_def, const WORD bg_def,
 	const uTCHAR *font_family, const int font_size, _dos_text_scroll *scroll, const uTCHAR *fmt, ...) {
 	int wpixels = 0;
@@ -644,7 +643,5 @@ static INLINE int dos_round(double d0, double d1) {
 	return (result);
 }
 static INLINE QSize dos_image_dim(const uTCHAR *resource) {
-	QImage image(uQString(resource));
-
-	return (image.size());
+	return (QImageReader(uQString(resource)).size());
 }
