@@ -1031,6 +1031,8 @@ void fds_control_autoinsert(_fds_sinfo *sinfo) {
 		{ "IGO", { 0x1E8B0151, 0xF7130E20, 0x00, 0x00 }, FALSE, TRUE, FALSE },
 		// Time Twist - Rekishi no Katasumi de (1991)(Nintendo)(J)
 		{ "TT1", { 0x6D6014C1, 0x145A90B2, 0xBFB019B9, 0x636083C1 }, FALSE, TRUE, FALSE },
+		// Vs. Excitebike
+		{ "EBD", { 0x00, 0x00, 0x00, 0x00 }, FALSE, TRUE, FALSE },
 	};
 
 	fds.auto_insert.r4032.disabled = FALSE;
@@ -1066,7 +1068,8 @@ void fds_control_autoinsert(_fds_sinfo *sinfo) {
 		_fds_control_autoinsert *fca = &images[i];
 
 		if (!strncmp((char *)&sinfo->block1.name[0], &fca->name[0], 3) &&
-			((fca->crc32prg[0] && (fca->crc32prg[0] == sinfo->crc32prg)) ||
+			((!fca->crc32prg[0] && !fca->crc32prg[1] && !fca->crc32prg[2] && !fca->crc32prg[3]) ||
+			(fca->crc32prg[0] && (fca->crc32prg[0] == sinfo->crc32prg)) ||
 			(fca->crc32prg[1] && (fca->crc32prg[1] == sinfo->crc32prg)) ||
 			(fca->crc32prg[2] && (fca->crc32prg[2] == sinfo->crc32prg)) ||
 			(fca->crc32prg[3] && (fca->crc32prg[3] == sinfo->crc32prg)))) {
