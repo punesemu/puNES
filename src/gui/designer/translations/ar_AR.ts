@@ -969,7 +969,7 @@
     </message>
     <message>
       <source>which Floppy Disk image do you want to load?</source>
-      <translation type="unfinished">which Floppy Disk image do you want to load?</translation>
+      <translation>أي صورة قرص مرن ترغب في الاختيار؟</translation>
     </message>
   </context>
   <context>
@@ -1627,63 +1627,63 @@
     </message>
     <message>
       <source>Warning</source>
-      <translation type="unfinished">Warning</translation>
+      <translation>تنبيه</translation>
     </message>
     <message>
       <source>This rom requires unsupported hardware to function correctly.</source>
-      <translation type="unfinished">This rom requires unsupported hardware to function correctly.</translation>
+      <translation>يتطلب ملف الروم عتاد غير مدعوم حاليا لتشغيله بشكل مضبوط.</translation>
     </message>
     <message>
       <source>Open FLoppy Disk Image</source>
-      <translation type="unfinished">Open FLoppy Disk Image</translation>
+      <translation>فتح صورة قرن مرن</translation>
     </message>
     <message>
       <source>FDS Format Disk</source>
-      <translation type="unfinished">FDS Format Disk</translation>
+      <translation>صيغة قرص FDS</translation>
     </message>
     <message>
       <source>Quick Disk Format Disk</source>
-      <translation type="unfinished">Quick Disk Format Disk</translation>
+      <translation>صيغة قرص Quick Disk</translation>
     </message>
     <message>
       <source>puNES image</source>
-      <translation type="unfinished">puNES image</translation>
+      <translation>صورة puNES</translation>
     </message>
     <message>
       <source>Exports the current state of the disk</source>
-      <translation type="unfinished">Exports the current state of the disk</translation>
+      <translation>تصدير الحالة الحالية للقرص</translation>
     </message>
     <message>
       <source>Error on export state</source>
-      <translation type="unfinished">Error on export state</translation>
+      <translation>حصل خطأ أثناء تصدير الحالة</translation>
     </message>
     <message>
       <source>Impossible write %0.</source>
-      <translation type="unfinished">Impossible write %0.</translation>
+      <translation>استحالة الكتابة %0</translation>
     </message>
     <message>
       <source>to &amp;FDS Format (with Header)</source>
-      <translation type="unfinished">to &amp;FDS Format (with Header)</translation>
+      <translation>إلى صيغة FDS (مع الترويسة)</translation>
     </message>
     <message>
       <source>to &amp;Quick Disk Format</source>
-      <translation type="unfinished">to &amp;Quick Disk Format</translation>
+      <translation>إلى صيغة Quick Disk</translation>
     </message>
     <message>
       <source>to puNES image</source>
-      <translation type="unfinished">to puNES image</translation>
+      <translation>إلى صورة puNES</translation>
     </message>
     <message>
       <source>to F&amp;DS Format (without Header)</source>
-      <translation type="unfinished">to F&amp;DS Format (without Header)</translation>
+      <translation>الى صيغة FDS (بدون الترويسة)</translation>
     </message>
     <message>
       <source>C&amp;hange Disk</source>
-      <translation type="unfinished">C&amp;hange Disk</translation>
+      <translation>تغيير القرص</translation>
     </message>
     <message>
       <source>E&amp;xport current state of Disk/Disks</source>
-      <translation type="unfinished">E&amp;xport current state of Disk/Disks</translation>
+      <translation>تصدير الحالة الحالية للقرص/الأقراص</translation>
     </message>
   </context>
   <context>
@@ -1925,7 +1925,7 @@
     <message>
       <source>auto switch [red]disabled[normal], single-sided disk</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">auto switch [red]disabled[normal], single-sided disk</translation>
+      <translation>التبديل التلقائي [red]معطل[normal]، جهة قرص واحدة</translation>
     </message>
   </context>
   <context>
@@ -3146,10 +3146,6 @@
       <translation>كائنات لامحدودة</translation>
     </message>
     <message>
-      <source>Enable Extra Scanlines</source>
-      <translation>تفعيل خطوط مسح إضافية</translation>
-    </message>
-    <message>
       <source>Hide Sprites</source>
       <translation>إخفاء الكائنات</translation>
     </message>
@@ -3180,6 +3176,26 @@
     <message>
       <source>Automatically restores the limit when necessary to prevent graphical glitches</source>
       <translation>استعادة المحدودية عند الضرورة لتفادي تشوهات بصرية.</translation>
+    </message>
+    <message>
+      <source>Per-Game</source>
+      <translation type="unfinished">Per-Game</translation>
+    </message>
+    <message>
+      <source>Per-Game Overclock Setting</source>
+      <translation type="unfinished">Per-Game Overclock Setting</translation>
+    </message>
+    <message>
+      <source>On</source>
+      <translation type="unfinished">On</translation>
+    </message>
+    <message>
+      <source>Off</source>
+      <translation type="unfinished">Off</translation>
+    </message>
+    <message>
+      <source>Default Value</source>
+      <translation type="unfinished">Default Value</translation>
     </message>
   </context>
   <context>

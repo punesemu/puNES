@@ -607,11 +607,11 @@
     </message>
     <message>
       <source>Vs. System (1P via $4016)</source>
-      <translation type="unfinished">Vs. System (1P via $4016)</translation>
+      <translation>VS 系统 (1P 经由 $4016)</translation>
     </message>
     <message>
       <source>Zapper ($4017)</source>
-      <translation type="unfinished">Zapper ($4017)</translation>
+      <translation>Zapper ($4017)</translation>
     </message>
     <message>
       <source>Arkanoid Vaus Controller (NES)</source>
@@ -1032,7 +1032,7 @@
     </message>
     <message>
       <source>Vs System</source>
-      <translation type="unfinished">Vs System</translation>
+      <translation>VS 系统</translation>
     </message>
     <message>
       <source>Coins</source>
@@ -1052,35 +1052,35 @@
     </message>
     <message>
       <source>12</source>
-      <translation type="unfinished">12</translation>
+      <translation>12</translation>
     </message>
     <message>
       <source>13</source>
-      <translation type="unfinished">13</translation>
+      <translation>13</translation>
     </message>
     <message>
       <source>14</source>
-      <translation type="unfinished">14</translation>
+      <translation>14</translation>
     </message>
     <message>
       <source>15</source>
-      <translation type="unfinished">15</translation>
+      <translation>15</translation>
     </message>
     <message>
       <source>16</source>
-      <translation type="unfinished">16</translation>
+      <translation>16</translation>
     </message>
     <message>
       <source>11</source>
-      <translation type="unfinished">11</translation>
+      <translation>11</translation>
     </message>
     <message>
       <source>10</source>
-      <translation type="unfinished">10</translation>
+      <translation>10</translation>
     </message>
     <message>
       <source>9</source>
-      <translation type="unfinished">9</translation>
+      <translation>9</translation>
     </message>
     <message>
       <source>Game Dip Switches</source>
@@ -2272,11 +2272,11 @@
     </message>
     <message>
       <source>MFields</source>
-      <translation type="unfinished">MFields</translation>
+      <translation>MFields</translation>
     </message>
     <message>
       <source>VBlend</source>
-      <translation type="unfinished">VBlend</translation>
+      <translation>VBlend</translation>
     </message>
     <message>
       <source>Contrast</source>
@@ -2362,7 +2362,7 @@
     </message>
     <message>
       <source>VBlend</source>
-      <translation type="unfinished">VBlend</translation>
+      <translation>VBlend</translation>
     </message>
     <message>
       <source>Black Point</source>
@@ -2402,7 +2402,7 @@
     </message>
     <message>
       <source>MFields</source>
-      <translation type="unfinished">MFields</translation>
+      <translation>MFields</translation>
     </message>
     <message>
       <source>Reset parameters to defaults</source>
@@ -2449,7 +2449,7 @@
     </message>
     <message>
       <source>VBlend</source>
-      <translation type="unfinished">VBlend</translation>
+      <translation>VBlend</translation>
     </message>
     <message>
       <source>Reset parameters to defaults</source>
@@ -3146,10 +3146,6 @@
       <translation>不限制精灵</translation>
     </message>
     <message>
-      <source>Enable Extra Scanlines</source>
-      <translation>启用额外扫描线</translation>
-    </message>
-    <message>
       <source>Hide Sprites</source>
       <translation>隐藏精灵</translation>
     </message>
@@ -3180,6 +3176,26 @@
     <message>
       <source>Automatically restores the limit when necessary to prevent graphical glitches</source>
       <translation>必要时自动恢复限制以避免图像出问题</translation>
+    </message>
+    <message>
+      <source>Per-Game</source>
+      <translation type="unfinished">Per-Game</translation>
+    </message>
+    <message>
+      <source>Per-Game Overclock Setting</source>
+      <translation type="unfinished">Per-Game Overclock Setting</translation>
+    </message>
+    <message>
+      <source>On</source>
+      <translation type="unfinished">On</translation>
+    </message>
+    <message>
+      <source>Off</source>
+      <translation type="unfinished">Off</translation>
+    </message>
+    <message>
+      <source>Default Value</source>
+      <translation type="unfinished">Default Value</translation>
     </message>
   </context>
   <context>
@@ -3908,19 +3924,19 @@
     </message>
     <message>
       <source>NTSC CRT LMP88959</source>
-      <translation type="unfinished">NTSC CRT LMP88959</translation>
+      <translation>NTSC CRT LMP88959</translation>
     </message>
     <message>
       <source>NTSC NES LMP88959</source>
-      <translation type="unfinished">NTSC NES LMP88959</translation>
+      <translation>NTSC NES LMP88959</translation>
     </message>
     <message>
       <source>PAL CRT LMP88959</source>
-      <translation type="unfinished">PAL CRT LMP88959</translation>
+      <translation>PAL CRT LMP88959</translation>
     </message>
     <message>
       <source>PAL NES LMP88959</source>
-      <translation type="unfinished">PAL NES LMP88959</translation>
+      <translation>PAL NES LMP88959</translation>
     </message>
   </context>
   <context>

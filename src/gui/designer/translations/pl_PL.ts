@@ -3146,10 +3146,6 @@
       <translation>Nieograniczone sprite'y</translation>
     </message>
     <message>
-      <source>Enable Extra Scanlines</source>
-      <translation>Włącz dodatkowe "scanlines"</translation>
-    </message>
-    <message>
       <source>Hide Sprites</source>
       <translation>Ukryj sprite'y</translation>
     </message>
@@ -3180,6 +3176,26 @@
     <message>
       <source>Automatically restores the limit when necessary to prevent graphical glitches</source>
       <translation>Gdy to konieczne, automatycznie przywraca limit, by zapobiec błędom graficznym</translation>
+    </message>
+    <message>
+      <source>Per-Game</source>
+      <translation type="unfinished">Per-Game</translation>
+    </message>
+    <message>
+      <source>Per-Game Overclock Setting</source>
+      <translation type="unfinished">Per-Game Overclock Setting</translation>
+    </message>
+    <message>
+      <source>On</source>
+      <translation>Włączone</translation>
+    </message>
+    <message>
+      <source>Off</source>
+      <translation>Wyłączone</translation>
+    </message>
+    <message>
+      <source>Default Value</source>
+      <translation>Domyślna wartość</translation>
     </message>
   </context>
   <context>
