@@ -173,9 +173,15 @@ void nsf_quit(void) {
 		}
 		free(nsf.info_song);
 	}
+	if (nsf.scroll_info_nsf.pimage.data) {
+		free(nsf.scroll_info_nsf.pimage.data);
+	}
+	if (nsf.scroll_title_song.pimage.data) {
+		free(nsf.scroll_title_song.pimage.data);
+	}
 
-	dos_text_curtain(0, 0, 0, 0, 0, NULL, 0, &nsf.curtain_info, DOS_TEXT_CURTAIN_QUIT);
-	dos_text_curtain(0, 0, 0, 0, 0, NULL, 0, &nsf.curtain_title_song, DOS_TEXT_CURTAIN_QUIT);
+	dos_text_curtain(0, 0, 0, &nsf.curtain_info, DOS_TEXT_CURTAIN_INIT);
+	dos_text_curtain(0, 0, 0, &nsf.curtain_title_song, DOS_TEXT_CURTAIN_INIT);
 
 	if (nsf.sound_chips.vrc7) {
 		extcl_mapper_quit_VRC7();
@@ -555,18 +561,18 @@ BYTE nsf_load_rom(void) {
 	return (EXIT_OK);
 }
 void nsf_after_load_rom(void) {
-	nsf.scroll_info_nsf.image.x = SCR_COLUMNS;
-	nsf.scroll_info_nsf.image.y = 0;
-	nsf.scroll_info_nsf.image.w = SCR_COLUMNS;
-	nsf.scroll_info_nsf.image.h = 16;
+	nsf.scroll_info_nsf.rect.x = SCR_COLUMNS;
+	nsf.scroll_info_nsf.rect.y = 0;
+	nsf.scroll_info_nsf.rect.w = SCR_COLUMNS;
+	nsf.scroll_info_nsf.rect.h = 16;
 	nsf.scroll_info_nsf.timer = 4.0f;
 	nsf.scroll_info_nsf.reload = 4.0f;
 	nsf.scroll_info_nsf.velocity = 6;
 
-	nsf.scroll_title_song.image.x = NSF_GUI_TITLE_W;
-	nsf.scroll_title_song.image.y = 0;
-	nsf.scroll_title_song.image.w = NSF_GUI_TITLE_W;
-	nsf.scroll_title_song.image.h = NSF_GUI_TITLE_H;
+	nsf.scroll_title_song.rect.x = NSF_GUI_TITLE_W;
+	nsf.scroll_title_song.rect.y = 0;
+	nsf.scroll_title_song.rect.w = NSF_GUI_TITLE_W;
+	nsf.scroll_title_song.rect.h = NSF_GUI_TITLE_H;
 	nsf.scroll_title_song.timer = 4.0f;
 	nsf.scroll_title_song.reload = 4.0f;
 	nsf.scroll_title_song.velocity = 6;
@@ -584,24 +590,25 @@ void nsf_after_load_rom(void) {
 	nsf.curtain_info.image.y = 0;
 	nsf.curtain_info.image.w = NSF_GUI_INFO_W;
 	nsf.curtain_info.image.h = NSF_GUI_INFO_H;
-	dos_text_curtain(0, 0, 0, 0, 0, NULL, 0, &nsf.curtain_info, DOS_TEXT_CURTAIN_INIT);
-	dos_text_curtain_add_line(&nsf.curtain_info, uL(" "));
-	dos_text_curtain_add_line(&nsf.curtain_info, uL("Pad commands :"));
-	dos_text_curtain_add_line(&nsf.curtain_info,
+	dos_text_curtain(0, 0, 0, &nsf.curtain_info, DOS_TEXT_CURTAIN_INIT);
+	dos_text_curtain_add_line(&nsf.curtain_info, DOS_TL02, DOS_TL01, uL("lemon_10"), 10, uL(" "));
+	dos_text_curtain_add_line(&nsf.curtain_info, DOS_TL02, DOS_TL01, uL("lemon_10"), 10,
 		uL("[top][image]:/pics/pics/controller_start.png[endimage] Start : Play/Pause"));
-	dos_text_curtain_add_line(&nsf.curtain_info,
+	dos_text_curtain_add_line(&nsf.curtain_info, DOS_TL02, DOS_TL01, uL("lemon_10"), 10,
+		uL("[top][image]:/pics/pics/controller_start.png[endimage] Start : Play/Pause"));
+	dos_text_curtain_add_line(&nsf.curtain_info, DOS_TL02, DOS_TL01, uL("lemon_10"), 10,
 		uL("[top][image]:/pics/pics/controller_select.png[endimage] Start : Stop"));
-	dos_text_curtain_add_line(&nsf.curtain_info,
+	dos_text_curtain_add_line(&nsf.curtain_info, DOS_TL02, DOS_TL01, uL("lemon_10"), 10,
 		uL("[top][image]:/pics/pics/controller_right.png[endimage] Right : Next Song"));
-	dos_text_curtain_add_line(&nsf.curtain_info,
+	dos_text_curtain_add_line(&nsf.curtain_info, DOS_TL02, DOS_TL01, uL("lemon_10"), 10,
 		uL("[top][image]:/pics/pics/controller_left.png[endimage] Left : Previous Song"));
-	dos_text_curtain_add_line(&nsf.curtain_info,
+	dos_text_curtain_add_line(&nsf.curtain_info, DOS_TL02, DOS_TL01, uL("lemon_10"), 10,
 		uL("[top][image]:/pics/pics/controller_button_b.png[endimage] B : Mute"));
-	dos_text_curtain_add_line(&nsf.curtain_info,
+	dos_text_curtain_add_line(&nsf.curtain_info, DOS_TL02, DOS_TL01, uL("lemon_10"), 10,
 		uL("[top][image]:/pics/pics/controller_button_a.png[endimage] A : Repeat Song"));
-	dos_text_curtain_add_line(&nsf.curtain_info,
+	dos_text_curtain_add_line(&nsf.curtain_info, DOS_TL02, DOS_TL01, uL("lemon_10"), 10,
 		uL("[top][image]:/pics/pics/controller_up.png[endimage] Up : Change Effect"));
-	dos_text_curtain_add_line(&nsf.curtain_info,
+	dos_text_curtain_add_line(&nsf.curtain_info, DOS_TL02, DOS_TL01, uL("lemon_10"), 10,
 		uL("or use your [top][image]:/pics/pics/controller_mouse.png[endimage] "));
 
 }
@@ -747,16 +754,18 @@ void nsf_reset_timers(void) {
 void nsf_reset_song_title(void) {
 	static uTCHAR no_title[] = uL("<No info available>");
 
-	dos_text_curtain(0, 0, 0, 0, 0, NULL, 0,&nsf.curtain_title_song, DOS_TEXT_CURTAIN_INIT);
+	dos_text_curtain(0, 0, 0, &nsf.curtain_title_song, DOS_TEXT_CURTAIN_INIT);
 	if (nsf.info_song) {
 		memcpy(&nsf.current_song, &nsf.info_song[nsf.songs.current], sizeof(_nsf_info_song));
-		dos_text_curtain_add_line(&nsf.curtain_title_song, uL("" uPs("") uPs("") uPs("") ""),
+		dos_text_curtain_add_line(&nsf.curtain_title_song, nsf.info_song ? DOS_TL03 : DOS_TL02, DOS_TL01,
+			uL("Ttyp0_11"), 11, uL("" uPs("") uPs("") uPs("") ""),
 			nsf.current_song.track_label,
 			nsf.current_song.author ? uL(" - ") : uL(""),
 			nsf.current_song.author ? nsf.current_song.author : uL(""));
 	} else {
 		nsf.current_song.track_label = &no_title[0];
-		dos_text_curtain_add_line(&nsf.curtain_title_song, nsf.current_song.track_label);
+		dos_text_curtain_add_line(&nsf.curtain_title_song, nsf.info_song ? DOS_TL03 : DOS_TL02, DOS_TL01,
+			uL("Ttyp0_11"), 11, nsf.current_song.track_label);
 	}
 }
 
@@ -866,10 +875,10 @@ void nsf_controls_mouse_in_gui(int x_mouse, int y_mouse) {
 
 	// pulsanti
 	if (nsf.info.text) {
-		x = NSF_GUI_PPUX + dos_image_w(uL(":/pics/pics/nsf_player.png")) -
-			dos_image_w(uL(":/pics/pics/authors_note_press.png"));
-		y = NSF_GUI_PPUY - dos_image_h(uL(":/pics/pics/authors_note_press.png"));
-		dos_image_size(&w, &h, uL(":/pics/pics/authors_note_press.png"));
+		x = NSF_GUI_PPUX + dos_resource_w(uL(":/pics/pics/nsf_player.png")) -
+			dos_resource_w(uL(":/pics/pics/authors_note_press.png"));
+		y = NSF_GUI_PPUY - dos_resource_h(uL(":/pics/pics/authors_note_press.png"));
+		dos_resource_size(&w, &h, uL(":/pics/pics/authors_note_press.png"));
 		if (((x_mouse >= x) && (x_mouse <= (x + (w - 1)))) && ((y_mouse >= y) && (y_mouse <= (y + h)))) {
 			if (!nsf.timers.button[INPUT_DECODE_COUNTS - 1]) {
 				nsf.timers.button[INPUT_DECODE_COUNTS - 1] = 1;
@@ -878,7 +887,7 @@ void nsf_controls_mouse_in_gui(int x_mouse, int y_mouse) {
 		}
 	}
 	x = NSF_GUI_BUTTONS_PPUX; y = NSF_GUI_BUTTONS_PPUY;
-	dos_image_size(&w, &h, uL(":/pics/pics/nsf_play_press.png"));
+	dos_resource_size(&w, &h, uL(":/pics/pics/nsf_play_press.png"));
 	if (((x_mouse >= x) && (x_mouse <= (x + (w - 1)))) && ((y_mouse >= y) && (y_mouse <= (y + h)))) {
 		if (!(nsf.state & NSF_PLAY)) {
 			input_data_set_standard_controller(START, PRESSED, prt);
@@ -886,7 +895,7 @@ void nsf_controls_mouse_in_gui(int x_mouse, int y_mouse) {
 		}
 		return;
 	}
-	x += w; w = dos_image_w(uL(":/pics/pics/nsf_pause_press.png"));
+	x += w; w = dos_resource_w(uL(":/pics/pics/nsf_pause_press.png"));
 	if (((x_mouse >= x) && (x_mouse <= (x + (w - 1)))) && ((y_mouse >= y) && (y_mouse <= (y + h)))) {
 		if (nsf.state & NSF_PLAY) {
 			input_data_set_standard_controller(START, PRESSED, prt);
@@ -894,31 +903,31 @@ void nsf_controls_mouse_in_gui(int x_mouse, int y_mouse) {
 		}
 		return;
 	}
-	x += w; w = dos_image_w(uL(":/pics/pics/nsf_stop_press.png"));
+	x += w; w = dos_resource_w(uL(":/pics/pics/nsf_stop_press.png"));
 	if (((x_mouse >= x) && (x_mouse <= (x + (w - 1)))) && ((y_mouse >= y) && (y_mouse <= (y + h)))) {
 		input_data_set_standard_controller(SELECT, PRESSED, prt);
 		nsf.timers.button[SELECT] = 0;
 		return;
 	}
-	x += w; w = dos_image_w(uL(":/pics/pics/nsf_prev_press.png"));
+	x += w; w = dos_resource_w(uL(":/pics/pics/nsf_prev_press.png"));
 	if (((x_mouse >= x) && (x_mouse <= (x + (w - 1)))) && ((y_mouse >= y) && (y_mouse <= (y + h)))) {
 		input_data_set_standard_controller(LEFT, PRESSED, prt);
 		nsf.timers.button[LEFT] = 0;
 		return;
 	}
-	x += w; w = dos_image_w(uL(":/pics/pics/nsf_next_press.png"));
+	x += w; w = dos_resource_w(uL(":/pics/pics/nsf_next_press.png"));
 	if (((x_mouse >= x) && (x_mouse <= (x + w))) && ((y_mouse >= y) && (y_mouse <= (y + h)))) {
 		input_data_set_standard_controller(RIGHT, PRESSED, prt);
 		nsf.timers.button[RIGHT] = 0;
 		return;
 	}
-	x += w; w = dos_image_w(uL(":/pics/pics/nsf_mute_press.png"));
+	x += w; w = dos_resource_w(uL(":/pics/pics/nsf_mute_press.png"));
 	if (((x_mouse >= x) && (x_mouse <= (x + w))) && ((y_mouse >= y) && (y_mouse <= (y + h)))) {
 		input_data_set_standard_controller(BUT_B, PRESSED, prt);
 		nsf.timers.button[BUT_B] = 1;
 		return;
 	}
-	x += w; w = dos_image_w(uL(":/pics/pics/nsf_repeat_song_press.png"));
+	x += w; w = dos_resource_w(uL(":/pics/pics/nsf_repeat_song_press.png"));
 	if (((x_mouse >= x) && (x_mouse <= (x + w))) && ((y_mouse >= y) && (y_mouse <= (y + h)))) {
 		input_data_set_standard_controller(BUT_A, PRESSED, prt);
 		nsf.timers.button[BUT_A] = 1;
@@ -1365,16 +1374,16 @@ static void nsf_draw_controls(void) {
 			y = 33;
 			dos_hline(0, 0, y, SCR_COLUMNS, DOS_BROWN);
 			dos_text(0, DOS_ALIGNHCENTER, y - 4, 0, 0, -1, -1, DOS_RED, DOS_BLACK, uL("pixelmix"), 8, uL(" Player "));
-			dos_image(0, NSF_GUI_PPUX, NSF_GUI_PPUY, 0, 0, -1, -1, uL(":/pics/pics/nsf_player.png"));
+			dos_image(0, NSF_GUI_PPUX, NSF_GUI_PPUY, 0, 0, -1, -1, uL(":/pics/pics/nsf_player.png"), NULL, 0);
 		}
 		// note dell'autore
 		if (nsf.info.text) {
 			static int sauthnote = -1;
 
 			if (sauthnote != (nsf.authors_note == PRESSED)) {
-				dos_image(0, (NSF_GUI_PPUX + dos_image_w(uL(":/pics/pics/nsf_player.png"))) - dos_image_w(uL(":/pics/pics/authors_note_press.png")),
-					NSF_GUI_PPUY - dos_image_h(uL(":/pics/pics/authors_note_press.png")), 0, 0, -1, -1, nsf.authors_note == PRESSED
-					? uL(":/pics/pics/authors_note_press.png") : uL(":/pics/pics/authors_note_no_press.png"));
+				dos_image(0, (NSF_GUI_PPUX + dos_resource_w(uL(":/pics/pics/nsf_player.png"))) - dos_resource_w(uL(":/pics/pics/authors_note_press.png")),
+					NSF_GUI_PPUY - dos_resource_h(uL(":/pics/pics/authors_note_press.png")), 0, 0, -1, -1, nsf.authors_note == PRESSED
+					? uL(":/pics/pics/authors_note_press.png") : uL(":/pics/pics/authors_note_no_press.png"), NULL, 0);
 				sauthnote = nsf.authors_note == PRESSED;
 			}
 		}
@@ -1384,9 +1393,7 @@ static void nsf_draw_controls(void) {
 				dos_text_scroll_tick(0, NSF_GUI_TITLE_PPUX, NSF_GUI_TITLE_PPUY, DOS_TL03, DOS_TL01,
 					uL("Ttyp0_11"), 11, &nsf.scroll_title_song, nsf.current_song.track_label);
 			} else if (nsf.curtain_title_song.count > 0) {
-				dos_text_curtain(0, NSF_GUI_TITLE_PPUX, NSF_GUI_TITLE_PPUY,
-					nsf.info_song ? DOS_TL03 : DOS_TL02, DOS_TL01,
-					uL("Ttyp0_11"), 11, &nsf.curtain_title_song, DOS_TEXT_CURTAIN_TICK);
+				dos_text_curtain(0, NSF_GUI_TITLE_PPUX, NSF_GUI_TITLE_PPUY, &nsf.curtain_title_song, DOS_TEXT_CURTAIN_TICK);
 			}
 		}
 		// timers
@@ -1472,8 +1479,7 @@ static void nsf_draw_controls(void) {
 				nsf.type == NSF_NTSC_MODE ? uL("NTSC") : nsf.type == NSF_PAL_MODE ? uL("PAL") : uL("DENDY"));
 		}
 		// info
-		dos_text_curtain(0, NSF_GUI_INFO_PPUX, NSF_GUI_INFO_PPUY, DOS_TL02, DOS_TL01,
-			uL("lemon_10"), 10, &nsf.curtain_info, DOS_TEXT_CURTAIN_TICK);
+		dos_text_curtain(0, NSF_GUI_INFO_PPUX, NSF_GUI_INFO_PPUY, &nsf.curtain_info, DOS_TEXT_CURTAIN_TICK);
 		// pulsanti
 		{
 			static int wplay = 0, wpause = 0, wstop = 0, wprev = 0, wnext = 0, wmute = 0;
@@ -1481,63 +1487,63 @@ static void nsf_draw_controls(void) {
 			int x = NSF_GUI_BUTTONS_PPUX;
 
 			if (!wplay) {
-				wplay = dos_image_w(uL(":/pics/pics/nsf_play_press.png"));
+				wplay = dos_resource_w(uL(":/pics/pics/nsf_play_press.png"));
 			}
 			if (!wpause) {
-				wpause = dos_image_w(uL(":/pics/pics/nsf_pause_press.png"));
+				wpause = dos_resource_w(uL(":/pics/pics/nsf_pause_press.png"));
 			}
 			if (!wstop) {
-				wstop = dos_image_w(uL(":/pics/pics/nsf_stop_press.png"));
+				wstop = dos_resource_w(uL(":/pics/pics/nsf_stop_press.png"));
 			}
 			if (!wprev) {
-				wprev = dos_image_w(uL(":/pics/pics/nsf_prev_press.png"));
+				wprev = dos_resource_w(uL(":/pics/pics/nsf_prev_press.png"));
 			}
 			if (!wnext) {
-				wnext = dos_image_w(uL(":/pics/pics/nsf_next_press.png"));
+				wnext = dos_resource_w(uL(":/pics/pics/nsf_next_press.png"));
 			}
 			if (!wmute) {
-				wmute = dos_image_w(uL(":/pics/pics/nsf_mute_press.png"));
+				wmute = dos_resource_w(uL(":/pics/pics/nsf_mute_press.png"));
 			}
 
 			if (splay != (nsf.state & NSF_PLAY)) {
 				dos_image(0, x, NSF_GUI_BUTTONS_PPUY, 0, 0, -1, -1, nsf.state & NSF_PLAY
-					? uL(":/pics/pics/nsf_play_press.png") : uL(":/pics/pics/nsf_play_no_press.png"));
+					? uL(":/pics/pics/nsf_play_press.png") : uL(":/pics/pics/nsf_play_no_press.png"), NULL, 0);
 				splay = (nsf.state & NSF_PLAY);
 			}
 			x += wplay;
 			if (spause != (nsf.state & NSF_PAUSE)) {
 				dos_image(0, x, NSF_GUI_BUTTONS_PPUY, 0, 0, -1, -1, nsf.state & NSF_PAUSE
-				 ? uL(":/pics/pics/nsf_pause_press.png") : uL(":/pics/pics/nsf_pause_no_press.png"));
+				 ? uL(":/pics/pics/nsf_pause_press.png") : uL(":/pics/pics/nsf_pause_no_press.png"), NULL, 0);
 				spause = (nsf.state & NSF_PAUSE);
 			}
 			x += wpause;
 			if (sstop != (nsf.state & NSF_STOP)) {
 				dos_image(0, x, NSF_GUI_BUTTONS_PPUY, 0, 0, -1, -1, nsf.state & NSF_STOP
-					? uL(":/pics/pics/nsf_stop_press.png") : uL(":/pics/pics/nsf_stop_no_press.png"));
+					? uL(":/pics/pics/nsf_stop_press.png") : uL(":/pics/pics/nsf_stop_no_press.png"), NULL, 0);
 				sstop = (nsf.state & NSF_STOP);
 			}
 			x += wstop;
 			if (sprev != (prt->data.treated[LEFT] == PRESSED)) {
 				dos_image(0, x, NSF_GUI_BUTTONS_PPUY, 0, 0, -1, -1, prt->data.treated[LEFT] == PRESSED
-					? uL(":/pics/pics/nsf_prev_press.png") : uL(":/pics/pics/nsf_prev_no_press.png"));
+					? uL(":/pics/pics/nsf_prev_press.png") : uL(":/pics/pics/nsf_prev_no_press.png"), NULL, 0);
 				sprev = (prt->data.treated[LEFT] == PRESSED);
 			}
 			x += wprev;
 			if (snext != (prt->data.treated[RIGHT] == PRESSED)) {
 				dos_image(0, x, NSF_GUI_BUTTONS_PPUY, 0, 0, -1, -1, prt->data.treated[RIGHT] == PRESSED
-					? uL(":/pics/pics/nsf_next_press.png") : uL(":/pics/pics/nsf_next_no_press.png"));
+					? uL(":/pics/pics/nsf_next_press.png") : uL(":/pics/pics/nsf_next_no_press.png"), NULL, 0);
 				snext = (prt->data.treated[RIGHT] == PRESSED);
 			}
 			x += wnext;
 			if (smute != !cfg->apu.channel[APU_MASTER]) {
 				dos_image(0, x, NSF_GUI_BUTTONS_PPUY, 0, 0, -1, -1, !cfg->apu.channel[APU_MASTER]
-					? uL(":/pics/pics/nsf_mute_press.png") : uL(":/pics/pics/nsf_mute_no_press.png"));
+					? uL(":/pics/pics/nsf_mute_press.png") : uL(":/pics/pics/nsf_mute_no_press.png"), NULL, 0);
 				smute = !cfg->apu.channel[APU_MASTER];
 			}
 			x += wmute;
 			if (srepeat != (nsf.repeat_song == PRESSED)) {
 				dos_image(0, x, NSF_GUI_BUTTONS_PPUY, 0, 0, -1, -1, nsf.repeat_song == PRESSED
-					? uL(":/pics/pics/nsf_repeat_song_press.png") : uL(":/pics/pics/nsf_repeat_song_no_press.png"));
+					? uL(":/pics/pics/nsf_repeat_song_press.png") : uL(":/pics/pics/nsf_repeat_song_no_press.png"), NULL, 0);
 				srepeat = nsf.repeat_song == PRESSED;
 			}
 		}

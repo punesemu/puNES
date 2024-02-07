@@ -26,7 +26,7 @@
 #include "video/gfx.h"
 #include "fps.h"
 
-INLINE static void select_region(void);
+INLINE static void select_region_NSF(void);
 
 void map_init_NSF(void) {
 	EXTCL_AFTER_MAPPER_INIT(NSF);
@@ -79,7 +79,7 @@ void map_init_NSF(void) {
 			break;
 	}
 
-	select_region();
+	select_region_NSF();
 	nsf.rate.count = nsf.rate.reload;
 	nsf.nmi.count = nsf.rate.reload;
 	nsf.nmi.in_use = FALSE;
@@ -157,7 +157,7 @@ BYTE extcl_save_mapper_NSF(BYTE mode, BYTE slot, FILE *fp) {
 	}
 
 	if (mode == SAVE_SLOT_READ) {
-		select_region();
+		select_region_NSF();
 		nsf_reset_song_title();
 		nsf_reset_timers();
 		nsf.curtain_title_song.redraw.all = TRUE;
@@ -278,8 +278,7 @@ void extcl_apu_tick_NSF(void) {
 	}
 }
 
-
-INLINE static void select_region(void) {
+INLINE static void select_region_NSF(void) {
 	double rate = 0, nmi_rate = 0;
 
 	switch (nsf.type & 0x03) {
