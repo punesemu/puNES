@@ -595,8 +595,6 @@ void nsf_after_load_rom(void) {
 	dos_text_curtain_add_line(&nsf.curtain_info, DOS_TL02, DOS_TL01, uL("lemon_10"), 10,
 		uL("[top][image]:/pics/pics/controller_start.png[endimage] Start : Play/Pause"));
 	dos_text_curtain_add_line(&nsf.curtain_info, DOS_TL02, DOS_TL01, uL("lemon_10"), 10,
-		uL("[top][image]:/pics/pics/controller_start.png[endimage] Start : Play/Pause"));
-	dos_text_curtain_add_line(&nsf.curtain_info, DOS_TL02, DOS_TL01, uL("lemon_10"), 10,
 		uL("[top][image]:/pics/pics/controller_select.png[endimage] Start : Stop"));
 	dos_text_curtain_add_line(&nsf.curtain_info, DOS_TL02, DOS_TL01, uL("lemon_10"), 10,
 		uL("[top][image]:/pics/pics/controller_right.png[endimage] Right : Next Song"));
@@ -1349,13 +1347,14 @@ static void nsf_change_current_song(unsigned int mode) {
 	}
 }
 static void nsf_draw_controls(void) {
+	BYTE force_draw = nes[0].p.ppu.frames < 2;
 	_port *prt = &port[PORT1];
 	uTCHAR buff[300];
 	int y = 0;
 
 	// titolo nsf - artista - copyright
 	{
-		if (nes[0].p.ppu.frames == 0) {
+		if (force_draw) {
 			y = 8;
 			dos_hline(0, 0, y, SCR_COLUMNS, DOS_BROWN);
 			dos_text(0, DOS_ALIGNHCENTER, y - 5, 0, 0, -1, -1,
@@ -1370,7 +1369,7 @@ static void nsf_draw_controls(void) {
 	}
 	// player
 	{
-		if (nes[0].p.ppu.frames == 0) {
+		if (force_draw) {
 			y = 33;
 			dos_hline(0, 0, y, SCR_COLUMNS, DOS_BROWN);
 			dos_text(0, DOS_ALIGNHCENTER, y - 4, 0, 0, -1, -1, DOS_RED, DOS_BLACK, uL("pixelmix"), 8, uL(" Player "));
@@ -1433,7 +1432,7 @@ static void nsf_draw_controls(void) {
 			WORD bg = condition ? DOS_TL01 : DOS_GR02;
 			WORD fg = condition ? DOS_TL02 : DOS_TL03;
 			static int scurrent = -1, spindex = -1, scfgplaylist = -1;
-			BYTE force = (nes[0].p.ppu.frames < 2) || (scfgplaylist != cfg->nsf_player_playlist);
+			BYTE force = force_draw || (scfgplaylist != cfg->nsf_player_playlist);
 
 			if (force || (scurrent != nsf.songs.current)) {
 				umemset(buff, 0x00, usizeof(buff));
@@ -1461,7 +1460,7 @@ static void nsf_draw_controls(void) {
 			}
 		}
 		// chips
-		if (nes[0].p.ppu.frames == 0) {
+		if (force_draw) {
 			dos_text(0, NSF_GUI_CHIPS_PPUX + 5, NSF_GUI_CHIPS_PPUY, 0, 0, -1, -1,
 				nsf.sound_chips.vrc6 ? DOS_TL03 : DOS_TL02, DOS_TL01, uL("Pixelated"), 8, uL("VRC6"));
 			dos_text(0, NSF_GUI_CHIPS_PPUX + 30, NSF_GUI_CHIPS_PPUY, 0, 0, -1, -1,
@@ -1485,7 +1484,6 @@ static void nsf_draw_controls(void) {
 			static int wplay = 0, wpause = 0, wstop = 0, wprev = 0, wnext = 0, wmute = 0;
 			static int splay = -1, spause = -1, sstop = -1, sprev = -1, snext = -1, smute = -1, srepeat = -1;
 			int x = NSF_GUI_BUTTONS_PPUX;
-			BYTE force = (nes[0].p.ppu.frames < 2);
 
 			if (!wplay) {
 				wplay = dos_resource_w(uL(":/pics/pics/nsf_play_press.png"));
@@ -1506,43 +1504,43 @@ static void nsf_draw_controls(void) {
 				wmute = dos_resource_w(uL(":/pics/pics/nsf_mute_press.png"));
 			}
 
-			if (force || (splay != (nsf.state & NSF_PLAY))) {
+			if (force_draw || (splay != (nsf.state & NSF_PLAY))) {
 				dos_image(0, x, NSF_GUI_BUTTONS_PPUY, 0, 0, -1, -1, nsf.state & NSF_PLAY
 					? uL(":/pics/pics/nsf_play_press.png") : uL(":/pics/pics/nsf_play_no_press.png"), NULL, 0);
 				splay = (nsf.state & NSF_PLAY);
 			}
 			x += wplay;
-			if (force || (spause != (nsf.state & NSF_PAUSE))) {
+			if (force_draw || (spause != (nsf.state & NSF_PAUSE))) {
 				dos_image(0, x, NSF_GUI_BUTTONS_PPUY, 0, 0, -1, -1, nsf.state & NSF_PAUSE
 				 ? uL(":/pics/pics/nsf_pause_press.png") : uL(":/pics/pics/nsf_pause_no_press.png"), NULL, 0);
 				spause = (nsf.state & NSF_PAUSE);
 			}
 			x += wpause;
-			if (force || (sstop != (nsf.state & NSF_STOP))) {
+			if (force_draw || (sstop != (nsf.state & NSF_STOP))) {
 				dos_image(0, x, NSF_GUI_BUTTONS_PPUY, 0, 0, -1, -1, nsf.state & NSF_STOP
 					? uL(":/pics/pics/nsf_stop_press.png") : uL(":/pics/pics/nsf_stop_no_press.png"), NULL, 0);
 				sstop = (nsf.state & NSF_STOP);
 			}
 			x += wstop;
-			if (force || (sprev != (prt->data.treated[LEFT] == PRESSED))) {
+			if (force_draw || (sprev != (prt->data.treated[LEFT] == PRESSED))) {
 				dos_image(0, x, NSF_GUI_BUTTONS_PPUY, 0, 0, -1, -1, prt->data.treated[LEFT] == PRESSED
 					? uL(":/pics/pics/nsf_prev_press.png") : uL(":/pics/pics/nsf_prev_no_press.png"), NULL, 0);
 				sprev = (prt->data.treated[LEFT] == PRESSED);
 			}
 			x += wprev;
-			if (force || (snext != (prt->data.treated[RIGHT] == PRESSED))) {
+			if (force_draw || (snext != (prt->data.treated[RIGHT] == PRESSED))) {
 				dos_image(0, x, NSF_GUI_BUTTONS_PPUY, 0, 0, -1, -1, prt->data.treated[RIGHT] == PRESSED
 					? uL(":/pics/pics/nsf_next_press.png") : uL(":/pics/pics/nsf_next_no_press.png"), NULL, 0);
 				snext = (prt->data.treated[RIGHT] == PRESSED);
 			}
 			x += wnext;
-			if (force || (smute != !cfg->apu.channel[APU_MASTER])) {
+			if (force_draw || (smute != !cfg->apu.channel[APU_MASTER])) {
 				dos_image(0, x, NSF_GUI_BUTTONS_PPUY, 0, 0, -1, -1, !cfg->apu.channel[APU_MASTER]
 					? uL(":/pics/pics/nsf_mute_press.png") : uL(":/pics/pics/nsf_mute_no_press.png"), NULL, 0);
 				smute = !cfg->apu.channel[APU_MASTER];
 			}
 			x += wmute;
-			if (force || (srepeat != (nsf.repeat_song == PRESSED))) {
+			if (force_draw || (srepeat != (nsf.repeat_song == PRESSED))) {
 				dos_image(0, x, NSF_GUI_BUTTONS_PPUY, 0, 0, -1, -1, nsf.repeat_song == PRESSED
 					? uL(":/pics/pics/nsf_repeat_song_press.png") : uL(":/pics/pics/nsf_repeat_song_no_press.png"), NULL, 0);
 				srepeat = nsf.repeat_song == PRESSED;
@@ -1553,22 +1551,22 @@ static void nsf_draw_controls(void) {
 	{
 		static int sreverse = -1, splaylist = -1, sfadeout = -1;
 
-		if (nes[0].p.ppu.frames == 0) {
+		if (force_draw) {
 			y = NSF_GUI_OPTIONS_PPUY + 7;
 			dos_hline(0, 0, y, SCR_COLUMNS, DOS_BROWN);
 			dos_text(0, DOS_ALIGNHCENTER, y - 5, 0, 0, -1, -1, DOS_RED, DOS_BLACK, uL("pixelmix"), 8, uL(" Options "));
 		}
-		if (sreverse != cfg->reverse_bits_dpcm) {
+		if (force_draw || (sreverse != cfg->reverse_bits_dpcm)) {
 			nsf_print_option(NSF_GUI_OPTIONS_1_PPUX, NSF_GUI_OPTIONS_BOX_PPUY,
 				uL("Reverse bits DPCM"), TRUE, cfg->reverse_bits_dpcm);
 			sreverse = cfg->reverse_bits_dpcm;
 		}
-		if (splaylist != cfg->nsf_player_playlist) {
+		if (force_draw || (splaylist != cfg->nsf_player_playlist)) {
 			nsf_print_option(NSF_GUI_OPTIONS_2_PPUX, NSF_GUI_OPTIONS_BOX_PPUY,
 				uL("Playlist"), nsf.playlist.count > 0, cfg->nsf_player_playlist);
 			splaylist = cfg->nsf_player_playlist;
 		}
-		if (sfadeout != cfg->nsf_player_nsf_fadeout) {
+		if (force_draw || (sfadeout != cfg->nsf_player_nsf_fadeout)) {
 			nsf_print_option(NSF_GUI_OPTIONS_3_PPUX, NSF_GUI_OPTIONS_BOX_PPUY,
 				uL("Fadeout"), nsf.info_song && nsf.current_song.fade, cfg->nsf_player_nsf_fadeout);
 			sfadeout = cfg->nsf_player_nsf_fadeout;
@@ -1578,7 +1576,7 @@ static void nsf_draw_controls(void) {
 	{
 		static int seffect = -1;
 
-		if (seffect != cfg->nsf_player_effect) {
+		if (force_draw || (seffect != cfg->nsf_player_effect)) {
 			umemset(buff, 0x00, usizeof(buff));
 			usnprintf(buff, usizeof(buff), uL(" [image]:/pics/pics/nsf_arrow_left.png[endimage] "));
 			for (int i = 0; i < NSF_EFFECTS; i++) {
