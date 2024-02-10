@@ -242,13 +242,15 @@ void d3d9_quit(void) {
 		d3d9.array = d3d9.adapter = NULL;
 	}
 
+	d3d9_reset();
+}
+void d3d9_reset(void) {
 	if (d3d9.screenshot.srfc.s) {
 		IDirect3DSurface9_Release(d3d9.screenshot.srfc.s);
 		d3d9.screenshot.srfc.s = NULL;
 		d3d9.screenshot.zone.w = 0;
 		d3d9.screenshot.zone.h = 0;
 	}
-
 	if (d3d9.screenshot.zone.s) {
 		IDirect3DSurface9_Release(d3d9.screenshot.zone.s);
 		d3d9.screenshot.zone.s = NULL;

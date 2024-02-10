@@ -714,6 +714,7 @@ BYTE emu_reset(BYTE type) {
 
 		settings_pgs_parse();
 
+		gfx_reset();
 		gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE,
 			(vs_enab != vs_system.enabled) || (vs_ppu != vs_system.ppu));
 

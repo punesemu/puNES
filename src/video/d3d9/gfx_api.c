@@ -32,6 +32,9 @@ BYTE gfx_api_init(void) {
 void gfx_api_quit(void) {
 	d3d9_quit();
 }
+void gfx_api_reset(void) {
+	d3d9_reset();
+}
 BYTE gfx_api_context_create(void) {
 	return (d3d9_context_create());
 }

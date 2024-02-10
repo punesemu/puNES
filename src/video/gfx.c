@@ -77,6 +77,9 @@ void gfx_quit(void) {
 
 	gfx_api_quit();
 }
+void gfx_reset(void) {
+	gfx_api_reset();
+}
 void gfx_set_screen(BYTE scale, DBWORD filter, DBWORD shader, BYTE fullscreen, BYTE palette, BYTE force_scale, BYTE force_palette) {
 	BYTE set_mode = 0;
 	WORD width = 0, height = 0;

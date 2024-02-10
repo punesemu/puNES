@@ -39,6 +39,7 @@ BYTE gfx_api_init(void) {
 void gfx_api_quit(void) {
 	opengl_quit();
 }
+void gfx_api_reset(void) {}
 BYTE gfx_api_context_create(void) {
 	return (opengl_context_create());
 }
