@@ -1843,6 +1843,15 @@ void objInp::sc_qstring_pntr_to_val(void *str, int index, int type) {
 	split.replace(type, (QString(*(QString *)str)));
 	val.replace(index, QString("%1,%2").arg(split.at(KEYBOARD), split.at(JOYSTICK)));
 }
+DBWORD objInp::kbd_keyval_from_name(int index, const QString &name) {
+	DBWORD value = 0;
+
+	if ((name != "NULL") && !(value = _kbd_keyval_from_name(name))) {
+		value = _kbd_keyval_from_name(uQString(set->cfg[index].def));
+	}
+
+	return (value);
+}
 QString objInp::kbd_keyval_to_name(const DBWORD value) {
 	bool ok = false;
 	int index = 0;
@@ -2014,15 +2023,6 @@ DBWORD objInp::_kbd_keyval_from_name(const QString &name) {
 			value = (kv_specials[i].value);
 			break;
 		}
-	}
-
-	return (value);
-}
-DBWORD objInp::kbd_keyval_from_name(int index, const QString &name) {
-	DBWORD value = 0;
-
-	if ((name != "NULL") && !(value = _kbd_keyval_from_name(name))) {
-		value = _kbd_keyval_from_name(uQString(set->cfg[index].def));
 	}
 
 	return (value);

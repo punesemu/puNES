@@ -88,6 +88,15 @@ void *settings_inp_rd_sc(int index, int type) {
 void settings_inp_wr_sc(void *str, int index, int type) {
 	s.inp->sc_qstring_pntr_to_val(str, index, type);
 }
+DBWORD settings_inp_wr_port(void *str, int index, int type) {
+	QString sstr = (*(QString *)str);
+
+	if (type == KEYBOARD) {
+		return (s.inp->kbd_keyval_from_name(index, sstr));
+	} else {
+		return (js_joyval_from_name(uQStringCD(sstr)));
+	}
+}
 void settings_inp_all_defaults(_config_input *config_input, _array_pointers_port *array) {
 	s.inp->set_all_input_defaults(config_input, array);
 }

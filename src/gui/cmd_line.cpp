@@ -100,12 +100,14 @@ static struct _cl_option {
 	{ "shader",                req_arg,  nullptr },
 	{ "overscan-blk-brd",      req_arg,  nullptr },
 	{ "rewind-minutes",        req_arg,  nullptr },
-	{ "hidden-gui",            no_arg,   nullptr }
+	{ "hidden-gui",            no_arg,   nullptr },
+	{ "shortcut.",             req_arg,  nullptr },
+	{ "input.",                req_arg,  nullptr }
 };
 
 BYTE cmd_line_parse(int argc, uTCHAR **argv) {
 	QStringList splitted;
-	QString arg, key, skey, value, exe = QFileInfo(uQString(argv[0])).baseName();
+	QString arg, key, value, exe = QFileInfo(uQString(argv[0])).baseName();
 	int opt = 0;
 
 	for (int a = 1; a < argc; a++) {
@@ -124,9 +126,11 @@ BYTE cmd_line_parse(int argc, uTCHAR **argv) {
 
 		if (elaborate) {
 			unsigned int b;
+			QString skey;
 
 			for (b = 0; b < LENGTH(opt_long); b++) {
-				if ((opt_long[b].lopt == key) || (opt_long[b].sopt == key)) {
+				if ((opt_long[b].lopt == key) || (opt_long[b].sopt == key) ||
+					(opt_long[b].lopt.endsWith(".") && key.startsWith(opt_long[b].lopt))) {
 					skey = opt_long[b].sopt;
 					if (opt_long[b].ra == req_arg) {
 						if (splitted.count() > 1) {
@@ -221,6 +225,67 @@ BYTE cmd_line_parse(int argc, uTCHAR **argv) {
 #endif
 				} else if (key == "hidden-gui") {
 					info.start_with_hidden_gui = TRUE;
+				} else if (key.startsWith("shortcut.")) {
+					QStringList list = key.toLower().split(".");
+
+					if (list.length() == 2) {
+						key = QString(list.at(1));
+						for (int i = SET_INP_SC_OPEN; i < SET_INP_SC_OPEN + SET_MAX_NUM_SC; i++) {
+							const _settings *s = &inp_cfg[i];
+							QString skey = uQString(s->key).toLower().replace(" ", "_");
+
+							if (key == skey) {
+								list = value.split(",");
+								if (!list.length()) {
+									break;
+								}
+								if (list.length() >= 1) {
+									settings_inp_wr_sc((void *)&list.at(0), i, KEYBOARD);
+								}
+								if (list.length() >= 2) {
+									settings_inp_wr_sc((void *)&list.at(0), i, JOYSTICK);
+								}
+							}
+						}
+					}
+				} else if (key.startsWith("input.")) {
+					QStringList list = key.toLower().split(".");
+					struct _range {
+						int port;
+						int start;
+						int end;
+					} const range[4] = {
+						{ 0, SET_INP_P1K_A, SET_INP_P1K_TURBOB },
+						{ 1, SET_INP_P2K_A, SET_INP_P2K_TURBOB },
+						{ 2, SET_INP_P3K_A, SET_INP_P3K_TURBOB },
+						{ 3, SET_INP_P4K_A, SET_INP_P4K_TURBOB }
+					};
+
+					if (list.length() == 2) {
+						key = QString(list.at(1));
+						for (unsigned int r = 0; r < LENGTH(range); r++) {
+							for (int i = range[r].start; i <= range[r].end ; i++) {
+								const _settings *s = &inp_cfg[i];
+								QString skey = uQString(s->key).toLower().replace(" ", "_");
+
+								if (key == skey) {
+									list = value.split(",");
+
+									if (!list.length()) {
+										break;
+									}
+									if (list.length() >= 1) {
+										port[range[r].port].input[KEYBOARD][i - range[r].start] =
+											settings_inp_wr_port((void *)&list.at(0), i, KEYBOARD);
+									}
+									if (list.length() >= 2) {
+										port[range[r].port].input[JOYSTICK][i - range[r].start] =
+											settings_inp_wr_port((void *)&list.at(1), i, JOYSTICK);
+									}
+								}
+							}
+						}
+					}
 				}
 				break;
 			case 'a':

@@ -1119,16 +1119,3 @@ void wdgSettingsInput::s_et_update_joy_combo(void) {
 	}
 	gui_dlgjsc_emit_update_joy_combo();
 }
-
-
-
-
-
-
-
-
-
-
-
-
-

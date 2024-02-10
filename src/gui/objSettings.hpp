@@ -178,6 +178,7 @@ class objInp : public objSettings {
 		void set_all_input_defaults(_config_input *config_input, _array_pointers_port *array);
 		void *sc_val_to_qstring_pntr(int index, int type);
 		void sc_qstring_pntr_to_val(void *str, int index, int type);
+		DBWORD kbd_keyval_from_name(int index, const QString &name);
 		static QString kbd_keyval_to_name(DBWORD value);
 		static DBWORD kbd_keyval_decode(QKeyEvent *keyEvent);
 		void kbd_default(int button, _port *prt, int index);
@@ -192,7 +193,6 @@ class objInp : public objSettings {
 		void kbd_rd(int index, int pIndex);
 		void kbd_wr(int index, int pIndex);
 		DBWORD _kbd_keyval_from_name(const QString &name);
-		DBWORD kbd_keyval_from_name(int index, const QString &name);
 		int kbd_keyval_to_int(int index);
 		int nes_keyboard_index(const QString &name);
 

@@ -10,6 +10,9 @@ Changelog:
 - Rewritten the audio of the VRC7.
   Implemented the project "A YM2413 emulator written in C" of okaxaki :
   * https://github.com/digital-sound-antiques/emu2413
+- Rewritten NSF player.
+  Added support to NSF2 format.
+- Added the ability to configure shortcuts and the NES pad from the command line.
 - Added support to Quick Disk format.
 - Added an option for RAM initialization (#276).
   It's possible to choose between three values:
