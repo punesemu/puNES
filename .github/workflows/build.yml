@@ -251,7 +251,9 @@ jobs:
       - name: 'Deploy AppImage'
         run: |
           unset QTDIR; unset QT_PLUGIN_PATH; unset LD_LIBRARY_PATH
-          ./linuxdeploy-x86_64.AppImage --appdir AppDir -d AppDir/usr/share/applications/io.github.punesemu.puNES.desktop -i AppDir/usr/share/icons/hicolor/256x256/apps/io.github.punesemu.puNES.png --output appimage --plugin qt
+          ./linuxdeploy-x86_64.AppImage --appdir AppDir -d AppDir/usr/share/applications/io.github.punesemu.puNES.desktop -i AppDir/usr/share/icons/hicolor/256x256/apps/io.github.punesemu.puNES.png --plugin qt
+          rm -f AppDir/usr/lib/libmpg123.so.0
+          ./linuxdeploy-x86_64.AppImage --appdir AppDir --exclude-library "*mpg123*" --output appimage
 
       - name: 'Setup tmate session (only for debug)'
         if: ${{ failure() }}
