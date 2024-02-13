@@ -169,6 +169,12 @@ BYTE gui_init(int *argc, char **argv) {
 
 	gui_init_os();
 
+#if defined(WITH_D3D9)
+	if (d3d9_is_installed() == EXIT_ERROR) {
+		return (EXIT_ERROR);
+	}
+#endif
+
 	return (qt.app->control_base_folders());
 }
 void gui_quit(void) {}
@@ -1001,13 +1007,25 @@ unsigned int gui_hardware_concurrency(void) {
 #endif
 
 void gui_warning(const uTCHAR *txt) {
-	QMessageBox::warning(nullptr, "Warning!", uQString(txt));
+	QMessageBox msgBox;
+
+	msgBox.setIcon(QMessageBox::Warning);
+	msgBox.setWindowTitle("Warning!");
+	msgBox.setTextFormat(Qt::RichText);
+	msgBox.setText(uQString(txt));
+	msgBox.exec();
 	if (qt.log) {
 		log_warning(txt);
 	}
 }
 void gui_critical(const uTCHAR *txt) {
-	QMessageBox::critical(nullptr, "Error!", uQString(txt));
+	QMessageBox msgBox;
+
+	msgBox.setIcon(QMessageBox::Critical);
+	msgBox.setWindowTitle("Error!");
+	msgBox.setTextFormat(Qt::RichText);
+	msgBox.setText(uQString(txt));
+	msgBox.exec();
 	if (qt.log) {
 		log_error(txt);
 	}

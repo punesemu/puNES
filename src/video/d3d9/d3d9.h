@@ -195,6 +195,7 @@ EXTERNC BYTE d3d9_context_create(void);
 EXTERNC void d3d9_context_delete(BYTE lock);
 EXTERNC void d3d9_draw_scene(void);
 EXTERNC void d3d9_quit(void);
+EXTERNC BYTE d3d9_is_installed(void);
 
 #undef EXTERNC
 

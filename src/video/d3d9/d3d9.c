@@ -754,6 +754,29 @@ void d3d9_draw_scene(void) {
 		d3d9_read_front_buffer();
 	}
 }
+BYTE d3d9_is_installed(void) {
+	uTCHAR system32[MAX_PATH];
+
+	if (GetSystemDirectoryW(system32, MAX_PATH) != 0) {
+		uTCHAR dll[MAX_PATH];
+		FILE *file = NULL;
+
+		usnprintf(dll, usizeof(dll), uL("" uPs("") "\\d3dx9_43.dll"), system32);
+		file = ufopen(dll, uL("r"));
+		if (file != NULL) {
+			fclose(file);
+		} else {
+			gui_critical(uL("The d3dx9_43.dll library is missing from your computer.<br>"
+				"Install the <a href='https://www.microsoft.com/download/details.aspx?id=35'>DirectX End-User Runtime</a> "
+				"and try launching the emulator again."));
+			return (EXIT_ERROR);
+		}
+	} else {
+		gui_critical(uL("Unable to obtain the path to the System32 directory."));
+		return (EXIT_ERROR);
+	}
+	return (EXIT_OK);
+}
 
 static void d3d9_shader_cg_error_handler(void) {
 	CGerror error = cgGetError();
