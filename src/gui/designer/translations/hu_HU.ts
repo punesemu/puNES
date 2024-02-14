@@ -969,7 +969,7 @@
     </message>
     <message>
       <source>which Floppy Disk image do you want to load?</source>
-      <translation type="unfinished">which Floppy Disk image do you want to load?</translation>
+      <translation>Melyik lemezképet akarod betölteni?</translation>
     </message>
   </context>
   <context>
@@ -1627,63 +1627,63 @@
     </message>
     <message>
       <source>Warning</source>
-      <translation type="unfinished">Warning</translation>
+      <translation>Figyelmeztetés</translation>
     </message>
     <message>
       <source>This rom requires unsupported hardware to function correctly.</source>
-      <translation type="unfinished">This rom requires unsupported hardware to function correctly.</translation>
+      <translation>Ez a ROM nem támogatott hardware-t igényel a megfelelő működéshez.</translation>
     </message>
     <message>
       <source>Open FLoppy Disk Image</source>
-      <translation type="unfinished">Open FLoppy Disk Image</translation>
+      <translation>Open FLoppy Disk lemezkép</translation>
     </message>
     <message>
       <source>FDS Format Disk</source>
-      <translation type="unfinished">FDS Format Disk</translation>
+      <translation>FDS formátumú lemez</translation>
     </message>
     <message>
       <source>Quick Disk Format Disk</source>
-      <translation type="unfinished">Quick Disk Format Disk</translation>
+      <translation>Quick Disk formátumú lemez</translation>
     </message>
     <message>
       <source>puNES image</source>
-      <translation type="unfinished">puNES image</translation>
+      <translation>puNES lemezkép</translation>
     </message>
     <message>
       <source>Exports the current state of the disk</source>
-      <translation type="unfinished">Exports the current state of the disk</translation>
+      <translation>A lemez jelenlegi állapotának exportálása</translation>
     </message>
     <message>
       <source>Error on export state</source>
-      <translation type="unfinished">Error on export state</translation>
+      <translation>Hiba az állapot exportálása közben</translation>
     </message>
     <message>
       <source>Impossible write %0.</source>
-      <translation type="unfinished">Impossible write %0.</translation>
+      <translation>Írás lehetetlen %0.</translation>
     </message>
     <message>
       <source>to &amp;FDS Format (with Header)</source>
-      <translation type="unfinished">to &amp;FDS Format (with Header)</translation>
+      <translation>&amp;FDS formátumba (fejléccel)</translation>
     </message>
     <message>
       <source>to &amp;Quick Disk Format</source>
-      <translation type="unfinished">to &amp;Quick Disk Format</translation>
+      <translation>&amp;Quick Disk formátumba</translation>
     </message>
     <message>
       <source>to puNES image</source>
-      <translation type="unfinished">to puNES image</translation>
+      <translation>puNES lemezképbe</translation>
     </message>
     <message>
       <source>to F&amp;DS Format (without Header)</source>
-      <translation type="unfinished">to F&amp;DS Format (without Header)</translation>
+      <translation>F&amp;DS formátumba (fejléc nélkül)</translation>
     </message>
     <message>
       <source>C&amp;hange Disk</source>
-      <translation type="unfinished">C&amp;hange Disk</translation>
+      <translation>Lemezc&amp;sere</translation>
     </message>
     <message>
       <source>E&amp;xport current state of Disk/Disks</source>
-      <translation type="unfinished">E&amp;xport current state of Disk/Disks</translation>
+      <translation>Lemez(ek) jelenlegi állapotának e&amp;xportálása</translation>
     </message>
   </context>
   <context>
@@ -1925,7 +1925,7 @@
     <message>
       <source>auto switch [red]disabled[normal], single-sided disk</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">auto switch [red]disabled[normal], single-sided disk</translation>
+      <translation>autokapcs [red]letiltva[normal], egyoldalú lemez</translation>
     </message>
   </context>
   <context>
@@ -3179,23 +3179,23 @@
     </message>
     <message>
       <source>Per-Game</source>
-      <translation type="unfinished">Per-Game</translation>
+      <translation>Per-játék</translation>
     </message>
     <message>
       <source>Per-Game Overclock Setting</source>
-      <translation type="unfinished">Per-Game Overclock Setting</translation>
+      <translation>Per-játék túlhúzás beállítása</translation>
     </message>
     <message>
       <source>On</source>
-      <translation type="unfinished">On</translation>
+      <translation>Be</translation>
     </message>
     <message>
       <source>Off</source>
-      <translation type="unfinished">Off</translation>
+      <translation>Ki</translation>
     </message>
     <message>
       <source>Default Value</source>
-      <translation type="unfinished">Default Value</translation>
+      <translation>Alap érték</translation>
     </message>
   </context>
   <context>
