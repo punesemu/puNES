@@ -61,7 +61,7 @@
     </message>
     <message>
       <source>Detach Barcode</source>
-      <translation type="unfinished">Detach Barcode</translation>
+      <translation>Отсоединить штрих-код</translation>
     </message>
     <message>
       <source>Apply</source>
@@ -76,11 +76,11 @@
     </message>
     <message>
       <source>Dipswitch</source>
-      <translation type="unfinished">Dipswitch</translation>
+      <translation>DIP-переключатель</translation>
     </message>
     <message>
       <source>Start</source>
-      <translation type="unfinished">Start</translation>
+      <translation>Start</translation>
     </message>
     <message>
       <source>Default</source>
@@ -615,15 +615,15 @@
     </message>
     <message>
       <source>Arkanoid Vaus Controller (NES)</source>
-      <translation type="unfinished">Arkanoid Vaus Controller (NES)</translation>
+      <translation>Vaus контроллер для Арканоида (NES)</translation>
     </message>
     <message>
       <source>Arkanoid Vaus Controller (Famicom)</source>
-      <translation type="unfinished">Arkanoid Vaus Controller (Famicom)</translation>
+      <translation>Vaus контроллер для Арканоида (Famicom)</translation>
     </message>
     <message>
       <source>Two Vaus Controllers plus Famicom Data Recorder</source>
-      <translation type="unfinished">Two Vaus Controllers plus Famicom Data Recorder</translation>
+      <translation>Два контроллера Vaus плюс Famicom Data Recorder</translation>
     </message>
     <message>
       <source>Subor Keyboard plus mouse (3x8-bit)</source>
@@ -639,7 +639,7 @@
     </message>
     <message>
       <source>Unknown Famiclone Keyboard (Golden Key)</source>
-      <translation type="unfinished">Unknown Famiclone Keyboard (Golden Key)</translation>
+      <translation>Неизвестная клавиатура Famiclone (Golden Key)</translation>
     </message>
     <message>
       <source>Subor Keyboard plus mouse (24-bit $4017)</source>
@@ -647,19 +647,19 @@
     </message>
     <message>
       <source>Port Test</source>
-      <translation type="unfinished">Port Test</translation>
+      <translation>Тест порта</translation>
     </message>
     <message>
       <source>Bandai Multi Game Player Gamepad</source>
-      <translation type="unfinished">Bandai Multi Game Player Gamepad</translation>
+      <translation>Геймпад Bandai Multi Game Player</translation>
     </message>
     <message>
       <source>Venom TV Dance Mat</source>
-      <translation type="unfinished">Venom TV Dance Mat</translation>
+      <translation>Танцевальный коврик Venom TV</translation>
     </message>
     <message>
       <source>LG TV Remote Control</source>
-      <translation type="unfinished">LG TV Remote Control</translation>
+      <translation>Пульт управления LG TV</translation>
     </message>
   </context>
   <context>
@@ -969,7 +969,7 @@
     </message>
     <message>
       <source>which Floppy Disk image do you want to load?</source>
-      <translation type="unfinished">which Floppy Disk image do you want to load?</translation>
+      <translation>Какой образ дискеты вы хотите загрузить?</translation>
     </message>
   </context>
   <context>
@@ -1040,15 +1040,15 @@
     </message>
     <message>
       <source>Monitor</source>
-      <translation type="unfinished">Monitor</translation>
+      <translation>Монитор</translation>
     </message>
     <message>
       <source>Left</source>
-      <translation type="unfinished">Left</translation>
+      <translation>Влево</translation>
     </message>
     <message>
       <source>Right</source>
-      <translation type="unfinished">Right</translation>
+      <translation>Вправо</translation>
     </message>
     <message>
       <source>12</source>
@@ -1084,7 +1084,7 @@
     </message>
     <message>
       <source>Game Dip Switches</source>
-      <translation type="unfinished">Game Dip Switches</translation>
+      <translation>Игровые DIP-переключатели</translation>
     </message>
   </context>
   <context>
@@ -1162,7 +1162,7 @@
     </message>
     <message>
       <source>&amp;Eject/Insert disk</source>
-      <translation>Вставить/Вынуть &amp;дискету</translation>
+      <translation>&amp;Вставить/Вынуть дискету</translation>
     </message>
     <message>
       <source>All supported formats</source>
@@ -1615,35 +1615,35 @@
     </message>
     <message>
       <source>&amp;Dipswitch</source>
-      <translation type="unfinished">&amp;Dipswitch</translation>
+      <translation>&amp;DIP-переключатель</translation>
     </message>
     <message>
       <source>Detach &amp;Barcode</source>
-      <translation type="unfinished">Detach &amp;Barcode</translation>
+      <translation>Отсоединить &amp;штрих-код</translation>
     </message>
     <message>
       <source>Floppy Disk image files</source>
-      <translation type="unfinished">Floppy Disk image files</translation>
+      <translation>Файлы образа дискеты</translation>
     </message>
     <message>
       <source>Warning</source>
-      <translation type="unfinished">Warning</translation>
+      <translation>Предупреждение</translation>
     </message>
     <message>
       <source>This rom requires unsupported hardware to function correctly.</source>
-      <translation type="unfinished">This rom requires unsupported hardware to function correctly.</translation>
+      <translation>Для корректной работы данного ROM требуется неподдерживаемое оборудование.</translation>
     </message>
     <message>
       <source>Open FLoppy Disk Image</source>
-      <translation type="unfinished">Open FLoppy Disk Image</translation>
+      <translation>Открыть образ дискеты</translation>
     </message>
     <message>
       <source>FDS Format Disk</source>
-      <translation type="unfinished">FDS Format Disk</translation>
+      <translation>Диск формата FDS</translation>
     </message>
     <message>
       <source>Quick Disk Format Disk</source>
-      <translation type="unfinished">Quick Disk Format Disk</translation>
+      <translation>Диск формата Quick Disk</translation>
     </message>
     <message>
       <source>puNES image</source>
@@ -1651,39 +1651,39 @@
     </message>
     <message>
       <source>Exports the current state of the disk</source>
-      <translation type="unfinished">Exports the current state of the disk</translation>
+      <translation>Экспортирует текущее состояние диска</translation>
     </message>
     <message>
       <source>Error on export state</source>
-      <translation type="unfinished">Error on export state</translation>
+      <translation>Ошибка при экспорте сохранения</translation>
     </message>
     <message>
       <source>Impossible write %0.</source>
-      <translation type="unfinished">Impossible write %0.</translation>
+      <translation>Невозможно записать %0.</translation>
     </message>
     <message>
       <source>to &amp;FDS Format (with Header)</source>
-      <translation type="unfinished">to &amp;FDS Format (with Header)</translation>
+      <translation>в формат &amp;FDS (с заголовком)</translation>
     </message>
     <message>
       <source>to &amp;Quick Disk Format</source>
-      <translation type="unfinished">to &amp;Quick Disk Format</translation>
+      <translation>в формат &amp;Quick Disk</translation>
     </message>
     <message>
       <source>to puNES image</source>
-      <translation type="unfinished">to puNES image</translation>
+      <translation>в образ puNES</translation>
     </message>
     <message>
       <source>to F&amp;DS Format (without Header)</source>
-      <translation type="unfinished">to F&amp;DS Format (without Header)</translation>
+      <translation>в формат F&amp;DS (без заголовка)</translation>
     </message>
     <message>
       <source>C&amp;hange Disk</source>
-      <translation type="unfinished">C&amp;hange Disk</translation>
+      <translation>&amp;Заменить дискету</translation>
     </message>
     <message>
       <source>E&amp;xport current state of Disk/Disks</source>
-      <translation type="unfinished">E&amp;xport current state of Disk/Disks</translation>
+      <translation>Э&amp;кспортировать текущее состояние диска/дисков</translation>
     </message>
   </context>
   <context>
@@ -1915,17 +1915,17 @@
     <message>
       <source>[red]error[normal] on write save state</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">[red]error[normal] on write save state</translation>
+      <translation>[red]ошибка[normal] при записи сохранения</translation>
     </message>
     <message>
       <source>auto switch [red]disabled[normal], game not compatible</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">auto switch [red]disabled[normal], game not compatible</translation>
+      <translation>автопереключение [red]отключено[normal], игра не совместима</translation>
     </message>
     <message>
       <source>auto switch [red]disabled[normal], single-sided disk</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">auto switch [red]disabled[normal], single-sided disk</translation>
+      <translation>автопереключение [red]отключено[normal], односторонний диск</translation>
     </message>
   </context>
   <context>
@@ -2378,7 +2378,7 @@
     </message>
     <message>
       <source>Color Phase</source>
-      <translation type="unfinished">Color Phase</translation>
+      <translation>Цветовая фаза</translation>
     </message>
     <message>
       <source>Brightness</source>
@@ -2394,7 +2394,7 @@
     </message>
     <message>
       <source>Chroma Lag</source>
-      <translation type="unfinished">Chroma Lag</translation>
+      <translation>Цветовая задержка</translation>
     </message>
     <message>
       <source>Chroma Correction</source>
@@ -2417,7 +2417,7 @@
     </message>
     <message>
       <source>Chroma Lag</source>
-      <translation type="unfinished">Chroma Lag</translation>
+      <translation>Цветовая задержка</translation>
     </message>
     <message>
       <source>Contrast</source>
@@ -3179,23 +3179,23 @@
     </message>
     <message>
       <source>Per-Game</source>
-      <translation type="unfinished">Per-Game</translation>
+      <translation>Внутриигровые</translation>
     </message>
     <message>
       <source>Per-Game Overclock Setting</source>
-      <translation type="unfinished">Per-Game Overclock Setting</translation>
+      <translation>Внутриигровые настройки разгона</translation>
     </message>
     <message>
       <source>On</source>
-      <translation type="unfinished">On</translation>
+      <translation>Вкл.</translation>
     </message>
     <message>
       <source>Off</source>
-      <translation type="unfinished">Off</translation>
+      <translation>Выкл.</translation>
     </message>
     <message>
       <source>Default Value</source>
-      <translation type="unfinished">Default Value</translation>
+      <translation>Значение по умолчанию</translation>
     </message>
   </context>
   <context>
