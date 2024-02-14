@@ -63,7 +63,7 @@ void ee93cx6_init(BYTE *buffer, size_t _capacity, BYTE _wordSize) {
 	ee93cx6.lastCLK = FALSE;
 	ee93cx6.writeEnabled = FALSE;
 	ee93cx6.wordSize = _wordSize;
-	
+
 	ee93cx6.State_address = ee93cx6.wordSize == 16 ? State_address16 : State_address8;
 	ee93cx6.State_data = ee93cx6.wordSize == 16 ? State_data16 : State_data8;
 }

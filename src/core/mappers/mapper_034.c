@@ -34,7 +34,7 @@ struct _m034 {
 
 void map_init_034(void) {
 	BYTE type = 0;
-	
+
 	if (miscrom_size() && miscrom_pnt()) {
 		type = 3;
 	} else if ((info.mapper.submapper == 1) || ((info.mapper.submapper != 2) && chrrom_size())) {
