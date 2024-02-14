@@ -814,7 +814,7 @@ static const _settings main_cfg[] = {
 	{
 		uL("system"), uL("preferred mode"), uL("auto"),
 		uL("# possible values: pal, ntsc, dendy, auto"),
-		uL("-m, --mode                preferred mode        : pal, ntsc, dendy, auto"),
+		uL("-m, --mode                     preferred mode        : pal, ntsc, dendy, auto"),
 		{LENGTH(opt_mode), opt_mode}
 	},
 	{
@@ -826,7 +826,7 @@ static const _settings main_cfg[] = {
 	{
 		uL("system"), uL("rewind minutes"), uL("15"),
 		uL("# possible values: disabled, 2, 5, 15, 30, 60, unlimited"),
-		uL("    --rewind-minutes      rewind minutes        : disabled, 2, 5, 15, 30, 60, unlimited"),
+		uL("    --rewind-minutes           rewind minutes        : disabled, 2, 5, 15, 30, 60, unlimited"),
 		{LENGTH(opt_rewind), opt_rewind}
 	},
 	{
@@ -844,13 +844,13 @@ static const _settings main_cfg[] = {
 	{
 		uL("system"), uL("pause when in background"), uL("yes"),
 		uL("# possible values: yes, no"),
-		uL("    --background-pause                          : yes, no"),
+		uL("    --background-pause                               : yes, no"),
 		{LENGTH(opt_no_yes), opt_no_yes}
 	},
 	{
 		uL("system"), uL("cheat mode"), uL("disabled"),
 		uL("# possible values: disabled, gamegenie, cheatslist"),
-		uL("-g, --cheat-mode          cheat mode            : disabled, gamegenie, cheatslist"),
+		uL("-g, --cheat-mode               cheat mode            : disabled, gamegenie, cheatslist"),
 		{LENGTH(opt_cheat_mode), opt_cheat_mode}
 	},
 	{
@@ -880,54 +880,54 @@ static const _settings main_cfg[] = {
 	{
 		uL("video"), uL("size window"), uL("2x"),
 		uL("# possible values: 1x, 2x, 3x, 4x, 5x, 6x"),
-		uL("-s, --size                window size           : 1x, 2x, 3x, 4x, 5x, 6x"),
+		uL("-s, --size                     window size           : 1x, 2x, 3x, 4x, 5x, 6x"),
 		{LENGTH(opt_scale), opt_scale}
 	},
 	{
 		uL("video"), uL("pixel aspect ratio"), uL("8:7"),
 		uL("# possible values: 1:1, 5:4, 8:7, 11:8"),
-		uL("-e, --pixel-aspect-ratio  enable aspect ratio   : 1:1, 5:4, 8:7, 11:8"),
+		uL("-e, --pixel-aspect-ratio       enable aspect ratio   : 1:1, 5:4, 8:7, 11:8"),
 		{LENGTH(opt_par), opt_par}
 	},
 	{
 		uL("video"), uL("pixel aspect ratio soft stretch"), uL("yes"),
 		uL("# possible values: yes, no"),
-		uL("    --par-soft-stretch    improves the          : yes, no" NEWLINE)
-		uL("                          stretched image"),
+		uL("    --par-soft-stretch         improves the          : yes, no" NEWLINE)
+		uL("                               stretched image"),
 		{LENGTH(opt_no_yes), opt_no_yes}
 	},
 	{
 		uL("video"), uL("overscan black borders in window"), uL("off"),
 		uL("# possible values: on, off"),
-		uL("    --overscan-blk-brd    enable black borders  : on, off" NEWLINE)
-		uL("                          in window mode"),
+		uL("    --overscan-blk-brd         enable black borders  : on, off" NEWLINE)
+		uL("                               in window mode"),
 		{LENGTH(opt_off_on), opt_off_on}
 	},
 	{
 		uL("video"), uL("overscan black borders in fullscreen"), uL("on"),
 		uL("# possible values: on, off"),
-		uL("    --overscan-blk-brd-f  enable black borders  : on, off" NEWLINE)
-		uL("                          in fullscreen"),
+		uL("    --overscan-blk-brd-f       enable black borders  : on, off" NEWLINE)
+		uL("                               in fullscreen"),
 		{LENGTH(opt_off_on), opt_off_on}
 	},
 	{
 		uL("video"), uL("overscan default"), uL("off"),
 		uL("# possible values: on, off"),
-		uL("-o, --overscan            default overscan      : on, off"),
+		uL("-o, --overscan                 default overscan      : on, off"),
 		{LENGTH(opt_pergame), opt_pergame}
 	},
 	{
 		uL("video"), uL("overscan bordes NTSC"), uL("8,8,8,9"),
 		uL("# possible values: 0-17" NEWLINE)
 		uL("# format string  : [UP],[DOWN],[LEFT],[RIGHT]"),
-		uL("    --overscan-brd-ntsc   borders in pixels     : [UP],[DOWN],[LEFT],[RIGHT]"),
+		uL("    --overscan-brd-ntsc        borders in pixels     : [UP],[DOWN],[LEFT],[RIGHT]"),
 		{0, NULL}
 	},
 	{
 		uL("video"), uL("overscan bordes PAL"), uL("1,0,2,2"),
 		uL("# possible values: 0-17" NEWLINE)
 		uL("# format string  : [UP],[DOWN],[LEFT],[RIGHT]"),
-		uL("    --overscan-brd-pal    borders in pixels     : [UP],[DOWN],[LEFT],[RIGHT]"),
+		uL("    --overscan-brd-pal         borders in pixels     : [UP],[DOWN],[LEFT],[RIGHT]"),
 		{0, NULL}
 	},
 	{
@@ -939,19 +939,19 @@ static const _settings main_cfg[] = {
 		uL("#                  tv4x, dotmatrix, paltv1x, paltv2x, paltv3x, paltv4x," NEWLINE)
 		uL("#                  ntscbisqwit2x, ntscbisqwit8x, ntscbisqwit8x, ntsccrtlmp," NEWLINE)
 		uL("#                  ntscneslmp, palcrtlmp, palneslmp"),
-		uL("-i, --filter              filter to apply       : nofilter, scale2x, scale3x, scale4x, hq2x, hq3x," NEWLINE)
-		uL("                                                  hq4x, xbrz2x, xbrz3x, xbrz4x, xbrz5x, xbrz6x," NEWLINE)
-		uL("                                                  xbrz2xmt, xbrz3xmt, xbrz4xmt, xbrz5xmt, xbrz6xmt," NEWLINE)
-		uL("                                                  ntsc, 2xsai, super2xsai, supereagle, tv2x,tv3x," NEWLINE)
-		uL("                                                  tv4x, dotmatrix, paltv1x, paltv2x, paltv3x," NEWLINE)
-		uL("                                                  paltv4x, ntscbisqwit2x, ntscbisqwit8x, ntscbisqwit8x," NEWLINE)
-		uL("                                                  ntsccrtlmp, ntscneslmp, palcrtlmp, palneslmp"),
+		uL("-i, --filter                   filter to apply       : nofilter, scale2x, scale3x, scale4x, hq2x, hq3x," NEWLINE)
+		uL("                                                       hq4x, xbrz2x, xbrz3x, xbrz4x, xbrz5x, xbrz6x," NEWLINE)
+		uL("                                                       xbrz2xmt, xbrz3xmt, xbrz4xmt, xbrz5xmt, xbrz6xmt," NEWLINE)
+		uL("                                                       ntsc, 2xsai, super2xsai, supereagle, tv2x,tv3x," NEWLINE)
+		uL("                                                       tv4x, dotmatrix, paltv1x, paltv2x, paltv3x," NEWLINE)
+		uL("                                                       paltv4x, ntscbisqwit2x, ntscbisqwit8x, ntscbisqwit8x," NEWLINE)
+		uL("                                                       ntsccrtlmp, ntscneslmp, palcrtlmp, palneslmp"),
 		{LENGTH(opt_filter), opt_filter}
 	},
 	{
 		uL("video"), uL("ntsc filter format"), uL("composite"),
 		uL("# possible values: composite, svideo, rgb"),
-		uL("-n, --ntsc-format         format of ntsc filter : composite, svideo, rgb"),
+		uL("-n, --ntsc-format              format of ntsc filter : composite, svideo, rgb"),
 		{LENGTH(opt_ntsc), opt_ntsc}
 	},
 	{
@@ -1032,8 +1032,8 @@ static const _settings main_cfg[] = {
 		uL("video"), uL("shader"), uL("none"),
 		uL("# possible values: none, crtdotmask, crtscanlines, crtcurve, emboss, noise," NEWLINE)
 		uL("#                  ntsc2phcomp, oldtv, file"),
-		uL("    --shader              shader to apply       : none, crtdotmask, crtscanlines, crtcurve," NEWLINE)
-		uL("                                                  emboss, noise, ntsc2phcomp, oldtv, file"),
+		uL("    --shader                   shader to apply       : none, crtdotmask, crtscanlines, crtcurve," NEWLINE)
+		uL("                                                       emboss, noise, ntsc2phcomp, oldtv, file"),
 		{LENGTH(opt_shader), opt_shader}
 	},
 	{
@@ -1045,8 +1045,8 @@ static const _settings main_cfg[] = {
 	{
 		uL("video"), uL("palette"), uL("ntsc"),
 		uL("# possible values: pal, ntsc, sony, frbyuv, frbuns, mono, green, file"),
-		uL("-p, --palette             type of palette       : pal, ntsc, sony, frbyuv, frbuns, mono, " NEWLINE)
-		uL("                                                : green, raw, file"),
+		uL("-p, --palette                  type of palette       : pal, ntsc, sony, frbyuv, frbuns, mono, " NEWLINE)
+		uL("                                                     : green, raw, file"),
 		{LENGTH(opt_palette), opt_palette}
 	},
 	{
@@ -1058,26 +1058,26 @@ static const _settings main_cfg[] = {
 	{
 		uL("video"), uL("disable swap emphasis PAL-Dendy"), uL("no"),
 		uL("# possible values: yes, no"),
-		uL("    --swap-emphasis       disable swap emphasis : yes, no" NEWLINE)
-		uL("                          in PAL/Dendy mode"),
+		uL("    --swap-emphasis            disable swap emphasis : yes, no" NEWLINE)
+		uL("                               in PAL/Dendy mode"),
 		{LENGTH(opt_no_yes), opt_no_yes}
 	},
 	{
 		uL("video"), uL("vsync"), uL("on"),
 		uL("# possible values: on, off"),
-		uL("-v, --vsync               use of vsync          : on, off"),
+		uL("-v, --vsync                    use of vsync          : on, off"),
 		{LENGTH(opt_off_on), opt_off_on}
 	},
 	{
 		uL("video"), uL("interpolation"), uL("no"),
 		uL("# possible values: yes, no"),
-		uL("-j, --interpolation       enable interpolation  : yes, no"),
+		uL("-j, --interpolation            enable interpolation  : yes, no"),
 		{LENGTH(opt_no_yes), opt_no_yes}
 	},
 	{
 		uL("video"), uL("text on screen"), uL("yes"),
 		uL("# possible values: yes, no"),
-		uL("    --txt-on-screen       enable messages       : yes, no"),
+		uL("    --txt-on-screen            enable messages       : yes, no"),
 		{LENGTH(opt_no_yes), opt_no_yes}
 	},
 	{
@@ -1095,84 +1095,84 @@ static const _settings main_cfg[] = {
 	{
 		uL("video"), uL("input display"), uL("no"),
 		uL("# possible values: yes, no"),
-		uL("    --input-display       enable input gui      : yes, no"),
+		uL("    --input-display            enable input gui      : yes, no"),
 		{LENGTH(opt_no_yes), opt_no_yes}
 	},
 	{
 		uL("video"), uL("disable tv noise emulation"), uL("no"),
 		uL("# possible values: yes, no"),
-		uL("    --disable-tv-noise    disable tv noise      : yes, no"),
+		uL("    --disable-tv-noise         disable tv noise      : yes, no"),
 		{LENGTH(opt_no_yes), opt_no_yes}
 	},
 	{
 		uL("video"), uL("disable sepia color on pause"), uL("no"),
 		uL("# possible values: yes, no"),
-		uL("    --disable-sepia       disable sepia color   : yes, no" NEWLINE)
-		uL("                          during the pause"),
+		uL("    --disable-sepia            disable sepia color   : yes, no" NEWLINE)
+		uL("                               during the pause"),
 		{LENGTH(opt_no_yes), opt_no_yes}
 	},
 #if defined (WITH_OPENGL)
 	{
 		uL("video"), uL("disable sRGB FBO (Shaders)"), uL("no"),
 		uL("# possible values: yes, no"),
-		uL("    --disable-srgb-fbo    disable in the        : yes, no" NEWLINE)
-		uL("                          shaders the use of" NEWLINE)
-		uL("                          sRGB FBO"),
+		uL("    --disable-srgb-fbo         disable in the        : yes, no" NEWLINE)
+		uL("                               shaders the use of" NEWLINE)
+		uL("                               sRGB FBO"),
 		{LENGTH(opt_no_yes), opt_no_yes}
 	},
 #endif
 	{
 		uL("video"), uL("fullscreen"), uL("no"),
 		uL("# possible values: yes, no"),
-		uL("-u, --fullscreen          no comment            : yes, no"),
+		uL("-u, --fullscreen               no comment            : yes, no"),
 		{LENGTH(opt_no_yes), opt_no_yes}
 	},
 	{
 		uL("video"), uL("fullscreen in window"), uL("no"),
 		uL("# possible values: yes, no"),
-		uL("    --fullscreen-window   the next fullscreen   : yes, no" NEWLINE)
-		uL("                          will be performed by" NEWLINE)
-		uL("                          maximizing the window"),
+		uL("    --fullscreen-window        the next fullscreen   : yes, no" NEWLINE)
+		uL("                               will be performed by" NEWLINE)
+		uL("                               maximizing the window"),
 		{LENGTH(opt_no_yes), opt_no_yes}
 	},
 	{
 		uL("video"), uL("use integer scaliung in fullscreen"), uL("no"),
 		uL("# possible values: yes, no"),
-		uL("-r, --int-scl-fullscreen  use integer scaling   : yes, no"),
+		uL("-r, --int-scl-fullscreen       use integer scaling   : yes, no"),
 		{LENGTH(opt_no_yes), opt_no_yes}
 	},
 	{
 		uL("video"), uL("stretch in fullscreen"), uL("no"),
 		uL("# possible values: yes, no"),
-		uL("-t, --stretch-fullscreen  stretch image         : yes, no"),
+		uL("-t, --stretch-fullscreen       stretch image         : yes, no"),
 		{LENGTH(opt_no_yes), opt_no_yes}
 	},
 #if defined (FULLSCREEN_RESFREQ)
 	{
 		uL("video"), uL("adaptive refresh rate in fullscreen"), uL("no"),
 		uL("# possible values: yes, no"),
-		uL("    --adaptive-rrate      try to adapte the     : yes, no" NEWLINE)
-		uL("                          refresh rate to the rom"),
+		uL("    --adaptive-rrate           try to adapte the     : yes, no" NEWLINE)
+		uL("                               refresh rate to the rom"),
 		{LENGTH(opt_no_yes), opt_no_yes}
 	},
 	{
 		uL("video"), uL("preferred fullscreen resolution"), NULL,
 		uL("# possible values: automatic, [width]x[height]"),
-		uL("    --fullscreen-res      fullscreen resolution : automatic, [width]x[height]" NEWLINE)
-		uL("                          if supported by the monitor"),
+		uL("    --fullscreen-res           fullscreen resolution : automatic, [width]x[height]" NEWLINE)
+		uL("                               if supported by the monitor"),
 		{0, NULL}
 	},
 #endif
 	{
 		uL("video"), uL("horizontal flip screen"), uL("no"),
 		uL("# possible values: yes, no"),
-		uL("    --hflip-screen         horizontal flip      : yes, no"),
+		uL("    --hflip-screen             horizontal flip       : yes, no"),
 		{LENGTH(opt_no_yes), opt_no_yes}
 	},
 	{
 		uL("video"), uL("screen rotation"), uL("0"),
 		uL("# possible values: 0, 90, 180, 270"),
-		uL("    --screen-rotation     degree scrn rotation  : 0, 90, 180, 270"),
+		uL("    --screen-rotation          degree scrn rotation  : 0, 90, 180, 270"),
 		{LENGTH(opt_screen_rotation), opt_screen_rotation}
 	},
 	{
@@ -1191,7 +1191,7 @@ static const _settings main_cfg[] = {
 		uL("audio"), uL("output device"), uL("default"),
 #if defined(__linux__)
 		uL("# possible values: default, plughw:[x,x]"),
-		uL("    --audio-output-device                       : default, plughw:[x,x]"),
+		uL("    --audio-output-device                            : default, plughw:[x,x]"),
 # else
 		uL("# possible values: default, [DEVICEID]"),
 		uL("    --audio-output-device                       : default, [DEVICEID]"),
@@ -1201,43 +1201,43 @@ static const _settings main_cfg[] = {
 	{
 		uL("audio"), uL("buffer factor"), uL("1"),
 		uL("# possible values: [0-15]"),
-		uL("-b, --audio-buffer-factor buffer size factor    : [0-15]"),
+		uL("-b, --audio-buffer-factor      buffer size factor    : [0-15]"),
 		{LENGTH(opt_audio_buffer_factor), opt_audio_buffer_factor}
 	},
 	{
 		uL("audio"), uL("sample rate"), uL("44100"),
 		uL("# possible values: 192000, 96000, 48000, 44100, 22050, 11025"),
-		uL("-l, --samplerate          sample rate           : 192000, 96000, 48000, 44100, 22050, 11025"),
+		uL("-l, --samplerate               sample rate           : 192000, 96000, 48000, 44100, 22050, 11025"),
 		{LENGTH(opt_samplerate), opt_samplerate}
 	},
 	{
 		uL("audio"), uL("channels"), uL("delay"),
 		uL("# possible values: mono, delay, panning"),
-		uL("-c, --channels            audio channels        : mono, delay, panning"),
+		uL("-c, --channels                 audio channels        : mono, delay, panning"),
 		{LENGTH(opt_channels), opt_channels}
 	},
 	{
 		uL("audio"), uL("stereo delay"), uL("30"),
 		uL("# possible values: [5 - 100]"),
-		uL("-d, --stereo-delay        stereo effect delay   : [5 - 100]"),
+		uL("-d, --stereo-delay             stereo effect delay   : [5 - 100]"),
 		{0, NULL}
 	},
 	{
 		uL("audio"), uL("reverse bits of DPCM"), uL("no"),
 		uL("# possible values: yes, no"),
-		uL("    --reverse-bits-dpcm   reverse bits of dpcm  : yes, no"),
+		uL("    --reverse-bits-dpcm        reverse bits of dpcm  : yes, no"),
 		{LENGTH(opt_no_yes), opt_no_yes}
 	},
 	{
 		uL("audio"), uL("swap duty cycles (Famicom clone chip audio emulation)"), uL("no"),
 		uL("# possible values: yes, no"),
-		uL("    --swap-duty           swap duty cycles      : yes, no"),
+		uL("    --swap-duty                swap duty cycles      : yes, no"),
 		{LENGTH(opt_no_yes), opt_no_yes}
 	},
 	{
 		uL("audio"), uL("audio"), uL("on"),
 		uL("# possible values: on, off"),
-		uL("-a, --audio                                     : on, off"),
+		uL("-a, --audio                                          : on, off"),
 		{LENGTH(opt_off_on), opt_off_on}
 	},
 	{
@@ -1271,26 +1271,26 @@ static const _settings main_cfg[] = {
 		{0, NULL}
 	},
 	{
-			uL("GUI"), uL("last geometry of log"), uL("80, 80, 0, 0"),
-			uL("# possible values: [X],[Y],[W],[H]"),
-			NULL,
-			{0, NULL}
+		uL("GUI"), uL("last geometry of log"), uL("80, 80, 0, 0"),
+		uL("# possible values: [X],[Y],[W],[H]"),
+		NULL,
+		{0, NULL}
 	},
 	{
-			uL("GUI"), uL("last geometry of header editor"), uL("80, 80, 0, 0"),
-			uL("# possible values: [X],[Y],[W],[H]"),
-			NULL,
-			{0, NULL}
+		uL("GUI"), uL("last geometry of header editor"), uL("80, 80, 0, 0"),
+		uL("# possible values: [X],[Y],[W],[H]"),
+		NULL,
+		{0, NULL}
 	},
 	{
 		uL("GUI"), uL("language"), uL("english"),
 		uL("# possible values: arabic, chinese simplified, english, french, german, hungarian," NEWLINE)
 		uL("#                  italian, polish, portuguese, russian, spanish, turkish"),
-		uL("    --language            GUI language          : arabic, chinese simplified," NEWLINE)
-		uL("                                                  english, french, german,"  NEWLINE)
-		uL("                                                  hungarian, italian, polish,"  NEWLINE)
-		uL("                                                  portuguese, russian, spanish," NEWLINE)
-		uL("                                                  turkish"),
+		uL("    --language                 GUI language          : arabic, chinese simplified," NEWLINE)
+		uL("                                                       english, french, german,"  NEWLINE)
+		uL("                                                       hungarian, italian, polish,"  NEWLINE)
+		uL("                                                       portuguese, russian, spanish," NEWLINE)
+		uL("                                                       turkish"),
 		{LENGTH(opt_languages), opt_languages}
 	},
 	{
@@ -1376,19 +1376,19 @@ static const _settings main_cfg[] = {
 	{
 		uL("ppu"), uL("hide sprites"), uL("no"),
 		uL("# possible values: yes, no"),
-		uL("    --hide-sprites                              : yes, no"),
+		uL("    --hide-sprites                                   : yes, no"),
 		{LENGTH(opt_no_yes), opt_no_yes}
 	},
 	{
 		uL("ppu"), uL("hide background"), uL("no"),
 		uL("# possible values: yes, no"),
-		uL("    --hide-background                           : yes, no"),
+		uL("    --hide-background                                : yes, no"),
 		{LENGTH(opt_no_yes), opt_no_yes}
 	},
 	{
 		uL("ppu"), uL("unlimited sprites"), uL("no"),
 		uL("# possible values: yes, no"),
-		uL("    --unlimited-sprites                         : yes, no"),
+		uL("    --unlimited-sprites                              : yes, no"),
 		{LENGTH(opt_no_yes), opt_no_yes}
 	},
 	{
@@ -1525,7 +1525,7 @@ static const _settings main_cfg[] = {
 	{
 		NULL, NULL, NULL,
 		NULL,
-		uL("    --hidden-gui          start with hidden GUI"),
+		uL("    --hidden-gui               start with hidden GUI"),
 		{0, NULL}
 	},
 };

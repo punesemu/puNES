@@ -113,7 +113,7 @@ BYTE cmd_line_parse(int argc, uTCHAR **argv) {
 	for (int a = 1; a < argc; a++) {
 		arg = uQString(argv[a]);
 		splitted = arg.split("=");
-		key = QString(splitted.at(0));
+		key = splitted.at(0);
 		bool elaborate = false;
 
 		if (key.startsWith("--")) {
@@ -134,7 +134,7 @@ BYTE cmd_line_parse(int argc, uTCHAR **argv) {
 					skey = opt_long[b].sopt;
 					if (opt_long[b].ra == req_arg) {
 						if (splitted.count() > 1) {
-							value = QString(splitted.at(1));
+							value = splitted.at(1);
 						} else {
 							if ((a + 1) >= argc) {
 								QMessageBox::warning(nullptr, "Error",
@@ -228,22 +228,19 @@ BYTE cmd_line_parse(int argc, uTCHAR **argv) {
 				} else if (key.startsWith("shortcut.")) {
 					QStringList list = key.toLower().split(".");
 
-					if (list.length() == 2) {
-						key = QString(list.at(1));
+					if (list.length() == 3) {
+						QString type = list.at(1);
+
+						key = list.at(2);
 						for (int i = SET_INP_SC_OPEN; i < SET_INP_SC_OPEN + SET_MAX_NUM_SC; i++) {
 							const _settings *s = &inp_cfg[i];
 							QString skey = uQString(s->key).toLower().replace(" ", "_");
 
 							if (key == skey) {
-								list = value.split(",");
-								if (!list.length()) {
-									break;
-								}
-								if (list.length() >= 1) {
-									settings_inp_wr_sc((void *)&list.at(0), i, KEYBOARD);
-								}
-								if (list.length() >= 2) {
-									settings_inp_wr_sc((void *)&list.at(0), i, JOYSTICK);
+								if (type == "k") {
+									settings_inp_wr_sc((void *)&value, i, KEYBOARD);
+								} else if (type == "j") {
+									settings_inp_wr_sc((void *)&value, i, JOYSTICK);
 								}
 							}
 						}
@@ -261,26 +258,22 @@ BYTE cmd_line_parse(int argc, uTCHAR **argv) {
 						{ 3, SET_INP_P4K_A, SET_INP_P4K_TURBOB }
 					};
 
-					if (list.length() == 2) {
-						key = QString(list.at(1));
+					if ((list.length() == 3) && (list.at(1).length() == 3)) {
+						QString type = list.at(1).mid(2, 1);
+
+						key = list.at(1).mid(0,2) + "k_" + list.at(2);
 						for (unsigned int r = 0; r < LENGTH(range); r++) {
 							for (int i = range[r].start; i <= range[r].end ; i++) {
 								const _settings *s = &inp_cfg[i];
 								QString skey = uQString(s->key).toLower().replace(" ", "_");
 
 								if (key == skey) {
-									list = value.split(",");
-
-									if (!list.length()) {
-										break;
-									}
-									if (list.length() >= 1) {
+									if (type == "k") {
 										port[range[r].port].input[KEYBOARD][i - range[r].start] =
-											settings_inp_wr_port((void *)&list.at(0), i, KEYBOARD);
-									}
-									if (list.length() >= 2) {
+											settings_inp_wr_port((void *)&value, i, KEYBOARD);
+									} else if (type == "j") {
 										port[range[r].port].input[JOYSTICK][i - range[r].start] =
-											settings_inp_wr_port((void *)&list.at(1), i, JOYSTICK);
+											settings_inp_wr_port((void *)&value, i, JOYSTICK);
 									}
 								}
 							}
