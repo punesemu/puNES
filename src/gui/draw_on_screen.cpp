@@ -45,7 +45,7 @@ typedef struct _dos_tag_ele {
 	long long opt;
 } _dos_tag_ele;
 
-#define gdt(desc, value, opt) { (desc), (value), (opt) }
+#define gdt(desc, value, opt) { QStringLiteral(desc), (value), (opt) }
 static QList<_dos_tag_ele> dos_tags = {
 	// gray
 	gdt("[gy01]", DOS_GY01, 0xFF424242), gdt("[gy02]", DOS_GY02, 0xFF585858),
@@ -181,40 +181,44 @@ void dos_text(BYTE nidx, int ppu_x, int ppu_y, int rect_x, int rect_y, int rect_
 
 		// disegno la stringa
 		for (int i = 0; i < line.length(); i++) {
-			QString ch = line.mid(i, 1);
+			QChar ch = line[i];
 			int chw = 0;
 
-			if (ch[0] == '[') {
+			if (ch == '[') {
 				bool is_tag = false;
 
 				for (const _dos_tag_ele &ele : dos_tags) {
 					int len = ele.desc.length();
 
 					if ((i + len) < line.length()) {
+#if QT_VERSION >= QT_VERSION_CHECK(5, 10, 0)
+						QStringView tag = QStringView{line}.mid(i, len);
+#else
 						QStringRef tag(&line, i, len);
+#endif
 
 						if (ele.desc == tag) {
-							if (tag == "[image]" && !is_name_subimage) {
+							if ((tag == QStringLiteral("[image]")) && !is_name_subimage) {
 								is_name_subimage = true;
-							} else if (tag == "[endimage]" && is_name_subimage) {
+							} else if ((tag == QStringLiteral("[endimage]")) && is_name_subimage) {
 								is_name_subimage = false;
 								is_subimage = true;
-							} else  if (tag == "[bck]") {
+							} else  if (tag == QStringLiteral("[bck]")) {
 								is_bck_tag = true;
-							} else if (tag == "[top]") {
+							} else if (tag == QStringLiteral("[top]")) {
 								alignv = DOS_ALIGNTOP;
-							} else if (tag == "[bottom]") {
+							} else if (tag == QStringLiteral("[bottom]")) {
 								alignv = DOS_ALIGNBOTTOM;
-							} else if (tag == "[vcenter]") {
+							} else if (tag == QStringLiteral("[vcenter]")) {
 								alignv = DOS_ALIGNVCENTER;
-							} else if (tag == "[left]") {
+							} else if (tag == QStringLiteral("[left]")) {
 								alignh = DOS_ALIGNLEFT;
-							} else if (tag == "[right]") {
+							} else if (tag == QStringLiteral("[right]")) {
 								alignh = DOS_ALIGNRIGHT;
-							} else if (tag == "[hcenter]") {
+							} else if (tag == QStringLiteral("[hcenter]")) {
 								alignh = DOS_ALIGNHCENTER;
 							} else {
-								bool is_normal = tag == "[normal]";
+								bool is_normal = tag == QStringLiteral("[normal]");
 
 								if (is_bck_tag) {
 									bg = is_normal ? bg_def : ele.value;
@@ -419,21 +423,25 @@ void dos_text_pixels_size(int *w, int *h, const uTCHAR *font_family, int font_si
 	QFontMetrics fontMetrics(font);
 
 	for (int i = 0; i < line.length(); i++) {
-		QString ch = line.mid(i, 1);
+		QChar ch = line[i];
 
-		if (ch[0] == '[') {
+		if (ch == '[') {
 			bool is_tag = false;
 
 			for (const _dos_tag_ele &ele: dos_tags) {
 				int len = ele.desc.length();
 
 				if ((i + len) < line.length()) {
+#if QT_VERSION >= QT_VERSION_CHECK(5, 10, 0)
+					QStringView tag = QStringView{line}.mid(i, len);
+#else
 					QStringRef tag(&line, i, len);
+#endif
 
 					if (ele.desc == tag) {
-						if (tag == "[image]" && !is_name_subimage) {
+						if ((tag == QStringLiteral("[image]")) && !is_name_subimage) {
 							is_name_subimage = true;
-						} else if (tag == "[endimage]" && is_name_subimage) {
+						} else if ((tag == QStringLiteral("[endimage]")) && is_name_subimage) {
 							is_name_subimage = false;
 							is_subimage = true;
 						}
@@ -753,40 +761,44 @@ static WORD *_dos_text_to_ppu_image(int rect_x, int rect_y, int rect_w, int rect
 
 		// disegno la stringa
 		for (int i = 0; i < line.length(); i++) {
-			QString ch = line.mid(i, 1);
+			QChar ch = line[i];
 			int chw = 0;
 
-			if (ch[0] == '[') {
+			if (ch == '[') {
 				bool is_tag = false;
 
 				for (const _dos_tag_ele &ele : dos_tags) {
 					int len = ele.desc.length();
 
 					if ((i + len) < line.length()) {
+#if QT_VERSION >= QT_VERSION_CHECK(5, 10, 0)
+						QStringView tag = QStringView{line}.mid(i, len);
+#else
 						QStringRef tag(&line, i, len);
+#endif
 
 						if (ele.desc == tag) {
-							if (tag == "[image]" && !is_name_subimage) {
+							if ((tag == QStringLiteral("[image]")) && !is_name_subimage) {
 								is_name_subimage = true;
-							} else if (tag == "[endimage]" && is_name_subimage) {
+							} else if ((tag == QStringLiteral("[endimage]")) && is_name_subimage) {
 								is_name_subimage = false;
 								is_subimage = true;
-							} else  if (tag == "[bck]") {
+							} else  if (tag == QStringLiteral("[bck]")) {
 								is_bck_tag = true;
-							} else if (tag == "[top]") {
+							} else if (tag == QStringLiteral("[top]")) {
 								alignv = DOS_ALIGNTOP;
-							} else if (tag == "[bottom]") {
+							} else if (tag == QStringLiteral("[bottom]")) {
 								alignv = DOS_ALIGNBOTTOM;
-							} else if (tag == "[vcenter]") {
+							} else if (tag == QStringLiteral("[vcenter]")) {
 								alignv = DOS_ALIGNVCENTER;
-							} else if (tag == "[left]") {
+							} else if (tag == QStringLiteral("[left]")) {
 								alignh = DOS_ALIGNLEFT;
-							} else if (tag == "[right]") {
+							} else if (tag == QStringLiteral("[right]")) {
 								alignh = DOS_ALIGNRIGHT;
-							} else if (tag == "[hcenter]") {
+							} else if (tag == QStringLiteral("[hcenter]")) {
 								alignh = DOS_ALIGNHCENTER;
 							} else {
-								bool is_normal = tag == "[normal]";
+								bool is_normal = tag == QStringLiteral("[normal]");
 
 								if (is_bck_tag) {
 									bg = is_normal ? bg_def : ele.value;

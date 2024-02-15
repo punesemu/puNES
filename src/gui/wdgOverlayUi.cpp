@@ -400,7 +400,9 @@ void wdgOverlayUi::update_dpr(void) {
 	font.setPointSizeF(9.0 / devicePixelRatioF());
 	setFont(font);
 
-#if (QT_VERSION >= QT_VERSION_CHECK(5, 7, 0))
+#if (QT_VERSION >= QT_VERSION_CHECK(6, 6, 0))
+	for (overlayWidget *ele : std::as_const(wdgs)) {
+#elif (QT_VERSION >= QT_VERSION_CHECK(5, 7, 0))
 	for (overlayWidget *ele : qAsConst(wdgs)) {
 #else
 	for (overlayWidget *ele : wdgs) {
@@ -441,7 +443,9 @@ void wdgOverlayUi::overlay_blit(void) {
 
 	// e' importante rispettare l'ordine sottostante.
 	// 1 - prima cancellazione
-#if (QT_VERSION >= QT_VERSION_CHECK(5, 7, 0))
+#if (QT_VERSION >= QT_VERSION_CHECK(6, 6, 0))
+	for (overlayWidget *ele : std::as_const(wdgs)) {
+#elif (QT_VERSION >= QT_VERSION_CHECK(5, 7, 0))
 	for (overlayWidget *ele : qAsConst(wdgs)) {
 #else
 	for (overlayWidget *ele : wdgs) {
@@ -449,7 +453,9 @@ void wdgOverlayUi::overlay_blit(void) {
 		wdg_clear(ele, nullptr, dpr);
 	}
 	// 2 - seconda cancellazione con preparazione immagini
-#if (QT_VERSION >= QT_VERSION_CHECK(5, 7, 0))
+#if (QT_VERSION >= QT_VERSION_CHECK(6, 6, 0))
+	for (overlayWidget *ele : std::as_const(wdgs)) {
+#elif (QT_VERSION >= QT_VERSION_CHECK(5, 7, 0))
 	for (overlayWidget *ele : qAsConst(wdgs)) {
 #else
 	for (overlayWidget *ele : wdgs) {
@@ -479,7 +485,9 @@ void wdgOverlayUi::overlay_blit(void) {
 		}
 	}
 	// 3 - blit delle immagini
-#if (QT_VERSION >= QT_VERSION_CHECK(5, 7, 0))
+#if (QT_VERSION >= QT_VERSION_CHECK(6, 6, 0))
+	for (overlayWidget *ele : std::as_const(wdgs)) {
+#elif (QT_VERSION >= QT_VERSION_CHECK(5, 7, 0))
 	for (overlayWidget *ele : qAsConst(wdgs)) {
 #else
 	for (overlayWidget *ele : wdgs) {

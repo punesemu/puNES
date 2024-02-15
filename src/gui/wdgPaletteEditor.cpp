@@ -516,12 +516,20 @@ void wdgPaletteEditor::s_html(void) {
 	int index = widget_Color_Selected->color;
 	QColor qrgb = widget_Palette_Wall->color_at(index);
 
+#if (QT_VERSION >= QT_VERSION_CHECK(6, 6, 0))
+	if (!QColor::isValidColorName(lineEdit_Html_Name->text())) {
+#else
 	if (!QColor::isValidColor(lineEdit_Html_Name->text())) {
+#endif
 		set_sliders_spins_lineedit();
 		return;
 	}
 
+#if (QT_VERSION >= QT_VERSION_CHECK(6, 6, 0))
+	qrgb.fromString(lineEdit_Html_Name->text());
+#else
 	qrgb.setNamedColor(lineEdit_Html_Name->text());
+#endif
 
 	set_internal_color(index, qrgb, true);
 

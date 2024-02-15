@@ -351,7 +351,9 @@ BYTE cgp_parse(const uTCHAR *file) {
 			if (!cgp_value(set, ele, value)) {
 				QString qfloat;
 
-#if (QT_VERSION >= QT_VERSION_CHECK(5, 7, 0))
+#if (QT_VERSION >= QT_VERSION_CHECK(6, 6, 0))
+				for (QChar c : std::as_const(value)) {
+#elif (QT_VERSION >= QT_VERSION_CHECK(5, 7, 0))
 				for (QChar c : qAsConst(value)) {
 #else
 				for (QChar c : value) {
