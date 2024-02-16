@@ -190,7 +190,7 @@ BYTE gui_control_instance(void) {
 #endif
 			if (finfo.exists()) {
 				do {
-					if (qt.app->sendMessage(finfo.absoluteFilePath().toUtf8())) {
+					if (qt.app->sendMessage(finfo.absoluteFilePath().toUtf8(), 200)) {
 						break;
 					}
 					gui_sleep(20);
