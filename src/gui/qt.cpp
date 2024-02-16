@@ -242,7 +242,7 @@ BYTE gui_create(void) {
 
 	// Thx to http://www.devincook.com/
 	// "Commodore 64 Pixelized" (10px)
-	QFontDatabase::addApplicationFont(":/fonts/fonts/Commodore Pixelized v1.2.ttf");
+	QFontDatabase::addApplicationFont(":/fonts/fonts/Commodore_Pixelized_v1.2.ttf");
 
 	qt.mwin = new mainWindow();
 	qt.screen = qt.mwin->wscreen;
