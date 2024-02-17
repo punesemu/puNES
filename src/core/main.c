@@ -61,6 +61,7 @@ int main(int argc, char **argv) {
 	memset(&chrrom, 0x00, sizeof(chrrom));
 	memset(&wram, 0x00, sizeof(wram));
 	memset(&miscrom, 0x00, sizeof(miscrom));
+	memset(&jsp, 0x00, sizeof(jsp));
 
 	info.number_of_nes = 1;
 

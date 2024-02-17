@@ -563,7 +563,13 @@ void js_jdev_update(_js *js, BYTE enable_decode, BYTE port_index) {
 					js->jdev = &jstick.jdd.devices[i];
 					js->inited = TRUE;
 					if (enable_decode) {
-						memcpy(p->input[JOYSTICK], JSJDEV->stdctrl, js_jdev_sizeof_stdctrl());
+						for (size_t btn = 0; btn < MAX_STD_PAD_BUTTONS ; btn++) {
+							if (js->stdctrl_from_cmdline[btn]) {
+								JSJDEV->stdctrl[btn] = js->stdctrl_from_cmdline[btn];
+								js->stdctrl_from_cmdline[btn] = 0;
+							}
+							p->input[JOYSTICK][btn] = JSJDEV->stdctrl[btn];
+						}
 						js->input_decode_event = pf->input_decode_event;
 					}
 					break;

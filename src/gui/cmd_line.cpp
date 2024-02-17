@@ -272,7 +272,7 @@ BYTE cmd_line_parse(int argc, uTCHAR **argv) {
 										port[range[r].port].input[KEYBOARD][i - range[r].start] =
 											settings_inp_wr_port((void *)&value, i, KEYBOARD);
 									} else if (type == "j") {
-										port[range[r].port].input[JOYSTICK][i - range[r].start] =
+										jsp[range[r].port].stdctrl_from_cmdline[i - range[r].start] =
 											settings_inp_wr_port((void *)&value, i, JOYSTICK);
 									}
 								}

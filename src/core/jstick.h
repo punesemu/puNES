@@ -198,6 +198,7 @@ typedef struct _js {
 	BYTE inited;
 	thread_mutex_t lock;
 	_input_guid guid;
+	DBWORD stdctrl_from_cmdline[MAX_STD_PAD_BUTTONS];
 	void *jdev;
 	BYTE (*input_decode_event)(BYTE mode, BYTE autorepeat, DBWORD event, BYTE type, _port *prt);
 } _js;
