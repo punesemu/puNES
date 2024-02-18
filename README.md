@@ -43,9 +43,28 @@ Notes:
 
 :beer: Support
 -----------
-If you want buy me a beer : <span class="badge-paypal"><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=QPPXNRL5NAHDC" title="Donate to this project using Paypal"><img src="https://img.shields.io/badge/paypal-donate-yellow.svg" alt="PayPal donate button" /></a></span>
+If you want buy me a beer :
 
-[You can help translate puNES on Crowdin](https://crowdin.com/project/punes)
+[![PayPal](https://img.shields.io/badge/PayPal-Donate-blue?style=for-the-badge&logo=paypal)](https://paypal.me/punesemu)
+[![kofi](https://img.shields.io/badge/Ko--Fi-Donate-orange?style=for-the-badge&logo=ko-fi)](https://ko-fi.com/punesemu)
+
+Multilingual Support
+-----------
+A big thank you to everyone who contributed to the translations:
+* Arabic
+* Chinese
+* English
+* French
+* German
+* Hungarian
+* Italian
+* Polish
+* Portuguese
+* Russian
+* Spanish
+* Turkish
+
+### Help with Translations [here](https://crowdin.com/project/punes)
 
 :camera: Screenshots
 -----------
