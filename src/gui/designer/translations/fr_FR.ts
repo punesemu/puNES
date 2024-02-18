@@ -57,11 +57,11 @@
     <name>dlgDetachBarcode</name>
     <message>
       <source>Enter a barcode yourself...</source>
-      <translation type="unfinished">Enter a barcode yourself...</translation>
+      <translation>Saisir vous-même un code-barres...</translation>
     </message>
     <message>
       <source>Detach Barcode</source>
-      <translation type="unfinished">Detach Barcode</translation>
+      <translation>Détacher le code-barres</translation>
     </message>
     <message>
       <source>Apply</source>
@@ -611,15 +611,15 @@
     </message>
     <message>
       <source>Zapper ($4017)</source>
-      <translation type="unfinished">Zapper ($4017)</translation>
+      <translation>Zapper ($4017)</translation>
     </message>
     <message>
       <source>Arkanoid Vaus Controller (NES)</source>
-      <translation type="unfinished">Arkanoid Vaus Controller (NES)</translation>
+      <translation>Contrôleur Arkanoid Vaus (NES)</translation>
     </message>
     <message>
       <source>Arkanoid Vaus Controller (Famicom)</source>
-      <translation type="unfinished">Arkanoid Vaus Controller (Famicom)</translation>
+      <translation>Contrôleur Arkanoid Vaus (Famicom)</translation>
     </message>
     <message>
       <source>Two Vaus Controllers plus Famicom Data Recorder</source>
@@ -627,15 +627,15 @@
     </message>
     <message>
       <source>Subor Keyboard plus mouse (3x8-bit)</source>
-      <translation type="unfinished">Subor Keyboard plus mouse (3x8-bit)</translation>
+      <translation>Clavier et Souris Subor (3x8-bit)</translation>
     </message>
     <message>
       <source>Subor Keyboard plus mouse (24-bit)</source>
-      <translation type="unfinished">Subor Keyboard plus mouse (24-bit)</translation>
+      <translation>Clavier et Souris Subor (24-bit)</translation>
     </message>
     <message>
       <source>SNES Mouse ($4017.0)</source>
-      <translation type="unfinished">SNES Mouse ($4017.0)</translation>
+      <translation>Souris SNES ($4017.0)</translation>
     </message>
     <message>
       <source>Unknown Famiclone Keyboard (Golden Key)</source>
@@ -643,19 +643,19 @@
     </message>
     <message>
       <source>Subor Keyboard plus mouse (24-bit $4017)</source>
-      <translation type="unfinished">Subor Keyboard plus mouse (24-bit $4017)</translation>
+      <translation>Clavier et Souris Subor (24-bit $4017)</translation>
     </message>
     <message>
       <source>Port Test</source>
-      <translation type="unfinished">Port Test</translation>
+      <translation>Test du Port</translation>
     </message>
     <message>
       <source>Bandai Multi Game Player Gamepad</source>
-      <translation type="unfinished">Bandai Multi Game Player Gamepad</translation>
+      <translation>Manette de jeu multijoueurs Bandai</translation>
     </message>
     <message>
       <source>Venom TV Dance Mat</source>
-      <translation type="unfinished">Venom TV Dance Mat</translation>
+      <translation>Tapis de Danse TV Venom</translation>
     </message>
     <message>
       <source>LG TV Remote Control</source>
