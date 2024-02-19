@@ -1612,7 +1612,7 @@ void mainWindow::s_change_disk(void) {
 	filters[2].append(" (*.fds *.FDS *.qd *.QD)");
 	filters[3].append(" (*.*)");
 
-	file = QFileDialog::getOpenFileName(this, tr("Open FLoppy Disk Image"),
+	file = QFileDialog::getOpenFileName(this, tr("Open Floppy Disk Image"),
 		uQString(info.rom.compress_file[0] ? &info.rom.compress_file[0] : &gui.last_open_path[0]), filters.join(";;"));
 
 	if (!file.isNull()) {
