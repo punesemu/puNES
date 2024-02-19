@@ -1634,10 +1634,6 @@
       <translation>يتطلب ملف الروم عتاد غير مدعوم حاليا لتشغيله بشكل مضبوط.</translation>
     </message>
     <message>
-      <source>Open FLoppy Disk Image</source>
-      <translation>فتح صورة قرن مرن</translation>
-    </message>
-    <message>
       <source>FDS Format Disk</source>
       <translation>صيغة قرص FDS</translation>
     </message>
@@ -1684,6 +1680,10 @@
     <message>
       <source>E&amp;xport current state of Disk/Disks</source>
       <translation>تصدير الحالة الحالية للقرص/الأقراص</translation>
+    </message>
+    <message>
+      <source>Open Floppy Disk Image</source>
+      <translation type="unfinished">Open Floppy Disk Image</translation>
     </message>
   </context>
   <context>
