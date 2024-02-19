@@ -1634,10 +1634,6 @@
       <translation>Ez a ROM nem támogatott hardware-t igényel a megfelelő működéshez.</translation>
     </message>
     <message>
-      <source>Open FLoppy Disk Image</source>
-      <translation>Open FLoppy Disk lemezkép</translation>
-    </message>
-    <message>
       <source>FDS Format Disk</source>
       <translation>FDS formátumú lemez</translation>
     </message>
@@ -1684,6 +1680,10 @@
     <message>
       <source>E&amp;xport current state of Disk/Disks</source>
       <translation>Lemez(ek) jelenlegi állapotának e&amp;xportálása</translation>
+    </message>
+    <message>
+      <source>Open Floppy Disk Image</source>
+      <translation type="unfinished">Open Floppy Disk Image</translation>
     </message>
   </context>
   <context>
