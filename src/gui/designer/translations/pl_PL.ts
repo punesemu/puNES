@@ -1634,10 +1634,6 @@
       <translation>Ten rom do poprawnego działania wymaga nieobsługiwanego urządzenia.</translation>
     </message>
     <message>
-      <source>Open FLoppy Disk Image</source>
-      <translation>Wczytaj obraz dyskietki</translation>
-    </message>
-    <message>
       <source>FDS Format Disk</source>
       <translation>Format dysku FDS</translation>
     </message>
@@ -1684,6 +1680,10 @@
     <message>
       <source>E&amp;xport current state of Disk/Disks</source>
       <translation type="unfinished">E&amp;xport current state of Disk/Disks</translation>
+    </message>
+    <message>
+      <source>Open Floppy Disk Image</source>
+      <translation type="unfinished">Open Floppy Disk Image</translation>
     </message>
   </context>
   <context>
