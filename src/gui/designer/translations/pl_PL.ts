@@ -61,7 +61,7 @@
     </message>
     <message>
       <source>Detach Barcode</source>
-      <translation type="unfinished">Detach Barcode</translation>
+      <translation>Detach Barcode</translation>
     </message>
     <message>
       <source>Apply</source>
@@ -607,7 +607,7 @@
     </message>
     <message>
       <source>Vs. System (1P via $4016)</source>
-      <translation type="unfinished">Vs. System (1P via $4016)</translation>
+      <translation>Vs. System (1P przez $4016)</translation>
     </message>
     <message>
       <source>Zapper ($4017)</source>
@@ -615,15 +615,15 @@
     </message>
     <message>
       <source>Arkanoid Vaus Controller (NES)</source>
-      <translation type="unfinished">Arkanoid Vaus Controller (NES)</translation>
+      <translation>Kontroler Arkanoid Vaus (NES)</translation>
     </message>
     <message>
       <source>Arkanoid Vaus Controller (Famicom)</source>
-      <translation type="unfinished">Arkanoid Vaus Controller (Famicom)</translation>
+      <translation>Kontroler Arkanoid Vaus (Famicom)</translation>
     </message>
     <message>
       <source>Two Vaus Controllers plus Famicom Data Recorder</source>
-      <translation type="unfinished">Two Vaus Controllers plus Famicom Data Recorder</translation>
+      <translation>Dwa kontrolery Vaus plus Famicon Data Recorder</translation>
     </message>
     <message>
       <source>Subor Keyboard plus mouse (3x8-bit)</source>
@@ -635,7 +635,7 @@
     </message>
     <message>
       <source>SNES Mouse ($4017.0)</source>
-      <translation type="unfinished">SNES Mouse ($4017.0)</translation>
+      <translation>Mysz SNESa ($4017.0)</translation>
     </message>
     <message>
       <source>Unknown Famiclone Keyboard (Golden Key)</source>
@@ -651,15 +651,15 @@
     </message>
     <message>
       <source>Bandai Multi Game Player Gamepad</source>
-      <translation type="unfinished">Bandai Multi Game Player Gamepad</translation>
+      <translation>Bandai Multi Game Player Gamepad</translation>
     </message>
     <message>
       <source>Venom TV Dance Mat</source>
-      <translation type="unfinished">Venom TV Dance Mat</translation>
+      <translation>Mata taneczna Venom TV</translation>
     </message>
     <message>
       <source>LG TV Remote Control</source>
-      <translation type="unfinished">LG TV Remote Control</translation>
+      <translation>Pilot LG TV</translation>
     </message>
   </context>
   <context>
@@ -1084,7 +1084,7 @@
     </message>
     <message>
       <source>Game Dip Switches</source>
-      <translation type="unfinished">Game Dip Switches</translation>
+      <translation>Przełączniki Dip gry</translation>
     </message>
   </context>
   <context>
@@ -1615,7 +1615,7 @@
     </message>
     <message>
       <source>&amp;Dipswitch</source>
-      <translation type="unfinished">&amp;Dipswitch</translation>
+      <translation>&amp;Dipswitch</translation>
     </message>
     <message>
       <source>Detach &amp;Barcode</source>
@@ -1623,39 +1623,39 @@
     </message>
     <message>
       <source>Floppy Disk image files</source>
-      <translation type="unfinished">Floppy Disk image files</translation>
+      <translation>Pliki obrazu dyskietek</translation>
     </message>
     <message>
       <source>Warning</source>
-      <translation type="unfinished">Warning</translation>
+      <translation>Ostrzeżenie</translation>
     </message>
     <message>
       <source>This rom requires unsupported hardware to function correctly.</source>
-      <translation type="unfinished">This rom requires unsupported hardware to function correctly.</translation>
+      <translation>Ten rom do poprawnego działania wymaga nieobsługiwanego urządzenia.</translation>
     </message>
     <message>
       <source>Open FLoppy Disk Image</source>
-      <translation type="unfinished">Open FLoppy Disk Image</translation>
+      <translation>Wczytaj obraz dyskietki</translation>
     </message>
     <message>
       <source>FDS Format Disk</source>
-      <translation type="unfinished">FDS Format Disk</translation>
+      <translation>Format dysku FDS</translation>
     </message>
     <message>
       <source>Quick Disk Format Disk</source>
-      <translation type="unfinished">Quick Disk Format Disk</translation>
+      <translation>Format Quick Disk</translation>
     </message>
     <message>
       <source>puNES image</source>
-      <translation type="unfinished">puNES image</translation>
+      <translation>Obraz puNES</translation>
     </message>
     <message>
       <source>Exports the current state of the disk</source>
-      <translation type="unfinished">Exports the current state of the disk</translation>
+      <translation>Eksportuje aktualny stan dysku</translation>
     </message>
     <message>
       <source>Error on export state</source>
-      <translation type="unfinished">Error on export state</translation>
+      <translation>Błąd podczas eksportowania stanu</translation>
     </message>
     <message>
       <source>Impossible write %0.</source>
@@ -1671,7 +1671,7 @@
     </message>
     <message>
       <source>to puNES image</source>
-      <translation type="unfinished">to puNES image</translation>
+      <translation>do obrazu puNES</translation>
     </message>
     <message>
       <source>to F&amp;DS Format (without Header)</source>
@@ -1679,7 +1679,7 @@
     </message>
     <message>
       <source>C&amp;hange Disk</source>
-      <translation type="unfinished">C&amp;hange Disk</translation>
+      <translation>Zmień dysk</translation>
     </message>
     <message>
       <source>E&amp;xport current state of Disk/Disks</source>
@@ -2268,15 +2268,15 @@
     <name>wdgNTSCLMP88959Filter</name>
     <message>
       <source>Scanline</source>
-      <translation type="unfinished">Scanline</translation>
+      <translation>Przeplot</translation>
     </message>
     <message>
       <source>MFields</source>
-      <translation type="unfinished">MFields</translation>
+      <translation>MFields</translation>
     </message>
     <message>
       <source>VBlend</source>
-      <translation type="unfinished">VBlend</translation>
+      <translation/>
     </message>
     <message>
       <source>Contrast</source>
@@ -2339,11 +2339,11 @@
     </message>
     <message>
       <source>Scanline</source>
-      <translation type="unfinished">Scanline</translation>
+      <translation>Przeplot</translation>
     </message>
     <message>
       <source>VBlend</source>
-      <translation type="unfinished">VBlend</translation>
+      <translation/>
     </message>
     <message>
       <source>Saturation</source>
@@ -2358,11 +2358,11 @@
     <name>wdgPALLMP88959Filter</name>
     <message>
       <source>Scanline</source>
-      <translation type="unfinished">Scanline</translation>
+      <translation>Przeplot</translation>
     </message>
     <message>
       <source>VBlend</source>
-      <translation type="unfinished">VBlend</translation>
+      <translation>VBlend</translation>
     </message>
     <message>
       <source>Black Point</source>
@@ -2394,7 +2394,7 @@
     </message>
     <message>
       <source>Chroma Lag</source>
-      <translation type="unfinished">Chroma Lag</translation>
+      <translation>Chroma Lag</translation>
     </message>
     <message>
       <source>Chroma Correction</source>
@@ -2417,7 +2417,7 @@
     </message>
     <message>
       <source>Chroma Lag</source>
-      <translation type="unfinished">Chroma Lag</translation>
+      <translation>Chroma Lag</translation>
     </message>
     <message>
       <source>Contrast</source>
@@ -2445,11 +2445,11 @@
     </message>
     <message>
       <source>Scanline</source>
-      <translation type="unfinished">Scanline</translation>
+      <translation>Przeplot</translation>
     </message>
     <message>
       <source>VBlend</source>
-      <translation type="unfinished">VBlend</translation>
+      <translation/>
     </message>
     <message>
       <source>Reset parameters to defaults</source>
@@ -2949,15 +2949,15 @@
     </message>
     <message>
       <source>Write mode</source>
-      <translation type="unfinished">Write mode</translation>
+      <translation>Tryb zapisu</translation>
     </message>
     <message>
       <source>Write to a separate file (Default)</source>
-      <translation type="unfinished">Write to a separate file (Default)</translation>
+      <translation>Zapisz do oddzielnego pliku (domyślnie)</translation>
     </message>
     <message>
       <source>Write to the original FDS/QD file</source>
-      <translation type="unfinished">Write to the original FDS/QD file</translation>
+      <translation>Zapisz do oryginalnego pliku FDS/QD</translation>
     </message>
   </context>
   <context>
@@ -3179,11 +3179,11 @@
     </message>
     <message>
       <source>Per-Game</source>
-      <translation type="unfinished">Per-Game</translation>
+      <translation>Dla danej gry</translation>
     </message>
     <message>
       <source>Per-Game Overclock Setting</source>
-      <translation type="unfinished">Per-Game Overclock Setting</translation>
+      <translation>Ustawienia podkręcania dla gry</translation>
     </message>
     <message>
       <source>On</source>

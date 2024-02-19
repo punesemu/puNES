@@ -57,11 +57,11 @@
     <name>dlgDetachBarcode</name>
     <message>
       <source>Enter a barcode yourself...</source>
-      <translation type="unfinished">Enter a barcode yourself...</translation>
+      <translation>Saisir vous-même un code-barres...</translation>
     </message>
     <message>
       <source>Detach Barcode</source>
-      <translation type="unfinished">Detach Barcode</translation>
+      <translation>Détacher le Code Barre</translation>
     </message>
     <message>
       <source>Apply</source>
@@ -611,15 +611,15 @@
     </message>
     <message>
       <source>Zapper ($4017)</source>
-      <translation type="unfinished">Zapper ($4017)</translation>
+      <translation>Zapper ($4017)</translation>
     </message>
     <message>
       <source>Arkanoid Vaus Controller (NES)</source>
-      <translation type="unfinished">Arkanoid Vaus Controller (NES)</translation>
+      <translation>Contrôleur Arkanoid Vaus (NES)</translation>
     </message>
     <message>
       <source>Arkanoid Vaus Controller (Famicom)</source>
-      <translation type="unfinished">Arkanoid Vaus Controller (Famicom)</translation>
+      <translation>Contrôleur Arkanoid Vaus (Famicom)</translation>
     </message>
     <message>
       <source>Two Vaus Controllers plus Famicom Data Recorder</source>
@@ -627,15 +627,15 @@
     </message>
     <message>
       <source>Subor Keyboard plus mouse (3x8-bit)</source>
-      <translation type="unfinished">Subor Keyboard plus mouse (3x8-bit)</translation>
+      <translation>Clavier et Souris Subor (3x8-bit)</translation>
     </message>
     <message>
       <source>Subor Keyboard plus mouse (24-bit)</source>
-      <translation type="unfinished">Subor Keyboard plus mouse (24-bit)</translation>
+      <translation>Clavier et Souris Subor (24-bit)</translation>
     </message>
     <message>
       <source>SNES Mouse ($4017.0)</source>
-      <translation type="unfinished">SNES Mouse ($4017.0)</translation>
+      <translation>Souris SNES ($4017.0)</translation>
     </message>
     <message>
       <source>Unknown Famiclone Keyboard (Golden Key)</source>
@@ -643,23 +643,23 @@
     </message>
     <message>
       <source>Subor Keyboard plus mouse (24-bit $4017)</source>
-      <translation type="unfinished">Subor Keyboard plus mouse (24-bit $4017)</translation>
+      <translation>Clavier et Souris Subor (24-bit $4017)</translation>
     </message>
     <message>
       <source>Port Test</source>
-      <translation type="unfinished">Port Test</translation>
+      <translation>Test du Port</translation>
     </message>
     <message>
       <source>Bandai Multi Game Player Gamepad</source>
-      <translation type="unfinished">Bandai Multi Game Player Gamepad</translation>
+      <translation>Manette de jeu multijoueurs Bandai</translation>
     </message>
     <message>
       <source>Venom TV Dance Mat</source>
-      <translation type="unfinished">Venom TV Dance Mat</translation>
+      <translation>Tapis de Danse TV Venom</translation>
     </message>
     <message>
       <source>LG TV Remote Control</source>
-      <translation type="unfinished">LG TV Remote Control</translation>
+      <translation>Télécommande LG TV</translation>
     </message>
   </context>
   <context>
@@ -969,7 +969,7 @@
     </message>
     <message>
       <source>which Floppy Disk image do you want to load?</source>
-      <translation type="unfinished">which Floppy Disk image do you want to load?</translation>
+      <translation>Quelle image de disquette voulez-vous charger ?</translation>
     </message>
   </context>
   <context>
@@ -1036,7 +1036,7 @@
     </message>
     <message>
       <source>Coins</source>
-      <translation type="unfinished">Coins</translation>
+      <translation>Pièces</translation>
     </message>
     <message>
       <source>Monitor</source>
@@ -1084,7 +1084,7 @@
     </message>
     <message>
       <source>Game Dip Switches</source>
-      <translation type="unfinished">Game Dip Switches</translation>
+      <translation>Interrupteurs DIP pour le jeu</translation>
     </message>
   </context>
   <context>
@@ -1615,75 +1615,75 @@
     </message>
     <message>
       <source>&amp;Dipswitch</source>
-      <translation type="unfinished">&amp;Dipswitch</translation>
+      <translation>Interrupteur &amp;Dip</translation>
     </message>
     <message>
       <source>Detach &amp;Barcode</source>
-      <translation type="unfinished">Detach &amp;Barcode</translation>
+      <translation>Détacher le Code &amp;Barre</translation>
     </message>
     <message>
       <source>Floppy Disk image files</source>
-      <translation type="unfinished">Floppy Disk image files</translation>
+      <translation>Fichiers image de la Disquette</translation>
     </message>
     <message>
       <source>Warning</source>
-      <translation type="unfinished">Warning</translation>
+      <translation>Avertissement</translation>
     </message>
     <message>
       <source>This rom requires unsupported hardware to function correctly.</source>
-      <translation type="unfinished">This rom requires unsupported hardware to function correctly.</translation>
+      <translation>Cette ROM nécessite un matériel non pris en charge pour fonctionner correctement.</translation>
     </message>
     <message>
       <source>Open FLoppy Disk Image</source>
-      <translation type="unfinished">Open FLoppy Disk Image</translation>
+      <translation>Ouvrir une Image Disquette</translation>
     </message>
     <message>
       <source>FDS Format Disk</source>
-      <translation type="unfinished">FDS Format Disk</translation>
+      <translation>Disque au Format FDS</translation>
     </message>
     <message>
       <source>Quick Disk Format Disk</source>
-      <translation type="unfinished">Quick Disk Format Disk</translation>
+      <translation>Disque au Format Disque Rapide</translation>
     </message>
     <message>
       <source>puNES image</source>
-      <translation type="unfinished">puNES image</translation>
+      <translation>Image puNES</translation>
     </message>
     <message>
       <source>Exports the current state of the disk</source>
-      <translation type="unfinished">Exports the current state of the disk</translation>
+      <translation>Exporte l'état en cours du disque</translation>
     </message>
     <message>
       <source>Error on export state</source>
-      <translation type="unfinished">Error on export state</translation>
+      <translation>Erreur sur l'exportation de l'état</translation>
     </message>
     <message>
       <source>Impossible write %0.</source>
-      <translation type="unfinished">Impossible write %0.</translation>
+      <translation>Écriture impossible %0.</translation>
     </message>
     <message>
       <source>to &amp;FDS Format (with Header)</source>
-      <translation type="unfinished">to &amp;FDS Format (with Header)</translation>
+      <translation>vers le format &amp;FDS (avec en-tête)</translation>
     </message>
     <message>
       <source>to &amp;Quick Disk Format</source>
-      <translation type="unfinished">to &amp;Quick Disk Format</translation>
+      <translation>vers le format &amp;Disque Rapide</translation>
     </message>
     <message>
       <source>to puNES image</source>
-      <translation type="unfinished">to puNES image</translation>
+      <translation>vers l'image puNES</translation>
     </message>
     <message>
       <source>to F&amp;DS Format (without Header)</source>
-      <translation type="unfinished">to F&amp;DS Format (without Header)</translation>
+      <translation>vers le format F&amp;DS (sans en-tête)</translation>
     </message>
     <message>
       <source>C&amp;hange Disk</source>
-      <translation type="unfinished">C&amp;hange Disk</translation>
+      <translation>C&amp;hangement de Disque</translation>
     </message>
     <message>
       <source>E&amp;xport current state of Disk/Disks</source>
-      <translation type="unfinished">E&amp;xport current state of Disk/Disks</translation>
+      <translation>E&amp;xporter l'état actuel du/des disque(s)</translation>
     </message>
   </context>
   <context>
@@ -1920,12 +1920,12 @@
     <message>
       <source>auto switch [red]disabled[normal], game not compatible</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">auto switch [red]disabled[normal], game not compatible</translation>
+      <translation>Interrupteur automatique [rouge]désactivé[normal], jeu non compatible</translation>
     </message>
     <message>
       <source>auto switch [red]disabled[normal], single-sided disk</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">auto switch [red]disabled[normal], single-sided disk</translation>
+      <translation>Interrupteur automatique [rouge]désactivé[normal], disque simple face</translation>
     </message>
   </context>
   <context>
@@ -2268,7 +2268,7 @@
     <name>wdgNTSCLMP88959Filter</name>
     <message>
       <source>Scanline</source>
-      <translation type="unfinished">Scanline</translation>
+      <translation>Scanline</translation>
     </message>
     <message>
       <source>MFields</source>
@@ -2288,11 +2288,11 @@
     </message>
     <message>
       <source>White Point</source>
-      <translation type="unfinished">White Point</translation>
+      <translation>Point Blanc</translation>
     </message>
     <message>
       <source>Black Point</source>
-      <translation type="unfinished">Black Point</translation>
+      <translation>Point Noir</translation>
     </message>
     <message>
       <source>Saturation</source>
@@ -2300,7 +2300,7 @@
     </message>
     <message>
       <source>Noise</source>
-      <translation type="unfinished">Noise</translation>
+      <translation>Bruit</translation>
     </message>
     <message>
       <source>Hue</source>
@@ -2308,14 +2308,14 @@
     </message>
     <message>
       <source>Reset parameters to defaults</source>
-      <translation type="unfinished">Reset parameters to defaults</translation>
+      <translation>Réinitialisation des paramètres par défaut</translation>
     </message>
   </context>
   <context>
     <name>wdgNTSCNESRGBLMP88959Filter</name>
     <message>
       <source>Black Point</source>
-      <translation type="unfinished">Black Point</translation>
+      <translation>Point Noir</translation>
     </message>
     <message>
       <source>Brightness</source>
@@ -2331,15 +2331,15 @@
     </message>
     <message>
       <source>Noise</source>
-      <translation type="unfinished">Noise</translation>
+      <translation>Bruit</translation>
     </message>
     <message>
       <source>White Point</source>
-      <translation type="unfinished">White Point</translation>
+      <translation>Point Blanc</translation>
     </message>
     <message>
       <source>Scanline</source>
-      <translation type="unfinished">Scanline</translation>
+      <translation>Scanline</translation>
     </message>
     <message>
       <source>VBlend</source>
@@ -2351,14 +2351,14 @@
     </message>
     <message>
       <source>Reset parameters to defaults</source>
-      <translation type="unfinished">Reset parameters to defaults</translation>
+      <translation>Réinitialisation des paramètres par défaut</translation>
     </message>
   </context>
   <context>
     <name>wdgPALLMP88959Filter</name>
     <message>
       <source>Scanline</source>
-      <translation type="unfinished">Scanline</translation>
+      <translation>Scanline</translation>
     </message>
     <message>
       <source>VBlend</source>
@@ -2366,94 +2366,94 @@
     </message>
     <message>
       <source>Black Point</source>
-      <translation type="unfinished">Black Point</translation>
+      <translation>Point Noir</translation>
     </message>
     <message>
       <source>White Point</source>
-      <translation type="unfinished">White Point</translation>
+      <translation>Point Blanc</translation>
     </message>
     <message>
       <source>Noise</source>
-      <translation type="unfinished">Noise</translation>
+      <translation>Bruit</translation>
     </message>
     <message>
       <source>Color Phase</source>
-      <translation type="unfinished">Color Phase</translation>
+      <translation>Phase de couleur</translation>
     </message>
     <message>
       <source>Brightness</source>
-      <translation type="unfinished">Brightness</translation>
+      <translation>Luminosité</translation>
     </message>
     <message>
       <source>Saturation</source>
-      <translation type="unfinished">Saturation</translation>
+      <translation>Saturation</translation>
     </message>
     <message>
       <source>Contrast</source>
-      <translation type="unfinished">Contrast</translation>
+      <translation>Contraste</translation>
     </message>
     <message>
       <source>Chroma Lag</source>
-      <translation type="unfinished">Chroma Lag</translation>
+      <translation>Chroma Lag</translation>
     </message>
     <message>
       <source>Chroma Correction</source>
-      <translation type="unfinished">Chroma Correction</translation>
+      <translation>Correction Chroma</translation>
     </message>
     <message>
       <source>MFields</source>
-      <translation type="unfinished">MFields</translation>
+      <translation>MFields</translation>
     </message>
     <message>
       <source>Reset parameters to defaults</source>
-      <translation type="unfinished">Reset parameters to defaults</translation>
+      <translation>Réinitialisation des paramètres par défaut</translation>
     </message>
   </context>
   <context>
     <name>wdgPALNESRGBLMP88959Filter</name>
     <message>
       <source>White Point</source>
-      <translation type="unfinished">White Point</translation>
+      <translation>Point Blanc</translation>
     </message>
     <message>
       <source>Chroma Lag</source>
-      <translation type="unfinished">Chroma Lag</translation>
+      <translation>Chroma Lag</translation>
     </message>
     <message>
       <source>Contrast</source>
-      <translation type="unfinished">Contrast</translation>
+      <translation>Contraste</translation>
     </message>
     <message>
       <source>Chroma Correction</source>
-      <translation type="unfinished">Chroma Correction</translation>
+      <translation>Correction Chroma</translation>
     </message>
     <message>
       <source>Brightness</source>
-      <translation type="unfinished">Brightness</translation>
+      <translation>Luminosité</translation>
     </message>
     <message>
       <source>Noise</source>
-      <translation type="unfinished">Noise</translation>
+      <translation>Bruit</translation>
     </message>
     <message>
       <source>Black Point</source>
-      <translation type="unfinished">Black Point</translation>
+      <translation>Point Noir</translation>
     </message>
     <message>
       <source>Saturation</source>
-      <translation type="unfinished">Saturation</translation>
+      <translation>Saturation</translation>
     </message>
     <message>
       <source>Scanline</source>
-      <translation type="unfinished">Scanline</translation>
+      <translation>Scanline</translation>
     </message>
     <message>
       <source>VBlend</source>
-      <translation type="unfinished">VBlend</translation>
+      <translation>VBlend</translation>
     </message>
     <message>
       <source>Reset parameters to defaults</source>
-      <translation type="unfinished">Reset parameters to defaults</translation>
+      <translation>Réinitialisation des paramètres par défaut</translation>
     </message>
   </context>
   <context>
@@ -2945,19 +2945,19 @@
     </message>
     <message>
       <source>Arabic</source>
-      <translation type="unfinished">Arabic</translation>
+      <translation>Arabe</translation>
     </message>
     <message>
       <source>Write mode</source>
-      <translation type="unfinished">Write mode</translation>
+      <translation>Mode écriture</translation>
     </message>
     <message>
       <source>Write to a separate file (Default)</source>
-      <translation type="unfinished">Write to a separate file (Default)</translation>
+      <translation>Écrire dans un fichier séparé (par défaut)</translation>
     </message>
     <message>
       <source>Write to the original FDS/QD file</source>
-      <translation type="unfinished">Write to the original FDS/QD file</translation>
+      <translation>Écrire dans le fichier FDS/QD original</translation>
     </message>
   </context>
   <context>
@@ -3179,23 +3179,23 @@
     </message>
     <message>
       <source>Per-Game</source>
-      <translation type="unfinished">Per-Game</translation>
+      <translation>Par jeu</translation>
     </message>
     <message>
       <source>Per-Game Overclock Setting</source>
-      <translation type="unfinished">Per-Game Overclock Setting</translation>
+      <translation>Paramètres de l&apos;Overscan Par Jeu</translation>
     </message>
     <message>
       <source>On</source>
-      <translation type="unfinished">On</translation>
+      <translation>On</translation>
     </message>
     <message>
       <source>Off</source>
-      <translation type="unfinished">Off</translation>
+      <translation>Off</translation>
     </message>
     <message>
       <source>Default Value</source>
-      <translation type="unfinished">Default Value</translation>
+      <translation>Valeur par Défaut</translation>
     </message>
   </context>
   <context>
@@ -3924,19 +3924,19 @@
     </message>
     <message>
       <source>NTSC CRT LMP88959</source>
-      <translation type="unfinished">NTSC CRT LMP88959</translation>
+      <translation>NTSC CRT LMP88959</translation>
     </message>
     <message>
       <source>NTSC NES LMP88959</source>
-      <translation type="unfinished">NTSC NES LMP88959</translation>
+      <translation>NTSC CRT LMP88959</translation>
     </message>
     <message>
       <source>PAL CRT LMP88959</source>
-      <translation type="unfinished">PAL CRT LMP88959</translation>
+      <translation>NTSC CRT LMP88959</translation>
     </message>
     <message>
       <source>PAL NES LMP88959</source>
-      <translation type="unfinished">PAL NES LMP88959</translation>
+      <translation>NTSC CRT LMP88959</translation>
     </message>
   </context>
   <context>

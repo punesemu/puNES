@@ -57,7 +57,7 @@
     <name>dlgDetachBarcode</name>
     <message>
       <source>Enter a barcode yourself...</source>
-      <translation type="unfinished">Enter a barcode yourself...</translation>
+      <translation>Inserisci un nuovo codice a barre...</translation>
     </message>
     <message>
       <source>Detach Barcode</source>
@@ -65,14 +65,14 @@
     </message>
     <message>
       <source>Apply</source>
-      <translation type="unfinished">Apply</translation>
+      <translation>Applica</translation>
     </message>
   </context>
   <context>
     <name>dlgDipswitch</name>
     <message>
       <source>Ok</source>
-      <translation type="unfinished">Ok</translation>
+      <translation>Ok</translation>
     </message>
     <message>
       <source>Dipswitch</source>
@@ -80,11 +80,11 @@
     </message>
     <message>
       <source>Start</source>
-      <translation type="unfinished">Start</translation>
+      <translation>Start</translation>
     </message>
     <message>
       <source>Default</source>
-      <translation type="unfinished">Default</translation>
+      <translation>Predefinito</translation>
     </message>
   </context>
   <context>
@@ -607,59 +607,59 @@
     </message>
     <message>
       <source>Vs. System (1P via $4016)</source>
-      <translation type="unfinished">Vs. System (1P via $4016)</translation>
+      <translation>Vs. System (1P via $4016)</translation>
     </message>
     <message>
       <source>Zapper ($4017)</source>
-      <translation type="unfinished">Zapper ($4017)</translation>
+      <translation>Zapper ($4017)</translation>
     </message>
     <message>
       <source>Arkanoid Vaus Controller (NES)</source>
-      <translation type="unfinished">Arkanoid Vaus Controller (NES)</translation>
+      <translation>Controller Arkanoid Vaus (NES)</translation>
     </message>
     <message>
       <source>Arkanoid Vaus Controller (Famicom)</source>
-      <translation type="unfinished">Arkanoid Vaus Controller (Famicom)</translation>
+      <translation>Controller Arkanoid Vaus (Famicom)</translation>
     </message>
     <message>
       <source>Two Vaus Controllers plus Famicom Data Recorder</source>
-      <translation type="unfinished">Two Vaus Controllers plus Famicom Data Recorder</translation>
+      <translation>Due Controllers Vaus più Famicom Data Recorder</translation>
     </message>
     <message>
       <source>Subor Keyboard plus mouse (3x8-bit)</source>
-      <translation type="unfinished">Subor Keyboard plus mouse (3x8-bit)</translation>
+      <translation>Tastiera Subor più mouse (3x8-bit)</translation>
     </message>
     <message>
       <source>Subor Keyboard plus mouse (24-bit)</source>
-      <translation type="unfinished">Subor Keyboard plus mouse (24-bit)</translation>
+      <translation>Tastiera Subor più mouse (24-bit)</translation>
     </message>
     <message>
       <source>SNES Mouse ($4017.0)</source>
-      <translation type="unfinished">SNES Mouse ($4017.0)</translation>
+      <translation>Mouse SNES ($4017.0)</translation>
     </message>
     <message>
       <source>Unknown Famiclone Keyboard (Golden Key)</source>
-      <translation type="unfinished">Unknown Famiclone Keyboard (Golden Key)</translation>
+      <translation>Tastiera Famiclone Sconosciuta (Golden Key)</translation>
     </message>
     <message>
       <source>Subor Keyboard plus mouse (24-bit $4017)</source>
-      <translation type="unfinished">Subor Keyboard plus mouse (24-bit $4017)</translation>
+      <translation>Tastiera Subor più mouse (24-bit $4017)</translation>
     </message>
     <message>
       <source>Port Test</source>
-      <translation type="unfinished">Port Test</translation>
+      <translation>Porta di Test</translation>
     </message>
     <message>
       <source>Bandai Multi Game Player Gamepad</source>
-      <translation type="unfinished">Bandai Multi Game Player Gamepad</translation>
+      <translation>Gamepad del Bandai Multi Game Player</translation>
     </message>
     <message>
       <source>Venom TV Dance Mat</source>
-      <translation type="unfinished">Venom TV Dance Mat</translation>
+      <translation>Venom TV Dance Mat</translation>
     </message>
     <message>
       <source>LG TV Remote Control</source>
-      <translation type="unfinished">LG TV Remote Control</translation>
+      <translation>Telecomando LG TV</translation>
     </message>
   </context>
   <context>
@@ -1032,55 +1032,55 @@
     </message>
     <message>
       <source>Vs System</source>
-      <translation type="unfinished">Vs System</translation>
+      <translation>Vs System</translation>
     </message>
     <message>
       <source>Coins</source>
-      <translation type="unfinished">Coins</translation>
+      <translation>Monete</translation>
     </message>
     <message>
       <source>Monitor</source>
-      <translation type="unfinished">Monitor</translation>
+      <translation>Schermo</translation>
     </message>
     <message>
       <source>Left</source>
-      <translation type="unfinished">Left</translation>
+      <translation>Sinistro</translation>
     </message>
     <message>
       <source>Right</source>
-      <translation type="unfinished">Right</translation>
+      <translation>Destro</translation>
     </message>
     <message>
       <source>12</source>
-      <translation type="unfinished">12</translation>
+      <translation>12</translation>
     </message>
     <message>
       <source>13</source>
-      <translation type="unfinished">13</translation>
+      <translation>13</translation>
     </message>
     <message>
       <source>14</source>
-      <translation type="unfinished">14</translation>
+      <translation>14</translation>
     </message>
     <message>
       <source>15</source>
-      <translation type="unfinished">15</translation>
+      <translation>15</translation>
     </message>
     <message>
       <source>16</source>
-      <translation type="unfinished">16</translation>
+      <translation>16</translation>
     </message>
     <message>
       <source>11</source>
-      <translation type="unfinished">11</translation>
+      <translation>11</translation>
     </message>
     <message>
       <source>10</source>
-      <translation type="unfinished">10</translation>
+      <translation>10</translation>
     </message>
     <message>
       <source>9</source>
-      <translation type="unfinished">9</translation>
+      <translation>9</translation>
     </message>
     <message>
       <source>Game Dip Switches</source>
@@ -1627,11 +1627,11 @@
     </message>
     <message>
       <source>Warning</source>
-      <translation type="unfinished">Warning</translation>
+      <translation>Attenzione</translation>
     </message>
     <message>
       <source>This rom requires unsupported hardware to function correctly.</source>
-      <translation type="unfinished">This rom requires unsupported hardware to function correctly.</translation>
+      <translation>Questa rom richiede hardware non supportato per funzionare correttamente.</translation>
     </message>
     <message>
       <source>Open FLoppy Disk Image</source>
@@ -1647,35 +1647,35 @@
     </message>
     <message>
       <source>puNES image</source>
-      <translation type="unfinished">puNES image</translation>
+      <translation>immagine puNES</translation>
     </message>
     <message>
       <source>Exports the current state of the disk</source>
-      <translation type="unfinished">Exports the current state of the disk</translation>
+      <translation>Esporta lo stato corrente del disco</translation>
     </message>
     <message>
       <source>Error on export state</source>
-      <translation type="unfinished">Error on export state</translation>
+      <translation>Errore nell'esportazione dello stato</translation>
     </message>
     <message>
       <source>Impossible write %0.</source>
-      <translation type="unfinished">Impossible write %0.</translation>
+      <translation>Impossibile scrivere %0.</translation>
     </message>
     <message>
       <source>to &amp;FDS Format (with Header)</source>
-      <translation type="unfinished">to &amp;FDS Format (with Header)</translation>
+      <translation>nel formato &amp;FDS (con Intestazione)</translation>
     </message>
     <message>
       <source>to &amp;Quick Disk Format</source>
-      <translation type="unfinished">to &amp;Quick Disk Format</translation>
+      <translation>nel formato &amp;Quick Disk</translation>
     </message>
     <message>
       <source>to puNES image</source>
-      <translation type="unfinished">to puNES image</translation>
+      <translation>nel formato puNES image</translation>
     </message>
     <message>
       <source>to F&amp;DS Format (without Header)</source>
-      <translation type="unfinished">to F&amp;DS Format (without Header)</translation>
+      <translation>nel formato F&amp;DS (senza Intestazione)</translation>
     </message>
     <message>
       <source>C&amp;hange Disk</source>
@@ -1915,7 +1915,7 @@
     <message>
       <source>[red]error[normal] on write save state</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">[red]error[normal] on write save state</translation>
+      <translation>[red]errore[normal] nella scrittura dello stato</translation>
     </message>
     <message>
       <source>auto switch [red]disabled[normal], game not compatible</source>
@@ -2268,113 +2268,113 @@
     <name>wdgNTSCLMP88959Filter</name>
     <message>
       <source>Scanline</source>
-      <translation type="unfinished">Scanline</translation>
+      <translation>Scanline</translation>
     </message>
     <message>
       <source>MFields</source>
-      <translation type="unfinished">MFields</translation>
+      <translation>MFields</translation>
     </message>
     <message>
       <source>VBlend</source>
-      <translation type="unfinished">VBlend</translation>
+      <translation>VBlend</translation>
     </message>
     <message>
       <source>Contrast</source>
-      <translation type="unfinished">Contrast</translation>
+      <translation>Contrasto</translation>
     </message>
     <message>
       <source>Brightness</source>
-      <translation type="unfinished">Brightness</translation>
+      <translation>Luminosità</translation>
     </message>
     <message>
       <source>White Point</source>
-      <translation type="unfinished">White Point</translation>
+      <translation>Punto bianco</translation>
     </message>
     <message>
       <source>Black Point</source>
-      <translation type="unfinished">Black Point</translation>
+      <translation>Punto nero</translation>
     </message>
     <message>
       <source>Saturation</source>
-      <translation type="unfinished">Saturation</translation>
+      <translation>Saturazione</translation>
     </message>
     <message>
       <source>Noise</source>
-      <translation type="unfinished">Noise</translation>
+      <translation>Noise</translation>
     </message>
     <message>
       <source>Hue</source>
-      <translation type="unfinished">Hue</translation>
+      <translation>Tonalità</translation>
     </message>
     <message>
       <source>Reset parameters to defaults</source>
-      <translation type="unfinished">Reset parameters to defaults</translation>
+      <translation>Predefiniti</translation>
     </message>
   </context>
   <context>
     <name>wdgNTSCNESRGBLMP88959Filter</name>
     <message>
       <source>Black Point</source>
-      <translation type="unfinished">Black Point</translation>
+      <translation>Punto nero</translation>
     </message>
     <message>
       <source>Brightness</source>
-      <translation type="unfinished">Brightness</translation>
+      <translation>Luminosità</translation>
     </message>
     <message>
       <source>Hue</source>
-      <translation type="unfinished">Hue</translation>
+      <translation>Tonalità</translation>
     </message>
     <message>
       <source>Contrast</source>
-      <translation type="unfinished">Contrast</translation>
+      <translation>Contrasto</translation>
     </message>
     <message>
       <source>Noise</source>
-      <translation type="unfinished">Noise</translation>
+      <translation>Noise</translation>
     </message>
     <message>
       <source>White Point</source>
-      <translation type="unfinished">White Point</translation>
+      <translation>Punto bianco</translation>
     </message>
     <message>
       <source>Scanline</source>
-      <translation type="unfinished">Scanline</translation>
+      <translation>Scanline</translation>
     </message>
     <message>
       <source>VBlend</source>
-      <translation type="unfinished">VBlend</translation>
+      <translation>VBlend</translation>
     </message>
     <message>
       <source>Saturation</source>
-      <translation type="unfinished">Saturation</translation>
+      <translation>Saturazione</translation>
     </message>
     <message>
       <source>Reset parameters to defaults</source>
-      <translation type="unfinished">Reset parameters to defaults</translation>
+      <translation>Predefiniti</translation>
     </message>
   </context>
   <context>
     <name>wdgPALLMP88959Filter</name>
     <message>
       <source>Scanline</source>
-      <translation type="unfinished">Scanline</translation>
+      <translation>Scanline</translation>
     </message>
     <message>
       <source>VBlend</source>
-      <translation type="unfinished">VBlend</translation>
+      <translation>VBlend</translation>
     </message>
     <message>
       <source>Black Point</source>
-      <translation type="unfinished">Black Point</translation>
+      <translation>Punto nero</translation>
     </message>
     <message>
       <source>White Point</source>
-      <translation type="unfinished">White Point</translation>
+      <translation>Punto bianco</translation>
     </message>
     <message>
       <source>Noise</source>
-      <translation type="unfinished">Noise</translation>
+      <translation>Noise</translation>
     </message>
     <message>
       <source>Color Phase</source>
@@ -2382,15 +2382,15 @@
     </message>
     <message>
       <source>Brightness</source>
-      <translation type="unfinished">Brightness</translation>
+      <translation>Luminosità</translation>
     </message>
     <message>
       <source>Saturation</source>
-      <translation type="unfinished">Saturation</translation>
+      <translation>Saturazione</translation>
     </message>
     <message>
       <source>Contrast</source>
-      <translation type="unfinished">Contrast</translation>
+      <translation>Contrasto</translation>
     </message>
     <message>
       <source>Chroma Lag</source>
@@ -2398,22 +2398,22 @@
     </message>
     <message>
       <source>Chroma Correction</source>
-      <translation type="unfinished">Chroma Correction</translation>
+      <translation>Correzione Cromatica</translation>
     </message>
     <message>
       <source>MFields</source>
-      <translation type="unfinished">MFields</translation>
+      <translation>MFields</translation>
     </message>
     <message>
       <source>Reset parameters to defaults</source>
-      <translation type="unfinished">Reset parameters to defaults</translation>
+      <translation>Predefiniti</translation>
     </message>
   </context>
   <context>
     <name>wdgPALNESRGBLMP88959Filter</name>
     <message>
       <source>White Point</source>
-      <translation type="unfinished">White Point</translation>
+      <translation>Punto bianco</translation>
     </message>
     <message>
       <source>Chroma Lag</source>
@@ -2421,39 +2421,39 @@
     </message>
     <message>
       <source>Contrast</source>
-      <translation type="unfinished">Contrast</translation>
+      <translation>Contrasto</translation>
     </message>
     <message>
       <source>Chroma Correction</source>
-      <translation type="unfinished">Chroma Correction</translation>
+      <translation>Correzione Cromatica</translation>
     </message>
     <message>
       <source>Brightness</source>
-      <translation type="unfinished">Brightness</translation>
+      <translation>Luminosità</translation>
     </message>
     <message>
       <source>Noise</source>
-      <translation type="unfinished">Noise</translation>
+      <translation>Noise</translation>
     </message>
     <message>
       <source>Black Point</source>
-      <translation type="unfinished">Black Point</translation>
+      <translation>Punto nero</translation>
     </message>
     <message>
       <source>Saturation</source>
-      <translation type="unfinished">Saturation</translation>
+      <translation>Saturazione</translation>
     </message>
     <message>
       <source>Scanline</source>
-      <translation type="unfinished">Scanline</translation>
+      <translation>Scanline</translation>
     </message>
     <message>
       <source>VBlend</source>
-      <translation type="unfinished">VBlend</translation>
+      <translation>VBlend</translation>
     </message>
     <message>
       <source>Reset parameters to defaults</source>
-      <translation type="unfinished">Reset parameters to defaults</translation>
+      <translation>Predefiniti</translation>
     </message>
   </context>
   <context>
@@ -2941,19 +2941,19 @@
     </message>
     <message>
       <source>Polish</source>
-      <translation type="unfinished">Polish</translation>
+      <translation>Polacco</translation>
     </message>
     <message>
       <source>Arabic</source>
-      <translation type="unfinished">Arabic</translation>
+      <translation>Arabo</translation>
     </message>
     <message>
       <source>Write mode</source>
-      <translation type="unfinished">Write mode</translation>
+      <translation>Modalità Scrittura</translation>
     </message>
     <message>
       <source>Write to a separate file (Default)</source>
-      <translation type="unfinished">Write to a separate file (Default)</translation>
+      <translation>Scrivi su un file separato (predefinito)</translation>
     </message>
     <message>
       <source>Write to the original FDS/QD file</source>
@@ -3195,7 +3195,7 @@
     </message>
     <message>
       <source>Default Value</source>
-      <translation type="unfinished">Default Value</translation>
+      <translation>Valore Predefinito</translation>
     </message>
   </context>
   <context>
@@ -3924,19 +3924,19 @@
     </message>
     <message>
       <source>NTSC CRT LMP88959</source>
-      <translation type="unfinished">NTSC CRT LMP88959</translation>
+      <translation>NTSC CRT LMP88959</translation>
     </message>
     <message>
       <source>NTSC NES LMP88959</source>
-      <translation type="unfinished">NTSC NES LMP88959</translation>
+      <translation>NTSC NES LMP88959</translation>
     </message>
     <message>
       <source>PAL CRT LMP88959</source>
-      <translation type="unfinished">PAL CRT LMP88959</translation>
+      <translation>PAL CRT LMP88959</translation>
     </message>
     <message>
       <source>PAL NES LMP88959</source>
-      <translation type="unfinished">PAL NES LMP88959</translation>
+      <translation>PAL NES LMP88959</translation>
     </message>
   </context>
   <context>

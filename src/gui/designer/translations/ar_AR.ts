@@ -3179,23 +3179,23 @@
     </message>
     <message>
       <source>Per-Game</source>
-      <translation type="unfinished">Per-Game</translation>
+      <translation>اللعبة الحالية</translation>
     </message>
     <message>
       <source>Per-Game Overclock Setting</source>
-      <translation type="unfinished">Per-Game Overclock Setting</translation>
+      <translation>إعدادات تعدي المقيت حسب اللعبة</translation>
     </message>
     <message>
       <source>On</source>
-      <translation type="unfinished">On</translation>
+      <translation>مُفَعَّلَة</translation>
     </message>
     <message>
       <source>Off</source>
-      <translation type="unfinished">Off</translation>
+      <translation>مُعَطَّلَة</translation>
     </message>
     <message>
       <source>Default Value</source>
-      <translation type="unfinished">Default Value</translation>
+      <translation>القيمة الافتراضية</translation>
     </message>
   </context>
   <context>
