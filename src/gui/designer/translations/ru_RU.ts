@@ -1634,10 +1634,6 @@
       <translation>Для корректной работы данного ROM требуется неподдерживаемое оборудование.</translation>
     </message>
     <message>
-      <source>Open FLoppy Disk Image</source>
-      <translation>Открыть образ дискеты</translation>
-    </message>
-    <message>
       <source>FDS Format Disk</source>
       <translation>Диск формата FDS</translation>
     </message>
@@ -1684,6 +1680,10 @@
     <message>
       <source>E&amp;xport current state of Disk/Disks</source>
       <translation>Э&amp;кспортировать текущее состояние диска/дисков</translation>
+    </message>
+    <message>
+      <source>Open Floppy Disk Image</source>
+      <translation type="unfinished">Open Floppy Disk Image</translation>
     </message>
   </context>
   <context>
