@@ -1634,10 +1634,6 @@
       <translation>Questa rom richiede hardware non supportato per funzionare correttamente.</translation>
     </message>
     <message>
-      <source>Open FLoppy Disk Image</source>
-      <translation type="unfinished">Open FLoppy Disk Image</translation>
-    </message>
-    <message>
       <source>FDS Format Disk</source>
       <translation type="unfinished">FDS Format Disk</translation>
     </message>
@@ -1684,6 +1680,10 @@
     <message>
       <source>E&amp;xport current state of Disk/Disks</source>
       <translation type="unfinished">E&amp;xport current state of Disk/Disks</translation>
+    </message>
+    <message>
+      <source>Open Floppy Disk Image</source>
+      <translation type="unfinished">Open Floppy Disk Image</translation>
     </message>
   </context>
   <context>
@@ -2957,7 +2957,7 @@
     </message>
     <message>
       <source>Write to the original FDS/QD file</source>
-      <translation type="unfinished">Write to the original FDS/QD file</translation>
+      <translation>Sovrascrivi il file originale FDS/QD</translation>
     </message>
   </context>
   <context>
@@ -3179,19 +3179,19 @@
     </message>
     <message>
       <source>Per-Game</source>
-      <translation type="unfinished">Per-Game</translation>
+      <translation>Per-Game</translation>
     </message>
     <message>
       <source>Per-Game Overclock Setting</source>
-      <translation type="unfinished">Per-Game Overclock Setting</translation>
+      <translation>Impostazioni Overscan Per-Game</translation>
     </message>
     <message>
       <source>On</source>
-      <translation type="unfinished">On</translation>
+      <translation>On</translation>
     </message>
     <message>
       <source>Off</source>
-      <translation type="unfinished">Off</translation>
+      <translation>Off</translation>
     </message>
     <message>
       <source>Default Value</source>
