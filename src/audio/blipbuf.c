@@ -306,9 +306,9 @@ void audio_end_frame_blipbuf(void) {
 		for (i = 0; i < blipbuf.samples.count; i++) {
 			static SWORD data = 0;
 
-			if (cfg->apu.channel[APU_MASTER]) {
-				data = (SWORD)(((float)blipbuf.samples.data[i] * apu_pre_amp) * cfg->apu.volume[APU_MASTER]);
-			}
+			data = cfg->apu.channel[APU_MASTER]
+				? (SWORD)(((float)blipbuf.samples.data[i] * apu_pre_amp) * cfg->apu.volume[APU_MASTER])
+				: 0;
 			audio_channels_tick(data);
 
 			if (snd.cache->write == (SWORD *)snd.cache->end) {
