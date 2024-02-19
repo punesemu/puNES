@@ -1634,10 +1634,6 @@
       <translation>这个 rom 需要尚未支持的硬件才能正确工作。</translation>
     </message>
     <message>
-      <source>Open FLoppy Disk Image</source>
-      <translation>打开软盘映像</translation>
-    </message>
-    <message>
       <source>FDS Format Disk</source>
       <translation>FDS 格式磁盘</translation>
     </message>
@@ -1684,6 +1680,10 @@
     <message>
       <source>E&amp;xport current state of Disk/Disks</source>
       <translation>导出当前磁盘的状态</translation>
+    </message>
+    <message>
+      <source>Open Floppy Disk Image</source>
+      <translation type="unfinished">Open Floppy Disk Image</translation>
     </message>
   </context>
   <context>
