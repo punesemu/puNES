@@ -45,6 +45,7 @@ Notes:
 -----------
 If you want buy me a beer :
 
+[![GitHub Sponsors](https://img.shields.io/badge/GitHub-Donate-EA4AAA?style=for-the-badge&logo=githubsponsors)](https://github.com/sponsors/punesemu)
 [![PayPal](https://img.shields.io/badge/PayPal-Donate-blue?style=for-the-badge&logo=paypal)](https://paypal.me/punesemu)
 [![kofi](https://img.shields.io/badge/Ko--Fi-Donate-orange?style=for-the-badge&logo=ko-fi)](https://ko-fi.com/punesemu)
 
