@@ -75,16 +75,16 @@
       <translation>Ok</translation>
     </message>
     <message>
-      <source>Dipswitch</source>
-      <translation>Dipswitch</translation>
-    </message>
-    <message>
       <source>Start</source>
       <translation>Iniciar</translation>
     </message>
     <message>
       <source>Default</source>
       <translation>Padrão</translation>
+    </message>
+    <message>
+      <source>Dip Switches</source>
+      <translation type="unfinished">Dip Switches</translation>
     </message>
   </context>
   <context>
@@ -1614,10 +1614,6 @@
       <translation>Cassete</translation>
     </message>
     <message>
-      <source>&amp;Dipswitch</source>
-      <translation>Interruptores &amp;Dip</translation>
-    </message>
-    <message>
       <source>Detach &amp;Barcode</source>
       <translation>Destacar Código de &amp;Barras</translation>
     </message>
@@ -1683,7 +1679,11 @@
     </message>
     <message>
       <source>Open Floppy Disk Image</source>
-      <translation type="unfinished">Open Floppy Disk Image</translation>
+      <translation>Abrir Imagem de Disquete</translation>
+    </message>
+    <message>
+      <source>&amp;Dip Switches</source>
+      <translation type="unfinished">&amp;Dip Switches</translation>
     </message>
   </context>
   <context>
