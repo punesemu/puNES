@@ -84,7 +84,7 @@
     </message>
     <message>
       <source>Dip Switches</source>
-      <translation type="unfinished">Dip Switches</translation>
+      <translation>Dip Switches</translation>
     </message>
   </context>
   <context>
@@ -1084,7 +1084,7 @@
     </message>
     <message>
       <source>Game Dip Switches</source>
-      <translation type="unfinished">Game Dip Switches</translation>
+      <translation>Dip Switches del Gioco</translation>
     </message>
   </context>
   <context>
@@ -1683,7 +1683,7 @@
     </message>
     <message>
       <source>&amp;Dip Switches</source>
-      <translation type="unfinished">&amp;Dip Switches</translation>
+      <translation>&amp;Dip Switches</translation>
     </message>
   </context>
   <context>
@@ -2378,7 +2378,7 @@
     </message>
     <message>
       <source>Color Phase</source>
-      <translation type="unfinished">Color Phase</translation>
+      <translation>Fase del Colore</translation>
     </message>
     <message>
       <source>Brightness</source>
@@ -2394,7 +2394,7 @@
     </message>
     <message>
       <source>Chroma Lag</source>
-      <translation type="unfinished">Chroma Lag</translation>
+      <translation>Ritardo Cromatico</translation>
     </message>
     <message>
       <source>Chroma Correction</source>
@@ -2417,7 +2417,7 @@
     </message>
     <message>
       <source>Chroma Lag</source>
-      <translation type="unfinished">Chroma Lag</translation>
+      <translation>Ritardo Cromatico</translation>
     </message>
     <message>
       <source>Contrast</source>
