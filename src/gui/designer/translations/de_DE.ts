@@ -75,16 +75,16 @@
       <translation type="unfinished">Ok</translation>
     </message>
     <message>
-      <source>Dipswitch</source>
-      <translation type="unfinished">Dipswitch</translation>
-    </message>
-    <message>
       <source>Start</source>
       <translation type="unfinished">Start</translation>
     </message>
     <message>
       <source>Default</source>
       <translation type="unfinished">Default</translation>
+    </message>
+    <message>
+      <source>Dip Switches</source>
+      <translation type="unfinished">Dip Switches</translation>
     </message>
   </context>
   <context>
@@ -1614,10 +1614,6 @@
       <translation type="unfinished">T&amp;ape</translation>
     </message>
     <message>
-      <source>&amp;Dipswitch</source>
-      <translation type="unfinished">&amp;Dipswitch</translation>
-    </message>
-    <message>
       <source>Detach &amp;Barcode</source>
       <translation type="unfinished">Detach &amp;Barcode</translation>
     </message>
@@ -1684,6 +1680,10 @@
     <message>
       <source>Open Floppy Disk Image</source>
       <translation type="unfinished">Open Floppy Disk Image</translation>
+    </message>
+    <message>
+      <source>&amp;Dip Switches</source>
+      <translation type="unfinished">&amp;Dip Switches</translation>
     </message>
   </context>
   <context>
