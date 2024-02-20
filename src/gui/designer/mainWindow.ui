@@ -778,7 +778,7 @@
      <normaloff>:/icon/icons/dipswitch.svgz</normaloff>:/icon/icons/dipswitch.svgz</iconset>
    </property>
    <property name="text">
-    <string>&amp;Dipswitch</string>
+    <string>&amp;Dip Switches</string>
    </property>
   </action>
   <action name="action_Detach_Barcode">
