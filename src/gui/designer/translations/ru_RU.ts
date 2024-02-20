@@ -84,7 +84,7 @@
     </message>
     <message>
       <source>Dip Switches</source>
-      <translation type="unfinished">Dip Switches</translation>
+      <translation>DIP-переключатель</translation>
     </message>
   </context>
   <context>
@@ -1683,7 +1683,7 @@
     </message>
     <message>
       <source>&amp;Dip Switches</source>
-      <translation type="unfinished">&amp;Dip Switches</translation>
+      <translation>&amp;DIP-переключатель</translation>
     </message>
   </context>
   <context>
