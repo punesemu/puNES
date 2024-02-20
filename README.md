@@ -175,8 +175,10 @@ CMake Options
 | ENABLE_QT6_LIBS           | Enable support for QT6 libraries                                                   | OFF     |
 | DISABLE_PORTABLE_MODE     | Disable portable mode handling (useful with sandbox<br/>environments like Flatpak) | OFF     |
 
-
 ## :penguin: Linux
+<details>
+<summary>Expand</summary>
+
 #### Dependencies
 * [CMake >= 3.14](https://cmake.org) ([Ninja](https://ninja-build.org) build system is optional)
 * [Qt5](https://www.qt.io) or [Qt6](https://www.qt.io) with OpenGL support (qtcore, qtgui, qtwidgets, qtnetwork, qtsvg and qttools)
@@ -225,7 +227,12 @@ to start the emulator
 ```bash
 ./build/src/punes
 ```
+</details>
+
 ## :smiling_imp: FreeBSD
+<details>
+<summary>Expand</summary>
+
 #### Dependencies
 * [CMake >= 3.14](https://cmake.org) ([Ninja](https://ninja-build.org) build system is optional)
 * [Qt5](https://www.qt.io) or [Qt6](https://www.qt.io) with OpenGL support (qtcore, qtgui, qtwidgets, qtnetwork, qtsvg and qttools)
@@ -261,7 +268,12 @@ cmake -B build -DCMAKE_C_FLAGS_DEBUG:STRING='-O0 -g -DDEBUG' -DCMAKE_CXX_FLAGS_D
 make -j2
 ```
 where `[...]` are the other necessary options.
-## :blowfish: OpenBSD 
+</details>
+
+## :blowfish: OpenBSD
+<details>
+<summary>Expand</summary>
+
 #### Dependencies
 * [CMake >= 3.14](https://cmake.org) ([Ninja](https://ninja-build.org) build system is optional)
 * [Qt5](https://www.qt.io) or [Qt6](https://www.qt.io) with OpenGL support (qtcore, qtgui, qtwidgets, qtnetwork, qtsvg and qttools)
@@ -294,7 +306,12 @@ cmake -B build -DCMAKE_C_FLAGS_DEBUG:STRING='-O0 -g -DDEBUG' -DCMAKE_CXX_FLAGS_D
 make -j2
 ```
 where `[...]` are the other necessary options.
+</details>
+
 ## :computer: Windows
+<details>
+<summary>Expand</summary>
+
 #### Dependencies
 * [Qt5](https://www.qt.io) with OpenGL support (5.6.3 is the last if you want the support for Windows XP)
 #### Development Environment installation
@@ -394,6 +411,7 @@ If you need the debug version then you need to replace the `cmake -B build -G Ni
 cmake -B build -G Ninja -DCMAKE_C_FLAGS_DEBUG:STRING='-O0 -g -DDEBUG' -DCMAKE_CXX_FLAGS_DEBUG:STRING='-O0 -g -DDEBUG' -DCMAKE_BUILD_TYPE:STRING=Debug -DENABLE_RELEASE:BOOL=OFF [...]
 ```
 where `[...]` are the other necessary options.
+</details>
 
 -----------
 
