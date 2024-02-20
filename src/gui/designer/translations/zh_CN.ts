@@ -75,16 +75,16 @@
       <translation>确定</translation>
     </message>
     <message>
-      <source>Dipswitch</source>
-      <translation>Dip 开关</translation>
-    </message>
-    <message>
       <source>Start</source>
       <translation>开始</translation>
     </message>
     <message>
       <source>Default</source>
       <translation>默认</translation>
+    </message>
+    <message>
+      <source>Dip Switches</source>
+      <translation>Dip 开关</translation>
     </message>
   </context>
   <context>
@@ -1614,10 +1614,6 @@
       <translation>磁带(&amp;A)</translation>
     </message>
     <message>
-      <source>&amp;Dipswitch</source>
-      <translation>Dip 开关(&amp;D)</translation>
-    </message>
-    <message>
       <source>Detach &amp;Barcode</source>
       <translation>Detach 条码(&amp;B)</translation>
     </message>
@@ -1632,10 +1628,6 @@
     <message>
       <source>This rom requires unsupported hardware to function correctly.</source>
       <translation>这个 rom 需要尚未支持的硬件才能正确工作。</translation>
-    </message>
-    <message>
-      <source>Open FLoppy Disk Image</source>
-      <translation>打开软盘映像</translation>
     </message>
     <message>
       <source>FDS Format Disk</source>
@@ -1684,6 +1676,14 @@
     <message>
       <source>E&amp;xport current state of Disk/Disks</source>
       <translation>导出当前磁盘的状态</translation>
+    </message>
+    <message>
+      <source>Open Floppy Disk Image</source>
+      <translation>打开软盘映像</translation>
+    </message>
+    <message>
+      <source>&amp;Dip Switches</source>
+      <translation>&amp;Dip 开关</translation>
     </message>
   </context>
   <context>

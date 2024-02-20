@@ -75,16 +75,16 @@
       <translation>موافق</translation>
     </message>
     <message>
-      <source>Dipswitch</source>
-      <translation>ديبسويتش</translation>
-    </message>
-    <message>
       <source>Start</source>
       <translation>ابدأ</translation>
     </message>
     <message>
       <source>Default</source>
       <translation>افتراضي</translation>
+    </message>
+    <message>
+      <source>Dip Switches</source>
+      <translation>محوّلات Dip</translation>
     </message>
   </context>
   <context>
@@ -1614,10 +1614,6 @@
       <translation>شريط</translation>
     </message>
     <message>
-      <source>&amp;Dipswitch</source>
-      <translation>ديبسويتش</translation>
-    </message>
-    <message>
       <source>Detach &amp;Barcode</source>
       <translation>الرمز الشريطي ديتاتش</translation>
     </message>
@@ -1632,10 +1628,6 @@
     <message>
       <source>This rom requires unsupported hardware to function correctly.</source>
       <translation>يتطلب ملف الروم عتاد غير مدعوم حاليا لتشغيله بشكل مضبوط.</translation>
-    </message>
-    <message>
-      <source>Open FLoppy Disk Image</source>
-      <translation>فتح صورة قرن مرن</translation>
     </message>
     <message>
       <source>FDS Format Disk</source>
@@ -1684,6 +1676,14 @@
     <message>
       <source>E&amp;xport current state of Disk/Disks</source>
       <translation>تصدير الحالة الحالية للقرص/الأقراص</translation>
+    </message>
+    <message>
+      <source>Open Floppy Disk Image</source>
+      <translation>فتح صورة قرن مرن</translation>
+    </message>
+    <message>
+      <source>&amp;Dip Switches</source>
+      <translation>&amp;محوّلات Dip</translation>
     </message>
   </context>
   <context>

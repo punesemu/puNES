@@ -75,16 +75,16 @@
       <translation>Ok</translation>
     </message>
     <message>
-      <source>Dipswitch</source>
-      <translation>DIP-kapcsoló</translation>
-    </message>
-    <message>
       <source>Start</source>
       <translation>Start</translation>
     </message>
     <message>
       <source>Default</source>
       <translation>Alap</translation>
+    </message>
+    <message>
+      <source>Dip Switches</source>
+      <translation>DIP-kapcsoló</translation>
     </message>
   </context>
   <context>
@@ -1614,10 +1614,6 @@
       <translation>Magnó</translation>
     </message>
     <message>
-      <source>&amp;Dipswitch</source>
-      <translation>&amp;Dip-kapcsoló</translation>
-    </message>
-    <message>
       <source>Detach &amp;Barcode</source>
       <translation>Vonalkód eltávolítása (&amp;B)</translation>
     </message>
@@ -1632,10 +1628,6 @@
     <message>
       <source>This rom requires unsupported hardware to function correctly.</source>
       <translation>Ez a ROM nem támogatott hardware-t igényel a megfelelő működéshez.</translation>
-    </message>
-    <message>
-      <source>Open FLoppy Disk Image</source>
-      <translation>Open FLoppy Disk lemezkép</translation>
     </message>
     <message>
       <source>FDS Format Disk</source>
@@ -1684,6 +1676,14 @@
     <message>
       <source>E&amp;xport current state of Disk/Disks</source>
       <translation>Lemez(ek) jelenlegi állapotának e&amp;xportálása</translation>
+    </message>
+    <message>
+      <source>Open Floppy Disk Image</source>
+      <translation>Open Floppy Disk lemezkép</translation>
+    </message>
+    <message>
+      <source>&amp;Dip Switches</source>
+      <translation>&amp;DIP-kapcsoló</translation>
     </message>
   </context>
   <context>

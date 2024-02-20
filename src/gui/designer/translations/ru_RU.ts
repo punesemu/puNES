@@ -75,16 +75,16 @@
       <translation>Ок</translation>
     </message>
     <message>
-      <source>Dipswitch</source>
-      <translation>DIP-переключатель</translation>
-    </message>
-    <message>
       <source>Start</source>
       <translation>Start</translation>
     </message>
     <message>
       <source>Default</source>
       <translation>По умолчанию</translation>
+    </message>
+    <message>
+      <source>Dip Switches</source>
+      <translation>DIP-переключатель</translation>
     </message>
   </context>
   <context>
@@ -1614,10 +1614,6 @@
       <translation>Кассета</translation>
     </message>
     <message>
-      <source>&amp;Dipswitch</source>
-      <translation>&amp;DIP-переключатель</translation>
-    </message>
-    <message>
       <source>Detach &amp;Barcode</source>
       <translation>Отсоединить &amp;штрих-код</translation>
     </message>
@@ -1632,10 +1628,6 @@
     <message>
       <source>This rom requires unsupported hardware to function correctly.</source>
       <translation>Для корректной работы данного ROM требуется неподдерживаемое оборудование.</translation>
-    </message>
-    <message>
-      <source>Open FLoppy Disk Image</source>
-      <translation>Открыть образ дискеты</translation>
     </message>
     <message>
       <source>FDS Format Disk</source>
@@ -1684,6 +1676,14 @@
     <message>
       <source>E&amp;xport current state of Disk/Disks</source>
       <translation>Э&amp;кспортировать текущее состояние диска/дисков</translation>
+    </message>
+    <message>
+      <source>Open Floppy Disk Image</source>
+      <translation>Открыть образ дискеты</translation>
+    </message>
+    <message>
+      <source>&amp;Dip Switches</source>
+      <translation>&amp;DIP-переключатель</translation>
     </message>
   </context>
   <context>

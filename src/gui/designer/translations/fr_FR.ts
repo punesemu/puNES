@@ -75,16 +75,16 @@
       <translation>Ok</translation>
     </message>
     <message>
-      <source>Dipswitch</source>
-      <translation>Commutateur DIP</translation>
-    </message>
-    <message>
       <source>Start</source>
       <translation>Démarrer</translation>
     </message>
     <message>
       <source>Default</source>
       <translation>Par défaut</translation>
+    </message>
+    <message>
+      <source>Dip Switches</source>
+      <translation>Dip Switches</translation>
     </message>
   </context>
   <context>
@@ -1614,10 +1614,6 @@
       <translation>&amp;K7</translation>
     </message>
     <message>
-      <source>&amp;Dipswitch</source>
-      <translation>Interrupteur &amp;Dip</translation>
-    </message>
-    <message>
       <source>Detach &amp;Barcode</source>
       <translation>Détacher le Code &amp;Barre</translation>
     </message>
@@ -1632,10 +1628,6 @@
     <message>
       <source>This rom requires unsupported hardware to function correctly.</source>
       <translation>Cette ROM nécessite un matériel non pris en charge pour fonctionner correctement.</translation>
-    </message>
-    <message>
-      <source>Open FLoppy Disk Image</source>
-      <translation>Ouvrir une Image Disquette</translation>
     </message>
     <message>
       <source>FDS Format Disk</source>
@@ -1684,6 +1676,14 @@
     <message>
       <source>E&amp;xport current state of Disk/Disks</source>
       <translation>E&amp;xporter l'état actuel du/des disque(s)</translation>
+    </message>
+    <message>
+      <source>Open Floppy Disk Image</source>
+      <translation>Ouvrir une Image Disquette</translation>
+    </message>
+    <message>
+      <source>&amp;Dip Switches</source>
+      <translation>Interrupteurs &amp;Dip</translation>
     </message>
   </context>
   <context>
