@@ -61,7 +61,7 @@
     </message>
     <message>
       <source>Detach Barcode</source>
-      <translation type="unfinished">Detach Barcode</translation>
+      <translation/>
     </message>
     <message>
       <source>Apply</source>
@@ -75,16 +75,16 @@
       <translation>Ok</translation>
     </message>
     <message>
-      <source>Dipswitch</source>
-      <translation type="unfinished">Dipswitch</translation>
-    </message>
-    <message>
       <source>Start</source>
       <translation>Start</translation>
     </message>
     <message>
       <source>Default</source>
       <translation>Predefinito</translation>
+    </message>
+    <message>
+      <source>Dip Switches</source>
+      <translation type="unfinished">Dip Switches</translation>
     </message>
   </context>
   <context>
@@ -969,7 +969,7 @@
     </message>
     <message>
       <source>which Floppy Disk image do you want to load?</source>
-      <translation type="unfinished">which Floppy Disk image do you want to load?</translation>
+      <translation>quale immagine di Floppy Disk vuoi caricare?</translation>
     </message>
   </context>
   <context>
@@ -1614,16 +1614,12 @@
       <translation>&amp;Nastro</translation>
     </message>
     <message>
-      <source>&amp;Dipswitch</source>
-      <translation type="unfinished">&amp;Dipswitch</translation>
-    </message>
-    <message>
       <source>Detach &amp;Barcode</source>
-      <translation type="unfinished">Detach &amp;Barcode</translation>
+      <translation/>
     </message>
     <message>
       <source>Floppy Disk image files</source>
-      <translation type="unfinished">Floppy Disk image files</translation>
+      <translation>Immagini Floppy Disk</translation>
     </message>
     <message>
       <source>Warning</source>
@@ -1635,11 +1631,11 @@
     </message>
     <message>
       <source>FDS Format Disk</source>
-      <translation type="unfinished">FDS Format Disk</translation>
+      <translation>Disco in formato FDS</translation>
     </message>
     <message>
       <source>Quick Disk Format Disk</source>
-      <translation type="unfinished">Quick Disk Format Disk</translation>
+      <translation>Disco in formato Quick Disk</translation>
     </message>
     <message>
       <source>puNES image</source>
@@ -1675,15 +1671,19 @@
     </message>
     <message>
       <source>C&amp;hange Disk</source>
-      <translation type="unfinished">C&amp;hange Disk</translation>
+      <translation>Cambio &amp;Disco</translation>
     </message>
     <message>
       <source>E&amp;xport current state of Disk/Disks</source>
-      <translation type="unfinished">E&amp;xport current state of Disk/Disks</translation>
+      <translation>Esp&amp;orta lo stato corrente del Disco/Dischi</translation>
     </message>
     <message>
       <source>Open Floppy Disk Image</source>
-      <translation type="unfinished">Open Floppy Disk Image</translation>
+      <translation>Apri Immagine Floppy Disk</translation>
+    </message>
+    <message>
+      <source>&amp;Dip Switches</source>
+      <translation type="unfinished">&amp;Dip Switches</translation>
     </message>
   </context>
   <context>
@@ -1920,12 +1920,12 @@
     <message>
       <source>auto switch [red]disabled[normal], game not compatible</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">auto switch [red]disabled[normal], game not compatible</translation>
+      <translation>auto switch [red]disabilitato[normal], gioco non compatibile</translation>
     </message>
     <message>
       <source>auto switch [red]disabled[normal], single-sided disk</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">auto switch [red]disabled[normal], single-sided disk</translation>
+      <translation>auto switch [red]disabilitato[normal], disco singolo lato</translation>
     </message>
   </context>
   <context>
