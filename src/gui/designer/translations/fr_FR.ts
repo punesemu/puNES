@@ -75,16 +75,16 @@
       <translation>Ok</translation>
     </message>
     <message>
-      <source>Dipswitch</source>
-      <translation>Commutateur DIP</translation>
-    </message>
-    <message>
       <source>Start</source>
       <translation>Démarrer</translation>
     </message>
     <message>
       <source>Default</source>
       <translation>Par défaut</translation>
+    </message>
+    <message>
+      <source>Dip Switches</source>
+      <translation type="unfinished">Dip Switches</translation>
     </message>
   </context>
   <context>
@@ -1614,10 +1614,6 @@
       <translation>&amp;K7</translation>
     </message>
     <message>
-      <source>&amp;Dipswitch</source>
-      <translation>Interrupteur &amp;Dip</translation>
-    </message>
-    <message>
       <source>Detach &amp;Barcode</source>
       <translation>Détacher le Code &amp;Barre</translation>
     </message>
@@ -1683,7 +1679,11 @@
     </message>
     <message>
       <source>Open Floppy Disk Image</source>
-      <translation type="unfinished">Open Floppy Disk Image</translation>
+      <translation>Ouvrir une Image Disquette</translation>
+    </message>
+    <message>
+      <source>&amp;Dip Switches</source>
+      <translation type="unfinished">&amp;Dip Switches</translation>
     </message>
   </context>
   <context>
