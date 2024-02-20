@@ -75,16 +75,16 @@
       <translation>确定</translation>
     </message>
     <message>
-      <source>Dipswitch</source>
-      <translation>Dip 开关</translation>
-    </message>
-    <message>
       <source>Start</source>
       <translation>开始</translation>
     </message>
     <message>
       <source>Default</source>
       <translation>默认</translation>
+    </message>
+    <message>
+      <source>Dip Switches</source>
+      <translation type="unfinished">Dip Switches</translation>
     </message>
   </context>
   <context>
@@ -1614,10 +1614,6 @@
       <translation>磁带(&amp;A)</translation>
     </message>
     <message>
-      <source>&amp;Dipswitch</source>
-      <translation>Dip 开关(&amp;D)</translation>
-    </message>
-    <message>
       <source>Detach &amp;Barcode</source>
       <translation>Detach 条码(&amp;B)</translation>
     </message>
@@ -1683,7 +1679,11 @@
     </message>
     <message>
       <source>Open Floppy Disk Image</source>
-      <translation type="unfinished">Open Floppy Disk Image</translation>
+      <translation>打开软盘映像</translation>
+    </message>
+    <message>
+      <source>&amp;Dip Switches</source>
+      <translation type="unfinished">&amp;Dip Switches</translation>
     </message>
   </context>
   <context>
