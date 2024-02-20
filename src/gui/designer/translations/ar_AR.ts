@@ -75,16 +75,16 @@
       <translation>موافق</translation>
     </message>
     <message>
-      <source>Dipswitch</source>
-      <translation>ديبسويتش</translation>
-    </message>
-    <message>
       <source>Start</source>
       <translation>ابدأ</translation>
     </message>
     <message>
       <source>Default</source>
       <translation>افتراضي</translation>
+    </message>
+    <message>
+      <source>Dip Switches</source>
+      <translation type="unfinished">Dip Switches</translation>
     </message>
   </context>
   <context>
@@ -1614,10 +1614,6 @@
       <translation>شريط</translation>
     </message>
     <message>
-      <source>&amp;Dipswitch</source>
-      <translation>ديبسويتش</translation>
-    </message>
-    <message>
       <source>Detach &amp;Barcode</source>
       <translation>الرمز الشريطي ديتاتش</translation>
     </message>
@@ -1683,7 +1679,11 @@
     </message>
     <message>
       <source>Open Floppy Disk Image</source>
-      <translation type="unfinished">Open Floppy Disk Image</translation>
+      <translation>فتح صورة قرن مرن</translation>
+    </message>
+    <message>
+      <source>&amp;Dip Switches</source>
+      <translation type="unfinished">&amp;Dip Switches</translation>
     </message>
   </context>
   <context>
