@@ -95,7 +95,7 @@
     </message>
     <message>
       <source>Do you want to boot the ROM with the changes made?</source>
-      <translation>هل تريد تشغيل الروم مع التغييرات التي أجريت؟</translation>
+      <translation>هل تريد تشغيل الروم مع التغييرات التي أجريتها؟</translation>
     </message>
     <message>
       <source>Header Editor</source>
@@ -2980,7 +2980,7 @@
     </message>
     <message>
       <source>Arkanoid Paddle</source>
-      <translation>مِقذاف أركنويد</translation>
+      <translation>ذراع أركنويد</translation>
     </message>
     <message>
       <source>Oeka Kids Tablet</source>
