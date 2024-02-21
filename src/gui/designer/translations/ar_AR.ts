@@ -1147,7 +1147,7 @@
     </message>
     <message>
       <source>Error on create screenshot folder</source>
-      <translation>تعثر إنشاء مُجلّد لقطة شاشة</translation>
+      <translation>تعثر إنشاء مُجلّد لقطة الشاشة</translation>
     </message>
   </context>
   <context>
@@ -1438,15 +1438,15 @@
     </message>
     <message>
       <source>IPS patch files</source>
-      <translation>ملفات رقعة IPS</translation>
+      <translation>IPS</translation>
     </message>
     <message>
       <source>BPS patch files</source>
-      <translation>ملفات رقعة BPS</translation>
+      <translation>BPS</translation>
     </message>
     <message>
       <source>XDELTA patch files</source>
-      <translation>ملفات رقعة XDELTA</translation>
+      <translation>XDELTA</translation>
     </message>
     <message>
       <source>Open IPS/BPS/XDELTA Patch</source>
@@ -1458,7 +1458,7 @@
     </message>
     <message>
       <source>Save Unalte&amp;red NES screen</source>
-      <translation>حفظ لقطة الشاشة الأصلية</translation>
+      <translation>أخذ لقطة للشاشة بأبعادها الأصلية</translation>
     </message>
     <message>
       <source>Widgets</source>
@@ -1571,7 +1571,7 @@
     </message>
     <message>
       <source>Shout into &amp;Microphone</source>
-      <translation>أصرخ في الميكروفون</translation>
+      <translation>أصرخ في المِكروفون</translation>
     </message>
     <message>
       <source>Toggle Virtual &amp;Keyboard</source>
@@ -1591,7 +1591,7 @@
     </message>
     <message>
       <source>Sa&amp;ve Screenshot</source>
-      <translation>أخذ لقطة شاشة</translation>
+      <translation>أخذ لقطة للشاشة بأبعادها الحالية</translation>
     </message>
     <message>
       <source>Insert &amp;Coin</source>
@@ -2627,7 +2627,7 @@
     <name>wdgSettingsAudio</name>
     <message>
       <source>Output Devices</source>
-      <translation>أجهزة إخراج الصوت</translation>
+      <translation>أجهزة مخرج الصوت</translation>
     </message>
     <message>
       <source>Sample Rate</source>
@@ -3203,22 +3203,22 @@
     <message>
       <source>MPEG 1 Video (*.mpg *.mpeg)</source>
       <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
-      <translation>فيديو إم بي إي جي 1 (*.mpg *.mpeg)</translation>
+      <translation>إم بي إي جي 1 (*.mpg *.mpeg)</translation>
     </message>
     <message>
       <source>MPEG 2 Video (*.mpg *.mpeg)</source>
       <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
-      <translation>فيديو إم بي إي جي 2 (*.mpg *.mpeg)</translation>
+      <translation>إم بي إي جي 2 (*.mpg *.mpeg)</translation>
     </message>
     <message>
       <source>MPEG 4 Video (*.mp4)</source>
       <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
-      <translation>فيديو إم بي إي جي 4 (*.mp4)</translation>
+      <translation>إم بي إي جي 4 (*.mp4)</translation>
     </message>
     <message>
       <source>MPEG H264 Video (*.mp4)</source>
       <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
-      <translation>فيديو إم بي إي جي إتش.264 (*.mp4)</translation>
+      <translation>إم بي إي جي إتش.264 (*.mp4)</translation>
     </message>
     <message>
       <source>High Efficiency Video Codec (*.mkv)</source>
@@ -3228,7 +3228,7 @@
     <message>
       <source>WebM Video (*.webm)</source>
       <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
-      <translation>فيديو ويب إم (*.webm)</translation>
+      <translation>ويب إم (*.webm)</translation>
     </message>
     <message>
       <source>Windows Media Video (*.wmv)</source>
@@ -3238,22 +3238,22 @@
     <message>
       <source>AVI FF Video (*.avi)</source>
       <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
-      <translation>فيديو تداخل الصوت والفيديو إف إف (*.avi)</translation>
+      <translation>تداخل الصوت والفيديو إف إف (*.avi)</translation>
     </message>
     <message>
       <source>AVI Video (*.avi)</source>
       <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
-      <translation>فيديو تداخل الصوت والفيديو (*.avi)</translation>
+      <translation>تداخل الصوت والفيديو (*.avi)</translation>
     </message>
     <message>
       <source>WAV Audio (*.wav)</source>
       <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
-      <translation>صوت واف (*.wav)</translation>
+      <translation>واف (*.wav)</translation>
     </message>
     <message>
       <source>MP3 Audio (*.mp3)</source>
       <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
-      <translation>صوت إم بي 3 (*.mp3)</translation>
+      <translation>إم بي 3 (*.mp3)</translation>
     </message>
     <message>
       <source>AAC Audio (*.aac)</source>
@@ -3263,12 +3263,12 @@
     <message>
       <source>Flac Audio (*.flac)</source>
       <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
-      <translation>صوت فلاك (*.flac)</translation>
+      <translation>فلاك (*.flac)</translation>
     </message>
     <message>
       <source>Ogg Audio (*.ogg)</source>
       <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
-      <translation>صوت أُوغ (*.ogg)</translation>
+      <translation>أُوغ (*.ogg)</translation>
     </message>
     <message>
       <source>Not supported</source>
@@ -3844,7 +3844,7 @@
     </message>
     <message>
       <source>Adapt the refresh rate to the region (PAL/Dendy 50Hz, NTSC 60Hz)</source>
-      <translation>تكييف معدل التحديث حسب المنطقة (PAL/Dendy 50 هرتز، NTSC 60 هرتز)</translation>
+      <translation>تكييف معدل التحديث حسب المنطقة (پال/دندي 50 هرتز، إن تي إس سي 60 هرتز)</translation>
     </message>
     <message>
       <source>Fullscreen</source>
