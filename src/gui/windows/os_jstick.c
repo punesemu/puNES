@@ -284,42 +284,43 @@ struct _js_os {
 
 void js_os_init(BYTE first_time) {
 	if (first_time) {
+		uTCHAR system32[MAX_PATH];
+
 		memset(&js_os, 0x00, sizeof(js_os));
 
-#if defined (__GNUC__)
-#if __GNUC__ >= 8
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wcast-function-type"
-#endif
-#endif
-		if (((js_os.xinput = LoadLibrary("XInput1_4.dll")) == NULL) &&
-			((js_os.xinput = LoadLibrary("XInput1_3.dll")) == NULL)) {
-			log_error(uL("xinput;failed to load xinput dll"));
-			js_os.xinput_available = FALSE;
-		} else {
-			js_os.xinput_available = TRUE;
-			js_os.XInputGetStateEx_proc =(DWORD (WINAPI *)(DWORD, XINPUT_STATE_EX *))GetProcAddress(js_os.xinput, (LPCSTR) 100);
-			js_os.XInputGetState_proc = (DWORD (WINAPI *)(DWORD, XINPUT_STATE *))GetProcAddress(js_os.xinput, "XInputGetState");
-			js_os.XInputGetCapabilities_proc = (DWORD (WINAPI *)(DWORD, DWORD, XINPUT_CAPABILITIES *))GetProcAddress(js_os.xinput, "XInputGetCapabilities");
-		}
+		if (GetSystemDirectoryW(system32, MAX_PATH) != 0) {
+			uTCHAR path[MAX_PATH];
 
-		if ((js_os.di8 = LoadLibrary("DINPUT8.dll")) == NULL) {
-			log_error(uL("directinput;failed to load dinput8.dll"));
-		} else {
-			HRESULT (WINAPI *DirectInput8Create_proc)(HINSTANCE, DWORD, REFIID, LPVOID *, LPUNKNOWN);
+			usnprintf(path, usizeof(path), uL("" uPs("") "\\XInput1_4.dll"), system32);
+			js_os.xinput = LoadLibraryW(path);
+			if (js_os.xinput == NULL) {
+				usnprintf(path, usizeof(path), uL("" uPs("") "\\XInput1_3.dll"), system32);
+				js_os.xinput = LoadLibraryW(path);
+			}
+			if (js_os.xinput == NULL) {
+				log_error(uL("xinput;failed to load xinput dll"));
+				js_os.xinput_available = FALSE;
+			} else {
+				js_os.xinput_available = TRUE;
+				js_os.XInputGetStateEx_proc = (void *)GetProcAddress(js_os.xinput, (LPCSTR) 100);
+				js_os.XInputGetState_proc = (void *)GetProcAddress(js_os.xinput, "XInputGetState");
+				js_os.XInputGetCapabilities_proc = (void *)GetProcAddress(js_os.xinput, "XInputGetCapabilities");
+			}
+			usnprintf(path, usizeof(path), uL("" uPs("") "\\DINPUT8.dll"), system32);
+			js_os.di8 = LoadLibraryW(path);
+			if (js_os.di8 == NULL) {
+				log_error(uL("directinput;failed to load dinput8.dll"));
+			} else {
+				HRESULT (WINAPI *DirectInput8Create_proc)(HINSTANCE, DWORD, REFIID, LPVOID *, LPUNKNOWN);
 
-			DirectInput8Create_proc = (HRESULT (WINAPI *)(HINSTANCE, DWORD, REFIID, LPVOID *, LPUNKNOWN))GetProcAddress(js_os.di8, "DirectInput8Create");
-			DirectInput8Create_proc(GetModuleHandle(NULL),
-				DIRECTINPUT_VERSION,
-				&IID_IDirectInput8W,
-				(void **)&js_os.directInputInterface,
-				NULL);
+				DirectInput8Create_proc = (void *)GetProcAddress(js_os.di8, "DirectInput8Create");
+				DirectInput8Create_proc(GetModuleHandle(NULL),
+					DIRECTINPUT_VERSION,
+					&IID_IDirectInput8W,
+					(void **)&js_os.directInputInterface,
+					NULL);
+			}
 		}
-#if defined (__GNUC__)
-#if __GNUC__ >= 8
-#pragma GCC diagnostic pop
-#endif
-#endif
 	}
 }
 void js_os_quit(BYTE last_time) {
@@ -521,7 +522,7 @@ void js_os_jdev_close(_js_device *jdev) {
 	if (jdev->present) {
 		jstick.jdd.count--;
 #if defined (DEBUG)
-		log_warning(uL("jstick disc.;slot%d \"" uPs("") "\" (%d)\n"),
+		log_warning(uL("jstick disc.;slot%d \"" uPs("") "\" (%d)"),
 			jdev->index,
 			jdev->desc,
 			jstick.jdd.count);

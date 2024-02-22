@@ -102,6 +102,8 @@ void (*snd_apu_tick)(void);
 void (*snd_end_frame)(void);
 
 BYTE snd_init(void) {
+	uTCHAR system32[MAX_PATH];
+
 	memset(&snd, 0x00, sizeof(_snd));
 	memset(&xaudio2, 0x00, sizeof(xaudio2));
 	memset(&ds8, 0x00, sizeof(ds8));
@@ -116,33 +118,21 @@ BYTE snd_init(void) {
 		return (EXIT_ERROR);
 	}
 
-	if ((ds8.ds8 = LoadLibrary("DSOUND.DLL")) == NULL) {
-		log_error(uL("directsound;failed to load DSOUND.DLL"));
-		ds8.available = FALSE;
-	} else {
-		ds8.available = TRUE;
+	if (GetSystemDirectoryW(system32, MAX_PATH) != 0) {
+		uTCHAR path[MAX_PATH];
 
-#if defined (__GNUC__)
-#if __GNUC__ >= 8
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wcast-function-type"
-#endif
-#endif
-		if ((ds8.DirectSoundCreate8_proc =
-			(HRESULT (WINAPI *)(LPGUID, LPDIRECTSOUND*,LPUNKNOWN))GetProcAddress(ds8.ds8, "DirectSoundCreate8")) == NULL) {
-			ds8.available = FALSE;
-		}
-		if ((ds8.DirectSoundCaptureEnumerateW_proc =
-			(HRESULT (WINAPI *)(LPDSENUMCALLBACKW, LPVOID))GetProcAddress(ds8.ds8, "DirectSoundCaptureEnumerateW")) == NULL) {
-			ds8.available = FALSE;
-		}
-#if defined (__GNUC__)
-#if __GNUC__ >= 8
-#pragma GCC diagnostic pop
-#endif
-#endif
-		if (!ds8.available) {
-			log_error(uL("directsound;system doesn't appear to have DS8"));
+		usnprintf(path, usizeof(path), uL("" uPs("") "\\DSOUND.DLL"), system32);
+		ds8.ds8 = LoadLibraryW(path);
+		ds8.available = FALSE;
+		if (ds8.ds8 == NULL) {
+			log_error(uL("directsound;failed to load DSOUND.DLL"));
+		} else {
+			ds8.DirectSoundCreate8_proc = (void *)GetProcAddress(ds8.ds8, "DirectSoundCreate8");
+			ds8.DirectSoundCaptureEnumerateW_proc = (void *)GetProcAddress(ds8.ds8,"DirectSoundCaptureEnumerateW");
+			ds8.available = (ds8.DirectSoundCreate8_proc != NULL) && (ds8.DirectSoundCaptureEnumerateW_proc != NULL);
+			if (!ds8.available) {
+				log_error(uL("directsound;system doesn't appear to have DS8"));
+			}
 		}
 	}
 
