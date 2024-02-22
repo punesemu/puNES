@@ -52,10 +52,35 @@ INLINE D3DTEXTUREFILTERTYPE d3d9_shader_filter(UINT type);
 INLINE static void d3d9_shader_params_overlay_set(_shader *shd);
 INLINE static void d3d9_shader_param_set(const _texture *texture, UINT sindex, UINT fcountmod, UINT fcount);
 
+struct _d3dx9 {
+	HMODULE d3dx9;
+	D3DXMATRIX *(WINAPI *D3DXMatrixOrthoOffCenterLH_proc)(D3DXMATRIX *pOut, FLOAT l, FLOAT r, FLOAT b, FLOAT t, FLOAT zn, FLOAT zf);
+	D3DXMATRIX *(WINAPI *D3DXMatrixRotationZ_proc)(D3DXMATRIX *pOut, FLOAT Angle);
+	D3DXMATRIX *(WINAPI *D3DXMatrixMultiply_proc)(D3DXMATRIX *pOut, const D3DXMATRIX *pM1, const D3DXMATRIX *pM2);
+	D3DXMATRIX *(WINAPI *D3DXMatrixTranspose_proc)(D3DXMATRIX *pOut, const D3DXMATRIX *pM);
+} d3dx9;
 _d3d9 d3d9;
 
 BYTE d3d9_init(void) {
+	uTCHAR system32[MAX_PATH];
+
+	memset(&d3dx9, 0x00, sizeof(d3dx9));
 	memset(&d3d9, 0x00, sizeof(d3d9));
+
+	if (GetSystemDirectoryW(system32, MAX_PATH) != 0) {
+		uTCHAR path[MAX_PATH];
+
+		usnprintf(path, usizeof(path), uL("" uPs("") "\\d3dx9_41.dll"), system32);
+		d3dx9.d3dx9 = LoadLibraryW(path);
+		if (d3dx9.d3dx9 == NULL) {
+			gui_critical(uL("Failed to load the d3dx9_41.dll library\n"));
+			return (EXIT_ERROR);
+		}
+		d3dx9.D3DXMatrixOrthoOffCenterLH_proc = (void *)GetProcAddress(d3dx9.d3dx9, "D3DXMatrixOrthoOffCenterLH");
+		d3dx9.D3DXMatrixRotationZ_proc = (void *)GetProcAddress(d3dx9.d3dx9, "D3DXMatrixRotationZ");
+		d3dx9.D3DXMatrixMultiply_proc = (void * )GetProcAddress(d3dx9.d3dx9, "D3DXMatrixMultiply");
+		d3dx9.D3DXMatrixTranspose_proc = (void *)GetProcAddress(d3dx9.d3dx9, "D3DXMatrixTranspose");
+	}
 
 	d3d9.d3d = Direct3DCreate9(D3D_SDK_VERSION);
 	if (d3d9.d3d == NULL) {
@@ -232,17 +257,21 @@ void d3d9_quit(void) {
 		}
 	}
 
-	if (d3d9.d3d) {
-		IDirect3D9_Release(d3d9.d3d);
-		d3d9.d3d = NULL;
-	}
+	d3d9_reset();
 
 	if (d3d9.array) {
 		free(d3d9.array);
 		d3d9.array = d3d9.adapter = NULL;
 	}
 
-	d3d9_reset();
+	if (d3d9.d3d) {
+		IDirect3D9_Release(d3d9.d3d);
+		d3d9.d3d = NULL;
+	}
+
+	if (d3dx9.d3dx9) {
+		FreeLibrary(d3dx9.d3dx9);
+	}
 }
 void d3d9_reset(void) {
 	if (d3d9.screenshot.srfc.s) {
@@ -758,19 +787,18 @@ BYTE d3d9_is_installed(void) {
 	uTCHAR system32[MAX_PATH];
 
 	if (GetSystemDirectoryW(system32, MAX_PATH) != 0) {
-		uTCHAR dll[MAX_PATH];
-		FILE *file = NULL;
+		uTCHAR path[MAX_PATH];
+		HMODULE dll = NULL;
 
-		usnprintf(dll, usizeof(dll), uL("" uPs("") "\\d3dx9_43.dll"), system32);
-		file = ufopen(dll, uL("r"));
-		if (file != NULL) {
-			fclose(file);
-		} else {
-			gui_critical(uL("The d3dx9_43.dll library is missing from your computer.<br>"
+		usnprintf(path, usizeof(path), uL("" uPs("") "\\d3dx9_41.dll"), system32);
+		dll = LoadLibraryW(path);
+		if (dll == NULL) {
+			gui_critical(uL("d3dx9_41.dll not found. "
 				"Install the <a href='https://www.microsoft.com/download/details.aspx?id=35'>DirectX End-User Runtime</a> "
 				"and try launching the emulator again."));
 			return (EXIT_ERROR);
 		}
+		FreeLibrary(dll);
 	} else {
 		gui_critical(uL("Unable to obtain the path to the System32 directory."));
 		return (EXIT_ERROR);
@@ -1898,13 +1926,13 @@ static void d3d9_vertex_buffer_set(_shader *shd, _viewport *vp, _texture_rect *p
 	{
 		D3DXMATRIX proj, ortho, rotz;
 
-		D3DXMatrixOrthoOffCenterLH(&ortho, 0, vp->w, 0, vp->h, 0, 1);
+		d3dx9.D3DXMatrixOrthoOffCenterLH_proc(&ortho, 0, vp->w, 0, vp->h, 0, 1);
 
 		D3DXMatrixIdentity(&rotz);
-		D3DXMatrixRotationZ(&rotz, rotation * ((FLOAT)M_PI / 180.0f));
+		d3dx9.D3DXMatrixRotationZ_proc(&rotz, rotation * ((FLOAT)M_PI / 180.0f));
 
-		D3DXMatrixMultiply(&proj, &ortho, &rotz);
-		D3DXMatrixTranspose(&shd->mvp, &proj);
+		d3dx9.D3DXMatrixMultiply_proc(&proj, &ortho, &rotz);
+		d3dx9.D3DXMatrixTranspose_proc(&shd->mvp, &proj);
 	}
 }
 static CGparameter d3d9_cg_find_param(CGparameter prm, const char *name) {
