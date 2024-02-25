@@ -1004,10 +1004,8 @@ INLINE static void d3d9_read_front_buffer(void) {
 #else
 	if (info.screenshot) {
 #endif
-		IDirect3DSurface9 *bbuf = NULL, *srflock = NULL;
-		RECT *viewp = NULL;
+		IDirect3DSurface9 *bbuf = NULL;
 		D3DSURFACE_DESC sd;
-		BYTE use_zone = FALSE;
 
 		if (IDirect3DDevice9_GetBackBuffer(d3d9.adapter->dev, 0, 0, D3DBACKBUFFER_TYPE_MONO, &bbuf) != D3D_OK) {
 			goto d3d9_read_front_buffer_end;
@@ -1031,15 +1029,28 @@ INLINE static void d3d9_read_front_buffer(void) {
 			d3d9.screenshot.srfc.w = w;
 			d3d9.screenshot.srfc.h = h;
 
+			if (IDirect3DDevice9_CreateOffscreenPlainSurface(d3d9.adapter->dev,
+				w, h, sd.Format, D3DPOOL_SYSTEMMEM, &d3d9.screenshot.srfc.s, NULL) != D3D_OK) {
+				goto d3d9_read_front_buffer_end;
+			}
+
+			w = d3d9.viewp.right - d3d9.viewp.left;
+			h = d3d9.viewp.bottom - d3d9.viewp.top;
+
+			d3d9.screenshot.zone.w = w;
+			d3d9.screenshot.zone.h = h;
+
 			d3d9.screenshot.walign32 = w;
 			if (d3d9.screenshot.walign32 % 32) {
-				d3d9.screenshot.walign32 = (w / 32) + 1;
+				// alcuni drivers, se non hanno 32 pixel vuoti in coda, non
+				// riescono a copiare correttamente sul d3d9.screenshot.zone.s
+				d3d9.screenshot.walign32 = (w / 32) + 2;
 				d3d9.screenshot.walign32 *= 32;
 			}
 			d3d9.screenshot.stride = d3d9.screenshot.walign32 * (int)sizeof(uint32_t);
 
 			if (IDirect3DDevice9_CreateOffscreenPlainSurface(d3d9.adapter->dev,
-				w, h, sd.Format, D3DPOOL_SYSTEMMEM, &d3d9.screenshot.srfc.s, NULL) != D3D_OK) {
+				d3d9.screenshot.walign32, h, sd.Format, D3DPOOL_DEFAULT, &d3d9.screenshot.zone.s, NULL) != D3D_OK) {
 				goto d3d9_read_front_buffer_end;
 			}
 		}
@@ -1048,56 +1059,26 @@ INLINE static void d3d9_read_front_buffer(void) {
 			goto d3d9_read_front_buffer_end;
 		}
 
-		if (overscan.enabled && ((!cfg->fullscreen && !cfg->oscan_black_borders) ||
-			(cfg->fullscreen && !cfg->oscan_black_borders_fscr))) {
-			use_zone = TRUE;
-
-			w = d3d9.viewp.right - d3d9.viewp.left;
-			h = d3d9.viewp.bottom - d3d9.viewp.top;
-
-			viewp = &d3d9.viewp;
-		} else if (w != d3d9.screenshot.walign32) {
-			use_zone = TRUE;
-		} else {
-			srflock = d3d9.screenshot.srfc.s;
-		}
-
-		if (use_zone) {
-			if ((d3d9.screenshot.zone.s == NULL) || (d3d9.screenshot.zone.h != h)) {
-				if (d3d9.screenshot.zone.s) {
-					IDirect3DSurface9_Release(d3d9.screenshot.zone.s);
-					d3d9.screenshot.zone.s = NULL;
-				}
-
-				d3d9.screenshot.zone.h = h;
-
-				if (IDirect3DDevice9_CreateOffscreenPlainSurface(d3d9.adapter->dev,
-					d3d9.screenshot.walign32, h, sd.Format, D3DPOOL_DEFAULT, &d3d9.screenshot.zone.s, NULL) != D3D_OK) {
-					goto d3d9_read_front_buffer_end;
-				}
-			}
-			if (IDirect3DDevice9_UpdateSurface(d3d9.adapter->dev,
-				d3d9.screenshot.srfc.s, viewp, d3d9.screenshot.zone.s, NULL) != D3D_OK) {
-				goto d3d9_read_front_buffer_end;
-			}
-			srflock = d3d9.screenshot.zone.s;
+		if (IDirect3DDevice9_UpdateSurface(d3d9.adapter->dev,
+			d3d9.screenshot.srfc.s, &d3d9.viewp, d3d9.screenshot.zone.s, NULL) != D3D_OK) {
+			goto d3d9_read_front_buffer_end;
 		}
 
 		{
 			D3DLOCKED_RECT lrect;
 
-			IDirect3DSurface9_LockRect(srflock, &lrect, NULL, 0);
+			IDirect3DSurface9_LockRect(d3d9.screenshot.zone.s, &lrect, NULL, 0);
 #if defined (WITH_FFMPEG)
 			if (info.recording_is_a_video) {
-				recording_video_frame(w, h, d3d9.screenshot.stride, lrect.pBits);
+				recording_video_frame(d3d9.screenshot.zone.w, d3d9.screenshot.zone.h, d3d9.screenshot.stride, lrect.pBits);
 			}
 			if (info.screenshot == SCRSH_STANDARD) {
-				gui_save_screenshot(w, h, d3d9.screenshot.stride, lrect.pBits, FALSE);
+				gui_save_screenshot(d3d9.screenshot.zone.w, d3d9.screenshot.zone.h, d3d9.screenshot.stride, lrect.pBits, FALSE);
 			}
 #else
-			gui_save_screenshot(w, h, d3d9.screenshot.stride, lrect.pBits, FALSE);
+			gui_save_screenshot(d3d9.screenshot.zone.w, d3d9.screenshot.zone.h, d3d9.screenshot.stride, lrect.pBits, FALSE);
 #endif
-			IDirect3DSurface9_UnlockRect(srflock);
+			IDirect3DSurface9_UnlockRect(d3d9.screenshot.zone.s);
 		}
 
 		d3d9_read_front_buffer_end:

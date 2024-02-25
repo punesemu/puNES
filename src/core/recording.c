@@ -993,6 +993,12 @@ static BYTE ffmpeg_video_add_stream_format_mp4(void) {
 
 	ffmpeg_video_mpeg_quality(video);
 
+	// la larghezza deve essere allineata a 16
+//	if (video->avcc->width % 16) {
+//		video->avcc->width = (video->avcc->width / 16) + 1;
+//		video->avcc->width *= 16;
+//	}
+
 	video->avcc->thread_count = FFMIN(8, gui_hardware_concurrency());
 
 	if (ffmpeg_stream_open(video, NULL, TRUE) == EXIT_ERROR) {
