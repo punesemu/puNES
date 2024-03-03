@@ -56,7 +56,6 @@ enum nsf_timining {
 	NSF_TIME_EFFECT_UPDATE = 1000 / 25
 };
 enum nsf_gui {
-
 	NSF_GUI_PPUX = 35,
 	NSF_GUI_PPUY = 49,
 
@@ -561,20 +560,22 @@ BYTE nsf_load_rom(void) {
 	return (EXIT_OK);
 }
 void nsf_after_load_rom(void) {
-	nsf.scroll_info_nsf.rect.x = SCR_COLUMNS;
+	nsf.scroll_info_nsf.rect.x = 0;
 	nsf.scroll_info_nsf.rect.y = 0;
 	nsf.scroll_info_nsf.rect.w = SCR_COLUMNS;
 	nsf.scroll_info_nsf.rect.h = 16;
 	nsf.scroll_info_nsf.timer = 4.0f;
 	nsf.scroll_info_nsf.reload = 4.0f;
+	nsf.scroll_info_nsf.x = SCR_COLUMNS;
 	nsf.scroll_info_nsf.velocity = 6;
 
-	nsf.scroll_title_song.rect.x = NSF_GUI_TITLE_W;
+	nsf.scroll_title_song.rect.x = 0;
 	nsf.scroll_title_song.rect.y = 0;
 	nsf.scroll_title_song.rect.w = NSF_GUI_TITLE_W;
 	nsf.scroll_title_song.rect.h = NSF_GUI_TITLE_H;
 	nsf.scroll_title_song.timer = 4.0f;
 	nsf.scroll_title_song.reload = 4.0f;
+	nsf.scroll_title_song.x = NSF_GUI_TITLE_W;
 	nsf.scroll_title_song.velocity = 6;
 
 	nsf.curtain_title_song.reload.r1 = 50;
@@ -608,7 +609,6 @@ void nsf_after_load_rom(void) {
 		uL("[top][image]:/pics/pics/controller_up.png[endimage] Up : Change Effect"));
 	dos_text_curtain_add_line(&nsf.curtain_info, DOS_TL02, DOS_TL01, uL("lemon_10"), 10,
 		uL("or use your [top][image]:/pics/pics/controller_mouse.png[endimage] "));
-
 }
 void nsf_init_tune(void) {
 	WORD i = 0;
@@ -1388,7 +1388,7 @@ static void nsf_draw_controls(void) {
 		}
 		// titolo canzone
 		if (nsf.current_song.track_label) {
-			if (dos_text_pixels_w(uL("Ttyp0_11"), 11, nsf.current_song.track_label) > 182) {
+			if (dos_text_pixels_w(uL("Ttyp0_11"), 11, nsf.current_song.track_label) > NSF_GUI_TITLE_W) {
 				dos_text_scroll_tick(0, NSF_GUI_TITLE_PPUX, NSF_GUI_TITLE_PPUY, DOS_TL03, DOS_TL01,
 					uL("Ttyp0_11"), 11, &nsf.scroll_title_song, nsf.current_song.track_label);
 			} else if (nsf.curtain_title_song.count > 0) {

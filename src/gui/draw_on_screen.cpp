@@ -317,11 +317,13 @@ void dos_text_scroll_tick(BYTE nidx, int ppu_x, int ppu_y, const WORD fg_def, co
 		scroll->timer -= 0.34f;
 		if (scroll->timer < 0) {
 			scroll->timer = scroll->reload;
-			scroll->rect.x -= scroll->velocity;
-			dos_draw_ppu_image(nidx, ppu_x + scroll->rect.x, ppu_y,
-				0, 0, scroll->pimage.w, scroll->pimage.h, scroll->pimage.data);
-			if ((scroll->rect.x + ((scroll->pimage.w - scroll->rect.w))) < 0) {
-				scroll->rect.x = scroll->rect.w;
+			scroll->x -= scroll->velocity;
+			dos_draw_ppu_image(nidx, ppu_x, ppu_y,
+				scroll->rect.x, scroll->rect.y, scroll->rect.w, scroll->rect.h,
+				scroll->pimage.w, scroll->pimage.h,
+				scroll->x, 0, scroll->pimage.data);
+			if ((scroll->x + ((scroll->pimage.w - scroll->rect.w))) < 0) {
+				scroll->x = scroll->rect.w;
 			}
 		}
 	}
@@ -339,12 +341,16 @@ void dos_text_curtain(BYTE nidx, int ppu_x, int ppu_y, _dos_text_curtain *curtai
 		if (curtain->redraw.all) {
 			curtain->redraw.all = FALSE;
 			dos_draw_ppu_image(nidx, ppu_x, ppu_y,
-				0, 0, curtain->image.w, curtain->image.h, curtain->line[curtain->index].data);
+				0, 0, curtain->image.w, curtain->image.h,
+				curtain->image.w, curtain->image.h,
+				0, 0, curtain->line[curtain->index].data);
 		}
 		if (curtain->timer <= 0) {
 			if (!curtain->pause) {
-				dos_draw_ppu_image(nidx, ppu_x, ppu_y + curtain->h,
-					0, curtain->h, curtain->image.w, 1, curtain->line[curtain->index].data);
+				dos_draw_ppu_image(nidx, ppu_x, ppu_y,
+					0, curtain->h, curtain->image.w, 1,
+					curtain->image.w, 1,
+					0, 0, curtain->line[curtain->index].data);
 				curtain->h++;
 				if (curtain->h == curtain->image.h) {
 					curtain->h = 0;
@@ -585,22 +591,31 @@ void dos_image(BYTE nidx, int ppu_x, int ppu_y, int rect_x, int rect_y, int rect
 }
 
 void dos_draw_ppu_image(BYTE nidx, int ppu_x, int ppu_y, int rect_x, int rect_y, int rect_w, int rect_h,
-	WORD *ppu_image) {
+	int img_w, int img_h, int scroll_x, int scroll_y, WORD *ppu_image) {
 	if (ppu_image) {
-		for (int iy = 0; iy < rect_h; iy++) {
-			const WORD *src_line = ppu_image + (iy + rect_y) * rect_w + rect_x;
-			int py = iy + ppu_y;
-			if (py < 0 || py >= SCR_ROWS) {
+		int ppux0 = (rect_x + ppu_x) < 0 ? 0 : rect_x + ppu_x;
+		int ppuy0 = (rect_y + ppu_y) < 0 ? 0 : rect_y + ppu_y;
+		int ppux1 = (ppux0 + rect_w) >= SCR_COLUMNS ? SCR_COLUMNS : ppux0 + rect_w;
+		int ppuy1 = (ppuy0 + rect_h) >= SCR_ROWS ? SCR_ROWS : ppuy0 + rect_h;
+
+		for (int iy = 0; iy < img_h; iy++) {
+			const WORD *src_line = ppu_image + ((iy + rect_y) * img_w);
+			int py = (ppuy0 + iy) + scroll_y;
+
+			if ((py < ppuy0) || (py >= ppuy1)) {
 				continue;
 			}
-			WORD *dst_line = nes[nidx].p.ppu_screen.wr->line[py] + ppu_x;
+			{
+				WORD *dst_line = nes[nidx].p.ppu_screen.wr->line[py];
 
-			for (int ix = 0; ix < rect_w; ix++) {
-				int px = ix + ppu_x;
-				if (px < 0 || px >= SCR_COLUMNS) {
-					continue;
+				for (int ix = 0; ix < img_w; ix++) {
+					int px = (ppux0 + ix) + scroll_x;
+
+					if ((px < ppux0) || (px >= ppux1)) {
+						continue;
+					}
+					dst_line[px] = src_line[ix];
 				}
-				dst_line[ix] = src_line[ix];
 			}
 		}
 	}

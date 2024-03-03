@@ -76,6 +76,7 @@ typedef struct _dos_text_scroll {
 	_dos_text_ppu_image pimage;
 	double timer;
 	double reload;
+	int x;
 	int velocity;
 } _dos_text_scroll;
 typedef struct _dos_text_curtain {
@@ -126,7 +127,7 @@ EXTERNC void dos_image(BYTE nidx, int ppu_x, int ppu_y, int rect_x, int rect_y, 
 	const uTCHAR *resource, WORD *ppu_image, uint32_t pitch);
 
 EXTERNC void dos_draw_ppu_image(BYTE nidx, int ppu_x, int ppu_y, int rect_x, int rect_y, int rect_w, int rect_h,
-	WORD *ppu_image);
+	int img_w, int img_h, int scroll_x, int scroll_y, WORD *ppu_image);
 
 EXTERNC int dos_resource_w(const uTCHAR *resource);
 EXTERNC int dos_resource_h(const uTCHAR *resource);
