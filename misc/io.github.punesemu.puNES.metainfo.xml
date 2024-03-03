@@ -95,7 +95,7 @@
   </releases>
   <url type="homepage">https://github.com/punesemu/puNES</url>
   <url type="bugtracker">https://github.com/punesemu/puNES/issues</url>
-  <url type="donation">https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=QPPXNRL5NAHDC</url>
+  <url type="donation">https://github.com/sponsors/punesemu</url>
   <url type="translate">https://crowdin.com/project/punes</url>
   <categories>
     <category>Game</category>
