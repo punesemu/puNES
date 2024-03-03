@@ -566,7 +566,6 @@ void nsf_after_load_rom(void) {
 	nsf.scroll_info_nsf.rect.h = 16;
 	nsf.scroll_info_nsf.timer = 4.0f;
 	nsf.scroll_info_nsf.reload = 4.0f;
-	nsf.scroll_info_nsf.x = SCR_COLUMNS;
 	nsf.scroll_info_nsf.velocity = 6;
 
 	nsf.scroll_title_song.rect.x = 0;
@@ -575,7 +574,6 @@ void nsf_after_load_rom(void) {
 	nsf.scroll_title_song.rect.h = NSF_GUI_TITLE_H;
 	nsf.scroll_title_song.timer = 4.0f;
 	nsf.scroll_title_song.reload = 4.0f;
-	nsf.scroll_title_song.x = NSF_GUI_TITLE_W;
 	nsf.scroll_title_song.velocity = 6;
 
 	nsf.curtain_title_song.reload.r1 = 50;
@@ -1697,6 +1695,10 @@ static void nsf_reset_song_variables(void) {
 	} else {
 		nsf.current_song.time = -1;
 		nsf.current_song.fade = -1;
+	}
+	if (nsf.scroll_title_song.pimage.data) {
+		free(nsf.scroll_title_song.pimage.data);
+		nsf.scroll_title_song.pimage.data = NULL;
 	}
 	nsf_reset_song_title();
 }

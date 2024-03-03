@@ -305,10 +305,10 @@ void dos_text_scroll_tick(BYTE nidx, int ppu_x, int ppu_y, const WORD fg_def, co
 
 	if (!scroll->pimage.data) {
 		dos_text_pixels_size(&scroll->pimage.w, &scroll->pimage.h, font_family, font_size, &text[0]);
-
 		if (!scroll->pimage.w || !scroll->pimage.h) {
 			return;
 		}
+		scroll->x = -(scroll->pimage.w - scroll->velocity);
 		scroll->pimage.w += scroll->rect.w;
 		scroll->pimage.data = _dos_text_to_ppu_image(0, 0, scroll->pimage.w, scroll->pimage.h,
 			fg_def, bg_def, font_family, font_size, &text[0]);
