@@ -239,12 +239,12 @@ INLINE static void prg_fix_561(void) {
 				memmap_auto_wp_32k(0, MMCPU(0x8000), 0x03, TRUE, wr);
 				return;
 			case 6:
-				memmap_auto_wp_8k(0, MMCPU(0x8000), m561.prg[0], TRUE, wr);
-				memmap_auto_wp_8k(0, MMCPU(0xA000), m561.prg[1], TRUE, wr);
+				memmap_auto_wp_8k(0, MMCPU(0x8000), (m561.reg & 0x0F), TRUE, wr);
+				memmap_auto_wp_8k(0, MMCPU(0xA000), (m561.reg >> 4), TRUE, wr);
 				memmap_auto_wp_16k(0, MMCPU(0xC000), 0x07, TRUE, wr);
 				return;
 			case 7:
-				memmap_auto_wp_8k(0, MMCPU(0x8000), (m561.prg[0] & 0x0E), TRUE, wr);
+				memmap_auto_wp_8k(0, MMCPU(0x8000), (m561.reg & 0x0E), TRUE, wr);
 				memmap_auto_wp_8k(0, MMCPU(0xA000), ((m561.reg >> 4) | 0x01), TRUE, wr);
 				memmap_auto_wp_16k(0, MMCPU(0xC000), 0x07, TRUE, wr);
 				return;
