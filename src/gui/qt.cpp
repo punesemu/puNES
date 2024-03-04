@@ -23,6 +23,11 @@
 #include <QtGui/QScreen>
 #include <QtGui/QFontDatabase>
 #include <QtCore/QBuffer>
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+#include <QtCore/QTextCodec>
+#else
+#include <QtCore/QStringDecoder>
+#endif
 #if defined (_WIN32)
 #include <QtCore/QtPlugin>
 #if defined (QT5_PLUGIN_QWINDOWS)
@@ -319,10 +324,33 @@ void gui_start(void) {
 }
 
 size_t gui_utf8_to_utchar(char *input, uTCHAR **output, size_t max_size) {
-	QString s = QString::fromUtf8(input);
-	size_t size = s.toUtf8().size();
+	bool is_iso8859_1 = false;
 	uTCHAR *buff = NULL;
+	size_t size = 0;
+	QString s;
 
+	{
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+		QTextCodec *clatin1 = QTextCodec::codecForName("ISO 8859-1");
+		QTextDecoder latin1(clatin1);
+		QTextCodec *cutf8 = QTextCodec::codecForName("UTF-8");
+		QTextDecoder utf8(cutf8);
+		QString slatin1 = latin1.toUnicode(input);
+		QString sutf8 = utf8.toUnicode(input);
+
+		is_iso8859_1 = !latin1.hasFailure() && utf8.hasFailure();
+#else
+		QStringDecoder latin1 = QStringDecoder(QStringDecoder::Latin1);
+		QStringDecoder utf8 = QStringDecoder(QStringDecoder::Utf8);
+		QString slatin1 = latin1(input);
+		QString sutf8 = utf8(input);
+
+		is_iso8859_1 = !latin1.hasError() && utf8.hasError();
+#endif
+	}
+
+	s = is_iso8859_1 ? QString::fromLatin1(input) : QString::fromUtf8(input);
+	size = s.size();
 	if (size && (size <= max_size)) {
 		QByteArray array = uQByteArrayFromString(s);
 		size_t asize = array.length();
