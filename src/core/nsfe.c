@@ -549,6 +549,7 @@ BYTE nsfe_tlbl(_rom_mem *rom, BYTE phase) {
 			index += size;
 		}
 		if (!size) {
+			index++;
 			size = gui_utf8_to_utchar(&nsf_default_label[0], &song->track_label, strlen(nsf_default_label));
 		}
 	}
