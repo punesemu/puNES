@@ -1,4 +1,7 @@
 Changelog:
+0.112
+- Disabled portable mode for the AppImage (#378).
+
 0.111
 - Rewritten mappers : All.
 - Rewritten WRAM, VRAM, PRGROM, CHROM and Nametebles management.

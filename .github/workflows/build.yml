@@ -187,7 +187,7 @@ jobs:
       fail-fast: false
       matrix:
         config:
-          - { os: ubuntu-20.04, cc: "gcc", cxx: "g++", env: x86_64, opts: "-DENABLE_RELEASE:BOOL=ON -DENABLE_FFMPEG:BOOL=ON -DENABLE_OPENGL_CG:BOOL=ON" }
+          - { os: ubuntu-20.04, cc: "gcc", cxx: "g++", env: x86_64, opts: "-DENABLE_RELEASE:BOOL=ON -DENABLE_FFMPEG:BOOL=ON -DENABLE_OPENGL_CG:BOOL=ON -DDISABLE_PORTABLE_MODE:BOOL=ON" }
 
     steps:
       - name: 'Checkout'
