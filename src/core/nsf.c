@@ -1449,7 +1449,7 @@ static void nsf_draw_controls(void) {
 					umemset(buff, 0x00, usizeof(buff));
 					usnprintf(buff, usizeof(buff), uL("Playlist "));
 					ustrncat(buff, usizeof(buff), uL("" uPs("") "/"), nsf_print_number(nsf.playlist.index + 1, 3, fg));
-					ustrncat(buff, usizeof(buff), uL("" uPs("") ""), nsf_print_number(nsf.playlist.count + 1, 3, fg));
+					ustrncat(buff, usizeof(buff), uL("" uPs("") ""), nsf_print_number(nsf.playlist.count, 3, fg));
 					dos_text(0, NSF_GUI_PLIST_PPUX, NSF_GUI_PLIST_PPUY,
 						DOS_ALIGNHCENTER, 0, NSF_GUI_PLIST_W, NSF_GUI_PLIST_H, fg, bg, uL("lemon_10"), 10, buff);
 					spindex = nsf.playlist.index;
