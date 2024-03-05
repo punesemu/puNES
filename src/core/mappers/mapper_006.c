@@ -796,7 +796,7 @@ INLINE static void chr_fix_006(void) {
 			bank[1] = bank[0] | 0x01;
 			bank[2] = bank[0] | 0x02;
 			bank[3] = bank[0] | 0x03;
-			bank[4] = m006.chr.reg[1 | m006.chr.mmc4[1]] & 0xFC;
+			bank[4] = m006.chr.reg[4 | m006.chr.mmc4[1]] & 0xFC;
 			bank[5] = bank[4] | 0x01;
 			bank[6] = bank[4] | 0x02;
 			bank[7] = bank[4] | 0x03;
