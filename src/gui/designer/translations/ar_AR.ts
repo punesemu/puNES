@@ -1740,7 +1740,7 @@
     <message>
       <source>[red]error loading Game Genie rom[normal]</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation>[red]حصل خطأ في أثناء تحميل روم غيم جيني[normal]</translation>
+      <translation>[red]تعثرت عملية تشغيل روم غيم جيني[normal]</translation>
     </message>
     <message>
       <source>[red]Illegal Opcode[normal] [yellow]0x%1[normal] at [yellow]0x%2[normal]</source>
@@ -1750,7 +1750,7 @@
     <message>
       <source>[red]error loading rom[normal]</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation>[red]خطأ في أثناء تحميل الروم[normal]</translation>
+      <translation>[red]تعثرت عملية تشغيل الروم[normal]</translation>
     </message>
     <message>
       <source>[red]FDS bios not found[normal]</source>
