@@ -1513,7 +1513,7 @@ void emu_initial_ram(BYTE *ram, unsigned int length) {
 		return;
 	}
 	for (i = 0; i < length; i++) {
-		ram[i] = cfg->initial_ram_value == IRV_0X00
+		ram[i] = (info.mapper.id == NSF_MAPPER) || (cfg->initial_ram_value == IRV_0X00)
 			? 0x00
 			: cfg->initial_ram_value == IRV_0XFF
 				? 0xFF
