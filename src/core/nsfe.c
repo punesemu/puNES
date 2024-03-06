@@ -238,6 +238,22 @@ BYTE nsfe_load_rom(void) {
 			nsf.play_speed.dendy = nsf.play_speed.pal;
 		}
 
+		switch (nsf.region.preferred & 0x03) {
+			case NSF_NTSC_MODE:
+				info.machine[DATABASE] = NTSC;
+				break;
+			case NSF_PAL_MODE:
+				info.machine[DATABASE] = PAL;
+				break;
+			case NSF_DENDY_MODE:
+				info.machine[DATABASE] = DENDY;
+				break;
+			default:
+				nsf.region.preferred = NSF_NTSC_MODE;
+				info.machine[DATABASE] = NTSC;
+				break;
+		}
+
 		ram_set_size(0, S2K);
 		ram_init();
 

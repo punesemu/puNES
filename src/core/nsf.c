@@ -199,12 +199,15 @@ void nsf_info(void) {
 	log_info_box(uL("copyright;" uPs("") ""), nsf.info.copyright);
 	log_info_box(uL("ripper;" uPs("") ""), nsf.info.ripper);
 	log_info_box(uL("text;%s"), nsf.info.text ? "yes" : "no");
-	log_info_box(uL("region;supported %s%s%s, preferred %s"),
+	log_info_box(uL("region;supported %s%s%s%s"),
 		nsf.region.supported & 0x01 ? "NTSC" : "",
 		nsf.region.supported & 0x02 ? nsf.region.supported & 0x01 ? "/PAL" : "PAL" : "",
 		nsf.region.supported & 0x04 ? nsf.region.supported & 0x03 ? "/Dendy" : "Dendy" : "",
-		nsf.region.preferred == NSF_NTSC_MODE ? "NTSC" : nsf.region.preferred == NSF_PAL_MODE
-			? "PAL" : nsf.region.preferred == NSF_DENDY_MODE ? "Dendy" : "unknown");
+		(nsf.region.supported == 0x01) || (nsf.region.supported == 0x02) || (nsf.region.supported == 0x04) ? ""
+			: nsf.region.preferred == NSF_NTSC_MODE ? ", preferred NTSC"
+			: nsf.region.preferred == NSF_PAL_MODE ? ", preferred PAL"
+			: nsf.region.preferred == NSF_DENDY_MODE ? ", preferred Dendy"
+			: ", preferred unknown");
 	log_info_box(uL("irq support;%s"), nsf2.features.irq_support ? "yes" : "no");
 	log_info_box(uL("non-ret INIT;%s"), nsf2.features.non_returning_init ? "yes" : "no");
 	log_info_box(uL("disable PLAY;%s"), nsf2.features.suppressed_PLAY ? "yes" : "no");
@@ -538,6 +541,22 @@ BYTE nsf_load_rom(void) {
 		}
 		if (!nsf.play_speed.dendy) {
 			nsf.play_speed.dendy = nsf.play_speed.pal;
+		}
+
+		switch (nsf.region.preferred & 0x03) {
+			case NSF_NTSC_MODE:
+				info.machine[DATABASE] = NTSC;
+				break;
+			case NSF_PAL_MODE:
+				info.machine[DATABASE] = PAL;
+				break;
+			case NSF_DENDY_MODE:
+				info.machine[DATABASE] = DENDY;
+				break;
+			default:
+				nsf.region.preferred = NSF_NTSC_MODE;
+				info.machine[DATABASE] = NTSC;
+				break;
 		}
 
 		nsf.enabled = TRUE;

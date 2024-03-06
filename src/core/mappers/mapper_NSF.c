@@ -63,19 +63,16 @@ void map_init_NSF(void) {
 
 	nsf.state = NSF_PLAY | NSF_CHANGE_SONG;
 
-	switch (cfg->mode) {
+	switch (machine.type) {
 		default:
-		case AUTO:
-			nsf.type = nsf.region.preferred;
-			break;
 		case NTSC:
-			nsf.type = nsf.region.supported & 0x01 ? nsf.type = NSF_NTSC_MODE : nsf.region.preferred;
+			nsf.type = NSF_NTSC_MODE;
 			break;
 		case PAL:
-			nsf.type = nsf.region.supported & 0x02 ? nsf.type = NSF_PAL_MODE : nsf.region.preferred;
+			nsf.type = NSF_PAL_MODE;
 			break;
 		case DENDY:
-			nsf.type = nsf.region.supported & 0x04 ? nsf.type = NSF_DENDY_MODE : nsf.region.preferred;
+			nsf.type = NSF_DENDY_MODE;
 			break;
 	}
 
@@ -280,22 +277,6 @@ void extcl_apu_tick_NSF(void) {
 
 INLINE static void select_region_NSF(void) {
 	double rate = 0, nmi_rate = 0;
-
-	switch (nsf.type & 0x03) {
-		case NSF_NTSC_MODE:
-			info.machine[DATABASE] = NTSC;
-			break;
-		case NSF_PAL_MODE:
-			info.machine[DATABASE] = PAL;
-			break;
-		case NSF_DENDY_MODE:
-			info.machine[DATABASE] = DENDY;
-			break;
-		default:
-			nsf.type = NSF_NTSC_MODE;
-			info.machine[DATABASE] = NTSC;
-			break;
-	}
 
 	if (machine.type == NTSC) {
 		rate = nsf.play_speed.ntsc;
