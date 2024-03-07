@@ -330,6 +330,7 @@ struct _m006 {
 	BYTE scratch[0x1000];
 } m006;
 struct _m006tmp {
+	size_t old_prgrom_size;
 	BYTE *chr;
 } m006tmp;
 
@@ -351,6 +352,7 @@ void map_init_006(void) {
 	m006tmp.chr = NULL;
 
 	if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
+		m006tmp.old_prgrom_size = prgrom_size();
 		if (chrrom_size()) {
 			if (info.mapper.id != 12) {
 				if (vram_size(0) < chrrom_size()) {
@@ -358,9 +360,7 @@ void map_init_006(void) {
 					m006tmp.chr = chrrom_pnt();
 				}
 			} else {
-				size_t old_size = prgrom_size();
-
-				if (old_size < S512K) {
+				if (m006tmp.old_prgrom_size < S512K) {
 					prgrom_pnt() = realloc(prgrom_pnt(), S512K);
 					prgrom_set_size(S512K);
 				}
@@ -408,10 +408,10 @@ void map_init_006(void) {
 		m006.chr.lock = FALSE;
 		m006.latch = 0;
 
-		m006.prg[0] = ~3;
-		m006.prg[1] = ~2;
-		m006.prg[2] = ~1;
-		m006.prg[3] = ~0;
+		m006.prg[0] = memmap_banks_from_size(S8K, m006tmp.old_prgrom_size) - 4;
+		m006.prg[1] = memmap_banks_from_size(S8K, m006tmp.old_prgrom_size) - 3;
+		m006.prg[2] = memmap_banks_from_size(S8K, m006tmp.old_prgrom_size) - 2;
+		m006.prg[3] = memmap_banks_from_size(S8K, m006tmp.old_prgrom_size) - 1;
 
 		m006.chr.reg[0] = 0;
 		m006.chr.reg[1] = 1;
@@ -532,7 +532,6 @@ void extcl_cpu_wr_mem_006(BYTE nidx, WORD address, BYTE value) {
 					//                   +-- 2M or 4M banking mode select if M=0
 					//                        0: 4M banking mode
 					//                        1: 2M banking mode
-
 					m006.mode.m2m4 = address & 0x03;
 					// The CC bits are mirrors of those in the latch at $8000-$FFFF.
 					m006.latch = (m006.latch & 0xFC) | (value & 0x03);

@@ -280,6 +280,7 @@ EXTERNC BYTE memmap_adr_is_readable(BYTE nidx, DBWORD address);
 EXTERNC BYTE memmap_adr_is_writable(BYTE nidx, DBWORD address);
 EXTERNC WORD memmap_chunk_actual_bank(BYTE nidx, DBWORD address);
 EXTERNC BYTE *memmap_chunk_pnt(BYTE nidx, DBWORD address);
+EXTERNC WORD memmap_banks_from_size(enum _sizes_types chunk_size, size_t size);
 
 EXTERNC BYTE memmap_prg_region_init(BYTE nidx, size_t chunk_size);
 EXTERNC BYTE memmap_chr_region_init(BYTE nidx, size_t chunk_size);

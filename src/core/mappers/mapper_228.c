@@ -49,8 +49,8 @@ void extcl_after_mapper_init_228(void) {
 			memcpy(buffer, prgrom_pnt(), prgrom_size());
 
 			for (int i = 0x000000; i < 0x080000; i++) {
-				buffer[0x180000 +i] = buffer[0x100000 +i];
-				buffer[0x100000 +i] = (i >> 8) & 0xFF;
+				buffer[0x180000 + i] = buffer[0x100000 + i];
+				buffer[0x100000 + i] = (i >> 8) & 0xFF;
 			}
 
 			prgrom_set_size(size);

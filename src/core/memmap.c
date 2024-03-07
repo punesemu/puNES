@@ -138,6 +138,9 @@ BYTE *memmap_chunk_pnt(BYTE nidx, DBWORD address) {
 	}
 	return (NULL);
 }
+WORD memmap_banks_from_size(enum _sizes_types chunk_size, size_t size) {
+	return (memmap_banks(chunk_size, size));
+}
 
 BYTE memmap_prg_region_init(BYTE nidx, size_t chunk_size) {
 	return (memmap_region_init(&nes[nidx].m.memmap.prg, MEMMAP_PRG_SIZE, chunk_size));
@@ -512,6 +515,7 @@ void prgrom_quit(void) {
 }
 void prgrom_set_size(size_t size) {
 	set_size(&prgrom_size(), &prgrom.real_size, nes[0].m.memmap.prg.info.chunk.size, size);
+	prgrom_mask() = calc_mask(prgrom_size());
 }
 void prgrom_reset_chunks(void) {
 	for (int nesidx = 0; nesidx < info.number_of_nes; nesidx++) {
@@ -661,6 +665,7 @@ void chrrom_quit(void) {
 }
 void chrrom_set_size(size_t size) {
 	set_size(&chrrom_size(), &chrrom.real_size, nes[0].m.memmap.chr.info.chunk.size, size);
+	chrrom_mask() = calc_mask(chrrom_size());
 }
 void chrrom_reset_chunks(void) {
 	for (int nesidx = 0; nesidx < info.number_of_nes; nesidx++) {
@@ -834,7 +839,6 @@ BYTE wram_init(void) {
 			wram_mask() = calc_mask(wram_size());
 			wram_ram_mask() = calc_mask(wram_ram_size());
 			wram_nvram_mask() = calc_mask(wram_nvram_size());
-
 			// resetto la wram
 			wram_reset_chunks();
 		}
@@ -855,11 +859,17 @@ void wram_set_ram_size(size_t size) {
 	wram.ram.size = pow_of_2(size);
 	wram_size() = wram_ram_size() + wram_nvram_size();
 	wram.real_size = pow_of_2(wram_size());
+	wram_mask() = calc_mask(wram_size());
+	wram_ram_mask() = calc_mask(wram_ram_size());
+	wram_nvram_mask() = calc_mask(wram_nvram_size());
 }
 void wram_set_nvram_size(size_t size) {
 	wram.nvram.size = pow_of_2(size);
 	wram_size() = wram_ram_size() + wram_nvram_size();
 	wram.real_size = pow_of_2(wram_size());
+	wram_mask() = calc_mask(wram_size());
+	wram_ram_mask() = calc_mask(wram_ram_size());
+	wram_nvram_mask() = calc_mask(wram_nvram_size());
 }
 void wram_reset_chunks(void) {
 	for (int nesidx = 0; nesidx < info.number_of_nes; nesidx++) {
@@ -1197,6 +1207,9 @@ void vram_set_ram_size(BYTE nidx, size_t size) {
 	nes[nidx].m.vram.ram.size = pow_of_2(size);
 	vram_size(nidx) = vram_ram_size(nidx) + vram_nvram_size(nidx);
 	nes[nidx].m.vram.real_size = pow_of_2(vram_size(nidx));
+	vram_mask(nidx) = calc_mask(vram_size(nidx));
+	vram_ram_mask(nidx) = calc_mask(vram_ram_size(nidx));
+	vram_nvram_mask(nidx) = calc_mask(vram_nvram_size(nidx));
 }
 void vram_set_nvram_size(BYTE nidx, size_t size) {
 	nes[nidx].m.vram.nvram.size = pow_of_2(size);
@@ -1336,6 +1349,7 @@ void ram_quit(void) {
 }
 void ram_set_size(BYTE nidx, size_t size) {
 	set_size(&ram_size(nidx), &nes[nidx].m.ram.real_size, nes[nidx].m.memmap.ram.info.chunk.size, size);
+	ram_mask(nidx) = calc_mask(ram_size(nidx));
 }
 void ram_reset_chunks(void) {
 	for (int nesidx = 0; nesidx < info.number_of_nes; nesidx++) {
@@ -1451,6 +1465,7 @@ void nmt_quit(void) {
 }
 void nmt_set_size(BYTE nidx, size_t size) {
 	set_size(&nmt_size(nidx), &nes[nidx].m.nmt.real_size, nes[nidx].m.memmap.nmt.info.chunk.size, size);
+	nmt_mask(nidx) = calc_mask(nmt_size(nidx));
 }
 void nmt_reset_chunks(void) {
 	for (int nesidx = 0; nesidx < info.number_of_nes; nesidx++) {
