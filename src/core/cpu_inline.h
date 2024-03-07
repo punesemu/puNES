@@ -1851,7 +1851,7 @@ INLINE static void nsf_wr_mem(BYTE nidx, WORD address, BYTE value) {
 					bank = (address & 0x01);
 					address = (address & 0x000F) << 12;
 					memmap_wram_4k(nidx, MMCPU(address), bank);
-					dst = memmap_chunk_pnt(nidx, address);
+					dst = memmap_chunk_pnt(nidx, MMCPU(address));
 					if (dst) memcpy(dst, prgrom_pnt_byte(value << 12), S4K);
 				}
 				return;
@@ -1863,12 +1863,12 @@ INLINE static void nsf_wr_mem(BYTE nidx, WORD address, BYTE value) {
 			case 0x5FFD:
 			case 0x5FFE:
 			case 0x5FFF:
+				value = prgrom_control_bank(S4K, value);
 				if (nsf.sound_chips.fds && (address <= 0x5FFD)) {
-					value = prgrom_control_bank(S4K, value);
 					bank = (address & 0x07);
 					address = (address & 0x000F) << 12;
 					memmap_wram_4k(nidx, MMCPU(address), bank + 2);
-					dst = memmap_chunk_pnt(nidx, address);
+					dst = memmap_chunk_pnt(nidx, MMCPU(address));
 					if (dst) memcpy(dst, prgrom_pnt_byte(value << 12), S4K);
 					return;
 				}
