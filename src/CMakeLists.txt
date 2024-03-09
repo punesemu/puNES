@@ -477,6 +477,7 @@ set(core_srcs
 	core/mappers/mapper_559.c
 	core/mappers/mapper_560.c
 	core/mappers/mapper_561.c
+	core/mappers/mapper_562.c
 	core/mappers/mapper_FDS.c
 	core/mappers/mapper_GameGenie.c
 	core/mappers/mapper_NSF.c
