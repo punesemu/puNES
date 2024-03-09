@@ -62,6 +62,7 @@ void map_init_NSF(void) {
 	}
 
 	nsf.state = NSF_PLAY | NSF_CHANGE_SONG;
+	nsf.timers.update_only_diff = FALSE;
 
 	switch (machine.type) {
 		default:
