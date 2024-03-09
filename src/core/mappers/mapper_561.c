@@ -49,7 +49,7 @@ void map_init_561(void) {
 	if (info.reset >= HARD) {
 		memset(&m561, 0x00, sizeof(m561));
 
-		m561.reg1m = info.mapper.submapper << 5 | (info.mapper.mirroring == MIRRORING_VERTICAL ? 0x01: 0x11) | 0x02;
+		m561.reg1m = (info.mapper.submapper << 5) | (info.mapper.mirroring == MIRRORING_VERTICAL ? 0x01: 0x11) | 0x02;
 		m561.reg4m = 0x03;
 		m561.prg[0] = 0x1C;
 		m561.prg[1] = 0x1D;
@@ -94,7 +94,11 @@ void extcl_cpu_init_pc_561(BYTE nidx) {
 				data = miscrom_pnt_byte(4);
 			}
 
-			memcpy(wram_pnt_byte(address & 0x1FFF), data, size);
+			if (address < 0x2000) {
+				memcpy(ram_pnt_byte(nidx, address & 0x1FFF), data, size);
+			} else {
+				memcpy(wram_pnt_byte(address & 0x1FFF), data, size);
+			}
 
 			if (init) {
 				// JSR init
@@ -252,7 +256,7 @@ INLINE static void prg_fix_561(void) {
 	}
 }
 INLINE static void chr_fix_561(void) {
-	memmap_vram_wp_8k(0, MMPPU(0x0000), m561.chr, TRUE, !((m561.reg1m & 0xE0) & 0x80));
+	memmap_vram_wp_8k(0, MMPPU(0x0000), m561.chr, TRUE, !(m561.reg1m >= 0x80));
 }
 INLINE static void mirroring_fix_561(void) {
 	switch (m561.reg1m & 0x11) {
