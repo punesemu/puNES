@@ -628,13 +628,12 @@ void nsf_after_load_rom(void) {
 		uL("or use your [top][image]:/pics/pics/controller_mouse.png[endimage] "));
 }
 void nsf_init_tune(void) {
-	WORD i = 0;
+	BYTE reset = info.reset;
 
+	info.reset = HARD;
 	info.disable_tick_hw = TRUE;
 
-	nes[0].c.cpu.SP = 0xFD;
-
-	memset(ram_pnt(0), 0x00, ram_size(0));
+	ram_memset();
 	wram_memset();
 
 	if (nsf.sound_chips.vrc6) {
@@ -656,7 +655,7 @@ void nsf_init_tune(void) {
 		init_NSF_FME7();
 	}
 
-	for (i = 0x4000; i < 0x4014; i++) {
+	for (WORD i = 0x4000; i < 0x4014; i++) {
 		cpu_wr_mem(0, i, 0x00);
 	}
 	cpu_wr_mem(0, 0x4015, 0x00);
@@ -671,6 +670,7 @@ void nsf_init_tune(void) {
 	nsf_reset_prg();
 
 	info.disable_tick_hw = FALSE;
+	info.reset = reset;
 
 	nsf.state = NSF_PLAY;
 	nsf.songs.started = FALSE;
