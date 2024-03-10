@@ -110,6 +110,7 @@ BYTE nsfe_load_rom(void) {
 		info.machine[DATABASE] = DEFAULT;
 
 		memset(&nsf2, 0x00, sizeof(_nsf2));
+		nsf.info.use_fade = FALSE;
 
 		for (phase = NSFE_COUNT; phase <= NSFE_READ; phase++) {
 			rom.position = 4;
@@ -528,6 +529,7 @@ BYTE nsfe_fade(_rom_mem *rom, BYTE phase) {
 
 		rom_mem_memcpy(&song->fade, rom, 4);
 		nsf.chunk.length -= 4;
+		nsf.info.use_fade = TRUE;
 	}
 
 	rom->position += nsf.chunk.length;

@@ -324,6 +324,7 @@ BYTE nsf_load_rom(void) {
 		nsf.adr.load = (flags[LOAD_ADR_HI] << 8) | flags[LOAD_ADR_LO];
 		nsf.adr.init = (flags[INIT_ADR_HI] << 8) | flags[INIT_ADR_LO];
 		nsf.adr.play = (flags[PLAY_ADR_HI] << 8) | flags[PLAY_ADR_LO];
+		nsf.info.use_fade = FALSE;
 
 		if ((nsf.songs.total == 0) || (nsf.adr.load < 0x6000) || (nsf.adr.init < 0x6000) || (nsf.adr.play < 0x6000)) {
 			free(rom.data);
@@ -976,6 +977,8 @@ void nsf_controls_mouse_in_gui(int x_mouse, int y_mouse) {
 			}
 			return;
 		}
+	}
+	if (nsf.info.use_fade) {
 		x = NSF_GUI_OPTIONS_3_PPUX;
 		if (((x_mouse >= x) && (x_mouse <= (x + w))) && ((y_mouse >= y) && (y_mouse <= (y + h)))) {
 			cfg->nsf_player_nsf_fadeout = !cfg->nsf_player_nsf_fadeout;
@@ -1585,7 +1588,7 @@ static void nsf_draw_controls(void) {
 		}
 		if (force_draw || (sfadeout != cfg->nsf_player_nsf_fadeout)) {
 			nsf_print_option(NSF_GUI_OPTIONS_3_PPUX, NSF_GUI_OPTIONS_BOX_PPUY,
-				uL("Fadeout"), nsf.info_song && nsf.current_song.fade, cfg->nsf_player_nsf_fadeout);
+				uL("Fadeout"), nsf.info.use_fade, cfg->nsf_player_nsf_fadeout);
 			sfadeout = cfg->nsf_player_nsf_fadeout;
 		}
 	}

@@ -132,6 +132,7 @@ typedef struct _nsf {
 		uTCHAR *copyright;
 		uTCHAR *ripper;
 		uTCHAR *text;
+		BYTE use_fade;
 	} info;
 	struct _nsf_play_speed {
 		WORD ntsc;
