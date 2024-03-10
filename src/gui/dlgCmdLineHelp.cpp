@@ -22,8 +22,8 @@
 #include "version.h"
 #include "gui.h"
 
-dlgCmdLineHelp::dlgCmdLineHelp(QWidget *parent, const QString name, const QString title, const uTCHAR *usage_string) : QDialog(parent) {
-	init(name, title, usage_string);
+dlgCmdLineHelp::dlgCmdLineHelp(QWidget *parent, const QString title, const uTCHAR *usage_string) : QDialog(parent) {
+	init(title, usage_string, false);
 }
 dlgCmdLineHelp::dlgCmdLineHelp(QWidget *parent, const QString name) : QDialog(parent) {
 	uTCHAR *usage_string;
@@ -155,7 +155,7 @@ dlgCmdLineHelp::dlgCmdLineHelp(QWidget *parent, const QString name) : QDialog(pa
 		main_cfg[SET_ONLYCMDLINE_HIDDEN_GUI].hlp,
 		sch_input
 	);
-	init(name, uQString(uL("" NAME " Command Line Help")), usage_string);
+	init(uQString(uL("" NAME " Command Line Help")), uQStringCD(QString(usage_string).arg(name)));
 	free(usage_string);
 }
 dlgCmdLineHelp::~dlgCmdLineHelp() = default;
@@ -165,7 +165,7 @@ void dlgCmdLineHelp::closeEvent( QCloseEvent* event ) {
 	QDialog::closeEvent(event);
 }
 
-void dlgCmdLineHelp::init(const QString name, const QString title, const uTCHAR *usage_string) {
+void dlgCmdLineHelp::init(const QString title, const uTCHAR *usage_string, bool use_html) {
 	setupUi(this);
 
 	setAttribute(Qt::WA_DeleteOnClose);
@@ -178,10 +178,19 @@ void dlgCmdLineHelp::init(const QString name, const QString title, const uTCHAR 
 		setFont(font);
 	}
 
-	if (name.isEmpty()) {
+	{
+		QFont monospace("Monospace");
+
+		monospace.setPointSize(font().pointSize());
+		textEdit_cmdLineHelp->setFont(monospace);
+	}
+
+	if (use_html) {
 		textEdit_cmdLineHelp->setHtml("<pre>" + uQString(usage_string) + "</pre>");
 	} else {
-		textEdit_cmdLineHelp->setHtml("<pre>" + uQString(usage_string).arg(name) + "</pre>");
+		// in questo modo il QTextEdit utilizza il lineWrapMode, cosa che non farebbe con
+		// l'html inserito nel tag '<pre>...</pre>'
+		textEdit_cmdLineHelp->setPlainText(uQString(usage_string));
 	}
 
 	connect(pushButton_Close, SIGNAL(clicked(bool)), this, SLOT(s_close_clicked(bool)));

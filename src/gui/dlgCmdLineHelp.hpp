@@ -27,7 +27,7 @@ class dlgCmdLineHelp : public QDialog, public Ui::dlgCmdLineHelp {
 	Q_OBJECT
 
 	public:
-		explicit dlgCmdLineHelp(QWidget *parent, const QString name, const QString title, const uTCHAR *usage_string);
+		explicit dlgCmdLineHelp(QWidget *parent, const QString title, const uTCHAR *usage_string);
 		explicit dlgCmdLineHelp(QWidget *parent = nullptr, const QString name = "");
 		~dlgCmdLineHelp() override;
 
@@ -35,7 +35,7 @@ class dlgCmdLineHelp : public QDialog, public Ui::dlgCmdLineHelp {
 		void closeEvent(QCloseEvent *event) override;
 
 	private:
-		void init(const QString name, const QString title, const uTCHAR *usage_string);
+		void init(const QString title, const uTCHAR *usage_string, bool use_html = true);
 
 	private slots:
 		void s_close_clicked(bool checked);

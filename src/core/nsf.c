@@ -1396,7 +1396,7 @@ static void nsf_draw_controls(void) {
 		if (nsf.info.text) {
 			static int sauthnote = -1;
 
-			if (sauthnote != (nsf.authors_note == PRESSED)) {
+			if (force_draw || (sauthnote != (nsf.authors_note == PRESSED))) {
 				dos_image(0, (NSF_GUI_PPUX + dos_resource_w(uL(":/pics/pics/nsf_player.png"))) - dos_resource_w(uL(":/pics/pics/authors_note_press.png")),
 					NSF_GUI_PPUY - dos_resource_h(uL(":/pics/pics/authors_note_press.png")), 0, 0, -1, -1, nsf.authors_note == PRESSED
 					? uL(":/pics/pics/authors_note_press.png") : uL(":/pics/pics/authors_note_no_press.png"), NULL, 0);

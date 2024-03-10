@@ -2567,7 +2567,7 @@ void mainWindow::s_et_nsf_author_note_open(const uTCHAR *string) {
 	if (!nsf_author_note.dlg) {
 		QString sstring = uQString(string);
 
-		nsf_author_note.dlg = new dlgCmdLineHelp(this, "", "Author's Note", uQStringCD(sstring));
+		nsf_author_note.dlg = new dlgCmdLineHelp(this, "Author's Note", uQStringCD(sstring));
 		nsf_author_note.dlg->setModal(false);
 		if (!nsf_author_note.geom.isEmpty()) {
 			nsf_author_note.dlg->setGeometry(nsf_author_note.geom);
