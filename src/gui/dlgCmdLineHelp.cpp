@@ -155,7 +155,7 @@ dlgCmdLineHelp::dlgCmdLineHelp(QWidget *parent, const QString name) : QDialog(pa
 		main_cfg[SET_ONLYCMDLINE_HIDDEN_GUI].hlp,
 		sch_input
 	);
-	init(uQString(uL("" NAME " Command Line Help")), uQStringCD(QString(usage_string).arg(name)));
+	init(uQString(uL("" NAME " Command Line Help")), uQStringCD(uQString(usage_string).arg(name)));
 	free(usage_string);
 }
 dlgCmdLineHelp::~dlgCmdLineHelp() = default;
