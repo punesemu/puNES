@@ -8,9 +8,11 @@ Changelog:
 - [NSF] Fixed wram destination pointer initialization (#383).
 - [NSF] Fixed region selection (#380).
 - [NSF] Fixed RAM initialization (#380).
+- [NSF] Fixed nsf2 structure initialization when loading a file in NSFe format.
 - [NSF Player] Fixed a bug that prevented the display of some song titles (#377).
 - [NSF Player] Some NSFe have text encoded in ISO-8859-1 instead of UTF8, improved string encoding recognition (#377).
 - [NSF Player] Fixed wrong playlist count (#377).
+- [NSF Player] Improved display of author notes.
 
 0.111
 - Rewritten mappers : All.

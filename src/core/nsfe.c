@@ -109,6 +109,8 @@ BYTE nsfe_load_rom(void) {
 		info.number_of_nes = 1;
 		info.machine[DATABASE] = DEFAULT;
 
+		memset(&nsf2, 0x00, sizeof(_nsf2));
+
 		for (phase = NSFE_COUNT; phase <= NSFE_READ; phase++) {
 			rom.position = 4;
 
