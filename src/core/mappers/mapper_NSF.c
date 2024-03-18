@@ -80,6 +80,7 @@ void map_init_NSF(void) {
 	select_region_NSF();
 	nsf.rate.count = nsf.rate.reload;
 	nsf.nmi.count = nsf.rate.reload;
+	nsf.nmi.exec = FALSE;
 	nsf.nmi.in_use = FALSE;
 
 	nsf.adr.loop = NSF_ROUTINE_LOOP;
@@ -129,6 +130,7 @@ BYTE extcl_save_mapper_NSF(BYTE mode, BYTE slot, FILE *fp) {
 
 	save_slot_ele(mode, slot, nsf.rate.count);
 
+	save_slot_ele(mode, slot, nsf.nmi.exec);
 	save_slot_ele(mode, slot, nsf.nmi.in_use);
 	save_slot_ele(mode, slot, nsf.nmi.count);
 
@@ -219,6 +221,7 @@ void extcl_cpu_every_cycle_NSF(BYTE nidx) {
 		nsf.nmi.count = nsf.nmi.reload;
 
 		nes[0].c.nmi.high = !nsf.nmi.in_use;
+		nsf.nmi.exec = nes[0].c.nmi.high;
 		nes[0].p.ppu.odd_frame = !nes[0].p.ppu.odd_frame;
 		nes[0].p.ppu.frames++;
 
