@@ -475,15 +475,14 @@ INLINE static void nsf_rd_mem(BYTE nidx, WORD address, BYTE made_tick) {
 				if (nsf.state & NSF_CHANGE_SONG) {
 					nes[nidx].c.cpu.openbus = NSF_ROUTINE_NSF_INIT & 0xFF;
 					return;
-				} else if (nsf.nmi.exec) {
+				} else if (nes[nidx].c.cpu.opcode == OP_NMI) {
 					nes[nidx].c.cpu.openbus = NSF_ROUTINE_NMI & 0xFF;
 					return;
 				}
 				break;
 			case 0xFFFB:
-				if ((nsf.state & NSF_CHANGE_SONG) || nsf.nmi.exec) {
+				if ((nsf.state & NSF_CHANGE_SONG) || (nes[nidx].c.cpu.opcode == OP_NMI)) {
 					nes[nidx].c.cpu.openbus = NSF_ROUTINE_START >> 8;
-					nsf.nmi.exec = FALSE;
 					return;
 				}
 				break;

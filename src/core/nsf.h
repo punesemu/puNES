@@ -110,7 +110,6 @@ typedef struct _nsf {
 		DBWORD reload;
 	} rate;
 	struct _nsf_nmi {
-		BYTE exec;
 		BYTE in_use;
 		DBWORD count;
 		DBWORD reload;

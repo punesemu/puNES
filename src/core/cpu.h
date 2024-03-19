@@ -27,6 +27,8 @@ enum interrupt_types {
 	INT_NMI = 0xFFFA,
 	INT_RESET = 0xFFFC,
 	INT_IRQ = 0xFFFE,
+	OP_NMI = 0x100,
+	OP_IRQ = 0x200,
 	APU_IRQ = 0x01,
 	DMC_IRQ = 0x02,
 	EXT_IRQ = 0x04,

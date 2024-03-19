@@ -977,8 +977,8 @@ void cpu_exe_op(BYTE nidx) {
 		}
 		nes[nidx].c.cpu.cycles = 0;
 		break;
-	case 0x100: IMP(RD_OP, NMI) break;                                                           // NMI
-	case 0x200: IMP(RD_OP, IRQ(nes[nidx].c.cpu.SR & 0xEF)) break;                                // IRQ
+	case OP_NMI: IMP(RD_OP, NMI) break;                                                          // NMI
+	case OP_IRQ: IMP(RD_OP, IRQ(nes[nidx].c.cpu.SR & 0xEF)) break;                               // IRQ
 	}
 
 	// se presenti eseguo i restanti cicli di PPU e APU
