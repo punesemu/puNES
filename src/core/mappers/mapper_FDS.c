@@ -43,6 +43,7 @@ void map_init_FDS(void) {
 	fds.auto_insert.rE445.in_run = FALSE;
 	fds.auto_insert.in_game = FALSE;
 
+	fds.drive.mirroring = 0x08;
 	fds.drive.transfer_reset = 0x02;
 	fds.drive.io_mode = 0x04;
 	fds.drive.drive_ready = 0x40;
@@ -77,6 +78,11 @@ void extcl_after_mapper_init_FDS(void) {
 	memmap_wram_8k(0, MMCPU(0xA000), 2);
 	memmap_wram_8k(0, MMCPU(0xC000), 3);
 	memmap_prgrom_8k(0, MMCPU(0xE000), 0);
+	if (fds.drive.mirroring) {
+		mirroring_H(0);
+	} else {
+		mirroring_V(0);
+	}
 }
 BYTE extcl_cpu_rd_mem_FDS(BYTE nidx, WORD address, UNUSED(BYTE openbus)) {
 	switch (address) {
