@@ -43,11 +43,11 @@
 #include "recent_roms.h"
 #include "../../c++/crc/crc.h"
 #include "gui.h"
+#include "nes20db.h"
 #include "video/effects/pause.h"
 #include "video/effects/tv_noise.h"
 #if defined (FULLSCREEN_RESFREQ)
 #include "video/gfx_monitor.h"
-#include "nes20db.h"
 #endif
 
 #define RS_SCALE (1.0f / (1.0f + (float)RAND_MAX))

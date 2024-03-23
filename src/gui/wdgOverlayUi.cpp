@@ -34,9 +34,9 @@
 #include "rewind.h"
 #include "version.h"
 #include "nes.h"
+#include "input/standard_controller.h"
 #if defined (FULLSCREEN_RESFREQ)
 #include "video/gfx_monitor.h"
-#include "input/standard_controller.h"
 #endif
 
 void overlay_info_append_qstring(BYTE alignment, const QString &msg);
