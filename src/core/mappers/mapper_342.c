@@ -2247,7 +2247,7 @@ INLINE static BYTE mapper13_cpu_rd(UNUSED(BYTE nidx), WORD address, BYTE openbus
 }
 INLINE static BYTE mapper15_cpu_rd(UNUSED(BYTE nidx), WORD address, BYTE openbus) {
 	// MMC5
-	if (address == 0x0204) {
+	if (address == 0x5204) {
 		BYTE value = (m342.mmc5.irq.out << 7) |
 			(!m342.mmc5.ppu.rendering || ((m342.mmc5.ppu.scanline + 1) >= 241) ? 0 : 0x40);
 
