@@ -59,6 +59,8 @@ void map_init_176(void) {
 			info.mapper.submapper = 1;
 		}  else if ((prgrom_size() == S256K) && (chrrom_size() == S128K)) {
 			info.mapper.submapper = 1;
+		}  else if ((prgrom_size() == S128K) && (chrrom_size() == S64K)) {
+			info.mapper.submapper = 1;
 		}  else if ((prgrom_size() >= S8M) && !chrrom_size()) {
 			info.mapper.submapper = 2;
 		}  else if ((prgrom_size() >= S4M) && !chrrom_size()) {
@@ -213,7 +215,7 @@ INLINE static void prg_fix_176(void) {
 
 	switch (info.mapper.submapper) {
 		case 1:
-			if ((mode == 7) || ext) {
+			if ((mode == 0) || ext) {
 				mask = 0xFF;
 			}
 			break;
@@ -223,7 +225,7 @@ INLINE static void prg_fix_176(void) {
 			break;
 		case 3:
 			base |= (m176.cpu5xxx[5] << 7);
-			if (mode == 7) {
+			if (mode == 0) {
 				mask = 0xFF;
 			}
 			break;
