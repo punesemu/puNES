@@ -179,7 +179,7 @@
     </message>
     <message>
       <source>Trainer</source>
-      <translation>作弊</translation>
+      <translation>训练师</translation>
     </message>
     <message>
       <source>Unspecified</source>
@@ -239,15 +239,15 @@
     </message>
     <message>
       <source>Konami Hyper Shot</source>
-      <translation>科乐美大按钮</translation>
+      <translation>Konami 超音速射手</translation>
     </message>
     <message>
       <source>Coconuts Pachinko</source>
-      <translation>柏青哥</translation>
+      <translation>Coconuts 柏青哥</translation>
     </message>
     <message>
       <source>Exciting Boxing Punching Bag</source>
-      <translation>刺激拳击袋</translation>
+      <translation>兴奋拳击拳击袋</translation>
     </message>
     <message>
       <source>Jissen Mahjong Controller</source>
@@ -275,7 +275,7 @@
     </message>
     <message>
       <source>Top Rider</source>
-      <translation>骑手凌云</translation>
+      <translation>顶级骑手</translation>
     </message>
     <message>
       <source>Double-Fisted</source>
@@ -3179,23 +3179,23 @@
     </message>
     <message>
       <source>Per-Game</source>
-      <translation type="unfinished">Per-Game</translation>
+      <translation>每个游戏</translation>
     </message>
     <message>
       <source>Per-Game Overclock Setting</source>
-      <translation type="unfinished">Per-Game Overclock Setting</translation>
+      <translation>每个游戏独立超频设置</translation>
     </message>
     <message>
       <source>On</source>
-      <translation type="unfinished">On</translation>
+      <translation>开</translation>
     </message>
     <message>
       <source>Off</source>
-      <translation type="unfinished">Off</translation>
+      <translation>关</translation>
     </message>
     <message>
       <source>Default Value</source>
-      <translation type="unfinished">Default Value</translation>
+      <translation>默认值</translation>
     </message>
   </context>
   <context>
