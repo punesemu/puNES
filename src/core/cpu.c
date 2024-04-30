@@ -565,7 +565,7 @@ static const BYTE table_opcode_cycles[256] = {
 /*    0  1  2  3  4  5  6  7  8  9  A  B  C  D  E  F     */
 };
 
-void cpu_exe_op(BYTE nidx) {	
+void cpu_exe_op(BYTE nidx) {
 	nes[nidx].c.cpu.opcode = FALSE;
 	DMC.tick_type = DMC_NORMAL;
 	nes[nidx].c.cpu.opcode_PC = nes[nidx].c.cpu.PC.w;
