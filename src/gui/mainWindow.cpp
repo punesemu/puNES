@@ -895,6 +895,12 @@ void mainWindow::connect_menu_signals(void) {
 	connect_action(action_Switch_sides, 0xFFF, SLOT(s_disk_side()));
 	connect_action(action_Eject_Insert_Disk, SLOT(s_eject_disk()));
 	connect_action(action_Change_Disk, SLOT(s_change_disk()));
+	connect_action(action_Empty_Disk_FDS_Format_with_Header, 0, SLOT(s_create_empty_disk()));
+	connect_action(action_Empty_Disk_FDS_Format_without_Header, 1, SLOT(s_create_empty_disk()));
+	connect_action(action_Empty_Disk_Quick_Disk_Format, 2, SLOT(s_create_empty_disk()));
+	connect_action(action_Empty_Disk_DS_FDS_Format_with_Header, 3, SLOT(s_create_empty_disk()));
+	connect_action(action_Empty_Disk_DS_FDS_Format_without_Header, 4, SLOT(s_create_empty_disk()));
+	connect_action(action_Empty_Disk_DS_Quick_Disk_Format, 5, SLOT(s_create_empty_disk()));
 	connect_action(action_Current_state_to_FDS_with_Header, 0, SLOT(s_export_fds_image()));
 	connect_action(action_Current_state_to_FDS_without_Header, 1, SLOT(s_export_fds_image()));
 	connect_action(action_Current_state_to_Quick_Disk, 2, SLOT(s_export_fds_image()));
@@ -1182,12 +1188,14 @@ void mainWindow::update_fds_menu(void) {
 		ctrl_disk_side(action_Disk_4_side_B);
 		action_Eject_Insert_Disk->setEnabled(true);
 		action_Change_Disk->setEnabled(true);
+		menu_Empty_Disk->setEnabled(true);
 		menu_Export_Current_state->setEnabled(true);
 	} else {
 		action_text(action_Eject_Insert_Disk, tr("&Eject/Insert disk"), sc);
 		menu_Disk_Side->setEnabled(false);
 		action_Eject_Insert_Disk->setEnabled(false);
 		action_Change_Disk->setEnabled(false);
+		menu_Empty_Disk->setEnabled(false);
 		menu_Export_Current_state->setEnabled(false);
 	}
 }
@@ -1622,6 +1630,72 @@ void mainWindow::s_change_disk(void) {
 			ustrncpy(gui.last_open_path, uQStringCD(fileinfo.absolutePath()), usizeof(gui.last_open_path) - 1);
 			update_window();
 		};
+	}
+
+	emu_thread_continue();
+}
+void mainWindow::s_create_empty_disk(void) {
+	int format = QVariant(((QObject *)sender())->property("myValue")).toInt();
+	QStringList filters;
+	QString file;
+
+	emu_thread_pause();
+
+	switch (format) {
+		default:
+		case 0:
+		case 1:
+			filters.append(tr("Single Side FDS Format Disk"));
+			filters[0].append(" (*.fds *.FDS)");
+			break;
+		case 2:
+			filters.append(tr("Single Side Quick Disk Format Disk"));
+			filters[0].append(" (*.qd *.QD)");
+			break;
+		case 3:
+		case 4:
+			filters.append(tr("Double Sides FDS Format Disk"));
+			filters[0].append(" (*.fds *.FDS)");
+			break;
+		case 5:
+			filters.append(tr("Double Sides Quick Disk Format Disk"));
+			filters[0].append(" (*.qd *.QD)");
+			break;
+	}
+
+	filters.append(tr("All files"));
+	filters[1].append(" (*.*)");
+
+	file = QFileDialog::getSaveFileName(this, tr("Create an image of an empty disk"),
+		uQString(gui.last_open_path), filters.join(";;"));
+
+	if (!file.isNull()) {
+		QFileInfo fileinfo(file);
+		BYTE rc = EXIT_ERROR;
+
+		if (fileinfo.suffix().isEmpty()) {
+			switch (format) {
+				default:
+				case 0:
+				case 1:
+				case 3:
+				case 4:
+					fileinfo.setFile(QString(file) + ".fds");
+					break;
+				case 2:
+				case 5:
+					fileinfo.setFile(QString(file) + ".qd");
+					break;
+			}
+		}
+		rc = fds_create_empty_disk(uQStringCD(fileinfo.absoluteFilePath()),
+			(format == 2) || (format == 5) ? QD_FORMAT : FDS_FORMAT,
+			(format == 0) || (format == 3) ? FDS_TYPE_FDS : FDS_TYPE_RAW,
+			format > 2);
+		if (rc == EXIT_ERROR) {
+			QMessageBox::critical(this, tr("Error creating file"),
+				tr("Impossible write %0.").arg(fileinfo.fileName()), QMessageBox::Ok);
+		}
 	}
 
 	emu_thread_continue();

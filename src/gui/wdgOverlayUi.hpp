@@ -195,11 +195,12 @@ class overlayWidgetFastForward : public overlayWidget {
 
 class overlayWidgetFloppy : public overlayWidget {
 	private:
-		struct _images_floppy {
-			QImage gray;
-			QImage red;
-			QImage green;
-		} floppy;
+		struct _images_motor {
+			QImage on;
+			QImage off;
+			QImage read;
+			QImage write;
+		} motor;
 
 	public:
 		explicit overlayWidgetFloppy(QWidget *parent = nullptr);

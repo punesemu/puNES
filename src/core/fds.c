@@ -115,7 +115,6 @@ void fds_init(void) {
 	fds.side.change.new_side = 0xFF;
 
 	fds.drive.disk_ejected = TRUE;
-	fds.drive.motor_on = TRUE;
 	fds.drive.enabled_dsk_reg = 0x01;
 	fds.drive.enabled_snd_reg = 0x02;
 }
@@ -329,7 +328,7 @@ fds_load_bios_founded:
 
 	return (EXIT_OK);
 }
-BYTE fds_create_empty_disk(BYTE format, BYTE type, BYTE double_side, uTCHAR *file) {
+BYTE fds_create_empty_disk(uTCHAR *file, BYTE format, BYTE type, BYTE double_side) {
 	BYTE total_sides = double_side ? 2 : 1, *mfds = NULL;
 	size_t size = (type == FDS_TYPE_FDS ? 16 : 0) + (fds_disk_side_size(format) * total_sides);
 	FILE *fp = NULL;
@@ -561,7 +560,11 @@ fds_disk_op_start:
 		case FDS_DISK_EJECT:
 			fds.drive.disk_ejected = TRUE;
 			fds.drive.scan = FALSE;
+			fds.drive.end_of_head = 0x40;
+			fds.drive.motor_on = 0x01;
+			fds.drive.transfer_reset = 0x02;
 			fds.drive.motor_started = FALSE;
+			fds.drive.delay_8bit = 0;
 			fds.auto_insert.r4032.frames = 0;
 			fds.auto_insert.r4032.checks = 0;
 			if (!quiet) {
@@ -580,8 +583,12 @@ fds_disk_op_start:
 			fds.drive.mark_finded = FALSE;
 			fds.drive.disk_ejected = FALSE;
 			fds.drive.scan = FALSE;
+			fds.drive.end_of_head = 0x40;
+			fds.drive.motor_on = 0x01;
+			fds.drive.transfer_reset = 0x02;
 			fds.drive.motor_started = FALSE;
-			fds.drive.delay_insert = 32768;
+			fds.drive.delay_8bit = 0;
+			fds.drive.delay_insert = FDS_DELAY_INSERT;
 			fds.auto_insert.r4032.frames = 0;
 			fds.auto_insert.r4032.checks = 0;
 			if (!quiet) {
@@ -792,7 +799,7 @@ BYTE fds_to_image(_fds_info *finfo) {
 
 					fib.blength = finfo->protection.magic_card_trainer
 						? 0x200
-						: finfo->protection.kgk ? 0x500 : finfo->protection.quick_hunter ? 0x3000 : 0;
+						: finfo->protection.kgk ? 0x2500 : finfo->protection.quick_hunter ? 0x3000 : 0;
 					// indico l'inizio del blocco
 					fds_image_memset(&dst[size], FDS_DISK_BLOCK_MARK, 1);
 					size += 1;
@@ -1109,7 +1116,7 @@ void fds_image_sinfo(BYTE side, _fds_sinfo *sinfo) {
 	memset(sinfo, 0x00, sizeof(_fds_sinfo));
 
 	for (position = 0; position < fds_disk_side_size(fds.info.format);) {
-		BYTE block = src[position], stop = FALSE;;
+		BYTE block = src[position], stop = FALSE;
 		uint32_t blength = 1;
 
 		switch (block) {
@@ -1414,7 +1421,7 @@ BYTE fds_create_ips(const BYTE *d1, const size_t size1, const BYTE *d2, const si
 	fwrite("PATCH", 5, 1, fp);
 	fsize += 5;
 
-	while ((i < size1) || (i < size2)) {
+	while ((i < size1) && (i < size2)) {
 		size_t length = 0;
 		BYTE rle = TRUE;
 

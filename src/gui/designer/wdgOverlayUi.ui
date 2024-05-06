@@ -190,7 +190,7 @@
       </widget>
      </item>
      <item>
-      <widget class="overlayWidgetFloppy" name="overlayFloppy" native="true">
+      <widget class="overlayWidgetFastForward" name="overlayFastForward" native="true">
        <property name="minimumSize">
         <size>
          <width>16</width>
@@ -200,7 +200,7 @@
       </widget>
      </item>
      <item>
-      <widget class="overlayWidgetFastForward" name="overlayFastForward" native="true">
+      <widget class="overlayWidgetFloppy" name="overlayFloppy" native="true">
        <property name="minimumSize">
         <size>
          <width>16</width>

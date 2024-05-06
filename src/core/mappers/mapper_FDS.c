@@ -44,7 +44,6 @@ void map_init_FDS(void) {
 	fds.auto_insert.in_game = FALSE;
 
 	fds.drive.mirroring = 0x08;
-	fds.drive.transfer_reset = 0x02;
 	fds.drive.io_mode = 0x04;
 	fds.drive.drive_ready = 0x40;
 
@@ -250,89 +249,112 @@ void extcl_cpu_every_cycle_FDS(BYTE nidx) {
 		return;
 	}
 
-	if (fds.drive.delay_insert) {
-		fds.drive.delay_insert--;
-		return;
+	if (!fds.drive.motor_on) {
+		fds.drive.transfer_reset = 0x02;
 	}
 
-	if (!fds.drive.motor_on && !fds.drive.motor_started) {
+	if (fds.drive.delay_insert) {
+		--fds.drive.delay_insert;
+		if (fds.drive.transfer_reset) {
+			fds.drive.motor_started = FALSE;
+		}
+		if (fds.drive.delay_insert) {
+			return;
+		}
 		fds.drive.disk_position = 0;
 		fds.drive.mark_finded = FALSE;
-		return;
+		fds.drive.end_of_head = FALSE;
+		fds.drive.data_available = FALSE;
+		fds.drive.delay_8bit = fds.info.cycles_8bit_delay;
+	}
+
+	if (!fds.drive.motor_started && !fds.drive.transfer_reset && fds.drive.drive_ready) {
+		// "Akuu Senki Raijin (Japan) (Disk Writer)" (sporcare lo screen).
+		fds.drive.delay_8bit = fds.info.cycles_8bit_delay;
+		fds.drive.motor_started = TRUE;
 	}
 
 	// se c'e' un delay aspetto
-	if ((fds.drive.delay_8bit > 0) && --fds.drive.delay_8bit) {
+	if (fds.drive.delay_8bit && --fds.drive.delay_8bit) {
 		return;
 	}
 
-	fds.drive.scan = !fds.drive.transfer_reset;
+	fds.drive.scan = FALSE;
 	fds.info.last_operation = FDS_OP_NONE;
 	fds.drive.data_available = FALSE;
 
-	if (fds.drive.scan) {
-		BYTE data = 0, transfer = FALSE;
+	if (fds.drive.motor_started) {
+		fds.drive.scan = !fds.drive.transfer_reset;
 
-		data = fds.side.info->data[fds.drive.disk_position];
+		if (fds.drive.scan) {
+			BYTE data = 0, transfer = FALSE;
 
-		if (fds.drive.io_mode) {
-			// read
-			if (fds.drive.drive_ready) {
-				if (fds.drive.mark_finded) {
-					transfer = TRUE;
-					fds.drive.crc = fds_crc_byte(fds.drive.crc, data);
-				} else if (data == FDS_DISK_BLOCK_MARK) {
-					fds.drive.mark_finded = TRUE;
-					fds.drive.crc = 0;
-					fds.drive.crc = fds_crc_byte(fds.drive.crc, data);
+			data = fds.side.info->data[fds.drive.disk_position];
+
+			if (fds.drive.io_mode) {
+				// read
+				if (fds.drive.drive_ready) {
+					if (fds.drive.mark_finded) {
+						transfer = TRUE;
+						fds.drive.crc = fds_crc_byte(fds.drive.crc, data);
+					} else if (data == FDS_DISK_BLOCK_MARK) {
+						fds.drive.mark_finded = TRUE;
+						fds.drive.crc = 0;
+						fds.drive.crc = fds_crc_byte(fds.drive.crc, data);
+					}
 				}
-			}
-		} else {
-			if (!fds.drive.drive_ready) {
-				data = FDS_DISK_GAP;
-				fds.drive.crc = 0;
 			} else {
-				if (fds.drive.crc_control) {
-					data = fds.drive.crc >> 0;
-					fds.drive.crc >>= 8;
+				// write
+				if (!fds.drive.drive_ready) {
+					data = FDS_DISK_GAP;
+					fds.drive.crc = 0;
 				} else {
-					data = fds.drive.data_io;
-					fds.drive.crc = fds_crc_byte(fds.drive.crc, data);
+					if (fds.drive.crc_control) {
+						data = fds.drive.crc >> 0;
+						fds.drive.crc >>= 8;
+					} else {
+						data = fds.drive.data_io;
+						fds.drive.crc = fds_crc_byte(fds.drive.crc, data);
+						fds.drive.data_io = FDS_DISK_GAP;
+					}
+				}
+				transfer = TRUE;
+			}
+
+			fds.auto_insert.r4032.frames = 0;
+			fds.auto_insert.r4032.checks = 0;
+
+			if (transfer) {
+				fds.drive.data_available = 0x80;
+				fds.drive.transfer_flag = 0x02;
+
+				if (fds.drive.irq_disk_enabled) {
+					nes[nidx].c.irq.high |= FDS_DISK_IRQ;
+				}
+				if (fds.drive.io_mode) {
+					fds.drive.data_io = data;
+					fds.info.last_operation = FDS_OP_READ;
+				} else {
+					fds.side.info->data[fds.drive.disk_position] = data;
+					fds.info.writings_occurred = TRUE;
+					fds.info.last_operation = FDS_OP_WRITE;
 				}
 			}
-			transfer = TRUE;
 		}
-
-		fds.auto_insert.r4032.frames = 0;
-		fds.auto_insert.r4032.checks = 0;
-
-		if (transfer) {
-			fds.drive.data_available = 0x80;
-
-			if (fds.drive.irq_disk_enabled) {
-				fds.drive.transfer_flag = 0x02;
+		if (++fds.drive.disk_position >= fds.info.sides[fds.drive.side_inserted].size) {
+			fds.drive.delay_insert = FDS_DELAY_INSERT;
+			// Kosodate Gokko non risconosce il fine disco senza questo
+			if (!fds.drive.transfer_reset && fds.drive.transfer_flag && fds.drive.irq_disk_enabled) {
 				nes[nidx].c.irq.high |= FDS_DISK_IRQ;
 			}
-			if (fds.drive.io_mode) {
-				fds.drive.data_io = data;
-				fds.info.last_operation = FDS_OP_READ;
-			} else {
-				fds.side.info->data[fds.drive.disk_position] = data;
-				fds.info.writings_occurred = TRUE;
-				fds.info.last_operation = FDS_OP_WRITE;
+			// signal "disk is full" if end track was reached during writing
+			if (!fds.drive.io_mode) {
+				fds.drive.transfer_reset = 0x02;
 			}
-		}
-	}
-	if (fds.drive.scan || fds.drive.motor_started) {
-		if (++fds.drive.disk_position >= fds.info.sides[fds.drive.side_inserted].size) {
 			fds.drive.end_of_head = 0x40;
-			fds.drive.disk_position = 0;
-			fds.drive.transfer_reset = FALSE;
-			// Bishoujo Alien Battle (Japan) (Unl).fds non esegue la routine a  0xE188
+			// Bishoujo Alien Battle (Japan) (Unl).fds non esegue la routine a 0xE188
 			fds.auto_insert.in_game = TRUE;
 			if (fds.drive.motor_started) {
-				fds.drive.motor_on = FALSE;
-				fds.drive.motor_started = FALSE;
 				if (fds_auto_insert_enabled() && !fds.auto_insert.end_of_head.disabled && !fds.auto_insert.delay.dummy) {
 					fds_disk_op(FDS_DISK_EJECT, 0, TRUE);
 					gui_update_fds_menu();
@@ -340,7 +362,6 @@ void extcl_cpu_every_cycle_FDS(BYTE nidx) {
 				}
 			}
 		} else {
-			fds.drive.end_of_head = FALSE;
 			// il delay per riuscire a leggere i prossimi 8 bit
 			fds.drive.delay_8bit = fds.info.cycles_8bit_delay;
 		}

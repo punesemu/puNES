@@ -886,41 +886,45 @@ void overlayWidgetFastForward::update_widget(void) {
 
 // overlayWidgetFloppy -------------------------------------------------------------------------------------------------
 
-overlayWidgetFloppy::overlayWidgetFloppy(QWidget *parent) : overlayWidget(parent) {}
+overlayWidgetFloppy::overlayWidgetFloppy(QWidget *parent) : overlayWidget(parent) {
+	set_opacity(0.75);
+}
 overlayWidgetFloppy::~overlayWidgetFloppy() = default;
 
 QSize overlayWidgetFloppy::sizeHint(void) const {
-	return (QSize(floppy.gray.size().width() + hpadtot(), minimum_eight()));
+	return (QSize(motor.off.size().width() + hpadtot(), minimum_eight()));
 }
 void overlayWidgetFloppy::paintEvent(QPaintEvent *event) {
-	const QPointF coords = QPointF(((qreal)rect().width() - (qreal)(floppy.gray.size().width())) / 2.0,
-		((qreal)rect().height() - (qreal)floppy.gray.size().height()) / 2.0);
+	qreal x = ((qreal)rect().width() - (qreal)motor.off.size().width()) / 2.0;
+	qreal y = ((qreal)rect().height() - (qreal)motor.off.size().height()) / 2.0;
+	QPointF coords = QPointF(x, y);
 
 	overlayWidget::paintEvent(event);
 
 	painter.begin(this);
 	painter.setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
-	if ((fds.info.last_operation | fds.drive.disk_ejected)) {
-		if (fds.drive.disk_ejected) {
-			painter.drawImage(coords, floppy.gray);
-		} else {
-			if (fds.info.last_operation == FDS_OP_READ) {
-				painter.drawImage(coords, floppy.green);
-			} else {
-				painter.drawImage(coords, floppy.red);
-			}
-			if (rwnd.action != RWND_ACT_PAUSE) {
-				fds.info.last_operation = FDS_OP_NONE;
-			}
-		}
+
+	// led del motore e operazioni di I/O
+	if (fds.info.last_operation == FDS_OP_READ) {
+		painter.drawImage(coords, motor.read);
+	} else if (fds.info.last_operation == FDS_OP_WRITE) {
+		painter.drawImage(coords, motor.write);
+	} else if (fds.drive.motor_started) {
+		painter.drawImage(coords, motor.on);
+	} else {
+		painter.drawImage(coords, motor.off);
+	}
+	if (rwnd.action != RWND_ACT_PAUSE) {
+		fds.info.last_operation = FDS_OP_NONE;
 	}
 	painter.end();
 }
 
 void overlayWidgetFloppy::update_dpr(void) {
-	floppy.gray = dpr_image(":/pics/pics/overlay_floppy_gray.png");
-	floppy.red = dpr_image(":/pics/pics/overlay_floppy_red.png");
-	floppy.green = dpr_image(":/pics/pics/overlay_floppy_green.png");
+	motor.on = dpr_image(":/pics/pics/overlay_fds_motor_led_on.png");
+	motor.off = dpr_image(":/pics/pics/overlay_fds_motor_led_off.png");
+	motor.read = dpr_image(":/pics/pics/overlay_fds_motor_led_read.png");
+	motor.write = dpr_image(":/pics/pics/overlay_fds_motor_led_write.png");
 }
 void overlayWidgetFloppy::update_widget(void) {
 	if (cfg->txt_on_screen & fds.info.enabled & !info.turn_off) {

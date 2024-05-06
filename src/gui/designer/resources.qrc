@@ -7,6 +7,7 @@
     <file>icons/flag_arabic.svgz</file>
     <file>icons/bios.svgz</file>
     <file>icons/buffer_size.svgz</file>
+    <file>icons/disk_empty.svgz</file>
     <file>icons/barcode.svgz</file>
     <file>icons/camera.svgz</file>
     <file>icons/flag_germany.svgz</file>
@@ -246,6 +247,10 @@
     <file>pics/overlay_zapper.png</file>
     <file>pics/overlay_floppy_gray.png</file>
     <file>pics/overlay_floppy_green.png</file>
+    <file>pics/overlay_fds_motor_led_off.png</file>
+    <file>pics/overlay_fds_motor_led_on.png</file>
+    <file>pics/overlay_fds_motor_led_read.png</file>
+    <file>pics/overlay_fds_motor_led_write.png</file>
     <file>pics/overlay_floppy_red.png</file>
     <file>pics/overlay_mouse.png</file>
     <file>pics/overlay_mouse_button.png</file>

@@ -104,6 +104,21 @@
      <addaction name="action_Current_state_to_Quick_Disk"/>
      <addaction name="action_Current_state_to_puNES_image"/>
     </widget>
+    <widget class="QMenu" name="menu_Empty_Disk">
+     <property name="title">
+      <string>Create Empt&amp;y Disk</string>
+     </property>
+     <property name="icon">
+      <iconset resource="resources.qrc">
+       <normaloff>:/icon/icons/disk_empty.svgz</normaloff>:/icon/icons/disk_empty.svgz</iconset>
+     </property>
+     <addaction name="action_Empty_Disk_FDS_Format_with_Header"/>
+     <addaction name="action_Empty_Disk_FDS_Format_without_Header"/>
+     <addaction name="action_Empty_Disk_Quick_Disk_Format"/>
+     <addaction name="action_Empty_Disk_DS_FDS_Format_with_Header"/>
+     <addaction name="action_Empty_Disk_DS_FDS_Format_without_Header"/>
+     <addaction name="action_Empty_Disk_DS_Quick_Disk_Format"/>
+    </widget>
     <addaction name="action_Turn_Off"/>
     <addaction name="action_Hard_Reset"/>
     <addaction name="action_Soft_Reset"/>
@@ -115,6 +130,7 @@
     <addaction name="menu_Disk_Side"/>
     <addaction name="action_Eject_Insert_Disk"/>
     <addaction name="action_Change_Disk"/>
+    <addaction name="menu_Empty_Disk"/>
     <addaction name="menu_Export_Current_state"/>
     <addaction name="separator"/>
     <addaction name="menu_Tape"/>
@@ -817,6 +833,36 @@
    </property>
    <property name="text">
     <string>C&amp;hange Disk</string>
+   </property>
+  </action>
+  <action name="action_Empty_Disk_FDS_Format_with_Header">
+   <property name="text">
+    <string>Single Side &amp;FDS Format (with Header)</string>
+   </property>
+  </action>
+  <action name="action_Empty_Disk_FDS_Format_without_Header">
+   <property name="text">
+    <string>Single Side F&amp;DS Format (without Header)</string>
+   </property>
+  </action>
+  <action name="action_Empty_Disk_Quick_Disk_Format">
+   <property name="text">
+    <string>Single Side &amp;Quick Disk Format</string>
+   </property>
+  </action>
+  <action name="action_Empty_Disk_DS_FDS_Format_with_Header">
+   <property name="text">
+    <string>Double Sides &amp;FDS Format (with Header)</string>
+   </property>
+  </action>
+  <action name="action_Empty_Disk_DS_FDS_Format_without_Header">
+   <property name="text">
+    <string>Double Sides F&amp;DS Format (without Header)</string>
+   </property>
+  </action>
+  <action name="action_Empty_Disk_DS_Quick_Disk_Format">
+   <property name="text">
+    <string>Double Sides &amp;Quick Disk Format</string>
    </property>
   </action>
  </widget>

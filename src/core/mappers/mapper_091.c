@@ -94,7 +94,7 @@ void extcl_cpu_wr_mem_091(BYTE nidx, WORD address, BYTE value) {
 				m091.chr[address & 0x03] = value;
 				chr_fix_091();
 			}
-			return;;
+			return;
 		case 0x7000:
 			switch (address & 0x0003) {
 				case 0:

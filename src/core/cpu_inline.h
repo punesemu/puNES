@@ -700,7 +700,6 @@ INLINE static BYTE fds_rd_mem(BYTE nidx, WORD address, BYTE made_tick) {
 			// bit 1 (trasfer flag)
 			nes[nidx].c.cpu.openbus |= fds.drive.transfer_flag;
 			// bit 2 e 3 non settati
-			// TODO : bit 4 (CRC control : 0 passato, 1 errore)
 			nes[nidx].c.cpu.openbus |= (fds.drive.crc ? 0x10 : 0x00);
 			// bit 5 non settato
 			// bit 6 (end of head)
@@ -725,9 +724,12 @@ INLINE static BYTE fds_rd_mem(BYTE nidx, WORD address, BYTE made_tick) {
 			fds.drive.transfer_flag = FALSE;
 			nes[nidx].c.irq.high &= ~FDS_DISK_IRQ;
 #if !defined (RELEASE)
-			//printf("0x%04X 0x%02X [0x%04X] 0x%04X %d %d\n", address, nes[nidx].c.cpu.openbus,
-			//	fds.info.sides[fds.drive.side_inserted].data[fds.drive.disk_position], nes[nidx].c.cpu.opcode_PC,
-			//	fds.drive.disk_position, nes[nidx].c.irq.high);
+			//printf("0x%04X 0x%02X [0x%04X] 0x%04X %d %d\n",
+			//	address, nes[nidx].c.cpu.openbus,
+			//	fds.info.sides[fds.drive.side_inserted].data[fds.drive.disk_position],
+			//	nes[nidx].c.cpu.opcode_PC,
+			//	fds.drive.disk_position,
+			//	nes[nidx].c.irq.high);
 #endif
 			return (TRUE);
 		}
@@ -749,12 +751,13 @@ INLINE static BYTE fds_rd_mem(BYTE nidx, WORD address, BYTE made_tick) {
 			nes[nidx].c.cpu.openbus |= fds.info.write_protected;
 
 #if !defined (RELEASE)
-			//printf("%5d - %3d - %3d : 0x%04X 0x%02X %d %d %d %d\n",
+			//printf("%5d - %3d - %3d : 0x%04X 0x%02X %d %d %d %d %d\n",
 			//	nes[nidx].p.ppu.frames,
 			//	nes[nidx].p.ppu.frame_y,
 			//	nes[nidx].p.ppu.frame_x,
-			//	address, nes[nidx].c.cpu.openbus, fds.drive.disk_ejected, fds.drive.scan,
-			//	fds.drive.delay_insert, fds.drive.disk_position);
+			//	address, nes[nidx].c.cpu.openbus,
+			//	fds.drive.end_of_head, fds.drive.transfer_reset,
+			//	fds.drive.motor_started, fds.drive.io_mode, fds.drive.disk_position);
 #endif
 			if (fds_auto_insert_enabled() && !fds.auto_insert.r4032.disabled && !fds.auto_insert.delay.dummy) {
 				if (!fds.auto_insert.r4032.frames) {
@@ -767,10 +770,10 @@ INLINE static BYTE fds_rd_mem(BYTE nidx, WORD address, BYTE made_tick) {
 						if (diff < 70) {
 							if (!fds.drive.scan && (++fds.auto_insert.r4032.checks > FDS_AUTOINSERT_R4032_MAX_CHECKS)) {
 								// - 19 Neunzehn (1988)(Soft Pro)(J).fds (il controllo del r4032 e' mooooolto lento)
-								// - Dandy (19xx)(Pony Canyon)(J).fds
-								// - Zelda no Densetsu - The Hyrule Fantasy (1986)(Nintendo)(J).fds
 								// - Ao no Senritsu (1987)(Gakken)(J).fds
 								// - Bishojou SF Alien Battle (19xx)(Hacker International)(J)(Unl)[b].fds
+								// - Dandy (19xx)(Pony Canyon)(J).fds
+								// - Zelda no Densetsu - The Hyrule Fantasy (1986)(Nintendo)(J).fds
 								fds_disk_op(FDS_DISK_EJECT, 0, TRUE);
 								gui_update_fds_menu();
 								fds.auto_insert.delay.dummy = fds.info.cycles_dummy_delay;
@@ -1950,7 +1953,7 @@ INLINE static BYTE fds_wr_mem(BYTE nidx, WORD address, BYTE value) {
 			//        |+- Enable disk I/O registers
 			//        +-- Enable sound I/O registers
 #if !defined (RELEASE)
-			//printf("0x%04X 0x%02X %d %d\n", address, value, fds.drive.disk_ejected, fds.drive.delay);
+			//printf("0x%04X 0x%02X %d %d\n", address, value, fds.drive.disk_ejected, fds.drive.io_mode);
 #endif
 			fds.drive.enabled_dsk_reg = value & 0x01;
 			fds.drive.enabled_snd_reg = value & 0x02;
@@ -2001,18 +2004,14 @@ INLINE static BYTE fds_wr_mem(BYTE nidx, WORD address, BYTE value) {
 			//	nes[nidx].p.ppu.frames,
 			//	nes[nidx].p.ppu.frame_y,
 			//	nes[nidx].p.ppu.frame_x,
-			//	address, value, fds.drive.motor_on, fds.drive.scan,
+			//	address, value,
+			//	fds.drive.motor_started,
+			//	fds.drive.scan,
 			//	fds.drive.delay_insert, fds.drive.disk_position);
 #endif
 			if (fds.drive.enabled_dsk_reg) {
 				fds.drive.motor_on = value & 0x01;
-				if (!fds.drive.transfer_reset && (value & 0x02)) {
-					fds.drive.motor_started = TRUE;
-				}
 				fds.drive.transfer_reset = value & 0x02;
-				if (!fds.drive.transfer_reset || !fds.drive.motor_on) {
-					fds.drive.motor_started = FALSE;
-				}
 				fds.drive.io_mode = value & 0x04;
 				fds.drive.mirroring = value & 0x08;
 				if (fds.drive.mirroring) {
@@ -2033,11 +2032,7 @@ INLINE static BYTE fds_wr_mem(BYTE nidx, WORD address, BYTE value) {
 					fds.drive.mark_finded = FALSE;
 				}
 				fds.drive.irq_disk_enabled = value & 0x80;
-
-				// "Akuu Senki Raijin (Japan) (Disk Writer)" (sporcare lo screen).
-				fds.drive.delay_8bit = fds.info.cycles_8bit_delay;
 			}
-			fds.drive.transfer_flag = FALSE;
 			nes[nidx].c.irq.high &= ~FDS_DISK_IRQ;
 			return (TRUE);
 		}

@@ -48,9 +48,10 @@ enum fds_misc {
 	FDS_DISK_BLOCK_MARK = 0x80,
 	FDS_AUTOINSERT_R4032_MAX_CHECKS = 7,
 	FDS_MIN_LAG_FRAMES = 20,
+	FDS_DELAY_INSERT = 90000,
 	FDS_IMAGE_SIDE_SIZE = 75500,
 	DISK_FDS_SIDE_SIZE = 65500,
-	DISK_QD_SIDE_SIZE = 65536
+	DISK_QD_SIDE_SIZE = 65536,
 };
 
 // https://www.chrismcovell.com/fds-lister.html
@@ -234,7 +235,7 @@ EXTERNC void fds_init(void);
 EXTERNC void fds_quit(void);
 EXTERNC BYTE fds_load_rom(BYTE format);
 EXTERNC BYTE fds_load_bios(void);
-EXTERNC BYTE fds_create_empty_disk(BYTE format, BYTE type, BYTE double_side, uTCHAR *file);
+EXTERNC BYTE fds_create_empty_disk(uTCHAR *file, BYTE format, BYTE type, BYTE double_side);
 EXTERNC BYTE fds_change_disk(uTCHAR *file);
 EXTERNC void fds_info(void);
 EXTERNC void fds_info_side(BYTE side);
