@@ -963,25 +963,25 @@ void cpu_exe_op(BYTE nidx) {
 	case 0x9B: ABX(WR_OP, XAS, nes[nidx].c.cpu.YR) break;                                        // XAS $ABS,Y
 
 	//KIL/HLT instructions. Set the cpu to be jammed
-	case 0x02: nes[nidx].c.cpu.jammed = 1; break;
-	case 0x12: nes[nidx].c.cpu.jammed = 1; break;
-	case 0x22: nes[nidx].c.cpu.jammed = 1; break;
-	case 0x32: nes[nidx].c.cpu.jammed = 1; break;
-	case 0x42: nes[nidx].c.cpu.jammed = 1; break;
-	case 0x52: nes[nidx].c.cpu.jammed = 1; break;
-	case 0x62: nes[nidx].c.cpu.jammed = 1; break;
-	case 0x72: nes[nidx].c.cpu.jammed = 1; break;
-	case 0x92: nes[nidx].c.cpu.jammed = 1; break;
-	case 0xB2: nes[nidx].c.cpu.jammed = 1; break;
-	case 0xD2: nes[nidx].c.cpu.jammed = 1; break;
-	case 0xF2: nes[nidx].c.cpu.jammed = 1; break;
-
+	case 0x02:
+	case 0x12:
+	case 0x22:
+	case 0x32:
+	case 0x42:
+	case 0x52:
+	case 0x62:
+	case 0x72:
+	case 0x92:
+	case 0xB2:
+	case 0xD2:
+	case 0xF2:
 	default:
 		if (!info.no_rom && !info.first_illegal_opcode) {
 			log_warning(uL("cpu;alert PC = 0x%04X, CODEOP = 0x%02X"), (nes[nidx].c.cpu.PC.w - 1), nes[nidx].c.cpu.opcode);
 			gui_overlay_info_append_msg_precompiled(4, NULL);
 			info.first_illegal_opcode = TRUE;
 		}
+		nes[nidx].c.cpu.jammed = 1;
 		nes[nidx].c.cpu.cycles = 0;
 		break;
 	case OP_NMI: IMP(RD_OP, NMI) break;                                                          // NMI
