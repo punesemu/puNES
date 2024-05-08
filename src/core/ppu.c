@@ -584,7 +584,7 @@ void ppu_tick(BYTE nidx) {
 						 * altrimenti visualizzo un pixel del
 						 * colore 0 della paletta.
 						 */
-						put_pixel(nes[nidx].m.memmap_palette.color[0])
+						put_emphasis(0)
 
 						if ((nes[nidx].p.r2006.value & 0xFF00) == 0x3F00) {
 							/*
