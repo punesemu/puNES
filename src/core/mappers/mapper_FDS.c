@@ -217,10 +217,10 @@ void extcl_cpu_every_cycle_FDS(BYTE nidx) {
 	}
 
 	// IRQ handler
-	if (fds.drive.irq_timer_delay && !(--fds.drive.irq_timer_delay)) {
-		fds.drive.irq_timer_high = 0x01;
-		nes[nidx].c.irq.high |= FDS_TIMER_IRQ;
-	}
+//	if (fds.drive.irq_timer_delay && !(--fds.drive.irq_timer_delay)) {
+//		fds.drive.irq_timer_high = 0x01;
+//		nes[nidx].c.irq.high |= FDS_TIMER_IRQ;
+//	}
 	if (fds.drive.enabled_dsk_reg && fds.drive.irq_timer_enabled) {
 		if (fds.drive.irq_timer_counter) {
 			fds.drive.irq_timer_counter--;
@@ -231,7 +231,9 @@ void extcl_cpu_every_cycle_FDS(BYTE nidx) {
 			} else {
 				fds.drive.irq_timer_enabled = FALSE;
 			}
-			fds.drive.irq_timer_delay = 1;
+//			fds.drive.irq_timer_delay = 1;
+			fds.drive.irq_timer_high = 0x01;
+			nes[nidx].c.irq.high |= FDS_TIMER_IRQ;
 		}
 	}
 
@@ -343,23 +345,17 @@ void extcl_cpu_every_cycle_FDS(BYTE nidx) {
 		}
 		if (++fds.drive.disk_position >= fds.info.sides[fds.drive.side_inserted].size) {
 			fds.drive.delay_insert = FDS_DELAY_INSERT;
-			// Kosodate Gokko non risconosce il fine disco senza questo
-			if (!fds.drive.transfer_reset && fds.drive.transfer_flag && fds.drive.irq_disk_enabled) {
-				nes[nidx].c.irq.high |= FDS_DISK_IRQ;
-			}
+			fds.drive.end_of_head = 0x40;
+			// Bishoujo Alien Battle (Japan) (Unl).fds non esegue la routine a 0xE188
+			fds.auto_insert.in_game = TRUE;
 			// signal "disk is full" if end track was reached during writing
 			if (!fds.drive.io_mode) {
 				fds.drive.transfer_reset = 0x02;
 			}
-			fds.drive.end_of_head = 0x40;
-			// Bishoujo Alien Battle (Japan) (Unl).fds non esegue la routine a 0xE188
-			fds.auto_insert.in_game = TRUE;
-			if (fds.drive.motor_started) {
-				if (fds_auto_insert_enabled() && !fds.auto_insert.end_of_head.disabled && !fds.auto_insert.delay.dummy) {
-					fds_disk_op(FDS_DISK_EJECT, 0, TRUE);
-					gui_update_fds_menu();
-					fds.auto_insert.delay.dummy = fds.info.cycles_dummy_delay;
-				}
+			if (fds_auto_insert_enabled() && !fds.auto_insert.end_of_head.disabled && !fds.auto_insert.delay.dummy) {
+				fds_disk_op(FDS_DISK_EJECT, 0, TRUE);
+				gui_update_fds_menu();
+				fds.auto_insert.delay.dummy = fds.info.cycles_dummy_delay;
 			}
 		} else {
 			// il delay per riuscire a leggere i prossimi 8 bit
