@@ -48,7 +48,6 @@ enum fds_misc {
 	FDS_DISK_BLOCK_MARK = 0x80,
 	FDS_AUTOINSERT_R4032_MAX_CHECKS = 7,
 	FDS_MIN_LAG_FRAMES = 20,
-	FDS_DELAY_INSERT = 90000,
 	FDS_IMAGE_SIDE_SIZE = 75500,
 	DISK_FDS_SIDE_SIZE = 65500,
 	DISK_QD_SIDE_SIZE = 65536,
@@ -64,6 +63,8 @@ enum fds_misc {
 // Aspic (1988)(Bothtec)(J) necessita di almeno 1500 ms
 // Pulsar no Hikari - Space Wars Simulation (Japan) di almeno 1600 ms
 #define FDS_OP_SIDE_MS_DELAY 1600.0f
+// Kosodate Gokko (Japan) (Unl) ha un delay di 78 ms
+#define FDS_INSERT_MS_DELAY 74.0f
 
 #define fds_auto_insert_enabled() (cfg->fds_switch_side_automatically & !fds.auto_insert.disabled & !fds.bios.first_run)
 #define fds_reset_envelope_counter(env) (fds.snd.envelope.speed << 3) * (fds.snd.env.speed + 1)
@@ -100,6 +101,7 @@ typedef struct _fds_info {
 	BYTE last_operation;
 	BYTE frame_insert;
 	uint32_t cycles_8bit_delay;
+	uint32_t cycles_insert_delay;
 	uint32_t cycles_dummy_delay;
 	_fds_info_protection protection;
 	_fds_info_side sides[20];

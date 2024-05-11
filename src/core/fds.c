@@ -220,6 +220,7 @@ BYTE fds_load_rom(BYTE format) {
 	fds.info.expcted_sides = fds.info.total_sides;
 	fds.info.write_protected = 0x00;
 	fds.info.cycles_8bit_delay = emu_ms_to_cpu_cycles(FDS_8BIT_MS_DELAY);
+	fds.info.cycles_insert_delay = emu_ms_to_cpu_cycles(FDS_INSERT_MS_DELAY);
 	fds.info.cycles_dummy_delay = emu_ms_to_cpu_cycles(FDS_OP_SIDE_MS_DELAY);
 
 	// converto nel mio formato immagine
@@ -367,6 +368,8 @@ BYTE fds_change_disk(uTCHAR *file) {
 	_fds_info finfo;
 	FILE *fp = NULL;
 
+	fds_free_fds_info();
+
 	memset(&finfo, 0x00, sizeof(_fds_info));
 	umemset(&path[0], 0x00, usizeof(path));
 	ustrncpy(path, file, usizeof(path) - 1);
@@ -444,10 +447,15 @@ BYTE fds_change_disk(uTCHAR *file) {
 		position = 0;
 	}
 
+	info.format = finfo.format;
+	ustrncpy(info.rom.file, path, usizeof(info.rom.file));
+
 	finfo.expcted_sides = finfo.total_sides;
 	finfo.write_protected = 0x00;
 	finfo.enabled = fds.info.enabled;
+	finfo.writings_occurred = FALSE;
 	finfo.cycles_8bit_delay = fds.info.cycles_8bit_delay;
+	finfo.cycles_insert_delay = fds.info.cycles_insert_delay;
 	finfo.cycles_dummy_delay = fds.info.cycles_dummy_delay;
 
 	// converto nel mio formato immagine
@@ -461,10 +469,6 @@ BYTE fds_change_disk(uTCHAR *file) {
 
 	finfo.frame_insert = nes[0].p.ppu.frames;
 
-	info.format = finfo.format;
-	ustrncpy(info.rom.file, path, usizeof(info.rom.file));
-
-	fds_free_fds_info();
 	memcpy(&fds.info, &finfo, sizeof(_fds_info));
 	fds_info();
 
@@ -588,7 +592,7 @@ fds_disk_op_start:
 			fds.drive.transfer_reset = 0x02;
 			fds.drive.motor_started = FALSE;
 			fds.drive.delay_8bit = 0;
-			fds.drive.delay_insert = FDS_DELAY_INSERT;
+			fds.drive.delay_insert = fds.info.cycles_insert_delay;
 			fds.auto_insert.r4032.frames = 0;
 			fds.auto_insert.r4032.checks = 0;
 			if (!quiet) {

@@ -283,7 +283,6 @@ void extcl_cpu_every_cycle_FDS(BYTE nidx) {
 
 	fds.drive.scan = FALSE;
 	fds.info.last_operation = FDS_OP_NONE;
-	fds.drive.data_available = FALSE;
 
 	if (fds.drive.motor_started) {
 		fds.drive.scan = !fds.drive.transfer_reset;
@@ -327,24 +326,27 @@ void extcl_cpu_every_cycle_FDS(BYTE nidx) {
 			fds.auto_insert.r4032.checks = 0;
 
 			if (transfer) {
-				fds.drive.data_available = 0x80;
-				fds.drive.transfer_flag = 0x02;
-
 				if (fds.drive.irq_disk_enabled) {
 					nes[nidx].c.irq.high |= FDS_DISK_IRQ;
 				}
 				if (fds.drive.io_mode) {
 					fds.drive.data_io = data;
-					fds.info.last_operation = FDS_OP_READ;
+					if (!fds.drive.data_available) {
+						fds.info.last_operation = FDS_OP_READ;
+					}
 				} else {
 					fds.side.info->data[fds.drive.disk_position] = data;
 					fds.info.writings_occurred = TRUE;
-					fds.info.last_operation = FDS_OP_WRITE;
+					if (!fds.drive.data_available) {
+						fds.info.last_operation = FDS_OP_WRITE;
+					}
 				}
+				fds.drive.data_available = 0x80;
+				fds.drive.transfer_flag = 0x02;
 			}
 		}
 		if (++fds.drive.disk_position >= fds.info.sides[fds.drive.side_inserted].size) {
-			fds.drive.delay_insert = FDS_DELAY_INSERT;
+			fds.drive.delay_insert = fds.info.cycles_insert_delay;
 			fds.drive.end_of_head = 0x40;
 			// Bishoujo Alien Battle (Japan) (Unl).fds non esegue la routine a 0xE188
 			fds.auto_insert.in_game = TRUE;
