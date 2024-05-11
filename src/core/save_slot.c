@@ -32,7 +32,7 @@
 #include "nsf.h"
 #include "cheat.h"
 
-#define SAVE_VERSION 100
+#define SAVE_VERSION 101
 
 static BYTE mem_with_size(BYTE mode, BYTE slot, BYTE *mem, size_t msize, FILE *fp);
 static void preview_image_from_ppu_screen(BYTE slot, _ppu_screen_buffer *sb, void **dst, size_t *size);
@@ -257,6 +257,9 @@ BYTE save_slot_operation(BYTE mode, BYTE slot, FILE *fp) {
 		save_slot_ele(mode, slot, nes[nesidx].c.cpu.prg_ram_rd_active);
 		save_slot_ele(mode, slot, nes[nesidx].c.cpu.prg_ram_wr_active);
 		save_slot_ele(mode, slot, nes[nesidx].c.cpu.base_opcode_cycles);
+		if (save_slot.version >= 101) {
+			save_slot_ele(mode, slot, nes[nesidx].c.cpu.jammed);
+		}
 
 		// irq
 		save_slot_ele(mode, slot, nes[nesidx].c.irq.high);
