@@ -88,6 +88,8 @@ typedef struct _cpu {
 	WORD base_opcode_cycles;
 	// buffer di lettura
 	BYTE openbus;
+	//Set to true by KIL/HLT instruction
+	BYTE jammed;
 } _cpu;
 typedef struct _irq {
 	BYTE high;

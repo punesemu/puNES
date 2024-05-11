@@ -652,6 +652,11 @@ void cpu_exe_op(BYTE nidx) {
 	nes[nidx].c.cpu.base_opcode_cycles = table_opcode_cycles[(BYTE)nes[nidx].c.cpu.opcode];
 	mod_cycles_op(+=, nes[nidx].c.cpu.base_opcode_cycles);
 
+	//Jam the cpu if necessary
+	if (nes[nidx].c.cpu.jammed) {
+		return;
+	}
+
 	// ... e la eseguo
 	switch (nes[nidx].c.cpu.opcode) {
 
@@ -957,24 +962,26 @@ void cpu_exe_op(BYTE nidx) {
 	case 0xBB: ABX(RD_OP, _CYW(LAS), nes[nidx].c.cpu.YR) break;                                  // LAS $ABS,Y
 	case 0x9B: ABX(WR_OP, XAS, nes[nidx].c.cpu.YR) break;                                        // XAS $ABS,Y
 
-	case 0x02: // JAM
-	case 0x12: // JAM
-	case 0x22: // JAM
-	case 0x32: // JAM
-	case 0x42: // JAM
-	case 0x52: // JAM
-	case 0x62: // JAM
-	case 0x72: // JAM
-	case 0x92: // JAM
-	case 0xB2: // JAM
-	case 0xD2: // JAM
-	case 0xF2: // JAM
+	//KIL/HLT instructions. Set the cpu to be jammed
+	case 0x02:
+	case 0x12:
+	case 0x22:
+	case 0x32:
+	case 0x42:
+	case 0x52:
+	case 0x62:
+	case 0x72:
+	case 0x92:
+	case 0xB2:
+	case 0xD2:
+	case 0xF2:
 	default:
 		if (!info.no_rom && !info.first_illegal_opcode) {
 			log_warning(uL("cpu;alert PC = 0x%04X, CODEOP = 0x%02X"), (nes[nidx].c.cpu.PC.w - 1), nes[nidx].c.cpu.opcode);
 			gui_overlay_info_append_msg_precompiled(4, NULL);
 			info.first_illegal_opcode = TRUE;
 		}
+		nes[nidx].c.cpu.jammed = 1;
 		nes[nidx].c.cpu.cycles = 0;
 		break;
 	case OP_NMI: IMP(RD_OP, NMI) break;                                                          // NMI
@@ -1061,6 +1068,7 @@ void cpu_turn_on(BYTE nidx) {
 		nes[nidx].c.cpu.opcode_cycle = 0;
 		nes[nidx].c.cpu.double_wr = 0;
 		nes[nidx].c.cpu.double_rd = 0;
+		nes[nidx].c.cpu.jammed = 0;
 	}
 	memset(&nes[nidx].c.nmi, 0x00, sizeof(_nmi));
 	memset(&nes[nidx].c.irq, 0x00, sizeof(_irq));
