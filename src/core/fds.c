@@ -90,12 +90,12 @@ typedef struct _fds_info_block {
 	BYTE kgk;
 } _fds_info_block;
 
-BYTE fds_to_image(_fds_info *finfo);
+BYTE fds_to_image(uTCHAR *file, _fds_info *finfo);
 uTCHAR *fds_bcd_data(BYTE *bcd);
 void fds_free_fds_info(void);
 BYTE fds_examine_block(const BYTE *src, uint32_t position, _fds_info_block *fb);
 void fds_control_autoinsert(_fds_sinfo *sinfo);
-void fds_diff_file_name(uTCHAR *dst, size_t lenght);
+void fds_diff_file_name(uTCHAR *file, BYTE format, uTCHAR *dst, size_t len_buffer_dst);
 void fds_image_sinfo(BYTE side, _fds_sinfo *sinfo);
 void fds_image_memset(BYTE *dst, BYTE value, uint32_t lenght);
 void fds_image_memcpy(const BYTE *src, BYTE *dst, uint32_t lenght);
@@ -224,7 +224,7 @@ BYTE fds_load_rom(BYTE format) {
 	fds.info.cycles_dummy_delay = emu_ms_to_cpu_cycles(FDS_OP_SIDE_MS_DELAY);
 
 	// converto nel mio formato immagine
-	if (fds_to_image(&fds.info)) {
+	if (fds_to_image(&info.rom.file[0], &fds.info)) {
 		return (EXIT_ERROR);
 	}
 
@@ -447,9 +447,6 @@ BYTE fds_change_disk(uTCHAR *file) {
 		position = 0;
 	}
 
-	info.format = finfo.format;
-	ustrncpy(info.rom.file, path, usizeof(info.rom.file));
-
 	finfo.expcted_sides = finfo.total_sides;
 	finfo.write_protected = 0x00;
 	finfo.enabled = fds.info.enabled;
@@ -459,7 +456,7 @@ BYTE fds_change_disk(uTCHAR *file) {
 	finfo.cycles_dummy_delay = fds.info.cycles_dummy_delay;
 
 	// converto nel mio formato immagine
-	if (fds_to_image(&finfo)) {
+	if (fds_to_image(file, &finfo)) {
 		free(finfo.data);
 		if (finfo.image) {
 			free(finfo.image);
@@ -468,6 +465,9 @@ BYTE fds_change_disk(uTCHAR *file) {
 	}
 
 	finfo.frame_insert = nes[0].p.ppu.frames;
+
+	info.format = finfo.format;
+	ustrncpy(info.rom.file, path, usizeof(info.rom.file));
 
 	memcpy(&fds.info, &finfo, sizeof(_fds_info));
 	fds_info();
@@ -667,7 +667,7 @@ BYTE fds_from_image_to_file(uTCHAR *file, BYTE format, BYTE type) {
 	{
 		uTCHAR diff[LENGTH_FILE_NAME_LONG];
 
-		fds_diff_file_name(&diff[0], usizeof(diff));
+		fds_diff_file_name(&info.rom.file[0], fds.info.format, &diff[0], usizeof(diff));
 		uremove(diff);
 	}
 	return (EXIT_OK);
@@ -708,7 +708,7 @@ uint32_t fds_image_side_size(void) {
 	return (FDS_IMAGE_SIDE_SIZE);
 }
 
-BYTE fds_to_image(_fds_info *finfo) {
+BYTE fds_to_image(uTCHAR *file, _fds_info *finfo) {
 	BYTE *mfds = NULL, *pointer = finfo->data;
 
 	if (finfo->image) {
@@ -718,14 +718,14 @@ BYTE fds_to_image(_fds_info *finfo) {
 
 	// applico la diff
 	{
-		uTCHAR file[LENGTH_FILE_NAME_LONG];
+		uTCHAR diff[LENGTH_FILE_NAME_LONG];
 
-		fds_diff_file_name(&file[0], usizeof(file));
-		if (emu_file_exist(file) == EXIT_OK) {
+		fds_diff_file_name(file, finfo->format, &diff[0], usizeof(diff));
+		if (emu_file_exist(diff) == EXIT_OK) {
 			mfds = malloc(finfo->total_size);
 			if (mfds) {
 				memcpy(mfds, finfo->data, finfo->total_size);
-				mfds = fds_read_ips(mfds, finfo->total_size, file);
+				mfds = fds_read_ips(mfds, finfo->total_size, diff);
 			}
 			if (!mfds) {
 				log_error(uL("FDS;error on reading diff file"));
@@ -918,7 +918,7 @@ void fds_free_fds_info(void) {
 		if (fds.info.writings_occurred) {
 			uTCHAR file[LENGTH_FILE_NAME_LONG];
 
-			fds_diff_file_name(&file[0], usizeof(file));
+			fds_diff_file_name(&info.rom.file[0], fds.info.format, &file[0], usizeof(file));
 			if (cfg->fds_write_mode == FDS_WR_ORIGINAL_FILE) {
 				fds_from_image_to_file(info.rom.file, fds.info.format, fds.info.type);
 			} else {
@@ -1095,13 +1095,13 @@ void fds_control_autoinsert(_fds_sinfo *sinfo) {
 		}
 	}
 }
-void fds_diff_file_name(uTCHAR *dst, size_t lenght) {
+void fds_diff_file_name(uTCHAR *file, BYTE format, uTCHAR *dst, size_t len_buffer_dst) {
 	uTCHAR ext[10], basename[255], *last_dot = NULL;
 
-	umemset(dst, 0x00, lenght);
-	gui_utf_basename(info.rom.file, basename, usizeof(basename));
-	usnprintf(dst, lenght, uL("" uPs("") DIFF_FOLDER "/" uPs("")), gui_data_folder(), basename);
-	usnprintf(ext, usizeof(ext), uL("" uPs("")), (fds.info.format == QD_FORMAT ? uL(".ipq") : uL(".ipf")));
+	umemset(dst, 0x00, len_buffer_dst);
+	gui_utf_basename(file, basename, usizeof(basename));
+	usnprintf(dst, len_buffer_dst, uL("" uPs("") DIFF_FOLDER "/" uPs("")), gui_data_folder(), basename);
+	usnprintf(ext, usizeof(ext), uL("" uPs("")), (format == QD_FORMAT ? uL(".ipq") : uL(".ipf")));
 
 	// rintraccio l'ultimo '.' nel nome
 	last_dot = ustrrchr(dst, uL('.'));
