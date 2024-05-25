@@ -96,6 +96,18 @@ void map_init_005(void) {
 		m005.snd.S4.length.value = 0;
 	}
 
+	// Because no ExROM game is known to write PRG-RAM with one bank value and then attempt
+	// to read back the same data with a different bank value, emulating the PRG-RAM as 64K at all times
+	// can be used as a compatible superset for all games.
+	if (info.format == iNES_1_0) {
+		if (info.mapper.battery) {
+			wram_set_nvram_size(S16K);
+			wram_set_ram_size(S48K);
+		} else {
+			wram_set_ram_size(S64K);
+		}
+	}
+
 	info.mapper.extend_wr = TRUE;
 	nes[0].irql2f.present = TRUE;
 }
