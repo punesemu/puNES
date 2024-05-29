@@ -47,6 +47,8 @@ typedef struct _joy_list {
 extern _joy_list joy_list;
 
 class pixmapButton: public QPushButton {
+	Q_OBJECT
+
 	private:
 		QPixmap pixmap;
 
