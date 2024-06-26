@@ -16,7 +16,7 @@
     </message>
     <message>
       <source>Nintendo Entertainment System Emulator</source>
-      <translation>Emulador de Nintendo Entertainment System</translation>
+      <translation>Emulador do Sistema de Entretenimento da Nintendo</translation>
     </message>
     <message>
       <source>Compiled</source>
@@ -57,11 +57,11 @@
     <name>dlgDetachBarcode</name>
     <message>
       <source>Enter a barcode yourself...</source>
-      <translation>Digitar código de barras manualmente...</translation>
+      <translation>Insira você mesmo um código de barras...</translation>
     </message>
     <message>
       <source>Detach Barcode</source>
-      <translation>Destacar Código de Barras</translation>
+      <translation>Desanexar o Código de Barra</translation>
     </message>
     <message>
       <source>Apply</source>
@@ -187,7 +187,7 @@
     </message>
     <message>
       <source>Standard Controllers</source>
-      <translation>Controles Padrões</translation>
+      <translation>Controles Padrão</translation>
     </message>
     <message>
       <source>NES Four Score/Satellite</source>
@@ -219,7 +219,7 @@
     </message>
     <message>
       <source>Bandai Hyper Shot Lightgun</source>
-      <translation>Bandai Hyper Shot Lightgun</translation>
+      <translation>Lightgun Hiper Shot da Bandai</translation>
     </message>
     <message>
       <source>Power Pad Side A</source>
@@ -3179,11 +3179,11 @@
     </message>
     <message>
       <source>Per-Game</source>
-      <translation type="unfinished">Per-Game</translation>
+      <translation>Por Jogo</translation>
     </message>
     <message>
       <source>Per-Game Overclock Setting</source>
-      <translation type="unfinished">Per-Game Overclock Setting</translation>
+      <translation>Configurações do Overclock Por Jogo</translation>
     </message>
     <message>
       <source>On</source>
