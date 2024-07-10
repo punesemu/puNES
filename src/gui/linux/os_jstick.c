@@ -73,12 +73,15 @@ void js_os_jdev_open(_js_device *jdev, void *arg) {
 			const char *vid = udev_device_get_sysattr_value(udevd, "id/vendor");
 			const char *ver = udev_device_get_sysattr_value(udevd, "id/version");
 			const char *name = udev_device_get_sysattr_value(udevd, "name");
+			const char *uniq = udev_device_get_sysattr_value(udevd, "uniq");
 
 			jdev->usb.bustype = strtoul(btype, NULL, 16);
 			jdev->usb.vendor_id = strtoul(vid, NULL, 16);
 			jdev->usb.product_id = strtoul(pid, NULL, 16);
 			jdev->usb.version = strtoul(ver, NULL, 16);
+
 			ustrncpy(jdev->desc, name, usizeof(jdev->desc) - 1);
+			ustrncpy(jdev->uniq, uniq, usizeof(jdev->uniq) - 1);
 		} else {
 			return;
 		}
