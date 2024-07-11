@@ -571,11 +571,11 @@
     </message>
     <message>
       <source>PRG RAM Battery</source>
-      <translation>Batteria RAM PRG</translation>
+      <translation>Batteria da RAM do PRG</translation>
     </message>
     <message>
       <source>CHR RAM</source>
-      <translation>RAM CHR</translation>
+      <translation>RAM do CHR</translation>
     </message>
     <message>
       <source>Input</source>
@@ -603,11 +603,11 @@
     </message>
     <message>
       <source>Reset to defaults</source>
-      <translation>Redefinir padrões</translation>
+      <translation>Resetar para os padrões</translation>
     </message>
     <message>
       <source>Vs. System (1P via $4016)</source>
-      <translation>Vs. System (1P via $4016)</translation>
+      <translation>Vs. Sistema (1P via $4016)</translation>
     </message>
     <message>
       <source>Zapper ($4017)</source>
@@ -615,43 +615,43 @@
     </message>
     <message>
       <source>Arkanoid Vaus Controller (NES)</source>
-      <translation>Controle Arkanoid Vaus (NES)</translation>
+      <translation>Controle do Arkanoid Vaus (NES)</translation>
     </message>
     <message>
       <source>Arkanoid Vaus Controller (Famicom)</source>
-      <translation>Controle Arkanoid Vaus (Famicom)</translation>
+      <translation>Controle do Arkanoid Vaus (Famicom)</translation>
     </message>
     <message>
       <source>Two Vaus Controllers plus Famicom Data Recorder</source>
-      <translation>Dois Controles Vaus mais Famicom Data Recorder</translation>
+      <translation>Dois Controles do Vaus mais o Gravador de Dados Famicom</translation>
     </message>
     <message>
       <source>Subor Keyboard plus mouse (3x8-bit)</source>
-      <translation>Teclado Subor mais mouse (3x8-bit)</translation>
+      <translation>Teclado Subor mais o mouse (3x8 bits)</translation>
     </message>
     <message>
       <source>Subor Keyboard plus mouse (24-bit)</source>
-      <translation>Teclado Subor mais mouse (24-bit)</translation>
+      <translation>Teclado Subor mais o mouse (24 bits)</translation>
     </message>
     <message>
       <source>SNES Mouse ($4017.0)</source>
-      <translation>Mouse SNES ($4017.0)</translation>
+      <translation>Mouse do SNES ($4017.0)</translation>
     </message>
     <message>
       <source>Unknown Famiclone Keyboard (Golden Key)</source>
-      <translation>Teclado Famiclone Desconhecido (Golden Key)</translation>
+      <translation>Teclado Famiclone Desconhecido (Chave Dourada)</translation>
     </message>
     <message>
       <source>Subor Keyboard plus mouse (24-bit $4017)</source>
-      <translation>Teclado Subor mais mouse (24-bit $4017)</translation>
+      <translation>Teclado Subor mais o mouse (24 bits $4017)</translation>
     </message>
     <message>
       <source>Port Test</source>
-      <translation>Port Test</translation>
+      <translation>Teste da Porta</translation>
     </message>
     <message>
       <source>Bandai Multi Game Player Gamepad</source>
-      <translation>Bandai Multi Game Player Gamepad</translation>
+      <translation>Gamepad Multi-Jogadores da Bandai</translation>
     </message>
     <message>
       <source>Venom TV Dance Mat</source>
