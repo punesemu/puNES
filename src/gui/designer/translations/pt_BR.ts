@@ -771,11 +771,11 @@
     </message>
     <message>
       <source>Rewind Mode On/Off</source>
-      <translation>Modo Retroceder Ativado/Desativado</translation>
+      <translation>Modo Rebobinar Ligado/Desligado</translation>
     </message>
     <message>
       <source>Rewind Step Backward</source>
-      <translation>Retroceder um Frame</translation>
+      <translation>Retroceder um Passo pra Trás</translation>
     </message>
     <message>
       <source>Rewind Step Forward</source>
@@ -783,15 +783,15 @@
     </message>
     <message>
       <source>Rewind Fast Forward</source>
-      <translation>Avançar Rápido</translation>
+      <translation>Retroceder o Avanço Rápido</translation>
     </message>
     <message>
       <source>Rewind Play</source>
-      <translation>Reproduzir Rebobinação</translation>
+      <translation>Retroceder a Reprodução</translation>
     </message>
     <message>
       <source>Rewind Pause</source>
-      <translation>Pausar Rebobinação</translation>
+      <translation>Retroceder a Pausa</translation>
     </message>
     <message>
       <source>Rewind Fast Backward</source>
