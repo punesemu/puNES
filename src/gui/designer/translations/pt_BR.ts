@@ -16,7 +16,7 @@
     </message>
     <message>
       <source>Nintendo Entertainment System Emulator</source>
-      <translation>Emulador de Nintendo Entertainment System</translation>
+      <translation>Emulador do Sistema de Entretenimento da Nintendo</translation>
     </message>
     <message>
       <source>Compiled</source>
@@ -57,11 +57,11 @@
     <name>dlgDetachBarcode</name>
     <message>
       <source>Enter a barcode yourself...</source>
-      <translation>Digitar código de barras manualmente...</translation>
+      <translation>Insira você mesmo um código de barras...</translation>
     </message>
     <message>
       <source>Detach Barcode</source>
-      <translation>Destacar Código de Barras</translation>
+      <translation>Desanexar o Código de Barra</translation>
     </message>
     <message>
       <source>Apply</source>
@@ -111,7 +111,7 @@
     </message>
     <message>
       <source>PRG ROM KiB</source>
-      <translation>PRG ROM KiB</translation>
+      <translation>KBs da ROM PRG</translation>
     </message>
     <message>
       <source>None</source>
@@ -131,51 +131,51 @@
     </message>
     <message>
       <source>1 KiB</source>
-      <translation>1 KiB</translation>
+      <translation>1 KB</translation>
     </message>
     <message>
       <source>2 KiB</source>
-      <translation>2 KiB</translation>
+      <translation>2 KBs</translation>
     </message>
     <message>
       <source>4 KiB</source>
-      <translation>4 KiB</translation>
+      <translation>4 KBs</translation>
     </message>
     <message>
       <source>8 KiB</source>
-      <translation>8 KiB</translation>
+      <translation>8 KBs</translation>
     </message>
     <message>
       <source>16 KiB</source>
-      <translation>16 KiB</translation>
+      <translation>16 KBs</translation>
     </message>
     <message>
       <source>32 KiB</source>
-      <translation>32 KiB</translation>
+      <translation>32 KBs</translation>
     </message>
     <message>
       <source>64 KiB</source>
-      <translation>64 KiB</translation>
+      <translation>64 KBs</translation>
     </message>
     <message>
       <source>128 KiB</source>
-      <translation>128 KiB</translation>
+      <translation>128 KBs</translation>
     </message>
     <message>
       <source>256 KiB</source>
-      <translation>256 KiB</translation>
+      <translation>256 KBs</translation>
     </message>
     <message>
       <source>512 KiB</source>
-      <translation>512 KiB</translation>
+      <translation>512 KBs</translation>
     </message>
     <message>
       <source>1 MiB</source>
-      <translation>1 MiB</translation>
+      <translation>1 MB</translation>
     </message>
     <message>
       <source>N/A</source>
-      <translation>N/A</translation>
+      <translation>Não Disponível</translation>
     </message>
     <message>
       <source>Trainer</source>
@@ -187,7 +187,7 @@
     </message>
     <message>
       <source>Standard Controllers</source>
-      <translation>Controles Padrões</translation>
+      <translation>Controles Padrão</translation>
     </message>
     <message>
       <source>NES Four Score/Satellite</source>
@@ -199,7 +199,7 @@
     </message>
     <message>
       <source>Vs. System</source>
-      <translation>Vs. System</translation>
+      <translation>Vs. Sistema</translation>
     </message>
     <message>
       <source>Vs. System (1P via $4017)</source>
@@ -219,7 +219,7 @@
     </message>
     <message>
       <source>Bandai Hyper Shot Lightgun</source>
-      <translation>Bandai Hyper Shot Lightgun</translation>
+      <translation>Lightgun Hiper Shot da Bandai</translation>
     </message>
     <message>
       <source>Power Pad Side A</source>
@@ -231,11 +231,11 @@
     </message>
     <message>
       <source>Family Trainer Side A</source>
-      <translation>Family Trainer Lado A</translation>
+      <translation>Trainer da Família Lado A</translation>
     </message>
     <message>
       <source>Family Trainer Side B</source>
-      <translation>Family Trainer Lado B</translation>
+      <translation>Trainer da Família Lado B</translation>
     </message>
     <message>
       <source>Konami Hyper Shot</source>
@@ -259,7 +259,7 @@
     </message>
     <message>
       <source>Oeka Kids Tablet</source>
-      <translation>Tablet Oeka Kids</translation>
+      <translation>Tablet do Oeka Kids</translation>
     </message>
     <message>
       <source>Sunsoft Barcode Battler</source>
@@ -267,7 +267,7 @@
     </message>
     <message>
       <source>Miracle Piano Keyboard</source>
-      <translation>Teclado Miracle Piano</translation>
+      <translation>Teclado do Piano Miracle</translation>
     </message>
     <message>
       <source>Pokkun Moguraa</source>
@@ -279,11 +279,11 @@
     </message>
     <message>
       <source>Double-Fisted</source>
-      <translation>Double-Fisted</translation>
+      <translation>Punho Duplo</translation>
     </message>
     <message>
       <source>Famicom 3D System</source>
-      <translation>Famicom 3D System</translation>
+      <translation>Sistema 3D da Famicom</translation>
     </message>
     <message>
       <source>Doremikko Keyboard</source>
@@ -291,23 +291,23 @@
     </message>
     <message>
       <source>R.O.B. Gyro Set</source>
-      <translation>R.O.B. Gyro Set</translation>
+      <translation>Conjunto do Gyro R.O.B.</translation>
     </message>
     <message>
       <source>Famicom Data Recorder</source>
-      <translation>Famicom Data Recorder</translation>
+      <translation>Gravador de Dados da Famicom</translation>
     </message>
     <message>
       <source>ASCII Turbo File</source>
-      <translation>ASCII Turbo File</translation>
+      <translation>Arquivo Turbo em ASCII</translation>
     </message>
     <message>
       <source>IGS Storage Battle Box</source>
-      <translation>IGS Storage Battle Box</translation>
+      <translation>Caixa de Batalha da Armazenagem do IGS</translation>
     </message>
     <message>
       <source>Family BASIC Keyboard</source>
-      <translation>Teclado Family BASIC</translation>
+      <translation>Teclado BASIC da Família</translation>
     </message>
     <message>
       <source>Dongda PEC-586 Keyboard</source>
@@ -315,7 +315,7 @@
     </message>
     <message>
       <source>Bit Corp. Bit-79 Keyboard</source>
-      <translation>Teclado Bit Corp. Bit-79</translation>
+      <translation>Teclado Bit-79 da Bit Corp.</translation>
     </message>
     <message>
       <source>Subor Keyboard</source>
@@ -327,11 +327,11 @@
     </message>
     <message>
       <source>Two SNES controllers</source>
-      <translation>Dois controles SNES</translation>
+      <translation>Dois controles do SNES</translation>
     </message>
     <message>
       <source>RacerMate Bicycle</source>
-      <translation>RacerMate Bicycle</translation>
+      <translation>Bicicleta do RacerMate</translation>
     </message>
     <message>
       <source>U-Force</source>
@@ -343,15 +343,15 @@
     </message>
     <message>
       <source>City Patrolman Lightgun</source>
-      <translation>City Patrolman Lightgun</translation>
+      <translation>Lightgun do Patrulheiro da Cidade</translation>
     </message>
     <message>
       <source>Sharp C1 Cassette Interface</source>
-      <translation>Interface de Cassette Sharp C1</translation>
+      <translation>Interface do Cassette Sharp C1</translation>
     </message>
     <message>
       <source>Standard Controller (inverted direction)</source>
-      <translation>Controle Padrão (direcionais invertidos)</translation>
+      <translation>Controle Padrão (direção invertida)</translation>
     </message>
     <message>
       <source>Excalibor Sudoku Pad</source>
@@ -359,11 +359,11 @@
     </message>
     <message>
       <source>ABL Pinball</source>
-      <translation>ABL Pinball</translation>
+      <translation>Pinball ABL</translation>
     </message>
     <message>
       <source>Golden Nugget Casino</source>
-      <translation>Golden Nugget Casino</translation>
+      <translation>Cassino Golden Nugget</translation>
     </message>
     <message>
       <source>NTSC</source>
@@ -395,19 +395,19 @@
     </message>
     <message>
       <source>4-Screen</source>
-      <translation>4-Telas</translation>
+      <translation>4 Telas</translation>
     </message>
     <message>
       <source>CPU Timing</source>
-      <translation>Timing CPU</translation>
+      <translation>Cronometragem da CPU</translation>
     </message>
     <message>
       <source>VS PPU</source>
-      <translation>PPU VS</translation>
+      <translation>VS PPU</translation>
     </message>
     <message>
       <source>CHR ROM KiB</source>
-      <translation>CHR ROM KiB</translation>
+      <translation>KBs da ROM CHR</translation>
     </message>
     <message>
       <source>NES/Famicom/Dendy</source>
@@ -455,7 +455,7 @@
     </message>
     <message>
       <source>Famicom Network System</source>
-      <translation>Famicom Network System</translation>
+      <translation>Sistema de Rede Famicom</translation>
     </message>
     <message>
       <source>File</source>
@@ -463,7 +463,7 @@
     </message>
     <message>
       <source>CHR RAM Battery</source>
-      <translation>Bateria CHR RAM</translation>
+      <translation>Bateria da RAM CHR</translation>
     </message>
     <message>
       <source>Mapper</source>
@@ -475,11 +475,11 @@
     </message>
     <message>
       <source>RBI Baseball</source>
-      <translation>RBI Baseball</translation>
+      <translation>Baseball RBI</translation>
     </message>
     <message>
       <source>TKO Boxing</source>
-      <translation>TKO Boxing</translation>
+      <translation>Boxing TKO</translation>
     </message>
     <message>
       <source>Super Xevious</source>
@@ -499,7 +499,7 @@
     </message>
     <message>
       <source>PRG RAM</source>
-      <translation>RAM PRG</translation>
+      <translation>RAM do PRG</translation>
     </message>
     <message>
       <source>iNES 1.0</source>
@@ -567,15 +567,15 @@
     </message>
     <message>
       <source>Header</source>
-      <translation>Header</translation>
+      <translation>Cabeçalho</translation>
     </message>
     <message>
       <source>PRG RAM Battery</source>
-      <translation>Batteria RAM PRG</translation>
+      <translation>Batteria da RAM do PRG</translation>
     </message>
     <message>
       <source>CHR RAM</source>
-      <translation>RAM CHR</translation>
+      <translation>RAM do CHR</translation>
     </message>
     <message>
       <source>Input</source>
@@ -603,11 +603,11 @@
     </message>
     <message>
       <source>Reset to defaults</source>
-      <translation>Redefinir padrões</translation>
+      <translation>Resetar para os padrões</translation>
     </message>
     <message>
       <source>Vs. System (1P via $4016)</source>
-      <translation>Vs. System (1P via $4016)</translation>
+      <translation>Vs. Sistema (1P via $4016)</translation>
     </message>
     <message>
       <source>Zapper ($4017)</source>
@@ -615,43 +615,43 @@
     </message>
     <message>
       <source>Arkanoid Vaus Controller (NES)</source>
-      <translation>Controle Arkanoid Vaus (NES)</translation>
+      <translation>Controle do Arkanoid Vaus (NES)</translation>
     </message>
     <message>
       <source>Arkanoid Vaus Controller (Famicom)</source>
-      <translation>Controle Arkanoid Vaus (Famicom)</translation>
+      <translation>Controle do Arkanoid Vaus (Famicom)</translation>
     </message>
     <message>
       <source>Two Vaus Controllers plus Famicom Data Recorder</source>
-      <translation>Dois Controles Vaus mais Famicom Data Recorder</translation>
+      <translation>Dois Controles do Vaus mais o Gravador de Dados Famicom</translation>
     </message>
     <message>
       <source>Subor Keyboard plus mouse (3x8-bit)</source>
-      <translation>Teclado Subor mais mouse (3x8-bit)</translation>
+      <translation>Teclado Subor mais o mouse (3x8 bits)</translation>
     </message>
     <message>
       <source>Subor Keyboard plus mouse (24-bit)</source>
-      <translation>Teclado Subor mais mouse (24-bit)</translation>
+      <translation>Teclado Subor mais o mouse (24 bits)</translation>
     </message>
     <message>
       <source>SNES Mouse ($4017.0)</source>
-      <translation>Mouse SNES ($4017.0)</translation>
+      <translation>Mouse do SNES ($4017.0)</translation>
     </message>
     <message>
       <source>Unknown Famiclone Keyboard (Golden Key)</source>
-      <translation>Teclado Famiclone Desconhecido (Golden Key)</translation>
+      <translation>Teclado Famiclone Desconhecido (Chave Dourada)</translation>
     </message>
     <message>
       <source>Subor Keyboard plus mouse (24-bit $4017)</source>
-      <translation>Teclado Subor mais mouse (24-bit $4017)</translation>
+      <translation>Teclado Subor mais o mouse (24 bits $4017)</translation>
     </message>
     <message>
       <source>Port Test</source>
-      <translation>Port Test</translation>
+      <translation>Teste da Porta</translation>
     </message>
     <message>
       <source>Bandai Multi Game Player Gamepad</source>
-      <translation>Bandai Multi Game Player Gamepad</translation>
+      <translation>Gamepad Multi-Jogadores da Bandai</translation>
     </message>
     <message>
       <source>Venom TV Dance Mat</source>
@@ -771,11 +771,11 @@
     </message>
     <message>
       <source>Rewind Mode On/Off</source>
-      <translation>Modo Retroceder Ativado/Desativado</translation>
+      <translation>Modo Rebobinar Ligado/Desligado</translation>
     </message>
     <message>
       <source>Rewind Step Backward</source>
-      <translation>Retroceder um Frame</translation>
+      <translation>Retroceder um Passo pra Trás</translation>
     </message>
     <message>
       <source>Rewind Step Forward</source>
@@ -783,15 +783,15 @@
     </message>
     <message>
       <source>Rewind Fast Forward</source>
-      <translation>Avançar Rápido</translation>
+      <translation>Retroceder o Avanço Rápido</translation>
     </message>
     <message>
       <source>Rewind Play</source>
-      <translation>Reproduzir Rebobinação</translation>
+      <translation>Retroceder a Reprodução</translation>
     </message>
     <message>
       <source>Rewind Pause</source>
-      <translation>Pausar Rebobinação</translation>
+      <translation>Retroceder a Pausa</translation>
     </message>
     <message>
       <source>Rewind Fast Backward</source>
@@ -3179,11 +3179,11 @@
     </message>
     <message>
       <source>Per-Game</source>
-      <translation type="unfinished">Per-Game</translation>
+      <translation>Por Jogo</translation>
     </message>
     <message>
       <source>Per-Game Overclock Setting</source>
-      <translation type="unfinished">Per-Game Overclock Setting</translation>
+      <translation>Configurações do Overclock Por Jogo</translation>
     </message>
     <message>
       <source>On</source>
