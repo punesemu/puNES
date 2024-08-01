@@ -162,10 +162,12 @@ typedef struct _js_device {
 	} report;
 #endif
 #endif
+#if defined (__linux__)
+	uTCHAR uniq[64];
+#endif
 	// comuni
 	enum _js_gamepad_type type;
 	uTCHAR desc[128];
-	uTCHAR uniq[64];
 	_js_info info;
 	_js_data data;
 	_input_guid guid;
