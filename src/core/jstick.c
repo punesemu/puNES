@@ -154,7 +154,7 @@ void js_guid_create(_js_device *jdev) {
 		(*(word + 5)) = jdev->usb.product_id - 300;
 		(*(word + 6)) = jdev->usb.version;
 		(*(word + 7)) = jdev->usb.version - 400;
-#if defined (_linux__)
+#if defined (__linux__)
 		if (ustrlen(jdev->uniq)) {
 			BYTE *byte = (BYTE *)&word[2];
 			int idx = 0;
