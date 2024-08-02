@@ -154,6 +154,17 @@ void js_guid_create(_js_device *jdev) {
 		(*(word + 5)) = jdev->usb.product_id - 300;
 		(*(word + 6)) = jdev->usb.version;
 		(*(word + 7)) = jdev->usb.version - 400;
+#if defined (__linux__)
+		BYTE *byte = (BYTE *)&word[2];
+		int idx = 0;
+
+		for (const char *s = jdev->uniq; *s; ++s) {
+			byte[idx++] ^= *s;
+			if (idx > 11) {
+				idx = 0;
+			}
+		}
+#endif
 	} else {
 		word += 2;
 		memcpy((char *)word, (char *)jdev->desc, sizeof(jdev->guid.data) - 4);
