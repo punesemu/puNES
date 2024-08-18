@@ -155,13 +155,15 @@ void js_guid_create(_js_device *jdev) {
 		(*(word + 6)) = jdev->usb.version;
 		(*(word + 7)) = jdev->usb.version - 400;
 #if defined (__linux__)
-		BYTE *byte = (BYTE *)&word[2];
-		int idx = 0;
+		{
+			BYTE *byte = (BYTE *)&word[2];
+			int idx = 0;
 
-		for (const char *s = jdev->uniq; *s; ++s) {
-			byte[idx++] ^= *s;
-			if (idx > 11) {
-				idx = 0;
+			for (const char *s = jdev->uniq; (*s); ++s) {
+				byte[idx++] ^= (*s);
+				if (idx > 11) {
+					idx = 0;
+				}
 			}
 		}
 #endif
