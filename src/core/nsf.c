@@ -614,7 +614,7 @@ void nsf_after_load_rom(void) {
 	dos_text_curtain_add_line(&nsf.curtain_info, DOS_TL02, DOS_TL01, uL("lemon_10"), 10,
 		uL("[top][image]:/pics/pics/controller_start.png[endimage] Start : Play/Pause"));
 	dos_text_curtain_add_line(&nsf.curtain_info, DOS_TL02, DOS_TL01, uL("lemon_10"), 10,
-		uL("[top][image]:/pics/pics/controller_select.png[endimage] Start : Stop"));
+		uL("[top][image]:/pics/pics/controller_select.png[endimage] Select : Stop"));
 	dos_text_curtain_add_line(&nsf.curtain_info, DOS_TL02, DOS_TL01, uL("lemon_10"), 10,
 		uL("[top][image]:/pics/pics/controller_right.png[endimage] Right : Next Song"));
 	dos_text_curtain_add_line(&nsf.curtain_info, DOS_TL02, DOS_TL01, uL("lemon_10"), 10,
