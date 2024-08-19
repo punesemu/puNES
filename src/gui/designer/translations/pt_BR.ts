@@ -191,7 +191,7 @@
     </message>
     <message>
       <source>NES Four Score/Satellite</source>
-      <translation>Four Score/Satellite NES</translation>
+      <translation>Four Score/Satellite do NES</translation>
     </message>
     <message>
       <source>Famicom Four Players Adapter</source>
@@ -203,7 +203,7 @@
     </message>
     <message>
       <source>Vs. System (1P via $4017)</source>
-      <translation>Vs. System (1P via $4017)</translation>
+      <translation>Vs. Sistema (1P via $4017)</translation>
     </message>
     <message>
       <source>Reserved</source>
@@ -247,11 +247,11 @@
     </message>
     <message>
       <source>Exciting Boxing Punching Bag</source>
-      <translation>Exciting Boxing Punching Bag</translation>
+      <translation>Saco Excitante de Pancada do Boxe</translation>
     </message>
     <message>
       <source>Jissen Mahjong Controller</source>
-      <translation>Controle Jissen Mahjong</translation>
+      <translation>Controle do Jissen Mahjong</translation>
     </message>
     <message>
       <source>Party Tap</source>
