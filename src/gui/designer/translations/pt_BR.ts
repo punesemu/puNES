@@ -795,7 +795,7 @@
     </message>
     <message>
       <source>Rewind Fast Backward</source>
-      <translation>Retroceder Rápido</translation>
+      <translation>Retroceder Rápido pra Trás</translation>
     </message>
     <message>
       <source>Recording</source>
@@ -850,7 +850,7 @@
     </message>
     <message>
       <source>Up</source>
-      <translation>Cima</translation>
+      <translation>Pra Cima</translation>
     </message>
     <message>
       <source>A</source>
@@ -858,7 +858,7 @@
     </message>
     <message>
       <source>Down</source>
-      <translation>Baixo</translation>
+      <translation>Pra Baixo</translation>
     </message>
     <message>
       <source>Unset</source>
@@ -910,7 +910,7 @@
     </message>
     <message>
       <source>Misc</source>
-      <translation>Opções Diversas</translation>
+      <translation>Miscelânea</translation>
     </message>
     <message>
       <source>Controller type</source>
@@ -918,11 +918,11 @@
     </message>
     <message>
       <source>Turbo B Delay</source>
-      <translation>Atraso de Turbo B</translation>
+      <translation>Atraso do Turbo B</translation>
     </message>
     <message>
       <source>Turbo A Delay</source>
-      <translation>Atraso de Turbo A</translation>
+      <translation>Atraso do Turbo A</translation>
     </message>
     <message>
       <source>Apply</source>
@@ -949,15 +949,15 @@
     <name>dlgUncomp</name>
     <message>
       <source>which ROM do you want to load?</source>
-      <translation>qual ROM você deseja carregar?</translation>
+      <translation>Qual ROM você quer carregar?</translation>
     </message>
     <message>
       <source>which PATCH do you want to apply?</source>
-      <translation>qual PATCH você deseja aplicar?</translation>
+      <translation>Qual PATCH você quer aplicar?</translation>
     </message>
     <message>
       <source>Unpacked archive</source>
-      <translation>Arquivo descompactado</translation>
+      <translation>Arquivo compactado descompactado</translation>
     </message>
     <message>
       <source>OK</source>
@@ -969,7 +969,7 @@
     </message>
     <message>
       <source>which Floppy Disk image do you want to load?</source>
-      <translation>qual imagem de disquete você deseja carregar?</translation>
+      <translation>Qual imagem de disquete você quer carregar?</translation>
     </message>
   </context>
   <context>
@@ -984,7 +984,7 @@
     </message>
     <message>
       <source>Service Coin</source>
-      <translation>Servir Moedas</translation>
+      <translation>Moeda do Serviço</translation>
     </message>
     <message>
       <source>Coin Counter</source>
@@ -1190,15 +1190,15 @@
     </message>
     <message>
       <source>Save states</source>
-      <translation>Estados salvos</translation>
+      <translation>Save states</translation>
     </message>
     <message>
       <source>Save state on file</source>
-      <translation>Salvar estado em um arquivo</translation>
+      <translation>Salvar o state no arquivo</translation>
     </message>
     <message>
       <source>Open save state</source>
-      <translation>Abrir estado salvo</translation>
+      <translation>Abrir o save state</translation>
     </message>
     <message>
       <source>&amp;Open</source>
@@ -1210,11 +1210,11 @@
     </message>
     <message>
       <source>&amp;Hard Reset</source>
-      <translation>&amp;Hard Reset</translation>
+      <translation>&amp;Reset Rígido</translation>
     </message>
     <message>
       <source>&amp;Soft Reset</source>
-      <translation>&amp;Soft Reset</translation>
+      <translation>&amp;Reset Leve</translation>
     </message>
     <message>
       <source>&amp;Eject/Insert Disk</source>
@@ -1254,7 +1254,7 @@
     </message>
     <message>
       <source>&amp;Switch sides</source>
-      <translation>&amp;Inverter lados</translation>
+      <translation>&amp;Trocar lados</translation>
     </message>
     <message>
       <source>&amp;Save to file</source>
@@ -1266,19 +1266,19 @@
     </message>
     <message>
       <source>F&amp;ullscreen</source>
-      <translation>&amp;Tela Cheia</translation>
+      <translation>T&amp;ela Cheia</translation>
     </message>
     <message>
       <source>&amp;Game Genie Rom Mode</source>
-      <translation>&amp;Modo Rom Game Genie</translation>
+      <translation>&amp;Modo Rom do Game Genie</translation>
     </message>
     <message>
       <source>S&amp;ave state</source>
-      <translation>&amp;Salvar estado</translation>
+      <translation>S&amp;ave state</translation>
     </message>
     <message>
       <source>L&amp;oad state</source>
-      <translation>&amp;Carregar estado</translation>
+      <translation>C&amp;arregar state</translation>
     </message>
     <message>
       <source>&amp;Increment slot</source>
@@ -1338,11 +1338,11 @@
     </message>
     <message>
       <source>Cheats &amp;Editor</source>
-      <translation>&amp;Editor de Trapaças</translation>
+      <translation>Editor de &amp;Trapaças</translation>
     </message>
     <message>
       <source>&amp;Disabled</source>
-      <translation>&amp;Desabilitado</translation>
+      <translation>&amp;Desativado</translation>
     </message>
     <message>
       <source>&amp;Pause</source>
@@ -1354,7 +1354,7 @@
     </message>
     <message>
       <source>&amp;Recent Roms</source>
-      <translation>&amp;ROMs Recentes</translation>
+      <translation>&amp;Roms Recentes</translation>
     </message>
     <message>
       <source>&amp;NES</source>
@@ -1366,7 +1366,7 @@
     </message>
     <message>
       <source>Setti&amp;ngs</source>
-      <translation>&amp;Configurações</translation>
+      <translation>Confi&amp;gurações</translation>
     </message>
     <message>
       <source>&amp;Video</source>
@@ -1374,7 +1374,7 @@
     </message>
     <message>
       <source>&amp;Audio</source>
-      <translation>Á&amp;udio</translation>
+      <translation>&amp;Áudio</translation>
     </message>
     <message>
       <source>&amp;Input</source>
@@ -1390,11 +1390,11 @@
     </message>
     <message>
       <source>S&amp;tate</source>
-      <translation>&amp;Estado</translation>
+      <translation>S&amp;tate</translation>
     </message>
     <message>
       <source>&amp;Help</source>
-      <translation>A&amp;juda</translation>
+      <translation>&amp;Ajuda</translation>
     </message>
     <message>
       <source>&amp;Turn On</source>
@@ -1595,11 +1595,11 @@
     </message>
     <message>
       <source>Insert &amp;Coin</source>
-      <translation>Inserir Moeda</translation>
+      <translation>Inserir &amp;Ficha</translation>
     </message>
     <message>
       <source>Open &amp;working folder</source>
-      <translation>Abrir &amp;diretório atual</translation>
+      <translation>Abrir a &amp;pasta de trabalho</translation>
     </message>
     <message>
       <source>Apply IPS/BPS/XDELTA &amp;Patch</source>
@@ -1607,19 +1607,19 @@
     </message>
     <message>
       <source>Open &amp;config folder</source>
-      <translation>Abrir diretório de &amp;configurações</translation>
+      <translation>Abrir o &amp;diretório das configurações</translation>
     </message>
     <message>
       <source>T&amp;ape</source>
-      <translation>Cassete</translation>
+      <translation>F&amp;ita Cassete</translation>
     </message>
     <message>
       <source>Detach &amp;Barcode</source>
-      <translation>Destacar Código de &amp;Barras</translation>
+      <translation>Desanexar o &amp;Código de Barras</translation>
     </message>
     <message>
       <source>Floppy Disk image files</source>
-      <translation>Arquivos de Imagem de Disquete</translation>
+      <translation>Arquivos de Imagem do Disquete</translation>
     </message>
     <message>
       <source>Warning</source>
@@ -1627,7 +1627,7 @@
     </message>
     <message>
       <source>This rom requires unsupported hardware to function correctly.</source>
-      <translation>Esta ROM requer hardware não suportado para funcionar corretamente.</translation>
+      <translation>Esta ROM requer hardware não suportado pra funcionar corretamente.</translation>
     </message>
     <message>
       <source>FDS Format Disk</source>
@@ -1635,11 +1635,11 @@
     </message>
     <message>
       <source>Quick Disk Format Disk</source>
-      <translation>Disco de Format Quick Disk</translation>
+      <translation>Disco de Formato Disco Rápido</translation>
     </message>
     <message>
       <source>puNES image</source>
-      <translation>Imagem puNES</translation>
+      <translation>Imagem do puNES</translation>
     </message>
     <message>
       <source>Exports the current state of the disk</source>
@@ -1647,39 +1647,39 @@
     </message>
     <message>
       <source>Error on export state</source>
-      <translation>Erro ao exportar estado</translation>
+      <translation>Erro ao exportar o estado</translation>
     </message>
     <message>
       <source>Impossible write %0.</source>
-      <translation>Impossível escrever %0.</translation>
+      <translation>Impossível gravar o %0.</translation>
     </message>
     <message>
       <source>to &amp;FDS Format (with Header)</source>
-      <translation>para Formato &amp;FDS (com cabeçalho)</translation>
+      <translation>pro Formato &amp;FDS (com cabeçalho)</translation>
     </message>
     <message>
       <source>to &amp;Quick Disk Format</source>
-      <translation>para Formato &amp;Quick Disk</translation>
+      <translation>pro Formato do &amp;Disco Rápido</translation>
     </message>
     <message>
       <source>to puNES image</source>
-      <translation>para Imagem puNES</translation>
+      <translation>pra Imagem do puNES</translation>
     </message>
     <message>
       <source>to F&amp;DS Format (without Header)</source>
-      <translation>para Formato F&amp;DS (sem cabeçalho)</translation>
+      <translation>pro Formato F&amp;DS (sem cabeçalho)</translation>
     </message>
     <message>
       <source>C&amp;hange Disk</source>
-      <translation>Alterar Disc&amp;o</translation>
+      <translation>M&amp;udar Disco</translation>
     </message>
     <message>
       <source>E&amp;xport current state of Disk/Disks</source>
-      <translation>E&amp;xportar estado atual do Disco(s)</translation>
+      <translation>E&amp;xportar estado atual do Disco/Discos</translation>
     </message>
     <message>
       <source>Open Floppy Disk Image</source>
-      <translation>Abrir Imagem de Disquete</translation>
+      <translation>Abrir Imagem do Disquete</translation>
     </message>
     <message>
       <source>&amp;Dip Switches</source>
@@ -1694,11 +1694,11 @@
     </message>
     <message>
       <source>Input is released</source>
-      <translation>Entrada liberada</translation>
+      <translation>A entrada foi liberada</translation>
     </message>
     <message>
       <source>Input is captured</source>
-      <translation>Entrada capturada</translation>
+      <translation>A entrada foi capturada</translation>
     </message>
     <message>
       <source>Toggle Virtual Keyboard</source>
@@ -1725,17 +1725,17 @@
     <message>
       <source>start wav recording</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation>iniciar gravação em &amp;WAV</translation>
+      <translation>iniciar gravação em wav</translation>
     </message>
     <message>
       <source>stop wav recording</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation>parar gravação em &amp;WAV</translation>
+      <translation>parar gravação em wav</translation>
     </message>
     <message>
       <source>[red]Game Genie rom not found[normal]</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation>[red]ROM Game Genie não encontrada[normal]</translation>
+      <translation>[red]ROM do Game Genie não encontrada[normal]</translation>
     </message>
     <message>
       <source>[red]error loading Game Genie rom[normal]</source>
@@ -1755,7 +1755,7 @@
     <message>
       <source>[red]FDS bios not found[normal]</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation>[red]BIOS FDS não encontrada[normal]</translation>
+      <translation>[red]BIOS do FDS não encontrada[normal]</translation>
     </message>
     <message>
       <source>disk [cyan]%1[normal] side [cyan]%2[normal] [yellow]ejected[normal]</source>
@@ -1765,7 +1765,7 @@
     <message>
       <source>you must [yellow]eject[normal] disk first</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation>você precisa [yellow]ejetar[normal] o disco primeiro</translation>
+      <translation>você deve [yellow]ejetar[normal] o disco primeiro</translation>
     </message>
     <message>
       <source>disk [cyan]%1[normal] side [cyan]%2[normal] [green]inserted[normal]</source>
@@ -1785,42 +1785,42 @@
     <message>
       <source>[red]error loading patch file[normal]</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation>[red]erro ao carregar o arquivo de patch[normal]</translation>
+      <translation>[red]erro ao carregar o arquivo do patch[normal]</translation>
     </message>
     <message>
       <source>[yellow]save is impossible in Game Genie menu[normal]</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation>[yellow]não é possível salvar no menu do Game Genie[normal]</translation>
+      <translation>[yellow]é impossível salvar no menu do Game Genie[normal]</translation>
     </message>
     <message>
       <source>[yellow]movie playback interrupted[normal]</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation>[yellow]reprodução de filme interrompida[normal]</translation>
+      <translation>[yellow]reprodução do filme interrompida[normal]</translation>
     </message>
     <message>
       <source>[red]error[normal] loading state</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation>[red]erro[normal] ao carregar estado</translation>
+      <translation>[red]erro[normal] ao carregar o state</translation>
     </message>
     <message>
       <source>[red]state file is not for this rom[normal]</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation>[red]arquivo de estado não é para esta ROM[normal]</translation>
+      <translation>[red]o arquivo do state não é pra esta ROM[normal]</translation>
     </message>
     <message>
       <source>[green]%1[normal] cheat active</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation>[green]%1[normal] trapaça ativada</translation>
+      <translation>[green]%1[normal] trapaça ativa</translation>
     </message>
     <message>
       <source>[green]%1[normal] cheats active</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation>[green]%1[normal] trapaças ativadas</translation>
+      <translation>[green]%1[normal] trapaças ativas</translation>
     </message>
     <message>
       <source>overclock enabled [green]VB[normal] [cyan]%1[normal], [green]PR[normal] [cyan]%2[normal]</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation>overclock habilitado [green]VB[normal] [cyan]%1[normal], [green]PR[normal] [cyan]%2[normal]</translation>
+      <translation>overclock ativado [green]VB[normal] [cyan]%1[normal], [green]PR[normal] [cyan]%2[normal]</translation>
     </message>
     <message>
       <source>[yellow]silence, the movie has begun[normal]</source>
@@ -2061,7 +2061,7 @@
     </message>
     <message>
       <source>Submit</source>
-      <translation>Concluir</translation>
+      <translation>Submeter</translation>
     </message>
     <message>
       <source>Cancel</source>
@@ -2069,11 +2069,11 @@
     </message>
     <message>
       <source>Delete</source>
-      <translation>Excluir</translation>
+      <translation>Apagar</translation>
     </message>
     <message>
       <source>Delete All</source>
-      <translation>Excluir Todas</translation>
+      <translation>Apagar Tudo</translation>
     </message>
     <message>
       <source>Copy</source>
@@ -2089,7 +2089,7 @@
     </message>
     <message>
       <source>New CPU Ram</source>
-      <translation>Nova RAM CPU</translation>
+      <translation>Nova RAM da CPU</translation>
     </message>
   </context>
   <context>
@@ -2100,7 +2100,7 @@
     </message>
     <message>
       <source>Hide Tools</source>
-      <translation>Ocultar Ferramentas</translation>
+      <translation>Esconder Ferramentas</translation>
     </message>
     <message>
       <source>All supported formats</source>
@@ -2116,39 +2116,39 @@
     </message>
     <message>
       <source>Export cheats on file</source>
-      <translation>Exportar trapaças para arquivo</translation>
+      <translation>Exportar as trapaças pro arquivo</translation>
     </message>
     <message>
       <source>Submit warning</source>
-      <translation>Aviso</translation>
+      <translation>Submeter aviso</translation>
     </message>
     <message>
       <source>The code is invalid</source>
-      <translation>Código inválido</translation>
+      <translation>O código é inválido</translation>
     </message>
     <message>
       <source>The cheat is already in the list</source>
-      <translation>Essa trapaça já está na lista</translation>
+      <translation>A trapaça já está na lista</translation>
     </message>
     <message>
       <source>A description must be entered</source>
-      <translation>Uma descrição é obrigatória</translation>
+      <translation>Uma descrição deve ser inserida</translation>
     </message>
     <message>
       <source>Nestopia XML files</source>
-      <translation>Arquivos XML Nestopia</translation>
+      <translation>Arquivos XML do Nestopia</translation>
     </message>
     <message>
       <source>Mame 128+ XML files</source>
-      <translation>Arquivos de XML Mame 128+</translation>
+      <translation>Arquivos XML do Mame 128+</translation>
     </message>
     <message>
       <source>FCEUX CHT files</source>
-      <translation>Arquivos CHT FCEUX</translation>
+      <translation>Arquivos CHT do FCEUX</translation>
     </message>
     <message>
       <source>libretro CHT files</source>
-      <translation>Arquivos CHT libretro</translation>
+      <translation>Arquivos CHT do libretro</translation>
     </message>
   </context>
   <context>
@@ -2198,7 +2198,7 @@
     </message>
     <message>
       <source>Reset parameters to defaults</source>
-      <translation>Redefinir parâmetros para os padrões</translation>
+      <translation>Resetar os parâmetros para os padrões</translation>
     </message>
     <message>
       <source>MFields</source>
@@ -2261,7 +2261,7 @@
     </message>
     <message>
       <source>Reset parameters to defaults</source>
-      <translation>Redefinir parâmetros para os padrões</translation>
+      <translation>Resetar os parâmetros para os padrões</translation>
     </message>
   </context>
   <context>
@@ -2508,7 +2508,7 @@
     </message>
     <message>
       <source>Reset color</source>
-      <translation>Redefinir cor</translation>
+      <translation>Resetar cor</translation>
     </message>
     <message>
       <source>Save to a file</source>
@@ -2516,7 +2516,7 @@
     </message>
     <message>
       <source>Reset palette</source>
-      <translation>Redefinir paleta</translation>
+      <translation>Resetar paleta</translation>
     </message>
   </context>
   <context>
@@ -2527,7 +2527,7 @@
     </message>
     <message>
       <source>Output Quality</source>
-      <translation>Qualidade de Saída</translation>
+      <translation>Qualidade da Saída</translation>
     </message>
     <message>
       <source>Low</source>
@@ -2554,11 +2554,11 @@
     <name>wdgRewind</name>
     <message>
       <source>Forward (single frame)</source>
-      <translation>Avançar (um frame)</translation>
+      <translation>Avançar (frame único)</translation>
     </message>
     <message>
       <source>Rewind (single frame)</source>
-      <translation>Retroceder (um frame)</translation>
+      <translation>Retroceder (frame único)</translation>
     </message>
     <message>
       <source>Pause</source>
@@ -2566,11 +2566,11 @@
     </message>
     <message>
       <source>Fast forward (from 1x to 8x)</source>
-      <translation>Avançar rápido (de 1x até 8x)</translation>
+      <translation>Avanço rápido (de 1x até 8x)</translation>
     </message>
     <message>
       <source>Fast rewind (from 1x to 8x)</source>
-      <translation>Retroceder rápido (de 1x até 8x)</translation>
+      <translation>Retrocesso rápido (de 1x até 8x)</translation>
     </message>
     <message>
       <source>Play</source>
@@ -2627,11 +2627,11 @@
     <name>wdgSettingsAudio</name>
     <message>
       <source>Output Devices</source>
-      <translation>Dispositivo de Saída</translation>
+      <translation>Dispositivos de Saída</translation>
     </message>
     <message>
       <source>Sample Rate</source>
-      <translation>Taxa de Amostragem</translation>
+      <translation>Taxa de Amostra</translation>
     </message>
     <message>
       <source>Buffer Size factor</source>
@@ -2643,7 +2643,7 @@
     </message>
     <message>
       <source>Stereo Delay</source>
-      <translation>Atraso de Estéreo</translation>
+      <translation>Atraso do Estéreo</translation>
     </message>
     <message>
       <source>Stereo Panning</source>
@@ -2651,11 +2651,11 @@
     </message>
     <message>
       <source>Channels Delay</source>
-      <translation>Atraso de Canais</translation>
+      <translation>Atraso dos Canais</translation>
     </message>
     <message>
       <source>Misc</source>
-      <translation>Opções Diversas</translation>
+      <translation>Miscelânea</translation>
     </message>
     <message>
       <source>Settings</source>
@@ -2710,7 +2710,7 @@
     <name>wdgSettingsCheats</name>
     <message>
       <source>Cheats Settings</source>
-      <translation>Configurações de Trapaças</translation>
+      <translation>Configurações das Trapaças</translation>
     </message>
     <message>
       <source>Settings</source>
