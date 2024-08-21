@@ -591,7 +591,7 @@
     </message>
     <message>
       <source>Misc</source>
-      <translation>Opções Diversas</translation>
+      <translation>Miscelânea</translation>
     </message>
     <message>
       <source>Save</source>
@@ -623,7 +623,7 @@
     </message>
     <message>
       <source>Two Vaus Controllers plus Famicom Data Recorder</source>
-      <translation>Dois Controles do Vaus mais o Gravador de Dados Famicom</translation>
+      <translation>Dois Controles do Vaus mais o Gravador de Dados do Famicom</translation>
     </message>
     <message>
       <source>Subor Keyboard plus mouse (3x8-bit)</source>
@@ -655,11 +655,11 @@
     </message>
     <message>
       <source>Venom TV Dance Mat</source>
-      <translation>Venom TV Dance Mat</translation>
+      <translation>Tapete de Dança da Venom TV</translation>
     </message>
     <message>
       <source>LG TV Remote Control</source>
-      <translation>Controle Remoto TV LG</translation>
+      <translation>Controle Remoto da TV LG</translation>
     </message>
   </context>
   <context>
@@ -717,14 +717,14 @@
     </message>
     <message>
       <source>Extended Mode (enable support for keypad, F10, F11, F12 and &quot;` &quot;. P.S. : &apos;Study and Game 32-in-1&apos; have problems with this mode)</source>
-      <translation>Modo Estendido (ativa o suporte para o keypad, F10, F11, F12 e &quot; &quot;. P.S. : &apos;Study e Game 32-in-1&apos; têm problemas com este modo)</translation>
+      <translation>Modo Estendido (ativa o suporte pro keypad, F10, F11, F12 e &quot; &quot;. P.S. : &apos;Study e Game 32 em 1&apos; têm problemas com este modo)</translation>
     </message>
   </context>
   <context>
     <name>dlgLog</name>
     <message>
       <source>Log</source>
-      <translation>Log</translation>
+      <translation>Registro</translation>
     </message>
     <message>
       <source>Close</source>
@@ -779,7 +779,7 @@
     </message>
     <message>
       <source>Rewind Step Forward</source>
-      <translation>Avançar um Frame</translation>
+      <translation>Retroceder um Passo Adiante</translation>
     </message>
     <message>
       <source>Rewind Fast Forward</source>
@@ -862,7 +862,7 @@
     </message>
     <message>
       <source>Unset</source>
-      <translation>Desfazer</translation>
+      <translation>Desconfigurar</translation>
     </message>
     <message>
       <source>Left</source>
@@ -898,7 +898,7 @@
     </message>
     <message>
       <source>Unset all</source>
-      <translation>Desfazer tudo</translation>
+      <translation>Desconfigurar tudo</translation>
     </message>
     <message>
       <source>Defaults</source>
@@ -976,19 +976,19 @@
     <name>dlgVsSystem</name>
     <message>
       <source>Left Coin</source>
-      <translation>Moeda Esquerda</translation>
+      <translation>Ficha Esquerda</translation>
     </message>
     <message>
       <source>Right Coin</source>
-      <translation>Moeda Direita</translation>
+      <translation>Ficha Direita</translation>
     </message>
     <message>
       <source>Service Coin</source>
-      <translation>Moeda do Serviço</translation>
+      <translation>Ficha do Serviço</translation>
     </message>
     <message>
       <source>Coin Counter</source>
-      <translation>Contador de Moedas</translation>
+      <translation>Contador de Fichas</translation>
     </message>
     <message>
       <source>Dip Switches</source>
@@ -1028,15 +1028,15 @@
     </message>
     <message>
       <source>Defaults Game Dip Switches</source>
-      <translation>Interruptores Padrões para o Jogo</translation>
+      <translation>Usa os Padrões dos Interruptores Dip do Jogo</translation>
     </message>
     <message>
       <source>Vs System</source>
-      <translation>Vs System</translation>
+      <translation>Vs Sistema</translation>
     </message>
     <message>
       <source>Coins</source>
-      <translation>Moedas</translation>
+      <translation>Fichas</translation>
     </message>
     <message>
       <source>Monitor</source>
@@ -1084,14 +1084,14 @@
     </message>
     <message>
       <source>Game Dip Switches</source>
-      <translation>Interruptores Dip</translation>
+      <translation>Interruptores Dip do Jogo</translation>
     </message>
   </context>
   <context>
     <name>familyBasicKeyboard</name>
     <message>
       <source>Family Basic Keyboard</source>
-      <translation>Teclado Family BASIC</translation>
+      <translation>Teclado da Família BASIC</translation>
     </message>
   </context>
   <context>
@@ -1099,55 +1099,55 @@
     <message>
       <source>%1 folders</source>
       <extracomment>Do not translate %1</extracomment>
-      <translation>%1 diretórios</translation>
+      <translation>%1 pastas</translation>
     </message>
     <message>
       <source>Error on create config folder</source>
-      <translation>Erro ao criar diretório de configurações</translation>
+      <translation>Erro ao criar a pasta das configurações</translation>
     </message>
     <message>
       <source>Error on create data folder</source>
-      <translation>Erro ao criar diretório de dados</translation>
+      <translation>Erro ao criar a pasta dos dados</translation>
     </message>
     <message>
       <source>Error on create temp folder</source>
-      <translation>Erro ao criar diretório temporário</translation>
+      <translation>Erro ao criar a pasta temporária</translation>
     </message>
     <message>
       <source>Error on create cheat folder</source>
-      <translation>Erro ao criar diretório de trapaças</translation>
+      <translation>Erro ao criar a pasta das trapaças</translation>
     </message>
     <message>
       <source>Error on create psg folder</source>
-      <translation>Erro ao criar diretório de psg</translation>
+      <translation>Erro ao criar a pasta do psg</translation>
     </message>
     <message>
       <source>Error on create shp folder</source>
-      <translation>Erro ao criar diretório de shp</translation>
+      <translation>Erro ao criar a pasta do shp</translation>
     </message>
     <message>
       <source>Error on create jsc folder</source>
-      <translation>Erro ao criar diretório de jsc</translation>
+      <translation>Erro ao criar a pasta do jsc</translation>
     </message>
     <message>
       <source>Error on create bios folder</source>
-      <translation>Erro ao criar diretório de bios</translation>
+      <translation>Erro ao criar a pasta da bios</translation>
     </message>
     <message>
       <source>Error on create diff folder</source>
-      <translation>Erro ao criar diretório de diff</translation>
+      <translation>Erro ao criar a pasta dos diffs</translation>
     </message>
     <message>
       <source>Error on create prb folder</source>
-      <translation>Erro ao criar diretório de prb</translation>
+      <translation>Erro ao criar a pasta do prb</translation>
     </message>
     <message>
       <source>Error on create save folder</source>
-      <translation>Erro ao criar diretório de saves</translation>
+      <translation>Erro ao criar a pasta dos saves</translation>
     </message>
     <message>
       <source>Error on create screenshot folder</source>
-      <translation>Erro ao criar diretório de capturas de tela</translation>
+      <translation>Erro ao criar a pasta das screenshots</translation>
     </message>
   </context>
   <context>
@@ -1174,11 +1174,11 @@
     </message>
     <message>
       <source>Nes rom files</source>
-      <translation>Arquivos rom NES</translation>
+      <translation>Arquivos das ROMs do NES</translation>
     </message>
     <message>
       <source>TAS movie files</source>
-      <translation>Arquivos de imagem TAS</translation>
+      <translation>Arquivos dos filmes TAS</translation>
     </message>
     <message>
       <source>All files</source>
@@ -1258,11 +1258,11 @@
     </message>
     <message>
       <source>&amp;Save to file</source>
-      <translation>Sal&amp;var em arquivo</translation>
+      <translation>&amp;Salvar no arquivo</translation>
     </message>
     <message>
       <source>&amp;Load from file</source>
-      <translation>Carre&amp;gar de arquivo</translation>
+      <translation>&amp;Carregar do arquivo</translation>
     </message>
     <message>
       <source>F&amp;ullscreen</source>
@@ -1406,51 +1406,51 @@
     </message>
     <message>
       <source>Too&amp;ls</source>
-      <translation>&amp;Ferramentas</translation>
+      <translation>Ferrame&amp;ntas</translation>
     </message>
     <message>
       <source>UNIF rom files</source>
-      <translation>Arquivos rom UNIF</translation>
+      <translation>Arquivos da rom do UNIF</translation>
     </message>
     <message>
       <source>Stop &amp;WAV recording</source>
-      <translation>Parar gravaçaõ de &amp;WAV</translation>
+      <translation>Parar a &amp;gravação do WAV</translation>
     </message>
     <message>
       <source>Start &amp;WAV recording</source>
-      <translation>Iniciar gravação de &amp;WAV</translation>
+      <translation>Iniciar a &amp;gravação do WAV</translation>
     </message>
     <message>
       <source>MS WAVE files</source>
-      <translation>Arquivos MS WAVE</translation>
+      <translation>Arquivos do MS WAVE</translation>
     </message>
     <message>
       <source>Record sound</source>
-      <translation>Gravar áudio</translation>
+      <translation>Gravar o som</translation>
     </message>
     <message>
       <source>NSF rom files</source>
-      <translation>Arquivos rom NSF</translation>
+      <translation>Arquivos da rom NSF</translation>
     </message>
     <message>
       <source>NSFE rom files</source>
-      <translation>Arquivos rom NSFE</translation>
+      <translation>Arquivos da rom NSFE</translation>
     </message>
     <message>
       <source>IPS patch files</source>
-      <translation>Arquivo de patch IPS</translation>
+      <translation>Arquivos do patch IPS</translation>
     </message>
     <message>
       <source>BPS patch files</source>
-      <translation>Arquivo de patch BPS</translation>
+      <translation>Arquivos do patch BPS</translation>
     </message>
     <message>
       <source>XDELTA patch files</source>
-      <translation>Arquivos de patch XDELTA</translation>
+      <translation>Arquivos do patch XDELTA</translation>
     </message>
     <message>
       <source>Open IPS/BPS/XDELTA Patch</source>
-      <translation>Patch OPEN IPS/BPS/XDELTA</translation>
+      <translation>Abrir o Patch IPS/BPS/XDELTA</translation>
     </message>
     <message>
       <source>&amp;General</source>
@@ -1458,7 +1458,7 @@
     </message>
     <message>
       <source>Save Unalte&amp;red NES screen</source>
-      <translation>Salvar Imagem &amp;Inalterada NES</translation>
+      <translation>Salvar a Tela &amp;Inalterada do NES</translation>
     </message>
     <message>
       <source>Widgets</source>
@@ -1466,31 +1466,31 @@
     </message>
     <message>
       <source>Start &amp;AUDIO recording</source>
-      <translation>Iniciar gravação de Á&amp;UDIO</translation>
+      <translation>Iniciar a &amp;gravação do ÁUDIO</translation>
     </message>
     <message>
       <source>Start &amp;VIDEO recording</source>
-      <translation>Iniciar gravação de &amp;VÍDEO</translation>
+      <translation>Iniciar a &amp;gravação do VÍDEO</translation>
     </message>
     <message>
       <source>Stop &amp;AUDIO recording</source>
-      <translation>Parar gravação de Á&amp;UDIO</translation>
+      <translation>Parar a &amp;gravação do ÁUDIO</translation>
     </message>
     <message>
       <source>Stop &amp;VIDEO recording</source>
-      <translation>Parar gravação de &amp;VÍDEO</translation>
+      <translation>Parar a &amp;gravação do VÍDEO</translation>
     </message>
     <message>
       <source>Start/Stop &amp;AUDIO recording</source>
-      <translation>Iniciar/Parar gravação de Á&amp;UDIO</translation>
+      <translation>Iniciar/Parar a &amp;gravação do ÁUDIO</translation>
     </message>
     <message>
       <source>&amp;Recording</source>
-      <translation>G&amp;ravação</translation>
+      <translation>&amp;Gravação</translation>
     </message>
     <message>
       <source>Start/Stop &amp;VIDEO recording</source>
-      <translation>Iniciar/Parar gravação de &amp;VÍDEO</translation>
+      <translation>Iniciar/Parar a &amp;gravação do VÍDEO</translation>
     </message>
     <message>
       <source>Slot %1 never used</source>
@@ -1507,11 +1507,11 @@
     </message>
     <message>
       <source>&amp;Vs System Controls</source>
-      <translation>Controles &amp;Vs System</translation>
+      <translation>&amp;Vs Controles do Sistema</translation>
     </message>
     <message>
       <source>&amp;Joypad/Gamepad Debug</source>
-      <translation>Debug &amp;Joypad/Gamepad</translation>
+      <translation>&amp;Debug do Joypad/Gamepad</translation>
     </message>
     <message>
       <source>Fast Forward (hold button)</source>
@@ -1519,23 +1519,23 @@
     </message>
     <message>
       <source>puNES tape image</source>
-      <translation>Imagem de cassete puNES</translation>
+      <translation>Imagem do cassete do puNES</translation>
     </message>
     <message>
       <source>Virtuanes tape image</source>
-      <translation>Imagem de cassete Virtuanes</translation>
+      <translation>Imagem do cassete do Virtuanes</translation>
     </message>
     <message>
       <source>Nestopia tape image</source>
-      <translation>Imagem de cassete Nestopia</translation>
+      <translation>Imagem do cassete do Nestopia</translation>
     </message>
     <message>
       <source>Open tape image</source>
-      <translation>Abrir imagem de cassete</translation>
+      <translation>Abrir imagem do cassete</translation>
     </message>
     <message>
       <source>Tape Image</source>
-      <translation>Imagem de Cassete</translation>
+      <translation>Imagem do Cassete</translation>
     </message>
     <message>
       <source>Unsupported format</source>
@@ -1543,15 +1543,15 @@
     </message>
     <message>
       <source>Error opening tape image file</source>
-      <translation>Erro ao abrir imagem de cassete</translation>
+      <translation>Erro ao abrir o arquivo de imagem do cassete</translation>
     </message>
     <message>
       <source>WAVE tape image</source>
-      <translation>Imagem de cassete WAVE</translation>
+      <translation>Imagem do cassete WAVE</translation>
     </message>
     <message>
       <source>Save tape image</source>
-      <translation>Salvar imagem de cassete</translation>
+      <translation>Salvar imagem do cassete</translation>
     </message>
     <message>
       <source>Toggle &amp;Fast Forward</source>
@@ -1559,11 +1559,11 @@
     </message>
     <message>
       <source>&amp;Play</source>
-      <translation>Re&amp;produzir</translation>
+      <translation>&amp;Reproduzir</translation>
     </message>
     <message>
       <source>&amp;Record</source>
-      <translation>G&amp;ravar</translation>
+      <translation>&amp;Gravar</translation>
     </message>
     <message>
       <source>&amp;Stop</source>
@@ -1575,23 +1575,23 @@
     </message>
     <message>
       <source>Toggle Virtual &amp;Keyboard</source>
-      <translation>Alternar &amp;Teclado Virtual</translation>
+      <translation>Alternar Teclado &amp;Virtual</translation>
     </message>
     <message>
       <source>&amp;Show Log</source>
-      <translation>Mostrar &amp;Log</translation>
+      <translation>Mostrar o &amp;Registro</translation>
     </message>
     <message>
       <source>Edit Current iNES/NES2.0 &amp;Header</source>
-      <translation>Editar o cabeçal&amp;ho iNES/NES2.0 atual</translation>
+      <translation>Editar o Cabeçalho Atual do &amp;iNES/NES2.0</translation>
     </message>
     <message>
       <source>Toggle &amp;GUI in window</source>
-      <translation>Al&amp;ternar Interface na janela</translation>
+      <translation>Alternar a &amp;GUI na janela</translation>
     </message>
     <message>
       <source>Sa&amp;ve Screenshot</source>
-      <translation>Sal&amp;var Captura de Tela</translation>
+      <translation>Sal&amp;var Screenshot</translation>
     </message>
     <message>
       <source>Insert &amp;Coin</source>
@@ -1830,32 +1830,32 @@
     <message>
       <source>The End</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation>FIM</translation>
+      <translation>Fim</translation>
     </message>
     <message>
       <source>switched to [green]%1[normal]</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation>alterado para [green]%1[normal]</translation>
+      <translation>trocou pro [green]%1[normal]</translation>
     </message>
     <message>
       <source>[red]error on game genie rom file[normal]</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation>[red]erro no arquivo de ROM do Game Genie[normal]</translation>
+      <translation>[red]erro no arquivo da ROM do Game Genie[normal]</translation>
     </message>
     <message>
       <source>[red]error on FDS bios file[normal]</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation>[red]erro no aquivo de BIOS FDS[normal]</translation>
+      <translation>[red]erro no aquivo da BIOS do FDS[normal]</translation>
     </message>
     <message>
       <source>[red]error on shader file[normal]</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation>[red]erro no arquivo de shader[normal]</translation>
+      <translation>[red]erro no arquivo do shader[normal]</translation>
     </message>
     <message>
       <source>[red]error on palette file[normal]</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation>[red]erro no arquivo de paleta[normal]</translation>
+      <translation>[red]erro no arquivo da paleta[normal]</translation>
     </message>
     <message>
       <source>[red]errors[normal] on shader, use [green]&apos;No shader&apos;[cyan]</source>
@@ -1865,42 +1865,42 @@
     <message>
       <source>switch on [cyan]%1x%2[normal] at [green]%3Hz[normal]</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation>trocar [cyan]%1x%2[normal] a [green]%3Hz[normal]</translation>
+      <translation>trocar no [cyan]%1x%2[normal] a [green]%3Hz[normal]</translation>
     </message>
     <message>
       <source>[cyan]%1[normal] ID sides founds, auto switch [red]disabled[normal]</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation>Encontrado [cyan]%1[normal] lados com o mesmo ID, troca [red]desabilitada[normal]</translation>
+      <translation>[cyan]%1[normal] lados da ID achados, auto-trocar [red]desativado[normal]</translation>
     </message>
     <message>
       <source>[red]error[normal] loading state [cyan]%1[normal], file is corrupted</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation>[red]erro[normal] ao carregar estado [cyan]%1[normal], o arquivo está corrompido</translation>
+      <translation>[red]erro[normal] ao carregar o state [cyan]%1[normal], o arquivo está corrompido</translation>
     </message>
     <message>
       <source>state [cyan]%1[normal] saved successfully</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation>Estado [cyan]%1[normal] salvo com sucesso</translation>
+      <translation>O state [cyan]%1[normal] foi salvo com sucesso</translation>
     </message>
     <message>
       <source>state [cyan]%1[normal] loaded successfully</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation>estado [cyan]%1[normal] carregado com sucesso</translation>
+      <translation>O state [cyan]%1[normal] foi carregado com sucesso</translation>
     </message>
     <message>
       <source>tape play</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation>cassete play</translation>
+      <translation>reproduzir o cassete</translation>
     </message>
     <message>
       <source>tape record</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation>cassete record</translation>
+      <translation>gravar no cassete</translation>
     </message>
     <message>
       <source>tape stop</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation>cassete stop</translation>
+      <translation>parar o cassete</translation>
     </message>
     <message>
       <source>keyboard input captured</source>
@@ -1920,12 +1920,12 @@
     <message>
       <source>auto switch [red]disabled[normal], game not compatible</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation>troca automática [red]desativada[normal], jogo não compatível</translation>
+      <translation>auto-trocar [red]desativado[normal], jogo não compatível</translation>
     </message>
     <message>
       <source>auto switch [red]disabled[normal], single-sided disk</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation>troca automática [red]desativada[normal], disco de lado único</translation>
+      <translation>auto-trocar [red]desativado[normal], disco de lado único</translation>
     </message>
   </context>
   <context>
@@ -1954,7 +1954,7 @@
     </message>
     <message>
       <source>Square 1</source>
-      <translation>Square 1</translation>
+      <translation>Quadrado 1</translation>
     </message>
     <message>
       <source>DMC</source>
@@ -1962,11 +1962,11 @@
     </message>
     <message>
       <source>Noise</source>
-      <translation>Noise</translation>
+      <translation>Barulho</translation>
     </message>
     <message>
       <source>Square 2</source>
-      <translation>Square 2</translation>
+      <translation>Quadrado 2</translation>
     </message>
     <message>
       <source>Extra</source>
@@ -1974,11 +1974,11 @@
     </message>
     <message>
       <source>Master</source>
-      <translation>Master</translation>
+      <translation>Mestre</translation>
     </message>
     <message>
       <source>Triangle</source>
-      <translation>Triangle</translation>
+      <translation>Triângulo</translation>
     </message>
     <message>
       <source>active</source>
@@ -1990,15 +1990,15 @@
     </message>
     <message>
       <source>Active all</source>
-      <translation>Ativar todos</translation>
+      <translation>Ativar tudo</translation>
     </message>
     <message>
       <source>Disable all</source>
-      <translation>Desativar todos</translation>
+      <translation>Desativar tudo</translation>
     </message>
     <message>
       <source>Reset to defaults</source>
-      <translation>Redefinir para padrões</translation>
+      <translation>Resetar para os padrões</translation>
     </message>
   </context>
   <context>
@@ -2045,11 +2045,11 @@
     </message>
     <message>
       <source>Editor Tools</source>
-      <translation>Ferramentas de Edição</translation>
+      <translation>Ferramentas do Editor</translation>
     </message>
     <message>
       <source>CPU Ram</source>
-      <translation>CPU RAM</translation>
+      <translation>RAM da CPU</translation>
     </message>
     <message>
       <source>Pro Action Rocky</source>
@@ -2213,7 +2213,7 @@
     </message>
     <message>
       <source>Fringing</source>
-      <translation>Aberração</translation>
+      <translation>Dispersão</translation>
     </message>
     <message>
       <source>Resolution</source>
@@ -2300,7 +2300,7 @@
     </message>
     <message>
       <source>Noise</source>
-      <translation>Ruído</translation>
+      <translation>Barulho</translation>
     </message>
     <message>
       <source>Hue</source>
@@ -2308,7 +2308,7 @@
     </message>
     <message>
       <source>Reset parameters to defaults</source>
-      <translation>Redefinir parâmetros para os padrões</translation>
+      <translation>Resetar os parâmetros para os padrões</translation>
     </message>
   </context>
   <context>
@@ -2331,7 +2331,7 @@
     </message>
     <message>
       <source>Noise</source>
-      <translation>Ruído</translation>
+      <translation>Barulho</translation>
     </message>
     <message>
       <source>White Point</source>
@@ -2351,7 +2351,7 @@
     </message>
     <message>
       <source>Reset parameters to defaults</source>
-      <translation>Redefinir parâmetros para os padrões</translation>
+      <translation>Resetar os parâmetros para os padrões</translation>
     </message>
   </context>
   <context>
@@ -2374,11 +2374,11 @@
     </message>
     <message>
       <source>Noise</source>
-      <translation>Ruído</translation>
+      <translation>Barulho</translation>
     </message>
     <message>
       <source>Color Phase</source>
-      <translation>Fase de Cor</translation>
+      <translation>Fase da Cor</translation>
     </message>
     <message>
       <source>Brightness</source>
@@ -2394,11 +2394,11 @@
     </message>
     <message>
       <source>Chroma Lag</source>
-      <translation>Atraso de Crominância</translation>
+      <translation>Atraso do Chroma</translation>
     </message>
     <message>
       <source>Chroma Correction</source>
-      <translation>Correção de Crominância</translation>
+      <translation>Correção do Chroma</translation>
     </message>
     <message>
       <source>MFields</source>
@@ -2406,7 +2406,7 @@
     </message>
     <message>
       <source>Reset parameters to defaults</source>
-      <translation>Redefinir parâmetros para os padrões</translation>
+      <translation>Resetar os parâmetros para os padrões</translation>
     </message>
   </context>
   <context>
@@ -2417,7 +2417,7 @@
     </message>
     <message>
       <source>Chroma Lag</source>
-      <translation>Atraso de Crominância</translation>
+      <translation>Atraso do Chroma</translation>
     </message>
     <message>
       <source>Contrast</source>
@@ -2425,7 +2425,7 @@
     </message>
     <message>
       <source>Chroma Correction</source>
-      <translation>Correção de Crominância</translation>
+      <translation>Correção do Chroma</translation>
     </message>
     <message>
       <source>Brightness</source>
@@ -2433,7 +2433,7 @@
     </message>
     <message>
       <source>Noise</source>
-      <translation>Ruído</translation>
+      <translation>Barulho</translation>
     </message>
     <message>
       <source>Black Point</source>
@@ -2453,14 +2453,14 @@
     </message>
     <message>
       <source>Reset parameters to defaults</source>
-      <translation>Redefinir parâmetros para os padrões</translation>
+      <translation>Resetar os parâmetros para os padrões</translation>
     </message>
   </context>
   <context>
     <name>wdgPaletteEditor</name>
     <message>
       <source>Palette files</source>
-      <translation>Arquivos de paleta</translation>
+      <translation>Arquivos da paleta</translation>
     </message>
     <message>
       <source>All files</source>
@@ -2468,7 +2468,7 @@
     </message>
     <message>
       <source>Save palette on file</source>
-      <translation>Salvar paleta em arquivo</translation>
+      <translation>Salvar a paleta no arquivo</translation>
     </message>
     <message>
       <source>Selected</source>
@@ -2671,15 +2671,15 @@
     </message>
     <message>
       <source>Swap Duty Cycles</source>
-      <translation>Inverter Ciclos de Trabalho</translation>
+      <translation>Trocar os Ciclos de Trabalho</translation>
     </message>
     <message>
       <source>Enable Audio</source>
-      <translation>Habilitar Áudio</translation>
+      <translation>Ativar Áudio</translation>
     </message>
     <message>
       <source>Reverse bits of DPCM</source>
-      <translation>Inverter bits de DPCM</translation>
+      <translation>Reverter os bits do DPCM</translation>
     </message>
     <message>
       <source>192000</source>
@@ -2718,15 +2718,15 @@
     </message>
     <message>
       <source>Disabled</source>
-      <translation>Desabilitado</translation>
+      <translation>Desativado</translation>
     </message>
     <message>
       <source>Game Genie Rom Mode</source>
-      <translation>Modo ROM Game Genie</translation>
+      <translation>Modo Rom do Game Genie</translation>
     </message>
     <message>
       <source>Cheats List Mode</source>
-      <translation>Modo Lista de Trapaças</translation>
+      <translation>Modo da Lista de Trapaças</translation>
     </message>
   </context>
   <context>
@@ -2741,11 +2741,11 @@
     </message>
     <message>
       <source>Select Game Genie ROM file</source>
-      <translation>Selecione ROM Game Genie</translation>
+      <translation>Selecionar o arquivo da ROM do Game Genie</translation>
     </message>
     <message>
       <source>Select FDS BIOS file</source>
-      <translation>Selecione BIOS FDS</translation>
+      <translation>Selecionar o arquivo da BIOS do FDS</translation>
     </message>
     <message>
       <source>General Settings</source>
@@ -2781,7 +2781,7 @@
     </message>
     <message>
       <source>System Roms</source>
-      <translation>ROMs do Sistema</translation>
+      <translation>Roms do Sistema</translation>
     </message>
     <message>
       <source>Mode</source>
@@ -2801,7 +2801,7 @@
     </message>
     <message>
       <source>Pause when in background</source>
-      <translation>Pausar enquanto em segundo plano</translation>
+      <translation>Pausar quando em segundo plano</translation>
     </message>
     <message>
       <source>Language</source>
@@ -2809,19 +2809,19 @@
     </message>
     <message>
       <source>Save settings on exit</source>
-      <translation>Salvar configurações ao sair</translation>
+      <translation>Salvar as configurações ao sair</translation>
     </message>
     <message>
       <source>Save battery RAM file every 3 min.</source>
-      <translation>Salvar arquivo de RAM da bateria a cada 3 minutos</translation>
+      <translation>Salvar o arquivo da RAM da bateria a cada 3 minutos</translation>
     </message>
     <message>
       <source>Fast Forward velocity</source>
-      <translation>Velocidade de avanço rápido</translation>
+      <translation>Velocidade do avanço rápido</translation>
     </message>
     <message>
       <source>Misc</source>
-      <translation>Opções Diversas</translation>
+      <translation>Miscelânea</translation>
     </message>
     <message>
       <source>Settings</source>
@@ -2829,15 +2829,15 @@
     </message>
     <message>
       <source>Game Genie Rom file</source>
-      <translation>ROM Game Genie</translation>
+      <translation>Arquivo da ROM do Game Genie</translation>
     </message>
     <message>
       <source>FDS Bios file</source>
-      <translation>BIOS FDS</translation>
+      <translation>Arquivo da BIOS do FDS</translation>
     </message>
     <message>
       <source>Rewind minutes</source>
-      <translation>Minutos de retrocesso</translation>
+      <translation>Minutos do retrocesso</translation>
     </message>
     <message>
       <source>Spanish</source>
@@ -2893,11 +2893,11 @@
     </message>
     <message>
       <source>Insert disk 1 side A at power-up/reset</source>
-      <translation>Inserir o disco 1 lado A ao ligar/reiniciar</translation>
+      <translation>Inserir o disco 1 lado A ao ligar/resetar</translation>
     </message>
     <message>
       <source>Famicom Disk System</source>
-      <translation>Famicom Disk System</translation>
+      <translation>Sistema de Disco do Famicom</translation>
     </message>
     <message>
       <source>Switch the disk/side automatically</source>
@@ -2909,7 +2909,7 @@
     </message>
     <message>
       <source>Use fast forward when loading the disk/side</source>
-      <translation>Usar avanço rápido ao carregar disco/lado</translation>
+      <translation>Usar avanço rápido quando carregar o disco/lado</translation>
     </message>
     <message>
       <source>French</source>
@@ -2949,22 +2949,22 @@
     </message>
     <message>
       <source>Write mode</source>
-      <translation>Modo de escrita</translation>
+      <translation>Modo de gravação</translation>
     </message>
     <message>
       <source>Write to a separate file (Default)</source>
-      <translation>Escrever para um arquivo separado (Padrão)</translation>
+      <translation>Gravar num arquivo separado (Padrão)</translation>
     </message>
     <message>
       <source>Write to the original FDS/QD file</source>
-      <translation>Escrever para o arquivo FDS/QD original</translation>
+      <translation>Gravar no arquivo FDS/QD original</translation>
     </message>
   </context>
   <context>
     <name>wdgSettingsInput</name>
     <message>
       <source>Disabled</source>
-      <translation>Desabilitado</translation>
+      <translation>Desativado</translation>
     </message>
     <message>
       <source>Standard Pad</source>
@@ -2976,7 +2976,7 @@
     </message>
     <message>
       <source>Snes Mouse</source>
-      <translation>SNES Mouse</translation>
+      <translation>Mouse do Snes</translation>
     </message>
     <message>
       <source>Arkanoid Paddle</source>
@@ -2984,7 +2984,7 @@
     </message>
     <message>
       <source>Oeka Kids Tablet</source>
-      <translation>Oeka Kids Tablet</translation>
+      <translation>Tablet do Oeka Kids</translation>
     </message>
     <message>
       <source>Default</source>
@@ -2992,15 +2992,15 @@
     </message>
     <message>
       <source>Unset</source>
-      <translation>Desfazer</translation>
+      <translation>Desconfigurar</translation>
     </message>
     <message>
       <source>No usable device</source>
-      <translation>Nenhum dispositivo disponível</translation>
+      <translation>Nenhum dispositivo usável</translation>
     </message>
     <message>
       <source>Input Settings</source>
-      <translation>Configurações de Entradas</translation>
+      <translation>Configurações da Entrada</translation>
     </message>
     <message>
       <source>Joystick ID</source>
@@ -3020,27 +3020,27 @@
     </message>
     <message>
       <source>Misc</source>
-      <translation>Opções Diversas</translation>
+      <translation>Miscelânea</translation>
     </message>
     <message>
       <source>Expansion Port</source>
-      <translation>Porta de Expansão</translation>
+      <translation>Porta da Expansão</translation>
     </message>
     <message>
       <source>Hide Zapper cursor</source>
-      <translation>Ocultar cursor do Zapper</translation>
+      <translation>Esconder o cursor do Zapper</translation>
     </message>
     <message>
       <source>Controller Port 1</source>
-      <translation>Porta de Controle 1</translation>
+      <translation>Porta do Controle 1</translation>
     </message>
     <message>
       <source>Controller Port 3</source>
-      <translation>Porta de Controle 3</translation>
+      <translation>Porta do Controle 3</translation>
     </message>
     <message>
       <source>Controller Port 2</source>
-      <translation>Porta de Controle 2</translation>
+      <translation>Porta do Controle 2</translation>
     </message>
     <message>
       <source>Ports</source>
@@ -3052,7 +3052,7 @@
     </message>
     <message>
       <source>Permit &quot;Up + Down&quot; and &quot;Left + Right&quot; at the same time</source>
-      <translation>Permir &quot;Cima + Baixo&quot; e &quot;Esquerda + Direita&quot; simultaneamente</translation>
+      <translation>Permitir &quot;Pra Cima + Pra Baixo&quot; e &quot;Esquerda + Direita&quot; ao mesmo tempo</translation>
     </message>
     <message>
       <source>Controller Mode</source>
@@ -3060,11 +3060,11 @@
     </message>
     <message>
       <source>Controller Port 4</source>
-      <translation>Porta de Controle 4</translation>
+      <translation>Porta do Controle 4</translation>
     </message>
     <message>
       <source>Reset to defaults</source>
-      <translation>Redefinir padrões</translation>
+      <translation>Resetar para os padrões</translation>
     </message>
     <message>
       <source>Action</source>
@@ -3080,31 +3080,31 @@
     </message>
     <message>
       <source>Unset all</source>
-      <translation>Desfazer todos</translation>
+      <translation>Desconfigurar tudo</translation>
     </message>
     <message>
       <source>Start/Stop AUDIO recording</source>
-      <translation>Iniciar/Parar gravação de Á&amp;UDIO</translation>
+      <translation>Iniciar/Parar a gravação do ÁUDIO</translation>
     </message>
     <message>
       <source>Start/Stop VIDEO recording</source>
-      <translation>Iniciar/Parar gravação de &amp;VÍDEO</translation>
+      <translation>Iniciar/Parar a gravação do VÍDEO</translation>
     </message>
     <message>
       <source>Start/Stop WAV recording</source>
-      <translation>Iniciar/Parar gravação &amp;WAV</translation>
+      <translation>Iniciar/Parar a gravação do WAV</translation>
     </message>
     <message>
       <source>Standard Pads on Port3 and Port4</source>
-      <translation>Controles Padrões nas Portas 3 e 4</translation>
+      <translation>Controles Padrões na Porta 3 e Porta 4</translation>
     </message>
     <message>
       <source>Press a key - timeout in %1</source>
-      <translation>Pressione uma tecla - tempo restante: %1</translation>
+      <translation>Pressione uma tecla - o tempo se esgota em %1</translation>
     </message>
     <message>
       <source>Family BASIC Keyboard</source>
-      <translation>Teclado Family BASIC</translation>
+      <translation>Teclado da Família BASIC</translation>
     </message>
     <message>
       <source>Subor Keyboard</source>
@@ -3119,19 +3119,19 @@
     </message>
     <message>
       <source>Disable 7bit Sample Control</source>
-      <translation>Desativar Controle de Amostra 7bit</translation>
+      <translation>Desativar o Controle da Amostra 7bit</translation>
     </message>
     <message>
       <source>Reset Lag Counter</source>
-      <translation>Zerar Contador de Lag</translation>
+      <translation>Resetar o Contador dos Atrasos</translation>
     </message>
     <message>
       <source>VBlank Lines</source>
-      <translation>VBlank Lines</translation>
+      <translation>Linhas do VBlank</translation>
     </message>
     <message>
       <source>Postrender Lines</source>
-      <translation>Postrender Lines</translation>
+      <translation>Linhas do Postrender</translation>
     </message>
     <message>
       <source>Overclock</source>
@@ -3139,19 +3139,19 @@
     </message>
     <message>
       <source>Sprites and background</source>
-      <translation>Sprites e fundo</translation>
+      <translation>Imagens móveis e cenários de fundo</translation>
     </message>
     <message>
       <source>Unlimited Sprites</source>
-      <translation>Sprites Ilimitadas</translation>
+      <translation>Imagens Móveis Ilimitadas</translation>
     </message>
     <message>
       <source>Hide Sprites</source>
-      <translation>Ocultar Sprites</translation>
+      <translation>Esconder Imagens Móveis</translation>
     </message>
     <message>
       <source>Hide Background</source>
-      <translation>Ocultar Fundo</translation>
+      <translation>Esconder o Cenário de Fundo</translation>
     </message>
     <message>
       <source>Advanced</source>
@@ -3167,15 +3167,15 @@
     </message>
     <message>
       <source>Power up/reset CPU/PPU Alignment</source>
-      <translation>Alinhamento da CPU/PPU ao ligar/reiniciar</translation>
+      <translation>Alinhamento da CPU/PPU ao ligar/resetar</translation>
     </message>
     <message>
       <source>Increment at every hard reset (Not recommended)</source>
-      <translation>Incrementar a cada reinício (Não recomendado)</translation>
+      <translation>Incrementar a cada reset rígido (Não recomendado)</translation>
     </message>
     <message>
       <source>Automatically restores the limit when necessary to prevent graphical glitches</source>
-      <translation>Restaurar automaticamente o limite quando necessário para prevenir falhas gráficas</translation>
+      <translation>Restaurar automaticamente o limite quando necessário pra impedir erros gráficos</translation>
     </message>
     <message>
       <source>Per-Game</source>
@@ -3223,7 +3223,7 @@
     <message>
       <source>High Efficiency Video Codec (*.mkv)</source>
       <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
-      <translation>HEVC (*.mkv)</translation>
+      <translation>Codec de Vídeo de Alta Eficiência (*.mkv)</translation>
     </message>
     <message>
       <source>WebM Video (*.webm)</source>
@@ -3280,7 +3280,7 @@
     </message>
     <message>
       <source>Output Video Format</source>
-      <translation>Formato de Saída de Vídeo</translation>
+      <translation>Formato de Saída do Vídeo</translation>
     </message>
     <message>
       <source>Custom Width</source>
@@ -3288,11 +3288,11 @@
     </message>
     <message>
       <source>Output Quality</source>
-      <translation>Qualidade de Saída</translation>
+      <translation>Qualidade da Saída</translation>
     </message>
     <message>
       <source>Output Audio Format</source>
-      <translation>Formato de Saída de Áudio</translation>
+      <translation>Formato de Saída do Áudio</translation>
     </message>
     <message>
       <source>Output Resolution</source>
@@ -3396,11 +3396,11 @@
     </message>
     <message>
       <source>Audio recording settings</source>
-      <translation>Configurações de gravação de áudio</translation>
+      <translation>Configurações de gravação do áudio</translation>
     </message>
     <message>
       <source>Video recording settings</source>
-      <translation>Configurações de gravação de vídeo</translation>
+      <translation>Configurações de gravação do vídeo</translation>
     </message>
     <message>
       <source>Recording Settings</source>
@@ -3409,18 +3409,18 @@
     <message>
       <source>Opus Audio (*.opus)</source>
       <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
-      <translation>Áudio Opus  (*.opus)</translation>
+      <translation>Áudio do Opus  (*.opus)</translation>
     </message>
   </context>
   <context>
     <name>wdgSettingsVideo</name>
     <message>
       <source>GLSL &amp;soft stretch</source>
-      <translation>GLSL &amp;soft stretch</translation>
+      <translation>Esticamento &amp;leve do GLSL</translation>
     </message>
     <message>
       <source>HLSL &amp;soft stretch</source>
-      <translation>HLSL &amp;soft stretch</translation>
+      <translation>Esticamento &amp;leve do HLSL</translation>
     </message>
     <message>
       <source>[Select a file]</source>
@@ -3432,7 +3432,7 @@
     </message>
     <message>
       <source>Shaders files</source>
-      <translation>Arquivos de Shader</translation>
+      <translation>Arquivos do Shader</translation>
     </message>
     <message>
       <source>All files</source>
@@ -3440,19 +3440,19 @@
     </message>
     <message>
       <source>Open Shader file</source>
-      <translation>Abrir arquivo de Shader</translation>
+      <translation>Abrir arquivo do Shader</translation>
     </message>
     <message>
       <source>Palette files</source>
-      <translation>Arquivos de Paleta</translation>
+      <translation>Arquivos da Paleta</translation>
     </message>
     <message>
       <source>Open palette file</source>
-      <translation>Abrir arquivo de paleta</translation>
+      <translation>Abrir arquivo da paleta</translation>
     </message>
     <message>
       <source>Video Settings</source>
-      <translation>Configurações de Vídeo</translation>
+      <translation>Configurações do Vídeo</translation>
     </message>
     <message>
       <source>1x</source>
@@ -3484,11 +3484,11 @@
     </message>
     <message>
       <source>** To apply this change restart is needed **</source>
-      <translation>** É necessário reiniciar para aplicar essa alteração **</translation>
+      <translation>** Pra aplicar esta mudança um reinício é necessário **</translation>
     </message>
     <message>
       <source>Misc</source>
-      <translation>Opções Diversas</translation>
+      <translation>Miscelânea</translation>
     </message>
     <message>
       <source>1:1</source>
@@ -3500,15 +3500,15 @@
     </message>
     <message>
       <source>8:7 (NTSC TV)</source>
-      <translation>8:7 (NTSC)</translation>
+      <translation>8:7 (NTSC TV)</translation>
     </message>
     <message>
       <source>11:8 (PAL TV)</source>
-      <translation>11:8 (PAL)</translation>
+      <translation>11:8 (PAL TV)</translation>
     </message>
     <message>
       <source>Pixel Aspect Ratio</source>
-      <translation>Aspecto da Tela</translation>
+      <translation>Proporção do Aspecto dos Pixels</translation>
     </message>
     <message>
       <source>Off</source>
@@ -3536,11 +3536,11 @@
     </message>
     <message>
       <source>Down</source>
-      <translation>Baixo</translation>
+      <translation>Pra Baixo</translation>
     </message>
     <message>
       <source>Up</source>
-      <translation>Cima</translation>
+      <translation>Pra Cima</translation>
     </message>
     <message>
       <source>Left</source>
@@ -3548,15 +3548,15 @@
     </message>
     <message>
       <source>Reset to defaults</source>
-      <translation>Redefinir padrões</translation>
+      <translation>Resetar para os padrões</translation>
     </message>
     <message>
       <source>Black borders in window mode</source>
-      <translation>Bordas em modo janela</translation>
+      <translation>Bordas pretas no modo janela</translation>
     </message>
     <message>
       <source>Black borders in fullscreen</source>
-      <translation>Bordas em modo tela cheia</translation>
+      <translation>Bordas pretas na tela cheia</translation>
     </message>
     <message>
       <source>Overscan</source>
@@ -3568,15 +3568,15 @@
     </message>
     <message>
       <source>CRT Dotmask</source>
-      <translation>Máscara de CRT</translation>
+      <translation>Máscara de pontos do CRT</translation>
     </message>
     <message>
       <source>CRT Scanlines</source>
-      <translation>Scanlines de CRT</translation>
+      <translation>Scanlines do CRT</translation>
     </message>
     <message>
       <source>CRT With Curve</source>
-      <translation>CRT com Curvatura</translation>
+      <translation>CRT com Curva</translation>
     </message>
     <message>
       <source>Emboss</source>
@@ -3584,11 +3584,11 @@
     </message>
     <message>
       <source>Noise</source>
-      <translation>Ruído</translation>
+      <translation>Barulho</translation>
     </message>
     <message>
       <source>NTSC 2Phase Composite</source>
-      <translation>NTSC 2Phase Composite</translation>
+      <translation>Composto 2Phase do NTSC</translation>
     </message>
     <message>
       <source>Old TV</source>
@@ -3596,7 +3596,7 @@
     </message>
     <message>
       <source>From File</source>
-      <translation>Carregar Arquivo</translation>
+      <translation>Do Arquivo</translation>
     </message>
     <message>
       <source>No Filters</source>
@@ -3616,15 +3616,15 @@
     </message>
     <message>
       <source>Hq2X</source>
-      <translation>Hq2X</translation>
+      <translation>HQ2X</translation>
     </message>
     <message>
       <source>Hq3X</source>
-      <translation>Hq3X</translation>
+      <translation>HQ3X</translation>
     </message>
     <message>
       <source>Hq4X</source>
-      <translation>Hq4X</translation>
+      <translation>HQ4X</translation>
     </message>
     <message>
       <source>xBRZ 2X</source>
@@ -3696,23 +3696,23 @@
     </message>
     <message>
       <source>xBRZ 2X Multithreading</source>
-      <translation>xBRZ 2X Multithreading</translation>
+      <translation>Multi-threading do xBRZ 2X</translation>
     </message>
     <message>
       <source>xBRZ 3X Multithreading</source>
-      <translation>xBRZ 3X Multithreading</translation>
+      <translation>Multi-threading do xBRZ 3X</translation>
     </message>
     <message>
       <source>xBRZ 4X Multithreading</source>
-      <translation>xBRZ 4X Multithreading</translation>
+      <translation>Multi-threading do xBRZ 4X</translation>
     </message>
     <message>
       <source>xBRZ 5X Multithreading</source>
-      <translation>xBRZ 5X Multithreading</translation>
+      <translation>Multi-threading do xBRZ 5X</translation>
     </message>
     <message>
       <source>xBRZ 6X Multithreading</source>
-      <translation>xBRZ 6X Multithreading</translation>
+      <translation>Multi-threading do xBRZ 6X</translation>
     </message>
     <message>
       <source>VSync</source>
@@ -3732,35 +3732,35 @@
     </message>
     <message>
       <source>Input display</source>
-      <translation>Mostrar atividade dos controles</translation>
+      <translation>Exibir a entrada</translation>
     </message>
     <message>
       <source>Disable TV noise emulation when turned off</source>
-      <translation>Desabilitar ruído de TV quando desligado</translation>
+      <translation>Desativar a emulação do barulho da TV quando desligado</translation>
     </message>
     <message>
       <source>Disable sepia color on pause</source>
-      <translation>Desabilitar cor de sépia quando pausado</translation>
+      <translation>Desativar a cor sépia na pausa</translation>
     </message>
     <message>
       <source>Fullscreen in window</source>
-      <translation>Tela cheia em janela</translation>
+      <translation>Tela cheia na janela</translation>
     </message>
     <message>
       <source>Stretch in fullscreen</source>
-      <translation>Esticar em tela cheia</translation>
+      <translation>Esticar na tela cheia</translation>
     </message>
     <message>
       <source>Soft stretch</source>
-      <translation>Suavizar esticamento</translation>
+      <translation>Esticamento leve</translation>
     </message>
     <message>
       <source>Disable sRGB FBO</source>
-      <translation>Desabilitar sRGB FBO</translation>
+      <translation>Desativar o FBO do sRGB</translation>
     </message>
     <message>
       <source>Disable Red and Green emphasis swap for PAL/Dendy</source>
-      <translation>Desabilitar troca de ênfase Vermelha e Verde para PAL/Dendy</translation>
+      <translation>Desativar a troca das ênfases Vermelha e Verde pra PAL/Dendy</translation>
     </message>
     <message>
       <source>0 degrees</source>
@@ -3780,27 +3780,27 @@
     </message>
     <message>
       <source>Raw</source>
-      <translation>Raw</translation>
+      <translation>Bruto</translation>
     </message>
     <message>
       <source>Horizontal flip</source>
-      <translation>Espelhar horizontalmente</translation>
+      <translation>Virar na horizontal</translation>
     </message>
     <message>
       <source>Flip/Rotate the controller input</source>
-      <translation>Espelhar/Girar a entrada do controle</translation>
+      <translation>Virar/Girar a entrada do controle</translation>
     </message>
     <message>
       <source>Flip/Rotate the text on screen</source>
-      <translation>Espelhar/Girar o texto na tela</translation>
+      <translation>Virar/Girar o texto na tela</translation>
     </message>
     <message>
       <source>Per-Game Overscan Setting</source>
-      <translation>Configuração de Overscan por jogo</translation>
+      <translation>Configuração do Overscan por jogo</translation>
     </message>
     <message>
       <source>Horizontal Flip and Rotation</source>
-      <translation>Espelhamento Horizontal e Rotação</translation>
+      <translation>Virada e Rotação Horizontal</translation>
     </message>
     <message>
       <source>Screen</source>
@@ -3816,7 +3816,7 @@
     </message>
     <message>
       <source>Shader File</source>
-      <translation>Arquivo de Shader</translation>
+      <translation>Arquivo do Shader</translation>
     </message>
     <message>
       <source>Filter</source>
@@ -3824,19 +3824,19 @@
     </message>
     <message>
       <source>GPU Shaders</source>
-      <translation>GPU Shaders</translation>
+      <translation>Shaders da GPU</translation>
     </message>
     <message>
       <source>Palette Selection</source>
-      <translation>Seleção de Paleta</translation>
+      <translation>Seleção de Paletas</translation>
     </message>
     <message>
       <source>Palette File</source>
-      <translation>Arquivo de Paleta</translation>
+      <translation>Arquivo da Paleta</translation>
     </message>
     <message>
       <source>Show frames and lags counters</source>
-      <translation>Mostrar quadros e contadores de lag</translation>
+      <translation>Mostrar frames e contadores dos atrasos</translation>
     </message>
     <message>
       <source>Desktop resolution</source>
@@ -3856,7 +3856,7 @@
     </message>
     <message>
       <source>Use integer scaling</source>
-      <translation>Usar escala de inteiros</translation>
+      <translation>Usar dimensionamento dos inteiros</translation>
     </message>
     <message>
       <source>Preferred resolution </source>
@@ -3920,7 +3920,7 @@
     </message>
     <message>
       <source>Reset parameters to defaults</source>
-      <translation>Redefinir parâmetros para os padrões</translation>
+      <translation>Resetar os parâmetros para os padrões</translation>
     </message>
     <message>
       <source>NTSC CRT LMP88959</source>
@@ -3943,19 +3943,19 @@
     <name>wdgState</name>
     <message>
       <source>Save/Load Slot Box</source>
-      <translation>Slot Salvar/Carregar</translation>
+      <translation>Salvar/Carregar a Caixa dos Slots</translation>
     </message>
     <message>
       <source>Save state</source>
-      <translation>Salvar estado</translation>
+      <translation>Save state</translation>
     </message>
     <message>
       <source>Save/Load State</source>
-      <translation>Salvar/Carregar Estado</translation>
+      <translation>Salvar/Carregar o State</translation>
     </message>
     <message>
       <source>Load state</source>
-      <translation>Carregar estado</translation>
+      <translation>Carregar o state</translation>
     </message>
   </context>
 </TS>
