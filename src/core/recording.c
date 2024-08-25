@@ -204,8 +204,10 @@ void recording_init(void) {
 					}
 					av_dict_free(&opts);
 					opts = NULL;
+#if LIBAVCODEC_VERSION_INT < AV_VERSION_INT(61, 0, 0)
 					avcodec_close(test);
-					av_free(test);
+#endif
+					avcodec_free_context(&test);
 					if (finded) {
 						break;
 					}
@@ -487,7 +489,9 @@ static void ffmpeg_fstream_close(_ffmpeg_stream *fs) {
 	fs->encode = FALSE;
 	fs->avc = NULL;
 	if (fs->avcc) {
+#if LIBAVCODEC_VERSION_INT < AV_VERSION_INT(61, 0, 0)
 		avcodec_close(fs->avcc);
+#endif
 		avcodec_free_context(&fs->avcc);
 	}
 	if (fs->avf) {
