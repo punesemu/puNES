@@ -84,7 +84,7 @@
     </message>
     <message>
       <source>Dip Switches</source>
-      <translation type="unfinished">Dip Switches</translation>
+      <translation>Dip Switches</translation>
     </message>
   </context>
   <context>
@@ -643,7 +643,7 @@
     </message>
     <message>
       <source>Subor Keyboard plus mouse (24-bit $4017)</source>
-      <translation type="unfinished">Subor Keyboard plus mouse (24-bit $4017)</translation>
+      <translation>Klawiatura Subor plus mysz (24-bit $4017)</translation>
     </message>
     <message>
       <source>Port Test</source>
@@ -1651,7 +1651,7 @@
     </message>
     <message>
       <source>Impossible write %0.</source>
-      <translation type="unfinished">Impossible write %0.</translation>
+      <translation>Niemożliwy zapis %0.</translation>
     </message>
     <message>
       <source>to &amp;FDS Format (with Header)</source>
@@ -1659,7 +1659,7 @@
     </message>
     <message>
       <source>to &amp;Quick Disk Format</source>
-      <translation type="unfinished">to &amp;Quick Disk Format</translation>
+      <translation>do formatu &amp;Quick Disk</translation>
     </message>
     <message>
       <source>to puNES image</source>
@@ -1667,7 +1667,7 @@
     </message>
     <message>
       <source>to F&amp;DS Format (without Header)</source>
-      <translation type="unfinished">to F&amp;DS Format (without Header)</translation>
+      <translation>do formatu F&amp;DS (bez nagłówka)</translation>
     </message>
     <message>
       <source>C&amp;hange Disk</source>
@@ -1675,7 +1675,7 @@
     </message>
     <message>
       <source>E&amp;xport current state of Disk/Disks</source>
-      <translation type="unfinished">E&amp;xport current state of Disk/Disks</translation>
+      <translation>Eksportuj bieżący stan dysku/dysków</translation>
     </message>
     <message>
       <source>Open Floppy Disk Image</source>
@@ -1683,7 +1683,7 @@
     </message>
     <message>
       <source>&amp;Dip Switches</source>
-      <translation type="unfinished">&amp;Dip Switches</translation>
+      <translation>&amp;Dip Switches</translation>
     </message>
   </context>
   <context>
