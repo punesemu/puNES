@@ -627,11 +627,11 @@
     </message>
     <message>
       <source>Subor Keyboard plus mouse (3x8-bit)</source>
-      <translation type="unfinished">Subor Keyboard plus mouse (3x8-bit)</translation>
+      <translation>Klawiatura Subor plus mysz (3x8-bit)</translation>
     </message>
     <message>
       <source>Subor Keyboard plus mouse (24-bit)</source>
-      <translation type="unfinished">Subor Keyboard plus mouse (24-bit)</translation>
+      <translation>Klawiatura Subor plus mysz (24-bit)</translation>
     </message>
     <message>
       <source>SNES Mouse ($4017.0)</source>
@@ -639,7 +639,7 @@
     </message>
     <message>
       <source>Unknown Famiclone Keyboard (Golden Key)</source>
-      <translation type="unfinished">Unknown Famiclone Keyboard (Golden Key)</translation>
+      <translation>Nieznana klawiatura Famiclone (Golden Key)</translation>
     </message>
     <message>
       <source>Subor Keyboard plus mouse (24-bit $4017)</source>
@@ -969,7 +969,7 @@
     </message>
     <message>
       <source>which Floppy Disk image do you want to load?</source>
-      <translation type="unfinished">which Floppy Disk image do you want to load?</translation>
+      <translation>który obraz dyskietki chcesz wgrać?</translation>
     </message>
   </context>
   <context>
@@ -1615,7 +1615,7 @@
     </message>
     <message>
       <source>Detach &amp;Barcode</source>
-      <translation type="unfinished">Detach &amp;Barcode</translation>
+      <translation>Odłącz kod kreskowy</translation>
     </message>
     <message>
       <source>Floppy Disk image files</source>
@@ -1655,7 +1655,7 @@
     </message>
     <message>
       <source>to &amp;FDS Format (with Header)</source>
-      <translation type="unfinished">to &amp;FDS Format (with Header)</translation>
+      <translation>do formatu &amp;FDS (z nagłówkiem)</translation>
     </message>
     <message>
       <source>to &amp;Quick Disk Format</source>
@@ -1920,12 +1920,12 @@
     <message>
       <source>auto switch [red]disabled[normal], game not compatible</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">auto switch [red]disabled[normal], game not compatible</translation>
+      <translation>automatyczne przełączenie [red]wyłączone[normal], gra nie jest kompatybilna</translation>
     </message>
     <message>
       <source>auto switch [red]disabled[normal], single-sided disk</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">auto switch [red]disabled[normal], single-sided disk</translation>
+      <translation>automatyczne przełączenie [red]wyłączone[normal], dysk jednostronny</translation>
     </message>
   </context>
   <context>
