@@ -113,6 +113,8 @@ jobs:
         shell: msys2 {0}
         run: |
           pacman --noconfirm -U http://repo.msys2.org/mingw/${{ matrix.env }}/mingw-w64-${{ matrix.env }}-ffmpeg4.4-4.4.4-8-any.pkg.tar.zst
+          sed -i -e 's,=/${{ matrix.msystem }}/..,=${prefix},' /${{ matrix.msystem }}/lib/ffmpeg4.4/pkgconfig/*.pc
+          cp /${{ matrix.msystem }}/lib/ffmpef4.4/pkgconfig/*.pc /${{ matrix.msystem }}/lib/pkgconfig/.
 
       - name: 'Environment configuration'
         shell: msys2 {0}
