@@ -112,7 +112,7 @@ jobs:
       - name: 'Install FFmpeg libraries'
         shell: msys2 {0}
         run: |
-          pacman --noconfirm -U http://repo.msys2.org/mingw/${{ matrix.env }}/mingw-w64-${{ matrix.env }}-ffmpeg4.4-4.4.5-1-any.pkg.tar.zst
+          pacman --noconfirm -U http://repo.msys2.org/mingw/${{ matrix.env }}/mingw-w64-${{ matrix.env }}-ffmpeg4.4-4.4.4-8-any.pkg.tar.zst
 
       - name: 'Environment configuration'
         shell: msys2 {0}
