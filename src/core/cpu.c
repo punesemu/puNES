@@ -66,16 +66,6 @@ enum cpu_opcode_type { RD_OP, WR_OP };
 	_RDABX_;\
 	cmd\
 }
-#define AXW(opTy, cmd, reg)\
-{\
-	WORD adr2 = lend_word(nidx, nes[nidx].c.cpu.PC.w, FALSE, TRUE);\
-	WORD adr0 = adr2 + (reg);\
-	WORD adr1 = (adr2 & 0xFF00) | (BYTE)adr0;\
-	nes[nidx].c.cpu.PC.w += 2;\
-	/* puo' essere la lettura corretta o anche semplice garbage */\
-	_RDAXW_;\
-	cmd\
-}
 #define IDR(opTy)\
 {\
 	WORD adr0 = lend_word(nidx, nes[nidx].c.cpu.PC.w, FALSE, TRUE);\
@@ -98,36 +88,6 @@ enum cpu_opcode_type { RD_OP, WR_OP };
 	_RDIDY_;\
 	cmd\
 }
-
-/* Prove tecniche
-#define IXW(opTy, cmd)\
-{\
-	WORD adr1 = _RDP;\
-	_RDIDX_;\
-	WORD adr0 = lend_word(nidx, (adr1 + nes[nidx].c.cpu.XR) & 0x00FF, TRUE, FALSE);\
-	_DMC\
-	cmd\
-}
-#define IXW(opTy, cmd)\
-{\
-	WORD adr1 = _RDP;\
-	_RDIDX_;\
-	WORD adr0 = lend_word(nidx, (adr1 + nes[nidx].c.cpu.XR) & 0x00FF, TRUE, FALSE);\
-	_DMC\
-	cmd\
-}
-#define IYW(opTy, cmd)\
-{\
-	WORD adr2 = lend_word(nidx, _RDP, TRUE, TRUE);\
-	WORD adr0 = adr2 + nes[nidx].c.cpu.YR;\
-	WORD adr1 = (adr2 & 0xFF00) | (BYTE)adr0;\
-	_RDIYW_;\
-	cmd\
-}
-#define _WRX(dst, src)\
-	if (!DMC.tick_type) DMC.tick_type = DMC_CPU_WRITE;\
-	cpu_wr_mem(nidx, dst, src)
-*/
 
 // ----------------------------------------------------------------------
 //  istruzioni ufficiali
@@ -271,10 +231,6 @@ enum cpu_opcode_type { RD_OP, WR_OP };
 	nes[nidx].c.cpu.of = (nes[nidx].c.cpu.AR & 0x40) ^ ((nes[nidx].c.cpu.AR & 0x20) << 1);
 // ATX
 #define ATX _RSZ(nes[nidx].c.cpu.XR = nes[nidx].c.cpu.AR = _RDP;, nes[nidx].c.cpu.AR)
-// AXA
-#define AXA(cmd)\
-	BYTE tmp = nes[nidx].c.cpu.AR & nes[nidx].c.cpu.XR & 0x07;\
-	cmd
 // AXS
 #define AXS\
 	nes[nidx].c.cpu.XR &= nes[nidx].c.cpu.AR;\
@@ -316,7 +272,7 @@ enum cpu_opcode_type { RD_OP, WR_OP };
 // SXX
 #define SXX(reg)\
 	BYTE tmp = (reg) & ((adr2 >> 8) + 1);\
-	if (adr1 != adr0) adr0 &= 0x00FF;\
+	if (adr1 != adr0) adr0 = (adr0 & (tmp << 8)) | (adr0 & 0x00FF);\
 	_SXXABX(tmp)
 // XAA
 #define XAA\
@@ -324,10 +280,8 @@ enum cpu_opcode_type { RD_OP, WR_OP };
 	nes[nidx].c.cpu.AR &= _RDP;
 // XAS
 #define XAS\
-	nes[nidx].c.cpu.SR = nes[nidx].c.cpu.AR & nes[nidx].c.cpu.YR;\
-	if (adr1 != adr0) adr0 &= 0x00FF;\
-	BYTE tmp = nes[nidx].c.cpu.SR & ((adr1 >> 8) + 1);\
-	_XASABX(tmp)
+	nes[nidx].c.cpu.SR = nes[nidx].c.cpu.AR & nes[nidx].c.cpu.XR;\
+    SXX(nes[nidx].c.cpu.SR)
 
 // ---------------------------------------------------------------------------------
 //  flags
@@ -416,9 +370,6 @@ enum cpu_opcode_type { RD_OP, WR_OP };
 	_PSH(nes[nidx].c.cpu.PC.b[0]);
 #define _RD0 _RDX(adr0, TRUE)
 #define _RD1 _RDX(adr1, TRUE)
-#define _RD2\
-	_RDX(adr1, FALSE)\
-	_DMC
 #define _RDB nes[nidx].c.cpu.openbus
 #define _RDP _RDX(nes[nidx].c.cpu.PC.w++, TRUE)
 #define _RDD _RDX(nes[nidx].c.cpu.PC.w, TRUE)
@@ -524,12 +475,10 @@ enum cpu_opcode_type { RD_OP, WR_OP };
 #define _RDZPX  _RD0
 #define _RDABS  _RD0
 #define _RDABX_ _RD1
-#define _RDAXW_ _RD2
 #define _RDABX  _RD0
 #define _RDIDX_ _RD1
 #define _RDIDX  _RD0
 #define _RDIDY_ _RD1
-#define _RDIYW_ _RD2
 #define _STXZPG(reg) _WR0(reg)
 #define _STXZPX(reg) _WR0(reg)
 #define _STXABS(reg) _WR0(reg)
@@ -540,9 +489,6 @@ enum cpu_opcode_type { RD_OP, WR_OP };
 #define _ASLWR2(reg) _WR0(reg)
 #define _AAXIDX(reg) _WR0(reg)
 #define _SXXABX(reg) _WR0(reg)
-#define _AXAABX(reg) _WR0(reg)
-#define _AXAIDY(reg) _WR0(reg)
-#define _XASABX(reg) _WR0(reg)
 
 static const BYTE table_opcode_cycles[256] = {
 /*    0  1  2  3  4  5  6  7  8  9  A  B  C  D  E  F     */
@@ -957,8 +903,8 @@ void cpu_exe_op(BYTE nidx) {
 
 	// casi incerti
 	case 0x8B: IMP(RD_OP, XAA) break;                                                            // XAA #IMM
-	case 0x9F: ABX(WR_OP, AXA(_AXAABX(tmp)), nes[nidx].c.cpu.YR) break;                          // AXA $ABS,Y
-	case 0x93: IDY(WR_OP, AXA(_AXAIDY(tmp))) break;                                              // AXA ($IND),Y
+	case 0x9F: ABX(WR_OP, SXX(nes[nidx].c.cpu.AR & nes[nidx].c.cpu.XR), nes[nidx].c.cpu.YR) break; // AXA $ABS,Y
+	case 0x93: IDY(WR_OP, SXX(nes[nidx].c.cpu.AR & nes[nidx].c.cpu.XR)) break;                   // AXA ($IND),Y
 	case 0xBB: ABX(RD_OP, _CYW(LAS), nes[nidx].c.cpu.YR) break;                                  // LAS $ABS,Y
 	case 0x9B: ABX(WR_OP, XAS, nes[nidx].c.cpu.YR) break;                                        // XAS $ABS,Y
 

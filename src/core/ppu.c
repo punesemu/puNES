@@ -1245,12 +1245,8 @@ INLINE static void ppu_oam_evaluation(BYTE nidx) {
 					 * The difference should only show up with a game
 					 * that doesn't use DMA every frame.
 					 */
-					{
-						static BYTE i;
-
-						for (i = 8; i--;) {
-							nes[nidx].p.oam.data[i] = nes[nidx].p.oam.data[(nes[nidx].p.r2003.value & 0xF8) + i];
-						}
+					for (BYTE i = 8; i--;) {
+						nes[nidx].p.oam.data[i] = nes[nidx].p.oam.data[(nes[nidx].p.r2003.value & 0xF8) + i];
 					}
 				} else {
 					nes[nidx].p.spr_ev.real = nes[nidx].p.spr_ev.index;
@@ -1264,16 +1260,12 @@ INLINE static void ppu_oam_evaluation(BYTE nidx) {
 					 * dello sprite) allora puo' essere disegnato.
 					 */
 					nes[nidx].p.spr_ev.range = nes[nidx].p.ppu.screen_y - nes[nidx].p.r2004.value;
-
-					nes[nidx].p.spr_ev.evaluate = FALSE;
 					/*
 					 * se sono nel range e lo sprite ha una
 					 * posizione Y inferiore o uguale a 0xEF,
 					 * lo esamino.
 					 */
-					if ((nes[nidx].p.spr_ev.count_plus < 8) && (nes[nidx].p.r2004.value <= 0xEF) && (nes[nidx].p.spr_ev.range < nes[nidx].p.r2000.size_spr)) {
-						nes[nidx].p.spr_ev.evaluate = TRUE;
-					}
+					nes[nidx].p.spr_ev.evaluate = (nes[nidx].p.spr_ev.count_plus < 8) && (nes[nidx].p.r2004.value <= 0xEF) && (nes[nidx].p.spr_ev.range < nes[nidx].p.r2000.size_spr);
 					/* incremento timing */
 					nes[nidx].p.spr_ev.timing++;
 				}
@@ -1324,7 +1316,6 @@ INLINE static void ppu_oam_evaluation(BYTE nidx) {
 						nes[nidx].p.spr_ev.evaluate = FALSE;
 						nes[nidx].p.spr_ev.byte_OAM = 3;
 						nes[nidx].p.spr_ev.index_plus = 0;
-
 						// unlimited sprites
 						if (cfg->unlimited_sprites) {
 							// https://wiki.nesdev.com/w/index.php/Sprite_overflow_games (Use of excess sprites for masking effects)
