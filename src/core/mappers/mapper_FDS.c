@@ -82,6 +82,34 @@ void extcl_after_mapper_init_FDS(void) {
 	} else {
 		mirroring_V(0);
 	}
+	// Zero-page variables
+	// The FDS BIOS uses the zero-page to store temporary values, controller reads, and the states of several write-only registers:
+	// $00..$0F:	Used as temporary variables.
+	// $F1..$F8:	Used by controller reading routines.
+	// [$F9]:		Mirror of $4026.   $FF on reset.
+	// [$FA]:		Mirror of $4025.   $2E on reset.
+	// [$FB]:		Mirror of $4016.   $00 on reset.
+	// [$FC]:		Mirror of $2005/2. $00 on reset.
+	// [$FD]:		Mirror of $2005/1. $00 on reset.
+	// [$FE]:		Mirror of $2001.   $06 on reset.
+	// [$FF]:		Mirror of $2000.   $10 on reset.
+	ram_wr(0, 0x0F9, 0xFF);
+	ram_wr(0, 0x0FA, 0x2E);
+	ram_wr(0, 0x0FB, 0x00);
+	ram_wr(0, 0x0FC, 0x00);
+	ram_wr(0, 0x0FD, 0x00);
+	ram_wr(0, 0x0FE, 0x06);
+	ram_wr(0, 0x0FF, 0x10);
+	// Interrupt/Reset vector controls
+	// The FDS BIOS uses 4 bytes at the lower end of the stack page to control the behaviour of interrupt/reset vectors:
+	// [$0100]:	PC action on NMI. $C0 (NMI #3) on reset.
+	// [$0101]:	PC action on IRQ. $80 (BIOS acknowledge and delay) on reset.
+	// [$0102]:	RESET flag. $35 on reset after the boot files have loaded.
+	// [$0103]:	RESET type. $AC = first boot of the game, $53 = the game was soft-reset by the user.
+	ram_wr(0, 0x100, 0xC0);
+	ram_wr(0, 0x101, 0x80);
+	ram_wr(0, 0x102, 0x00);
+	ram_wr(0, 0x103, info.reset == RESET ? 0x53 : 0xAC);
 }
 BYTE extcl_cpu_rd_mem_FDS(BYTE nidx, WORD address, UNUSED(BYTE openbus)) {
 	switch (address) {
