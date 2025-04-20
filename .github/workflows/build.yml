@@ -112,7 +112,9 @@ jobs:
       - name: 'Install FFmpeg libraries'
         shell: msys2 {0}
         run: |
-          pacman --noconfirm -U http://repo.msys2.org/mingw/${{ matrix.env }}/mingw-w64-${{ matrix.env }}-rav1e-0.7.1-7-any.pkg.tar.zst 
+          if [[ ${{ matrix.msystem }} == "mingw32" ]] ; then
+            pacman --noconfirm -U http://repo.msys2.org/mingw/${{ matrix.env }}/mingw-w64-${{ matrix.env }}-rav1e-0.7.1-6-any.pkg.tar.zst 
+          fi
           pacman --noconfirm -U http://repo.msys2.org/mingw/${{ matrix.env }}/mingw-w64-${{ matrix.env }}-ffmpeg4.4-4.4.4-8-any.pkg.tar.zst
           sed -i -e 's,=/${{ matrix.msystem }}/..,=${prefix},' /${{ matrix.msystem }}/lib/ffmpeg4.4/pkgconfig/*.pc
           cp /${{ matrix.msystem }}/lib/ffmpeg4.4/pkgconfig/*.pc /${{ matrix.msystem }}/lib/pkgconfig/.
@@ -211,11 +213,11 @@ jobs:
             libswscale-dev \
             libavutil-dev \
             nvidia-cg-dev \
-            qt5-default \
-            libqt5svg5-dev \
             qtbase5-dev \
             qtbase5-dev-tools \
+            qt5-qmake \
             qttools5-dev \
+            libqt5svg5-dev \
             qt5-image-formats-plugins
 
       - name: 'Set WIP env'
