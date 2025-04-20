@@ -112,6 +112,7 @@ jobs:
       - name: 'Install FFmpeg libraries'
         shell: msys2 {0}
         run: |
+          pacman --noconfirm -U http://repo.msys2.org/mingw/${{ matrix.env }}/mingw-w64-${{ matrix.env }}-rav1e-0.7.1-7-any.pkg.tar.zst 
           pacman --noconfirm -U http://repo.msys2.org/mingw/${{ matrix.env }}/mingw-w64-${{ matrix.env }}-ffmpeg4.4-4.4.4-8-any.pkg.tar.zst
           sed -i -e 's,=/${{ matrix.msystem }}/..,=${prefix},' /${{ matrix.msystem }}/lib/ffmpeg4.4/pkgconfig/*.pc
           cp /${{ matrix.msystem }}/lib/ffmpeg4.4/pkgconfig/*.pc /${{ matrix.msystem }}/lib/pkgconfig/.
@@ -189,7 +190,7 @@ jobs:
       fail-fast: false
       matrix:
         config:
-          - { os: ubuntu-20.04, cc: "gcc", cxx: "g++", env: x86_64, opts: "-DENABLE_RELEASE:BOOL=ON -DENABLE_FFMPEG:BOOL=ON -DENABLE_OPENGL_CG:BOOL=ON -DDISABLE_PORTABLE_MODE:BOOL=ON" }
+          - { os: ubuntu-22.04, cc: "gcc", cxx: "g++", env: x86_64, opts: "-DENABLE_RELEASE:BOOL=ON -DENABLE_FFMPEG:BOOL=ON -DENABLE_OPENGL_CG:BOOL=ON -DDISABLE_PORTABLE_MODE:BOOL=ON" }
 
     steps:
       - name: 'Checkout'
