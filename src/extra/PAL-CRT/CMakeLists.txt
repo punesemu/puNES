@@ -25,7 +25,7 @@ if(UNIX)
 endif()
 
 set(fw_url https://github.com/LMP88959/PL3D-KC.git)
-set(fw_tag 3fa35ad)
+set(fw_tag main)
 set(fw_args
 -DCMAKE_INSTALL_PREFIX:PATH=${CMAKE_INSTALL_PREFIX}
 -DCMAKE_BUILD_TYPE=Release
@@ -60,7 +60,7 @@ add_dependencies(fw::fw fw)
 endif()
 
 # --- PAL program
-add_executable(pal pal_core.c pal.c pal_nes.c pal_main.c ppm_rw.c bmp_rw.c)
+add_executable(pal pal_core.c pal.c pal_nes.c pal_nesrgb.c pal_main.c ppm_rw.c bmp_rw.c)
 target_include_directories(pal PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 target_compile_definitions(pal PRIVATE
 CMD_LINE_VERSION=$<NOT:$<BOOL:${live}>>

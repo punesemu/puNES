@@ -25,7 +25,7 @@ if(LIVE)
 	endif()
 
 	set(fw_url https://github.com/LMP88959/PL3D-KC.git)
-	set(fw_tag 3fa35ad)
+	set(fw_tag main)
 	set(fw_args
 	-DCMAKE_INSTALL_PREFIX:PATH=${CMAKE_INSTALL_PREFIX}
 	-DCMAKE_BUILD_TYPE=Release
@@ -67,7 +67,7 @@ endif()
 
 # --- video_convert
 if(VIDEO)
-	add_executable(ntsc_video video_convert.c crt_core.c crt_ntsc.c crt_ntscvhs.c crt_pv1k.c crt_template.c bmp_rw.c)
+	add_executable(ntsc_video extra/video_convert.c crt_core.c crt_ntsc.c crt_ntscvhs.c crt_pv1k.c crt_template.c bmp_rw.c)
 	target_include_directories(ntsc_video PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 	target_compile_definitions(ntsc_video PRIVATE CRT_SYSTEM=${CRT_SYSTEM})
 	target_compile_definitions(ntsc_video PRIVATE
@@ -78,7 +78,7 @@ if(VIDEO)
 	$<$<BOOL:${LIVE}>:fw::fw>
 	$<$<BOOL:${WIN32}>:winmm>
 	)
-	
+
 # --- default
 else()
 	add_executable(ntsc crt_core.c crt_ntsc.c crt_nes.c crt_pv1k.c crt_template.c crt_snes.c crt_main.c ppm_rw.c bmp_rw.c)

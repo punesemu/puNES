@@ -71,6 +71,13 @@ Extra features include the NES-specific NTSC frame pulses, dot skipping every od
 
 #### `Massive thank you to Persune for helping improve the NES version!`
 
+------
+❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗
+### `AVX accelerated version written by L. Spiro in their repo located here:`
+https://github.com/L-Spiro/BeesNES/blob/main/Src/Filters/NTSC-CRT-Full/crt_core.cpp#L478-L616
+❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗❗
+
+
 ## Compiling
 
 ```sh
@@ -195,6 +202,7 @@ Most modifications should only be to the constants defined in crt_template.h
 These emulators have this NTSC filter as an option:  
 puNES: https://github.com/punesemu/puNES  
 BeesNES: https://github.com/L-Spiro/BeesNES  
+As of Feb 15, 2025, BeesNES's developer L. Spiro has an AVX accelerated version of this library implemented in their emulator
 
 ------
 
