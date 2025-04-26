@@ -133,13 +133,13 @@ typedef struct _fds {
 		BYTE data_io;
 		BYTE data_available;
 		BYTE transfer_flag;
+		BYTE motor_stop;
 		BYTE transfer_reset;
-		BYTE motor_on;
 		BYTE motor_started;
 		BYTE io_mode;
 		BYTE mirroring;
 		BYTE unknow;
-		BYTE drive_ready;
+		BYTE crc_enabled;
 		BYTE irq_disk_enabled;
 		BYTE irq_timer_enabled;
 		BYTE irq_timer_reload_enabled;
@@ -148,8 +148,9 @@ typedef struct _fds {
 		WORD irq_timer_counter;
 		BYTE irq_timer_delay;
 		BYTE data_external_connector;
+		BYTE scan_disabled;
 		/* per usi futuri */
-		BYTE filler[30];
+		BYTE filler[29];
 	} drive;
 	// snd
 	struct _fds_snd {

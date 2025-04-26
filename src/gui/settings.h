@@ -768,7 +768,6 @@ static const _opt opt_fds_write_mode[] = {
 	{NULL, uL("diff file"), FDS_WR_DIFF_FILE},
 	{NULL, uL("original file"), FDS_WR_ORIGINAL_FILE}
 };
-
 static const _opt opt_slot_pgs[] = {
 	{NULL, uL("0"), 0},
 	{NULL, uL("1"), 1},
@@ -777,7 +776,6 @@ static const _opt opt_slot_pgs[] = {
 	{NULL, uL("4"), 4},
 	{NULL, uL("5"), 5}
 };
-
 static const _opt opt_controller_mode[] = {
 	{NULL, uL("nes")       , CTRL_MODE_NES},
 	{NULL, uL("famicom")   , CTRL_MODE_FAMICOM},

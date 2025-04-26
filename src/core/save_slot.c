@@ -32,7 +32,7 @@
 #include "nsf.h"
 #include "cheat.h"
 
-#define SAVE_VERSION 101
+#define SAVE_VERSION 102
 
 static BYTE mem_with_size(BYTE mode, BYTE slot, BYTE *mem, size_t msize, FILE *fp);
 static void preview_image_from_ppu_screen(BYTE slot, _ppu_screen_buffer *sb, void **dst, size_t *size);
@@ -532,13 +532,13 @@ BYTE save_slot_operation(BYTE mode, BYTE slot, FILE *fp) {
 		save_slot_ele(mode, slot, fds.drive.data_io);
 		save_slot_ele(mode, slot, fds.drive.data_available);
 		save_slot_ele(mode, slot, fds.drive.transfer_flag);
+		save_slot_ele(mode, slot, fds.drive.motor_stop);
 		save_slot_ele(mode, slot, fds.drive.transfer_reset);
-		save_slot_ele(mode, slot, fds.drive.motor_on);
 		save_slot_ele(mode, slot, fds.drive.motor_started);
 		save_slot_ele(mode, slot, fds.drive.io_mode);
 		save_slot_ele(mode, slot, fds.drive.mirroring);
 		save_slot_ele(mode, slot, fds.drive.unknow);
-		save_slot_ele(mode, slot, fds.drive.drive_ready);
+		save_slot_ele(mode, slot, fds.drive.crc_enabled);
 		save_slot_ele(mode, slot, fds.drive.irq_disk_enabled);
 		save_slot_ele(mode, slot, fds.drive.irq_timer_enabled);
 		save_slot_ele(mode, slot, fds.drive.irq_timer_reload_enabled);
@@ -547,6 +547,7 @@ BYTE save_slot_operation(BYTE mode, BYTE slot, FILE *fp) {
 		save_slot_ele(mode, slot, fds.drive.irq_timer_counter);
 		save_slot_ele(mode, slot, fds.drive.irq_timer_delay);
 		save_slot_ele(mode, slot, fds.drive.data_external_connector);
+		save_slot_ele(mode, slot, fds.drive.scan_disabled);
 		save_slot_ele(mode, slot, fds.drive.filler);
 
 		save_slot_ele(mode, slot, fds.snd.wave.data);

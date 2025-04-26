@@ -45,7 +45,7 @@ void map_init_FDS(void) {
 
 	fds.drive.mirroring = 0x08;
 	fds.drive.io_mode = 0x04;
-	fds.drive.drive_ready = 0x40;
+	fds.drive.crc_enabled = 0x40;
 
 	if (cfg->fds_disk1sideA_at_reset) {
 		fds_disk_op(FDS_DISK_EJECT, 0, TRUE);
@@ -245,10 +245,6 @@ void extcl_cpu_every_cycle_FDS(BYTE nidx) {
 	}
 
 	// IRQ handler
-//	if (fds.drive.irq_timer_delay && !(--fds.drive.irq_timer_delay)) {
-//		fds.drive.irq_timer_high = 0x01;
-//		nes[nidx].c.irq.high |= FDS_TIMER_IRQ;
-//	}
 	if (fds.drive.enabled_dsk_reg && fds.drive.irq_timer_enabled) {
 		if (fds.drive.irq_timer_counter) {
 			fds.drive.irq_timer_counter--;
@@ -279,13 +275,13 @@ void extcl_cpu_every_cycle_FDS(BYTE nidx) {
 		return;
 	}
 
-	if (!fds.drive.motor_on) {
-		fds.drive.transfer_reset = 0x02;
+	if (!fds.drive.transfer_reset) {
+		fds.drive.motor_stop = 0x02;
 	}
 
 	if (fds.drive.delay_insert) {
 		--fds.drive.delay_insert;
-		if (fds.drive.transfer_reset) {
+		if (fds.drive.motor_stop) {
 			fds.drive.motor_started = FALSE;
 		}
 		if (fds.drive.delay_insert) {
@@ -293,12 +289,13 @@ void extcl_cpu_every_cycle_FDS(BYTE nidx) {
 		}
 		fds.drive.disk_position = 0;
 		fds.drive.mark_finded = FALSE;
+		fds.drive.scan_disabled = FALSE;
 		fds.drive.end_of_head = FALSE;
 		fds.drive.data_available = FALSE;
 		fds.drive.delay_8bit = fds.info.cycles_8bit_delay;
 	}
 
-	if (!fds.drive.motor_started && !fds.drive.transfer_reset && fds.drive.drive_ready) {
+	if (!fds.drive.motor_started && !fds.drive.motor_stop && fds.drive.crc_enabled) {
 		// "Akuu Senki Raijin (Japan) (Disk Writer)" (sporcare lo screen).
 		fds.drive.delay_8bit = fds.info.cycles_8bit_delay;
 		fds.drive.motor_started = TRUE;
@@ -313,7 +310,7 @@ void extcl_cpu_every_cycle_FDS(BYTE nidx) {
 	fds.info.last_operation = FDS_OP_NONE;
 
 	if (fds.drive.motor_started) {
-		fds.drive.scan = !fds.drive.transfer_reset;
+		fds.drive.scan = !fds.drive.scan_disabled && !fds.drive.motor_stop;
 
 		if (fds.drive.scan) {
 			BYTE data = 0, transfer = FALSE;
@@ -322,7 +319,7 @@ void extcl_cpu_every_cycle_FDS(BYTE nidx) {
 
 			if (fds.drive.io_mode) {
 				// read
-				if (fds.drive.drive_ready) {
+				if (fds.drive.crc_enabled) {
 					if (fds.drive.mark_finded) {
 						transfer = TRUE;
 						fds.drive.crc = fds_crc_byte(fds.drive.crc, data);
@@ -334,7 +331,7 @@ void extcl_cpu_every_cycle_FDS(BYTE nidx) {
 				}
 			} else {
 				// write
-				if (!fds.drive.drive_ready) {
+				if (!fds.drive.crc_enabled) {
 					data = FDS_DISK_GAP;
 					fds.drive.crc = 0;
 				} else {
@@ -354,7 +351,7 @@ void extcl_cpu_every_cycle_FDS(BYTE nidx) {
 			fds.auto_insert.r4032.checks = 0;
 
 			if (transfer) {
-				if (fds.drive.irq_disk_enabled) {
+				if (fds.drive.enabled_dsk_reg && fds.drive.irq_disk_enabled) {
 					nes[nidx].c.irq.high |= FDS_DISK_IRQ;
 				}
 				if (fds.drive.io_mode) {
@@ -375,12 +372,13 @@ void extcl_cpu_every_cycle_FDS(BYTE nidx) {
 		}
 		if (++fds.drive.disk_position >= fds.info.sides[fds.drive.side_inserted].size) {
 			fds.drive.delay_insert = fds.info.cycles_insert_delay;
+			fds.drive.scan_disabled = FALSE;
 			fds.drive.end_of_head = 0x40;
 			// Bishoujo Alien Battle (Japan) (Unl).fds non esegue la routine a 0xE188
 			fds.auto_insert.in_game = TRUE;
 			// signal "disk is full" if end track was reached during writing
 			if (!fds.drive.io_mode) {
-				fds.drive.transfer_reset = 0x02;
+				fds.drive.motor_stop = 0x02;
 			}
 			if (fds_auto_insert_enabled() && !fds.auto_insert.end_of_head.disabled && !fds.auto_insert.delay.dummy) {
 				fds_disk_op(FDS_DISK_EJECT, 0, TRUE);

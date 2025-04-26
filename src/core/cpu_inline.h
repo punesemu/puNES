@@ -685,21 +685,25 @@ INLINE static BYTE fds_rd_mem(BYTE nidx, WORD address, BYTE made_tick) {
 		if (address == 0x4030) {
 			// 7  bit  0
 			// ---------
-			// IExB xxTD
-			// ||||   ||
-			// ||||   |+- Timer Interrupt (1: an IRQ occurred)
-			// ||||   +-- Byte transfer flag. Set every time 8 bits
-			// ||||         have been transfered between the RAM adaptor & disk
-			// ||||         drive (service $4024/$4031).
-			// ||||         Reset when $4024, $4031, or $4030 has been serviced.
-			// |||+------ CRC control (0: CRC passed; 1: CRC error)
+			// IExB MxTD
+			// || | | ||
+			// || | | |+- Timer Interrupt (1: an IRQ occurred)
+			// || | | +-- Byte transfer flag. Set every time 8 bits
+			// || | |       have been transfered between the RAM adaptor & disk
+			// || | |       drive (service $4024/$4031).
+			// || | |       Reset when $4024, $4031, or $4030 has been serviced.
+			// || | +---- Nametable Arrangement (from $4025.D3)
+			// || +------ CRC control (0: CRC passed; 1: CRC error)
 			// |+-------- End of Head (1 when disk head is on the most inner track)
 			// +--------- Disk Data Read/Write Enable (1 when disk is readable/writable)
 			// bit 0 (timer irq)
 			nes[nidx].c.cpu.openbus = fds.drive.irq_timer_high;
 			// bit 1 (trasfer flag)
 			nes[nidx].c.cpu.openbus |= fds.drive.transfer_flag;
-			// bit 2 e 3 non settati
+			// bit 2 non settato
+			// bit 3 (mirroring)
+			nes[nidx].c.cpu.openbus |= fds.drive.mirroring;
+			// bit 4 (crc control)
 			nes[nidx].c.cpu.openbus |= (fds.drive.crc ? 0x10 : 0x00);
 			// bit 5 non settato
 			// bit 6 (end of head)
@@ -745,7 +749,7 @@ INLINE static BYTE fds_rd_mem(BYTE nidx, WORD address, BYTE made_tick) {
 
 			if (fds.drive.disk_ejected) {
 				nes[nidx].c.cpu.openbus |= 0x07;
-			} else if (fds.drive.end_of_head | fds.drive.transfer_reset) {
+			} else if (fds.drive.end_of_head | fds.drive.motor_stop) {
 				nes[nidx].c.cpu.openbus |= 0x02;
 			}
 			nes[nidx].c.cpu.openbus |= fds.info.write_protected;
@@ -1982,23 +1986,20 @@ INLINE static BYTE fds_wr_mem(BYTE nidx, WORD address, BYTE value) {
 		if (address == 0x4025) {
 			// 7  bit  0
 			// ---------
-			// IS1B MRTD
+			// IE1C MRDT
 			// |||| ||||
-			// |||| |||+- Drive Motor Control
-			// |||| |||     0: Stop motor
-			// |||| |||     1: Turn on motor
-			// |||| ||+-- Transfer Reset
-			// |||| ||      Set 1 to reset transfer timing to the initial state.
-			// |||| |+--- Read / Write mode
-			// |||| |     (0: write; 1: read)
-			// |||| +---- Mirroring (0: horizontal; 1: vertical)
-			// |||+------ CRC control (set during CRC calculation of transfer)
-			// ||+------- Always set to '1'
-			// |+-------- Read/Write Start
-			// |            Turn on motor.  Set to 1 when the drive becomes ready for read/write
-			// +--------- Interrupt Transfer
-			//              0: Transfer without using IRQ
-			//              1: Enable IRQ when the drive becomes ready for
+			// |||| |||+- Transfer Reset
+			// |||| |||     1: Reset transfer timing to the initial state.
+			// |||| ||+-- Drive Motor Control (0: start, 1: stop)
+			// |||| |+--- Transfer Mode (0: write; 1: read)
+			// |||| +---- Nametable Arrangement
+			// ||||         0: Horizontal ("Vertical Mirroring")
+			// ||||         1: Vertical ("Horizontal Mirroring")
+			// |||+------ CRC Transfer Control (1: transfer CRC value)
+			// ||+------- Unknown, always set to '1'
+			// |+-------- CRC Enabled (0: disable/reset, 1: enable)
+			// +--------- Interrupt Enabled
+			//              1: Generate an IRQ every time the byte transfer flag is raised.
 #if !defined (RELEASE)
 			//printf("%5d - %3d - %3d : 0x%04X 0x%02X %d %d %d %d\n",
 			//	nes[nidx].p.ppu.frames,
@@ -2010,8 +2011,11 @@ INLINE static BYTE fds_wr_mem(BYTE nidx, WORD address, BYTE value) {
 			//	fds.drive.delay_insert, fds.drive.disk_position);
 #endif
 			if (fds.drive.enabled_dsk_reg) {
-				fds.drive.motor_on = value & 0x01;
-				fds.drive.transfer_reset = value & 0x02;
+				fds.drive.transfer_reset = value & 0x01;
+				fds.drive.motor_stop = value & 0x02;
+				if (fds.drive.motor_stop && fds.drive.motor_started) {
+					fds.drive.scan_disabled = TRUE;
+				}
 				fds.drive.io_mode = value & 0x04;
 				fds.drive.mirroring = value & 0x08;
 				if (fds.drive.mirroring) {
@@ -2027,8 +2031,8 @@ INLINE static BYTE fds_wr_mem(BYTE nidx, WORD address, BYTE value) {
 				}
 				fds.drive.crc_control = value & 0x10;
 				fds.drive.unknow = value & 0x20;
-				fds.drive.drive_ready = value & 0x40;
-				if (!fds.drive.drive_ready) {
+				fds.drive.crc_enabled = value & 0x40;
+				if (!fds.drive.crc_enabled) {
 					fds.drive.mark_finded = FALSE;
 				}
 				fds.drive.irq_disk_enabled = value & 0x80;

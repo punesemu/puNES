@@ -358,6 +358,12 @@ BYTE fds_create_empty_disk(uTCHAR *file, BYTE format, BYTE type, BYTE double_sid
 	}
 	fclose(fp);
 	free(mfds);
+	{
+		uTCHAR diff[LENGTH_FILE_NAME_LONG];
+
+		fds_diff_file_name(file, format, &diff[0], usizeof(diff));
+		uremove(diff);
+	}
 	return (rc);
 }
 BYTE fds_change_disk(uTCHAR *file) {
@@ -564,9 +570,10 @@ fds_disk_op_start:
 		case FDS_DISK_EJECT:
 			fds.drive.disk_ejected = TRUE;
 			fds.drive.scan = FALSE;
+			fds.drive.scan_disabled = FALSE;
 			fds.drive.end_of_head = 0x40;
-			fds.drive.motor_on = 0x01;
-			fds.drive.transfer_reset = 0x02;
+			fds.drive.transfer_reset = 0x01;
+			fds.drive.motor_stop = 0x02;
 			fds.drive.motor_started = FALSE;
 			fds.drive.delay_8bit = 0;
 			fds.auto_insert.r4032.frames = 0;
@@ -587,9 +594,10 @@ fds_disk_op_start:
 			fds.drive.mark_finded = FALSE;
 			fds.drive.disk_ejected = FALSE;
 			fds.drive.scan = FALSE;
+			fds.drive.scan_disabled = FALSE;
 			fds.drive.end_of_head = 0x40;
-			fds.drive.motor_on = 0x01;
-			fds.drive.transfer_reset = 0x02;
+			fds.drive.transfer_reset = 0x01;
+			fds.drive.motor_stop = 0x02;
 			fds.drive.motor_started = FALSE;
 			fds.drive.delay_8bit = 0;
 			fds.drive.delay_insert = fds.info.cycles_insert_delay;
@@ -843,7 +851,11 @@ BYTE fds_to_image(uTCHAR *file, _fds_info *finfo) {
 				fds_image_memcpy(&src[position], &dst[size], fib.blength);
 				size += fib.blength;
 				// crc
-				crc = fds_crc_block(&dst[cpos], cblength);
+				if (finfo->format == FDS_FORMAT) {
+					crc = fds_crc_block(&dst[cpos], cblength);
+				} else {
+					fds_image_memcpy(&src[position + fib.blength], (BYTE *)&crc, 2);
+				}
 				fds_image_memset(&dst[size], (crc >> 0), 1);
 				size += 1;
 				fds_image_memset(&dst[size], (crc >> 8), 1);
@@ -1274,7 +1286,12 @@ BYTE *fds_from_image_to_mem(BYTE format, BYTE type, size_t *size) {
 				continue;
 			}
 			if (fds_examine_block(src, position, &fib)) {
-				crc = fds_crc_block(&src[position], fib.blength);
+				if (format == FDS_FORMAT) {
+					crc = fds_crc_block(&src[position], fib.blength);
+				} else {
+					crc = src[position + fib.blength];
+					crc = (src[position + fib.blength + 1] << 8) | crc;
+				}
 			} else {
 				break;
 			}
