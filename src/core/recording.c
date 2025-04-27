@@ -1457,8 +1457,16 @@ INLINE static BYTE ffmpeg_audio_write_frame(SWORD *data) {
 }
 
 static enum AVSampleFormat ffmpeg_audio_select_sample_fmt(const AVCodec *codec) {
-	const enum AVSampleFormat *p = codec->sample_fmts;
+	const enum AVSampleFormat *sample_fmts = NULL;
+	const enum AVSampleFormat *p = NULL;
 
+#if LIBAVCODEC_VERSION_INT < AV_VERSION_INT(61, 13, 100)
+	sample_fmts = codec->sample_fmts;
+#else
+	avcodec_get_supported_config(NULL, codec, AV_CODEC_CONFIG_SAMPLE_FORMAT, 0, (const void **)&sample_fmts, NULL);
+#endif
+
+	p = sample_fmts;
 	if (!p) {
 		return (AV_SAMPLE_FMT_S16);
 	}
@@ -1469,13 +1477,20 @@ static enum AVSampleFormat ffmpeg_audio_select_sample_fmt(const AVCodec *codec) 
 		}
 		p++;
 	}
-	return (codec->sample_fmts[0]);
+	return (sample_fmts[0]);
 }
 static int ffmpeg_audio_select_samplerate(const AVCodec *codec) {
 	int snd_sample_rate = (snd.samplerate ? snd.samplerate : 44100), best_samplerate = 0;
+	const int *supported_samplerates = NULL;
 	const int *p = NULL;
 
-	if (!codec->supported_samplerates) {
+#if LIBAVCODEC_VERSION_INT < AV_VERSION_INT(61, 13, 100)
+	sample_fmts = codec->supported_samplerates;
+#else
+	avcodec_get_supported_config(NULL, codec, AV_CODEC_CONFIG_SAMPLE_RATE, 0, (const void **)&supported_samplerates, NULL);
+#endif
+
+	if (supported_samplerates == NULL) {
 		switch (codec->id) {
 			case AV_CODEC_ID_PCM_S16LE:
 			case AV_CODEC_ID_PCM_S16BE:
@@ -1492,13 +1507,13 @@ static int ffmpeg_audio_select_samplerate(const AVCodec *codec) {
 		}
 	}
 
-	p = codec->supported_samplerates;
+	p = supported_samplerates;
 	while (*p) {
 		best_samplerate = FFMAX(*p, best_samplerate);
 		p++;
 	}
 
-	p = codec->supported_samplerates;
+	p = supported_samplerates;
 	while (*p) {
 		if ((*p) == snd_sample_rate) {
 			best_samplerate = snd_sample_rate;
@@ -1609,10 +1624,17 @@ static AVFrame *ffmpeg_audio_alloc_frame(enum AVSampleFormat sample_fmt, const A
 	return (avframe);
 }
 static int ffmpeg_audio_select_channel_layout(const AVCodec *codec, AVChannelLayout *dst) {
-	const  AVChannelLayout *p = NULL, *best_ch_layout = NULL;
+	const AVChannelLayout *best_ch_layout = NULL;
+	const AVChannelLayout *ch_layouts = NULL;
+	const AVChannelLayout *p = NULL;
 	int best_nb_channels = 0;
 
-	if (!codec->ch_layouts) {
+#if LIBAVCODEC_VERSION_INT < AV_VERSION_INT(61, 13, 100)
+	ch_layouts = codec->ch_layouts;
+#else
+	avcodec_get_supported_config(NULL, codec, AV_CODEC_CONFIG_CHANNEL_LAYOUT, 0, (const void **)&ch_layouts, NULL);
+#endif
+	if (ch_layouts == NULL) {
 		switch (codec->id) {
 			case AV_CODEC_ID_PCM_S16LE:
 			case AV_CODEC_ID_PCM_S16BE:
@@ -1632,7 +1654,7 @@ static int ffmpeg_audio_select_channel_layout(const AVCodec *codec, AVChannelLay
 		}
 	}
 
-	p = codec->ch_layouts;
+	p = ch_layouts;
 	while (p->nb_channels) {
 		int nb_channels = p->nb_channels;
 
@@ -1643,7 +1665,7 @@ static int ffmpeg_audio_select_channel_layout(const AVCodec *codec, AVChannelLay
 		p++;
 	}
 
-	p = codec->ch_layouts;
+	p = ch_layouts;
 	while (p->nb_channels) {
 		int nb_channels = p->nb_channels;
 
