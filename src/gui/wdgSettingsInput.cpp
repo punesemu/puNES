@@ -257,6 +257,7 @@ void wdgSettingsInput::controller_ports_init(void) {
 }
 void wdgSettingsInput::controller_port_init(QComboBox *cb, _cfg_port *cfg_port, void *list, int length) {
 	_cb_ports *cbp = (_cb_ports *)list;
+	bool found = false;
 	int i;
 
 	cb->clear();
@@ -270,6 +271,13 @@ void wdgSettingsInput::controller_port_init(QComboBox *cb, _cfg_port *cfg_port, 
 
 		cb->addItem(cbp[i].desc);
 		cb->setItemData(i, QVariant(type));
+
+		if (cbp[i].index == cfg_port->port->type) {
+			found = true;
+		}
+	}
+	if (!found) {
+		cfg_port->port->type = cbp[0].index;
 	}
 }
 void wdgSettingsInput::shortcuts_init(void) {
