@@ -413,7 +413,7 @@ void init_OneBus(BYTE reset) {
 	onebus.reg.cpu[0x61] = 0x00;
 
 	if (info.mapper.ext_console_type == VT369) {
-		extcl_cpu_wr_mem_OneBus(0, 0x4162, 0x00);
+		onebus.reg.cpu[0x4162 & 0x00FF] = 0X00;
 
 		for (int i = 0; i < (int)LENGTH(onebus.gpio); i++) {
 			gpio_onebus_reset(onebus.gpio[i]);
