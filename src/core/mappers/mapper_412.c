@@ -30,6 +30,7 @@ struct _m412 {
 void map_init_412(void) {
 	EXTCL_AFTER_MAPPER_INIT(MMC3);
 	EXTCL_CPU_WR_MEM(412);
+	EXTCL_CPU_RD_MEM(412);
 	EXTCL_SAVE_MAPPER(412);
 	EXTCL_CPU_EVERY_CYCLE(MMC3);
 	EXTCL_PPU_000_TO_34X(MMC3);
@@ -53,16 +54,22 @@ void map_init_412(void) {
 	irqA12_delay = 1;
 }
 void extcl_cpu_wr_mem_412(BYTE nidx, WORD address, BYTE value) {
-	if ((address >= 0x6000) && (address <= 0x7FFF)) {
-		if (memmap_adr_is_writable(nidx, MMCPU(address))) {
+	if ((address >= 0x5000) && (address <= 0x7FFF)) {
+		if (memmap_adr_is_writable(nidx, MMCPU(address)) && !(m412.reg[1] & 0x01)) {
 			m412.reg[address & 0x0003] = value;
 			MMC3_prg_fix();
 			MMC3_chr_fix();
 		}
-		return;
+		wram_wr(nidx, address, value);
 	} else if (address >= 0x8000) {
 		extcl_cpu_wr_mem_MMC3(nidx, address, value);
 	}
+}
+BYTE extcl_cpu_rd_mem_412(BYTE nidx, WORD address, UNUSED(BYTE openbus)) {
+	if (dipswitch.used && (address >= 0x5000) && (address <= 0x6FFF)) {
+		return (dipswitch.value & 0x0F);
+	}
+	return (wram_rd(nidx, address));
 }
 BYTE extcl_save_mapper_412(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m412.reg);
@@ -81,14 +88,14 @@ void prg_swap_mmc3_412(WORD address, WORD value) {
 		mask = 0x01;
 		value = (address >> 13) & 0x01;
 	} else {
-		mask = (0x3F & ~((m412.reg[1] & 0x07) << 3));
-		base = ((m412.reg[1] & 0xF8) >> 2) & ~mask;
+		mask = (((~m412.reg[1] & 0x02) << 4) | (~m412.reg[1] & 0x10) | 0x0F);
+		base = (((m412.reg[1] & 0x40) >> 2) | ((m412.reg[1] & 0x04) <<  3)) & ~mask;
 	}
 	prg_swap_MMC3_base(address, (base | (value & mask)));
 }
 void chr_swap_mmc3_412(WORD address, WORD value) {
-	WORD base = m412.reg[1] & 0x80;
-	WORD mask = 0x7F;
+	WORD base = ((m412.reg[1] & 0x08) << 5) | (m412.reg[1] & 0x80);
+	WORD mask = 0xFF >> ((m412.reg[1] & 0x20) >> 5);
 
 	if (m412.reg[2] & 0x02) {
 		base = (m412.reg[0] >> 2) << 3;
