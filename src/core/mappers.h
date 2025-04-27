@@ -413,6 +413,7 @@
 #include "mappers/mapper_560.h"
 #include "mappers/mapper_561.h"
 #include "mappers/mapper_562.h"
+#include "mappers/mapper_564.h"
 #include "mappers/mapper_FDS.h"
 #include "mappers/mapper_GameGenie.h"
 #include "mappers/mapper_NSF.h"

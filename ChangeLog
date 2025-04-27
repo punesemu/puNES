@@ -1,6 +1,6 @@
 Changelog:
 0.112
-- Added support to mapper : 481, 562.
+- Added support to mapper : 481, 562, 564.
 - Disabled portable mode for the AppImage (#378).
 - Fixed mapper : 12, 17, 561, 394.
 - [NSF] Fixed display of timers when resetting the emulator (#380).

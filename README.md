@@ -150,7 +150,7 @@ To see a list of available command-line options, start puNES with the `-h` argum
 | 528 | 529 | 530 |     | 532 |     | 534 |     | 536 | 537 | 538 |
 | 539 | 540 | 541 |     | 543 |     |     |     | 547 |     |     |
 | 550 | 551 | 552 |     | 554 | 555 | 556 | 557 | 558 | 559 | 560 |
-| 561 | 562 |     |     |     |     |     |     |     |     |     |
+| 561 | 562 |     | 564 |     |     |     |     |     |     |     |
 
 ## :electric_plug: UNIF boards
 
