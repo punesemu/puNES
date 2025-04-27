@@ -447,6 +447,7 @@ set(core_srcs
 	core/mappers/mapper_456.c
 	core/mappers/mapper_457.c
 	core/mappers/mapper_471.c
+	core/mappers/mapper_481.c
 	core/mappers/mapper_512.c
 	core/mappers/mapper_513.c
 	core/mappers/mapper_516.c

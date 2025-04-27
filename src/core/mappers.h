@@ -381,6 +381,7 @@
 #include "mappers/mapper_456.h"
 #include "mappers/mapper_457.h"
 #include "mappers/mapper_471.h"
+#include "mappers/mapper_481.h"
 #include "mappers/mapper_512.h"
 #include "mappers/mapper_513.h"
 #include "mappers/mapper_516.h"
