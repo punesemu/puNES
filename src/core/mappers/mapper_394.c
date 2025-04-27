@@ -55,7 +55,7 @@ void map_init_394(void) {
 		memset(&m394, 0x00, sizeof(m394));
 
 		m394.reg[1] = 0x0F;
-		m394.reg[3] = 0x10;
+		m394.reg[3] = 0x90;
 	}
 
 	init_JYASIC(TRUE, info.reset);
