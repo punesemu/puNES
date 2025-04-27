@@ -1485,7 +1485,7 @@ static int ffmpeg_audio_select_samplerate(const AVCodec *codec) {
 	const int *p = NULL;
 
 #if LIBAVCODEC_VERSION_INT < AV_VERSION_INT(61, 13, 100)
-	sample_fmts = codec->supported_samplerates;
+	supported_samplerates = codec->supported_samplerates;
 #else
 	avcodec_get_supported_config(NULL, codec, AV_CODEC_CONFIG_SAMPLE_RATE, 0, (const void **)&supported_samplerates, NULL);
 #endif
