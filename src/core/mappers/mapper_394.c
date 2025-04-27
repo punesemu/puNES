@@ -184,8 +184,10 @@ void chr_swap_mmc3_394(WORD address, WORD value) {
 }
 
 INLINE static WORD prg_base(void) {
-	return (((m394.reg[3] & 0x08) << 1) | ((m394.reg[1] & 0x01) << 5));
+	return (((m394.reg[3] & 0x08) << 1) | ((m394.reg[1] & 0x03) << 5));
 }
 INLINE static WORD chr_base(void) {
-	return ((m394.reg[3] & 0x40) << 1) | ((m394.reg[1] & 0x01) << 8);
+	return info.mapper.submapper == 1
+		? ((m394.reg[3] & 0x40) << 1) | ((m394.reg[1] & 0x02) << 8) | ((m394.reg[1] & 0x04) << 6)
+		: ((m394.reg[3] & 0x40) << 1) | ((m394.reg[1] & 0x01) << 8);
 }
