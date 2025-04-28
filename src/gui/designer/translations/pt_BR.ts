@@ -99,7 +99,7 @@
     </message>
     <message>
       <source>Header Editor</source>
-      <translation>Header Editor</translation>
+      <translation>Editor de Cabeçalho</translation>
     </message>
     <message>
       <source>Mirroring</source>
@@ -571,7 +571,7 @@
     </message>
     <message>
       <source>PRG RAM Battery</source>
-      <translation>Batteria da RAM do PRG</translation>
+      <translation>Bateria da RAM do PRG</translation>
     </message>
     <message>
       <source>CHR RAM</source>
@@ -1210,11 +1210,11 @@
     </message>
     <message>
       <source>&amp;Hard Reset</source>
-      <translation>&amp;Reset Rígido</translation>
+      <translation>&amp;Reset por Hardware</translation>
     </message>
     <message>
       <source>&amp;Soft Reset</source>
-      <translation>&amp;Reset Leve</translation>
+      <translation>&amp;Reset por Software</translation>
     </message>
     <message>
       <source>&amp;Eject/Insert Disk</source>
@@ -1962,7 +1962,7 @@
     </message>
     <message>
       <source>Noise</source>
-      <translation>Barulho</translation>
+      <translation>Ruído</translation>
     </message>
     <message>
       <source>Square 2</source>
@@ -2300,7 +2300,7 @@
     </message>
     <message>
       <source>Noise</source>
-      <translation>Barulho</translation>
+      <translation>Ruído</translation>
     </message>
     <message>
       <source>Hue</source>
@@ -2331,7 +2331,7 @@
     </message>
     <message>
       <source>Noise</source>
-      <translation>Barulho</translation>
+      <translation>Ruído</translation>
     </message>
     <message>
       <source>White Point</source>
@@ -2374,7 +2374,7 @@
     </message>
     <message>
       <source>Noise</source>
-      <translation>Barulho</translation>
+      <translation>Ruído</translation>
     </message>
     <message>
       <source>Color Phase</source>
@@ -2433,7 +2433,7 @@
     </message>
     <message>
       <source>Noise</source>
-      <translation>Barulho</translation>
+      <translation>Ruído</translation>
     </message>
     <message>
       <source>Black Point</source>
@@ -3143,7 +3143,7 @@
     </message>
     <message>
       <source>Unlimited Sprites</source>
-      <translation>Imagens Móveis Ilimitadas</translation>
+      <translation>Sprites Ilimitados</translation>
     </message>
     <message>
       <source>Hide Sprites</source>
@@ -3584,7 +3584,7 @@
     </message>
     <message>
       <source>Noise</source>
-      <translation>Barulho</translation>
+      <translation>Ruído</translation>
     </message>
     <message>
       <source>NTSC 2Phase Composite</source>
@@ -3736,7 +3736,7 @@
     </message>
     <message>
       <source>Disable TV noise emulation when turned off</source>
-      <translation>Desativar a emulação do barulho da TV quando desligado</translation>
+      <translation>Desativar a emulação de ruído da TV quando desligado</translation>
     </message>
     <message>
       <source>Disable sepia color on pause</source>
