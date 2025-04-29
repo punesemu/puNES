@@ -34,7 +34,7 @@ struct _m308 {
 void map_init_308(void) {
 	EXTCL_AFTER_MAPPER_INIT(VRC2and4);
 	EXTCL_CPU_WR_MEM(308);
-	EXTCL_CPU_WR_MEM(VRC2and4);
+	EXTCL_CPU_RD_MEM(VRC2and4);
 	EXTCL_SAVE_MAPPER(308);
 	EXTCL_CPU_EVERY_CYCLE(308);
 	map_internal_struct_init((BYTE *)&m308, sizeof(m308));
