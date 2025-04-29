@@ -1190,15 +1190,15 @@
     </message>
     <message>
       <source>Save states</source>
-      <translation>Save states</translation>
+      <translation>Estados salvos</translation>
     </message>
     <message>
       <source>Save state on file</source>
-      <translation>Salvar o state no arquivo</translation>
+      <translation>Salvar estado em um arquivo</translation>
     </message>
     <message>
       <source>Open save state</source>
-      <translation>Abrir o save state</translation>
+      <translation>Abrir estado salvo</translation>
     </message>
     <message>
       <source>&amp;Open</source>
@@ -1274,11 +1274,11 @@
     </message>
     <message>
       <source>S&amp;ave state</source>
-      <translation>S&amp;ave state</translation>
+      <translation>&amp;Salvar estado</translation>
     </message>
     <message>
       <source>L&amp;oad state</source>
-      <translation>C&amp;arregar state</translation>
+      <translation>&amp;Carregar estado</translation>
     </message>
     <message>
       <source>&amp;Increment slot</source>
@@ -1390,7 +1390,7 @@
     </message>
     <message>
       <source>S&amp;tate</source>
-      <translation>S&amp;tate</translation>
+      <translation>&amp;Estado</translation>
     </message>
     <message>
       <source>&amp;Help</source>
@@ -1800,12 +1800,12 @@
     <message>
       <source>[red]error[normal] loading state</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation>[red]erro[normal] ao carregar o state</translation>
+      <translation>[red]erro[normal] ao carregar estado</translation>
     </message>
     <message>
       <source>[red]state file is not for this rom[normal]</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation>[red]o arquivo do state não é pra esta ROM[normal]</translation>
+      <translation>[red]arquivo de estado não é para esta ROM[normal]</translation>
     </message>
     <message>
       <source>[green]%1[normal] cheat active</source>
@@ -1875,17 +1875,17 @@
     <message>
       <source>[red]error[normal] loading state [cyan]%1[normal], file is corrupted</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation>[red]erro[normal] ao carregar o state [cyan]%1[normal], o arquivo está corrompido</translation>
+      <translation>[red]erro[normal] ao carregar estado [cyan]%1[normal], o arquivo está corrompido</translation>
     </message>
     <message>
       <source>state [cyan]%1[normal] saved successfully</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation>O state [cyan]%1[normal] foi salvo com sucesso</translation>
+      <translation>estado [cyan]%1[normal] salvo com sucesso</translation>
     </message>
     <message>
       <source>state [cyan]%1[normal] loaded successfully</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation>O state [cyan]%1[normal] foi carregado com sucesso</translation>
+      <translation>estado [cyan]%1[normal] carregado com sucesso</translation>
     </message>
     <message>
       <source>tape play</source>
@@ -1915,7 +1915,7 @@
     <message>
       <source>[red]error[normal] on write save state</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation>[red]erro[normal] ao gravar o save state</translation>
+      <translation>[red]erro[normal] ao gravar o estado salvo</translation>
     </message>
     <message>
       <source>auto switch [red]disabled[normal], game not compatible</source>
@@ -3139,7 +3139,7 @@
     </message>
     <message>
       <source>Sprites and background</source>
-      <translation>Imagens móveis e cenários de fundo</translation>
+      <translation>Sprites e fundo</translation>
     </message>
     <message>
       <source>Unlimited Sprites</source>
@@ -3147,7 +3147,7 @@
     </message>
     <message>
       <source>Hide Sprites</source>
-      <translation>Esconder Imagens Móveis</translation>
+      <translation>Ocultar Sprites</translation>
     </message>
     <message>
       <source>Hide Background</source>
@@ -3947,15 +3947,15 @@
     </message>
     <message>
       <source>Save state</source>
-      <translation>Save state</translation>
+      <translation>Salvar estado</translation>
     </message>
     <message>
       <source>Save/Load State</source>
-      <translation>Salvar/Carregar o State</translation>
+      <translation>Salvar/Carregar Estado</translation>
     </message>
     <message>
       <source>Load state</source>
-      <translation>Carregar o state</translation>
+      <translation>Carregar estado</translation>
     </message>
   </context>
 </TS>
