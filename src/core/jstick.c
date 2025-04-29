@@ -691,6 +691,12 @@ void js_jdev_read_port(_js *js, _port *prt) {
 						if (js_jdev_update_axs(jdev, i, FALSE, (int)a, &value, &mode, deadzone) == EXIT_OK) {
 							if (value && js->input_decode_event) {
 								js->input_decode_event(mode, FALSE, value, JOYSTICK, prt);
+								if ((mode == PRESSED) &&
+									(jsx->last_event.mode == PRESSED) && (jsx->last_event.value != value)) {
+									js->input_decode_event(RELEASED, FALSE, jsx->last_event.value, JOYSTICK, prt);
+								}
+								jsx->last_event.value = value;
+								jsx->last_event.mode = mode;
 							}
 						}
 					}

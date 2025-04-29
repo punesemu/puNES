@@ -108,6 +108,10 @@ typedef struct _js_axis {
 #if defined (_WIN32)
 	DBWORD offset_di8;
 #endif
+	struct _jsx_axs_last_event{
+		DBWORD value;
+		BYTE mode;
+	} last_event;
 	// thx to the developer of SDL for this
 	struct _js_axs_validate {
 		BYTE sent_initial_value;
