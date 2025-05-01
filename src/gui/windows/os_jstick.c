@@ -289,21 +289,28 @@ void js_os_init(BYTE first_time) {
 		memset(&js_os, 0x00, sizeof(js_os));
 
 		if (GetSystemDirectoryW(system32, MAX_PATH) != 0) {
+			const uTCHAR* xinput_dll[3] = {
+				uL("XInput1_4.dll"),
+				uL("XInput1_3.dll"),
+				uL("XInput9_1_0.dll")
+			};
 			uTCHAR path[MAX_PATH];
 
-			usnprintf(path, usizeof(path), uL("" uPs("") "\\XInput1_4.dll"), system32);
-			js_os.xinput = LoadLibraryW(path);
-			if (js_os.xinput == NULL) {
-				usnprintf(path, usizeof(path), uL("" uPs("") "\\XInput1_3.dll"), system32);
+			for (int i = 0; i < (int)LENGTH(xinput_dll); i++) {
+				usnprintf(path, usizeof(path), xinput_dll[i], system32);
 				js_os.xinput = LoadLibraryW(path);
+				if (js_os.xinput) {
+					log_info(uL("xinput;loaded " uPs("")), xinput_dll[i]);
+					break;
+				}
 			}
 			if (js_os.xinput == NULL) {
 				log_error(uL("xinput;failed to load xinput dll"));
 				js_os.xinput_available = FALSE;
 			} else {
 				js_os.xinput_available = TRUE;
-				js_os.XInputGetStateEx_proc = (void *)GetProcAddress(js_os.xinput, (LPCSTR) 100);
 				js_os.XInputGetState_proc = (void *)GetProcAddress(js_os.xinput, "XInputGetState");
+				js_os.XInputGetStateEx_proc = (void *)GetProcAddress(js_os.xinput, (LPCSTR)100);
 				js_os.XInputGetCapabilities_proc = (void *)GetProcAddress(js_os.xinput, "XInputGetCapabilities");
 			}
 			usnprintf(path, usizeof(path), uL("" uPs("") "\\DINPUT8.dll"), system32);
