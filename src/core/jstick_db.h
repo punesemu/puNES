@@ -548,7 +548,45 @@ static const _js_db_device js_db_devices[] = {
 		{},
 		{}
 #endif
-	}
+	},
+	// Mamba Retro SNES adapter
+	{
+			JS_SC_UNKNOWN,
+			FALSE,
+			0x081F,
+			0xE401,
+#if defined (__linux__)
+			{
+				/* BUT_A  */ JS_BTN_DEF(BTN_THUMB),
+				/* BUT_B  */ JS_BTN_DEF(BTN_THUMB2),
+				/* SELECT */ JS_BTN_DEF(BTN_BASE3),
+				/* START  */ JS_BTN_DEF(BTN_BASE4),
+				/* UP     */ JS_ABS_DEF(ABS_Y, 0),
+				/* DOWN   */ JS_ABS_DEF(ABS_Y, 1),
+				/* LEFT   */ JS_ABS_DEF(ABS_X, 0),
+				/* RIGHT  */ JS_ABS_DEF(ABS_X, 1),
+				/* TRB_A  */ JS_BTN_DEF(BTN_TRIGGER),
+				/* TRB_B  */ JS_BTN_DEF(BTN_TOP)
+			},
+			{},
+			{}
+#else
+			{
+				/* BUT_A  */ JS_BTN_DEF(BTN_B),
+				/* BUT_B  */ JS_BTN_DEF(BTN_X),
+				/* SELECT */ JS_BTN_DEF(BTN_MODE),
+				/* START  */ JS_BTN_DEF(BTN_THUMBL),
+				/* UP     */ JS_ABS_DEF(ABS_HAT0Y, 0),
+				/* DOWN   */ JS_ABS_DEF(ABS_HAT0Y, 1),
+				/* LEFT   */ JS_ABS_DEF(ABS_HAT0X, 0),
+				/* RIGHT  */ JS_ABS_DEF(ABS_HAT0X, 1),
+				/* TRB_A  */ JS_BTN_DEF(BTN_A),
+				/* TRB_B  */ JS_BTN_DEF(BTN_Y)
+			},
+			{},
+			{}
+#endif
+		}
 };
 
 #endif /* _JSTICK_DB_H_ */
