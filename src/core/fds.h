@@ -243,6 +243,7 @@ EXTERNC BYTE fds_change_disk(uTCHAR *file);
 EXTERNC void fds_info(void);
 EXTERNC void fds_info_side(BYTE side);
 EXTERNC void fds_disk_op(WORD type, BYTE side_to_insert, BYTE quiet);
+EXTERNC void fds_diff_to_file(void);
 EXTERNC BYTE fds_from_image_to_file(uTCHAR *file, BYTE format, BYTE type);
 EXTERNC BYTE fds_image_to_file(uTCHAR *file);
 EXTERNC WORD fds_crc_byte(WORD base, BYTE data);

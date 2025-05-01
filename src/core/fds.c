@@ -646,6 +646,25 @@ fds_disk_op_start:
 			break;
 	}
 }
+void fds_diff_to_file(void) {
+	uTCHAR file[LENGTH_FILE_NAME_LONG];
+
+	fds_diff_file_name(&info.rom.file[0], fds.info.format, &file[0], usizeof(file));
+	// se richiesto, sovrascrivo il file originale
+	if (cfg->fds_write_mode == FDS_WR_ORIGINAL_FILE) {
+		fds_from_image_to_file(info.rom.file, fds.info.format, fds.info.type);
+	} else {
+		size_t size = 0;
+		BYTE *mfds = fds_from_image_to_mem(fds.info.format, fds.info.type, &size);
+
+		if (!mfds || fds_create_ips(fds.info.data, fds.info.total_size, mfds, size, file)) {
+			log_error(uL("FDS;error on writing diff file"));
+		}
+		if (mfds) {
+			free(mfds);
+		}
+	}
+}
 BYTE fds_from_image_to_file(uTCHAR *file, BYTE format, BYTE type) {
 	size_t size = 0;
 	BYTE *mfds = fds_from_image_to_mem(format, type, &size);
@@ -926,24 +945,9 @@ uTCHAR *fds_bcd_data(BYTE *bcd) {
 }
 void fds_free_fds_info(void) {
 	if (fds.info.image) {
-		// se richiesto, sovrascrivo il file originale
 		if (fds.info.writings_occurred) {
-			uTCHAR file[LENGTH_FILE_NAME_LONG];
-
-			fds_diff_file_name(&info.rom.file[0], fds.info.format, &file[0], usizeof(file));
-			if (cfg->fds_write_mode == FDS_WR_ORIGINAL_FILE) {
-				fds_from_image_to_file(info.rom.file, fds.info.format, fds.info.type);
-			} else {
-				size_t size = 0;
-				BYTE *mfds = fds_from_image_to_mem(fds.info.format, fds.info.type, &size);
-
-				if (!mfds || fds_create_ips(fds.info.data, fds.info.total_size, mfds, size, file)) {
-					log_error(uL("FDS;error on writing diff file"));
-				}
-				if (mfds) {
-					free(mfds);
-				}
-			}
+			fds.info.writings_occurred = FALSE;
+			fds_diff_to_file();
 		}
 		free(fds.info.image);
 	}

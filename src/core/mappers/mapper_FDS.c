@@ -373,6 +373,10 @@ void extcl_cpu_every_cycle_FDS(BYTE nidx) {
 			}
 		}
 		if (++fds.drive.disk_position >= fds.info.sides[fds.drive.side_inserted].size) {
+			if (fds.info.writings_occurred) {
+				fds.info.writings_occurred = FALSE;
+				fds_diff_to_file();
+			}
 			fds.drive.delay_insert = fds.info.cycles_insert_delay;
 			fds.drive.scan_disabled = FALSE;
 			fds.drive.end_of_head = 0x40;
