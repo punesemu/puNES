@@ -81,8 +81,8 @@ A big thank you to everyone who contributed to the translations:
   <img src="https://github.com/punesemu/puNES/assets/14859058/b309a584-e3ba-487e-9cd7-ca78d1997ac8" width="400" alt="puNES Cheat Editor"/>
   <img src="https://github.com/punesemu/puNES/assets/14859058/d115817b-b802-4d75-bdce-3df9efda929c" width="400" alt="puNES Xbox360 Standard Controller Settings"/>
   <img src="https://github.com/punesemu/puNES/assets/14859058/ffc4ba31-6899-4385-b0c1-59f7bf5764a2" width="400" alt="puNES PS4 Standard Controller Settings"/>
-  <img src="https://github.com/punesemu/puNES/assets/14859058/315dbca5-ea3b-4390-b91b-9b7b0028af88" width="800" alt="puNES Family BASIC Virtual Keyboard"/>
-  <img src="https://github.com/punesemu/puNES/assets/14859058/1347fde5-bcc5-46d2-8e68-1e4875759a6e" width="800" alt="puNES Subor Virtual Keyboard"/>
+  <img src="https://github.com/punesemu/puNES/assets/14859058/7526907f-18f3-42d2-af47-9870e798f6ab" width="800" alt="puNES Family BASIC Virtual Keyboard"/>
+  <img src="https://github.com/punesemu/puNES/assets/14859058/7502bb44-a040-4445-8fcc-541a9654b6b5" width="800" alt="puNES Subor Virtual Keyboard"/>
 </p>
 
 ## :keyboard: Configuration
