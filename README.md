@@ -334,13 +334,13 @@ To see a list of available command-line options, start puNES with the `-h` argum
 ## CMake Options
 
 | CMake Option              | Description                                                                        | Default |
-| ------------------------- | ---------------------------------------------------------------------------------- | ------- |
+|---------------------------|------------------------------------------------------------------------------------| ------- |
 | ENABLE_RELEASE            | Build release version                                                              | ON      |
 | ENABLE_FFMPEG             | Enable FFMPEG support                                                              | ON      |
 | ENABLE_OPENGL             | Use OpenGL support instead of Direct3D 9 (only for Windows)                        | ON      |
 | ENABLE_OPENGL_CG          | Enable OpenGL nVidia Cg Toolkit support                                            | OFF     |
 | ENABLE_FULLSCREEN_RESFREQ | Enable Fullscreen resolution and auto frequency                                    | ON      |
-| ENABLE_QT6_LIBS           | Enable support for QT6 libraries                                                   | OFF     |
+| ENABLE_QT5_LIBS           | Enable support for QT5 libraries                                                   | OFF     |
 | DISABLE_PORTABLE_MODE     | Disable portable mode handling (useful with sandbox<br/>environments like Flatpak) | OFF     |
 
 ## :penguin: Linux
