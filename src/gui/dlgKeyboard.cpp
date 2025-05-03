@@ -65,17 +65,33 @@ dlgKeyboard::dlgKeyboard(QWidget *parent) : QDialog(parent) {
 	geom.setY(cfg->lg_nes_keyboard.y);
 	geom.setWidth(cfg->lg_nes_keyboard.w);
 	geom.setHeight(cfg->lg_nes_keyboard.h);
+	font_point_size = font().pointSize();
 
 	dlgkbd = this;
 	reset();
 
-	checkBox_Subor_Extende_Mode->setChecked(cfg->input.vk_subor_extended_mode);
+	groupBox_Options->setStyleSheet(button_stylesheet());
 
-	connect(comboBox_Mode, SIGNAL(currentIndexChanged(int)), this, SLOT(s_mode(int)));
-	connect(comboBox_Size, SIGNAL(currentIndexChanged(int)), this, SLOT(s_size_factor(int)));
+	pushButton_Mode_virtual->setProperty("mtype", QVariant(DK_VIRTUAL));
+	pushButton_Mode_setup->setProperty("mtype", QVariant(DK_SETUP));
+	pushButton_Size_10x->setProperty("mtype", QVariant(VK_SIZE_10X));
+	pushButton_Size_15x->setProperty("mtype", QVariant(VK_SIZE_15X));
+	pushButton_Size_20x->setProperty("mtype", QVariant(VK_SIZE_20X));
+	pushButton_Size_25x->setProperty("mtype", QVariant(VK_SIZE_25X));
+
+	connect(pushButton_Mode_virtual, SIGNAL(toggled(bool)), this, SLOT(s_mode(bool)));
+	connect(pushButton_Mode_setup, SIGNAL(toggled(bool)), this, SLOT(s_mode(bool)));
+	connect(pushButton_Size_10x, SIGNAL(toggled(bool)), this, SLOT(s_size_factor(bool)));
+	connect(pushButton_Size_15x, SIGNAL(toggled(bool)), this, SLOT(s_size_factor(bool)));
+	connect(pushButton_Size_20x, SIGNAL(toggled(bool)), this, SLOT(s_size_factor(bool)));
+	connect(pushButton_Size_25x, SIGNAL(toggled(bool)), this, SLOT(s_size_factor(bool)));
 	connect(checkBox_Subor_Extende_Mode, SIGNAL(clicked(bool)), this, SLOT(s_subor_extended_mode(bool)));
 
 	connect(this, SIGNAL(et_nes_keyboard()), this, SLOT(s_nes_keyboard()));
+
+	switch_mode(DK_VIRTUAL);
+	switch_size_factor(cfg_from_file.input.vk_size);
+	checkBox_Subor_Extende_Mode->setChecked(cfg->input.vk_subor_extended_mode);
 
 	installEventFilter(this);
 }
@@ -204,10 +220,10 @@ bool dlgKeyboard::process_event(QEvent *event) {
 	}
 	return (false);
 }
-void dlgKeyboard::shortcut_toggle(BYTE mode) {
+void dlgKeyboard::shortcut_toggle(BYTE is_this) {
 	QObject *parent = nullptr;
 
-	if (mode) {
+	if (is_this) {
 		parent = this;
 	} else {
 		parent = mainwin;
@@ -331,8 +347,16 @@ void dlgKeyboard::key_event_release(QKeyEvent *event, keyevent_types type) {
 		}
 	}
 }
-void dlgKeyboard::switch_mode(BYTE mode) {
-	comboBox_Mode->setCurrentIndex(mode);
+void dlgKeyboard::switch_mode(BYTE dk_mode) {
+	QList<QPushButton *> btn_list = widget_Mode->findChildren<QPushButton *>();
+
+	foreach (QPushButton *btn, btn_list) {
+		int index = btn->property("mtype").toInt();
+
+		if (index == dk_mode) {
+			emit btn->toggled(true);
+		}
+	}
 }
 
 void dlgKeyboard::fake_keyboard(void) {
@@ -359,28 +383,52 @@ void dlgKeyboard::replace_keyboard(wdgKeyboard *wk) {
 	delete (keyboard);
 	keyboard = wk;
 	keyboard->ext_setup();
-	if (comboBox_Size->currentIndex() == cfg_from_file.input.vk_size) {
+	if (get_size_factor() == cfg_from_file.input.vk_size) {
 		s_size_factor(cfg_from_file.input.vk_size);
 	} else {
-		comboBox_Size->setCurrentIndex(cfg_from_file.input.vk_size);
+		switch_size_factor(cfg_from_file.input.vk_size);
 	}
 	keyboard->show();
 	setWindowTitle(keyboard->keyboard_name());
 }
-void dlgKeyboard::set_size_factor(double size_factor) {
-	QList<keyboardButton *> kb_list= findChildren<keyboardButton *>();
+void dlgKeyboard::switch_size_factor(BYTE vk_size) {
+	QList<QPushButton *> btn_list = widget_Size->findChildren<QPushButton *>();
 
+	foreach (QPushButton *btn, btn_list) {
+		int index = btn->property("mtype").toInt();
+
+		if (index == vk_size) {
+			emit btn->toggled(true);
+		}
+	}
+}
+BYTE dlgKeyboard::get_size_factor(void) {
+	QList<QPushButton *> btn_list = widget_Size->findChildren<QPushButton *>();
+
+	foreach (QPushButton *btn, btn_list) {
+		if (btn->isChecked()) {
+			return (BYTE)btn->property("mtype").toInt();
+		}
+	}
+	return VK_SIZE_10X;
+}
+void dlgKeyboard::apply_size_factor(double size_factor) {
+	QList<keyboardButton *> kb_list;
+	QList<QWidget *> wdg_list = {};
+
+	// opzioni
+	wdg_list.append(groupBox_Options);
+	wdg_list.append(groupBox_Options->findChildren<QWidget *>());
+	foreach (QWidget *wdg, wdg_list) {
+		QFont font = wdg->font();
+		font.setPointSize(font_point_size * size_factor);
+		wdg->setFont(font);
+	}
+
+	// keyboard
+	kb_list.append(keyboard->findChildren<keyboardButton *>());
 	foreach (keyboardButton *kb, kb_list) {
-		QSize ms = kb->minimumSize();
-		int minw = (int)((double)kb->minw * size_factor), minh = (int)((double)kb->minh * size_factor);
-
-		if ((kb->minw > 0) && (minw != ms.width())) {
-			kb->setMinimumWidth(minw);
-		}
-		if ((kb->minh > 0) && (minh != ms.height())) {
-			kb->setMinimumHeight(minh);
-		}
-		kb->size_factor = size_factor;
+		kb->apply_size_factor(size_factor);
 	}
 }
 bool dlgKeyboard::one_click_find(keyboardButton *kb) {
@@ -449,14 +497,40 @@ void dlgKeyboard::s_nes_keyboard(void) {
 	mainwin->statusbar->keyb->setEnabled(!disable);
 	mainwin->update_window();
 }
-void dlgKeyboard::s_mode(int index) {
-	mode = index;
-	update();
+void dlgKeyboard::s_mode(bool checked) {
+	if (checked) {
+		QList<QPushButton *> btn_list = widget_Mode->findChildren<QPushButton *>();
+
+		foreach (QPushButton *btn, btn_list) {
+			if ((QPushButton *)sender() == btn) {
+				int index = btn->property("mtype").toInt();
+
+				mode = index;
+				update();
+				qtHelper::pushbutton_set_checked(btn, true);
+			} else {
+				qtHelper::pushbutton_set_checked(btn, false);
+			}
+		}
+	}
 }
-void dlgKeyboard::s_size_factor(int index) {
-	cfg_from_file.input.vk_size = index;
-	set_size_factor(1.0f + ((double)index * 0.5f));
-	settings_inp_save();
+void dlgKeyboard::s_size_factor(bool checked) {
+	if (checked) {
+		QList<QPushButton *> btn_list = widget_Size->findChildren<QPushButton *>();
+
+		foreach (QPushButton *btn, btn_list) {
+			if ((QPushButton *)sender() == btn) {
+				int index = btn->property("mtype").toInt();
+
+				cfg_from_file.input.vk_size = index;
+				apply_size_factor(1.0f + ((double)index * 0.5f));
+				settings_inp_save();
+				qtHelper::pushbutton_set_checked(btn, true);
+			} else {
+				qtHelper::pushbutton_set_checked(btn, false);
+			}
+		}
+	}
 }
 void dlgKeyboard::s_subor_extended_mode(UNUSED(bool checked)) {
 	cfg->input.vk_subor_extended_mode = !cfg->input.vk_subor_extended_mode;
@@ -737,6 +811,18 @@ void keyboardButton::setMinimumSize(const QSize &s) {
 	QPushButton::setMinimumSize(s);
 }
 
+void keyboardButton::apply_size_factor(double factor) {
+	int min_width = (int)((double)minw * factor), min_heigth = (int)((double)minh * factor);
+	QSize ms = minimumSize();
+
+	if ((min_width > 0) && (min_width != ms.width())) {
+		setMinimumWidth(min_width);
+	}
+	if ((min_heigth > 0) && (min_heigth != ms.height())) {
+		setMinimumHeight(min_heigth);
+	}
+	size_factor = factor;
+}
 void keyboardButton::set(DBWORD nscode, SWORD index, SBYTE row, SBYTE column, SWORD element, modifier_types mtype,
 	const _color &clr, QList<_label> labels) {
 	this->row = row;
@@ -1947,7 +2033,7 @@ void suborKeyboard::set_buttons(void) {
 				{ keyboardButton::LP_CENTER, "S", true }
 			})
 		},
-		{ "kButton_End", 1, 3, keyboardButton::MODIFIERS_NONE, keyboardButton::_color(),
+		{ "kButton_End", 1, 3, keyboardButton::MODIFIERS_NONE, gray_button(),
 			QList<keyboardButton::_label>
 			({
 				{ keyboardButton::LP_CENTER, "End", true }
@@ -1982,25 +2068,25 @@ void suborKeyboard::set_buttons(void) {
 		},
 
 		// Row 2 - Column 0
-		{ "kButton_Insert", 2, 0, keyboardButton::MODIFIERS_NONE, keyboardButton::_color(),
+		{ "kButton_Insert", 2, 0, keyboardButton::MODIFIERS_NONE, gray_button(),
 			QList<keyboardButton::_label>
 			({
 				{ keyboardButton::LP_CENTER, "Insert", true }
 			})
 		},
-		{ "kButton_Backspace", 2, 1, keyboardButton::MODIFIERS_NONE, keyboardButton::_color(),
+		{ "kButton_Backspace", 2, 1, keyboardButton::MODIFIERS_NONE, gray_button(),
 			QList<keyboardButton::_label>
 			({
 				{ keyboardButton::LP_CENTER, "←", true }
 			})
 		},
-		{ "kButton_PageDown", 2, 2, keyboardButton::MODIFIERS_NONE, keyboardButton::_color(),
+		{ "kButton_PageDown", 2, 2, keyboardButton::MODIFIERS_NONE, gray_button(),
 			QList<keyboardButton::_label>
 			({
 				{ keyboardButton::LP_CENTER, "Page\nDown", true }
 			})
 		},
-		{ "kButton_Right", 2, 3, keyboardButton::MODIFIERS_NONE, keyboardButton::_color(),
+		{ "kButton_Right", 2, 3, keyboardButton::MODIFIERS_NONE, gray_button(),
 			QList<keyboardButton::_label>
 			({
 				{ keyboardButton::LP_CENTER, "→", true }
@@ -2008,25 +2094,25 @@ void suborKeyboard::set_buttons(void) {
 		},
 
 		// Row 2 - Column 1
-		{ "kButton_F8", 2, 4, keyboardButton::MODIFIERS_NONE, keyboardButton::_color(),
+		{ "kButton_F8", 2, 4, keyboardButton::MODIFIERS_NONE, gray_button(),
 			QList<keyboardButton::_label>
 			({
 				{ keyboardButton::LP_CENTER, "F8", true }
 			})
 		},
-		{ "kButton_PageUp", 2, 5, keyboardButton::MODIFIERS_NONE, keyboardButton::_color(),
+		{ "kButton_PageUp", 2, 5, keyboardButton::MODIFIERS_NONE, gray_button(),
 			QList<keyboardButton::_label>
 			({
 				{ keyboardButton::LP_CENTER, "Page\nUp", true }
 			})
 		},
-		{ "kButton_Delete", 2, 6, keyboardButton::MODIFIERS_NONE, keyboardButton::_color(),
+		{ "kButton_Delete", 2, 6, keyboardButton::MODIFIERS_NONE, gray_button(),
 			QList<keyboardButton::_label>
 			({
 				{ keyboardButton::LP_CENTER, "Delete", true }
 			})
 		},
-		{ "kButton_Home", 2, 7, keyboardButton::MODIFIERS_NONE, keyboardButton::_color(),
+		{ "kButton_Home", 2, 7, keyboardButton::MODIFIERS_NONE, gray_button(),
 			QList<keyboardButton::_label>
 			({
 				{ keyboardButton::LP_CENTER, "Home", true }
@@ -2062,7 +2148,7 @@ void suborKeyboard::set_buttons(void) {
 		},
 
 		// Row 3 - Column 1
-		{ "kButton_F5", 3, 4, keyboardButton::MODIFIERS_NONE, keyboardButton::_color(),
+		{ "kButton_F5", 3, 4, keyboardButton::MODIFIERS_NONE, gray_button(),
 			QList<keyboardButton::_label>
 			({
 				{ keyboardButton::LP_CENTER, "F5", true }
@@ -2097,25 +2183,25 @@ void suborKeyboard::set_buttons(void) {
 				{ keyboardButton::LP_TOP, "}", false }
 			})
 		},
-		{ "kButton_Return", 4, 1, keyboardButton::MODIFIERS_NONE, keyboardButton::_color(),
+		{ "kButton_Return", 4, 1, keyboardButton::MODIFIERS_NONE, gray_button(),
 			QList<keyboardButton::_label>
 			({
 				{ keyboardButton::LP_CENTER, "Enter", true }
 			})
 		},
-		{ "kButton_Enter", 4, 1, keyboardButton::MODIFIERS_NONE, keyboardButton::_color(),
+		{ "kButton_Enter", 4, 1, keyboardButton::MODIFIERS_NONE, gray_button(),
 			QList<keyboardButton::_label>
 			({
 				{ keyboardButton::LP_CENTER, "⏎", true }
 			})
 		},
-		{ "kButton_Up", 4, 2, keyboardButton::MODIFIERS_NONE, keyboardButton::_color(),
+		{ "kButton_Up", 4, 2, keyboardButton::MODIFIERS_NONE, gray_button(),
 			QList<keyboardButton::_label>
 			({
 				{ keyboardButton::LP_CENTER, "↑", true }
 			})
 		},
-		{ "kButton_Left", 4, 3, keyboardButton::MODIFIERS_NONE, keyboardButton::_color(),
+		{ "kButton_Left", 4, 3, keyboardButton::MODIFIERS_NONE, gray_button(),
 			QList<keyboardButton::_label>
 			({
 				{ keyboardButton::LP_CENTER, "←", true }
@@ -2123,7 +2209,7 @@ void suborKeyboard::set_buttons(void) {
 		},
 
 		// Row 4 - Column 1
-		{ "kButton_F7", 4, 4, keyboardButton::MODIFIERS_NONE, keyboardButton::_color(),
+		{ "kButton_F7", 4, 4, keyboardButton::MODIFIERS_NONE, gray_button(),
 			QList<keyboardButton::_label>
 			({
 				{ keyboardButton::LP_CENTER, "F7", true }
@@ -2143,7 +2229,7 @@ void suborKeyboard::set_buttons(void) {
 				{ keyboardButton::LP_TOP, "|", false }
 			})
 		},
-		{ "kButton_Down", 4, 7, keyboardButton::MODIFIERS_NONE, keyboardButton::_color(),
+		{ "kButton_Down", 4, 7, keyboardButton::MODIFIERS_NONE, gray_button(),
 			QList<keyboardButton::_label>
 			({
 				{ keyboardButton::LP_CENTER, "↓", true }
@@ -2157,7 +2243,7 @@ void suborKeyboard::set_buttons(void) {
 				{ keyboardButton::LP_CENTER, "Q", true }
 			})
 		},
-		{ "kButton_CapsLock", 5, 1, keyboardButton::MODIFIERS_SWITCH, keyboardButton::_color(),
+		{ "kButton_CapsLock", 5, 1, keyboardButton::MODIFIERS_SWITCH, gray_button(),
 			QList<keyboardButton::_label>
 			({
 				{ keyboardButton::LP_CENTER, "Caps", true }
@@ -2169,7 +2255,7 @@ void suborKeyboard::set_buttons(void) {
 				{ keyboardButton::LP_CENTER, "Z", true }
 			})
 		},
-		{ "kButton_Pause", 5, 3, keyboardButton::MODIFIERS_NONE, keyboardButton::_color(),
+		{ "kButton_Pause", 5, 3, keyboardButton::MODIFIERS_NONE, gray_button(),
 			QList<keyboardButton::_label>
 			({
 				{ keyboardButton::LP_CENTER, "Pause", true }
@@ -2177,7 +2263,7 @@ void suborKeyboard::set_buttons(void) {
 		},
 
 		// Row 5 - Column 1
-		{ "kButton_Esc", 5, 4, keyboardButton::MODIFIERS_NONE, keyboardButton::_color(),
+		{ "kButton_Esc", 5, 4, keyboardButton::MODIFIERS_NONE, gray_button(),
 			QList<keyboardButton::_label>
 			({
 				{ keyboardButton::LP_CENTER, "Esc", true }
@@ -2196,13 +2282,13 @@ void suborKeyboard::set_buttons(void) {
 				{ keyboardButton::LP_TOP, "!", false }
 			})
 		},
-		{ "kButton_LControl", 5, 7, keyboardButton::MODIFIERS_NONE, keyboardButton::_color(),
+		{ "kButton_LControl", 5, 7, keyboardButton::MODIFIERS_NONE, gray_button(),
 			QList<keyboardButton::_label>
 			({
 				{ keyboardButton::LP_CENTER, "Ctrl", true }
 			})
 		},
-		{ "kButton_RControl", 5, 7, keyboardButton::MODIFIERS_NONE, keyboardButton::_color(),
+		{ "kButton_RControl", 5, 7, keyboardButton::MODIFIERS_NONE, gray_button(),
 			QList<keyboardButton::_label>
 			({
 				{ keyboardButton::LP_CENTER, "Ctrl", true }
@@ -2294,7 +2380,7 @@ void suborKeyboard::set_buttons(void) {
 		},
 
 		// Row 7 - Column 1
-		{ "kButton_F6", 7, 4, keyboardButton::MODIFIERS_NONE, keyboardButton::_color(),
+		{ "kButton_F6", 7, 4, keyboardButton::MODIFIERS_NONE, gray_button(),
 			QList<keyboardButton::_label>
 			({
 				{ keyboardButton::LP_CENTER, "F6", true }
@@ -2313,13 +2399,13 @@ void suborKeyboard::set_buttons(void) {
 				{ keyboardButton::LP_TOP, "+", false }
 			})
 		},
-		{ "kButton_LShift", 7, 7, keyboardButton::MODIFIERS_ONE_CLICK, keyboardButton::_color(),
+		{ "kButton_LShift", 7, 7, keyboardButton::MODIFIERS_ONE_CLICK, gray_button(),
 			QList<keyboardButton::_label>
 			({
 				{ keyboardButton::LP_CENTER, "Shift", true }
 			})
 		},
-		{ "kButton_RShift", 7, 7, keyboardButton::MODIFIERS_ONE_CLICK, keyboardButton::_color(),
+		{ "kButton_RShift", 7, 7, keyboardButton::MODIFIERS_ONE_CLICK, gray_button(),
 			QList<keyboardButton::_label>
 			({
 				{ keyboardButton::LP_CENTER, "Shift", true }
@@ -2381,7 +2467,7 @@ void suborKeyboard::set_buttons(void) {
 
 		// Row 10 - Column 0
 		// Break ???????
-		{ "kButton_Break", 10, 0, keyboardButton::MODIFIERS_NONE, keyboardButton::_color(),
+		{ "kButton_Break", 10, 0, keyboardButton::MODIFIERS_NONE, gray_button(),
 			QList<keyboardButton::_label>
 			({
 				{ keyboardButton::LP_CENTER, "Break", true }
@@ -2438,19 +2524,19 @@ void suborKeyboard::set_buttons(void) {
 		},
 
 		// Row 11 - Column 0
-		{ "kButton_KMinus", 11, 0, keyboardButton::MODIFIERS_NONE, keyboardButton::_color(),
+		{ "kButton_KMinus", 11, 0, keyboardButton::MODIFIERS_NONE, gray_button(),
 			QList<keyboardButton::_label>
 			({
 				{ keyboardButton::LP_CENTER, "-", true }
 			})
 		},
-		{ "kButton_KPlus", 11, 1, keyboardButton::MODIFIERS_NONE, keyboardButton::_color(),
+		{ "kButton_KPlus", 11, 1, keyboardButton::MODIFIERS_NONE, gray_button(),
 			QList<keyboardButton::_label>
 			({
 				{ keyboardButton::LP_CENTER, "+", true }
 			})
 		},
-		{ "kButton_KAsterisk", 11, 2, keyboardButton::MODIFIERS_NONE, keyboardButton::_color(),
+		{ "kButton_KAsterisk", 11, 2, keyboardButton::MODIFIERS_NONE, gray_button(),
 			QList<keyboardButton::_label>
 			({
 				{ keyboardButton::LP_CENTER, "*", true }
@@ -2477,13 +2563,13 @@ void suborKeyboard::set_buttons(void) {
 				{ keyboardButton::LP_TOP, "5", true }
 			})
 		},
-		{ "kButton_KSlash", 11, 6, keyboardButton::MODIFIERS_NONE, keyboardButton::_color(),
+		{ "kButton_KSlash", 11, 6, keyboardButton::MODIFIERS_NONE, gray_button(),
 			QList<keyboardButton::_label>
 			({
 				{ keyboardButton::LP_CENTER, "/", true }
 			})
 		},
-		{ "kButton_NumLock", 11, 7, keyboardButton::MODIFIERS_SWITCH, keyboardButton::_color(),
+		{ "kButton_NumLock", 11, 7, keyboardButton::MODIFIERS_SWITCH, gray_button(),
 			QList<keyboardButton::_label>
 			({
 				{ keyboardButton::LP_LEFT, "Num\nLock", true }
@@ -2505,19 +2591,19 @@ void suborKeyboard::set_buttons(void) {
 				{ keyboardButton::LP_TOP, "6", true }
 			})
 		},
-		{ "kButton_Alt", 12, 2, keyboardButton::MODIFIERS_NONE, keyboardButton::_color(),
+		{ "kButton_Alt", 12, 2, keyboardButton::MODIFIERS_NONE, gray_button(),
 			QList<keyboardButton::_label>
 			({
 				{ keyboardButton::LP_CENTER, "Alt", true }
 			})
 		},
-		{ "kButton_AltGr", 12, 2, keyboardButton::MODIFIERS_NONE, keyboardButton::_color(),
+		{ "kButton_AltGr", 12, 2, keyboardButton::MODIFIERS_NONE, gray_button(),
 			QList<keyboardButton::_label>
 			({
 				{ keyboardButton::LP_CENTER, "Alt", true }
 			})
 		},
-		{ "kButton_Tab", 12, 3, keyboardButton::MODIFIERS_NONE, keyboardButton::_color(),
+		{ "kButton_Tab", 12, 3, keyboardButton::MODIFIERS_NONE, gray_button(),
 			QList<keyboardButton::_label>
 			({
 				{ keyboardButton::LP_CENTER, "Tab", true }
@@ -2712,6 +2798,14 @@ void suborKeyboard::ext_setup(void) {
 	gui_update_tape_menu();
 }
 
+keyboardButton::_color suborKeyboard::gray_button(void) {
+	keyboardButton::_color red;
+
+	red.bck = "#BEC2BA";
+	red.hover = "#9DA198";
+	red.press = "#90948C";
+	return (red);
+}
 SBYTE suborKeyboard::calc_shift(void) {
 	return (calc_element(7, 7));
 }

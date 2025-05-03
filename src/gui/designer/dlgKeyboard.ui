@@ -22,7 +22,7 @@
     <enum>QLayout::SetFixedSize</enum>
    </property>
    <item>
-    <widget class="QGroupBox" name="groupBox">
+    <widget class="QGroupBox" name="groupBox_Options">
      <property name="title">
       <string>Options</string>
      </property>
@@ -37,9 +37,9 @@
          </widget>
         </item>
         <item>
-         <widget class="QComboBox" name="comboBox_Size">
+         <widget class="QWidget" name="widget_Size" native="true">
           <property name="sizePolicy">
-           <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+           <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
@@ -47,26 +47,73 @@
           <property name="focusPolicy">
            <enum>Qt::NoFocus</enum>
           </property>
-          <item>
-           <property name="text">
-            <string>1.0x</string>
+          <layout class="QHBoxLayout" name="horizontalLayout_Size_xx">
+           <property name="spacing">
+            <number>0</number>
            </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>1.5x</string>
+           <property name="leftMargin">
+            <number>11</number>
            </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>2.0x</string>
+           <property name="topMargin">
+            <number>0</number>
            </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>2.5x</string>
+           <property name="rightMargin">
+            <number>11</number>
            </property>
-          </item>
+           <property name="bottomMargin">
+            <number>0</number>
+           </property>
+           <item>
+            <widget class="QPushButton" name="pushButton_Size_10x">
+             <property name="font">
+              <font>
+               <underline>true</underline>
+              </font>
+             </property>
+             <property name="text">
+              <string>1x</string>
+             </property>
+             <property name="checkable">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="pushButton_Size_15x">
+             <property name="font">
+              <font>
+               <underline>false</underline>
+              </font>
+             </property>
+             <property name="text">
+              <string>1.5x</string>
+             </property>
+             <property name="checkable">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="pushButton_Size_20x">
+             <property name="text">
+              <string>2x</string>
+             </property>
+             <property name="checkable">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="pushButton_Size_25x">
+             <property name="text">
+              <string>2.5x</string>
+             </property>
+             <property name="checkable">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+          </layout>
          </widget>
         </item>
         <item>
@@ -90,9 +137,9 @@
          </widget>
         </item>
         <item>
-         <widget class="QComboBox" name="comboBox_Mode">
+         <widget class="QWidget" name="widget_Mode" native="true">
           <property name="sizePolicy">
-           <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+           <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
@@ -100,16 +147,53 @@
           <property name="focusPolicy">
            <enum>Qt::NoFocus</enum>
           </property>
-          <item>
-           <property name="text">
-            <string>Virtual Keyboard</string>
+          <layout class="QHBoxLayout" name="horizontalLayout_Mode">
+           <property name="spacing">
+            <number>0</number>
            </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>Setup</string>
+           <property name="leftMargin">
+            <number>11</number>
            </property>
-          </item>
+           <property name="topMargin">
+            <number>0</number>
+           </property>
+           <property name="rightMargin">
+            <number>11</number>
+           </property>
+           <property name="bottomMargin">
+            <number>0</number>
+           </property>
+           <item>
+            <widget class="QPushButton" name="pushButton_Mode_virtual">
+             <property name="font">
+              <font>
+               <underline>true</underline>
+              </font>
+             </property>
+             <property name="text">
+              <string>Virtual Keyboard</string>
+             </property>
+             <property name="checkable">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="pushButton_Mode_setup">
+             <property name="font">
+              <font>
+               <underline>false</underline>
+              </font>
+             </property>
+             <property name="text">
+              <string>Setup</string>
+             </property>
+             <property name="checkable">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+          </layout>
          </widget>
         </item>
        </layout>
@@ -131,13 +215,6 @@
          </property>
          <item>
           <layout class="QHBoxLayout" name="horizontalLayout_Subor">
-           <item>
-            <widget class="QLabel" name="label_Subor">
-             <property name="text">
-              <string>Subor Keyboard</string>
-             </property>
-            </widget>
-           </item>
            <item>
             <widget class="Line" name="line_Subor">
              <property name="sizePolicy">
@@ -189,6 +266,14 @@
    <container>1</container>
   </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>pushButton_Size_10x</tabstop>
+  <tabstop>pushButton_Size_15x</tabstop>
+  <tabstop>pushButton_Size_20x</tabstop>
+  <tabstop>pushButton_Size_25x</tabstop>
+  <tabstop>pushButton_Mode_virtual</tabstop>
+  <tabstop>pushButton_Mode_setup</tabstop>
+ </tabstops>
  <resources>
   <include location="resources.qrc"/>
  </resources>

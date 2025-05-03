@@ -97,6 +97,7 @@ class keyboardButton : public QPushButton {
 		void setMinimumSize(const QSize &s);
 
 	public:
+		void apply_size_factor(double factor);
 		void set(DBWORD nscode, SWORD index, SBYTE row, SBYTE column, SWORD element, modifier_types mtype,
 			const _color &clr, QList<_label> labels);
 		void reset(void);
@@ -245,6 +246,7 @@ class suborKeyboard : public wdgKeyboard, public Ui::wdgKeyboardSubor {
 		void ext_setup(void) override;
 
 	private:
+		keyboardButton::_color gray_button(void);
 		SBYTE calc_shift(void);
 };
 
@@ -307,6 +309,7 @@ class dlgKeyboard : public QDialog, public Ui::dlgKeyboard {
 		BYTE mode;
 		QRect geom;
 		pasteObject *paste;
+		int font_point_size;
 
 	private:
 		keyboardButton *kbuttons[NES_KEYBOARD_MAX_KEYS];
@@ -336,12 +339,12 @@ class dlgKeyboard : public QDialog, public Ui::dlgKeyboard {
 		void set_buttons(wdgKeyboard *wk, wdgKeyboard::_button buttons[], int totals);
 		void set_charset(wdgKeyboard::_charset charset, wdgKeyboard::_delay delay) const;
 		bool process_event(QEvent *event);
-		void shortcut_toggle(BYTE mode);
+		void shortcut_toggle(BYTE is_this);
 		void button_press(keyboardButton *kb, keyevent_types type);
 		void key_event_press(QKeyEvent *event, keyevent_types type);
 		void button_release(keyboardButton *kb, keyevent_types type);
 		void key_event_release(QKeyEvent *event, keyevent_types type);
-		void switch_mode(BYTE mode);
+		void switch_mode(BYTE dk_mode);
 
 	public:
 		void fake_keyboard(void);
@@ -350,7 +353,9 @@ class dlgKeyboard : public QDialog, public Ui::dlgKeyboard {
 
 	private:
 		void replace_keyboard(wdgKeyboard *wk);
-		void set_size_factor(double size_factor);
+		BYTE get_size_factor(void);
+		void switch_size_factor(BYTE vk_size);
+		void apply_size_factor(double size_factor);
 		bool one_click_find(keyboardButton *kb);
 		void one_click_append(keyboardButton *kb);
 		void one_click_remove(keyboardButton *kb);
@@ -360,8 +365,8 @@ class dlgKeyboard : public QDialog, public Ui::dlgKeyboard {
 
 	private slots:
 		void s_nes_keyboard(void);
-		void s_mode(int index);
-		void s_size_factor(int index);
+		void s_mode(bool checked);
+		void s_size_factor(bool checked);
 		void s_subor_extended_mode(bool checked);
 };
 
