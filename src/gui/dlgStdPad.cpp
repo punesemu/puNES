@@ -327,6 +327,8 @@ QString dlgStdPad::stylesheet_pixmapbutton(void) {
 		"	border-style: solid;"\
 		"	border-top-left-radius: 6px;"\
 		"	border-top-right-radius: 6px;"\
+		"	border-bottom-left-radius: 0px;"\
+		"	border-bottom-right-radius: 0px;"\
 		"	background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 %1, stop: 1 %2);"\
 		"	padding: 5px;"\
 		"	padding-left: 3px;"\
