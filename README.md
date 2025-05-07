@@ -75,7 +75,7 @@ A big thank you to everyone who contributed to the translations:
 <p align="center">
   <img src="https://github.com/user-attachments/assets/801b85b5-78e7-47b7-9430-4b0904f876a8" width="400" alt="puNES main window"/>
   <img src="https://github.com/user-attachments/assets/a05a88de-1feb-41e7-a531-13a4e6ba6937" width="400" alt="puNES NSF2 Player"/>
-  <img src="https://github.com/user-attachments/assets/9e3b034d-9e54-42cc-9cd6-26842ebb431b" width="400" alt="puNES Slot Preview"/>
+  <img src="https://github.com/user-attachments/assets/4da61eb7-349c-43ab-bc88-85f993e86cca" width="400" alt="puNES Slot Preview"/>
   <img src="https://github.com/user-attachments/assets/3a1a0a82-d3b5-4213-9f73-ec28461ce188" width="400" alt="puNES General Settings"/>
   <img src="https://github.com/user-attachments/assets/eb135545-a3d4-4ca1-91f9-4b49aafe3cef" width="400" alt="puNES Video Filters Settings"/>
   <img src="https://github.com/user-attachments/assets/9358391c-4a16-4eff-9610-d56cc18c647b" width="400" alt="puNES Cheat Editor"/>
