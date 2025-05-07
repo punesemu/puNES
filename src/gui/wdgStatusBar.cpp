@@ -36,8 +36,6 @@ wdgStatusBar::wdgStatusBar(QWidget *parent) : QStatusBar(parent) {
 	layout()->setContentsMargins(QMargins(0, 0, 0, 0));
 	layout()->setSpacing(0);
 
-	//setStyleSheet("QStatusBar::item { border: 1px solid; border-radius: 3px; } ");
-
 	info = new infoStatusBar(this);
 	addWidget(info, 1);
 

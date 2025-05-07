@@ -129,7 +129,7 @@
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_Save_Close_Buttons">
      <item>
-      <widget class="QPushButton" name="pushButton_Save_Settings">
+      <widget class="themePushButton" name="pushButton_Save_Settings">
        <property name="text">
         <string>Save Settings</string>
        </property>
@@ -140,7 +140,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="pushButton_Close_Settings">
+      <widget class="themePushButton" name="pushButton_Close_Settings">
        <property name="text">
         <string>Close Settings</string>
        </property>
@@ -196,6 +196,11 @@
    <extends>QWidget</extends>
    <header>wdgSettingsRecording.hpp</header>
    <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>themePushButton</class>
+   <extends>QPushButton</extends>
+   <header>theme.hpp</header>
   </customwidget>
  </customwidgets>
  <tabstops>

@@ -35,87 +35,6 @@ enum _overlay_info_alignment {
 	OVERLAY_INFO_RIGHT
 };
 
-//	"	background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #f6f7fa, stop: 1 #aaabae);"
-
-#define button_stylesheet()\
-	"QPushButton {"\
-	"	margin: 0; padding: 2px; border: 2px groove gray;"\
-	"}"\
-	"QPushButton:pressed {"\
-	"	background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #aaabae, stop: 1 #f6f7fa);"\
-	"}"\
-	"QPushButton:disabled {"\
-	"	color: gray;"\
-	"}"\
-	"QPushButton:disabled:checked {"\
-	"	background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #aaabae, stop: 1 #f6f7fa);"\
-	"	color: gray;"\
-	"}"\
-	"QPushButton:checked {"\
-	"	background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #aaabae, stop: 1 #f6f7fa);"\
-	"	color: black;"\
-	"}"
-#define group_title_bold_stylesheet()\
-	"QGroupBox {"\
-	"	font-weight: bold;"\
-	"}"
-#define group_title_and_button_stylesheet()\
-	group_title_bold_stylesheet() button_stylesheet()
-#define tools_stylesheet()\
-	"QGroupBox {"\
-	"	border-radius: 10px;"\
-	"	border: 1px solid black;"\
-	"	border: 2px groove gray;"\
-	"	font-weight: bold;"\
-	"}"\
-	"QGroupBox::title {"\
-	"	subcontrol-origin: margin;"\
-	"	subcontrol-position: top center;"\
-	"	padding: 0 0px;"\
-	"}"
-#define toolbar_button_stylesheet()\
-	"QPushButton {"\
-	"	margin :0; padding: 2px; border: 1px groove lightgray;"\
-	"}"\
-	"QPushButton:hover {"\
-	"	border: 1px groove darkgray;"\
-	"}"\
-	"QPushButton:pressed {"\
-	"	margin :0; padding: 2px; border: 1px inset darkgray;"\
-	"}"\
-	"QPushButton:disabled {"\
-	"	color: gray;"\
-	"}"\
-	"QPushButton:disabled:checked {"\
-	"	margin :0; padding: 2px; border: 1px inset darkgray;"\
-	"	color: gray;"\
-	"}"\
-	"QPushButton:checked {"\
-	"	margin :0; padding: 2px; border: 1px inset darkgray;"\
-	"	color: black;"\
-	"}"
-#define toolbar_toolbutton_stylesheet()\
-	"QToolButton {"\
-	"	margin :0; padding: 2px; border: 1px groove lightgray;"\
-	"}"\
-	"QToolButton:hover {"\
-	"	border: 1px groove darkgray;"\
-	"}"\
-	"QToolButton:pressed {"\
-	"	margin :0; padding: 2px; border: 1px inset darkgray;"\
-	"}"\
-	"QToolButton:disabled {"\
-	"	color: gray;"\
-	"}"\
-	"QToolButton:checked:disabled {"\
-	"	margin :0; padding: 2px; border: 1px inset darkgray;"\
-	"	color: gray;"\
-	"}"\
-	"QToolButton:checked {"\
-	"	margin :0; padding: 2px; border: 1px inset darkgray;"\
-	"	color: black;"\
-	"}"
-
 #define dlgheader ((dlgHeaderEditor *)gui_dlgheadereditor_get_ptr())
 #define dlgjsc ((dlgJsc *)gui_dlgjsc_get_ptr())
 #define dlgkeyb ((dlgKeyboard *)gui_dlgkeyboard_get_ptr())
@@ -182,6 +101,9 @@ EXTERNC void gui_quit(void);
 EXTERNC BYTE gui_control_instance(void);
 EXTERNC BYTE gui_create(void);
 EXTERNC void gui_start(void);
+
+EXTERNC void gui_set_dark_theme(void);
+EXTERNC void gui_set_light_theme(void);
 
 EXTERNC size_t gui_utf8_to_utchar(char *input, uTCHAR **output, size_t max_size);
 

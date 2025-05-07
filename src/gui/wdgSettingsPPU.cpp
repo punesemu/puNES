@@ -28,11 +28,6 @@ wdgSettingsPPU::wdgSettingsPPU(QWidget *parent) : QWidget(parent) {
 
 	setFocusProxy(checkBox_Hide_Sprites);
 
-	groupBox_Overclock_Pergame_setting->setStyleSheet(group_title_and_button_stylesheet());
-	groupBox_Overclock_Def_value->setStyleSheet(group_title_and_button_stylesheet());
-	groupBox_Pergame_Slines->setStyleSheet(group_title_bold_stylesheet());
-	groupBox_Def_Slines->setStyleSheet(group_title_bold_stylesheet());
-
 	connect(checkBox_Hide_Sprites, SIGNAL(clicked(bool)), this, SLOT(s_hide_sprites(bool)));
 	connect(checkBox_Hide_Background, SIGNAL(clicked(bool)), this, SLOT(s_hide_background(bool)));
 	connect(checkBox_Unlimited_Sprites, SIGNAL(clicked(bool)), this, SLOT(s_unlimited_sprites(bool)));
@@ -190,7 +185,7 @@ void wdgSettingsPPU::s_unlimited_sprites_auto(UNUSED(bool checked)) {
 void wdgSettingsPPU::s_overclock(bool checked) {
 	if (checked) {
 		emu_thread_pause();
-		cfg->oclock_all.pergame.enabled = QVariant(((QPushButton *)sender())->property("mtype")).toInt();
+		cfg->oclock_all.pergame.enabled = QVariant(((themePushButton *)sender())->property("mtype")).toInt();
 		cfg->oclock = cfg->oclock_all.pergame.enabled == PERGAME_DEFAULT
 			? &cfg->oclock_all.def
 			: &cfg->oclock_all.pergame;
@@ -204,7 +199,7 @@ void wdgSettingsPPU::s_overclock(bool checked) {
 void wdgSettingsPPU::s_overclock_def_value(bool checked) {
 	if (checked) {
 		emu_thread_pause();
-		cfg->oclock_all.def.enabled = QVariant(((QPushButton *)sender())->property("mtype")).toInt();
+		cfg->oclock_all.def.enabled = QVariant(((themePushButton *)sender())->property("mtype")).toInt();
 		cfg->oclock = cfg->oclock_all.pergame.enabled == PERGAME_DEFAULT
 			? &cfg->oclock_all.def
 			: &cfg->oclock_all.pergame;
@@ -216,7 +211,7 @@ void wdgSettingsPPU::s_overclock_def_value(bool checked) {
 	overclock_set();
 }
 void wdgSettingsPPU::s_overclock_vb_slines(int i) {
-	_config_overclock *oclock = QVariant(((QPushButton *)sender())->property("mtype")).toInt() == 0
+	_config_overclock *oclock = QVariant(((themePushButton *)sender())->property("mtype")).toInt() == 0
 		? &cfg->oclock_all.pergame
 		: &cfg->oclock_all.def;
 
@@ -232,7 +227,7 @@ void wdgSettingsPPU::s_overclock_vb_slines_reset(UNUSED(bool checked)) {
 	overclock_slines_set();
 }
 void wdgSettingsPPU::s_overclock_pr_slines(int i) {
-	_config_overclock *oclock = QVariant(((QPushButton *)sender())->property("mtype")).toInt() == 0
+	_config_overclock *oclock = QVariant(((themePushButton *)sender())->property("mtype")).toInt() == 0
 		? &cfg->oclock_all.pergame
 		: &cfg->oclock_all.def;
 
@@ -248,7 +243,7 @@ void wdgSettingsPPU::s_overclock_pr_slines_reset(UNUSED(bool checked)) {
 	overclock_slines_set();
 }
 void wdgSettingsPPU::s_overclock_disable_dmc_control(UNUSED(bool checked)) {
-	_config_overclock *oclock = QVariant(((QPushButton *)sender())->property("mtype")).toInt() == 0
+	_config_overclock *oclock = QVariant(((themePushButton *)sender())->property("mtype")).toInt() == 0
 		? &cfg->oclock_all.pergame
 		: &cfg->oclock_all.def;
 

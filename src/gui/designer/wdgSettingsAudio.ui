@@ -151,7 +151,7 @@
          <number>0</number>
         </property>
         <item>
-         <widget class="QPushButton" name="pushButton_Samplarate_192000">
+         <widget class="themePushButton" name="pushButton_Samplarate_192000">
           <property name="text">
            <string>192000</string>
           </property>
@@ -161,7 +161,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="pushButton_Samplarate_96000">
+         <widget class="themePushButton" name="pushButton_Samplarate_96000">
           <property name="text">
            <string>96000</string>
           </property>
@@ -171,7 +171,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="pushButton_Samplarate_48000">
+         <widget class="themePushButton" name="pushButton_Samplarate_48000">
           <property name="text">
            <string>48000</string>
           </property>
@@ -181,7 +181,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="pushButton_Samplarate_44100">
+         <widget class="themePushButton" name="pushButton_Samplarate_44100">
           <property name="font">
            <font>
             <underline>true</underline>
@@ -196,7 +196,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="pushButton_Samplarate_22050">
+         <widget class="themePushButton" name="pushButton_Samplarate_22050">
           <property name="text">
            <string>22050</string>
           </property>
@@ -206,7 +206,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="pushButton_Samplarate_11025">
+         <widget class="themePushButton" name="pushButton_Samplarate_11025">
           <property name="text">
            <string>11025</string>
           </property>
@@ -243,7 +243,7 @@
          <number>0</number>
         </property>
         <item>
-         <widget class="QPushButton" name="pushButton_Channels_Mono">
+         <widget class="themePushButton" name="pushButton_Channels_Mono">
           <property name="text">
            <string>Mono</string>
           </property>
@@ -253,7 +253,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="pushButton_Channels_Stereo_Delay">
+         <widget class="themePushButton" name="pushButton_Channels_Stereo_Delay">
           <property name="font">
            <font>
             <underline>true</underline>
@@ -268,7 +268,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="pushButton_Channels_Stereo_Panning">
+         <widget class="themePushButton" name="pushButton_Channels_Stereo_Panning">
           <property name="text">
            <string>Stereo Panning</string>
           </property>
@@ -479,6 +479,11 @@
    <extends>QWidget</extends>
    <header>wdgAPUChannels.hpp</header>
    <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>themePushButton</class>
+   <extends>QPushButton</extends>
+   <header>theme.hpp</header>
   </customwidget>
  </customwidgets>
  <tabstops>

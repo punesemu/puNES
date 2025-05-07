@@ -72,7 +72,7 @@
       </widget>
      </item>
      <item row="0" column="3">
-      <widget class="QPushButton" name="pushButton_Brightness">
+      <widget class="themePushButton" name="pushButton_Brightness">
        <property name="text">
         <string notr="true"/>
        </property>
@@ -83,7 +83,7 @@
       </widget>
      </item>
      <item row="1" column="8">
-      <widget class="QPushButton" name="pushButton_Black_Point">
+      <widget class="themePushButton" name="pushButton_Black_Point">
        <property name="text">
         <string notr="true"/>
        </property>
@@ -141,7 +141,7 @@
       </layout>
      </item>
      <item row="2" column="8">
-      <widget class="QPushButton" name="pushButton_White_Point">
+      <widget class="themePushButton" name="pushButton_White_Point">
        <property name="text">
         <string notr="true"/>
        </property>
@@ -189,7 +189,7 @@
       </widget>
      </item>
      <item row="3" column="3">
-      <widget class="QPushButton" name="pushButton_Contrast">
+      <widget class="themePushButton" name="pushButton_Contrast">
        <property name="text">
         <string notr="true"/>
        </property>
@@ -200,7 +200,7 @@
       </widget>
      </item>
      <item row="0" column="8">
-      <widget class="QPushButton" name="pushButton_Noise">
+      <widget class="themePushButton" name="pushButton_Noise">
        <property name="text">
         <string notr="true"/>
        </property>
@@ -254,7 +254,7 @@
       </widget>
      </item>
      <item row="2" column="3">
-      <widget class="QPushButton" name="pushButton_Saturation">
+      <widget class="themePushButton" name="pushButton_Saturation">
        <property name="text">
         <string notr="true"/>
        </property>
@@ -265,7 +265,7 @@
       </widget>
      </item>
      <item row="1" column="3">
-      <widget class="QPushButton" name="pushButton_Hue">
+      <widget class="themePushButton" name="pushButton_Hue">
        <property name="text">
         <string notr="true"/>
        </property>
@@ -286,7 +286,7 @@
       </widget>
      </item>
      <item row="3" column="8">
-      <widget class="QPushButton" name="pushButton_Scanline_MFields_VBlend">
+      <widget class="themePushButton" name="pushButton_Scanline_MFields_VBlend">
        <property name="text">
         <string notr="true"/>
        </property>
@@ -382,7 +382,7 @@
     </layout>
    </item>
    <item>
-    <widget class="QPushButton" name="pushButton_NTSC_Parameters_reset">
+    <widget class="themePushButton" name="pushButton_NTSC_Parameters_reset">
      <property name="text">
       <string>Reset parameters to defaults</string>
      </property>
@@ -394,6 +394,13 @@
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>themePushButton</class>
+   <extends>QPushButton</extends>
+   <header>theme.hpp</header>
+  </customwidget>
+ </customwidgets>
  <tabstops>
   <tabstop>horizontalSlider_Brightness</tabstop>
   <tabstop>spinBox_Brightness</tabstop>

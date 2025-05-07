@@ -36,8 +36,6 @@ dlgUncomp::dlgUncomp(QWidget *parent, void *uncompress_archive, BYTE type) : QDi
 	setAttribute(Qt::WA_DeleteOnClose);
 	setWindowTitle(QFileInfo(uQString(archive->file)).fileName());
 
-	//tableWidget_Selection->setStyleSheet("QTreeView {selection-background-color: red;}");
-
 	switch (type) {
 		default:
 		case UNCOMPRESS_TYPE_ROM: {

@@ -29,11 +29,6 @@ wdgSettingsGeneral::wdgSettingsGeneral(QWidget *parent) : QWidget(parent) {
 
 	setFocusProxy(widget_Mode);
 
-	widget_Mode->setStyleSheet(button_stylesheet());
-	widget_Fast_Forward_velocity->setStyleSheet(button_stylesheet());
-	widget_Rewind_minutes->setStyleSheet(button_stylesheet());
-	widget_Initial_RAM_Value->setStyleSheet(button_stylesheet());
-
 	pushButton_Mode_Auto->setProperty("mtype", QVariant(AUTO));
 	pushButton_Mode_NTSC->setProperty("mtype", QVariant(NTSC));
 	pushButton_Mode_PAL->setProperty("mtype", QVariant(PAL));
@@ -322,7 +317,7 @@ void wdgSettingsGeneral::initial_ram_value_set(void) {
 
 void wdgSettingsGeneral::s_mode(bool checked) {
 	if (checked) {
-		int mode = QVariant(((QPushButton *)sender())->property("mtype")).toInt();
+		int mode = QVariant(((themePushButton *)sender())->property("mtype")).toInt();
 		bool reset = true;
 
 		if (cfg->mode == mode) {
@@ -384,7 +379,7 @@ void wdgSettingsGeneral::s_mode(bool checked) {
 }
 void wdgSettingsGeneral::s_fast_forward_velocity(bool checked) {
 	if (checked) {
-		int velocity = QVariant(((QPushButton *)sender())->property("mtype")).toInt();
+		int velocity = QVariant(((themePushButton *)sender())->property("mtype")).toInt();
 
 		if (cfg->ff_velocity == velocity) {
 			return;
@@ -404,7 +399,7 @@ void wdgSettingsGeneral::s_fast_forward_velocity(bool checked) {
 }
 void wdgSettingsGeneral::s_rewind_minutes(bool checked) {
 	if (checked) {
-		int minutes = QVariant(((QPushButton *)sender())->property("mtype")).toInt();
+		int minutes = QVariant(((themePushButton *)sender())->property("mtype")).toInt();
 
 		if (minutes == cfg->rewind_minutes) {
 			return;
@@ -495,7 +490,7 @@ void wdgSettingsGeneral::s_game_genie_rom_file_clear(UNUSED(bool checked)) {
 }
 void wdgSettingsGeneral::s_initial_ram_value(bool checked) {
 	if (checked) {
-		int irv = QVariant(((QPushButton *)sender())->property("mtype")).toInt();
+		int irv = QVariant(((themePushButton *)sender())->property("mtype")).toInt();
 
 		if (irv == cfg->initial_ram_value) {
 			return;

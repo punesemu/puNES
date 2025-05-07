@@ -157,7 +157,7 @@
       <item>
        <layout class="QHBoxLayout" name="horizontalLayout_Cheats_Buttons">
         <item>
-         <widget class="QPushButton" name="pushButton_Hide_Show_Tools">
+         <widget class="themePushButton" name="pushButton_Hide_Show_Tools">
           <property name="text">
            <string>Show Tools</string>
           </property>
@@ -168,7 +168,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="pushButton_Import_Cheats">
+         <widget class="themePushButton" name="pushButton_Import_Cheats">
           <property name="text">
            <string>Import</string>
           </property>
@@ -179,7 +179,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="pushButton_Export_Cheats">
+         <widget class="themePushButton" name="pushButton_Export_Cheats">
           <property name="text">
            <string>Export</string>
           </property>
@@ -190,7 +190,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="pushButton_Delete_Cheat">
+         <widget class="themePushButton" name="pushButton_Delete_Cheat">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
             <horstretch>0</horstretch>
@@ -207,7 +207,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="pushButton_Delete_All_Cheats">
+         <widget class="themePushButton" name="pushButton_Delete_All_Cheats">
           <property name="text">
            <string>Delete All</string>
           </property>
@@ -276,9 +276,6 @@
       </item>
       <item>
        <widget class="QFrame" name="frame_Edit">
-        <property name="styleSheet">
-         <string notr="true">QFrame { background-color: rgb(235, 235, 255); }</string>
-        </property>
         <property name="frameShape">
          <enum>QFrame::StyledPanel</enum>
         </property>
@@ -450,7 +447,7 @@
                  </widget>
                 </item>
                 <item row="1" column="3">
-                 <widget class="QPushButton" name="pushButton_Copy_GG">
+                 <widget class="themePushButton" name="pushButton_Copy_GG">
                   <property name="sizePolicy">
                    <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                     <horstretch>0</horstretch>
@@ -470,7 +467,7 @@
                  </widget>
                 </item>
                 <item row="2" column="3">
-                 <widget class="QPushButton" name="pushButton_Copy_ProAR">
+                 <widget class="themePushButton" name="pushButton_Copy_ProAR">
                   <property name="sizePolicy">
                    <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                     <horstretch>0</horstretch>
@@ -546,7 +543,7 @@
            <item row="2" column="0" colspan="2">
             <layout class="QHBoxLayout" name="horizontalLayout_Submit_Cancel">
              <item>
-              <widget class="QPushButton" name="pushButton_Submit_Cheat">
+              <widget class="themePushButton" name="pushButton_Submit_Cheat">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                  <horstretch>0</horstretch>
@@ -563,7 +560,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QPushButton" name="pushButton_Cancel_Cheat">
+              <widget class="themePushButton" name="pushButton_Cancel_Cheat">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                  <horstretch>0</horstretch>
@@ -608,9 +605,6 @@
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
-        <property name="styleSheet">
-         <string notr="true">QFrame { background-color: rgb(235, 255, 235); }</string>
-        </property>
         <property name="frameShape">
          <enum>QFrame::StyledPanel</enum>
         </property>
@@ -633,7 +627,7 @@
          <item>
           <layout class="QHBoxLayout" name="horizontalLayout_Edit_Buttons">
            <item>
-            <widget class="QPushButton" name="pushButton_New_Cheat">
+            <widget class="themePushButton" name="pushButton_New_Cheat">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                <horstretch>0</horstretch>
@@ -646,7 +640,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QPushButton" name="pushButton_New_Cheat_GG">
+            <widget class="themePushButton" name="pushButton_New_Cheat_GG">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                <horstretch>0</horstretch>
@@ -659,7 +653,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QPushButton" name="pushButton_New_Cheat_ProAR">
+            <widget class="themePushButton" name="pushButton_New_Cheat_ProAR">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                <horstretch>0</horstretch>
@@ -681,6 +675,13 @@
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>themePushButton</class>
+   <extends>QPushButton</extends>
+   <header>theme.hpp</header>
+  </customwidget>
+ </customwidgets>
  <tabstops>
   <tabstop>tableWidget_Cheats</tabstop>
   <tabstop>pushButton_Hide_Show_Tools</tabstop>

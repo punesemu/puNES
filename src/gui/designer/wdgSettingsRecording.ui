@@ -398,7 +398,7 @@
          <number>0</number>
         </property>
         <item>
-         <widget class="QPushButton" name="pushButton_Output_Quality_low">
+         <widget class="themePushButton" name="pushButton_Output_Quality_low">
           <property name="text">
            <string>Low</string>
           </property>
@@ -408,7 +408,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="pushButton_Output_Quality_medium">
+         <widget class="themePushButton" name="pushButton_Output_Quality_medium">
           <property name="font">
            <font>
             <underline>true</underline>
@@ -423,7 +423,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="pushButton_Output_Quality_high">
+         <widget class="themePushButton" name="pushButton_Output_Quality_high">
           <property name="text">
            <string>High</string>
           </property>
@@ -452,6 +452,13 @@
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>themePushButton</class>
+   <extends>QPushButton</extends>
+   <header>theme.hpp</header>
+  </customwidget>
+ </customwidgets>
  <tabstops>
   <tabstop>comboBox_Output_Audio_Format</tabstop>
   <tabstop>comboBox_Output_Video_Format</tabstop>

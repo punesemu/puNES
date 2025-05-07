@@ -45,8 +45,6 @@ wdgPaletteWall::wdgPaletteWall(QWidget *parent) : QWidget(parent) {
 	curRow = 0;
 	selCol = -1;
 	selRow = -1;
-
-	//setStyleSheet("background-color: black;");
 }
 wdgPaletteWall::~wdgPaletteWall() = default;
 
@@ -291,7 +289,6 @@ void wdgPaletteWall::paint_cell(QPainter *p, int row, int col, const QRect &rect
 void wdgPaletteWall::paint_cell_contents(QPainter *p, int row, int col, const QRect &rect) {
 	int pindex = palette_index(row, col);
 	int index = color_index(row, col);
-	double brightness = 0;
 	_color_RGB *rgb = &palette_RGB.noswap[pindex];
 	QColor color = QColor(rgb->r, rgb->g, rgb->b);
 	QColor bg;
@@ -312,9 +309,8 @@ void wdgPaletteWall::paint_cell_contents(QPainter *p, int row, int col, const QR
 		bg = color;
 	}
 
-	brightness = bg.redF() * 0.299f + bg.greenF() * 0.587f + bg.blueF() * 0.114f;
 	p->fillRect(rect, bg);
-	p->setPen((brightness > 0.5f) ? Qt::black : Qt::white);
+	p->setPen(theme::get_foreground_color(bg));
 	print_in_cell(p, row, col, rect);
 }
 

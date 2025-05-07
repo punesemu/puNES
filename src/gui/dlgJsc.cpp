@@ -255,8 +255,9 @@ int dlgJsc::buttons_disabled(void) {
 }
 
 void dlgJsc::s_joy_read_timer(void) {
-	static const QString scbg = "QCheckBox { background-color : #ACFFAC; }";
-	static const QString scbr = "QCheckBox { background-color : #FFCFCF; }";
+	QString styleSheet = "QCheckBox { background-color: %0; }";
+	QString scbg = styleSheet.arg(theme::get_theme_color("#ACFFAC").name());
+	QString scbr = styleSheet.arg(theme::get_theme_color("#FFCFCF").name());
 	int jdev_index = js_jdev_index();
 
 	mutex.lock();

@@ -53,7 +53,7 @@
     </widget>
    </item>
    <item row="3" column="2">
-    <widget class="QPushButton" name="pushButton_flip">
+    <widget class="themePushButton" name="pushButton_flip">
      <property name="text">
       <string/>
      </property>
@@ -82,7 +82,7 @@
        <number>0</number>
       </property>
       <item>
-       <widget class="QPushButton" name="pushButton_left">
+       <widget class="themePushButton" name="pushButton_left">
         <property name="toolTip">
          <string>Rotate the screen 90 degrees to the left</string>
         </property>
@@ -96,7 +96,7 @@
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="pushButton_right">
+       <widget class="themePushButton" name="pushButton_right">
         <property name="toolTip">
          <string>Rotate the screen 90 degrees to the Right</string>
         </property>
@@ -114,6 +114,13 @@
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>themePushButton</class>
+   <extends>QPushButton</extends>
+   <header>theme.hpp</header>
+  </customwidget>
+ </customwidgets>
  <tabstops>
   <tabstop>pushButton_left</tabstop>
   <tabstop>pushButton_right</tabstop>

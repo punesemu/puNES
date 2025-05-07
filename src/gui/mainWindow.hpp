@@ -225,6 +225,7 @@ class mainWindow : public QMainWindow, public Ui::mainWindow {
 
 	private:
 		void retranslateUi(mainWindow *mainWindow);
+		void stylesheet_update(void);
 
 	public:
 		void update_window(void);

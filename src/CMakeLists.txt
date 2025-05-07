@@ -680,6 +680,8 @@ set(gui_srcs
 	gui/wdgState.hpp
 	gui/wdgStatusBar.cpp
 	gui/wdgStatusBar.hpp
+	gui/theme.cpp
+	gui/theme.hpp
 	gui/wdgToolBar.cpp
 	gui/wdgToolBar.hpp
 

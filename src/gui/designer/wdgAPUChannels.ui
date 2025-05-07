@@ -407,14 +407,14 @@
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_buttons">
      <item>
-      <widget class="QPushButton" name="pushButton_APU_Channels_active_all">
+      <widget class="themePushButton" name="pushButton_APU_Channels_active_all">
        <property name="text">
         <string>Active all</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="pushButton_APU_Channels_disable_all">
+      <widget class="themePushButton" name="pushButton_APU_Channels_disable_all">
        <property name="text">
         <string>Disable all</string>
        </property>
@@ -423,7 +423,7 @@
     </layout>
    </item>
    <item>
-    <widget class="QPushButton" name="pushButton_APU_Channels_reset">
+    <widget class="themePushButton" name="pushButton_APU_Channels_reset">
      <property name="text">
       <string>Reset to defaults</string>
      </property>
@@ -435,6 +435,13 @@
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>themePushButton</class>
+   <extends>QPushButton</extends>
+   <header>theme.hpp</header>
+  </customwidget>
+ </customwidgets>
  <tabstops>
   <tabstop>checkBox_Master</tabstop>
   <tabstop>horizontalSlider_Master</tabstop>

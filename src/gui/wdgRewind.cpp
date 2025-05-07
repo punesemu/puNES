@@ -33,6 +33,8 @@ wdgRewind::wdgRewind(QWidget *parent) : QWidget(parent) {
 
 	setupUi(this);
 
+	stylesheet_update();
+
 	widget_buttons->setLayoutDirection(Qt::LeftToRight);
 
 	gridLayout->setHorizontalSpacing(SPACING);
@@ -54,31 +56,14 @@ wdgRewind::wdgRewind(QWidget *parent) : QWidget(parent) {
 	toolButton_Step_Forward->setAutoRepeatInterval(WDGRWND_AUTOREPEAT_MOUSE_TIMER_STEP);
 
 	set_enable_play_pause_forward(FALSE);
-
-	{
-		QString style = "QToolButton:enabled {"\
-			"	background-color: #ACFFAC"\
-			"}"\
-			"QToolButton:disabled {"\
-			"	background-color: #FFCFCF"\
-			"}"\
-			"QToolButton:pressed {"\
-			"	margin :0; padding: 2px; border: 1px inset darkgray;"\
-			"	background-color: #00B300"\
-			"}"\
-			"QToolButton:checked { "\
-			"	margin :0; padding: 2px; border: 1px inset darkgray;"\
-			"	background-color: #00B300"
-			"}";
-
-		setStyleSheet(style);
-	}
 }
 wdgRewind::~wdgRewind() = default;
 
 void wdgRewind::changeEvent(QEvent *event) {
 	if (event->type() == QEvent::LanguageChange) {
 		Ui::wdgRewind::retranslateUi(this);
+	} else if (event->type() == QEvent::PaletteChange) {
+		stylesheet_update();
 	} else {
 		QWidget::changeEvent(event);
 	}
@@ -89,6 +74,24 @@ void wdgRewind::paintEvent(UNUSED(QPaintEvent *event)) {
 
 	opt.initFrom(this);
 	style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
+}
+
+void wdgRewind::stylesheet_update(void) {
+	if (theme::is_dark_theme()) {
+		toolButton_Fast_Backward->setIcon(QIcon(":/icon/icons/rwnd_fast_backward_dtheme.svgz"));
+		toolButton_Step_Backward->setIcon(QIcon(":/icon/icons/rwnd_step_backward_dtheme.svgz"));
+		toolButton_Play->setIcon(QIcon(":/icon/icons/rwnd_play_dtheme.svgz"));
+		toolButton_Pause->setIcon(QIcon(":/icon/icons/rwnd_pause_dtheme.svgz"));
+		toolButton_Step_Forward->setIcon(QIcon(":/icon/icons/rwnd_step_forward_dtheme.svgz"));
+		toolButton_Fast_Forward->setIcon(QIcon(":/icon/icons/rwnd_fast_forward_dtheme.svgz"));
+	} else {
+		toolButton_Fast_Backward->setIcon(QIcon(":/icon/icons/rwnd_fast_backward.svgz"));
+		toolButton_Step_Backward->setIcon(QIcon(":/icon/icons/rwnd_step_backward.svgz"));
+		toolButton_Play->setIcon(QIcon(":/icon/icons/rwnd_play.svgz"));
+		toolButton_Pause->setIcon(QIcon(":/icon/icons/rwnd_pause.svgz"));
+		toolButton_Step_Forward->setIcon(QIcon(":/icon/icons/rwnd_step_forward.svgz"));
+		toolButton_Fast_Forward->setIcon(QIcon(":/icon/icons/rwnd_fast_forward.svgz"));
+	}
 }
 
 bool wdgRewind::step_autorepeat_timer_control(void) const {

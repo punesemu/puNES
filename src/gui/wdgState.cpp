@@ -99,7 +99,6 @@ bool stateBar::eventFilter(QObject *obj, QEvent *event) {
 	return (QWidget::eventFilter(obj, event));
 }
 void stateBar::paintEvent(UNUSED(QPaintEvent *event)) {
-	static const int padding = 2;
 	static QPen pen;
 	static QRect rect;
 	int x, y, w, h;
@@ -117,29 +116,29 @@ void stateBar::paintEvent(UNUSED(QPaintEvent *event)) {
 	}
 
 	for (unsigned int i = 0; i < SAVE_SLOTS; i++) {
-		rect.setRect(x + (padding / 2), y, w - padding, h);
+		rect.setRect(x, y, w, h);
 
 		if (save_slot.slot[i].state) {
 			painter.fillRect(rect, Qt::green);
-			pen.setColor(Qt::black);
+			pen.setColor(theme::get_foreground_color(Qt::green));
 		} else {
-			painter.fillRect(rect, palette().mid().color());
-			if (isEnabled()) {
-				pen.setColor(palette().text().color());
-			} else {
-				pen.setColor(palette().brightText().color());
-			}
+			painter.fillRect(rect, palette().window().color());
+			pen.setColor(palette().text().color());
 		}
 
 		if (save_slot.slot_in_use == i) {
 			painter.save();
 			painter.setOpacity(0.6);
 			if (save_slot.slot[i].state) {
-				painter.fillRect(rect, Qt::darkGreen);
-				pen.setColor(Qt::white);
+				painter.setPen(QPen(palette().highlight().color(), 1, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+				painter.setBrush(Qt::darkGreen);
+				painter.drawRect(rect);
+				pen.setColor(theme::get_foreground_color(Qt::darkGreen));
 			} else {
-				painter.fillRect(rect, palette().highlight().color());
-				pen.setColor(palette().highlightedText().color());
+				painter.setPen(QPen(palette().highlight().color(), 1, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+				painter.setBrush(palette().highlight().color().lighter(theme::is_dark_theme() ? 180 : 120));
+				painter.drawRect(rect);
+				pen.setColor(palette().text().color());
 			}
 			painter.restore();
 		}

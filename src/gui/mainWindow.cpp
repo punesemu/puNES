@@ -33,6 +33,7 @@
 #include <QtGui/QDesktopServices>
 #include <QtWidgets/QErrorMessage>
 #include <QtCore/QBuffer>
+#include <QPalette>
 #include "mainWindow.hpp"
 #include "extra/singleapplication/singleapplication.h"
 #include "dlgAbout.hpp"
@@ -42,7 +43,6 @@
 #include "dlgKeyboard.hpp"
 #include "dlgLog.hpp"
 #include "dlgSettings.hpp"
-#include "wdgMenuBar.hpp"
 #include "wdgOverlayUi.hpp"
 #include "common.h"
 #include "emu_thread.h"
@@ -74,6 +74,8 @@ enum state_save_enum { SAVE, LOAD };
 
 mainWindow::mainWindow() : QMainWindow() {
 	setupUi(this);
+
+	stylesheet_update();
 
 	org_geom.setX(100);
 	org_geom.setY(100);
@@ -277,6 +279,8 @@ bool mainWindow::eventFilter(QObject *obj, QEvent *event) {
 void mainWindow::changeEvent(QEvent *event) {
 	if (event->type() == QEvent::LanguageChange) {
 		retranslateUi(this);
+	} else if (event->type() == QEvent::PaletteChange) {
+		stylesheet_update();
 	} else {
 		QMainWindow::changeEvent(event);
 	}
@@ -337,6 +341,15 @@ void mainWindow::retranslateUi(mainWindow *mainWindow) {
 		save_slot_count_load();
 	}
 	update_window();
+}
+void mainWindow::stylesheet_update(void) {
+	setStyleSheet(QString("%0%1%2%3%4")
+		.arg(theme::stylesheet_wdgroupbox())
+		.arg(theme::stylesheet_wdgbutton())
+		.arg(theme::stylesheet_wdgtoolgroupbox())
+		.arg(theme::stylesheet_wdgtoolbutton())
+		.arg(theme::stylesheet_pixmapbutton())
+	);
 }
 
 void mainWindow::update_window(void) {

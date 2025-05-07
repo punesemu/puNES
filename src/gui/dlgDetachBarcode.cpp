@@ -18,7 +18,6 @@
 
 #include <QtCore/QTimer>
 #include <QtCore/QList>
-#include <QtGui/QCloseEvent>
 #include <QtGui/QScreen>
 #include "mainWindow.hpp"
 #include "dlgDetachBarcode.hpp"
@@ -58,7 +57,7 @@ dlgDetachBarcode::name_detach_barcode cardsDragonBallZ = {
 	{ "Item Card: ブルマの母",							"0140643200013" },
 	{ "Item Card: チチ",									"0162747144253" },
 	{ "Item Card: ブリーフ博士",							"0120637202254" },
-	{ "Item Card: ドラゴンボール",						"0162741145218" },
+	{ "Item Card: ドラゴンボール",							"0162741145218" },
 	{ "Item Card: 回復カプセル",							"0122815544019" },
 	{ "Item Card: カリン様",								"0120631203219" },
 	{ "Item Card: エンマ大王",							"0120671203255" },
@@ -116,7 +115,7 @@ dlgDetachBarcode::name_detach_barcode cardsSDGundamWars = {
 	{"Character Card: ジムカスタム",						"0401001501112"},
 	{"Character Card: ジムキャノン II",					"0402131502024"},
 	{"Character Card: Zグンダム",						"0401046744055"},
-	{"Character Card: リックディアス",					"0403001143149"},
+	{"Character Card: リックディアス",						"0403001143149"},
 	{"Character Card: ZZグンダム",						"0407114541014"},
 	{"Character Card: ν・グンダム",						"0401514545108"},
 	{"Character Card: グンダムF-91",						"0403554500147"},
@@ -128,31 +127,31 @@ dlgDetachBarcode::name_detach_barcode cardsSDGundamWars = {
 	{"Character Card: ズゴック",							"0402101145572"},
 	{"Character Card: ハイザック",						"0403131400075"},
 	{"Character Card: メッサーラ",						"0400530541019"},
-	{"Character Card: パラス・アテネ",					"0401540442532"},
+	{"Character Card: パラス・アテネ",						"0401540442532"},
 	{"Character Card: キュベレイ",						"0401030142010"},
 	{"Character Card: ドライセン",						"0401407405045"},
-	{"Character Card: ヤクト・ドーガ",					"0403500100568"},
+	{"Character Card: ヤクト・ドーガ",						"0403500100568"},
 	{"Character Card: サザビー",							"0400440140142"},
-	{"Character Card: ベルガ・ギロス",					"0402102142020"},
+	{"Character Card: ベルガ・ギロス",						"0402102142020"},
 	{"Character Card: ビギナ・ギナ",						"0403450442138"},
 	{"Character Card: デナン・ゾン",						"0401115401056"},
 	{"Character Card: グンダム Mk-II",					"0402733635151"},
 	{"Character Card: 百式",								"0402434441006"},
-	{"Character Card: ベルガ・ダラス",					"0402500402160"},
-	{"Character Card: シャア専用ザク",					"0400741404172"},
+	{"Character Card: ベルガ・ダラス",						"0402500402160"},
+	{"Character Card: シャア専用ザク",						"0400741404172"},
 	{"Character Card: エルメス",							"0400441406148"},
 	{"Character Card: ギャン",							"0403503043008"},
 	{"Character Card: ガルバルディ・β",					"0401145042557"},
 	{"Character Card: ジ・O",							"0402450400513"},
-	{"Character Card: ハンマ・ハンマ",					"0400144403109"},
+	{"Character Card: ハンマ・ハンマ",						"0400144403109"},
 	{"Character Card: バウ",								"0401142240062"},
 	{"Character Card: ザク III",							"0406154264044"},
-	{"Character Card: ドーベンウルフ",					"0402440042532"},
+	{"Character Card: ドーベンウルフ",						"0402440042532"},
 	{"Character Card: ガンダムGP-03",					"9346126717639"},
 	{"Command Card: ホワイトベース",						"0465464360068"},
 	{"Command Card: プロペラントタンク",					"0420416654671"},
 	{"Command Card: ソーラシステム",						"0440302250565"},
-	{"Command Card: 弾幕を張れ!",						"0443304064666"},
+	{"Command Card: 弾幕を張れ!",							"0443304064666"},
 	{"Command Card: ガンペリー",							"0447363361032"},
 	{"Command Card: ミデア",								"0460553366228"},
 	{"Command Card: フルアーマーユニット",					"0420002452667"},
@@ -164,14 +163,14 @@ dlgDetachBarcode::name_detach_barcode cardsSDGundamWars = {
 	{"Command Card: サイコフレーム",						"0462523640710"},
 	{"Command Card: ガウ爆撃!",							"0464552366074"},
 	{"Command Card: ヴァル・ヴァロ",						"0441351472243"},
-	{"Command Card: α・アジール",						"0427627620136"},
+	{"Command Card: α・アジール",							"0427627620136"},
 	{"Command Card: 先手必勝!",							"0447220635665"},
 	{"Command Card: みんなつっこめ!",						"0467760762065"},
 	{"Command Card: たのむ行ってくれ!",					"0445726750448"},
-	{"Command Card: オレが行く!",						"0467061567000"},
-	{"Command Card: みんな撃て!",						"0401544774318"},
+	{"Command Card: オレが行く!",							"0467061567000"},
+	{"Command Card: みんな撃て!",							"0401544774318"},
 	{"Command Card: たのむ撃ってくれ!",					"0405564736646"},
-	{"Command Card: みんな突進!",						"0462730572521"},
+	{"Command Card: みんな突進!",							"0462730572521"},
 	{"Command Card: 真っ向勝負!!",						"0466765740016"},
 	{"Command Card: ザコをねらえ!",						"0420434751369"},
 	{"Command Card: 援護ミサイル",						"0427062053452"},
@@ -185,7 +184,7 @@ dlgDetachBarcode::name_detach_barcode cardsSDGundamWars = {
 	{"Command Card: エースを斬れ!",						"0426464772275"},
 	{"Command Card: ザコをちらせ!",						"0402743543040"},
 	{"Command Card: 守りを堅めろ!",						"0405645155656"},
-	{"Command Card: オレが撃つ!",						"0403007706119"},
+	{"Command Card: オレが撃つ!",							"0403007706119"},
 	{"Command Card: デンドロビウム",						"9366723460578"}
 };
 
@@ -194,8 +193,6 @@ dlgDetachBarcode::dlgDetachBarcode(QWidget *parent) : QDialog(parent) {
 
 	setWindowFlags(Qt::Dialog | Qt::FramelessWindowHint);
 	setAttribute(Qt::WA_DeleteOnClose);
-
-	setStyleSheet(tools_stylesheet());
 
 	ndb = cardsDefault;
 
@@ -208,7 +205,7 @@ dlgDetachBarcode::dlgDetachBarcode(QWidget *parent) : QDialog(parent) {
 	{
 		QMargins vgbm = verticalLayout_groupBox_Detach_Barcode->contentsMargins();
 		QMargins vdia = verticalLayout_Detach_Barcode->contentsMargins();
-		QPushButton *close = new QPushButton(this);
+		themePushButton *close = new themePushButton(this);
 		int x = 0, y = 0, w = 0, h = 0;
 
 		w = close->fontMetrics().size(0, "x").width() + 10;
@@ -221,8 +218,8 @@ dlgDetachBarcode::dlgDetachBarcode(QWidget *parent) : QDialog(parent) {
 
 		connect(close, SIGNAL(clicked(bool)), this, SLOT(s_x_clicked(bool)));
 
-		vgbm.setTop(close->sizeHint().height() + 2);
-		verticalLayout_groupBox_Detach_Barcode->setContentsMargins(vgbm);
+//		vgbm.setTop(close->sizeHint().height() + 2);
+//		verticalLayout_groupBox_Detach_Barcode->setContentsMargins(vgbm);
 	}
 
 	installEventFilter(this);
