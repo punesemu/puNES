@@ -64,7 +64,7 @@
             <number>0</number>
            </property>
            <item>
-            <widget class="QPushButton" name="pushButton_Size_10x">
+            <widget class="themePushButton" name="pushButton_Size_10x">
              <property name="font">
               <font>
                <underline>true</underline>
@@ -79,7 +79,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QPushButton" name="pushButton_Size_15x">
+            <widget class="themePushButton" name="pushButton_Size_15x">
              <property name="font">
               <font>
                <underline>false</underline>
@@ -94,7 +94,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QPushButton" name="pushButton_Size_20x">
+            <widget class="themePushButton" name="pushButton_Size_20x">
              <property name="text">
               <string>2x</string>
              </property>
@@ -104,7 +104,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QPushButton" name="pushButton_Size_25x">
+            <widget class="themePushButton" name="pushButton_Size_25x">
              <property name="text">
               <string>2.5x</string>
              </property>
@@ -164,7 +164,7 @@
             <number>0</number>
            </property>
            <item>
-            <widget class="QPushButton" name="pushButton_Mode_virtual">
+            <widget class="themePushButton" name="pushButton_Mode_virtual">
              <property name="font">
               <font>
                <underline>true</underline>
@@ -179,7 +179,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QPushButton" name="pushButton_Mode_setup">
+            <widget class="themePushButton" name="pushButton_Mode_setup">
              <property name="font">
               <font>
                <underline>false</underline>
@@ -264,6 +264,11 @@
    <extends>QWidget</extends>
    <header location="global">dlgKeyboard.hpp</header>
    <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>themePushButton</class>
+   <extends>QPushButton</extends>
+   <header>theme.hpp</header>
   </customwidget>
  </customwidgets>
  <tabstops>

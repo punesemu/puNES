@@ -44,14 +44,6 @@ wdgSettingsVideo::wdgSettingsVideo(QWidget *parent) : QWidget(parent) {
 
 	setFocusProxy(tabWidget_Video);
 
-	widget_Scale_xx->setStyleSheet(button_stylesheet());
-	groupBox_Oscan_pergame_setting->setStyleSheet(group_title_and_button_stylesheet());
-	groupBox_Oscan_def_value->setStyleSheet(group_title_and_button_stylesheet());
-	groupBox_Oscan_NTSC_brd->setStyleSheet(group_title_bold_stylesheet());
-	groupBox_Oscan_PAL_brd->setStyleSheet(group_title_bold_stylesheet());
-	frame_PAR->setStyleSheet(button_stylesheet());
-	frame_Screen_Rotation->setStyleSheet(button_stylesheet());
-
 	pushButton_Scale_1x->setProperty("mtype", QVariant(X1));
 	pushButton_Scale_2x->setProperty("mtype", QVariant(X2));
 	pushButton_Scale_3x->setProperty("mtype", QVariant(X3));
@@ -735,7 +727,7 @@ void wdgSettingsVideo::shader_param_set(void) {
 		{
 			QWidget *widget = new QWidget(this);
 			QHBoxLayout *layout = new QHBoxLayout(widget);
-			QPushButton *def = new QPushButton(widget) ;
+			themePushButton *def = new themePushButton(widget) ;
 
 			widget->setObjectName("widget_button");
 			def->setObjectName("default");
@@ -847,7 +839,7 @@ bool wdgSettingsVideo::call_gfx_set_screen(int mtype) {
 
 void wdgSettingsVideo::s_scale(bool checked) {
 	if (checked) {
-		int scale = QVariant(((QPushButton *)sender())->property("mtype")).toInt();
+		int scale = QVariant(((themePushButton *)sender())->property("mtype")).toInt();
 
 		if ((cfg->fullscreen) || (scale == cfg->scale)) {
 			return;
@@ -861,7 +853,7 @@ void wdgSettingsVideo::s_scale(bool checked) {
 }
 void wdgSettingsVideo::s_par(bool checked) {
 	if (checked) {
-		int par = QVariant(((QPushButton *)sender())->property("mtype")).toInt();
+		int par = QVariant(((themePushButton *)sender())->property("mtype")).toInt();
 
 		if (cfg->pixel_aspect_ratio == par) {
 			return;
@@ -883,7 +875,7 @@ void wdgSettingsVideo::s_par_stretch(UNUSED(bool checked)) {
 void wdgSettingsVideo::s_oscan(bool checked) {
 	if (checked) {
 		emu_thread_pause();
-		cfg->oscan = QVariant(((QPushButton *)sender())->property("mtype")).toInt();
+		cfg->oscan = QVariant(((themePushButton *)sender())->property("mtype")).toInt();
 		settings_pgs_save();
 		gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, FALSE);
 		emu_thread_continue();
@@ -893,7 +885,7 @@ void wdgSettingsVideo::s_oscan(bool checked) {
 void wdgSettingsVideo::s_oscan_def_value(bool checked) {
 	if (checked) {
 		emu_thread_pause();
-		cfg->oscan_default = QVariant(((QPushButton *)sender())->property("mtype")).toInt();
+		cfg->oscan_default = QVariant(((themePushButton *)sender())->property("mtype")).toInt();
 		if (cfg->oscan == PERGAME_DEFAULT) {
 			gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, FALSE);
 		}
@@ -918,7 +910,7 @@ void wdgSettingsVideo::s_oscan_brd_black_f(UNUSED(bool checked)) {
 	emu_thread_continue();
 }
 void wdgSettingsVideo::s_oscan_spinbox(int i) {
-	int mtype = QVariant(((QPushButton *)sender())->property("mtype")).toInt();
+	int mtype = QVariant(((themePushButton *)sender())->property("mtype")).toInt();
 	QString name = ((QSpinBox *)sender())->objectName();
 	_overscan_borders *borders;
 
@@ -941,7 +933,7 @@ void wdgSettingsVideo::s_oscan_spinbox(int i) {
 	emu_thread_continue();
 }
 void wdgSettingsVideo::s_oscan_reset(UNUSED(bool checked)) {
-	int mtype = QVariant(((QPushButton *)sender())->property("mtype")).toInt();
+	int mtype = QVariant(((themePushButton *)sender())->property("mtype")).toInt();
 	_overscan_borders *borders;
 
 	borders = &overscan_borders[mtype];
@@ -1207,7 +1199,10 @@ void wdgSettingsVideo::s_shader_param_spin(double d) {
 		tableWidget_Shader_Parameters->item(row, WSV_SP_DESC)->setForeground(shdp_brush.fg);
 		tableWidget_Shader_Parameters->item(row, WSV_SP_DESC)->setBackground(shdp_brush.bg);
 	} else {
-		tableWidget_Shader_Parameters->item(row, WSV_SP_DESC)->setBackground(Qt::yellow);
+		QColor color = theme::get_grayed_color(Qt::yellow);
+
+		tableWidget_Shader_Parameters->item(row, WSV_SP_DESC)->setForeground(theme::get_foreground_color(color));
+		tableWidget_Shader_Parameters->item(row, WSV_SP_DESC)->setBackground(color);
 	}
 }
 void wdgSettingsVideo::s_shader_param_default(UNUSED(bool checked)) {
@@ -1388,7 +1383,7 @@ void wdgSettingsVideo::s_resolution(int index) {
 #endif
 void wdgSettingsVideo::s_screen_rotation(bool checked) {
 	if (checked) {
-		int rotation = QVariant(((QPushButton *)sender())->property("mtype")).toInt();
+		int rotation = QVariant(((themePushButton *)sender())->property("mtype")).toInt();
 
 		if (rotation == cfg->screen_rotation) {
 			return;

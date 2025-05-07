@@ -113,7 +113,7 @@
              <number>0</number>
             </property>
             <item>
-             <widget class="QPushButton" name="pushButton_Scale_1x">
+             <widget class="themePushButton" name="pushButton_Scale_1x">
               <property name="text">
                <string>1x</string>
               </property>
@@ -123,7 +123,7 @@
              </widget>
             </item>
             <item>
-             <widget class="QPushButton" name="pushButton_Scale_2x">
+             <widget class="themePushButton" name="pushButton_Scale_2x">
               <property name="font">
                <font>
                 <underline>true</underline>
@@ -138,7 +138,7 @@
              </widget>
             </item>
             <item>
-             <widget class="QPushButton" name="pushButton_Scale_3x">
+             <widget class="themePushButton" name="pushButton_Scale_3x">
               <property name="text">
                <string>3x</string>
               </property>
@@ -148,7 +148,7 @@
              </widget>
             </item>
             <item>
-             <widget class="QPushButton" name="pushButton_Scale_4x">
+             <widget class="themePushButton" name="pushButton_Scale_4x">
               <property name="text">
                <string>4x</string>
               </property>
@@ -158,7 +158,7 @@
              </widget>
             </item>
             <item>
-             <widget class="QPushButton" name="pushButton_Scale_5x">
+             <widget class="themePushButton" name="pushButton_Scale_5x">
               <property name="text">
                <string>5x</string>
               </property>
@@ -168,7 +168,7 @@
              </widget>
             </item>
             <item>
-             <widget class="QPushButton" name="pushButton_Scale_6x">
+             <widget class="themePushButton" name="pushButton_Scale_6x">
               <property name="text">
                <string>6x</string>
               </property>
@@ -237,7 +237,7 @@
           <item row="0" column="0" colspan="2">
            <layout class="QHBoxLayout" name="horizontalLayout_Oscan_pergame_and_def">
             <item>
-             <widget class="QGroupBox" name="groupBox_Oscan_pergame_setting">
+             <widget class="themeGroupBox" name="groupBox_Oscan_pergame_setting">
               <property name="title">
                <string>Per-Game Overscan Setting</string>
               </property>
@@ -246,7 +246,7 @@
                 <number>0</number>
                </property>
                <item>
-                <widget class="QPushButton" name="pushButton_Oscan_pergame_setting_on">
+                <widget class="themePushButton" name="pushButton_Oscan_pergame_setting_on">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
                    <horstretch>0</horstretch>
@@ -262,7 +262,7 @@
                 </widget>
                </item>
                <item>
-                <widget class="QPushButton" name="pushButton_Oscan_pergame_setting_off">
+                <widget class="themePushButton" name="pushButton_Oscan_pergame_setting_off">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
                    <horstretch>0</horstretch>
@@ -278,7 +278,7 @@
                 </widget>
                </item>
                <item>
-                <widget class="QPushButton" name="pushButton_Oscan_pergame_setting_use_def">
+                <widget class="themePushButton" name="pushButton_Oscan_pergame_setting_use_def">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
                    <horstretch>0</horstretch>
@@ -302,7 +302,7 @@
              </widget>
             </item>
             <item>
-             <widget class="QGroupBox" name="groupBox_Oscan_def_value">
+             <widget class="themeGroupBox" name="groupBox_Oscan_def_value">
               <property name="title">
                <string>Default Value</string>
               </property>
@@ -311,7 +311,7 @@
                 <number>0</number>
                </property>
                <item>
-                <widget class="QPushButton" name="pushButton_Oscan_def_value_on">
+                <widget class="themePushButton" name="pushButton_Oscan_def_value_on">
                  <property name="text">
                   <string>On</string>
                  </property>
@@ -321,7 +321,7 @@
                 </widget>
                </item>
                <item>
-                <widget class="QPushButton" name="pushButton_Oscan_def_value_off">
+                <widget class="themePushButton" name="pushButton_Oscan_def_value_off">
                  <property name="font">
                   <font>
                    <underline>true</underline>
@@ -341,7 +341,7 @@
            </layout>
           </item>
           <item row="1" column="0">
-           <widget class="QGroupBox" name="groupBox_Oscan_NTSC_brd">
+           <widget class="themeGroupBox" name="groupBox_Oscan_NTSC_brd">
             <property name="title">
              <string>NTSC</string>
             </property>
@@ -393,7 +393,7 @@
               </layout>
              </item>
              <item row="3" column="1" colspan="2">
-              <widget class="QPushButton" name="pushButton_Oscan_NTSC_brd_reset">
+              <widget class="themePushButton" name="pushButton_Oscan_NTSC_brd_reset">
                <property name="text">
                 <string>Reset to defaults</string>
                </property>
@@ -460,7 +460,7 @@
            </widget>
           </item>
           <item row="1" column="1">
-           <widget class="QGroupBox" name="groupBox_Oscan_PAL_brd">
+           <widget class="themeGroupBox" name="groupBox_Oscan_PAL_brd">
             <property name="title">
              <string>PAL/Dendy</string>
             </property>
@@ -558,7 +558,7 @@
               </layout>
              </item>
              <item row="3" column="1" colspan="2">
-              <widget class="QPushButton" name="pushButton_Oscan_PAL_brd_reset">
+              <widget class="themePushButton" name="pushButton_Oscan_PAL_brd_reset">
                <property name="text">
                 <string>Reset to defaults</string>
                </property>
@@ -614,7 +614,7 @@
                <number>0</number>
               </property>
               <item row="1" column="2" colspan="2">
-               <widget class="QPushButton" name="pushButton_PAR_118">
+               <widget class="themePushButton" name="pushButton_PAR_118">
                 <property name="text">
                  <string>11:8 (PAL TV)</string>
                 </property>
@@ -624,7 +624,7 @@
                </widget>
               </item>
               <item row="0" column="0" colspan="2">
-               <widget class="QPushButton" name="pushButton_PAR_11">
+               <widget class="themePushButton" name="pushButton_PAR_11">
                 <property name="text">
                  <string>1:1</string>
                 </property>
@@ -634,7 +634,7 @@
                </widget>
               </item>
               <item row="0" column="2" colspan="2">
-               <widget class="QPushButton" name="pushButton_PAR_54">
+               <widget class="themePushButton" name="pushButton_PAR_54">
                 <property name="text">
                  <string>5:4</string>
                 </property>
@@ -644,7 +644,7 @@
                </widget>
               </item>
               <item row="1" column="0" colspan="2">
-               <widget class="QPushButton" name="pushButton_PAR_87">
+               <widget class="themePushButton" name="pushButton_PAR_87">
                 <property name="font">
                  <font>
                   <underline>true</underline>
@@ -695,7 +695,7 @@
                <number>0</number>
               </property>
               <item row="0" column="0">
-               <widget class="QPushButton" name="pushButton_Screen_Rotation_0d">
+               <widget class="themePushButton" name="pushButton_Screen_Rotation_0d">
                 <property name="font">
                  <font>
                   <underline>true</underline>
@@ -710,7 +710,7 @@
                </widget>
               </item>
               <item row="1" column="1">
-               <widget class="QPushButton" name="pushButton_Screen_Rotation_180d">
+               <widget class="themePushButton" name="pushButton_Screen_Rotation_180d">
                 <property name="text">
                  <string>180 degrees</string>
                 </property>
@@ -720,7 +720,7 @@
                </widget>
               </item>
               <item row="0" column="1">
-               <widget class="QPushButton" name="pushButton_Screen_Rotation_90d">
+               <widget class="themePushButton" name="pushButton_Screen_Rotation_90d">
                 <property name="text">
                  <string>90 degrees</string>
                 </property>
@@ -730,7 +730,7 @@
                </widget>
               </item>
               <item row="1" column="0">
-               <widget class="QPushButton" name="pushButton_Screen_Rotation_270d">
+               <widget class="themePushButton" name="pushButton_Screen_Rotation_270d">
                 <property name="text">
                  <string>270 degrees</string>
                 </property>
@@ -1118,7 +1118,7 @@
         </layout>
        </item>
        <item row="12" column="0" colspan="3">
-        <widget class="QPushButton" name="pushButton_Shader_Parameters_reset_alls">
+        <widget class="themePushButton" name="pushButton_Shader_Parameters_reset_alls">
          <property name="text">
           <string>Reset parameters to defaults</string>
          </property>
@@ -1263,7 +1263,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QPushButton" name="pushButton_Shaders_file">
+          <widget class="themePushButton" name="pushButton_Shaders_file">
            <property name="text">
             <string notr="true"/>
            </property>
@@ -1274,7 +1274,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QPushButton" name="pushButton_Shaders_file_clear">
+          <widget class="themePushButton" name="pushButton_Shaders_file_clear">
            <property name="icon">
             <iconset resource="resources.qrc">
              <normaloff>:/icon/icons/trash.svgz</normaloff>:/icon/icons/trash.svgz</iconset>
@@ -1463,7 +1463,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QPushButton" name="pushButton_Palette_file">
+          <widget class="themePushButton" name="pushButton_Palette_file">
            <property name="text">
             <string notr="true"/>
            </property>
@@ -1474,7 +1474,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QPushButton" name="pushButton_Palette_file_clear">
+          <widget class="themePushButton" name="pushButton_Palette_file_clear">
            <property name="icon">
             <iconset resource="resources.qrc">
              <normaloff>:/icon/icons/trash.svgz</normaloff>:/icon/icons/trash.svgz</iconset>
@@ -1934,6 +1934,17 @@
    <class>wdgPALNESRGBLMP88959Filter</class>
    <extends>QWidget</extends>
    <header>wdgNTSCFilter.hpp</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>themePushButton</class>
+   <extends>QPushButton</extends>
+   <header>theme.hpp</header>
+  </customwidget>
+  <customwidget>
+   <class>themeGroupBox</class>
+   <extends>QGroupBox</extends>
+   <header>theme.hpp</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

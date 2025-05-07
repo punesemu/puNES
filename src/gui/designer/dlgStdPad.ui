@@ -30,7 +30,7 @@
     <enum>QLayout::SetFixedSize</enum>
    </property>
    <item>
-    <widget class="QGroupBox" name="groupBox_controller">
+    <widget class="themeGroupBox" name="groupBox_controller">
      <property name="title">
       <string notr="true">Controller</string>
      </property>
@@ -166,7 +166,7 @@
                    <number>0</number>
                   </property>
                   <item>
-                   <widget class="pixmapButton" name="pushButton_kbd_Up">
+                   <widget class="pixmapPushButton" name="pushButton_kbd_Up">
                     <property name="text">
                      <string notr="true">PushButton</string>
                     </property>
@@ -259,7 +259,7 @@
                    <number>0</number>
                   </property>
                   <item>
-                   <widget class="pixmapButton" name="pushButton_kbd_Down">
+                   <widget class="pixmapPushButton" name="pushButton_kbd_Down">
                     <property name="text">
                      <string notr="true">PushButton</string>
                     </property>
@@ -362,7 +362,7 @@
                    <number>0</number>
                   </property>
                   <item>
-                   <widget class="pixmapButton" name="pushButton_kbd_Left">
+                   <widget class="pixmapPushButton" name="pushButton_kbd_Left">
                     <property name="text">
                      <string notr="true">PushButton</string>
                     </property>
@@ -493,7 +493,7 @@
                      <number>0</number>
                     </property>
                     <item>
-                     <widget class="pixmapButton" name="pushButton_kbd_Start">
+                     <widget class="pixmapPushButton" name="pushButton_kbd_Start">
                       <property name="text">
                        <string notr="true">PushButton</string>
                       </property>
@@ -609,7 +609,7 @@
                      <number>0</number>
                     </property>
                     <item>
-                     <widget class="pixmapButton" name="pushButton_kbd_Select">
+                     <widget class="pixmapPushButton" name="pushButton_kbd_Select">
                       <property name="text">
                        <string notr="true">PushButton</string>
                       </property>
@@ -740,7 +740,7 @@
                    <number>0</number>
                   </property>
                   <item>
-                   <widget class="pixmapButton" name="pushButton_kbd_Right">
+                   <widget class="pixmapPushButton" name="pushButton_kbd_Right">
                     <property name="text">
                      <string notr="true">PushButton</string>
                     </property>
@@ -835,7 +835,7 @@
                      <number>0</number>
                     </property>
                     <item>
-                     <widget class="pixmapButton" name="pushButton_kbd_TurboB">
+                     <widget class="pixmapPushButton" name="pushButton_kbd_TurboB">
                       <property name="text">
                        <string notr="true">PushButton</string>
                       </property>
@@ -961,7 +961,7 @@
                      <number>0</number>
                     </property>
                     <item>
-                     <widget class="pixmapButton" name="pushButton_kbd_TurboA">
+                     <widget class="pixmapPushButton" name="pushButton_kbd_TurboA">
                       <property name="text">
                        <string notr="true">PushButton</string>
                       </property>
@@ -1054,7 +1054,7 @@
                      <number>0</number>
                     </property>
                     <item>
-                     <widget class="pixmapButton" name="pushButton_kbd_A">
+                     <widget class="pixmapPushButton" name="pushButton_kbd_A">
                       <property name="text">
                        <string notr="true">PushButton</string>
                       </property>
@@ -1157,7 +1157,7 @@
                      <number>0</number>
                     </property>
                     <item>
-                     <widget class="pixmapButton" name="pushButton_kbd_B">
+                     <widget class="pixmapPushButton" name="pushButton_kbd_B">
                       <property name="text">
                        <string notr="true">PushButton</string>
                       </property>
@@ -1263,7 +1263,7 @@
              </size>
             </property>
             <property name="frameShape">
-             <enum>QFrame::Box</enum>
+             <enum>QFrame::StyledPanel</enum>
             </property>
             <property name="text">
              <string notr="true"/>
@@ -1289,7 +1289,7 @@
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout_DSU">
             <item>
-             <widget class="QPushButton" name="pushButton_kbd_Sequence">
+             <widget class="themePushButton" name="pushButton_kbd_Sequence">
               <property name="text">
                <string>In sequence</string>
               </property>
@@ -1300,7 +1300,7 @@
              </widget>
             </item>
             <item>
-             <widget class="QPushButton" name="pushButton_kbd_Defaults">
+             <widget class="themePushButton" name="pushButton_kbd_Defaults">
               <property name="text">
                <string>Defaults</string>
               </property>
@@ -1311,7 +1311,7 @@
              </widget>
             </item>
             <item>
-             <widget class="QPushButton" name="pushButton_kbd_Unset_all">
+             <widget class="themePushButton" name="pushButton_kbd_Unset_all">
               <property name="text">
                <string>Unset all</string>
               </property>
@@ -1378,7 +1378,7 @@
              </widget>
             </item>
             <item row="0" column="4">
-             <widget class="QPushButton" name="pushButton_kbd_Deadzone">
+             <widget class="themePushButton" name="pushButton_kbd_Deadzone">
               <property name="enabled">
                <bool>false</bool>
               </property>
@@ -1491,7 +1491,7 @@
                    <number>0</number>
                   </property>
                   <item>
-                   <widget class="pixmapButton" name="pushButton_joy_Right">
+                   <widget class="pixmapPushButton" name="pushButton_joy_Right">
                     <property name="text">
                      <string notr="true">PushButton</string>
                     </property>
@@ -1600,7 +1600,7 @@
                    <number>0</number>
                   </property>
                   <item>
-                   <widget class="pixmapButton" name="pushButton_joy_Up">
+                   <widget class="pixmapPushButton" name="pushButton_joy_Up">
                     <property name="text">
                      <string notr="true">PushButton</string>
                     </property>
@@ -1719,7 +1719,7 @@
                    <number>0</number>
                   </property>
                   <item>
-                   <widget class="pixmapButton" name="pushButton_joy_Down">
+                   <widget class="pixmapPushButton" name="pushButton_joy_Down">
                     <property name="text">
                      <string notr="true">PushButton</string>
                     </property>
@@ -1824,7 +1824,7 @@
                      <number>0</number>
                     </property>
                     <item>
-                     <widget class="pixmapButton" name="pushButton_joy_A">
+                     <widget class="pixmapPushButton" name="pushButton_joy_A">
                       <property name="text">
                        <string notr="true">PushButton</string>
                       </property>
@@ -1947,7 +1947,7 @@
                      <number>0</number>
                     </property>
                     <item>
-                     <widget class="pixmapButton" name="pushButton_joy_TurboA">
+                     <widget class="pixmapPushButton" name="pushButton_joy_TurboA">
                       <property name="text">
                        <string notr="true">PushButton</string>
                       </property>
@@ -2040,7 +2040,7 @@
                      <number>0</number>
                     </property>
                     <item>
-                     <widget class="pixmapButton" name="pushButton_joy_B">
+                     <widget class="pixmapPushButton" name="pushButton_joy_B">
                       <property name="text">
                        <string notr="true">PushButton</string>
                       </property>
@@ -2156,7 +2156,7 @@
                      <number>0</number>
                     </property>
                     <item>
-                     <widget class="pixmapButton" name="pushButton_joy_TurboB">
+                     <widget class="pixmapPushButton" name="pushButton_joy_TurboB">
                       <property name="text">
                        <string notr="true">PushButton</string>
                       </property>
@@ -2271,7 +2271,7 @@
                    <number>0</number>
                   </property>
                   <item>
-                   <widget class="pixmapButton" name="pushButton_joy_Left">
+                   <widget class="pixmapPushButton" name="pushButton_joy_Left">
                     <property name="text">
                      <string notr="true">PushButton</string>
                     </property>
@@ -2376,7 +2376,7 @@
                      <number>0</number>
                     </property>
                     <item>
-                     <widget class="pixmapButton" name="pushButton_joy_Start">
+                     <widget class="pixmapPushButton" name="pushButton_joy_Start">
                       <property name="text">
                        <string notr="true">PushButton</string>
                       </property>
@@ -2482,7 +2482,7 @@
                      <number>0</number>
                     </property>
                     <item>
-                     <widget class="pixmapButton" name="pushButton_joy_Select">
+                     <widget class="pixmapPushButton" name="pushButton_joy_Select">
                       <property name="text">
                        <string notr="true">PushButton</string>
                       </property>
@@ -2588,7 +2588,7 @@
              </size>
             </property>
             <property name="frameShape">
-             <enum>QFrame::Box</enum>
+             <enum>QFrame::StyledPanel</enum>
             </property>
             <property name="text">
              <string notr="true"/>
@@ -2614,7 +2614,7 @@
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout_joy_DSU">
             <item>
-             <widget class="QPushButton" name="pushButton_joy_Sequence">
+             <widget class="themePushButton" name="pushButton_joy_Sequence">
               <property name="text">
                <string>In sequence</string>
               </property>
@@ -2625,7 +2625,7 @@
              </widget>
             </item>
             <item>
-             <widget class="QPushButton" name="pushButton_joy_Defaults">
+             <widget class="themePushButton" name="pushButton_joy_Defaults">
               <property name="text">
                <string>Defaults</string>
               </property>
@@ -2636,7 +2636,7 @@
              </widget>
             </item>
             <item>
-             <widget class="QPushButton" name="pushButton_joy_Unset_all">
+             <widget class="themePushButton" name="pushButton_joy_Unset_all">
               <property name="text">
                <string>Unset all</string>
               </property>
@@ -2688,7 +2688,7 @@
              </widget>
             </item>
             <item row="0" column="4">
-             <widget class="QPushButton" name="pushButton_joy_Deadzone">
+             <widget class="themePushButton" name="pushButton_joy_Deadzone">
               <property name="toolTip">
                <string>Default</string>
               </property>
@@ -2711,7 +2711,7 @@
     </widget>
    </item>
    <item>
-    <widget class="QGroupBox" name="groupBox_Misc">
+    <widget class="themeGroupBox" name="groupBox_Misc">
      <property name="title">
       <string>Misc</string>
      </property>
@@ -2826,7 +2826,7 @@
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_Standard_Button">
      <item>
-      <widget class="QPushButton" name="pushButton_Apply">
+      <widget class="themePushButton" name="pushButton_Apply">
        <property name="text">
         <string>Apply</string>
        </property>
@@ -2837,7 +2837,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="pushButton_Discard">
+      <widget class="themePushButton" name="pushButton_Discard">
        <property name="text">
         <string>Discard</string>
        </property>
@@ -2853,9 +2853,20 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>pixmapButton</class>
+   <class>themePushButton</class>
    <extends>QPushButton</extends>
-   <header>dlgStdPad.hpp</header>
+   <header>theme.hpp</header>
+  </customwidget>
+  <customwidget>
+   <class>pixmapPushButton</class>
+   <extends>QPushButton</extends>
+   <header>theme.hpp</header>
+  </customwidget>
+  <customwidget>
+   <class>themeGroupBox</class>
+   <extends>QGroupBox</extends>
+   <header>theme.hpp</header>
+   <container>1</container>
   </customwidget>
  </customwidgets>
  <tabstops>
@@ -2939,7 +2950,6 @@
   <tabstop>pushButton_Discard</tabstop>
  </tabstops>
  <resources>
-  <include location="resources.qrc"/>
   <include location="resources.qrc"/>
  </resources>
  <connections/>

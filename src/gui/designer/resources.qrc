@@ -42,6 +42,12 @@
     <file>icons/flag_china.svgz</file>
     <file>icons/flag_english.svgz</file>
     <file>icons/flag_hungary.svgz</file>
+    <file>icons/rwnd_fast_backward_dtheme.svgz</file>
+    <file>icons/rwnd_fast_forward_dtheme.svgz</file>
+    <file>icons/rwnd_pause_dtheme.svgz</file>
+    <file>icons/rwnd_play_dtheme.svgz</file>
+    <file>icons/rwnd_step_backward_dtheme.svgz</file>
+    <file>icons/rwnd_step_forward_dtheme.svgz</file>
     <file>icons/flag_italy.svgz</file>
     <file>icons/flag_russia.svgz</file>
     <file>icons/flag_spain.svgz</file>

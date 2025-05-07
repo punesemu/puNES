@@ -39,6 +39,25 @@ static const char std_pad_button[10][15] = {
 
 _joy_list joy_list;
 
+typedef struct _color_label {
+	_color_label() :
+	normal(theme::get_theme_adaptive_color("#EFEFEF")),
+	selected(theme::get_theme_adaptive_color("#BBF591")) {}
+	QColor normal;
+	QColor selected;
+} _color_label;
+typedef struct _color_frame {
+	_color_frame() :
+	button(theme::get_theme_adaptive_color("#BAB9B7")),
+	kbd(theme::get_theme_adaptive_color(QApplication::palette().light().color().darker(theme::is_dark_theme() ? 105 : 115))),
+	joy(theme::get_theme_adaptive_color(QApplication::palette().light().color().darker(theme::is_dark_theme() ? 105 : 115))),
+	tbrd(theme::get_theme_adaptive_color("#A69F8A")) {}
+	QColor button;
+	QColor kbd;
+	QColor joy;
+	QColor tbrd;
+} _color_frame;
+
 dlgStdPad::dlgStdPad(QWidget *parent, _cfg_port *cfg_port) : QDialog(parent) {
 	int i;
 
@@ -51,14 +70,13 @@ dlgStdPad::dlgStdPad(QWidget *parent, _cfg_port *cfg_port) : QDialog(parent) {
 
 	setupUi(this);
 
+	stylesheet_update();
+
 	setAttribute(Qt::WA_DeleteOnClose);
 	setFocusProxy(tabWidget_kbd_joy);
 
 	frame_kbd_buttons->setLayoutDirection(Qt::LeftToRight);
 	frame_joy_buttons->setLayoutDirection(Qt::LeftToRight);
-
-	groupBox_controller->setStyleSheet(group_title_bold_stylesheet());
-	groupBox_Misc->setStyleSheet(group_title_bold_stylesheet());
 
 	groupBox_controller->setTitle(tr("Controller %1 : Standard Pad").arg(cfg_port->id));
 
@@ -71,42 +89,32 @@ dlgStdPad::dlgStdPad(QWidget *parent, _cfg_port *cfg_port) : QDialog(parent) {
 	joy_combo_init();
 
 	for (i = KEYBOARD; i < INPUT_TYPES; i++) {
-		QPushButton *bt;
+		themePushButton *bt;
 		int a;
 
-		bt = findChild<QPushButton *>("pushButton_" + SPT(i) + "_Sequence");
+		bt = findChild<themePushButton *>("pushButton_" + SPT(i) + "_Sequence");
 		bt->setProperty("myType", QVariant(i));
 		connect(bt, SIGNAL(clicked(bool)), this, SLOT(s_in_sequence_clicked(bool)));
 
-		bt = findChild<QPushButton *>("pushButton_" + SPT(i) + "_Unset_all");
+		bt = findChild<themePushButton *>("pushButton_" + SPT(i) + "_Unset_all");
 		bt->setProperty("myType", QVariant(i));
 		connect(bt, SIGNAL(clicked(bool)), this, SLOT(s_unset_all_clicked(bool)));
 
-		bt = findChild<QPushButton *>("pushButton_" + SPT(i) + "_Defaults");
+		bt = findChild<themePushButton *>("pushButton_" + SPT(i) + "_Defaults");
 		bt->setProperty("myType", QVariant(i));
 		connect(bt, SIGNAL(clicked(bool)), this, SLOT(s_defaults_clicked(bool)));
 
-		frame_kbd_buttons->setStyleSheet(style_frame.arg(_color_frame().tbrd, _color_frame().kbd));
-		frame_joy_buttons->setStyleSheet(style_frame.arg(_color_frame().tbrd, _color_frame().joy));
-
 		for (a = BUT_A; a < MAX_STD_PAD_BUTTONS; a++) {
 			int vbutton = a + (i * MAX_STD_PAD_BUTTONS);
-			QPushButton *def, *unset;
-			pixmapButton *pbt;
-			QFrame *fbt;
+			QPushButton *def = findChild<QPushButton *>("pushButton_" + SPT(i) + "_default_" + SPB(a));
+			QPushButton *unset = findChild<QPushButton *>("pushButton_" + SPT(i) + "_unset_" + SPB(a));
+			pixmapPushButton *pbt = findChild<pixmapPushButton *>("pushButton_" + SPT(i) + "_" + SPB(a));
 
-			fbt = findChild<QFrame *>("frame_" + SPT(i) + "_" + SPB(a));
-			pbt = findChild<pixmapButton *>("pushButton_" + SPT(i) + "_" + SPB(a));
-			def = findChild<QPushButton *>("pushButton_" + SPT(i) + "_default_" + SPB(a));
-			unset = findChild<QPushButton *>("pushButton_" + SPT(i) + "_unset_" + SPB(a));
-
-			fbt->setStyleSheet(style_frame.arg(_color_frame().button, _color_frame().button));
-			pbt->setStyleSheet(style_pixmapbutton);
 			pbt->setIcon(QIcon(""));
 			if (i == KEYBOARD) {
 				pbt->setText(objInp::kbd_keyval_to_name(data.cfg.port.input[i][a]));
 			} else {
-				js_pixmapButton(js_jdev_index(), data.cfg.port.input[i][a], pbt);
+				js_pixmapPushButton(js_jdev_index(), data.cfg.port.input[i][a], pbt);
 			}
 
 			pbt->installEventFilter(this);
@@ -197,6 +205,8 @@ bool dlgStdPad::eventFilter(QObject *obj, QEvent *event) {
 void dlgStdPad::changeEvent(QEvent *event) {
 	if (event->type() == QEvent::LanguageChange) {
 		Ui::dlgStdPad::retranslateUi(this);
+	} else if (event->type() == QEvent::PaletteChange) {
+		stylesheet_update();
 	} else {
 		QDialog::changeEvent(event);
 	}
@@ -225,6 +235,167 @@ void dlgStdPad::closeEvent(QCloseEvent *event) {
 	QDialog::closeEvent(event);
 }
 
+void dlgStdPad::stylesheet_update(void) {
+	int i;
+
+	tabWidget_kbd_joy->setStyleSheet("QTabWidget { font-weight: normal; }");
+
+	frame_kbd_buttons->setStyleSheet(stylesheet_frame(_color_frame().tbrd, _color_frame().kbd));
+	frame_joy_buttons->setStyleSheet(stylesheet_frame(_color_frame().tbrd, _color_frame().joy));
+
+	for (i = KEYBOARD; i < INPUT_TYPES; i++) {
+		int a;
+
+		for (a = BUT_A; a < MAX_STD_PAD_BUTTONS; a++) {
+			QPushButton *def = findChild<QPushButton *>("pushButton_" + SPT(i) + "_default_" + SPB(a));
+			QPushButton *unset = findChild<QPushButton *>("pushButton_" + SPT(i) + "_unset_" + SPB(a));
+			pixmapPushButton *pbt = findChild<pixmapPushButton *>("pushButton_" + SPT(i) + "_" + SPB(a));
+			QFrame *fbt = findChild<QFrame *>("frame_" + SPT(i) + "_" + SPB(a));
+			QLabel *lb = findChild<QLabel *>("label_" + SPT(i) + "_" + SPB(a));
+
+			def->setStyleSheet(stylesheet_left_button());
+			unset->setStyleSheet(stylesheet_right_button());
+			pbt->setStyleSheet(stylesheet_pixmapbutton());
+			fbt->setStyleSheet(stylesheet_frame(_color_frame().button, _color_frame().button));
+			lb->setStyleSheet(stylesheet_label(_color_label().normal));
+		}
+	}
+}
+
+QString dlgStdPad::stylesheet_label(const QColor &background) {
+	QColor border = theme::get_theme_adaptive_color("#BAB9B7");
+	QColor text = theme::get_theme_color("#000000");
+	QColor disabled_border = theme::get_theme_adaptive_color("#BABDB6");
+	QColor disabled_background = theme::get_theme_adaptive_color("#EFEFEF");
+	QColor disabled_text = theme::get_theme_color("#BABDB6");
+	QString stylesheet =
+		"QLabel {"\
+		"	background-color: %0;"\
+		"	border-width: 1px;"\
+		"	border-color: %1;"\
+		"	border-style: solid;"\
+		"	padding: 2px;"\
+		"	padding-left: 3px;"\
+		"	padding-right: 3px;"\
+		"	border-radius: 3px;"\
+		"	color: %3;"\
+		"	font-size: 8pt;"\
+		"	font-weight: bold;"\
+		"}"\
+		"QLabel:disabled {"\
+		"	border-color: %4;"\
+		"	background-color: %5;"\
+		"	color: %6;"\
+		"}";
+
+	return stylesheet
+		.arg(background.name())
+		.arg(border.name())
+		.arg(text.name())
+		.arg(disabled_border.name())
+		.arg(disabled_background.name())
+		.arg(disabled_text.name());
+}
+QString dlgStdPad::stylesheet_frame(const QColor &border, const QColor &background) {
+	QString stylesheet =
+		"QFrame {"\
+		"	border-width: 1px;"\
+		"	border-color: %0;"\
+		"	border-style: solid;"\
+		"	border-radius: 6px;"\
+		"	background-color: %1;"\
+		"	font-size: 8pt;"\
+		"}";
+
+	return stylesheet
+		.arg(border.name())
+		.arg(background.name());
+}
+QString dlgStdPad::stylesheet_pixmapbutton(void) {
+	QColor border = theme::get_theme_adaptive_color("#8F8F91");
+	QColor gradient0 = theme::get_theme_color("#F6F7FA");
+	QColor gradient1 = theme::get_theme_color("#DADBDE");
+	QColor disabled_border = theme::get_theme_adaptive_color("#C2C2C2");
+	QColor disabled_background = theme::get_theme_adaptive_color("#EFEFEF");
+	QColor disabled_text = theme::get_theme_adaptive_color("#BABDB6");
+	QColor hover_gradient0 = theme::get_theme_adaptive_color("#DADBDE");
+	QColor hover_gradient1 = theme::get_theme_adaptive_color("#F6F7FA");
+	QString stylesheet =
+		"QPushButton {"\
+		"	border-width: 1px;"\
+		"	border-color: %0;"\
+		"	border-style: solid;"\
+		"	border-top-left-radius: 6px;"\
+		"	border-top-right-radius: 6px;"\
+		"	background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 %1, stop: 1 %2);"\
+		"	padding: 5px;"\
+		"	padding-left: 3px;"\
+		"	padding-right: 3px;"\
+		"	min-width: 80px;"\
+		"	font-size: 8pt;"\
+		"}"\
+		"QPushButton:disabled {"\
+		"	border-color: %3;"\
+		"	background-color: %4;"\
+		"	color: %5;"\
+		"}"\
+		"QPushButton:hover {"\
+		"	background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 %6, stop: 1 %7);"\
+		"}";
+
+	return stylesheet
+		.arg(border.name())
+		.arg(gradient0.name())
+		.arg(gradient1.name())
+		.arg(disabled_border.name())
+		.arg(disabled_background.name())
+		.arg(disabled_text.name())
+		.arg(hover_gradient0.name())
+		.arg(hover_gradient1.name());
+}
+QString dlgStdPad::stylesheet_left_button(void) {
+	QColor baseColor = theme::get_theme_color(QApplication::palette().light().color());
+	QColor lightGray = theme::is_dark_theme() ? baseColor.lighter(125) : baseColor.darker(145);
+	QColor darkGray = lightGray.darker(125);
+	QString stylesheet =
+		"QPushButton {"\
+		"	margin-top: 1;"\
+		"	border-top: 1px;"\
+		"	border-bottom: 1px;"\
+		"	border-left: 1px;"\
+		"	border-style: solid;"\
+		"	border-bottom-left-radius: 6px;"\
+		"	border-color: %1;"\
+		"	padding: 2px;"\
+		"}"\
+		"QPushButton:hover {"\
+		"	background-color: %0;"\
+		"}"\
+		"QPushButton:pressed {"\
+		"	margin-top: 1;"\
+		"	border-top: 1px;"\
+		"	border-bottom: 1px;"\
+		"	border-left: 1px;"\
+		"	border-style: inset;"\
+		"	border-bottom-left-radius: 6px;"\
+		"	border-color: %1;"\
+		"	padding: 2px;"\
+		"	background-color: %1;"\
+		"}"\
+		"QPushButton:disabled {"\
+		"	color: gray;"\
+		"}";
+
+	return stylesheet
+		.arg(lightGray.name())
+		.arg(darkGray.name());
+}
+QString dlgStdPad::stylesheet_right_button(void) {
+	return stylesheet_left_button()
+		.replace("border-left", "border-right")
+		.replace("border-bottom-left-radius", "border-bottom-right-radius");
+}
+
 bool dlgStdPad::keypress(QKeyEvent *event) {
 	int type, vbutton;
 
@@ -240,7 +411,7 @@ bool dlgStdPad::keypress(QKeyEvent *event) {
 		// quando sto configurando il joystick, l'unico input da tastiera che accetto e' l'escape.
 		if (event->key() == Qt::Key_Escape) {
 			data.joy.timer->stop();
-			js_pixmapButton(js_jdev_index(), data.cfg.port.input[type][vbutton], data.bp);
+			js_pixmapPushButton(js_jdev_index(), data.cfg.port.input[type][vbutton], data.bp);
 		} else {
 			return (true);
 		}
@@ -349,8 +520,8 @@ void dlgStdPad::setEnable_tab_buttons(int type, bool mode) {
 
 	for (i = BUT_A; i < MAX_STD_PAD_BUTTONS; i++) {
 		findChild<QLabel *>("label_" + SPT(type) + "_" + SPB(i))->setEnabled(mode);
-		findChild<QLabel *>("label_" + SPT(type) + "_" + SPB(i))->setStyleSheet(style_label.arg(_color_label().normal));
-		findChild<pixmapButton *>("pushButton_" + SPT(type) + "_" + SPB(i))->setEnabled(mode);
+		findChild<QLabel *>("label_" + SPT(type) + "_" + SPB(i))->setStyleSheet(stylesheet_label(_color_label().normal));
+		findChild<pixmapPushButton *>("pushButton_" + SPT(type) + "_" + SPB(i))->setEnabled(mode);
 		findChild<QPushButton *>("pushButton_" + SPT(type) + "_default_" + SPB(i))->setEnabled(mode);
 		findChild<QPushButton *>("pushButton_" + SPT(type) + "_unset_" + SPB(i))->setEnabled(mode);
 	}
@@ -365,13 +536,13 @@ void dlgStdPad::disable_tab_and_other(int type, int vbutton) {
 
 	setEnable_tab_buttons(type, false);
 	findChild<QLabel *>("label_" + SPT(type) + "_" + SPB(vbutton))->setEnabled(true);
-	findChild<QLabel *>("label_" + SPT(type) + "_" + SPB(vbutton))->setStyleSheet(style_label.arg(_color_label().selected));
-	findChild<pixmapButton *>("pushButton_" + SPT(type) + "_" + SPB(vbutton))->setEnabled(true);
+	findChild<QLabel *>("label_" + SPT(type) + "_" + SPB(vbutton))->setStyleSheet(stylesheet_label(_color_label().selected));
+	findChild<pixmapPushButton *>("pushButton_" + SPT(type) + "_" + SPB(vbutton))->setEnabled(true);
 
 	// in sequence, unset all, default
-	findChild<QPushButton *>("pushButton_" + SPT(type) + "_Sequence")->setEnabled(false);
-	findChild<QPushButton *>("pushButton_" + SPT(type) + "_Unset_all")->setEnabled(false);
-	findChild<QPushButton *>("pushButton_" + SPT(type) + "_Defaults")->setEnabled(false);
+	findChild<themePushButton *>("pushButton_" + SPT(type) + "_Sequence")->setEnabled(false);
+	findChild<themePushButton *>("pushButton_" + SPT(type) + "_Unset_all")->setEnabled(false);
+	findChild<themePushButton *>("pushButton_" + SPT(type) + "_Defaults")->setEnabled(false);
 
 	// misc
 	groupBox_Misc->setEnabled(false);
@@ -401,7 +572,7 @@ void dlgStdPad::td_update_label(int type, int value) {
 void dlgStdPad::deadzone_update_label(int value) {
 	label_joy_Deadzone_value_slider->setText(QString("%1").arg(value, 2));
 }
-void dlgStdPad::js_pixmapButton(int index, DBWORD input, pixmapButton *bt) {
+void dlgStdPad::js_pixmapPushButton(int index, DBWORD input, pixmapPushButton *bt) {
 	QString icon, desc;
 
 	gui_js_joyval_icon_desc(index, input, &icon, &desc);
@@ -445,28 +616,28 @@ void dlgStdPad::s_combobox_joy_index_changed(UNUSED(int index)) {
 	}
 
 	for (a = KEYBOARD; a < INPUT_TYPES; a++) {
-		pixmapButton *bt;
+		pixmapPushButton *bt;
 		int b;
 
 		for (b = BUT_A; b < MAX_STD_PAD_BUTTONS; b++) {
-			bt = findChild<pixmapButton *>("pushButton_" + SPT(a) + "_" + SPB(b));
+			bt = findChild<pixmapPushButton *>("pushButton_" + SPT(a) + "_" + SPB(b));
 
 			if (a == KEYBOARD) {
 				bt->setText(objInp::kbd_keyval_to_name(data.cfg.port.input[a][b]));
 			} else {
-				js_pixmapButton(jdev_index, data.cfg.port.input[a][b], bt);
+				js_pixmapPushButton(jdev_index, data.cfg.port.input[a][b], bt);
 			}
 		}
 	}
 }
 void dlgStdPad::s_input_clicked(UNUSED(bool checked)) {
-	int type, vbutton = QVariant(((pixmapButton *)sender())->property("myVbutton")).toInt();
+	int type, vbutton = QVariant(((pixmapPushButton *)sender())->property("myVbutton")).toInt();
 
 	if (data.no_other_buttons) {
 		return;
 	}
 
-	data.bp = ((pixmapButton *)sender());
+	data.bp = ((pixmapPushButton *)sender());
 	data.vbutton = vbutton;
 
 	type = vbutton / MAX_STD_PAD_BUTTONS;
@@ -513,18 +684,18 @@ void dlgStdPad::s_default_clicked(UNUSED(bool checked)) {
 	settings_inp_port_button_default(vbutton, &data.cfg.port, index, type);
 
 	{
-		pixmapButton *bt = findChild<pixmapButton *>("pushButton_" + SPT(type) + "_" + SPB(vbutton));
+		pixmapPushButton *bt = findChild<pixmapPushButton *>("pushButton_" + SPT(type) + "_" + SPB(vbutton));
 
 		if (type == KEYBOARD) {
 			bt->setText(objInp::kbd_keyval_to_name(data.cfg.port.input[type][vbutton]));
 		} else {
-			js_pixmapButton(index, data.cfg.port.input[type][vbutton], bt);
+			js_pixmapPushButton(index, data.cfg.port.input[type][vbutton], bt);
 		}
 	}
 }
 void dlgStdPad::s_unset_clicked(UNUSED(bool checked)) {
 	int type, vbutton = QVariant(((QPushButton *)sender())->property("myVbutton")).toInt();
-	pixmapButton *bt;
+	pixmapPushButton *bt;
 
 	type = vbutton / MAX_STD_PAD_BUTTONS;
 	vbutton -= (type * MAX_STD_PAD_BUTTONS);
@@ -532,12 +703,12 @@ void dlgStdPad::s_unset_clicked(UNUSED(bool checked)) {
 
 	info_entry_print(type, "");
 
-	bt = findChild<pixmapButton *>("pushButton_" + SPT(type) + "_" + SPB(vbutton));
+	bt = findChild<pixmapPushButton *>("pushButton_" + SPT(type) + "_" + SPB(vbutton));
 	bt->setPixmap(QPixmap(""));
 	bt->setText("NULL");
 }
 void dlgStdPad::s_in_sequence_clicked(UNUSED(bool checked)) {
-	data.seq.type = QVariant(((QPushButton *)sender())->property("myType")).toInt();
+	data.seq.type = QVariant(((themePushButton *)sender())->property("myType")).toInt();
 
 	info_entry_print(data.seq.type, "");
 	data.seq.active = true;
@@ -545,7 +716,7 @@ void dlgStdPad::s_in_sequence_clicked(UNUSED(bool checked)) {
 	data.seq.timer->start(150);
 }
 void dlgStdPad::s_unset_all_clicked(UNUSED(bool checked)) {
-	int i, type = QVariant(((QPushButton *)sender())->property("myType")).toInt();
+	int i, type = QVariant(((themePushButton *)sender())->property("myType")).toInt();
 
 	info_entry_print(type, "");
 
@@ -554,7 +725,7 @@ void dlgStdPad::s_unset_all_clicked(UNUSED(bool checked)) {
 	}
 }
 void dlgStdPad::s_defaults_clicked(UNUSED(bool checked)) {
-	int i, index, type = QVariant(((QPushButton *)sender())->property("myType")).toInt();
+	int i, index, type = QVariant(((themePushButton *)sender())->property("myType")).toInt();
 
 	index = type == KEYBOARD ? data.cfg.id - 1 : js_jdev_index();
 
@@ -563,12 +734,12 @@ void dlgStdPad::s_defaults_clicked(UNUSED(bool checked)) {
 	settings_inp_port_defaults(&data.cfg.port, index, type);
 
 	for (i = BUT_A; i < MAX_STD_PAD_BUTTONS; i++) {
-		pixmapButton *bt = findChild<pixmapButton *>("pushButton_" + SPT(type) + "_" + SPB(i));
+		pixmapPushButton *bt = findChild<pixmapPushButton *>("pushButton_" + SPT(type) + "_" + SPB(i));
 
 		if (type == KEYBOARD) {
 			bt->setText(objInp::kbd_keyval_to_name(data.cfg.port.input[type][i]));
 		} else {
-			js_pixmapButton(index, data.cfg.port.input[type][i], bt);
+			js_pixmapPushButton(index, data.cfg.port.input[type][i], bt);
 		}
 	}
 }
@@ -610,7 +781,7 @@ void dlgStdPad::s_pad_joy_read_timer(void) {
 
 		info_entry_print(type, "");
 		data.cfg.port.input[type][vbutton] = data.joy.value;
-		js_pixmapButton(js_jdev_index(), data.cfg.port.input[type][vbutton], data.bp);
+		js_pixmapPushButton(js_jdev_index(), data.cfg.port.input[type][vbutton], data.bp);
 		data.joy.timer->stop();
 
 		update_dialog();
@@ -627,7 +798,7 @@ void dlgStdPad::s_pad_in_sequence_timer(void) {
 		SELECT, START, BUT_A, BUT_B,
 		TRB_A,  TRB_B,
 	};
-	QPushButton *bt;
+	pixmapPushButton *bt;
 
 	if (data.no_other_buttons) {
 		return;
@@ -640,12 +811,12 @@ void dlgStdPad::s_pad_in_sequence_timer(void) {
 		return;
 	}
 
-	bt = findChild<pixmapButton *>("pushButton_" + SPT(data.seq.type) + "_" + SPB(order[data.seq.counter]));
+	bt = findChild<pixmapPushButton *>("pushButton_" + SPT(data.seq.type) + "_" + SPB(order[data.seq.counter]));
 	bt->setEnabled(true);
 	bt->click();
 }
 void dlgStdPad::s_apply_clicked(UNUSED(bool checked)) {
-	_cfg_port *cfg_port = ((_cfg_port *)((QPushButton *)sender())->property("myPointer").value<void *>());
+	_cfg_port *cfg_port = ((_cfg_port *)((themePushButton *)sender())->property("myPointer").value<void *>());
 
 	data.exec_js_init = (cfg_port->id != data.cfg.id) | (memcmp(cfg_port->port, &data.cfg.port, sizeof(_port)) != 0);
 	cfg_port->id = data.cfg.id;
@@ -674,28 +845,4 @@ void dlgStdPad::s_et_update_joy_combo(void) {
 		!data.joy.timer->isActive()) {
 		joy_combo_init();
 	}
-}
-
-// ----------------------------------------------------------------------------------------------
-
-pixmapButton::pixmapButton(QWidget *parent) : QPushButton(parent) {}
-pixmapButton::~pixmapButton() = default;
-
-void pixmapButton::paintEvent(QPaintEvent *e) {
-	if (!pixmap.isNull()) {
-		QPixmap img = pixmap.scaled(iconSize(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
-		QStylePainter spainter(this);
-		QStyleOptionButton option;
-
-		initStyleOption(&option);
-		option.text = "";
-		option.icon = QIcon(img);
-		spainter.drawControl(QStyle::CE_PushButton, option);
-	} else {
-		QPushButton::paintEvent(e);
-	}
-}
-
-void pixmapButton::setPixmap(const QPixmap &pixmap) {
-	this->pixmap = pixmap;
 }

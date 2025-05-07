@@ -48,14 +48,14 @@
       </spacer>
      </item>
      <item>
-      <widget class="QPushButton" name="pushButton_Ok">
+      <widget class="themePushButton" name="pushButton_Ok">
        <property name="text">
         <string>OK</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="pushButton_None">
+      <widget class="themePushButton" name="pushButton_None">
        <property name="text">
         <string>None</string>
        </property>
@@ -65,6 +65,13 @@
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>themePushButton</class>
+   <extends>QPushButton</extends>
+   <header>theme.hpp</header>
+  </customwidget>
+ </customwidgets>
  <resources>
   <include location="resources.qrc"/>
  </resources>

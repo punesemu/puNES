@@ -59,6 +59,9 @@ class wdgCheatsEditor : public QWidget, public Ui::wdgCheatEditor {
 		bool in_lineedit_text_changed;
 		bool disable_hexspinbox_value_changed;
 		chl_map last_cheat;
+		QColor COLOR_GG;
+		QColor COLOR_ROCKY;
+		QColor COLOR_MEM;
 
 	public:
 		explicit wdgCheatsEditor(QWidget *parent = nullptr);
@@ -68,9 +71,15 @@ class wdgCheatsEditor : public QWidget, public Ui::wdgCheatEditor {
 		void changeEvent(QEvent *event) override;
 		void showEvent(QShowEvent *event) override;
 
+	private:
+		void stylesheet_update(void);
+
 	public:
 		void hide_tools_widgets(bool state);
 		void populate_cheat_table(void);
+
+	private:
+		QString stylesheet_label(const QColor &color);
 
 	private:
 		chl_map extract_cheat_from_row(int row);

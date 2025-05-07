@@ -391,7 +391,7 @@
       </widget>
      </item>
      <item row="3" column="1" colspan="3">
-      <widget class="QPushButton" name="pushButton_Color_reset">
+      <widget class="themePushButton" name="pushButton_Color_reset">
        <property name="font">
         <font>
          <weight>50</weight>
@@ -432,7 +432,7 @@
       <number>6</number>
      </property>
      <item>
-      <widget class="QPushButton" name="pushButton_Palette_save">
+      <widget class="themePushButton" name="pushButton_Palette_save">
        <property name="text">
         <string>Save to a file</string>
        </property>
@@ -445,7 +445,7 @@
     </layout>
    </item>
    <item row="1" column="0">
-    <widget class="QPushButton" name="pushButton_Palette_reset">
+    <widget class="themePushButton" name="pushButton_Palette_reset">
      <property name="font">
       <font>
        <weight>50</weight>
@@ -486,6 +486,11 @@
    <class>wdgHtmlName</class>
    <extends>QLineEdit</extends>
    <header>wdgPaletteEditor.hpp</header>
+  </customwidget>
+  <customwidget>
+   <class>themePushButton</class>
+   <extends>QPushButton</extends>
+   <header>theme.hpp</header>
   </customwidget>
  </customwidgets>
  <tabstops>

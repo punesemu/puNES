@@ -94,7 +94,7 @@ void wdgAPUChannels::s_apu_ch_slider(int value) {
 	gui_update_apu_channels_widgets();
 }
 void wdgAPUChannels::s_apu_ch_toggle_all(UNUSED(bool checked)) {
-	int mode = QVariant(((QPushButton *)sender())->property("myIndex")).toInt();
+	int mode = QVariant(((themePushButton *)sender())->property("myIndex")).toInt();
 	BYTE i;
 
 	if (mode == 2) {

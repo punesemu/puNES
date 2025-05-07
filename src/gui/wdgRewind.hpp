@@ -38,6 +38,9 @@ class wdgRewind : public QWidget, public Ui::wdgRewind {
 		void changeEvent(QEvent *event) override;
 		void paintEvent(QPaintEvent *event) override;
 
+	private:
+		void stylesheet_update(void);
+
 	public:
 		bool step_autorepeat_timer_control(void) const;
 		bool egds_rewind(void);

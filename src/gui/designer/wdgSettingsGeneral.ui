@@ -70,7 +70,7 @@
          <number>0</number>
         </property>
         <item>
-         <widget class="QPushButton" name="pushButton_Rwn_off">
+         <widget class="themePushButton" name="pushButton_Rwn_off">
           <property name="text">
            <string>Off</string>
           </property>
@@ -80,7 +80,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="pushButton_Rwn_2">
+         <widget class="themePushButton" name="pushButton_Rwn_2">
           <property name="text">
            <string>2</string>
           </property>
@@ -90,7 +90,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="pushButton_Rwn_5">
+         <widget class="themePushButton" name="pushButton_Rwn_5">
           <property name="text">
            <string>5</string>
           </property>
@@ -100,7 +100,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="pushButton_Rwn_15">
+         <widget class="themePushButton" name="pushButton_Rwn_15">
           <property name="font">
            <font>
             <underline>true</underline>
@@ -115,7 +115,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="pushButton_Rwn_30">
+         <widget class="themePushButton" name="pushButton_Rwn_30">
           <property name="text">
            <string>30</string>
           </property>
@@ -125,7 +125,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="pushButton_Rwn_60">
+         <widget class="themePushButton" name="pushButton_Rwn_60">
           <property name="text">
            <string>60</string>
           </property>
@@ -135,7 +135,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="pushButton_Rwn_unlimited">
+         <widget class="themePushButton" name="pushButton_Rwn_unlimited">
           <property name="text">
            <string>Unlim.</string>
           </property>
@@ -204,7 +204,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="pushButton_Game_Genie_rom_file">
+        <widget class="themePushButton" name="pushButton_Game_Genie_rom_file">
          <property name="text">
           <string notr="true"/>
          </property>
@@ -215,7 +215,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="pushButton_Game_Genie_rom_file_clear">
+        <widget class="themePushButton" name="pushButton_Game_Genie_rom_file_clear">
          <property name="icon">
           <iconset resource="resources.qrc">
            <normaloff>:/icon/icons/trash.svgz</normaloff>:/icon/icons/trash.svgz</iconset>
@@ -294,7 +294,7 @@
          <number>0</number>
         </property>
         <item>
-         <widget class="QPushButton" name="pushButton_FF_2x">
+         <widget class="themePushButton" name="pushButton_FF_2x">
           <property name="font">
            <font>
             <underline>true</underline>
@@ -309,7 +309,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="pushButton_FF_3x">
+         <widget class="themePushButton" name="pushButton_FF_3x">
           <property name="text">
            <string>3x</string>
           </property>
@@ -319,7 +319,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="pushButton_FF_4x">
+         <widget class="themePushButton" name="pushButton_FF_4x">
           <property name="text">
            <string>4x</string>
           </property>
@@ -329,7 +329,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="pushButton_FF_5x">
+         <widget class="themePushButton" name="pushButton_FF_5x">
           <property name="text">
            <string>5x</string>
           </property>
@@ -360,7 +360,7 @@
          <number>0</number>
         </property>
         <item>
-         <widget class="QPushButton" name="pushButton_IRV_0X00">
+         <widget class="themePushButton" name="pushButton_IRV_0X00">
           <property name="text">
            <string>0x00</string>
           </property>
@@ -370,7 +370,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="pushButton_IRV_0XFF">
+         <widget class="themePushButton" name="pushButton_IRV_0XFF">
           <property name="font">
            <font>
             <underline>true</underline>
@@ -385,7 +385,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="pushButton_IRV_Random">
+         <widget class="themePushButton" name="pushButton_IRV_Random">
           <property name="text">
            <string>Random</string>
           </property>
@@ -670,7 +670,7 @@
          <number>0</number>
         </property>
         <item>
-         <widget class="QPushButton" name="pushButton_Mode_Auto">
+         <widget class="themePushButton" name="pushButton_Mode_Auto">
           <property name="font">
            <font>
             <underline>true</underline>
@@ -685,7 +685,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="pushButton_Mode_NTSC">
+         <widget class="themePushButton" name="pushButton_Mode_NTSC">
           <property name="text">
            <string>NTSC</string>
           </property>
@@ -695,7 +695,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="pushButton_Mode_PAL">
+         <widget class="themePushButton" name="pushButton_Mode_PAL">
           <property name="text">
            <string>PAL</string>
           </property>
@@ -705,7 +705,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="pushButton_Mode_Dendy">
+         <widget class="themePushButton" name="pushButton_Mode_Dendy">
           <property name="text">
            <string>Dendy</string>
           </property>
@@ -765,7 +765,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="pushButton_FDS_Bios">
+        <widget class="themePushButton" name="pushButton_FDS_Bios">
          <property name="text">
           <string notr="true"/>
          </property>
@@ -776,7 +776,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="pushButton_FDS_Bios_clear">
+        <widget class="themePushButton" name="pushButton_FDS_Bios_clear">
          <property name="icon">
           <iconset resource="resources.qrc">
            <normaloff>:/icon/icons/trash.svgz</normaloff>:/icon/icons/trash.svgz</iconset>
@@ -888,6 +888,13 @@
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>themePushButton</class>
+   <extends>QPushButton</extends>
+   <header>theme.hpp</header>
+  </customwidget>
+ </customwidgets>
  <tabstops>
   <tabstop>pushButton_Mode_Auto</tabstop>
   <tabstop>pushButton_Mode_NTSC</tabstop>

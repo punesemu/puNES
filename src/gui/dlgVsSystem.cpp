@@ -33,10 +33,6 @@ dlgVsSystem::dlgVsSystem(QWidget *parent) : QDialog(parent) {
 	setWindowFlags(Qt::Dialog | Qt::FramelessWindowHint);
 	setAttribute(Qt::WA_DeleteOnClose);
 
-	setStyleSheet(tools_stylesheet());
-
-	widget_Monitor->setStyleSheet(button_stylesheet());
-
 	pushButton_Left_Coin->setProperty("myIndex", QVariant(1));
 	pushButton_Right_Coin->setProperty("myIndex", QVariant(2));
 	pushButton_Service_Coin->setProperty("myIndex", QVariant(3));
@@ -109,7 +105,7 @@ dlgVsSystem::dlgVsSystem(QWidget *parent) : QDialog(parent) {
 	{
 		QMargins vgbm = verticalLayout_groupBox_Vs_System->contentsMargins();
 		QMargins vdia = verticalLayout_Vs_System->contentsMargins();
-		QPushButton *close = new QPushButton(this);
+		themePushButton *close = new themePushButton(this);
 		int x = 0, y = 0, w = 0, h = 0;
 
 		w = close->fontMetrics().size(0, "x").width() + 10;
@@ -122,8 +118,8 @@ dlgVsSystem::dlgVsSystem(QWidget *parent) : QDialog(parent) {
 
 		connect(close, SIGNAL(clicked(bool)), this, SLOT(s_x_clicked(bool)));
 
-		vgbm.setTop(close->sizeHint().height() + 2);
-		verticalLayout_groupBox_Vs_System->setContentsMargins(vgbm);
+//		vgbm.setTop(close->sizeHint().height() + 2);
+//		verticalLayout_groupBox_Vs_System->setContentsMargins(vgbm);
 	}
 
 	installEventFilter(this);
@@ -235,7 +231,7 @@ void dlgVsSystem::s_coins_clicked(UNUSED(bool checked)) {
 }
 void dlgVsSystem::s_monitor_clicked(bool checked) {
 	if (checked) {
-		int monitor = QVariant(((QPushButton *)sender())->property("myIndex")).toInt();
+		int monitor = QVariant(((themePushButton *)sender())->property("myIndex")).toInt();
 
 		if (cfg->vs_monitor == monitor) {
 			return;

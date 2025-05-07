@@ -28,9 +28,6 @@ wdgSettingsAudio::wdgSettingsAudio(QWidget *parent) : QWidget(parent) {
 
 	setFocusProxy(comboBox_Output_Devices);
 
-	widget_Samplarate->setStyleSheet(button_stylesheet());
-	widget_Channels->setStyleSheet(button_stylesheet());
-
 #if defined (__OpenBSD__) || defined (__FreeBSD__)
 	icon_Output_Devices->setVisible(false);
 	label_Output_Devices->setVisible(false);
@@ -241,7 +238,7 @@ void wdgSettingsAudio::s_output_devices(int index) {
 }
 void wdgSettingsAudio::s_sample_rate(bool checked) {
 	if (checked) {
-		int samplerate = QVariant(((QPushButton *)sender())->property("mtype")).toInt();
+		int samplerate = QVariant(((themePushButton *)sender())->property("mtype")).toInt();
 
 		if (cfg->samplerate == samplerate) {
 			return;
@@ -279,7 +276,7 @@ void wdgSettingsAudio::s_audio_buffer_factor(int value) {
 }
 void wdgSettingsAudio::s_channels(bool checked) {
 	if (checked) {
-		int channels = QVariant(((QPushButton *)sender())->property("mtype")).toInt();
+		int channels = QVariant(((themePushButton *)sender())->property("mtype")).toInt();
 
 		if (cfg->channels_mode == channels) {
 			return;

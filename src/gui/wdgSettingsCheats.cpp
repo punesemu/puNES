@@ -26,8 +26,6 @@ wdgSettingsCheats::wdgSettingsCheats(QWidget *parent) : QWidget(parent) {
 
 	setFocusProxy(widget_Cheats_Mode);
 
-	widget_Cheats_Mode->setStyleSheet(button_stylesheet());
-
 	pushButton_Cheats_Mode_disabled->setProperty("mtype", QVariant(NOCHEAT_MODE));
 	pushButton_Cheats_Mode_gg->setProperty("mtype", QVariant(GAMEGENIE_MODE));
 	pushButton_Cheats_Mode_list->setProperty("mtype", QVariant(CHEATSLIST_MODE));
@@ -93,7 +91,7 @@ void wdgSettingsCheats::cheat_editor_control(void) {
 
 void wdgSettingsCheats::s_cheat_mode(bool checked) {
 	if (checked) {
-		int mode = QVariant(((QPushButton *)sender())->property("mtype")).toInt();
+		int mode = QVariant(((themePushButton *)sender())->property("mtype")).toInt();
 
 		if (cfg->cheat_mode == mode) {
 			return;

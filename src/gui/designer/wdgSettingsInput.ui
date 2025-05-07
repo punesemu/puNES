@@ -35,7 +35,7 @@
       <enum>QTabWidget::East</enum>
      </property>
      <property name="currentIndex">
-      <number>0</number>
+      <number>1</number>
      </property>
      <widget class="QWidget" name="tab_Ports">
       <attribute name="icon">
@@ -117,7 +117,7 @@
           </widget>
          </item>
          <item row="4" column="3">
-          <widget class="QPushButton" name="pushButton_cp2">
+          <widget class="themePushButton" name="pushButton_cp2">
            <property name="text">
             <string/>
            </property>
@@ -162,7 +162,7 @@
           </widget>
          </item>
          <item row="6" column="3">
-          <widget class="QPushButton" name="pushButton_cp4">
+          <widget class="themePushButton" name="pushButton_cp4">
            <property name="text">
             <string/>
            </property>
@@ -289,7 +289,7 @@
           </widget>
          </item>
          <item row="3" column="3">
-          <widget class="QPushButton" name="pushButton_cp1">
+          <widget class="themePushButton" name="pushButton_cp1">
            <property name="text">
             <string/>
            </property>
@@ -307,7 +307,7 @@
           </widget>
          </item>
          <item row="5" column="3">
-          <widget class="QPushButton" name="pushButton_cp3">
+          <widget class="themePushButton" name="pushButton_cp3">
            <property name="text">
             <string/>
            </property>
@@ -318,7 +318,7 @@
           </widget>
          </item>
          <item row="7" column="0" colspan="4">
-          <widget class="QPushButton" name="pushButton_Input_reset">
+          <widget class="themePushButton" name="pushButton_Input_reset">
            <property name="text">
             <string>Reset to defaults</string>
            </property>
@@ -353,7 +353,7 @@
              <number>0</number>
             </property>
             <item>
-             <widget class="QPushButton" name="pushButton_cm_nes">
+             <widget class="themePushButton" name="pushButton_cm_nes">
               <property name="font">
                <font>
                 <underline>true</underline>
@@ -368,7 +368,7 @@
              </widget>
             </item>
             <item>
-             <widget class="QPushButton" name="pushButton_cm_famicom">
+             <widget class="themePushButton" name="pushButton_cm_famicom">
               <property name="text">
                <string>Famicom</string>
               </property>
@@ -378,7 +378,7 @@
              </widget>
             </item>
             <item>
-             <widget class="QPushButton" name="pushButton_cm_fscore">
+             <widget class="themePushButton" name="pushButton_cm_fscore">
               <property name="text">
                <string>Four Score</string>
               </property>
@@ -401,7 +401,7 @@
           </widget>
          </item>
          <item row="2" column="3">
-          <widget class="QPushButton" name="pushButton_ep">
+          <widget class="themePushButton" name="pushButton_ep">
            <property name="text">
             <string/>
            </property>
@@ -494,7 +494,7 @@
          <item row="4" column="0" colspan="2">
           <layout class="QHBoxLayout" name="horizontalLayout_Shortcut">
            <item>
-            <widget class="QPushButton" name="pushButton_Shortcut_unset_all">
+            <widget class="themePushButton" name="pushButton_Shortcut_unset_all">
              <property name="text">
               <string>Unset all</string>
              </property>
@@ -505,7 +505,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QPushButton" name="pushButton_Shortcut_reset">
+            <widget class="themePushButton" name="pushButton_Shortcut_reset">
              <property name="text">
               <string>Reset to defaults</string>
              </property>
@@ -566,7 +566,7 @@
             </size>
            </property>
            <property name="frameShape">
-            <enum>QFrame::Box</enum>
+            <enum>QFrame::StyledPanel</enum>
            </property>
            <property name="text">
             <string notr="true"/>
@@ -590,6 +590,13 @@
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>themePushButton</class>
+   <extends>QPushButton</extends>
+   <header>theme.hpp</header>
+  </customwidget>
+ </customwidgets>
  <tabstops>
   <tabstop>tabWidget_Input</tabstop>
   <tabstop>pushButton_cm_nes</tabstop>

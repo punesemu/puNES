@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>174</width>
+    <width>180</width>
     <height>44</height>
    </rect>
   </property>
@@ -58,7 +58,7 @@
        <number>0</number>
       </property>
       <item>
-       <widget class="QToolButton" name="toolButton_Fast_Backward">
+       <widget class="themeToolButton" name="toolButton_Fast_Backward">
         <property name="toolTip">
          <string>Fast rewind (from 1x to 8x)</string>
         </property>
@@ -75,7 +75,7 @@
        </widget>
       </item>
       <item>
-       <widget class="QToolButton" name="toolButton_Step_Backward">
+       <widget class="themeToolButton" name="toolButton_Step_Backward">
         <property name="toolTip">
          <string>Rewind (single frame)</string>
         </property>
@@ -95,7 +95,7 @@
        </widget>
       </item>
       <item>
-       <widget class="QToolButton" name="toolButton_Play">
+       <widget class="themeToolButton" name="toolButton_Play">
         <property name="toolTip">
          <string>Play</string>
         </property>
@@ -112,7 +112,7 @@
        </widget>
       </item>
       <item>
-       <widget class="QToolButton" name="toolButton_Pause">
+       <widget class="themeToolButton" name="toolButton_Pause">
         <property name="toolTip">
          <string>Pause</string>
         </property>
@@ -129,7 +129,7 @@
        </widget>
       </item>
       <item>
-       <widget class="QToolButton" name="toolButton_Step_Forward">
+       <widget class="themeToolButton" name="toolButton_Step_Forward">
         <property name="toolTip">
          <string>Forward (single frame)</string>
         </property>
@@ -149,7 +149,7 @@
        </widget>
       </item>
       <item>
-       <widget class="QToolButton" name="toolButton_Fast_Forward">
+       <widget class="themeToolButton" name="toolButton_Fast_Forward">
         <property name="toolTip">
          <string>Fast forward (from 1x to 8x)</string>
         </property>
@@ -170,6 +170,13 @@
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>themeToolButton</class>
+   <extends>QToolButton</extends>
+   <header>theme.hpp</header>
+  </customwidget>
+ </customwidgets>
  <resources>
   <include location="resources.qrc"/>
  </resources>

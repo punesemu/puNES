@@ -27,7 +27,7 @@
     <number>6</number>
    </property>
    <item>
-    <widget class="QGroupBox" name="groupBox_Vs_System">
+    <widget class="themeToolGroupBox" name="groupBox_Vs_System">
      <property name="title">
       <string>Vs System</string>
      </property>
@@ -75,14 +75,14 @@
       <item>
        <layout class="QHBoxLayout" name="horizontalLayout_coin">
         <item>
-         <widget class="QPushButton" name="pushButton_Left_Coin">
+         <widget class="themePushButton" name="pushButton_Left_Coin">
           <property name="text">
            <string>Left Coin</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="pushButton_Right_Coin">
+         <widget class="themePushButton" name="pushButton_Right_Coin">
           <property name="text">
            <string>Right Coin</string>
           </property>
@@ -91,7 +91,7 @@
        </layout>
       </item>
       <item>
-       <widget class="QPushButton" name="pushButton_Service_Coin">
+       <widget class="themePushButton" name="pushButton_Service_Coin">
         <property name="text">
          <string>Service Coin</string>
         </property>
@@ -206,7 +206,7 @@
             <number>0</number>
            </property>
            <item>
-            <widget class="QPushButton" name="pushButton_Left_Monitor">
+            <widget class="themePushButton" name="pushButton_Left_Monitor">
              <property name="text">
               <string>Left</string>
              </property>
@@ -216,7 +216,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QPushButton" name="pushButton_Right_Monitor">
+            <widget class="themePushButton" name="pushButton_Right_Monitor">
              <property name="text">
               <string>Right</string>
              </property>
@@ -550,14 +550,14 @@
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="pushButton_Dip_Switches">
+       <widget class="themePushButton" name="pushButton_Dip_Switches">
         <property name="text">
          <string>Game Dip Switches</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="pushButton_Defaults_Dip_Switches">
+       <widget class="themePushButton" name="pushButton_Defaults_Dip_Switches">
         <property name="text">
          <string>Defaults Game Dip Switches</string>
         </property>
@@ -568,6 +568,19 @@
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>themePushButton</class>
+   <extends>QPushButton</extends>
+   <header>theme.hpp</header>
+  </customwidget>
+  <customwidget>
+   <class>themeToolGroupBox</class>
+   <extends>QGroupBox</extends>
+   <header>theme.hpp</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <tabstops>
   <tabstop>pushButton_Left_Coin</tabstop>
   <tabstop>pushButton_Right_Coin</tabstop>

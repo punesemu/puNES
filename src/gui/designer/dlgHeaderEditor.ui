@@ -894,7 +894,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="pushButton_Folder">
+        <widget class="themePushButton" name="pushButton_Folder">
          <property name="text">
           <string/>
          </property>
@@ -1158,7 +1158,7 @@
     </layout>
    </item>
    <item>
-    <widget class="QPushButton" name="pushButton_Reset">
+    <widget class="themePushButton" name="pushButton_Reset">
      <property name="text">
       <string>Reset to defaults</string>
      </property>
@@ -1178,7 +1178,7 @@
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
-      <widget class="QPushButton" name="pushButton_Save">
+      <widget class="themePushButton" name="pushButton_Save">
        <property name="text">
         <string>Save</string>
        </property>
@@ -1189,7 +1189,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="pushButton_Cancel">
+      <widget class="themePushButton" name="pushButton_Cancel">
        <property name="text">
         <string>Cancel</string>
        </property>
@@ -1203,6 +1203,13 @@
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>themePushButton</class>
+   <extends>QPushButton</extends>
+   <header>theme.hpp</header>
+  </customwidget>
+ </customwidgets>
  <tabstops>
   <tabstop>lineEdit_File</tabstop>
   <tabstop>pushButton_Folder</tabstop>

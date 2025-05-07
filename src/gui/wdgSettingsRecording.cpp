@@ -66,8 +66,6 @@ wdgSettingsRecording::wdgSettingsRecording(QWidget *parent) : QWidget(parent) {
 #if defined (WITH_FFMPEG)
 	output_format_init();
 
-	widget_Output_Quality->setStyleSheet(button_stylesheet());
-
 	cfg->recording.output_custom_w = output_custom_control(cfg->recording.output_custom_w, 256, 2048, 512);
 	cfg->recording.output_custom_h = output_custom_control(cfg->recording.output_custom_h, 240, 2048, 480);
 
@@ -262,7 +260,7 @@ void wdgSettingsRecording::s_output_video_format(int index) {
 }
 void wdgSettingsRecording::s_output_quality(bool checked) {
 	if (checked) {
-		int quality = QVariant(((QPushButton *)sender())->property("mtype")).toInt();
+		int quality = QVariant(((themePushButton *)sender())->property("mtype")).toInt();
 
 		cfg->recording.quality = quality;
 	}

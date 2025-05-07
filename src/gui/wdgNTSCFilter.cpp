@@ -42,7 +42,7 @@ wdgNTSCFilter::wdgNTSCFilter(QWidget *parent) : QWidget(parent) {
 	for (i = 0; i < LENGTH(parameters_desc); i++) {
 		QSlider *slider = findChild<QSlider *>("horizontalSlider_" + QString(parameters_desc[i]));
 		QSpinBox *sbox = findChild<QSpinBox *>("spinBox_" + QString(parameters_desc[i]));
-		QPushButton *btn = findChild<QPushButton *>("pushButton_" + QString(parameters_desc[i]));
+		themePushButton *btn = findChild<themePushButton *>("pushButton_" + QString(parameters_desc[i]));
 
 		slider->setProperty("myIndex", QVariant(i));
 		connect(slider, SIGNAL(valueChanged(int)), this, SLOT(s_slider_spin_changed(int)));
@@ -218,7 +218,7 @@ wdgNTSCBisqwitFilter::wdgNTSCBisqwitFilter(QWidget *parent) : QWidget(parent) {
 	for (i = 0; i < LENGTH(bisqwit_parameters_desc); i++) {
 		QSlider *slider = findChild<QSlider *>("horizontalSlider_" + QString(bisqwit_parameters_desc[i]));
 		QSpinBox *sbox = findChild<QSpinBox *>("spinBox_" + QString(bisqwit_parameters_desc[i]));
-		QPushButton *btn = findChild<QPushButton *>("pushButton_" + QString(bisqwit_parameters_desc[i]));
+		themePushButton *btn = findChild<themePushButton *>("pushButton_" + QString(bisqwit_parameters_desc[i]));
 
 		slider->setProperty("myIndex", QVariant(i));
 		connect(slider, SIGNAL(valueChanged(int)), this, SLOT(s_slider_spin_changed(int)));
@@ -379,7 +379,7 @@ wdgNTSCLMP88959Filter::wdgNTSCLMP88959Filter(QWidget *parent) : QWidget(parent) 
 	for (i = 0; i < LENGTH(ntsc_lmp88959_parameters_desc); i++) {
 		QSlider *slider = findChild<QSlider *>("horizontalSlider_" + QString(ntsc_lmp88959_parameters_desc[i]));
 		QSpinBox *sbox = findChild<QSpinBox *>("spinBox_" + QString(ntsc_lmp88959_parameters_desc[i]));
-		QPushButton *btn = findChild<QPushButton *>("pushButton_" + QString(ntsc_lmp88959_parameters_desc[i]));
+		themePushButton *btn = findChild<themePushButton *>("pushButton_" + QString(ntsc_lmp88959_parameters_desc[i]));
 
 		slider->setProperty("myIndex", QVariant(i));
 		connect(slider, SIGNAL(valueChanged(int)), this, SLOT(s_slider_spin_changed(int)));
@@ -552,7 +552,7 @@ wdgNTSCNESRGBLMP88959Filter::wdgNTSCNESRGBLMP88959Filter(QWidget *parent) : QWid
 	for (i = 0; i < LENGTH(ntsc_nesrgb_lmp88959_parameters_desc); i++) {
 		QSlider *slider = findChild<QSlider *>("horizontalSlider_" + QString(ntsc_nesrgb_lmp88959_parameters_desc[i]));
 		QSpinBox *sbox = findChild<QSpinBox *>("spinBox_" + QString(ntsc_nesrgb_lmp88959_parameters_desc[i]));
-		QPushButton *btn = findChild<QPushButton *>("pushButton_" + QString(ntsc_nesrgb_lmp88959_parameters_desc[i]));
+		themePushButton *btn = findChild<themePushButton *>("pushButton_" + QString(ntsc_nesrgb_lmp88959_parameters_desc[i]));
 
 		slider->setProperty("myIndex", QVariant(i));
 		connect(slider, SIGNAL(valueChanged(int)), this, SLOT(s_slider_spin_changed(int)));
@@ -718,7 +718,7 @@ wdgPALLMP88959Filter::wdgPALLMP88959Filter(QWidget *parent) : QWidget(parent) {
 	for (i = 0; i < LENGTH(pal_lmp88959_parameters_desc); i++) {
 		QSlider *slider = findChild<QSlider *>("horizontalSlider_" + QString(pal_lmp88959_parameters_desc[i]));
 		QSpinBox *sbox = findChild<QSpinBox *>("spinBox_" + QString(pal_lmp88959_parameters_desc[i]));
-		QPushButton *btn = findChild<QPushButton *>("pushButton_" + QString(pal_lmp88959_parameters_desc[i]));
+		themePushButton *btn = findChild<themePushButton *>("pushButton_" + QString(pal_lmp88959_parameters_desc[i]));
 
 		slider->setProperty("myIndex", QVariant(i));
 		connect(slider, SIGNAL(valueChanged(int)), this, SLOT(s_slider_spin_changed(int)));
@@ -911,7 +911,7 @@ wdgPALNESRGBLMP88959Filter::wdgPALNESRGBLMP88959Filter(QWidget *parent) : QWidge
 	for (i = 0; i < LENGTH(pal_nesrgb_lmp88959_parameters_desc); i++) {
 		QSlider *slider = findChild<QSlider *>("horizontalSlider_" + QString(pal_nesrgb_lmp88959_parameters_desc[i]));
 		QSpinBox *sbox = findChild<QSpinBox *>("spinBox_" + QString(pal_nesrgb_lmp88959_parameters_desc[i]));
-		QPushButton *btn = findChild<QPushButton *>("pushButton_" + QString(pal_nesrgb_lmp88959_parameters_desc[i]));
+		themePushButton *btn = findChild<themePushButton *>("pushButton_" + QString(pal_nesrgb_lmp88959_parameters_desc[i]));
 
 		slider->setProperty("myIndex", QVariant(i));
 		connect(slider, SIGNAL(valueChanged(int)), this, SLOT(s_slider_spin_changed(int)));

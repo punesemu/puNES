@@ -46,7 +46,7 @@
        <item>
         <layout class="QHBoxLayout" name="horizontalLayout_Overclock_Slines">
          <item>
-          <widget class="QGroupBox" name="groupBox_Pergame_Slines">
+          <widget class="themeGroupBox" name="groupBox_Pergame_Slines">
            <property name="title">
             <string>Per-Game</string>
            </property>
@@ -106,7 +106,7 @@
                </widget>
               </item>
               <item row="0" column="2">
-               <widget class="QPushButton" name="pushButton_Pergame_VB_Slines">
+               <widget class="themePushButton" name="pushButton_Pergame_VB_Slines">
                 <property name="text">
                  <string notr="true"/>
                 </property>
@@ -117,7 +117,7 @@
                </widget>
               </item>
               <item row="1" column="2">
-               <widget class="QPushButton" name="pushButton_Pergame_Postrender_Slines">
+               <widget class="themePushButton" name="pushButton_Pergame_Postrender_Slines">
                 <property name="text">
                  <string notr="true"/>
                 </property>
@@ -143,7 +143,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QGroupBox" name="groupBox_Def_Slines">
+          <widget class="themeGroupBox" name="groupBox_Def_Slines">
            <property name="title">
             <string>Default</string>
            </property>
@@ -203,7 +203,7 @@
                </widget>
               </item>
               <item row="0" column="2">
-               <widget class="QPushButton" name="pushButton_Def_VB_Slines">
+               <widget class="themePushButton" name="pushButton_Def_VB_Slines">
                 <property name="text">
                  <string notr="true"/>
                 </property>
@@ -214,7 +214,7 @@
                </widget>
               </item>
               <item row="1" column="2">
-               <widget class="QPushButton" name="pushButton_Def_Postrender_Slines">
+               <widget class="themePushButton" name="pushButton_Def_Postrender_Slines">
                 <property name="text">
                  <string notr="true"/>
                 </property>
@@ -372,7 +372,7 @@
         </widget>
        </item>
        <item row="0" column="0">
-        <widget class="QPushButton" name="pushButton_Reset_Lag_Counter">
+        <widget class="themePushButton" name="pushButton_Reset_Lag_Counter">
          <property name="text">
           <string>Reset Lag Counter</string>
          </property>
@@ -473,7 +473,7 @@
      <item row="6" column="0">
       <layout class="QHBoxLayout" name="horizontalLayout_Overclock_Pergame_and_Def">
        <item>
-        <widget class="QGroupBox" name="groupBox_Overclock_Pergame_setting">
+        <widget class="themeGroupBox" name="groupBox_Overclock_Pergame_setting">
          <property name="title">
           <string>Per-Game Overclock Setting</string>
          </property>
@@ -482,7 +482,7 @@
            <number>0</number>
           </property>
           <item>
-           <widget class="QPushButton" name="pushButton_Overclock_Pergame_setting_on">
+           <widget class="themePushButton" name="pushButton_Overclock_Pergame_setting_on">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
               <horstretch>0</horstretch>
@@ -498,7 +498,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QPushButton" name="pushButton_Overclock_Pergame_setting_off">
+           <widget class="themePushButton" name="pushButton_Overclock_Pergame_setting_off">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
               <horstretch>0</horstretch>
@@ -514,7 +514,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QPushButton" name="pushButton_Overclock_Pergame_setting_use_def">
+           <widget class="themePushButton" name="pushButton_Overclock_Pergame_setting_use_def">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
               <horstretch>0</horstretch>
@@ -538,7 +538,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QGroupBox" name="groupBox_Overclock_Def_value">
+        <widget class="themeGroupBox" name="groupBox_Overclock_Def_value">
          <property name="title">
           <string>Default Value</string>
          </property>
@@ -547,7 +547,7 @@
            <number>0</number>
           </property>
           <item>
-           <widget class="QPushButton" name="pushButton_Overclock_Def_value_on">
+           <widget class="themePushButton" name="pushButton_Overclock_Def_value_on">
             <property name="text">
              <string>On</string>
             </property>
@@ -557,7 +557,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QPushButton" name="pushButton_Overclock_Def_value_off">
+           <widget class="themePushButton" name="pushButton_Overclock_Def_value_off">
             <property name="font">
              <font>
               <underline>true</underline>
@@ -580,6 +580,19 @@
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>themePushButton</class>
+   <extends>QPushButton</extends>
+   <header>theme.hpp</header>
+  </customwidget>
+  <customwidget>
+   <class>themeGroupBox</class>
+   <extends>QGroupBox</extends>
+   <header>theme.hpp</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <tabstops>
   <tabstop>checkBox_Hide_Sprites</tabstop>
   <tabstop>checkBox_Hide_Background</tabstop>

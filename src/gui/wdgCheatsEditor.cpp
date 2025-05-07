@@ -26,10 +26,6 @@
 #include "objCheat.hpp"
 #include "conf.h"
 
-#define COLOR_GG    Qt::cyan
-#define COLOR_ROCKY Qt::yellow
-#define COLOR_MEM   QColor(252, 215, 248)
-
 enum cheat_table_rows {
 	CR_ACTIVE,
 	CR_DESCRIPTION,
@@ -47,8 +43,13 @@ wdgCheatsEditor::wdgCheatsEditor(QWidget *parent) : QWidget(parent) {
 	in_populate_cheat_table = false;
 	in_lineedit_text_changed = false;
 	disable_hexspinbox_value_changed = false;
+	COLOR_GG = theme::get_grayed_color(Qt::cyan);
+	COLOR_ROCKY = theme::get_grayed_color(Qt::yellow);
+	COLOR_MEM = theme::get_grayed_color(QColor(252, 215, 248));
 
 	setupUi(this);
+
+	stylesheet_update();
 
 	setFocusProxy(tableWidget_Cheats);
 
@@ -57,9 +58,11 @@ wdgCheatsEditor::wdgCheatsEditor(QWidget *parent) : QWidget(parent) {
 	connect(tableWidget_Cheats, SIGNAL(itemSelectionChanged()), this, SLOT(s_cheat_item()));
 	connect(tableWidget_Cheats->model(),
 		SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)),
-		this, SLOT(s_table_data_changed(QModelIndex,QModelIndex,QVector<int>)));
+		this,
+		SLOT(s_table_data_changed(QModelIndex,QModelIndex,QVector<int>)));
 	connect(tableWidget_Cheats->model(),
-		SIGNAL(layoutChanged(QList<QPersistentModelIndex>,QAbstractItemModel::LayoutChangeHint)), this,
+		SIGNAL(layoutChanged(QList<QPersistentModelIndex>,QAbstractItemModel::LayoutChangeHint)),
+		this,
 		SLOT(s_table_layout_changed(QList<QPersistentModelIndex>,QAbstractItemModel::LayoutChangeHint)));
 
 	connect(pushButton_Hide_Show_Tools, SIGNAL(clicked(bool)), this, SLOT(s_hide_show_tools(bool)));
@@ -80,19 +83,10 @@ wdgCheatsEditor::wdgCheatsEditor(QWidget *parent) : QWidget(parent) {
 		connect(grp, SIGNAL(buttonClicked(QAbstractButton*)), this, SLOT(s_grp_type_cheat(QAbstractButton*)));
 	}
 
-	label_color_CPU_Ram->setStyleSheet("QLabel{background: #FCD7F8;}");
-	label_color_GG->setStyleSheet("QLabel{background: cyan;}");
-	label_color_ProAR->setStyleSheet("QLabel{background: yellow;}");
-
 	{
 		toUpValidator *val = new toUpValidator(this);
 
-		lineEdit_CPU_Ram->setStyleSheet("QLineEdit{background: #FCD7F8;}");
-
-		lineEdit_GG->setStyleSheet("QLineEdit{background: cyan;}");
 		lineEdit_GG->setValidator(val);
-
-		lineEdit_ProAR->setStyleSheet("QLineEdit{background: yellow;}");
 		lineEdit_ProAR->setValidator(val);
 
 		connect(lineEdit_Description, SIGNAL(textEdited(QString)), SLOT(s_gg_proar_text_edited(QString)));
@@ -165,6 +159,8 @@ wdgCheatsEditor::~wdgCheatsEditor() = default;
 void wdgCheatsEditor::changeEvent(QEvent *event) {
 	if (event->type() == QEvent::LanguageChange) {
 		wdgCheatsEditor::retranslateUi(this);
+	} else if (event->type() == QEvent::PaletteChange) {
+		stylesheet_update();
 	} else {
 		QWidget::changeEvent(event);
 	}
@@ -179,6 +175,12 @@ void wdgCheatsEditor::showEvent(QShowEvent *event) {
 	radioButton_CPU_Ram->setFixedHeight(radioButton_ProAR->height());
 
 	QWidget::showEvent(event);
+}
+
+void wdgCheatsEditor::stylesheet_update(void) {
+	label_color_CPU_Ram->setStyleSheet(stylesheet_label(QColor("#FCD7F8")));
+	label_color_GG->setStyleSheet(stylesheet_label(QColor("cyan")));
+	label_color_ProAR->setStyleSheet(stylesheet_label(QColor("yellow")));
 }
 
 void wdgCheatsEditor::hide_tools_widgets(bool state) {
@@ -210,6 +212,16 @@ void wdgCheatsEditor::populate_cheat_table(void) {
 	}
 
 	in_populate_cheat_table = false;
+}
+
+QString wdgCheatsEditor::stylesheet_label(const QColor &color) {
+	QColor background = theme::get_grayed_color(color);
+	QString stylesheet =
+			"QLabel {"\
+"	background-color: %0;"\
+" }";
+
+	return stylesheet.arg(background.name());
 }
 
 chl_map wdgCheatsEditor::extract_cheat_from_row(int row) {
@@ -303,12 +315,15 @@ void wdgCheatsEditor::update_cheat_row(int row, chl_map *cheat) {
 	if ((*cheat)["genie"] != "-") {
 		tableWidget_Cheats->item(row, CR_CODE)->setText((*cheat)["genie"]);
 		tableWidget_Cheats->item(row, CR_CODE)->setBackground(COLOR_GG);
+		tableWidget_Cheats->item(row, CR_CODE)->setForeground(theme::get_foreground_color(COLOR_GG));
 	} else if ((*cheat)["rocky"] != "-") {
 		tableWidget_Cheats->item(row, CR_CODE)->setText((*cheat)["rocky"]);
 		tableWidget_Cheats->item(row, CR_CODE)->setBackground(COLOR_ROCKY);
+		tableWidget_Cheats->item(row, CR_CODE)->setForeground(theme::get_foreground_color(COLOR_ROCKY));
 	} else {
 		tableWidget_Cheats->item(row, CR_CODE)->setText("-");
 		tableWidget_Cheats->item(row, CR_CODE)->setBackground(COLOR_MEM);
+		tableWidget_Cheats->item(row, CR_CODE)->setForeground(theme::get_foreground_color(COLOR_MEM));
 	}
 
 	tableWidget_Cheats->item(row, CR_ADDRESS)->setText((*cheat)["address"]);
@@ -323,7 +338,7 @@ void wdgCheatsEditor::update_color_row(int row, bool active) {
 	int i;
 
 	if (active == 1) {
-		brush = QBrush(QColor::fromRgb(214, 255, 182, 255));
+		brush = QBrush(theme::get_grayed_color(QColor::fromRgb(214, 255, 182, 255)));
 	}
 
 	for (i = 0; i < tableWidget_Cheats->columnCount(); i++) {
@@ -333,6 +348,11 @@ void wdgCheatsEditor::update_color_row(int row, bool active) {
 			continue;
 		}
 		item->setBackground(brush);
+		if (active == 1) {
+			item->setForeground(theme::get_foreground_color(brush.color()));
+		} else {
+			item->setForeground(QApplication::palette().text().color());
+		}
 	}
 }
 

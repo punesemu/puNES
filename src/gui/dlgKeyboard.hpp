@@ -58,7 +58,7 @@ class keyboardButton : public QPushButton {
 		} _label;
 		typedef struct _color {
 			_color() : bck("#EFEFEF"), hover("#DDE0DA"), press("#BABDB6"),
-				bck_border("#D91414"), hover_border("#E36666"), press_border("#D91414") {}
+				bck_border("#888A85"), hover_border("#50524F"), press_border("#50524F") {}
 			QString bck;
 			QString hover;
 			QString press;
@@ -334,6 +334,8 @@ class dlgKeyboard : public QDialog, public Ui::dlgKeyboard {
 
 	public:
 		void retranslateUi(QDialog *dlgKeyboard);
+
+	public:
 		void reset(void);
 		void add_buttons(wdgKeyboard *wk, wdgKeyboard::_button buttons[], int totals);
 		void set_buttons(wdgKeyboard *wk, wdgKeyboard::_button buttons[], int totals);

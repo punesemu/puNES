@@ -70,8 +70,6 @@ dlgKeyboard::dlgKeyboard(QWidget *parent) : QDialog(parent) {
 	dlgkbd = this;
 	reset();
 
-	groupBox_Options->setStyleSheet(button_stylesheet());
-
 	pushButton_Mode_virtual->setProperty("mtype", QVariant(DK_VIRTUAL));
 	pushButton_Mode_setup->setProperty("mtype", QVariant(DK_SETUP));
 	pushButton_Size_10x->setProperty("mtype", QVariant(VK_SIZE_10X));
@@ -348,9 +346,9 @@ void dlgKeyboard::key_event_release(QKeyEvent *event, keyevent_types type) {
 	}
 }
 void dlgKeyboard::switch_mode(BYTE dk_mode) {
-	QList<QPushButton *> btn_list = widget_Mode->findChildren<QPushButton *>();
+	QList<themePushButton *> btn_list = widget_Mode->findChildren<themePushButton *>();
 
-	foreach (QPushButton *btn, btn_list) {
+	foreach (themePushButton *btn, btn_list) {
 		int index = btn->property("mtype").toInt();
 
 		if (index == dk_mode) {
@@ -392,9 +390,9 @@ void dlgKeyboard::replace_keyboard(wdgKeyboard *wk) {
 	setWindowTitle(keyboard->keyboard_name());
 }
 void dlgKeyboard::switch_size_factor(BYTE vk_size) {
-	QList<QPushButton *> btn_list = widget_Size->findChildren<QPushButton *>();
+	QList<themePushButton *> btn_list = widget_Size->findChildren<themePushButton *>();
 
-	foreach (QPushButton *btn, btn_list) {
+	foreach (themePushButton *btn, btn_list) {
 		int index = btn->property("mtype").toInt();
 
 		if (index == vk_size) {
@@ -403,9 +401,9 @@ void dlgKeyboard::switch_size_factor(BYTE vk_size) {
 	}
 }
 BYTE dlgKeyboard::get_size_factor(void) {
-	QList<QPushButton *> btn_list = widget_Size->findChildren<QPushButton *>();
+	QList<themePushButton *> btn_list = widget_Size->findChildren<themePushButton *>();
 
-	foreach (QPushButton *btn, btn_list) {
+	foreach (themePushButton *btn, btn_list) {
 		if (btn->isChecked()) {
 			return (BYTE)btn->property("mtype").toInt();
 		}
@@ -499,10 +497,10 @@ void dlgKeyboard::s_nes_keyboard(void) {
 }
 void dlgKeyboard::s_mode(bool checked) {
 	if (checked) {
-		QList<QPushButton *> btn_list = widget_Mode->findChildren<QPushButton *>();
+		QList<themePushButton *> btn_list = widget_Mode->findChildren<themePushButton *>();
 
-		foreach (QPushButton *btn, btn_list) {
-			if ((QPushButton *)sender() == btn) {
+		foreach (themePushButton *btn, btn_list) {
+			if ((themePushButton *)sender() == btn) {
 				int index = btn->property("mtype").toInt();
 
 				mode = index;
@@ -516,10 +514,10 @@ void dlgKeyboard::s_mode(bool checked) {
 }
 void dlgKeyboard::s_size_factor(bool checked) {
 	if (checked) {
-		QList<QPushButton *> btn_list = widget_Size->findChildren<QPushButton *>();
+		QList<themePushButton *> btn_list = widget_Size->findChildren<themePushButton *>();
 
-		foreach (QPushButton *btn, btn_list) {
-			if ((QPushButton *)sender() == btn) {
+		foreach (themePushButton *btn, btn_list) {
+			if ((themePushButton *)sender() == btn) {
 				int index = btn->property("mtype").toInt();
 
 				cfg_from_file.input.vk_size = index;
@@ -836,34 +834,35 @@ void keyboardButton::set(DBWORD nscode, SWORD index, SBYTE row, SBYTE column, SW
 	pressed = FALSE;
 	setEnabled(true);
 	{
-		QString style = "QPushButton {"\
+		QString style =
+			"keyboardButton {"\
 			"	background-color: %0;"\
-			"	border-width: 1px;"\
-			"	border-color: %1;"\
-			"	border-style: solid;"\
+			"	border: 1px groove %1;"\
 			"	padding: 5px;"\
 			"	padding-left: 10px;"\
 			"	padding-right: 10px;"\
-			"	border-radius: 3px;"\
 			"	color: #000;"\
 			"}"\
-			"QPushButton:hover {"\
+			"keyboardButton:hover {"\
 			"	background-color: %2;"\
-			"	border-color: %3;"\
+			"	border: 1px groove %3;"\
 			"}"\
-			"QPushButton:pressed {"\
+			"keyboardButton:pressed {"\
 			"	background-color: %4;"\
-			"	border-color: %5;"\
+			"	border: 1px inset %5;"\
+			"	padding: 5px;"\
+			"	padding-left: 10px;"\
+			"	padding-right: 10px;"\
 			"}";
 
 		setStyleSheet(
-			style.arg(
-			(clr.bck.isEmpty() ? keyboardButton::_color().bck : clr.bck),
-			(clr.bck_border.isEmpty() ? keyboardButton::_color().bck_border : clr.bck_border),
-			(clr.hover.isEmpty() ? keyboardButton::_color().hover : clr.hover),
-			(clr.hover_border.isEmpty() ? keyboardButton::_color().hover_border : clr.hover_border),
-			(clr.press.isEmpty() ? keyboardButton::_color().press : clr.press),
-			(clr.press_border.isEmpty() ? keyboardButton::_color().press_border : clr.press_border)));
+			style
+			.arg(clr.bck.isEmpty() ? keyboardButton::_color().bck : clr.bck)
+			.arg(clr.bck_border.isEmpty() ? keyboardButton::_color().bck_border : clr.bck_border)
+			.arg(clr.hover.isEmpty() ? keyboardButton::_color().hover : clr.hover)
+			.arg(clr.hover_border.isEmpty() ? keyboardButton::_color().hover_border : clr.hover_border)
+			.arg(clr.press.isEmpty() ? keyboardButton::_color().press : clr.press)
+			.arg(clr.press_border.isEmpty() ? keyboardButton::_color().press_border : clr.press_border));
 	}
 }
 void keyboardButton::reset(void) {
