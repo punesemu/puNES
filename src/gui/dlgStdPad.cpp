@@ -341,8 +341,15 @@ QString dlgStdPad::stylesheet_pixmapbutton(void) {
 		"	background-color: %4;"\
 		"	color: %5;"\
 		"}"\
+		"QPushButton:focus {"\
+		"	border-color: %8;"\
+		"	background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 %6, stop: 1 %7);"\
+		"}"\
 		"QPushButton:hover {"\
 		"	background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 %6, stop: 1 %7);"\
+		"}"\
+		"QPushButton:hover:focus {"\
+		"	border-color: %8;"\
 		"}";
 
 	return stylesheet
@@ -353,7 +360,8 @@ QString dlgStdPad::stylesheet_pixmapbutton(void) {
 		.arg(disabled_background.name())
 		.arg(disabled_text.name())
 		.arg(hover_gradient0.name())
-		.arg(hover_gradient1.name());
+		.arg(hover_gradient1.name())
+		.arg(theme::get_focus_color().name());
 }
 QString dlgStdPad::stylesheet_left_button(void) {
 	QColor baseColor = theme::get_theme_color(QApplication::palette().light().color());
@@ -370,8 +378,18 @@ QString dlgStdPad::stylesheet_left_button(void) {
 		"	border-color: %1;"\
 		"	padding: 2px;"\
 		"}"\
+		"QPushButton:disabled {"\
+		"	color: gray;"\
+		"}"\
+		"QPushButton:focus {"\
+		"	border-color: %2;"\
+		"	background-color: %0;"\
+		"}"\
 		"QPushButton:hover {"\
 		"	background-color: %0;"\
+		"}"\
+		"QPushButton:hover:focus {"\
+		"	border-color: %2;"\
 		"}"\
 		"QPushButton:pressed {"\
 		"	margin-top: 1;"\
@@ -384,13 +402,15 @@ QString dlgStdPad::stylesheet_left_button(void) {
 		"	padding: 2px;"\
 		"	background-color: %1;"\
 		"}"\
-		"QPushButton:disabled {"\
-		"	color: gray;"\
+		"QPushButton:pressed:focus {"\
+		"	border-color: %2;"\
 		"}";
+
 
 	return stylesheet
 		.arg(lightGray.name())
-		.arg(darkGray.name());
+		.arg(darkGray.name())
+		.arg(theme::get_focus_color().name());
 }
 QString dlgStdPad::stylesheet_right_button(void) {
 	return stylesheet_left_button()
