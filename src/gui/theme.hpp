@@ -35,6 +35,7 @@ class theme {
 	public:
 		static float calculate_brightness(const QColor &color);
 		static bool is_dark_theme(void);
+		static QColor get_focus_color(void);
 		static QColor get_foreground_color(const QColor &background_color);
 		static QColor get_theme_color(const QColor &base_color);
 		static QColor get_theme_aware_color(const QColor &base_color);

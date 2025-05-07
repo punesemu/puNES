@@ -912,7 +912,7 @@ void wdgSettingsInput::s_expansion_port_setup(UNUSED(bool checked)) {
 			if (dlgkeyb->isHidden()) {
 				mainwin->open_dkeyb(dlgKeyboard::DK_SETUP);
 			} else {
-				dlgkeyb->switch_mode(dlgKeyboard::DK_SETUP);
+				dlgkeyb->setHidden(true);
 			}
 			break;
 		default:

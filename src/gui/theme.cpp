@@ -62,7 +62,7 @@ QString theme::stylesheet_wdgbutton(void) {
 	QColor background_checked = base_color.lighter(is_dark_theme() ? 80 : 115);
 	QString stylesheet =
 		"themePushButton {"\
-		"	margin :0;"\
+		"	margin: 0;"\
 		"	border: 2px groove %0;"\
 		"	border-radius: 4px;"\
 		"	padding: 2px;"\
@@ -71,36 +71,37 @@ QString theme::stylesheet_wdgbutton(void) {
 		"themePushButton:disabled {"\
 		"	color: gray;"\
 		"}"\
+		"themePushButton:focus {"\
+		"	border-color: %5;"\
+		"}"\
 		"themePushButton:hover {"\
 		"	border: 2px groove %1;"\
 		"	background-color: %3;"\
 		"}"\
+		"themePushButton:hover:focus {"\
+		"	border-color: %5;"\
+		"}"\
 		"themePushButton:pressed {"\
-		"	margin :0;"\
+		"	margin: 0;"\
 		"	border: 2px inset %1;"\
 		"	border-radius: 4px;"\
 		"	padding: 2px;"\
 		"	background-color: %4;"\
 		"}"\
-		"themePushButton:focus {"\
-		"	margin :0;"\
-		"	border: 2px groove %1;"\
-		"	border-radius: 4px;"\
-		"	padding: 2px;"\
-		"	background-color: %4;"\
+		"themePushButton:pressed:focus {"\
+		"	border-color: %5;"\
 		"}"\
 		"themePushButton:checked {"\
-		"	margin :0;"\
+		"	margin: 0;"\
 		"	border: 2px inset %1;"\
 		"	border-radius: 4px;"\
 		"	padding: 2px;"\
 		"	background-color: %4;"\
 		"}"\
-		"themePushButton:disabled:checked {"\
-		"	margin :0;"\
-		"	border: 2px inset %0;"\
-		"	border-radius: 4px;"\
-		"	padding: 2px;"\
+		"themePushButton:checked:focus {"\
+		"	border-color: %5;"\
+		"}"\
+		"themePushButton:checked:disabled {"\
 		"	color: gray;"\
 		"}";
 
@@ -109,7 +110,8 @@ QString theme::stylesheet_wdgbutton(void) {
 		.arg(is_dark_theme() ? border_color0.name() : border_color1.name())
 		.arg(background_normal.name())
 		.arg(background_hover.name())
-		.arg(background_checked.name());
+		.arg(background_checked.name())
+		.arg(get_focus_color().name());
 }
 QString theme::stylesheet_wdgtoolbutton(void) {
 	return stylesheet_wdgbutton().replace("themePushButton", "themeToolButton");
@@ -123,6 +125,9 @@ float theme::calculate_brightness(const QColor &color) {
 }
 bool theme::is_dark_theme(void) {
 	return (calculate_brightness(QApplication::palette().window().color()) < 0.5f);
+}
+QColor theme::get_focus_color(void) {
+	return QApplication::palette().highlight().color();
 }
 QColor theme::get_foreground_color(const QColor &background_color) {
 	return calculate_brightness(background_color) >= 0.5f ? Qt::black : Qt::white;
