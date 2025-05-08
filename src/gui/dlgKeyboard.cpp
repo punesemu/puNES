@@ -130,7 +130,6 @@ void dlgKeyboard::showEvent(QShowEvent *event) {
 void dlgKeyboard::hideEvent(QHideEvent *event) {
 	geom = geometry();
 	QDialog::hideEvent(event);
-	switch_mode(DK_VIRTUAL);
 	mainwin->statusbar->keyb->update_tooltip();
 }
 void dlgKeyboard::closeEvent(QCloseEvent *event) {

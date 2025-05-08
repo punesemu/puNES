@@ -247,7 +247,7 @@ class mainWindow : public QMainWindow, public Ui::mainWindow {
 		QScreen *win_handle_screen(void);
 		void shout_into_mic(BYTE mode);
 		void hold_fast_forward(BYTE mode);
-		void open_dkeyb(BYTE mode);
+		void open_dkeyb(void);
 		void unsupported_hardware(void);
 
 	private:

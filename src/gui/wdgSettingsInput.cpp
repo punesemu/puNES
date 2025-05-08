@@ -909,11 +909,7 @@ void wdgSettingsInput::s_expansion_port_setup(UNUSED(bool checked)) {
 	switch (cfg->input.expansion) {
 		case CTRL_FAMILY_BASIC_KEYBOARD:
 		case CTRL_SUBOR_KEYBOARD:
-			if (dlgkeyb->isHidden()) {
-				mainwin->open_dkeyb(dlgKeyboard::DK_SETUP);
-			} else {
-				dlgkeyb->setHidden(true);
-			}
+			mainwin->action_Virtual_Keyboard->trigger();
 			break;
 		default:
 			break;

@@ -866,10 +866,9 @@ void mainWindow::hold_fast_forward(BYTE mode) {
 		s_fast_forward();
 	}
 }
-void mainWindow::open_dkeyb(BYTE mode) {
+void mainWindow::open_dkeyb(void) {
 	set_dialog_geom(dlgkeyb->geom);
 	dlgkeyb->setGeometry(dlgkeyb->geom);
-	dlgkeyb->switch_mode(mode);
 	dlgkeyb->show();
 }
 void mainWindow::unsupported_hardware(void) {
@@ -1290,7 +1289,7 @@ int mainWindow::is_shortcut(const QKeyEvent *event) {
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 		if ((unsigned int)shortcut[i]->key()[0] == (event->key() | event->modifiers())) {
 #else
-			if (shortcut[i]->key()[0] == event->keyCombination()) {
+		if (shortcut[i]->key()[0] == event->keyCombination()) {
 #endif
 			return (i);
 		}
@@ -1381,7 +1380,7 @@ void mainWindow::s_set_detach_barcode_window(void) {
 void mainWindow::s_open_dkeyb(void) {
 	if (nes_keyboard.enabled) {
 		if (dlgkeyb->isHidden()) {
-			open_dkeyb(dlgKeyboard::DK_VIRTUAL);
+			open_dkeyb();
 		} else {
 			dlgkeyb->hide();
 		}
