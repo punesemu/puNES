@@ -121,6 +121,17 @@ bool wdgRewind::egds_rewind(void) {
 	}
 	return (false);
 }
+void wdgRewind::reset_buttons(void) {
+	gui_egds_stop_rwnd();
+	set_enable_backward(true);
+	set_enable_forward(false);
+	toolButton_Step_Backward->setChecked(false);
+	toolButton_Step_Forward->setChecked(false);
+	toolButton_Fast_Backward->setChecked(false);
+	toolButton_Fast_Forward->setChecked(false);
+	toolButton_Pause->setChecked(false);
+	set_enable_play_pause_forward(FALSE);
+}
 
 void wdgRewind::set_enable_backward(BYTE mode) {
 	toolButton_Step_Backward->setEnabled(mode);
@@ -210,18 +221,8 @@ void wdgRewind::s_play(UNUSED(bool checked)) {
 	if (!rwnd.active) {
 		return;
 	}
-	gui_egds_stop_rwnd();
-	set_enable_backward(true);
-	set_enable_forward(false);
-	toolButton_Step_Backward->setChecked(false);
-	toolButton_Step_Forward->setChecked(false);
-	toolButton_Fast_Backward->setChecked(false);
-	toolButton_Fast_Forward->setChecked(false);
-	toolButton_Pause->setChecked(false);
-	set_enable_play_pause_forward(FALSE);
+	reset_buttons();
 	rewind_close_operation();
-	rwnd.factor.backward = 0;
-	rwnd.factor.forward = 0;
 }
 void wdgRewind::s_pause(UNUSED(bool checked)) {
 	first_backward();

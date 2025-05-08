@@ -316,6 +316,9 @@ void rewind_close_operation(void) {
 	rwint.count.snaps = rwint.snap_cursor;
 	rwint.count.segments = rwint.index.segment;
 
+	rwnd.action = RWND_ACT_PLAY;
+	rwnd.factor.backward = 0;
+	rwnd.factor.forward = 0;
 	rwnd.active = FALSE;
 	emu_ctrl_doublebuffer();
 	gui_update();
