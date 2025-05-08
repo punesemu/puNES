@@ -98,6 +98,7 @@ void wdgToolBar::update_toolbar(void) const {
 		state->update_widget();
 
 		if (cfg->rewind_minutes == RWND_0_MINUTES) {
+			rewind->reset_buttons();
 			rw = false;
 		}
 	}

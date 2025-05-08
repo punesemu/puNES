@@ -404,8 +404,10 @@ void wdgSettingsGeneral::s_rewind_minutes(bool checked) {
 		if (minutes == cfg->rewind_minutes) {
 			return;
 		}
-
 		emu_thread_pause();
+		if ((minutes == RWND_0_MINUTES) && rwnd.active && (rwnd.action != RWND_ACT_PLAY)) {
+			rewind_close_operation();
+		}
 		cfg->rewind_minutes = minutes;
 		rewind_init();
 		emu_thread_continue();

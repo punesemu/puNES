@@ -44,6 +44,7 @@ class wdgRewind : public QWidget, public Ui::wdgRewind {
 	public:
 		bool step_autorepeat_timer_control(void) const;
 		bool egds_rewind(void);
+		void reset_buttons(void);
 
 	private:
 		void set_enable_backward(BYTE mode);
