@@ -43,6 +43,26 @@ void wdgState::changeEvent(QEvent *event) {
 		QWidget::changeEvent(event);
 	}
 }
+void wdgState::wheelEvent(QWheelEvent *event) {
+	if (isEnabled()) {
+		static const int SCROLL_THRESHOLD = 120;
+		static int accumulatedScroll = 0;
+
+		accumulatedScroll += event->angleDelta().y();
+		if (abs(accumulatedScroll) >= SCROLL_THRESHOLD) {
+			const int delta = (accumulatedScroll > 0) ? -1 : 1;
+			const DBWORD newSlot = (save_slot.slot_in_use + delta + SAVE_SLOTS) % SAVE_SLOTS;
+
+			if (newSlot != save_slot.slot_in_use) {
+				gui_state_save_slot_set(newSlot, TRUE);
+			}
+			accumulatedScroll = 0;
+		}
+		event->accept();
+		return;
+	}
+	event->ignore();
+}
 
 void wdgState::retranslateUi(wdgState *wdgState) {
 	Ui::wdgState::retranslateUi(wdgState);
