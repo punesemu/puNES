@@ -173,11 +173,7 @@ BYTE gui_init(int *argc, char **argv) {
 	}
 
 
-	fprintf(stderr, "0\n");
-
 	gui_init_os();
-
-	fprintf(stderr, "1\n");
 
 
 #if defined(WITH_D3D9)
