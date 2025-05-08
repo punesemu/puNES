@@ -217,9 +217,10 @@ dlgDetachBarcode::dlgDetachBarcode(QWidget *parent) : QDialog(parent) {
 		close->setText("x");
 
 		connect(close, SIGNAL(clicked(bool)), this, SLOT(s_x_clicked(bool)));
-
-//		vgbm.setTop(close->sizeHint().height() + 2);
-//		verticalLayout_groupBox_Detach_Barcode->setContentsMargins(vgbm);
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+		vgbm.setTop(close->sizeHint().height() + 2);
+		verticalLayout_groupBox_Detach_Barcode->setContentsMargins(vgbm);
+#endif
 	}
 
 	installEventFilter(this);

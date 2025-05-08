@@ -172,7 +172,13 @@ BYTE gui_init(int *argc, char **argv) {
 		gui.dlg_tabWidget_kbd_joy_index[i] = -1;
 	}
 
+
+	fprintf(stderr, "0\n");
+
 	gui_init_os();
+
+	fprintf(stderr, "1\n");
+
 
 #if defined(WITH_D3D9)
 	if (d3d9_is_installed() == EXIT_ERROR) {
