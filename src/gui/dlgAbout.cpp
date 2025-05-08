@@ -26,6 +26,7 @@
 
 dlgAbout::dlgAbout(QWidget *parent) : QDialog(parent) {
 	QDateTime compiled = QDateTime::fromString(COMPILED, "MMddyyyyhhmmss");
+	QString link_color = theme::is_dark_theme() ? "style=\"color: #A4AAE4\" " : "";
 	QString text;
 
 	setupUi(this);
@@ -52,7 +53,10 @@ dlgAbout::dlgAbout(QWidget *parent) : QDialog(parent) {
 	text.append(QString(VERSION) + "</h2></center>");
 
 #if defined (WITH_GIT_INFO)
-	text.append("<center><h4>[<font color='#800000'>Commit " + QString(GIT_COUNT_COMMITS) + "</font> " + "<a href=\"https://github.com/punesemu/puNES/commit/" + QString(GIT_LAST_COMMIT_HASH) + "\">" + QString(GIT_LAST_COMMIT) + "</a>]</h4></center>");
+	text.append(QString("<center><h4>[Commit <font color='%0'>").arg(theme::is_dark_theme() ? "#00E556" : "#800000") +
+		QString(GIT_COUNT_COMMITS) + "</font>  " +
+		QString(", Hash <a %0href=\"https://github.com/punesemu/puNES/commit/").arg(link_color) +
+		QString(GIT_LAST_COMMIT_HASH) + "\" >" + QString(GIT_LAST_COMMIT) + "</a>]</h4></center>");
 #endif
 	text.append("<center>" + tr("Nintendo Entertainment System Emulator") + "</center>");
 	text.append("<center>" + tr("Compiled") + " " + QLocale().toString(compiled, QLocale::ShortFormat) + " (" + QString(ENVIRONMENT));
@@ -60,9 +64,12 @@ dlgAbout::dlgAbout(QWidget *parent) : QDialog(parent) {
 	label_Text->setText(text);
 
 	text = "<center>" + QString(COPYRUTF8) + "</center>\n";
-	text.append("<center><a href=\"" + QString(GITLAB) + "\">" + "GitLab Page</a></center>");
-	text.append("<center><a href=\"" + QString(GITHUB) + "\">" + "GitHub Page</a></center>");
-	text.append("<center><a href=\"" + QString(WEBSITE) + "\">" + "NesDev Forum</a></center>");
+	text.append(QString("<center><a %0href=\"").arg(link_color) +
+		QString(GITLAB) + "\">" + "GitLab Page</a></center>");
+	text.append(QString("<center><a %0href=\"").arg(link_color) +
+		QString(GITHUB) + "\">" + "GitHub Page</a></center>");
+	text.append(QString("<center><a %0href=\"").arg(link_color) +
+		QString(WEBSITE) + "\">" + "NesDev Forum</a></center>");
 	label_Informative->setText(text);
 
 	connect(pushButton_Ok, SIGNAL(clicked(bool)), this, SLOT(s_ok_clicked(bool)));
