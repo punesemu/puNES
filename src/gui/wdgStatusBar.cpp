@@ -137,7 +137,7 @@ void alignmentStatusBar::update_label(void) {
 	if (cfg->ppu_alignment == PPU_ALIGMENT_DEFAULT) {
 		hide();
 	} else {
-		label->setText(QString("c%0p%1").arg(ppu_alignment.cpu, 2, 'd', 0, '0').arg(ppu_alignment.ppu));
+		label->setText(QString("c%0p%1").arg(ppu_alignment.cpu, 2, 10, QChar(u'0')).arg(ppu_alignment.ppu));
 		show();
 	}
 }
