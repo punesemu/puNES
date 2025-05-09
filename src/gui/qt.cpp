@@ -1137,8 +1137,8 @@ BYTE gui_load_lut(void *l, const uTCHAR *path) {
 	return (EXIT_OK);
 }
 void gui_save_screenshot(int w, int h, int stride, char *buffer, BYTE flip) {
-	QString basename = QString(uQString(gui_data_folder())) + QString(SCRSHT_FOLDER) + "/"
-		+ QFileInfo(uQString(info.rom.file)).completeBaseName();
+	QString basename = QString(uQString(gui_data_folder())) + QString(SCRSHT_FOLDER) + "/" +
+		QFileInfo(uQString(info.rom.file)).completeBaseName();
 	QImage screenshot = QImage((uchar *)buffer, w, h, stride, QImage::Format_RGB32);
 	QFile file;
 	uint count = 0;
@@ -1148,7 +1148,7 @@ void gui_save_screenshot(int w, int h, int stride, char *buffer, BYTE flip) {
 	}
 
 	for (count = 1; count < 999999; count++) {
-		QString final = basename + QString("_%1.png").arg(count, 6, 'd', 0, '0');
+		QString final = basename + QString("_%1.png").arg(count, 6, 10, QChar(u'0'));
 
 		if (!QFileInfo::exists(final)) {
 			file.setFileName(final);
@@ -1157,7 +1157,11 @@ void gui_save_screenshot(int w, int h, int stride, char *buffer, BYTE flip) {
 	}
 
 	if (flip) {
+#if QT_VERSION < QT_VERSION_CHECK(6, 9, 0)
 		screenshot = screenshot.mirrored(false, true);
+#else
+		screenshot = screenshot.flipped(Qt::Vertical);
+#endif
 	}
 
 	file.open(QIODevice::WriteOnly);
