@@ -373,13 +373,15 @@ BYTE d3d9_context_create(void) {
 			vp->w = (float)gfx.w[VIDEO_MODE] * gfx.device_pixel_ratio;
 			vp->h = (float)gfx.h[VIDEO_MODE] * gfx.device_pixel_ratio;
 
-			if (!cfg->stretch) {
-				if (cfg->integer_scaling) {
-					int factor = vmw > vmh ? vmh / mh : vmw / mw;
+			if (cfg->integer_scaling) {
+				int factor = vmw > vmh ? vmh / mh : vmw / mw;
 
-					vp->w = mw * (float)factor;
-					vp->h = mh * (float)factor;
-				} else if (vmw > vmh) {
+				vp->w = mw * (float)factor;
+				vp->h = mh * (float)factor;
+				vp->x += (vmw - vp->w) / 2.0f;
+				vp->y += (vmh - vp->h) / 2.0f;
+			} else  if (!cfg->stretch) {
+				if (vmw > vmh) {
 					vp->w = vmh * ratio;
 				} else {
 					vp->h = vmw / ratio;
