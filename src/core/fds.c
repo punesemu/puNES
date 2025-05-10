@@ -1065,6 +1065,11 @@ void fds_control_autoinsert(_fds_sinfo *sinfo) {
 	fds.auto_insert.r4032.disabled = FALSE;
 	fds.auto_insert.end_of_head.disabled = TRUE;
 
+	// lascio il controllo sulla protezione di OUJI solo se ha piu' files
+	// di quelli segnati nel blocco 2 ("Jingorou (Japan) (Unl).fds")
+	if (fds.info.protection.ouji && (sinfo->block2.files == sinfo->counted_files)) {
+		fds.info.write_protected = 0x00;
+	}
 	// Souseiki Fammy - ROM-QD for 256K+64K (Japan) (Unl)
 	if (!strncmp((char *)&sinfo->block1.name[0], "ILE", 3) &&
 		((sinfo->crc32prg == 0x01218B9D) || (sinfo->crc32prg == 0xF1BCA55D))) {
