@@ -882,7 +882,9 @@ void wram_reset_chunks(void) {
 void wram_memset(void) {
 	if (wram_size()) {
 		if (info.mapper.id == FDS_MAPPER) {
-			memset(wram_pnt(), 0xEA, wram.real_size);
+			if (info.reset > RESET) {
+				memset(wram_pnt(), 0xEA, wram.real_size);
+			}
 		} else {
 			BYTE *dst = NULL;
 			size_t size = 0;
