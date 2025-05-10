@@ -270,6 +270,7 @@ INLINE static void prg_fix_176(void) {
 	}
 }
 INLINE static void chr_fix_176(void) {
+	WORD swap = (m176.mmc3_bank_to_update & 0x80) << 5;
 	DBWORD base = m176.cpu5xxx[2] << 3;
 	DBWORD bank[8];
 
@@ -282,6 +283,7 @@ INLINE static void chr_fix_176(void) {
 			? (m176.cpu5xxx[0] & 0x010 ? 0x08 : 0x18)
 			: 0x00;
 
+		swap = 0x00;
 		base = (info.mapper.submapper == 5 ? base : (base & ~mask)) | ((m176.cpu8xxx[0] << 3) & mask);
 		bank[0] = base | 0;
 		bank[1] = base | 1;
@@ -321,8 +323,6 @@ INLINE static void chr_fix_176(void) {
 		memmap_auto_2k(0, MMPPU(0x1000), bank[4]);
 		memmap_auto_2k(0, MMPPU(0x1800), bank[6]);
 	} else {
-		WORD swap = (m176.mmc3_bank_to_update & 0x80) << 5;
-
 		chr_swap_176(0x0000 ^ swap, bank[0]);
 		chr_swap_176(0x0400 ^ swap, bank[1]);
 		chr_swap_176(0x0800 ^ swap, bank[2]);
