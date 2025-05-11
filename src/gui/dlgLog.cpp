@@ -227,13 +227,7 @@ void dlgLog::error_box(const uTCHAR *utxt, va_list ap) {
 }
 
 void dlgLog::lopen(types type, const uTCHAR *utxt, va_list ap) {
-#if defined (_WIN32)
-	_lopen(type, "▶", "*", utxt, ap);
-#elif defined (__OpenBSD__)
-	_lopen(type, "▶", "*", utxt, ap);
-#else
-	_lopen(type, "▶", "▶", utxt, ap);
-#endif
+	_lopen(type, ">", ">", utxt, ap);
 }
 void dlgLog::lclose(const uTCHAR *utxt, va_list ap) {
 	_lclose(TRUE, utxt, ap);
