@@ -26,7 +26,7 @@
 #include "emu_thread.h"
 #include "settings.h"
 #include "cheat.h"
-#include "recent_roms.h"
+#include "recent_files.h"
 #include "patcher.h"
 #include "mappers.h"
 #include "tape_data_recorder.h"
@@ -107,6 +107,9 @@ int main(int argc, char **argv) {
 
 	recent_roms_init();
 	recent_roms_parse();
+
+	recent_disks_init();
+	recent_disks_parse();
 
 #if defined (WITH_FFMPEG)
 	recording_init();

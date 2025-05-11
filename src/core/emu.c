@@ -40,7 +40,7 @@
 #include "fds.h"
 #include "nsfe.h"
 #include "patcher.h"
-#include "recent_roms.h"
+#include "recent_files.h"
 #include "../../c++/crc/crc.h"
 #include "gui.h"
 #include "nes20db.h"

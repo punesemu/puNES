@@ -28,6 +28,7 @@
 #include "emu.h"
 #include "rewind.h"
 #include "save_slot.h"
+#include "recent_files.h"
 #include "../../c++/crc/crc.h"
 
 #define BIOSFILE "disksys.rom"
@@ -481,6 +482,9 @@ BYTE fds_change_disk(uTCHAR *file) {
 	if (rewind_init()) {
 		return (EXIT_ERROR);
 	}
+
+	recent_roms_add(file);
+	recent_disks_add(file);
 
 	save_slot_count_load();
 

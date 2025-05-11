@@ -44,10 +44,11 @@
 #include "dlgLog.hpp"
 #include "dlgSettings.hpp"
 #include "wdgOverlayUi.hpp"
+#include "recentFiles.hpp"
 #include "common.h"
 #include "emu_thread.h"
 #include "clock.h"
-#include "recent_roms.h"
+#include "recent_files.h"
 #include "fds.h"
 #include "patcher.h"
 #include "save_slot.h"
@@ -76,6 +77,9 @@ mainWindow::mainWindow() : QMainWindow() {
 	setupUi(this);
 
 	stylesheet_update();
+
+	update_menu_recent_roms();
+	update_menu_recent_disks();
 
 	org_geom.setX(100);
 	org_geom.setY(100);
@@ -601,6 +605,14 @@ void mainWindow::change_rom(const uTCHAR *rom) {
 	}
 	emu_thread_continue();
 }
+void mainWindow::change_disk(const QString disk) {
+	QFileInfo fileinfo(disk);
+
+	if (!fds_change_disk(uQStringCD(fileinfo.absoluteFilePath()))) {
+		ustrncpy(gui.last_open_path, uQStringCD(fileinfo.absolutePath()), usizeof(gui.last_open_path) - 1);
+		update_window();
+	};
+}
 void mainWindow::shortcuts(void) {
 	// se non voglio che gli shortcuts funzionino durante il fullscreen, basta
 	// utilizzare lo shortcut associato al QAction. In questo modo quando nascondero'
@@ -1056,7 +1068,7 @@ void mainWindow::update_menu_file(void) {
 
 		menu_Recent_Roms->clear();
 
-		for (i = 0; i < RECENT_ROMS_MAX; i++) {
+		for (i = 0; i < RECENT_FILES_MAX; i++) {
 			const QString description = QString((const QChar *)recent_roms_item(i), recent_roms_item_size(i));
 			const QFileInfo rom(description);
 			QAction *action = nullptr;
@@ -1179,6 +1191,107 @@ void mainWindow::update_menu_state(void) {
 	action_State_Save_to_file->setEnabled(state);
 	action_State_Load_from_file->setEnabled(state && (tas.type == NOTAS));
 }
+void mainWindow::update_menu_recent_roms(void) {
+	foreach (QAction *action, menu_Recent_Roms->actions()) {
+		delete (action);
+	}
+
+	menu_Recent_Roms->clear();
+
+	if (recent_roms_count() == 0) {
+		QAction *action = new QAction(this);
+
+		action->setText(tr("list of last used roms still empty"));
+		action->setEnabled(false);
+		menu_Recent_Roms->addAction(action);
+	} else {
+		int i = 0;
+
+		for (i = 0; i < RECENT_FILES_MAX; i++) {
+			const QString description = QString((const QChar *)recent_roms_item(i), recent_roms_item_size(i));
+			const QFileInfo rom(description);
+			QAction *action = nullptr;
+
+			if (description.isEmpty()) {
+				break;
+			}
+
+			action = new QAction(this);
+			action->setText(QFileInfo(description).fileName());
+
+			if (rom.suffix().isEmpty() ||
+				!rom.suffix().compare("nes", Qt::CaseInsensitive) ||
+				!rom.suffix().compare("unf", Qt::CaseInsensitive) ||
+				!rom.suffix().compare("unif", Qt::CaseInsensitive)) {
+				action->setIcon(QIcon(":/icon/icons/nes_file.svgz"));
+			} else if (!rom.suffix().compare("nsf", Qt::CaseInsensitive) ||
+				!rom.suffix().compare("nsfe", Qt::CaseInsensitive)) {
+				action->setIcon(QIcon(":/icon/icons/nsf_file.svgz"));
+			} else if (!rom.suffix().compare("fds", Qt::CaseInsensitive)) {
+				action->setIcon(QIcon(":/icon/icons/fds_file.svgz"));
+			} else if (!rom.suffix().compare("qd", Qt::CaseInsensitive)) {
+				action->setIcon(QIcon(":/icon/icons/fds_file.svgz"));
+			} else if (!rom.suffix().compare("fm2", Qt::CaseInsensitive)) {
+				action->setIcon(QIcon(":/icon/icons/fm2_file.svgz"));
+			} else {
+				action->setIcon(QIcon(":/icon/icons/compressed_file.svgz"));
+			}
+
+			action->setProperty("myValue", QVariant(i));
+			menu_Recent_Roms->addAction(action);
+			connect(action, SIGNAL(triggered()), this, SLOT(s_open_recent_roms()));
+		}
+	}
+}
+void mainWindow::update_menu_recent_disks(void) {
+	if (menu_Change_Disk->isEnabled() && (QThread::currentThread() == this->thread())) {
+		foreach (QAction *action, menu_Change_Disk->actions()) {
+			if (action != action_Change_Disk) {
+				delete (action);
+			}
+		}
+
+		menu_Change_Disk->clear();
+
+		menu_Change_Disk->addAction(action_Change_Disk);
+		menu_Change_Disk->addSeparator();
+		if (recent_disks_count() == 0) {
+			QAction *action = new QAction(this);
+
+			action->setText(tr("list of last used disks still empty"));
+			action->setEnabled(false);
+			menu_Change_Disk->addAction(action);
+		} else {
+			int i = 0;
+
+			for (i = 0; i < RECENT_FILES_MAX; i++) {
+				const QString description = QString((const QChar *)recent_disks_item(i), recent_disks_item_size(i));
+				const QFileInfo disk(description);
+				QAction *action = nullptr;
+
+				if (description.isEmpty()) {
+					break;
+				}
+
+				action = new QAction(this);
+				action->setText(QFileInfo(description).fileName());
+
+				if (!disk.suffix().compare("fds", Qt::CaseInsensitive)) {
+					action->setIcon(QIcon(":/icon/icons/fds_file.svgz"));
+				} else if (!disk.suffix().compare("qd", Qt::CaseInsensitive)) {
+					action->setIcon(QIcon(":/icon/icons/fds_file.svgz"));
+				} else {
+					action->setIcon(QIcon(":/icon/icons/compressed_file.svgz"));
+				}
+
+				action->setProperty("myValue", QVariant(i));
+				menu_Change_Disk->addAction(action);
+				connect(action, SIGNAL(triggered()), this, SLOT(s_open_recent_disks()));
+			}
+		}
+	}
+}
+
 
 void mainWindow::update_fds_menu(void) {
 	QString *sc = (QString *)settings_inp_rd_sc(SET_INP_SC_EJECT_DISK, KEYBOARD);
@@ -1190,6 +1303,7 @@ void mainWindow::update_fds_menu(void) {
 			action_text(action_Eject_Insert_Disk, tr("&Eject disk"), sc);
 		}
 
+		action_Eject_Insert_Disk->setEnabled(true);
 		menu_Disk_Side->setEnabled(true);
 		ctrl_disk_side(action_Disk_1_side_A);
 		ctrl_disk_side(action_Disk_1_side_B);
@@ -1199,15 +1313,14 @@ void mainWindow::update_fds_menu(void) {
 		ctrl_disk_side(action_Disk_3_side_B);
 		ctrl_disk_side(action_Disk_4_side_A);
 		ctrl_disk_side(action_Disk_4_side_B);
-		action_Eject_Insert_Disk->setEnabled(true);
-		action_Change_Disk->setEnabled(true);
+		menu_Change_Disk->setEnabled(true);
 		menu_Empty_Disk->setEnabled(true);
 		menu_Export_Current_state->setEnabled(true);
 	} else {
+		action_Eject_Insert_Disk->setEnabled(false);
 		action_text(action_Eject_Insert_Disk, tr("&Eject/Insert disk"), sc);
 		menu_Disk_Side->setEnabled(false);
-		action_Eject_Insert_Disk->setEnabled(false);
-		action_Change_Disk->setEnabled(false);
+		menu_Change_Disk->setEnabled(false);
 		menu_Empty_Disk->setEnabled(false);
 		menu_Export_Current_state->setEnabled(false);
 	}
@@ -1607,6 +1720,32 @@ void mainWindow::s_eject_disk(void) {
 	emu_thread_continue();
 	update_menu_nes();
 }
+void mainWindow::s_open_recent_disks(void) {
+	int index = QVariant(((QObject *)sender())->property("myValue")).toInt();
+	QString current = QString((const QChar *)recent_disks_current(), recent_disks_current_size());
+	QString item = QString((const QChar *)recent_disks_item(index), recent_disks_item_size(index));
+
+	emu_pause(TRUE);
+
+	if (current != item) {
+		change_disk(item);
+//	} else {
+//		// se l'archivio e' compresso e contiene piu' di una rom allora lo carico
+//		_uncompress_archive *archive;
+//		BYTE rc;
+//
+//		archive = uncompress_archive_alloc(uQStringCD(item), &rc);
+//
+//		if (rc == UNCOMPRESS_EXIT_OK) {
+//			if (archive->rom.count > 1) {
+//				change_rom(uQStringCD(item));
+//			}
+//			uncompress_archive_free(archive);
+//		}
+	}
+
+	emu_pause(FALSE);
+}
 void mainWindow::s_change_disk(void) {
 	QStringList filters;
 	QString file;
@@ -1637,12 +1776,7 @@ void mainWindow::s_change_disk(void) {
 		uQString(info.rom.compress_file[0] ? &info.rom.compress_file[0] : &gui.last_open_path[0]), filters.join(";;"));
 
 	if (!file.isNull()) {
-		QFileInfo fileinfo(file);
-
-		if (!fds_change_disk(uQStringCD(fileinfo.absoluteFilePath()))) {
-			ustrncpy(gui.last_open_path, uQStringCD(fileinfo.absolutePath()), usizeof(gui.last_open_path) - 1);
-			update_window();
-		};
+		change_disk(file);
 	}
 
 	emu_thread_continue();

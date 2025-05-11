@@ -15,9 +15,12 @@ Changelog:
 - [NSF Player] Improved display of author notes.
 - [FDS] Fixed handling of CRC blocks during QD format image loading (#416).
 - [FDS] Fixed reset behavior (#424 and #425).
-- Fix joystick axes input handling: add RELEASED event trigger when needed before new PRESSED events (#415).
-- Refactor GUI : removed hard-coded stylesheets and centralize theme updates.
+- [FDS] Implemented a submenu in the NES menu tracking the last 15 disk swaps.
+- [FDS] Added a keyboard shortcut for the action "Change Disk".
+- Fixed joystick axes input handling: add RELEASED event trigger when needed before new PRESSED events (#415).
 - Fixed rewind state handling and ensured proper cleanup during reset.
+- Refactor GUI : removed hard-coded stylesheets and centralize theme updates.
+- Added a context menu to the emulator window that reproduces the entire "NES" menu with the addition of dedicated Family/Subor Keyboard entries for "Paste" and "Release/Capture input".
 
 0.111
 - Rewritten mappers : All.

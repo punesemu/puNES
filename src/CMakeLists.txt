@@ -641,7 +641,9 @@ set(gui_srcs
 	gui/objSettings.cpp
 	gui/objSettings.hpp
 	gui/qt.cpp
-	gui/recent_roms.cpp
+	gui/recentFiles.cpp
+	gui/recentFiles.hpp
+	gui/recent_files.cpp
 	gui/settings.cpp
 	gui/tas.cpp
 	gui/wdgAPUChannels.cpp
