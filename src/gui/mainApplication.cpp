@@ -143,7 +143,7 @@ BYTE mainApplication::control_base_folders(void) {
 	}
 
 	if (!info.portable && old.exists()) {
-		QString list[] = { QString(CFGFILENAME), QString(INPFILENAME), QString(RECENTFILENAME) };
+		QString list[] = { QString(CFGFILENAME), QString(INPFILENAME), QString(RECENTROMSFILENAME) };
 		int i;
 
 		for (i = 0; i < 3; i++) {

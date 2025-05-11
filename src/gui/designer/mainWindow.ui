@@ -68,6 +68,8 @@
       <iconset resource="resources.qrc">
        <normaloff>:/icon/icons/disk_side.svgz</normaloff>:/icon/icons/disk_side.svgz</iconset>
      </property>
+     <addaction name="action_Switch_sides"/>
+     <addaction name="separator"/>
      <addaction name="action_Disk_1_side_A"/>
      <addaction name="action_Disk_1_side_B"/>
      <addaction name="action_Disk_2_side_A"/>
@@ -76,8 +78,6 @@
      <addaction name="action_Disk_3_side_B"/>
      <addaction name="action_Disk_4_side_A"/>
      <addaction name="action_Disk_4_side_B"/>
-     <addaction name="separator"/>
-     <addaction name="action_Switch_sides"/>
     </widget>
     <widget class="QMenu" name="menu_Tape">
      <property name="title">
@@ -119,6 +119,16 @@
      <addaction name="action_Empty_Disk_DS_FDS_Format_without_Header"/>
      <addaction name="action_Empty_Disk_DS_Quick_Disk_Format"/>
     </widget>
+    <widget class="QMenu" name="menu_Change_Disk">
+     <property name="title">
+      <string>C&amp;hange Disk</string>
+     </property>
+     <property name="icon">
+      <iconset resource="resources.qrc">
+       <normaloff>:/icon/icons/fds_change_disk.svgz</normaloff>:/icon/icons/fds_change_disk.svgz</iconset>
+     </property>
+     <addaction name="action_Change_Disk"/>
+    </widget>
     <addaction name="action_Turn_Off"/>
     <addaction name="action_Hard_Reset"/>
     <addaction name="action_Soft_Reset"/>
@@ -127,9 +137,9 @@
     <addaction name="separator"/>
     <addaction name="action_Shout_into_Microphone"/>
     <addaction name="separator"/>
-    <addaction name="menu_Disk_Side"/>
     <addaction name="action_Eject_Insert_Disk"/>
-    <addaction name="action_Change_Disk"/>
+    <addaction name="menu_Disk_Side"/>
+    <addaction name="menu_Change_Disk"/>
     <addaction name="menu_Empty_Disk"/>
     <addaction name="menu_Export_Current_state"/>
     <addaction name="separator"/>
@@ -826,15 +836,6 @@
     <string>to F&amp;DS Format (without Header)</string>
    </property>
   </action>
-  <action name="action_Change_Disk">
-   <property name="icon">
-    <iconset resource="resources.qrc">
-     <normaloff>:/icon/icons/fds_change_disk.svgz</normaloff>:/icon/icons/fds_change_disk.svgz</iconset>
-   </property>
-   <property name="text">
-    <string>C&amp;hange Disk</string>
-   </property>
-  </action>
   <action name="action_Empty_Disk_FDS_Format_with_Header">
    <property name="text">
     <string>Single Side &amp;FDS Format (with Header)</string>
@@ -863,6 +864,18 @@
   <action name="action_Empty_Disk_DS_Quick_Disk_Format">
    <property name="text">
     <string>Double Sides &amp;Quick Disk Format</string>
+   </property>
+  </action>
+  <action name="action_Change_Disk">
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/icon/icons/load.svgz</normaloff>:/icon/icons/load.svgz</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Load from File</string>
+   </property>
+   <property name="iconText">
+    <string>Load from File</string>
    </property>
   </action>
  </widget>

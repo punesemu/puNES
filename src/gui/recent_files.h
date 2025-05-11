@@ -16,14 +16,10 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#ifndef RECENT_ROMS_H_
-#define RECENT_ROMS_H_
+#ifndef RECENT_FILES_H_
+#define RECENT_FILES_H_
 
 #include "common.h"
-
-enum recent_roms_misc {
-	RECENT_ROMS_MAX = 15,
-};
 
 #if defined (__cplusplus)
 #define EXTERNC extern "C"
@@ -41,6 +37,16 @@ EXTERNC int recent_roms_item_size(int index);
 EXTERNC const char *recent_roms_current(void);
 EXTERNC int recent_roms_current_size(void);
 
+EXTERNC void recent_disks_init(void);
+EXTERNC void recent_disks_add(uTCHAR *file);
+EXTERNC void recent_disks_parse(void);
+EXTERNC void recent_disks_save(void);
+EXTERNC int recent_disks_count(void);
+EXTERNC const char *recent_disks_item(int index);
+EXTERNC int recent_disks_item_size(int index);
+EXTERNC const char *recent_disks_current(void);
+EXTERNC int recent_disks_current_size(void);
+
 #undef EXTERNC
 
-#endif /* RECENT_ROMS_H_ */
+#endif /* RECENT_FILES_H_ */

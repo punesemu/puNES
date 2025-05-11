@@ -34,7 +34,8 @@ typedef signed int SDBWORD;
 
 #define CFGFILENAME "/puNES.cfg"
 #define INPFILENAME "/input.cfg"
-#define RECENTFILENAME "/recent.cfg"
+#define RECENTROMSFILENAME "/recent.cfg"
+#define RECENTDISKSFILENAME "/disks.cfg"
 
 #define CHEAT_FOLDER   "/cheat"
 #define PERGAME_FOLDER "/pgs"

@@ -236,6 +236,7 @@ class mainWindow : public QMainWindow, public Ui::mainWindow {
 		void control_visible_cursor(void);
 		void make_reset(int type);
 		void change_rom(const uTCHAR *rom);
+		void change_disk(const QString disk);
 		void shortcuts(void);
 		bool is_rwnd_shortcut_or_not_shcut(const QKeyEvent *event);
 		void update_gfx_monitor_dimension(void);
@@ -266,6 +267,8 @@ class mainWindow : public QMainWindow, public Ui::mainWindow {
 		void update_fds_menu(void);
 		void update_tape_menu(void);
 		void update_menu_tools(void);
+		void update_menu_recent_roms(void);
+		void update_menu_recent_disks(void);
 
 	private:
 		void action_text(QAction *action, const QString &description, QString *scut);
@@ -297,6 +300,7 @@ class mainWindow : public QMainWindow, public Ui::mainWindow {
 		void s_disk_side(void);
 		void s_eject_disk(void);
 		void s_change_disk(void);
+		void s_open_recent_disks(void);
 		void s_create_empty_disk(void);
 		void s_export_fds_image(void);
 		void s_start_stop_audio_recording(void);
