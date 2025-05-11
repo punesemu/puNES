@@ -331,8 +331,8 @@ void wdgScreen::s_context_menu(const QPoint &pos) {
 			(gui.capture_input ? tr("Release input") : tr("Capure Input")) +
 			(sc == NULL ? "" : QString("\t%0").arg((*sc))));
 		capture_input->setIcon(QIcon(gui.capture_input
-			? ":/pics/pics/hostkey_captured.png"
-			: ":/pics/pics/hostkey.png"));
+			? ":/pics/pics/hostkey.png"
+			: ":/pics/pics/hostkey_captured.png"));
 
 		menu.addAction(paste);
 		menu.addAction(capture_input);
