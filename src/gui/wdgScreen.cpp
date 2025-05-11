@@ -37,8 +37,6 @@
 
 wdgScreen::wdgScreen(QWidget *parent) : QWidget(parent) {
 	target = nullptr;
-	paste = new QAction(this);
-	capture_input = new QAction(this);
 #if defined (WITH_OPENGL)
 	wogl = new wdgOpenGL(this);
 #elif defined (WITH_D3D9)
@@ -60,8 +58,6 @@ wdgScreen::wdgScreen(QWidget *parent) : QWidget(parent) {
 
 	connect(this, SIGNAL(et_cursor_set()), this, SLOT(s_cursor_set()));
 	connect(this, SIGNAL(et_cursor_hide(int)), this, SLOT(s_cursor_hide(int)));
-	connect(paste, SIGNAL(triggered()), this, SLOT(s_paste_event()));
-	connect(capture_input, SIGNAL(triggered()), this, SLOT(s_capture_input_event()));
 
 	setContextMenuPolicy(Qt::CustomContextMenu);
 	connect(this, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(s_context_menu(QPoint)));
@@ -264,12 +260,32 @@ void wdgScreen::cursor_set(void) {
 void wdgScreen::cursor_hide(BYTE hide) {
 	emit et_cursor_hide(hide);
 }
-void wdgScreen::menu_copy(QMenu *src, QMenu *dst) {
+void wdgScreen::menu_copy(QMenu *src, QMenu *dst, bool src_as_root) {
+	QMenu *submenu, *root = dst;
+
+	if (src_as_root) {
+		submenu = new QMenu(src->title(), dst);
+		submenu->setIcon(src->icon());
+		submenu->setEnabled(src->isEnabled());
+		dst->addMenu(submenu);
+		root = submenu;
+	}
 	foreach(QAction *action, src->actions()) {
 		if (action->menu()) {
-			dst->addMenu(action->menu());
+			submenu = new QMenu(action->text(), dst);
+			submenu->setIcon(action->icon());
+			submenu->setEnabled(action->isEnabled());
+			root->addMenu(submenu);
+			menu_copy(action->menu(), submenu, src_as_root);
+		} else if (action->isSeparator()) {
+			root->addSeparator();
 		} else {
-			dst->addAction(action);
+			QAction *new_action = new QAction(action->text(), dst);
+
+			new_action->setIcon(action->icon());
+			new_action->setEnabled(action->isEnabled());
+			connect(new_action, &QAction::triggered, [action](UNUSED(bool checked)) { action->trigger(); });
+			root->addAction(new_action);
 		}
 	}
 }
@@ -304,35 +320,42 @@ void wdgScreen::s_capture_input_event(void) {
 }
 void wdgScreen::s_context_menu(const QPoint &pos) {
 	QPoint global_pos = mapToGlobal(pos);
-	QMenu menu;
+	QMenu menu(this);
 
 	menu.addSection(tr("Files"));
-	menu.addMenu(mainwin->menu_Recent_Roms);
+	menu_copy(mainwin->menu_Recent_Roms, &menu, true);
 	menu.addSection(tr("NES"));
-	menu_copy(mainwin->menu_NES, &menu);
+	menu_copy(mainwin->menu_NES, &menu, false);
 	if (nes_keyboard.enabled) {
 		QString *sc = (QString *)settings_inp_rd_sc(SET_INP_SC_TOGGLE_CAPTURE_INPUT, KEYBOARD);
 		const QClipboard *clipboard = QApplication::clipboard();
 		const QMimeData *mimeData = clipboard->mimeData();
+		QAction *action = new QAction(this);
 
 		menu.addSection(dlgkeyb->keyboard->keyboard_name());
 
-		paste->setText(tr("Paste"));
-		paste->setIcon(QIcon(":/icon/icons/paste.svgz"));
-		paste->setEnabled(
+		// paste
+		action->setText(tr("Paste"));
+		action->setIcon(QIcon(":/icon/icons/paste.svgz"));
+		action->setEnabled(
+			!info.no_rom &&
 			(mimeData->hasUrls() || mimeData->hasText()) &&
 			!dlgkeyb->paste->enable &&
 			(tape_data_recorder.mode == TAPE_DATA_NONE));
+		connect(action, SIGNAL(triggered()), this, SLOT(s_paste_event()));
+		menu.addAction(action);
 
-		capture_input->setText(
+		//release/capture input
+		action = new QAction(this);
+		action->setText(
 			(gui.capture_input ? tr("Release input") : tr("Capure Input")) +
 			(sc == NULL ? "" : QString("\t%0").arg((*sc))));
-		capture_input->setIcon(QIcon(gui.capture_input
+		action->setIcon(QIcon(gui.capture_input
 			? ":/pics/pics/hostkey.png"
 			: ":/pics/pics/hostkey_captured.png"));
-
-		menu.addAction(paste);
-		menu.addAction(capture_input);
+		action->setEnabled(!info.no_rom);
+		connect(action, SIGNAL(triggered()), this, SLOT(s_capture_input_event()));
+		menu.addAction(action);
 	}
 	menu.exec(global_pos);
 }
