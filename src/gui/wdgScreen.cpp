@@ -38,9 +38,7 @@
 wdgScreen::wdgScreen(QWidget *parent) : QWidget(parent) {
 	target = nullptr;
 	paste = new QAction(this);
-	tape.play = new QAction(this);
-	tape.record = new QAction(this);
-	tape.stop = new QAction(this);
+	capture_input = new QAction(this);
 #if defined (WITH_OPENGL)
 	wogl = new wdgOpenGL(this);
 #elif defined (WITH_D3D9)
@@ -60,17 +58,10 @@ wdgScreen::wdgScreen(QWidget *parent) : QWidget(parent) {
 
 	setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
-	paste->setIcon(QIcon(":/icon/icons/paste.svgz"));
-	tape.play->setIcon(QIcon(":/icon/icons/cassette_tape_play.svgz"));
-	tape.record->setIcon(QIcon(":/icon/icons/cassette_tape_record.svgz"));
-	tape.stop->setIcon(QIcon(":/icon/icons/cassette_tape_stop.svgz"));
-
-	connect (this, SIGNAL(et_cursor_set()), this, SLOT(s_cursor_set()));
-	connect (this, SIGNAL(et_cursor_hide(int)), this, SLOT(s_cursor_hide(int)));
+	connect(this, SIGNAL(et_cursor_set()), this, SLOT(s_cursor_set()));
+	connect(this, SIGNAL(et_cursor_hide(int)), this, SLOT(s_cursor_hide(int)));
 	connect(paste, SIGNAL(triggered()), this, SLOT(s_paste_event()));
-	connect(tape.play, SIGNAL(triggered()), this, SLOT(s_tape_play_event()));
-	connect(tape.record, SIGNAL(triggered()), this, SLOT(s_tape_record_event()));
-	connect(tape.stop, SIGNAL(triggered()), this, SLOT(s_tape_stop_event()));
+	connect(capture_input, SIGNAL(triggered()), this, SLOT(s_capture_input_event()));
 
 	setContextMenuPolicy(Qt::CustomContextMenu);
 	connect(this, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(s_context_menu(QPoint)));
@@ -273,6 +264,20 @@ void wdgScreen::cursor_set(void) {
 void wdgScreen::cursor_hide(BYTE hide) {
 	emit et_cursor_hide(hide);
 }
+void wdgScreen::menu_copy(QMenu *src, QMenu *dst) {
+	foreach(QAction *action, src->actions()) {
+		if (action->menu()) {
+			QMenu *submenu = new QMenu(action->text(), dst);
+
+			submenu->setIcon(action->icon());
+			submenu->setEnabled(action->isEnabled());
+			dst->addMenu(submenu);
+			menu_copy(action->menu(), submenu);
+		} else {
+			dst->addAction(action);
+		}
+	}
+}
 
 void wdgScreen::s_cursor_set(void) {
 	if (input_draw_target()) {
@@ -299,57 +304,39 @@ void wdgScreen::s_paste_event(void) {
 		dropEvent(&de);
 	}
 }
-void wdgScreen::s_tape_play_event(void) {
-	mainwin->action_Tape_Play->trigger();
-}
-void wdgScreen::s_tape_record_event(void) {
-	mainwin->action_Tape_Record->trigger();
-}
-void wdgScreen::s_tape_stop_event(void) {
-	mainwin->action_Tape_Stop->trigger();
+void wdgScreen::s_capture_input_event(void) {
+	mainwin->qaction_shcut.toggle_capture_input->trigger();
 }
 void wdgScreen::s_context_menu(const QPoint &pos) {
 	QPoint global_pos = mapToGlobal(pos);
-	int counter = 0;
 	QMenu menu;
 
-	menu.setMinimumWidth(200);
+	menu.addSection(tr("NES"));
+	menu_copy(mainwin->menu_NES, &menu);
+	if (nes_keyboard.enabled) {
+		QString *sc = (QString *)settings_inp_rd_sc(SET_INP_SC_TOGGLE_CAPTURE_INPUT, KEYBOARD);
+		const QClipboard *clipboard = QApplication::clipboard();
+		const QMimeData *mimeData = clipboard->mimeData();
 
-	if (!info.no_rom) {
-		if (nes_keyboard.enabled) {
-			const QClipboard *clipboard = QApplication::clipboard();
-			const QMimeData *mimeData = clipboard->mimeData();
+		menu.addSection(dlgkeyb->keyboard->keyboard_name());
 
-			menu.addSection(dlgkeyb->keyboard->keyboard_name());
+		paste->setText(tr("Paste"));
+		paste->setIcon(QIcon(":/icon/icons/paste.svgz"));
+		paste->setEnabled(
+			(mimeData->hasUrls() || mimeData->hasText()) &&
+			!dlgkeyb->paste->enable &&
+			(tape_data_recorder.mode == TAPE_DATA_NONE));
 
-			paste->setText(tr("Paste"));
-			paste->setEnabled((mimeData->hasUrls() || mimeData->hasText()) &&
-				!dlgkeyb->paste->enable && (tape_data_recorder.mode == TAPE_DATA_NONE));
+		capture_input->setText(
+			(gui.capture_input ? tr("Release input") : tr("Capure Input")) +
+			(sc == NULL ? "" : QString("\t") + sc));
+		capture_input->setIcon(QIcon(gui.capture_input
+			? ":/pics/pics/hostkey_captured.png"
+			: ":/pics/pics/hostkey.png"));
 
-			menu.addAction(paste);
-
-			counter++;
-		}
-		if (tape_data_recorder.enabled) {
-			menu.addSection(tr("Tape"));
-
-			tape.play->setText(tr("Play"));
-			tape.record->setText(tr("Record"));
-			tape.stop->setText(tr("Stop"));
-
-			tape.play->setEnabled(mainwin->action_Tape_Play->isEnabled());
-			tape.record->setEnabled(mainwin->action_Tape_Record->isEnabled());
-			tape.stop->setEnabled(mainwin->action_Tape_Stop->isEnabled());
-
-			menu.addAction(tape.play);
-			menu.addAction(tape.record);
-			menu.addAction(tape.stop);
-
-			counter++;
-		}
+		menu.addAction(paste);
+		menu.addAction(capture_input);
 	}
-
-	if (counter) {
-		menu.exec(global_pos);
-	}
+	menu.exec(global_pos);
 }
+
