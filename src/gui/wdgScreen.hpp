@@ -68,8 +68,6 @@ class wdgScreen : public QWidget {
 
 	private:
 		QCursor *target;
-		QAction *paste;
-		QAction *capture_input;
 
 	public:
 		explicit wdgScreen(QWidget *parent = nullptr);
@@ -92,7 +90,7 @@ class wdgScreen : public QWidget {
 		void cursor_hide(BYTE hide);
 
 	private:
-		void menu_copy(QMenu *src, QMenu *dst);
+		void menu_copy(QMenu *src, QMenu *dst, bool src_as_root);
 
 	private slots:
 		void s_cursor_set(void);
