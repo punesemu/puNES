@@ -267,12 +267,7 @@ void wdgScreen::cursor_hide(BYTE hide) {
 void wdgScreen::menu_copy(QMenu *src, QMenu *dst) {
 	foreach(QAction *action, src->actions()) {
 		if (action->menu()) {
-			QMenu *submenu = new QMenu(action->text(), dst);
-
-			submenu->setIcon(action->icon());
-			submenu->setEnabled(action->isEnabled());
-			dst->addMenu(submenu);
-			menu_copy(action->menu(), submenu);
+			dst->addMenu(action->menu());
 		} else {
 			dst->addAction(action);
 		}
@@ -311,6 +306,8 @@ void wdgScreen::s_context_menu(const QPoint &pos) {
 	QPoint global_pos = mapToGlobal(pos);
 	QMenu menu;
 
+	menu.addSection(tr("Files"));
+	menu.addMenu(mainwin->menu_Recent_Roms);
 	menu.addSection(tr("NES"));
 	menu_copy(mainwin->menu_NES, &menu);
 	if (nes_keyboard.enabled) {

@@ -20,7 +20,7 @@ Changelog:
 - Fixed joystick axes input handling: add RELEASED event trigger when needed before new PRESSED events (#415).
 - Fixed rewind state handling and ensured proper cleanup during reset.
 - Refactor GUI : removed hard-coded stylesheets and centralize theme updates.
-- Added a context menu to the emulator window that reproduces the entire "NES" menu with the addition of dedicated Family/Subor Keyboard entries for "Paste" and "Release/Capture input".
+- Added a context menu to the emulator window that shows "Recent Roms", the entire "NES" menu and adds "Paste" and "Release/Capture Input" entries for the Family BASIC/Subor keyboard.
 
 0.111
 - Rewritten mappers : All.
