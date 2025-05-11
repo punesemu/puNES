@@ -839,6 +839,7 @@ void wdgSettingsInput::shortcuts_set(void) {
 	shortcut_update_text(mainwin->action_Insert_Coin, SET_INP_SC_INSERT_COIN);
 	shortcut_update_text(mainwin->action_Switch_sides, SET_INP_SC_SWITCH_SIDES);
 	shortcut_update_text(mainwin->action_Eject_Insert_Disk, SET_INP_SC_EJECT_DISK);
+	shortcut_update_text(mainwin->action_Change_Disk, SET_INP_SC_CHANGE_DISK);
 	shortcut_update_text(mainwin->action_Fullscreen, SET_INP_SC_FULLSCREEN);
 	shortcut_update_text(mainwin->action_Save_Screenshot, SET_INP_SC_SCREENSHOT);
 	shortcut_update_text(mainwin->action_Save_Unaltered_NES_screen, SET_INP_SC_SCREENSHOT_1X);

@@ -179,6 +179,7 @@ enum inp_element {
 	SET_INP_SC_INSERT_COIN,
 	SET_INP_SC_SWITCH_SIDES,
 	SET_INP_SC_EJECT_DISK,
+	SET_INP_SC_CHANGE_DISK,
 	SET_INP_SC_REC_AUDIO,
 #if defined (WITH_FFMPEG)
 	SET_INP_SC_REC_VIDEO,
@@ -1588,6 +1589,7 @@ static const _settings inp_cfg[] = {
 	{uL("shortcuts"), uL("insert coin"),                   uL("8,NULL"),            NULL, NULL, {0, NULL}},
 	{uL("shortcuts"), uL("switch sides"),                  uL("Alt+S,NULL"),        NULL, NULL, {0, NULL}},
 	{uL("shortcuts"), uL("eject disk"),                    uL("Alt+E,NULL"),        NULL, NULL, {0, NULL}},
+	{uL("shortcuts"), uL("change disk"),                   uL("Alt+D,NULL"),        NULL, NULL, {0, NULL}},
 	{uL("shortcuts"), uL("start or stop audio recording"), uL("CTRL+A,NULL"),       NULL, NULL, {0, NULL}},
 #if defined (WITH_FFMPEG)
 	{uL("shortcuts"), uL("start or stop video recording"), uL("CTRL+V,NULL"),       NULL, NULL, {0, NULL}},

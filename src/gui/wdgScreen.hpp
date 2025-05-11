@@ -22,6 +22,7 @@
 #include <QtCore/QtGlobal>
 #include <QtCore/QMutex>
 #include <QtWidgets/QWidget>
+#include <QtWidgets/QMenu>
 #include <QtGui/QDragEnterEvent>
 #include <QtGui/QDropEvent>
 #include <QtGui/QResizeEvent>
@@ -68,11 +69,7 @@ class wdgScreen : public QWidget {
 	private:
 		QCursor *target;
 		QAction *paste;
-		struct wdgScreen_tape {
-			QAction *play;
-			QAction *record;
-			QAction *stop;
-		} tape{};
+		QAction *capture_input;
 
 	public:
 		explicit wdgScreen(QWidget *parent = nullptr);
@@ -94,13 +91,14 @@ class wdgScreen : public QWidget {
 		void cursor_set(void);
 		void cursor_hide(BYTE hide);
 
+	private:
+		void menu_copy(QMenu *src, QMenu *dst);
+
 	private slots:
 		void s_cursor_set(void);
 		void s_cursor_hide(int hide);
 		void s_paste_event(void);
-		void s_tape_play_event(void);
-		void s_tape_record_event(void);
-		void s_tape_stop_event(void);
+		void s_capture_input_event(void);
 		void s_context_menu(const QPoint &pos);
 };
 

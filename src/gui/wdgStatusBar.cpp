@@ -312,11 +312,9 @@ void nesKeyboardStatusBar::update_tooltip(void) {
 	icon->setToolTip(tooltip);
 }
 void nesKeyboardStatusBar::icon_pixmap(QIcon::Mode mode) const {
-	if (gui.capture_input) {
-		icon->setPixmap(QIcon(":/pics/pics/hostkey_captured.png").pixmap(16, 16,  mode));
-	} else {
-		icon->setPixmap(QIcon(":/pics/pics/hostkey.png").pixmap(16, 16,  mode));
-	}
+	icon->setPixmap(QIcon(gui.capture_input
+		? ":/pics/pics/hostkey_captured.png"
+		: ":/pics/pics/hostkey.png").pixmap(16, 16,  mode));
 }
 
 void nesKeyboardStatusBar::s_clicked(int button) {

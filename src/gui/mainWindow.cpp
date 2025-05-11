@@ -621,6 +621,7 @@ void mainWindow::shortcuts(void) {
 	connect_shortcut(action_Shout_into_Microphone, SET_INP_SC_SHOUT_INTO_MIC, SLOT(s_fake_slot())); // shortcut speciale
 	connect_shortcut(action_Switch_sides, SET_INP_SC_SWITCH_SIDES, SLOT(s_disk_side()));
 	connect_shortcut(action_Eject_Insert_Disk, SET_INP_SC_EJECT_DISK, SLOT(s_eject_disk()));
+	connect_shortcut(action_Change_Disk, SET_INP_SC_CHANGE_DISK, SLOT(s_change_disk()));
 	connect_shortcut(action_Fullscreen, SET_INP_SC_FULLSCREEN, SLOT(s_set_fullscreen()));
 	connect_shortcut(action_Save_Screenshot, SET_INP_SC_SCREENSHOT, SLOT(s_save_screenshot()));
 	connect_shortcut(action_Save_Unaltered_NES_screen, SET_INP_SC_SCREENSHOT_1X, SLOT(s_save_screenshot_1x()));
@@ -2388,6 +2389,9 @@ void mainWindow::s_shcjoy_read_timer(void) {
 							break;
 						case SET_INP_SC_EJECT_DISK:
 							action_Eject_Insert_Disk->trigger();
+							break;
+						case SET_INP_SC_CHANGE_DISK:
+							action_Change_Disk->trigger();
 							break;
 						case SET_INP_SC_FULLSCREEN:
 							action_Fullscreen->trigger();
