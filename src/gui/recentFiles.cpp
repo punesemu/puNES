@@ -28,12 +28,10 @@
 #include "settings.h"
 #include "gui.h"
 
-recentFiles::recentFiles(QString file) {
-	file_name = file;
-}
-
-void recentFiles::init(void) {
+void recentFiles::init(QString recent_file_name) {
 	QFile file;
+
+	file_name = recent_file_name;
 
 	clear();
 	file.setFileName(file_name);
