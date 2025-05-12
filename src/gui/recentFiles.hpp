@@ -36,11 +36,11 @@ class recentFiles {
 		} list;
 
 	public:
-		recentFiles(QString file);
+		recentFiles() = default;
 		~recentFiles() = default;
 
 	public:
-		void init(void);
+		void init(QString recent_file_name);
 		void add(uTCHAR *file);
 		void parse(void);
 		void save(void);

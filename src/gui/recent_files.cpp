@@ -23,10 +23,10 @@
 
 // ----------------------------------------------------------------------------------------------
 
-recentFiles recent_roms(QString("%0%1").arg(uQString(gui_config_folder())).arg(QString(RECENTROMSFILENAME)));
+recentFiles recent_roms;
 
 void recent_roms_init(void) {
-	recent_roms.init();
+	recent_roms.init(QString("%0%1").arg(uQString(gui_config_folder())).arg(QString(RECENTROMSFILENAME)));
 }
 void recent_roms_add(uTCHAR *file) {
 	recent_roms.add(file);
@@ -56,10 +56,10 @@ int recent_roms_current_size(void) {
 
 // ----------------------------------------------------------------------------------------------
 
-recentFiles recent_disks(QString("%0%1").arg(uQString(gui_config_folder())).arg(QString(RECENTDISKSFILENAME)));
+recentFiles recent_disks;
 
 void recent_disks_init(void) {
-	recent_disks.init();
+	recent_disks.init(QString("%0%1").arg(uQString(gui_config_folder())).arg(QString(RECENTDISKSFILENAME)));
 }
 void recent_disks_add(uTCHAR *file) {
 	recent_disks.add(file);
