@@ -224,7 +224,7 @@ INLINE static void chr_fix_083(void) {
 }
 INLINE static void wram_fix_083(void) {
 	if (m083tmp.use_wram) {
-		memmap_wram_8k(0, MMCPU(0x6000), (m083tmp.prg_mask >> 6));
+		memmap_wram_8k(0, MMCPU(0x6000), (m083.outer >> 6));
 	} else if (m083.mode & 0x20) {
 		memmap_prgrom_8k(0, MMCPU(0x6000), m083.prg[3]);
 	} else {

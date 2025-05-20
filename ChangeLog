@@ -2,7 +2,7 @@ Changelog:
 0.112
 - Added support to mapper : 481, 562, 564.
 - Disabled portable mode for the AppImage (#378).
-- Fixed mapper : 12, 17, 176, 308, 394, 412, 561.
+- Fixed mapper : 12, 17, 83, 176, 308, 394, 412, 561.
 - [NSF] Fixed display of timers when resetting the emulator (#380).
 - [NSF] Fixed Fixed RAM and WRAM initialization when changing songs (#380 and #384).
 - [NSF] Fixed wram destination pointer initialization (#383).
