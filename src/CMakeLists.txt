@@ -560,22 +560,23 @@ set(extra_srcs
 	)
 
 set(gui_ui_srcs
-	gui/designer/dlgCfgNSCode.ui
-	gui/designer/dlgCmdLineHelp.ui
-	gui/designer/dlgDetachBarcode.ui
 	gui/designer/dlgDipswitch.ui
 	gui/designer/dlgHeaderEditor.ui
 	gui/designer/dlgJsc.ui
-	gui/designer/dlgKeyboard.ui
-	gui/designer/dlgLog.ui
-	gui/designer/dlgSettings.ui
 	gui/designer/dlgStdPad.ui
 	gui/designer/dlgUncomp.ui
-	gui/designer/dlgVsSystem.ui
 	gui/designer/dlgWizard.ui
 	gui/designer/mainWindow.ui
 	gui/designer/wdgAPUChannels.ui
 	gui/designer/wdgCheatsEditor.ui
+	gui/designer/wdgDialogAbout.ui
+	gui/designer/wdgDialogCfgNSCode.ui
+	gui/designer/wdgDialogCmdLineHelp.ui
+	gui/designer/wdgDialogDetachBarcode.ui
+	gui/designer/wdgDialogLog.ui
+	gui/designer/wdgDialogKeyboard.ui
+	gui/designer/wdgDialogSettings.ui
+	gui/designer/wdgDialogVsSystem.ui
 	gui/designer/wdgKeyboardFB.ui
 	gui/designer/wdgKeyboardSubor.ui
 	gui/designer/wdgNTSCFilter.ui
@@ -596,6 +597,8 @@ set(gui_ui_srcs
 	gui/designer/wdgSettingsRecording.ui
 	gui/designer/wdgSettingsVideo.ui
 	gui/designer/wdgState.ui
+	gui/designer/wdgTitleBar.ui
+	gui/designer/wdgTitleBarWindow.ui
 	gui/designer/resources.qrc
 	)
 
@@ -684,6 +687,8 @@ set(gui_srcs
 	gui/wdgStatusBar.hpp
 	gui/theme.cpp
 	gui/theme.hpp
+	gui/wdgTitleBarWindow.cpp
+	gui/wdgTitleBarWindow.hpp
 	gui/wdgToolBar.cpp
 	gui/wdgToolBar.hpp
 

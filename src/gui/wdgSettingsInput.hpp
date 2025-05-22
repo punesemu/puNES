@@ -56,12 +56,12 @@ class wdgSettingsInput : public QWidget, public Ui::wdgSettingsInput {
 		double last_control;
 		dlgStdPad *dlg_std_pad;
 
+	signals:
+		void et_update_joy_combo(void);
+
 	public:
 		explicit wdgSettingsInput(QWidget *parent = nullptr);
 		~wdgSettingsInput() override;
-
-	signals:
-		void et_update_joy_combo(void);
 
 	private:
 		bool eventFilter(QObject *obj, QEvent *event) override;

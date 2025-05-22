@@ -38,14 +38,14 @@ class wdgPaletteWall : public QWidget {
 		int selCol;
 		int margin;
 
-	public:
-		explicit wdgPaletteWall(QWidget *parent = nullptr);
-		~wdgPaletteWall() override;
-
 	signals:
 		void et_first_paint(void);
 		void et_selected(int row, int col);
 		void et_current_changed(int row, int col);
+
+	public:
+		explicit wdgPaletteWall(QWidget *parent = nullptr);
+		~wdgPaletteWall() override;
 
 	public:
 		QSize sizeHint(void) const override;

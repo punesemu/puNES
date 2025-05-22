@@ -7,6 +7,10 @@
     <file>icons/flag_arabic.svgz</file>
     <file>icons/bios.svgz</file>
     <file>icons/buffer_size.svgz</file>
+    <file>icons/maximize_black.svgz</file>
+    <file>icons/maximize_white.svgz</file>
+    <file>icons/minimize_black.svgz</file>
+    <file>icons/minimize_white.svgz</file>
     <file>icons/disk_empty.svgz</file>
     <file>icons/barcode.svgz</file>
     <file>icons/camera.svgz</file>
@@ -31,6 +35,8 @@
     <file>icons/compressed_file.svgz</file>
     <file>icons/confirm.svgz</file>
     <file>icons/copy.svgz</file>
+    <file>icons/close_black.svgz</file>
+    <file>icons/close_white.svgz</file>
     <file>icons/cube.svgz</file>
     <file>icons/default.svgz</file>
     <file>icons/disk_side.svgz</file>
@@ -54,6 +60,8 @@
     <file>icons/flag_turkey.svgz</file>
     <file>icons/fm2_file.svgz</file>
     <file>icons/fullscreen.svgz</file>
+    <file>icons/fullscreen_black.svgz</file>
+    <file>icons/fullscreen_white.svgz</file>
     <file>icons/game_controller.svgz</file>
     <file>icons/gamepad_playstation_3_dpad_down.svgz</file>
     <file>icons/gamepad_playstation_3_dpad_left.svgz</file>

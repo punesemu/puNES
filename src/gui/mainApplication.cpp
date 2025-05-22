@@ -177,7 +177,7 @@ bool mainApplication::is_set_inp_shortcut(QEvent *event, int set_inp) {
 }
 bool mainApplication::dlgkeyb_event(QEvent *event) {
 	// il resto degli eventi
-	if (dlgkeyb && dlgkeyb->process_event(event)) {
+	if (dlgkeyb && dlgkeyb->wd->process_event(event)) {
 		return (true);
 	}
 	return (false);

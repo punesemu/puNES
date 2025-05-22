@@ -34,12 +34,12 @@ class dlgJsc : public QDialog, public Ui::dlgJsc {
 		QRect geom;
 		bool first_time;
 
+	signals:
+		void et_update_joy_combo(void);
+
 	public:
 		explicit dlgJsc(QWidget *parent = nullptr);
 		~dlgJsc() override;
-
-	signals:
-		void et_update_joy_combo(void);
 
 	protected:
 		bool eventFilter(QObject *obj, QEvent *event) override;

@@ -19,15 +19,17 @@
 #ifndef DLGVSSYSTEM_HPP_
 #define DLGVSSYSTEM_HPP_
 
-#include <QtWidgets/QDialog>
-#include "ui_dlgVsSystem.h"
+#include "ui_wdgDialogVsSystem.h"
+#include "wdgTitleBarWindow.hpp"
 
-class dlgVsSystem : public QDialog, public Ui::dlgVsSystem {
+// ----------------------------------------------------------------------------------------------
+
+class wdgDialogVsSystem : public QWidget, public Ui::wdgDialogVsSystem {
 	Q_OBJECT
 
 	public:
-		explicit dlgVsSystem(QWidget *parent = nullptr);
-		~dlgVsSystem() override;
+		explicit wdgDialogVsSystem(QWidget *parent = nullptr);
+		~wdgDialogVsSystem() override;
 
 	protected:
 		bool eventFilter(QObject *obj, QEvent *event) override;
@@ -35,7 +37,6 @@ class dlgVsSystem : public QDialog, public Ui::dlgVsSystem {
 		void showEvent(QShowEvent *event) override;
 
 	public:
-		int update_pos(int startY);
 		void update_dialog(void);
 		void insert_coin(int index);
 
@@ -45,7 +46,20 @@ class dlgVsSystem : public QDialog, public Ui::dlgVsSystem {
 		void s_ds_changed(int state);
 		void s_ds_clicked(bool checked);
 		void s_ds_defaults_clicked(bool checked);
-		void s_x_clicked(bool checked);
+};
+
+// ----------------------------------------------------------------------------------------------
+
+class dlgVsSystem : public wdgTitleBarDialog {
+	public:
+		wdgDialogVsSystem *wd;
+
+	public:
+		explicit dlgVsSystem(QWidget *parent = nullptr);
+		~dlgVsSystem() override;
+
+	protected:
+		void closeEvent(QCloseEvent *event) override;
 };
 
 #endif /* DLGVSSYSTEM_HPP_ */

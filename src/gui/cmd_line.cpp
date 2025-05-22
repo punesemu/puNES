@@ -377,7 +377,9 @@ BYTE cmd_line_check_portable(int argc, uTCHAR **argv) {
 
 static void usage(QString &name) {
 	dlgCmdLineHelp *dlg = new dlgCmdLineHelp(nullptr, name);
+	QEventLoop loop;
 
+	QObject::connect(dlg, SIGNAL(destroyed(QObject *)), &loop, SLOT(quit(void)));
 	dlg->show();
-	dlg->exec();
+	loop.exec();
 }

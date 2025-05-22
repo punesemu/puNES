@@ -263,7 +263,7 @@ BYTE gui_create(void) {
 	qt.mwin->show();
 
 	qt.log = new dlgLog(qt.mwin);
-	qt.log->start_thread();
+	qt.log->wd->start_thread();
 
 	log_info(uL("" uPs("") " (by FHorse) " uPs("") ", " uPs("") ", " uPs("")
 #if defined (WITH_GIT_INFO)
@@ -697,30 +697,30 @@ void gui_update(void) {
 	emu_set_title(title, usizeof(title));
 	qt.mwin->setWindowTitle(uQString(title));
 	qt.mwin->update_window();
-	qt.dset->update_dialog();
+	qt.dset->wd->update_dialog();
 	qt.overlay->update_widget();
 
 	gui.in_update = FALSE;
 }
 void gui_update_gps_settings(void) {
-	qt.dset->change_rom();
+	qt.dset->wd->change_rom();
 }
 void gui_update_status_bar(void) {
 	qt.mwin->statusbar->update_statusbar();
 }
 
 void gui_update_ntsc_widgets(void) {
-	qt.dset->update_tab_video();
+	qt.dset->wd->update_tab_video();
 }
 void gui_update_apu_channels_widgets(void) {
-	qt.dset->update_tab_audio();
+	qt.dset->wd->update_tab_audio();
 }
 void gui_update_recording_widgets(void) {
 	qt.mwin->update_recording_widgets();
 }
 
 void gui_update_ppu_hacks_lag_frames(void) {
-	qt.dset->widget_Settings_PPU->lag_counter_update();
+	qt.dset->wd->widget_Settings_PPU->lag_counter_update();
 }
 
 void gui_update_fds_menu(void) {
@@ -730,7 +730,7 @@ void gui_update_tape_menu(void) {
 	qt.mwin->update_tape_menu();
 }
 void gui_update_recording_tab(void) {
-	qt.dset->update_tab_recording();
+	qt.dset->wd->update_tab_recording();
 }
 
 void gui_egds_set_fps(void) {
@@ -993,7 +993,7 @@ void gui_screen_update(void) {
 #elif defined (WITH_D3D9)
 	qt.screen->wd3d9->update();
 #endif
-	qt.dset->widget_Settings_Video->widget_Palette_Editor->widget_Palette_PPU->update();
+	qt.dset->wd->widget_Settings_Video->widget_Palette_Editor->widget_Palette_PPU->update();
 }
 
 void *gui_wdgoverlayui_get_ptr(void) {
@@ -1011,7 +1011,7 @@ void *gui_dlgsettings_get_ptr(void) {
 	return ((void *)qt.dset);
 }
 void gui_dlgsettings_input_update_joy_combo(void) {
-	qt.dset->widget_Settings_Input->update_joy_list();
+	qt.dset->wd->widget_Settings_Input->update_joy_list();
 }
 
 void *gui_dlgjsc_get_ptr(void) {
@@ -1042,40 +1042,33 @@ void gui_js_joyval_icon_desc(int index, DBWORD input, void *icon, void *desc) {
 
 void gui_external_control_windows_show(void) {
 	if (ext_win.vs_system && (cfg->fullscreen != FULLSCR)) {
-		qt.vssystem->update_dialog();
+		qt.vssystem->wd->update_dialog();
 		qt.vssystem->show();
 	} else {
 		qt.vssystem->hide();
 	}
 	if (ext_win.detach_barcode && (cfg->fullscreen != FULLSCR)) {
-		qt.dbarcode->update_dialog();
+		qt.dbarcode->wd->update_dialog();
 		qt.dbarcode->show();
 	} else {
 		qt.dbarcode->hide();
 	}
 	gui_update();
-	gui_external_control_windows_update_pos();
 	gui_active_window();
 	gui_set_focus();
 }
-void gui_external_control_windows_update_pos(void) {
-	unsigned int y = 0;
-
-	y += qt.vssystem->update_pos((int)y);
-	y += qt.dbarcode->update_pos((int)y);
-}
 
 void gui_vs_system_update_dialog(void) {
-	qt.vssystem->update_dialog();
+	qt.vssystem->wd->update_dialog();
 }
 void gui_vs_system_insert_coin(void) {
 	if (vs_system.enabled) {
-		qt.vssystem->insert_coin(1);
+		qt.vssystem->wd->insert_coin(1);
 	}
 }
 
 void gui_detach_barcode_change_rom(void) {
-	qt.dbarcode->change_rom();
+	qt.dbarcode->wd->change_rom();
 }
 
 void gui_unsupported_hardware(void) {

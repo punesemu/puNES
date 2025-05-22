@@ -64,7 +64,7 @@ void wdgState::wheelEvent(QWheelEvent *event) {
 	event->ignore();
 }
 
-void wdgState::retranslateUi(wdgState *wdgState) {
+void wdgState::retranslateUi(QWidget *wdgState) {
 	Ui::wdgState::retranslateUi(wdgState);
 }
 

@@ -232,8 +232,8 @@ void wdgScreen::dropEvent(QDropEvent *event) {
 		return;
 	}
 	if (!event->mimeData()->text().isEmpty() && nes_keyboard.enabled) {
-		if (!dlgkeyb->paste->enable && (tape_data_recorder.mode == TAPE_DATA_NONE)) {
-			dlgkeyb->paste->set_text(event->mimeData()->text());
+		if (!dlgkeyb->wd->paste->enable && (tape_data_recorder.mode == TAPE_DATA_NONE)) {
+			dlgkeyb->wd->paste->set_text(event->mimeData()->text());
 		}
 		return;
 	}
@@ -332,7 +332,7 @@ void wdgScreen::s_context_menu(const QPoint &pos) {
 		const QMimeData *mimeData = clipboard->mimeData();
 		QAction *action = new QAction(this);
 
-		menu.addSection(dlgkeyb->keyboard->keyboard_name());
+		menu.addSection(dlgkeyb->wd->keyboard->keyboard_name());
 
 		// paste
 		action->setText(tr("Paste"));
@@ -340,7 +340,7 @@ void wdgScreen::s_context_menu(const QPoint &pos) {
 		action->setEnabled(
 			!info.no_rom &&
 			(mimeData->hasUrls() || mimeData->hasText()) &&
-			!dlgkeyb->paste->enable &&
+			!dlgkeyb->wd->paste->enable &&
 			(tape_data_recorder.mode == TAPE_DATA_NONE));
 		connect(action, SIGNAL(triggered()), this, SLOT(s_paste_event()));
 		menu.addAction(action);

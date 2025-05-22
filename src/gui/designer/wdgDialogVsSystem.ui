@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>dlgVsSystem</class>
- <widget class="QDialog" name="dlgVsSystem">
+ <class>wdgDialogVsSystem</class>
+ <widget class="QWidget" name="wdgDialogVsSystem">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
     <width>214</width>
-    <height>408</height>
+    <height>384</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Vs System</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout_Vs_System">
+  <layout class="QVBoxLayout" name="verticalLayout_wdgDialogVsSystem">
    <property name="leftMargin">
     <number>6</number>
    </property>
@@ -27,13 +27,7 @@
     <number>6</number>
    </property>
    <item>
-    <widget class="themeToolGroupBox" name="groupBox_Vs_System">
-     <property name="title">
-      <string>Vs System</string>
-     </property>
-     <property name="flat">
-      <bool>true</bool>
-     </property>
+    <widget class="QWidget" name="widget_Vs_System" native="true">
      <layout class="QVBoxLayout" name="verticalLayout_groupBox_Vs_System">
       <item>
        <layout class="QHBoxLayout" name="horizontalLayout_Coins">
@@ -150,7 +144,7 @@
       </item>
       <item>
        <widget class="QWidget" name="widget_Monitor" native="true">
-        <layout class="QVBoxLayout" name="verticalLayout_2">
+        <layout class="QVBoxLayout" name="verticalLayout_Monitor">
          <property name="leftMargin">
           <number>0</number>
          </property>
@@ -401,7 +395,7 @@
       </item>
       <item>
        <widget class="QWidget" name="widget_Dip_Switches2" native="true">
-        <layout class="QVBoxLayout" name="verticalLayout">
+        <layout class="QVBoxLayout" name="verticalLayout_Dip_Switches2">
          <property name="leftMargin">
           <number>0</number>
          </property>
@@ -573,12 +567,6 @@
    <class>themePushButton</class>
    <extends>QPushButton</extends>
    <header>theme.hpp</header>
-  </customwidget>
-  <customwidget>
-   <class>themeToolGroupBox</class>
-   <extends>QGroupBox</extends>
-   <header>theme.hpp</header>
-   <container>1</container>
   </customwidget>
  </customwidgets>
  <tabstops>

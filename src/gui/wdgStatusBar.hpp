@@ -46,12 +46,12 @@ class recStatusBar : public QFrame {
 		QLabel *desc;
 		QTimer *timer;
 
+	signals:
+		void et_blink_icon(void);
+
 	public:
 		explicit recStatusBar(QWidget *parent = nullptr);
 		~recStatusBar() override;
-
-	signals:
-		void et_blink_icon(void);
 
 	protected:
 		void changeEvent(QEvent *event) override;

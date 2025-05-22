@@ -27,28 +27,28 @@ void log_info(const uTCHAR *txt, ...) {
 	va_list ap;
 
 	va_start(ap, txt);
-	dlglog->info(txt, ap);
+	dlglog->wd->info(txt, ap);
 	va_end(ap);
 }
 void log_info_open(const uTCHAR *txt, ...) {
 	va_list ap;
 
 	va_start(ap, txt);
-	dlglog->lopen(dlgLog::types::LINFO, txt, ap);
+	dlglog->wd->lopen(wdgDialogLog::types::LINFO, txt, ap);
 	va_end(ap);
 }
 void log_info_box(const uTCHAR *txt, ...) {
 	va_list ap;
 
 	va_start(ap, txt);
-	dlglog->info_box(txt, ap);
+	dlglog->wd->info_box(txt, ap);
 	va_end(ap);
 }
 void log_info_box_open(const uTCHAR *txt, ...) {
 	va_list ap;
 
 	va_start(ap, txt);
-	dlglog->lopen_box(dlgLog::types::LINFO, txt, ap);
+	dlglog->wd->lopen_box(wdgDialogLog::types::LINFO, txt, ap);
 	va_end(ap);
 }
 
@@ -56,28 +56,28 @@ void log_warning(const uTCHAR *txt, ...) {
 	va_list ap;
 
 	va_start(ap, txt);
-	dlglog->warning(txt, ap);
+	dlglog->wd->warning(txt, ap);
 	va_end(ap);
 }
 void log_warning_open(const uTCHAR *txt, ...) {
 	va_list ap;
 
 	va_start(ap, txt);
-	dlglog->lopen(dlgLog::types::LWARNING, txt, ap);
+	dlglog->wd->lopen(wdgDialogLog::types::LWARNING, txt, ap);
 	va_end(ap);
 }
 void log_warning_box(const uTCHAR *txt, ...) {
 	va_list ap;
 
 	va_start(ap, txt);
-	dlglog->warning_box(txt, ap);
+	dlglog->wd->warning_box(txt, ap);
 	va_end(ap);
 }
 void log_warning_box_open(const uTCHAR *txt, ...) {
 	va_list ap;
 
 	va_start(ap, txt);
-	dlglog->lopen_box(dlgLog::types::LWARNING, txt, ap);
+	dlglog->wd->lopen_box(wdgDialogLog::types::LWARNING, txt, ap);
 	va_end(ap);
 }
 
@@ -85,28 +85,28 @@ void log_error(const uTCHAR *txt, ...) {
 	va_list ap;
 
 	va_start(ap, txt);
-	dlglog->error(txt, ap);
+	dlglog->wd->error(txt, ap);
 	va_end(ap);
 }
 void log_error_open(const uTCHAR *txt, ...) {
 	va_list ap;
 
 	va_start(ap, txt);
-	dlglog->lopen(dlgLog::types::LERROR, txt, ap);
+	dlglog->wd->lopen(wdgDialogLog::types::LERROR, txt, ap);
 	va_end(ap);
 }
 void log_error_box(const uTCHAR *txt, ...) {
 	va_list ap;
 
 	va_start(ap, txt);
-	dlglog->error_box(txt, ap);
+	dlglog->wd->error_box(txt, ap);
 	va_end(ap);
 }
 void log_error_box_open(const uTCHAR *txt, ...) {
 	va_list ap;
 
 	va_start(ap, txt);
-	dlglog->lopen_box(dlgLog::types::LERROR, txt, ap);
+	dlglog->wd->lopen_box(wdgDialogLog::types::LERROR, txt, ap);
 	va_end(ap);
 }
 
@@ -114,14 +114,14 @@ void log_close(const uTCHAR *txt, ...) {
 	va_list ap;
 
 	va_start(ap, txt);
-	dlglog->lclose(txt, ap);
+	dlglog->wd->lclose(txt, ap);
 	va_end(ap);
 }
 void log_close_box(const uTCHAR *txt, ...) {
 	va_list ap;
 
 	va_start(ap, txt);
-	dlglog->lclose_box(txt, ap);
+	dlglog->wd->lclose_box(txt, ap);
 	va_end(ap);
 }
 
@@ -129,14 +129,42 @@ void log_append(const uTCHAR *txt, ...) {
 	va_list ap;
 
 	va_start(ap, txt);
-	dlglog->lappend(txt, ap);
+	dlglog->wd->lappend(txt, ap);
 	va_end(ap);
 }
 void log_newline(void) {
-	dlglog->lnewline();
+	dlglog->wd->lnewline();
 }
 
-// textEditThread ----------------------------------------------------------------------------------------------------------------
+// ----------------------------------------------------------------------------------------------
+
+dlgLog::dlgLog(QWidget *parent) : wdgTitleBarDialog(parent) {
+	wd = new wdgDialogLog(this);
+	setWindowTitle(wd->windowTitle());
+	setWindowIcon(QIcon(":/icon/icons/cheat_editor.svgz"));
+	set_border_color(Qt::green);
+	set_buttons(barButton::Maximize | barButton::Close);
+	add_widget(wd);
+	init_geom_variable(cfg->lg_log);
+
+	connect(wd->pushButton_Close, SIGNAL(clicked(bool)), this, SLOT(close(void)));
+}
+dlgLog::~dlgLog() = default;
+
+void dlgLog::hideEvent(QHideEvent *event) {
+	geom = geometry();
+	wdgTitleBarDialog::hideEvent(event);
+}
+void dlgLog::closeEvent(QCloseEvent *event) {
+	if (!info.stop) {
+		event->ignore();
+		hide();
+		return;
+	}
+	wdgTitleBarDialog::closeEvent(event);
+}
+
+// ----------------------------------------------------------------------------------------------
 
 textEditThread::textEditThread() = default;
 textEditThread::~textEditThread() = default;
@@ -147,28 +175,21 @@ void textEditThread::run() {
 }
 
 void textEditThread::time_out(void) {
-	dlglog->mutex.lock();
-	for (QString &msg : dlglog->messages) {
-		dlglog->plainTextEdit_Log->appendHtml(msg);
+	dlglog->wd->mutex.lock();
+	for (QString &msg : dlglog->wd->messages) {
+		dlglog->wd->plainTextEdit_Log->appendHtml(msg);
 	}
-	dlglog->messages.clear();
-	dlglog->mutex.unlock();
+	dlglog->wd->messages.clear();
+	dlglog->wd->mutex.unlock();
 	QTimer::singleShot(10, this, SLOT(time_out()));
 }
 
-// dlgLog ------------------------------------------------------------------------------------------------------------------------
+// ----------------------------------------------------------------------------------------------
 
-dlgLog::dlgLog(QWidget *parent) : QDialog(parent) {
+wdgDialogLog::wdgDialogLog(QWidget *parent) : QWidget(parent) {
 	max = 13;
 
 	setupUi(this);
-
-	//setAttribute(Qt::WA_DeleteOnClose);
-
-	geom.setX(cfg->lg_log.x);
-	geom.setY(cfg->lg_log.y);
-	geom.setWidth(cfg->lg_log.w);
-	geom.setHeight(cfg->lg_log.h);
 
 	if (font().pointSize() > 9) {
 		QFont font;
@@ -184,63 +205,57 @@ dlgLog::dlgLog(QWidget *parent) : QDialog(parent) {
 		p.setColor(QPalette::Text, Qt::white);
 		plainTextEdit_Log->setPalette(p);
 	}
-
-	connect(pushButton_Close, SIGNAL(clicked(bool)), this, SLOT(s_close_clicked(bool)));
 }
-dlgLog::~dlgLog() = default;
+wdgDialogLog::~wdgDialogLog() = default;
 
-void dlgLog::changeEvent(QEvent *event) {
+void wdgDialogLog::changeEvent(QEvent *event) {
 	if (event->type() == QEvent::LanguageChange) {
 		retranslateUi(this);
 	} else {
-		QDialog::changeEvent(event);
+		QWidget::changeEvent(event);
 	}
 }
-void dlgLog::hideEvent(QHideEvent *event) {
-	geom = geometry();
-	QDialog::hideEvent(event);
-}
 
-void dlgLog::start_thread(void) {
+void wdgDialogLog::start_thread(void) {
 	textedit_thread.start();
 }
 
-void dlgLog::info(const uTCHAR *utxt, va_list ap) {
+void wdgDialogLog::info(const uTCHAR *utxt, va_list ap) {
 	print(types::LINFO, utxt, ap);
 }
-void dlgLog::info_box(const uTCHAR *utxt, va_list ap) {
+void wdgDialogLog::info_box(const uTCHAR *utxt, va_list ap) {
 	print_box(types::LINFO,utxt, ap);
 }
 
-void dlgLog::warning(const uTCHAR *utxt, va_list ap) {
+void wdgDialogLog::warning(const uTCHAR *utxt, va_list ap) {
 	print(types::LWARNING, utxt, ap);
 }
-void dlgLog::warning_box(const uTCHAR *utxt, va_list ap) {
+void wdgDialogLog::warning_box(const uTCHAR *utxt, va_list ap) {
 	print_box(types::LWARNING,utxt, ap);
 }
 
-void dlgLog::error(const uTCHAR *utxt, va_list ap) {
+void wdgDialogLog::error(const uTCHAR *utxt, va_list ap) {
 	print(types::LERROR, utxt, ap);
 }
-void dlgLog::error_box(const uTCHAR *utxt, va_list ap) {
+void wdgDialogLog::error_box(const uTCHAR *utxt, va_list ap) {
 	print_box(types::LERROR,utxt, ap);
 }
 
-void dlgLog::lopen(types type, const uTCHAR *utxt, va_list ap) {
+void wdgDialogLog::lopen(types type, const uTCHAR *utxt, va_list ap) {
 	_lopen(type, ">", ">", utxt, ap);
 }
-void dlgLog::lclose(const uTCHAR *utxt, va_list ap) {
+void wdgDialogLog::lclose(const uTCHAR *utxt, va_list ap) {
 	_lclose(TRUE, utxt, ap);
 }
 
-void dlgLog::lopen_box(types type, const uTCHAR *utxt, va_list ap) {
+void wdgDialogLog::lopen_box(types type, const uTCHAR *utxt, va_list ap) {
 	_lopen(type, " ", " ", utxt, ap);
 }
-void dlgLog::lclose_box(const uTCHAR *utxt, va_list ap) {
+void wdgDialogLog::lclose_box(const uTCHAR *utxt, va_list ap) {
 	_lclose(FALSE, utxt, ap);
 }
 
-void dlgLog::lappend(const uTCHAR *utxt, va_list ap) {
+void wdgDialogLog::lappend(const uTCHAR *utxt, va_list ap) {
 	static uTCHAR tmp[1024];
 
 	uvsnprintf(tmp, usizeof(tmp), utxt, ap);
@@ -248,14 +263,14 @@ void dlgLog::lappend(const uTCHAR *utxt, va_list ap) {
 
 	buffer.tmp += uQString(tmp);
 }
-void dlgLog::lnewline(void) {
+void wdgDialogLog::lnewline(void) {
 	mutex.lock();
 	plainTextEdit_Log->appendHtml("\n");
 	std_err("");
 	mutex.unlock();
 }
 
-void dlgLog::_lopen(types type, const QString &shtml, const QString &snohtml, const uTCHAR *utxt, va_list ap) {
+void wdgDialogLog::_lopen(types type, const QString &shtml, const QString &snohtml, const uTCHAR *utxt, va_list ap) {
 	mutex.lock();
 	buffer.type = type;
 	buffer.symbol.html = shtml;
@@ -278,7 +293,7 @@ void dlgLog::_lopen(types type, const QString &shtml, const QString &snohtml, co
 			break;
 	}
 }
-void dlgLog::_lclose(BYTE color, const uTCHAR *utxt, va_list ap) {
+void wdgDialogLog::_lclose(BYTE color, const uTCHAR *utxt, va_list ap) {
 	QString symbol, html, txt;
 	QStringList list;
 
@@ -298,15 +313,15 @@ void dlgLog::_lclose(BYTE color, const uTCHAR *utxt, va_list ap) {
 	std_err(QString("%0 %1").arg(buffer.symbol.nohtml, buffer.txt));
 	mutex.unlock();
 }
-void dlgLog::print(types type, const uTCHAR *utxt, va_list ap) {
+void wdgDialogLog::print(types type, const uTCHAR *utxt, va_list ap) {
 	lopen(type, utxt, ap);
 	lclose(nullptr, ap);
 }
-void dlgLog::print_box(types type, const uTCHAR *utxt, va_list ap) {
+void wdgDialogLog::print_box(types type, const uTCHAR *utxt, va_list ap) {
 	lopen_box(type, utxt, ap);
 	lclose_box(nullptr, ap);
 }
-void dlgLog::extract(void) {
+void wdgDialogLog::extract(void) {
 	QStringList list;
 
 	if (buffer.tmp.count(';') > 1) {
@@ -327,15 +342,11 @@ void dlgLog::extract(void) {
 			? QString("%0").arg(list.at(0), -max)
 			: buffer.txt = "[NONE]";
 }
-void dlgLog::std_err(const QString &string) {
+void wdgDialogLog::std_err(const QString &string) {
 	QTextStream err(stderr);
 
 	err << string << "\n";
 }
-QString dlgLog::ctrl_special_characters(const QString &input) {
+QString wdgDialogLog::ctrl_special_characters(const QString &input) {
 	return (QString(input).replace("<", "&lt;").replace(">", "&gt;"));
-}
-
-void dlgLog::s_close_clicked(UNUSED(bool checked)) {
-	hide();
 }

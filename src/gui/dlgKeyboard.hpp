@@ -19,13 +19,13 @@
 #ifndef DLGKEYBOARD_HPP_
 #define DLGKEYBOARD_HPP_
 
-#include <QtWidgets/QDialog>
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QGraphicsColorizeEffect>
+#include "wdgTitleBarWindow.hpp"
 #include "common.h"
 #include "input.h"
 
-// keyboardButton ----------------------------------------------------------------------------------------------------------------
+// ----------------------------------------------------------------------------------------------
 
 class keyboardButton : public QPushButton {
 	Q_OBJECT
@@ -103,7 +103,7 @@ class keyboardButton : public QPushButton {
 		void reset(void);
 };
 
-// wdgKeyboard -------------------------------------------------------------------------------------------------------------------
+// ----------------------------------------------------------------------------------------------
 
 class wdgKeyboard : public QWidget {
 	Q_OBJECT
@@ -152,7 +152,7 @@ class wdgKeyboard : public QWidget {
 		virtual QList<QList<SBYTE>> parse_character(_character *ch);
 };
 
-// pasteObject -------------------------------------------------------------------------------------------------------------------
+// ----------------------------------------------------------------------------------------------
 
 class pasteObject : public QObject {
 	Q_OBJECT
@@ -196,7 +196,7 @@ class pasteObject : public QObject {
 		void set_elements(BYTE value);
 };
 
-// familyBasicKeyboard -----------------------------------------------------------------------------------------------------------
+// ----------------------------------------------------------------------------------------------
 
 #include "ui_wdgKeyboardFB.h"
 
@@ -226,7 +226,7 @@ class familyBasicKeyboard : public wdgKeyboard, public Ui::wdgKeyboardFB {
 		SBYTE calc_v(void);
 };
 
-// suborKeyboard -----------------------------------------------------------------------------------------------------------------
+// ----------------------------------------------------------------------------------------------
 
 #include "ui_wdgKeyboardSubor.h"
 
@@ -250,11 +250,11 @@ class suborKeyboard : public wdgKeyboard, public Ui::wdgKeyboardSubor {
 		SBYTE calc_shift(void);
 };
 
-// dlgCfgNSCode ------------------------------------------------------------------------------------------------------------------
+// ----------------------------------------------------------------------------------------------
 
-#include "ui_dlgCfgNSCode.h"
+#include "ui_wdgDialogCfgNSCode.h"
 
-class dlgCfgNSCode : public QDialog, public Ui::dlgCfgNSCode {
+class wdgDialogCfgNSCode : public QWidget, public Ui::wdgDialogCfgNSCode {
 	Q_OBJECT
 
 	private:
@@ -262,8 +262,8 @@ class dlgCfgNSCode : public QDialog, public Ui::dlgCfgNSCode {
 		DBWORD nscode;
 
 	public:
-		explicit dlgCfgNSCode(QWidget *parent = nullptr, keyboardButton *button = nullptr);
-		~dlgCfgNSCode() override;
+		explicit wdgDialogCfgNSCode(QWidget *parent = nullptr, keyboardButton *button = nullptr);
+		~wdgDialogCfgNSCode() override;
 
 	protected:
 		bool eventFilter(QObject *obj, QEvent *event) override;
@@ -275,14 +275,26 @@ class dlgCfgNSCode : public QDialog, public Ui::dlgCfgNSCode {
 		void s_default_clicked(bool checked);
 		void s_unset_clicked(bool checked);
 		void s_apply_clicked(bool checked);
-		void s_discard_clicked(bool checked);
 };
 
-// dlgKeyboard -------------------------------------------------------------------------------------------------------------------
+// ----------------------------------------------------------------------------------------------
 
-#include "ui_dlgKeyboard.h"
+class dlgCfgNSCode : public wdgTitleBarDialog {
+	Q_OBJECT
 
-class dlgKeyboard : public QDialog, public Ui::dlgKeyboard {
+	public:
+		wdgDialogCfgNSCode *wd;
+
+	public:
+		explicit dlgCfgNSCode(QWidget *parent = nullptr, keyboardButton *button = nullptr);
+		~dlgCfgNSCode() override;
+};
+
+// ----------------------------------------------------------------------------------------------
+
+#include "ui_wdgDialogKeyboard.h"
+
+class wdgDialogKeyboard : public QWidget, public Ui::wdgDialogKeyboard {
 	Q_OBJECT
 
 	public:
@@ -307,7 +319,6 @@ class dlgKeyboard : public QDialog, public Ui::dlgKeyboard {
 
 	public:
 		BYTE mode;
-		QRect geom;
 		pasteObject *paste;
 		int font_point_size;
 
@@ -317,23 +328,22 @@ class dlgKeyboard : public QDialog, public Ui::dlgKeyboard {
 		_last_press last_press;
 		QString last_line;
 
-	public:
-		explicit dlgKeyboard(QWidget *parent = nullptr);
-		~dlgKeyboard() override;
-
 	signals:
 		void et_nes_keyboard(void);
+		void et_adjust_size(void);
+
+	public:
+		explicit wdgDialogKeyboard(QWidget *parent = nullptr);
+		~wdgDialogKeyboard() override;
 
 	protected:
 		bool event(QEvent *event) override;
 		bool eventFilter(QObject *obj, QEvent *event) override;
 		void changeEvent(QEvent *event) override;
 		void showEvent(QShowEvent *event) override;
-		void hideEvent(QHideEvent *event) override;
-		void closeEvent(QCloseEvent *event) override;
 
 	public:
-		void retranslateUi(QDialog *dlgKeyboard);
+		void retranslateUi(QWidget *wdgDialogKeyboard);
 
 	public:
 		void reset(void);
@@ -364,12 +374,34 @@ class dlgKeyboard : public QDialog, public Ui::dlgKeyboard {
 		void one_click_oneshot(keyboardButton *kb);
 		void one_click_inc(void);
 		void one_click_dec(void);
+		void resize_request(void);
 
 	private slots:
 		void s_nes_keyboard(void);
 		void s_mode(bool checked);
 		void s_size_factor(bool checked);
 		void s_subor_extended_mode(bool checked);
+};
+
+// ----------------------------------------------------------------------------------------------
+
+class dlgKeyboard : public wdgTitleBarDialog {
+	Q_OBJECT
+
+	public:
+		wdgDialogKeyboard *wd;
+
+	public:
+		explicit dlgKeyboard(QWidget *parent = nullptr);
+		~dlgKeyboard() override;
+
+	protected:
+		void resizeEvent(QResizeEvent *event) override;
+		void closeEvent(QCloseEvent *event) override;
+		void hideEvent(QHideEvent *event) override;
+
+	private slots:
+		void s_adjust_size(void);
 };
 
 #endif /* DLGKEYBOARD_HPP_ */

@@ -19,11 +19,13 @@
 #ifndef DLGLOG_HPP_
 #define DLGLOG_HPP_
 
-#include <QtWidgets/QDialog>
 #include <QtCore/QThread>
 #include <QtCore/QMutex>
-#include "ui_dlgLog.h"
+#include "ui_wdgDialogLog.h"
+#include "wdgTitleBarWindow.hpp"
 #include "common.h"
+
+// ----------------------------------------------------------------------------------------------
 
 class textEditThread : public QThread {
 	Q_OBJECT
@@ -39,7 +41,9 @@ class textEditThread : public QThread {
 		void time_out(void);
 };
 
-class dlgLog : public QDialog, public Ui::dlgLog {
+// ----------------------------------------------------------------------------------------------
+
+class wdgDialogLog : public QWidget, public Ui::wdgDialogLog {
 	Q_OBJECT
 
 	public:
@@ -67,15 +71,16 @@ class dlgLog : public QDialog, public Ui::dlgLog {
 	public:
 		QStringList messages;
 		QMutex mutex;
-		QRect geom;
+
+	signals:
+		void et_close(void);
 
 	public:
-		explicit dlgLog(QWidget *parent = nullptr);
-		~dlgLog() override;
+		explicit wdgDialogLog(QWidget *parent = nullptr);
+		~wdgDialogLog() override;
 
 	protected:
 		void changeEvent(QEvent *event) override;
-		void hideEvent(QHideEvent *event) override;
 
 	public:
 		void start_thread(void);
@@ -106,9 +111,21 @@ class dlgLog : public QDialog, public Ui::dlgLog {
 		void extract(void);
 		void std_err(const QString &string);
 		QString ctrl_special_characters(const QString &input);
+};
 
-	private slots:
-		void s_close_clicked(bool checked);
+// ----------------------------------------------------------------------------------------------
+
+class dlgLog : public wdgTitleBarDialog {
+	public:
+		wdgDialogLog *wd;
+
+	public:
+		explicit dlgLog(QWidget *parent = nullptr);
+		~dlgLog() override;
+
+	protected:
+		void hideEvent(QHideEvent *event) override;
+		void closeEvent(QCloseEvent *event) override;
 };
 
 #endif /* DLGLOG_HPP_ */

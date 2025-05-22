@@ -200,10 +200,6 @@ class mainWindow : public QMainWindow, public Ui::mainWindow {
 		bool fullscreen_resize;
 		QRect org_geom, fs_geom;
 
-	public:
-		mainWindow();
-		~mainWindow() override;
-
 	signals:
 		void et_reset(BYTE type);
 		void et_gg_reset(void);
@@ -213,6 +209,10 @@ class mainWindow : public QMainWindow, public Ui::mainWindow {
 		void et_nsf_author_note_open(const uTCHAR *string);
 		void et_nsf_author_note_close(void);
 
+	public:
+		mainWindow();
+		~mainWindow() override;
+
 	protected:
 #if defined (_WIN32)
 		bool nativeEvent(const QByteArray &eventType, void *message, long *result);
@@ -220,7 +220,6 @@ class mainWindow : public QMainWindow, public Ui::mainWindow {
 		bool eventFilter(QObject *obj, QEvent *event) override;
 		void changeEvent(QEvent *event) override;
 		void closeEvent(QCloseEvent *event) override;
-		void moveEvent(QMoveEvent *event) override;
 		void resizeEvent(QResizeEvent *event) override;
 
 	private:

@@ -56,7 +56,7 @@ class wdgState : public QWidget, public Ui::wdgState {
 		void wheelEvent(QWheelEvent *event) override;
 
 	private:
-		void retranslateUi(wdgState *wdgState);
+		void retranslateUi(QWidget *wdgState);
 
 	public:
 		void update_widget(void);

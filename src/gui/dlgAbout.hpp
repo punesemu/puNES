@@ -19,22 +19,32 @@
 #ifndef DLGABOUT_HPP_
 #define DLGABOUT_HPP_
 
-#include <QtWidgets/QDialog>
-#include "ui_dlgAbout.h"
+#include "ui_wdgDialogAbout.h"
+#include "wdgTitleBarWindow.hpp"
 #include "common.h"
 
-class dlgAbout : public QDialog, public Ui::dlgAbout {
+// ----------------------------------------------------------------------------------------------
+
+class wdgDialogAbout : public QWidget, public Ui::wdgDialogAbout {
 	Q_OBJECT
+
+	public:
+		explicit wdgDialogAbout(QWidget *parent = nullptr);
+		~wdgDialogAbout() override;
+
+	protected:
+		void changeEvent(QEvent *event) override;
+};
+
+// ----------------------------------------------------------------------------------------------
+
+class dlgAbout : public wdgTitleBarDialog {
+	public:
+		wdgDialogAbout *wd;
 
 	public:
 		explicit dlgAbout(QWidget *parent = nullptr);
 		~dlgAbout() override;
-
-	protected:
-		void changeEvent(QEvent *event) override;
-
-	private slots:
-		void s_ok_clicked(bool checked);
 };
 
 #endif /* DLGABOUT_HPP_ */

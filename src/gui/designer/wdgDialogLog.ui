@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>dlgLog</class>
- <widget class="QDialog" name="dlgLog">
+ <class>wdgDialogLog</class>
+ <widget class="QWidget" name="wdgDialogLog">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -19,14 +19,7 @@
   <property name="windowTitle">
    <string>Log</string>
   </property>
-  <property name="windowIcon">
-   <iconset resource="resources.qrc">
-    <normaloff>:/icon/icons/application.png</normaloff>:/icon/icons/application.png</iconset>
-  </property>
-  <property name="sizeGripEnabled">
-   <bool>true</bool>
-  </property>
-  <layout class="QVBoxLayout" name="verticalLayout_dlgLog">
+  <layout class="QVBoxLayout" name="verticalLayout_wdgDialogLog">
    <item>
     <widget class="QPlainTextEdit" name="plainTextEdit_Log">
      <property name="sizeAdjustPolicy">

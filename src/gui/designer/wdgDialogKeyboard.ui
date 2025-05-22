@@ -1,30 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>dlgKeyboard</class>
- <widget class="QDialog" name="dlgKeyboard">
+ <class>wdgDialogKeyboard</class>
+ <widget class="QWidget" name="wdgDialogKeyboard">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
     <width>861</width>
-    <height>151</height>
+    <height>124</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string notr="true">Virtual Keyboard</string>
   </property>
-  <property name="windowIcon">
-   <iconset resource="resources.qrc">
-    <normaloff>:/icon/icons/application.png</normaloff>:/icon/icons/application.png</iconset>
-  </property>
-  <layout class="QVBoxLayout" name="layout_dlgKeyboard">
+  <layout class="QVBoxLayout" name="layout_wdgDialogKeyboard">
    <property name="sizeConstraint">
     <enum>QLayout::SetFixedSize</enum>
    </property>
    <item>
     <widget class="QGroupBox" name="groupBox_Options">
      <property name="title">
-      <string>Options</string>
+      <string/>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout_Options">
       <item>
@@ -249,7 +245,7 @@
    <item>
     <widget class="wdgKeyboard" name="keyboard" native="true">
      <property name="sizePolicy">
-      <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+      <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
        <horstretch>0</horstretch>
        <verstretch>0</verstretch>
       </sizepolicy>
@@ -260,15 +256,15 @@
  </widget>
  <customwidgets>
   <customwidget>
+   <class>themePushButton</class>
+   <extends>QPushButton</extends>
+   <header>theme.hpp</header>
+  </customwidget>
+  <customwidget>
    <class>wdgKeyboard</class>
    <extends>QWidget</extends>
    <header location="global">dlgKeyboard.hpp</header>
    <container>1</container>
-  </customwidget>
-  <customwidget>
-   <class>themePushButton</class>
-   <extends>QPushButton</extends>
-   <header>theme.hpp</header>
   </customwidget>
  </customwidgets>
  <tabstops>

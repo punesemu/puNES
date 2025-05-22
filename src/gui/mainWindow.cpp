@@ -289,12 +289,6 @@ void mainWindow::changeEvent(QEvent *event) {
 		QMainWindow::changeEvent(event);
 	}
 }
-void mainWindow::moveEvent(QMoveEvent *event) {
-	if (gui.start) {
-		gui_external_control_windows_update_pos();
-	}
-	QMainWindow::moveEvent(event);
-}
 void mainWindow::resizeEvent(QResizeEvent *event) {
 	if (gui.start) {
 		if (fullscreen_resize && (event->size().width() >= SCR_COLUMNS)) {
@@ -310,7 +304,6 @@ void mainWindow::resizeEvent(QResizeEvent *event) {
 			}
 			gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, FULLSCR, NO_CHANGE, FALSE, FALSE);
 		}
-		gui_external_control_windows_update_pos();
 	}
 
 	QMainWindow::resizeEvent(event);
@@ -1330,15 +1323,15 @@ void mainWindow::update_tape_menu(void) {
 
 	switch (tape_data_recorder.mode) {
 		case TAPE_DATA_NONE:
-			action_Tape_Play->setEnabled(!dlgkeyb->paste->enable);
-			action_Tape_Record->setEnabled(!dlgkeyb->paste->enable);
+			action_Tape_Play->setEnabled(!dlgkeyb->wd->paste->enable);
+			action_Tape_Record->setEnabled(!dlgkeyb->wd->paste->enable);
 			action_Tape_Stop->setEnabled(false);
 			break;
 		case TAPE_DATA_PLAY:
 		case TAPE_DATA_RECORD:
 			action_Tape_Play->setEnabled(false);
 			action_Tape_Record->setEnabled(false);
-			action_Tape_Stop->setEnabled(!dlgkeyb->paste->enable);
+			action_Tape_Stop->setEnabled(!dlgkeyb->wd->paste->enable);
 			break;
 		default:
 			action_Tape_Play->setEnabled(false);
@@ -2076,8 +2069,8 @@ void mainWindow::s_open_settings(void) {
 	int index = QVariant(((QObject *)sender())->property("myValue")).toInt();
 
 	set_dialog_geom(dlgsettings->geom);
-	dlgsettings->tabWidget_Settings->setCurrentIndex(index);
-	dlgsettings->setGeometry(dlgsettings->geom);
+	dlgsettings->set_geometry();
+	dlgsettings->wd->tabWidget_Settings->setCurrentIndex(index);
 	dlgsettings->show();
 	dlgsettings->activateWindow();
 }
@@ -2331,7 +2324,7 @@ void mainWindow::s_tape_stop(void) {
 }
 void mainWindow::s_show_log(void) {
 	set_dialog_geom(dlglog->geom);
-	dlglog->setGeometry(dlglog->geom);
+	dlglog->set_geometry();
 	dlglog->show();
 	dlglog->activateWindow();
 }
@@ -2342,7 +2335,6 @@ void mainWindow::s_help(void) {
 
 	about->show();
 	about->activateWindow();
-	about->exec();
 
 	emu_pause(FALSE);
 }
@@ -2678,27 +2670,27 @@ void mainWindow::s_nsf_author_note_close(void) {
 void mainWindow::s_shcut_mode(void) {
 	int mode = QVariant(((QObject *)sender())->property("myValue")).toInt();
 
-	dlgsettings->shcut_mode(mode);
+	dlgsettings->wd->shcut_mode(mode);
 }
 void mainWindow::s_shcut_scale(void) {
 	int scale = QVariant(((QObject *)sender())->property("myValue")).toInt();
 
-	dlgsettings->shcut_scale(scale);
+	dlgsettings->wd->shcut_scale(scale);
 }
 void mainWindow::s_shcut_interpolation(void) {
-	dlgsettings->widget_Settings_Video->checkBox_Interpolation->click();
+	dlgsettings->wd->widget_Settings_Video->checkBox_Interpolation->click();
 }
 void mainWindow::s_shcut_integer_in_fullscreen(void) {
-	dlgsettings->widget_Settings_Video->checkBox_Use_integer_scaling_in_fullscreen->click();
+	dlgsettings->wd->widget_Settings_Video->checkBox_Use_integer_scaling_in_fullscreen->click();
 }
 void mainWindow::s_shcut_stretch_in_fullscreen(void) {
-	dlgsettings->widget_Settings_Video->checkBox_Stretch_in_fullscreen->click();
+	dlgsettings->wd->widget_Settings_Video->checkBox_Stretch_in_fullscreen->click();
 }
 void mainWindow::s_shcut_audio_enable(void) {
-	dlgsettings->widget_Settings_Audio->checkBox_Enable_Audio->click();
+	dlgsettings->wd->widget_Settings_Audio->checkBox_Enable_Audio->click();
 }
 void mainWindow::s_shcut_save_settings(void) {
-	dlgsettings->pushButton_Save_Settings->click();
+	dlgsettings->wd->pushButton_Save_Settings->click();
 }
 void mainWindow::s_shcut_rwnd_active_deactive_mode(void) const {
 	if (!rwnd.active) {
@@ -2792,14 +2784,10 @@ void mainWindow::s_et_nsf_author_note_open(const uTCHAR *string) {
 		QString sstring = uQString(string);
 
 		nsf_author_note.dlg = new dlgCmdLineHelp(this, "Author's Note", uQStringCD(sstring));
-		nsf_author_note.dlg->setModal(false);
 		if (!nsf_author_note.geom.isEmpty()) {
 			nsf_author_note.dlg->setGeometry(nsf_author_note.geom);
 		}
-		nsf_author_note.dlg->setModal(false);
-
-		connect(nsf_author_note.dlg, SIGNAL(et_close()), this, SLOT(s_nsf_author_note_close()));
-
+		connect(nsf_author_note.dlg, SIGNAL(et_close(void)), this, SLOT(s_nsf_author_note_close(void)));
 		nsf_author_note.dlg->show();
 	}
 }

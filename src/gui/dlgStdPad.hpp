@@ -72,12 +72,12 @@ class dlgStdPad : public QDialog, public Ui::dlgStdPad {
 		} data;
 		int last_js_index;
 
+	signals:
+		void et_update_joy_combo(void);
+
 	public:
 		explicit dlgStdPad(QWidget *parent = nullptr, _cfg_port *cfg_port = nullptr);
 		~dlgStdPad() override;
-
-	signals:
-		void et_update_joy_combo(void);
 
 	protected:
 		bool eventFilter(QObject *obj, QEvent *event) override;

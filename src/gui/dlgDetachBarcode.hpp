@@ -19,12 +19,14 @@
 #ifndef DLGDETACHBARCODE_HPP_
 #define DLGDETACHBARCODE_HPP_
 
-#include <QtWidgets/QDialog>
-#include "ui_dlgDetachBarcode.h"
+#include "ui_wdgDialogDetachBarcode.h"
+#include "wdgTitleBarWindow.hpp"
 #include "common.h"
 #include "uncompress.h"
 
-class dlgDetachBarcode : public QDialog, public Ui::dlgDetachBarcode {
+// ----------------------------------------------------------------------------------------------
+
+class wdgDialogDetachBarcode : public QWidget, public Ui::wdgDialogDetachBarcode {
 	Q_OBJECT
 
 	public:
@@ -42,15 +44,14 @@ class dlgDetachBarcode : public QDialog, public Ui::dlgDetachBarcode {
 		QRect geom;
 
 	public:
-		explicit dlgDetachBarcode(QWidget *parent = nullptr);
-		~dlgDetachBarcode() override;
+		explicit wdgDialogDetachBarcode(QWidget *parent = nullptr);
+		~wdgDialogDetachBarcode() override;
 
 	private:
 		bool eventFilter(QObject *obj, QEvent *event) override;
 		void changeEvent(QEvent *event) override;
 
 	public:
-		int update_pos(int startY);
 		void update_dialog(void);
 		void change_rom(void);
 
@@ -62,6 +63,20 @@ class dlgDetachBarcode : public QDialog, public Ui::dlgDetachBarcode {
 		void s_barcode_doubleclick(QListWidgetItem *item);
 		void s_apply_clicked(bool checked);
 		void s_x_clicked(bool checked);
+};
+
+// ----------------------------------------------------------------------------------------------
+
+class dlgDetachBarcode : public wdgTitleBarDialog {
+	public:
+		wdgDialogDetachBarcode *wd;
+
+	public:
+		explicit dlgDetachBarcode(QWidget *parent = nullptr);
+		~dlgDetachBarcode() override;
+
+	protected:
+		void closeEvent(QCloseEvent *event) override;
 };
 
 #endif /* DLGDETACHBARCODE_HPP_ */

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>dlgDetachBarcode</class>
- <widget class="QDialog" name="dlgDetachBarcode">
+ <class>wdgDialogDetachBarcode</class>
+ <widget class="QWidget" name="wdgDialogDetachBarcode">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -19,7 +19,7 @@
   <property name="windowTitle">
    <string>Detach Barcode</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout_Detach_Barcode">
+  <layout class="QVBoxLayout" name="verticalLayout_wdgDialogDetachBarcode">
    <property name="leftMargin">
     <number>6</number>
    </property>
@@ -33,11 +33,8 @@
     <number>6</number>
    </property>
    <item>
-    <widget class="themeToolGroupBox" name="groupBox_Detach_Barcode">
-     <property name="title">
-      <string>Detach Barcode</string>
-     </property>
-     <layout class="QVBoxLayout" name="verticalLayout_groupBox_Detach_Barcode">
+    <widget class="QWidget" name="widget_Detach_Barcode" native="true">
+     <layout class="QVBoxLayout" name="verticalLayout_widget_Detach_Barcode">
       <item>
        <widget class="QListWidget" name="listWidget_Barcodes">
         <property name="defaultDropAction">
@@ -76,12 +73,6 @@
    <class>themePushButton</class>
    <extends>QPushButton</extends>
    <header>theme.hpp</header>
-  </customwidget>
-  <customwidget>
-   <class>themeToolGroupBox</class>
-   <extends>QGroupBox</extends>
-   <header>theme.hpp</header>
-   <container>1</container>
   </customwidget>
  </customwidgets>
  <resources>

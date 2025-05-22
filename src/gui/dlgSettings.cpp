@@ -20,13 +20,38 @@
 #include "mainWindow.hpp"
 #include "conf.h"
 
-dlgSettings::dlgSettings(QWidget *parent) : QDialog(parent) {
-	setupUi(this);
+// ----------------------------------------------------------------------------------------------
 
-	geom.setX(cfg->lg_settings.x);
-	geom.setY(cfg->lg_settings.y);
-	geom.setWidth(cfg->lg_settings.w);
-	geom.setHeight(cfg->lg_settings.h);
+dlgSettings::dlgSettings(QWidget *parent) : wdgTitleBarDialog(parent) {
+	wd = new wdgDialogSettings(this);
+	setWindowTitle(wd->windowTitle());
+	setWindowIcon(QIcon(":/icon/icons/general.svgz"));
+	set_border_color(Qt::cyan);
+	set_buttons(barButton::Close);
+	add_widget(wd);
+	init_geom_variable(cfg->lg_settings);
+
+	connect(wd, SIGNAL(et_close(void)), this, SLOT(close(void)));
+}
+dlgSettings::~dlgSettings() = default;
+
+void dlgSettings::hideEvent(QHideEvent *event) {
+	geom = geometry();
+	wdgTitleBarDialog::hideEvent(event);
+}
+void dlgSettings::closeEvent(QCloseEvent *event) {
+	if (!info.stop) {
+		event->ignore();
+		hide();
+		return;
+	}
+	wdgTitleBarDialog::closeEvent(event);
+}
+
+// ----------------------------------------------------------------------------------------------
+
+wdgDialogSettings::wdgDialogSettings(QWidget *parent) : QWidget(parent) {
+	setupUi(this);
 
 	connect(pushButton_Save_Settings, SIGNAL(clicked(bool)), this, SLOT(s_save_settings(bool)));
 	connect(pushButton_Close_Settings, SIGNAL(clicked(bool)), this, SLOT(s_close_settings(bool)));
@@ -39,9 +64,9 @@ dlgSettings::dlgSettings(QWidget *parent) : QDialog(parent) {
 
 	installEventFilter(this);
 }
-dlgSettings::~dlgSettings() = default;
+wdgDialogSettings::~wdgDialogSettings() = default;
 
-bool dlgSettings::eventFilter(QObject *obj, QEvent *event) {
+bool wdgDialogSettings::eventFilter(QObject *obj, QEvent *event) {
 	switch (event->type()) {
 		case QEvent::WindowActivate:
 		case QEvent::WindowDeactivate:
@@ -51,22 +76,18 @@ bool dlgSettings::eventFilter(QObject *obj, QEvent *event) {
 			break;
 	}
 
-	return (QDialog::eventFilter(obj, event));
+	return (QWidget::eventFilter(obj, event));
 }
-void dlgSettings::changeEvent(QEvent *event) {
+void wdgDialogSettings::changeEvent(QEvent *event) {
 	if (event->type() == QEvent::LanguageChange) {
 		retranslateUi(this);
 	} else {
-		QDialog::changeEvent(event);
+		QWidget::changeEvent(event);
 	}
 }
-void dlgSettings::hideEvent(QHideEvent *event) {
-	geom = geometry();
-	QDialog::hideEvent(event);
-}
 
-void dlgSettings::retranslateUi(QDialog *dlgSettings) {
-	Ui::dlgSettings::retranslateUi(dlgSettings);
+void wdgDialogSettings::retranslateUi(QWidget *wdgDialogSettings) {
+	Ui::wdgDialogSettings::retranslateUi(wdgDialogSettings);
 
 	// Rewind operations
 	mainwin->qaction_shcut.save_settings->setText(pushButton_Save_Settings->text());
@@ -84,7 +105,7 @@ void dlgSettings::retranslateUi(QDialog *dlgSettings) {
 	// nes keyboard
 	mainwin->qaction_shcut.toggle_capture_input->setText(tr("Capture/Release Input"));
 }
-void dlgSettings::update_dialog(void) {
+void wdgDialogSettings::update_dialog(void) {
 	update_tab_general();
 	update_tab_video();
 	update_tab_audio();
@@ -93,44 +114,44 @@ void dlgSettings::update_dialog(void) {
 	update_tab_cheats();
 	update_tab_recording();
 }
-void dlgSettings::change_rom(void) {
+void wdgDialogSettings::change_rom(void) {
 	widget_Settings_Video->change_rom();
 }
-void dlgSettings::shcut_mode(int mode) {
+void wdgDialogSettings::shcut_mode(int mode) {
 	widget_Settings_General->shcut_mode(mode);
 }
-void dlgSettings::shcut_scale(int scale) {
+void wdgDialogSettings::shcut_scale(int scale) {
 	widget_Settings_Video->shcut_scale(scale + 1);
 }
 
-void dlgSettings::update_tab_general(void) {
+void wdgDialogSettings::update_tab_general(void) {
 	widget_Settings_General->update_widget();
 }
-void dlgSettings::update_tab_input(void) {
+void wdgDialogSettings::update_tab_input(void) {
 	widget_Settings_Input->update_widget();
 }
-void dlgSettings::update_tab_ppu(void) {
+void wdgDialogSettings::update_tab_ppu(void) {
 	widget_Settings_PPU->update_widget();
 }
-void dlgSettings::update_tab_cheats(void) {
+void wdgDialogSettings::update_tab_cheats(void) {
 	widget_Settings_Cheats->update_widget();
 }
 
-void dlgSettings::update_tab_video(void) {
+void wdgDialogSettings::update_tab_video(void) {
 	widget_Settings_Video->update_widget();
 }
-void dlgSettings::update_tab_audio(void) {
+void wdgDialogSettings::update_tab_audio(void) {
 	widget_Settings_Audio->update_widget();
 }
-void dlgSettings::update_tab_recording(void) {
+void wdgDialogSettings::update_tab_recording(void) {
 #if defined (WITH_FFMPEG)
 	widget_Settings_Recording->update_widget();
 #endif
 }
 
-void dlgSettings::s_save_settings(UNUSED(bool checked)) {
+void wdgDialogSettings::s_save_settings(UNUSED(bool checked)) {
 	settings_save();
 }
-void dlgSettings::s_close_settings(UNUSED(bool checked)) {
-	hide();
+void wdgDialogSettings::s_close_settings(UNUSED(bool checked)) {
+	emit et_close();
 }

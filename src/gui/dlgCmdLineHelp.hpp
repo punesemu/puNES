@@ -19,12 +19,32 @@
 #ifndef DLGCMDLINEHELP_HPP_
 #define DLGCMDLINEHELP_HPP_
 
-#include <QtWidgets/QDialog>
-#include "ui_dlgCmdLineHelp.h"
+#include "ui_wdgDialogCmdLineHelp.h"
+#include "wdgTitleBarWindow.hpp"
 #include "common.h"
 
-class dlgCmdLineHelp : public QDialog, public Ui::dlgCmdLineHelp {
+// ----------------------------------------------------------------------------------------------
+
+class wdgDialogCmdLineHelp : public QWidget, public Ui::wdgDialogCmdLineHelp {
+	public:
+		explicit wdgDialogCmdLineHelp(QWidget *parent, const QString title, const uTCHAR *usage_string);
+		explicit wdgDialogCmdLineHelp(QWidget *parent = nullptr, const QString name = "");
+		~wdgDialogCmdLineHelp() override;
+
+	private:
+		void init(const QString title, const uTCHAR *usage_string, bool use_html = true);
+};
+
+// ----------------------------------------------------------------------------------------------
+
+class dlgCmdLineHelp : public wdgTitleBarDialog {
 	Q_OBJECT
+
+	signals:
+		void et_close(void);
+
+	public:
+		wdgDialogCmdLineHelp *wd;
 
 	public:
 		explicit dlgCmdLineHelp(QWidget *parent, const QString title, const uTCHAR *usage_string);
@@ -35,13 +55,7 @@ class dlgCmdLineHelp : public QDialog, public Ui::dlgCmdLineHelp {
 		void closeEvent(QCloseEvent *event) override;
 
 	private:
-		void init(const QString title, const uTCHAR *usage_string, bool use_html = true);
-
-	private slots:
-		void s_close_clicked(bool checked);
-
-	signals:
-		void et_close(void);
+		void init(void);
 };
 
 #endif /* DLGCMDLINEHELP_HPP_ */
