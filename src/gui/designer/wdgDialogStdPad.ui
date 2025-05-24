@@ -131,9 +131,6 @@
              </property>
              <item>
               <layout class="QGridLayout" name="gridLayout_kbd_buttons">
-               <property name="topMargin">
-                <number>0</number>
-               </property>
                <item row="1" column="1" colspan="2">
                 <widget class="QFrame" name="frame_kbd_Up">
                  <property name="frameShape">
@@ -336,9 +333,9 @@
                   <enum>QFrame::StyledPanel</enum>
                  </property>
                  <property name="frameShadow">
-                  <enum>QFrame::Raised</enum>
+                  <enum>QFrame::Sunken</enum>
                  </property>
-                 <layout class="QVBoxLayout" name="verticalLayout_kbd_Left_2">
+                 <layout class="QVBoxLayout" name="verticalLayout_kbd_Left">
                   <property name="spacing">
                    <number>0</number>
                   </property>
@@ -716,7 +713,7 @@
                  <property name="frameShadow">
                   <enum>QFrame::Sunken</enum>
                  </property>
-                 <layout class="QVBoxLayout" name="verticalLayout_kbd_Right_2">
+                 <layout class="QVBoxLayout" name="verticalLayout_kbd_Right">
                   <property name="spacing">
                    <number>0</number>
                   </property>
@@ -2245,7 +2242,7 @@
                   <enum>QFrame::StyledPanel</enum>
                  </property>
                  <property name="frameShadow">
-                  <enum>QFrame::Raised</enum>
+                  <enum>QFrame::Sunken</enum>
                  </property>
                  <layout class="QVBoxLayout" name="verticalLayout_joy_Left">
                   <property name="spacing">
