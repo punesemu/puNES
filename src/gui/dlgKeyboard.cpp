@@ -29,7 +29,7 @@
 #include "tas.h"
 #include "tape_data_recorder.h"
 
-static wdgDialogKeyboard *dlgkbd = nullptr;
+static dlgKeyboard *dlgkbd = nullptr;
 
 void gui_nes_keyboard(void) {
 	if (dlgkbd) {
@@ -49,8 +49,8 @@ void gui_nes_keyboard_frame_finished(void) {
 
 // ----------------------------------------------------------------------------------------------
 
-dlgKeyboard::dlgKeyboard(QWidget *parent) : wdgTitleBarDialog(parent) {
-	wd = new wdgDialogKeyboard(this);
+wdgDlgKeyboard::wdgDlgKeyboard(QWidget *parent) : wdgTitleBarDialog(parent) {
+	wd = new dlgKeyboard(this);
 	setWindowTitle(wd->windowTitle());
 	setWindowIcon(QIcon(":/icon/icons/virtual_keyboard.svgz"));
 	set_border_color(Qt::red);
@@ -61,9 +61,9 @@ dlgKeyboard::dlgKeyboard(QWidget *parent) : wdgTitleBarDialog(parent) {
 
 	connect(wd, SIGNAL(et_adjust_size(void)), this, SLOT(s_adjust_size(void)));
 }
-dlgKeyboard::~dlgKeyboard() = default;
+wdgDlgKeyboard::~wdgDlgKeyboard() = default;
 
-void dlgKeyboard::resizeEvent(QResizeEvent *event) {
+void wdgDlgKeyboard::resizeEvent(QResizeEvent *event) {
 	// sotto wayland (almeno con GNOME) ogni tanto ricevo un evento di Resize
 	// spontaneo (con dimensioni non corrette) che provo a filtrare
 	if (gfx.wayland.enabled &&  event->spontaneous()) {
@@ -71,24 +71,24 @@ void dlgKeyboard::resizeEvent(QResizeEvent *event) {
 	}
 	wdgTitleBarDialog::resizeEvent(event);
 }
-void dlgKeyboard::closeEvent(QCloseEvent *event) {
+void wdgDlgKeyboard::closeEvent(QCloseEvent *event) {
 	geom = geometry();
 	wdgTitleBarDialog::closeEvent(event);
 }
-void dlgKeyboard::hideEvent(QHideEvent *event) {
+void wdgDlgKeyboard::hideEvent(QHideEvent *event) {
 	geom = geometry();
 	wdgTitleBarDialog::hideEvent(event);
 	mainwin->statusbar->keyb->update_tooltip();
 }
 
-void dlgKeyboard::s_adjust_size(void) {
+void wdgDlgKeyboard::s_adjust_size(void) {
 	adjustSize();
 	updateGeometry();
 }
 
 // ----------------------------------------------------------------------------------------------
 
-wdgDialogKeyboard::wdgDialogKeyboard(QWidget *parent) : QWidget(parent) {
+dlgKeyboard::dlgKeyboard(QWidget *parent) : QWidget(parent) {
 	setupUi(this);
 
 	{
@@ -131,9 +131,9 @@ wdgDialogKeyboard::wdgDialogKeyboard(QWidget *parent) : QWidget(parent) {
 
 	installEventFilter(this);
 }
-wdgDialogKeyboard::~wdgDialogKeyboard() = default;
+dlgKeyboard::~dlgKeyboard() = default;
 
-bool wdgDialogKeyboard::event(QEvent *event) {
+bool dlgKeyboard::event(QEvent *event) {
 	QKeyEvent *keyevent = dynamic_cast<QKeyEvent*>(event);
 
 	// disabilito la chiusura del dialog tramite il tasto ESC.
@@ -143,13 +143,13 @@ bool wdgDialogKeyboard::event(QEvent *event) {
 	}
 	return (QWidget::event(event));
 }
-bool wdgDialogKeyboard::eventFilter(QObject *obj, QEvent *event) {
+bool dlgKeyboard::eventFilter(QObject *obj, QEvent *event) {
 	if (process_event(event)) {
 		return (true);
 	}
 	return (QWidget::eventFilter(obj, event));
 }
-void wdgDialogKeyboard::changeEvent(QEvent *event) {
+void dlgKeyboard::changeEvent(QEvent *event) {
 	if (event->type() == QEvent::LanguageChange) {
 		retranslateUi(this);
 	} else if (event->type() == QEvent::ActivationChange) {
@@ -161,18 +161,18 @@ void wdgDialogKeyboard::changeEvent(QEvent *event) {
 	}
 	QWidget::changeEvent(event);
 }
-void wdgDialogKeyboard::showEvent(QShowEvent *event) {
+void dlgKeyboard::showEvent(QShowEvent *event) {
 	QWidget::showEvent(event);
 	mainwin->statusbar->keyb->update_tooltip();
 }
 
-void wdgDialogKeyboard::retranslateUi(QWidget *wdgDialogKeyboard) {
-	Ui::wdgDialogKeyboard::retranslateUi(wdgDialogKeyboard);
+void dlgKeyboard::retranslateUi(QWidget *dlgKeyboard) {
+	Ui::dlgKeyboard::retranslateUi(dlgKeyboard);
 	if (nes_keyboard.enabled) {
 		setWindowTitle(keyboard->keyboard_name());
 	}
 }
-void wdgDialogKeyboard::reset(void) {
+void dlgKeyboard::reset(void) {
 	memset(kbuttons, 0x00, sizeof(kbuttons));
 	one_click.activies = FALSE;
 	one_click.list.clear();
@@ -183,7 +183,7 @@ void wdgDialogKeyboard::reset(void) {
 
 	retranslateUi(this);
 }
-void wdgDialogKeyboard::add_buttons(wdgKeyboard *wk, wdgKeyboard::_button buttons[], int totals) {
+void dlgKeyboard::add_buttons(wdgKeyboard *wk, wdgKeyboard::_button buttons[], int totals) {
 	QList<keyboardButton *> kb_list= wk->findChildren<keyboardButton *>();
 	int i;
 
@@ -204,30 +204,30 @@ void wdgDialogKeyboard::add_buttons(wdgKeyboard *wk, wdgKeyboard::_button button
 	nes_keyboard.totals += totals;
 	retranslateUi(this);
 }
-void wdgDialogKeyboard::set_buttons(wdgKeyboard *wk, wdgKeyboard::_button buttons[], int totals) {
+void dlgKeyboard::set_buttons(wdgKeyboard *wk, wdgKeyboard::_button buttons[], int totals) {
 	reset();
 	memset(nes_keyboard.matrix, 0x00, sizeof(nes_keyboard.matrix));
 	nes_keyboard.totals = 0;
 	add_buttons(wk, buttons, totals);
 }
 
-void wdgDialogKeyboard::set_charset(wdgKeyboard::_charset charset, wdgKeyboard::_delay delay) const {
+void dlgKeyboard::set_charset(wdgKeyboard::_charset charset, wdgKeyboard::_delay delay) const {
 	paste->set_charset(charset, delay);
 }
-bool wdgDialogKeyboard::process_event(QEvent *event) {
+bool dlgKeyboard::process_event(QEvent *event) {
 	if ((tas.type == NOTAS) && nes_keyboard.enabled && !dlgsettings->isActiveWindow() && (mode == DK_VIRTUAL)) {
 		if (event->type() == QEvent::ShortcutOverride) {
 			QKeyEvent *keyevent = (QKeyEvent *)event;
 
 			if (!paste->enable) {
-				key_event_press(keyevent, wdgDialogKeyboard::KEVENT_NORMAL);
+				key_event_press(keyevent, dlgKeyboard::KEVENT_NORMAL);
 			} else if (keyevent->key() == Qt::Key_Escape) {
 				paste->parse_break();
 			}
 			return (gui.capture_input);
 		} else if (event->type() == QEvent::KeyRelease) {
 			if (!paste->enable) {
-				key_event_release((QKeyEvent *)event, wdgDialogKeyboard::KEVENT_NORMAL);
+				key_event_release((QKeyEvent *)event, dlgKeyboard::KEVENT_NORMAL);
 			}
 			return (gui.capture_input);
 		} else if (event->type() == QEvent::Shortcut) {
@@ -244,7 +244,7 @@ bool wdgDialogKeyboard::process_event(QEvent *event) {
 	}
 	return (false);
 }
-void wdgDialogKeyboard::shortcut_toggle(BYTE is_this) {
+void dlgKeyboard::shortcut_toggle(BYTE is_this) {
 	QObject *parent = nullptr;
 
 	if (is_this) {
@@ -255,7 +255,7 @@ void wdgDialogKeyboard::shortcut_toggle(BYTE is_this) {
 	mainwin->shortcut[SET_INP_SC_TOGGLE_CAPTURE_INPUT]->setParent(parent);
 	mainwin->shortcut[SET_INP_SC_TOGGLE_NES_KEYBOARD]->setParent(parent);
 }
-void wdgDialogKeyboard::button_press(keyboardButton *kb, keyevent_types type) {
+void dlgKeyboard::button_press(keyboardButton *kb, keyevent_types type) {
 	nes_keyboard.matrix[kb->element] = 0x80;
 
 	switch (kb->modifier.type) {
@@ -323,7 +323,7 @@ void wdgDialogKeyboard::button_press(keyboardButton *kb, keyevent_types type) {
 			break;
 	}
 }
-void wdgDialogKeyboard::key_event_press(QKeyEvent *event, keyevent_types type) {
+void dlgKeyboard::key_event_press(QKeyEvent *event, keyevent_types type) {
 	int i;
 
 	for (i = 0; i < nes_keyboard.totals; i++) {
@@ -343,7 +343,7 @@ void wdgDialogKeyboard::key_event_press(QKeyEvent *event, keyevent_types type) {
 		}
 	}
 }
-void wdgDialogKeyboard::button_release(keyboardButton *kb, keyevent_types type) {
+void dlgKeyboard::button_release(keyboardButton *kb, keyevent_types type) {
 	switch (kb->modifier.type) {
 		default:
 		case keyboardButton::MODIFIERS_NONE:
@@ -359,7 +359,7 @@ void wdgDialogKeyboard::button_release(keyboardButton *kb, keyevent_types type) 
 			break;
 	}
 }
-void wdgDialogKeyboard::key_event_release(QKeyEvent *event, keyevent_types type) {
+void dlgKeyboard::key_event_release(QKeyEvent *event, keyevent_types type) {
 	int i;
 
 	for (i = 0; i < nes_keyboard.totals; i++) {
@@ -371,7 +371,7 @@ void wdgDialogKeyboard::key_event_release(QKeyEvent *event, keyevent_types type)
 		}
 	}
 }
-void wdgDialogKeyboard::switch_mode(BYTE dk_mode) {
+void dlgKeyboard::switch_mode(BYTE dk_mode) {
 	QList<themePushButton *> btn_list = widget_Mode->findChildren<themePushButton *>();
 
 	foreach (themePushButton *btn, btn_list) {
@@ -383,27 +383,27 @@ void wdgDialogKeyboard::switch_mode(BYTE dk_mode) {
 	}
 }
 
-void wdgDialogKeyboard::fake_keyboard(void) {
+void dlgKeyboard::fake_keyboard(void) {
 	paste->cs = Qt::CaseInsensitive;
 	widget_Subor->setVisible(false);
 	replace_keyboard(new wdgKeyboard(this));
 }
-void wdgDialogKeyboard::family_basic_keyboard(void) {
+void dlgKeyboard::family_basic_keyboard(void) {
 	paste->cs = Qt::CaseInsensitive;
 	widget_Subor->setVisible(false);
 	replace_keyboard(new familyBasicKeyboard(this));
 }
-void wdgDialogKeyboard::subor_keyboard(void) {
+void dlgKeyboard::subor_keyboard(void) {
 	paste->cs = Qt::CaseSensitive;
 	widget_Subor->setVisible(true);
 	replace_keyboard(new suborKeyboard(this));
 }
 
-void wdgDialogKeyboard::replace_keyboard(wdgKeyboard *wk) {
+void dlgKeyboard::replace_keyboard(wdgKeyboard *wk) {
 	if (keyboard) {
 		keyboard->hide();
 	}
-	layout_wdgDialogKeyboard->replaceWidget(keyboard, wk);
+	layout_dlgKeyboard->replaceWidget(keyboard, wk);
 	delete (keyboard);
 	keyboard = wk;
 	keyboard->ext_setup();
@@ -411,7 +411,7 @@ void wdgDialogKeyboard::replace_keyboard(wdgKeyboard *wk) {
 	setWindowTitle(keyboard->keyboard_name());
 	switch_size_factor(cfg_from_file.input.vk_size);
 }
-void wdgDialogKeyboard::switch_size_factor(BYTE vk_size) {
+void dlgKeyboard::switch_size_factor(BYTE vk_size) {
 	QList<themePushButton *> btn_list = widget_Size->findChildren<themePushButton *>();
 
 	foreach (themePushButton *btn, btn_list) {
@@ -422,7 +422,7 @@ void wdgDialogKeyboard::switch_size_factor(BYTE vk_size) {
 		}
 	}
 }
-BYTE wdgDialogKeyboard::get_size_factor(void) {
+BYTE dlgKeyboard::get_size_factor(void) {
 	QList<themePushButton *> btn_list = widget_Size->findChildren<themePushButton *>();
 
 	foreach (themePushButton *btn, btn_list) {
@@ -432,7 +432,7 @@ BYTE wdgDialogKeyboard::get_size_factor(void) {
 	}
 	return VK_SIZE_10X;
 }
-void wdgDialogKeyboard::apply_size_factor(double size_factor) {
+void dlgKeyboard::apply_size_factor(double size_factor) {
 	QList<keyboardButton *> kb_list;
 	QList<QWidget *> wdg_list = {};
 
@@ -451,7 +451,7 @@ void wdgDialogKeyboard::apply_size_factor(double size_factor) {
 		kb->apply_size_factor(size_factor);
 	}
 }
-bool wdgDialogKeyboard::one_click_find(keyboardButton *kb) {
+bool dlgKeyboard::one_click_find(keyboardButton *kb) {
 	QList<keyboardButton *>::iterator it = std::find(one_click.list.begin(), one_click.list.end(), kb);
 
 	if (it == one_click.list.end()) {
@@ -459,17 +459,17 @@ bool wdgDialogKeyboard::one_click_find(keyboardButton *kb) {
 	}
 	return (true);
 }
-void wdgDialogKeyboard::one_click_append(keyboardButton *kb) {
+void dlgKeyboard::one_click_append(keyboardButton *kb) {
 	if (!one_click_find(kb)) {
 		one_click.list.append(kb);
 	}
 }
-void wdgDialogKeyboard::one_click_remove(keyboardButton *kb) {
+void dlgKeyboard::one_click_remove(keyboardButton *kb) {
 	if (one_click_find(kb)) {
 		one_click.list.removeOne(kb);
 	}
 }
-void wdgDialogKeyboard::one_click_oneshot(keyboardButton *kb) {
+void dlgKeyboard::one_click_oneshot(keyboardButton *kb) {
 	QTimer::singleShot(75, this, [this, kb] {
 		if (kb->modifier.state) {
 			this->one_click_dec();
@@ -479,23 +479,23 @@ void wdgDialogKeyboard::one_click_oneshot(keyboardButton *kb) {
 		kb->update();
 	});
 }
-void wdgDialogKeyboard::one_click_inc(void) {
+void dlgKeyboard::one_click_inc(void) {
 	one_click.activies++;
 }
-void wdgDialogKeyboard::one_click_dec(void) {
+void dlgKeyboard::one_click_dec(void) {
 	if (one_click.activies) {
 		one_click.activies--;
 	}
 }
-void wdgDialogKeyboard::resize_request(void) {
+void dlgKeyboard::resize_request(void) {
 	QTimer::singleShot(0, this, [this] {
 		adjustSize();
-		setFixedSize(sizeHint());
+		updateGeometry();
 		emit et_adjust_size();
 	});
 }
 
-void wdgDialogKeyboard::s_nes_keyboard(void) {
+void dlgKeyboard::s_nes_keyboard(void) {
 	BYTE disable = !nes_keyboard.enabled;
 
 	reset();
@@ -524,7 +524,7 @@ void wdgDialogKeyboard::s_nes_keyboard(void) {
 	mainwin->statusbar->keyb->setEnabled(!disable);
 	mainwin->update_window();
 }
-void wdgDialogKeyboard::s_mode(bool checked) {
+void dlgKeyboard::s_mode(bool checked) {
 	if (checked) {
 		QList<themePushButton *> btn_list = widget_Mode->findChildren<themePushButton *>();
 
@@ -541,7 +541,7 @@ void wdgDialogKeyboard::s_mode(bool checked) {
 		}
 	}
 }
-void wdgDialogKeyboard::s_size_factor(bool checked) {
+void dlgKeyboard::s_size_factor(bool checked) {
 	QList<themePushButton *> btn_list = widget_Size->findChildren<themePushButton *>();
 
 	foreach (themePushButton *btn, btn_list) {
@@ -561,16 +561,16 @@ void wdgDialogKeyboard::s_size_factor(bool checked) {
 		}
 	}
 }
-void wdgDialogKeyboard::s_subor_extended_mode(UNUSED(bool checked)) {
+void dlgKeyboard::s_subor_extended_mode(UNUSED(bool checked)) {
 	cfg->input.vk_subor_extended_mode = !cfg->input.vk_subor_extended_mode;
 	settings_inp_save();
 }
 
 // ----------------------------------------------------------------------------------------------
 
-dlgCfgNSCode::dlgCfgNSCode(QWidget *parent, keyboardButton *button) : wdgTitleBarDialog(parent) {
+wdgDlgCfgNSCode::wdgDlgCfgNSCode(QWidget *parent, keyboardButton *button) : wdgTitleBarDialog(parent) {
 	setAttribute(Qt::WA_DeleteOnClose);
-	wd = new wdgDialogCfgNSCode(this, button);
+	wd = new dlgCfgNSCode(this, button);
 	setWindowTitle(wd->windowTitle());
 	setWindowIcon(QIcon(":/icon/icons/virtual_keyboard.svgz"));
 	set_border_color(Qt::red);
@@ -580,11 +580,11 @@ dlgCfgNSCode::dlgCfgNSCode(QWidget *parent, keyboardButton *button) : wdgTitleBa
 
 	connect(wd->pushButton_Discard, SIGNAL(clicked(bool)), this, SLOT(close(void)));
 }
-dlgCfgNSCode::~dlgCfgNSCode() = default;
+wdgDlgCfgNSCode::~wdgDlgCfgNSCode() = default;
 
 // ----------------------------------------------------------------------------------------------
 
-wdgDialogCfgNSCode::wdgDialogCfgNSCode(QWidget *parent, keyboardButton *button) : QWidget(parent) {
+dlgCfgNSCode::dlgCfgNSCode(QWidget *parent, keyboardButton *button) : QWidget(parent) {
 	this->button = button;
 	nscode = button->nscode;
 
@@ -615,9 +615,9 @@ wdgDialogCfgNSCode::wdgDialogCfgNSCode(QWidget *parent, keyboardButton *button) 
 
 	installEventFilter(this);
 }
-wdgDialogCfgNSCode::~wdgDialogCfgNSCode() = default;
+dlgCfgNSCode::~dlgCfgNSCode() = default;
 
-bool wdgDialogCfgNSCode::eventFilter(QObject *obj, QEvent *event) {
+bool dlgCfgNSCode::eventFilter(QObject *obj, QEvent *event) {
 	switch (event->type()) {
 		case QEvent::KeyPress:
 			return (keypress((QKeyEvent *)event));
@@ -627,21 +627,21 @@ bool wdgDialogCfgNSCode::eventFilter(QObject *obj, QEvent *event) {
 	return (QWidget::eventFilter(obj, event));
 }
 
-bool wdgDialogCfgNSCode::keypress(QKeyEvent *event) {
+bool dlgCfgNSCode::keypress(QKeyEvent *event) {
 	nscode = (DBWORD)qkeycode::toKeycode(event);
 	label_Desc->setText(objInp::nscode_to_name(nscode));
 	return (true);
 }
 
-void wdgDialogCfgNSCode::s_default_clicked(UNUSED(bool checked)) {
+void dlgCfgNSCode::s_default_clicked(UNUSED(bool checked)) {
 	nscode = settings_inp_nes_keyboard_nscode_default(uQStringCD(button->objectName()));
 	label_Desc->setText(objInp::nscode_to_name(nscode));
 }
-void wdgDialogCfgNSCode::s_unset_clicked(UNUSED(bool checked)) {
+void dlgCfgNSCode::s_unset_clicked(UNUSED(bool checked)) {
 	nscode = 0;
 	label_Desc->setText("NULL");
 }
-void wdgDialogCfgNSCode::s_apply_clicked(UNUSED(bool checked)) {
+void dlgCfgNSCode::s_apply_clicked(UNUSED(bool checked)) {
 	button->nscode = nscode;
 	settings_inp_nes_keyboard_set_nscode(uQStringCD(button->objectName()), nscode);
 	settings_inp_save();
@@ -697,7 +697,7 @@ void keyboardButton::paintEvent(QPaintEvent *event) {
 		w = (qreal)rect().width();
 		h = (qreal)rect().height();
 
-		if (dlgkbd->mode == wdgDialogKeyboard::DK_SETUP) {
+		if (dlgkbd->mode == dlgKeyboard::DK_SETUP) {
 			painter.save();
 
 			for (i = 0; i < labels.count(); i++) {
@@ -821,21 +821,21 @@ void keyboardButton::paintEvent(QPaintEvent *event) {
 }
 
 void keyboardButton::mousePressEvent(QMouseEvent *event) {
-	if (dlgkbd->mode == wdgDialogKeyboard::DK_VIRTUAL) {
-		dlgkbd->button_press(this, wdgDialogKeyboard::KEVENT_VIRTUAL);
+	if (dlgkbd->mode == dlgKeyboard::DK_VIRTUAL) {
+		dlgkbd->button_press(this, dlgKeyboard::KEVENT_VIRTUAL);
 	}
 	QPushButton::mousePressEvent(event);
 }
 void keyboardButton::mouseReleaseEvent(QMouseEvent *event) {
-	if (dlgkbd->mode == wdgDialogKeyboard::DK_SETUP) {
+	if (dlgkbd->mode == dlgKeyboard::DK_SETUP) {
 		QTimer::singleShot(75, this, [this] {
-			dlgCfgNSCode *cfg = new dlgCfgNSCode(dlgkeyb, this);
+			wdgDlgCfgNSCode *cfg = new wdgDlgCfgNSCode(dlgkeyb, this);
 
 			cfg->show();
 			update();
 		});
 	} else {
-		dlgkbd->button_release(this, wdgDialogKeyboard::KEVENT_VIRTUAL);
+		dlgkbd->button_release(this, dlgKeyboard::KEVENT_VIRTUAL);
 	}
 	QPushButton::mouseReleaseEvent(event);
 }

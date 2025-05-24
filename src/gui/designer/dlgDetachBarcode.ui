@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>wdgDialogDetachBarcode</class>
- <widget class="QWidget" name="wdgDialogDetachBarcode">
+ <class>dlgDetachBarcode</class>
+ <widget class="QWidget" name="dlgDetachBarcode">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -19,7 +19,7 @@
   <property name="windowTitle">
    <string>Detach Barcode</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout_wdgDialogDetachBarcode">
+  <layout class="QVBoxLayout" name="verticalLayout_dlgDetachBarcode">
    <property name="leftMargin">
     <number>6</number>
    </property>

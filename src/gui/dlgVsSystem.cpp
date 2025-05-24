@@ -29,8 +29,8 @@
 
 // ----------------------------------------------------------------------------------------------
 
-dlgVsSystem::dlgVsSystem(QWidget *parent) : wdgTitleBarDialog(parent) {
-	wd = new wdgDialogVsSystem(this);
+wdgDlgVsSystem::wdgDlgVsSystem(QWidget *parent) : wdgTitleBarDialog(parent) {
+	wd = new dlgVsSystem(this);
 	setWindowTitle(wd->windowTitle());
 	setWindowIcon(QIcon(":/icon/icons/insert_coins.svgz"));
 	set_border_color("orange");
@@ -38,20 +38,16 @@ dlgVsSystem::dlgVsSystem(QWidget *parent) : wdgTitleBarDialog(parent) {
 	set_permit_resize(false);
 	add_widget(wd);
 }
-dlgVsSystem::~dlgVsSystem() = default;
+wdgDlgVsSystem::~wdgDlgVsSystem() = default;
 
-void dlgVsSystem::closeEvent(QCloseEvent *event) {
-	if (!info.stop) {
-		event->ignore();
-		mainwin->s_set_vs_window();
-		return;
-	}
+void wdgDlgVsSystem::closeEvent(QCloseEvent *event) {
+	mainwin->s_set_vs_window();
 	wdgTitleBarDialog::closeEvent(event);
 }
 
 // ----------------------------------------------------------------------------------------------
 
-wdgDialogVsSystem::wdgDialogVsSystem(QWidget *parent) : QWidget(parent) {
+dlgVsSystem::dlgVsSystem(QWidget *parent) : QWidget(parent) {
 	setupUi(this);
 
 	pushButton_Left_Coin->setProperty("myIndex", QVariant(1));
@@ -121,9 +117,9 @@ wdgDialogVsSystem::wdgDialogVsSystem(QWidget *parent) : QWidget(parent) {
 
 	installEventFilter(this);
 }
-wdgDialogVsSystem::~wdgDialogVsSystem() = default;
+dlgVsSystem::~dlgVsSystem() = default;
 
-bool wdgDialogVsSystem::eventFilter(QObject *obj, QEvent *event) {
+bool dlgVsSystem::eventFilter(QObject *obj, QEvent *event) {
 	switch (event->type()) {
 		case QEvent::WindowActivate:
 		case QEvent::WindowDeactivate:
@@ -134,14 +130,14 @@ bool wdgDialogVsSystem::eventFilter(QObject *obj, QEvent *event) {
 	}
 	return (QWidget::eventFilter(obj, event));
 }
-void wdgDialogVsSystem::changeEvent(QEvent *event) {
+void dlgVsSystem::changeEvent(QEvent *event) {
 	if (event->type() == QEvent::LanguageChange) {
 		retranslateUi(this);
 	} else {
 		QWidget::changeEvent(event);
 	}
 }
-void wdgDialogVsSystem::showEvent(UNUSED(QShowEvent *event)) {
+void dlgVsSystem::showEvent(UNUSED(QShowEvent *event)) {
 	int dim = fontMetrics().height();
 
 	icon_Coins->setPixmap(QIcon(":/icon/icons/insert_coins.svgz").pixmap(dim, dim));
@@ -150,7 +146,7 @@ void wdgDialogVsSystem::showEvent(UNUSED(QShowEvent *event)) {
 	icon_Dipswitches->setPixmap(QIcon(":/icon/icons/dipswitch.svgz").pixmap(dim, dim));
 }
 
-void wdgDialogVsSystem::update_dialog(void) {
+void dlgVsSystem::update_dialog(void) {
 	widget_Vs_System->setEnabled(vs_system.enabled);
 
 	lineEdit_Coin_Counter->setText(QString("%1").arg(vs_system.coins.counter));
@@ -186,7 +182,7 @@ void wdgDialogVsSystem::update_dialog(void) {
 
 	pushButton_Dip_Switches->setEnabled(dipswitch_type_length() > 0);
 }
-void wdgDialogVsSystem::insert_coin(int index) {
+void dlgVsSystem::insert_coin(int index) {
 	int base = vs_system_cn_next()
 
 	switch (index) {
@@ -203,14 +199,14 @@ void wdgDialogVsSystem::insert_coin(int index) {
 	}
 }
 
-void wdgDialogVsSystem::s_coins_clicked(UNUSED(bool checked)) {
+void dlgVsSystem::s_coins_clicked(UNUSED(bool checked)) {
 	int index = QVariant(((QCheckBox *)sender())->property("myIndex")).toInt();
 
 	insert_coin(index);
 	gui_active_window();
 	gui_set_focus();
 }
-void wdgDialogVsSystem::s_monitor_clicked(bool checked) {
+void dlgVsSystem::s_monitor_clicked(bool checked) {
 	if (checked) {
 		int monitor = QVariant(((themePushButton *)sender())->property("myIndex")).toInt();
 
@@ -225,7 +221,7 @@ void wdgDialogVsSystem::s_monitor_clicked(bool checked) {
 	gui_active_window();
 	gui_set_focus();
 }
-void wdgDialogVsSystem::s_ds_changed(int state) {
+void dlgVsSystem::s_ds_changed(int state) {
 	int index = QVariant(((QCheckBox *)sender())->property("myIndex")).toInt();
 
 	switch (index) {
@@ -284,7 +280,7 @@ void wdgDialogVsSystem::s_ds_changed(int state) {
 	gui_active_window();
 	gui_set_focus();
 }
-void wdgDialogVsSystem::s_ds_clicked(UNUSED(bool checked)) {
+void dlgVsSystem::s_ds_clicked(UNUSED(bool checked)) {
 	emu_thread_pause();
 	gui_dipswitch_dialog();
 	emu_thread_continue();
@@ -293,7 +289,7 @@ void wdgDialogVsSystem::s_ds_clicked(UNUSED(bool checked)) {
 	gui_active_window();
 	gui_set_focus();
 }
-void wdgDialogVsSystem::s_ds_defaults_clicked(UNUSED(bool checked)) {
+void dlgVsSystem::s_ds_defaults_clicked(UNUSED(bool checked)) {
 	cfg->dipswitch = dipswitch.def;
 	update_dialog();
 

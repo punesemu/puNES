@@ -20,13 +20,13 @@
 #define DLGJSC_HPP_
 
 #include <QtCore/QMutex>
-#include "ui_wdgDialogJsc.h"
+#include "ui_dlgJsc.h"
 #include "wdgTitleBarWindow.hpp"
 #include "jstick.h"
 
 // ----------------------------------------------------------------------------------------------
 
-class wdgDialogJsc : public QWidget, public Ui::wdgDialogJsc {
+class dlgJsc : public QWidget, public Ui::dlgJsc {
 	Q_OBJECT
 
 	private:
@@ -38,8 +38,8 @@ class wdgDialogJsc : public QWidget, public Ui::wdgDialogJsc {
 		void et_update_joy_combo(void);
 
 	public:
-		explicit wdgDialogJsc(QWidget *parent = nullptr);
-		~wdgDialogJsc() override;
+		explicit dlgJsc(QWidget *parent = nullptr);
+		~dlgJsc() override;
 
 	protected:
 		bool eventFilter(QObject *obj, QEvent *event) override;
@@ -71,13 +71,13 @@ class wdgDialogJsc : public QWidget, public Ui::wdgDialogJsc {
 
 // ----------------------------------------------------------------------------------------------
 
-class dlgJsc : public wdgTitleBarDialog {
+class wdgDlgJsc : public wdgTitleBarDialog {
 	public:
-		wdgDialogJsc *wd;
+		dlgJsc *wd;
 
 	public:
-		explicit dlgJsc(QWidget *parent = nullptr);
-		~dlgJsc() override;
+		explicit wdgDlgJsc(QWidget *parent = nullptr);
+		~wdgDlgJsc() override;
 
 	protected:
 		void closeEvent(QCloseEvent *event) override;

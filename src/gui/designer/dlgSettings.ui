@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>wdgDialogSettings</class>
- <widget class="QWidget" name="wdgDialogSettings">
+ <class>dlgSettings</class>
+ <widget class="QWidget" name="dlgSettings">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -13,7 +13,7 @@
   <property name="windowTitle">
    <string>Settings</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout_wdgDialogSettings">
+  <layout class="QVBoxLayout" name="verticalLayout_dlgSettings">
    <item>
     <widget class="QTabWidget" name="tabWidget_Settings">
      <property name="currentIndex">

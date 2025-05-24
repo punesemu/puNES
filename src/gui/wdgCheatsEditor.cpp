@@ -158,7 +158,7 @@ wdgCheatsEditor::~wdgCheatsEditor() = default;
 
 void wdgCheatsEditor::changeEvent(QEvent *event) {
 	if (event->type() == QEvent::LanguageChange) {
-		wdgCheatsEditor::retranslateUi(this);
+		retranslateUi(this);
 	} else if (event->type() == QEvent::PaletteChange) {
 		stylesheet_update();
 	} else {

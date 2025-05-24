@@ -19,27 +19,27 @@
 #ifndef DLGSETTINGS_HPP_
 #define DLGSETTINGS_HPP_
 
-#include "ui_wdgDialogSettings.h"
+#include "ui_dlgSettings.h"
 #include "wdgTitleBarWindow.hpp"
 
 // ----------------------------------------------------------------------------------------------
 
-class wdgDialogSettings : public QWidget, public Ui::wdgDialogSettings {
+class dlgSettings : public QWidget, public Ui::dlgSettings {
 	Q_OBJECT
 
 	signals:
 		void et_close(void);
 
 	public:
-		explicit wdgDialogSettings(QWidget *parent = nullptr);
-		~wdgDialogSettings() override;
+		explicit dlgSettings(QWidget *parent = nullptr);
+		~dlgSettings() override;
 
 	private:
 		bool eventFilter(QObject *obj, QEvent *event) override;
 		void changeEvent(QEvent *event) override;
 
 	public:
-		void retranslateUi(QWidget *wdgDialogSettings);
+		void retranslateUi(QWidget *dlgSettings);
 		void update_dialog(void);
 		void change_rom(void);
 		void shcut_mode(int mode);
@@ -58,18 +58,17 @@ class wdgDialogSettings : public QWidget, public Ui::wdgDialogSettings {
 
 	private slots:
 		void s_save_settings(bool checked);
-		void s_close_settings(bool checked);
 };
 
 // ----------------------------------------------------------------------------------------------
 
-class dlgSettings : public wdgTitleBarDialog {
+class wdgDlgSettings : public wdgTitleBarDialog {
 	public:
-		wdgDialogSettings *wd;
+		dlgSettings *wd;
 
 	public:
-		explicit dlgSettings(QWidget *parent = nullptr);
-		~dlgSettings() override;
+		explicit wdgDlgSettings(QWidget *parent = nullptr);
+		~wdgDlgSettings() override;
 
 	protected:
 		void hideEvent(QHideEvent *event) override;

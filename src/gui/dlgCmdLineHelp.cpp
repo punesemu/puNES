@@ -24,22 +24,22 @@
 
 // ----------------------------------------------------------------------------------------------
 
-dlgCmdLineHelp::dlgCmdLineHelp(QWidget *parent, const QString title, const uTCHAR *usage_string) : wdgTitleBarDialog(parent) {
-	wd = new wdgDialogCmdLineHelp(this, title, usage_string);
+wdgDlgCmdLineHelp::wdgDlgCmdLineHelp(QWidget *parent, const QString title, const uTCHAR *usage_string) : wdgTitleBarDialog(parent) {
+	wd = new dlgCmdLineHelp(this, title, usage_string);
 	init();
 }
-dlgCmdLineHelp::dlgCmdLineHelp(QWidget *parent, const QString name) : wdgTitleBarDialog(parent) {
-	wd = new wdgDialogCmdLineHelp(this, name);
+wdgDlgCmdLineHelp::wdgDlgCmdLineHelp(QWidget *parent, const QString name) : wdgTitleBarDialog(parent) {
+	wd = new dlgCmdLineHelp(this, name);
 	init();
 }
-dlgCmdLineHelp::~dlgCmdLineHelp() = default;
+wdgDlgCmdLineHelp::~wdgDlgCmdLineHelp() = default;
 
-void dlgCmdLineHelp::closeEvent(QCloseEvent *event) {
+void wdgDlgCmdLineHelp::closeEvent(QCloseEvent *event) {
 	emit et_close();
 	wdgTitleBarDialog::closeEvent(event);
 }
 
-void dlgCmdLineHelp::init(void) {
+void wdgDlgCmdLineHelp::init(void) {
 	setAttribute(Qt::WA_DeleteOnClose);
 	setWindowTitle(wd->windowTitle());
 	setWindowIcon(QIcon(":/icon/icons/application.png"));
@@ -52,10 +52,10 @@ void dlgCmdLineHelp::init(void) {
 
 // ----------------------------------------------------------------------------------------------
 
-wdgDialogCmdLineHelp::wdgDialogCmdLineHelp(QWidget *parent, const QString title, const uTCHAR *usage_string) : QWidget(parent) {
+dlgCmdLineHelp::dlgCmdLineHelp(QWidget *parent, const QString title, const uTCHAR *usage_string) : QWidget(parent) {
 	init(title, usage_string, false);
 }
-wdgDialogCmdLineHelp::wdgDialogCmdLineHelp(QWidget *parent, const QString name) : QWidget(parent) {
+dlgCmdLineHelp::dlgCmdLineHelp(QWidget *parent, const QString name) : QWidget(parent) {
 	uTCHAR *usage_string;
 	const uTCHAR *istructions = {
 			uL("Usage: %%1 [options] file...\n\n")
@@ -188,9 +188,9 @@ wdgDialogCmdLineHelp::wdgDialogCmdLineHelp(QWidget *parent, const QString name) 
 	init(uQString(uL("" NAME " Command Line Help")), uQStringCD(uQString(usage_string).arg(name)));
 	free(usage_string);
 }
-wdgDialogCmdLineHelp::~wdgDialogCmdLineHelp() = default;
+dlgCmdLineHelp::~dlgCmdLineHelp() = default;
 
-void wdgDialogCmdLineHelp::init(const QString title, const uTCHAR *usage_string, bool use_html) {
+void dlgCmdLineHelp::init(const QString title, const uTCHAR *usage_string, bool use_html) {
 	setupUi(this);
 
 	setWindowTitle(title);

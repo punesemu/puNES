@@ -19,18 +19,18 @@
 #ifndef DLGABOUT_HPP_
 #define DLGABOUT_HPP_
 
-#include "ui_wdgDialogAbout.h"
+#include "ui_dlgAbout.h"
 #include "wdgTitleBarWindow.hpp"
 #include "common.h"
 
 // ----------------------------------------------------------------------------------------------
 
-class wdgDialogAbout : public QWidget, public Ui::wdgDialogAbout {
+class dlgAbout : public QWidget, public Ui::dlgAbout {
 	Q_OBJECT
 
 	public:
-		explicit wdgDialogAbout(QWidget *parent = nullptr);
-		~wdgDialogAbout() override;
+		explicit dlgAbout(QWidget *parent = nullptr);
+		~dlgAbout() override;
 
 	protected:
 		void changeEvent(QEvent *event) override;
@@ -38,13 +38,13 @@ class wdgDialogAbout : public QWidget, public Ui::wdgDialogAbout {
 
 // ----------------------------------------------------------------------------------------------
 
-class dlgAbout : public wdgTitleBarDialog {
+class wdgDlgAbout : public wdgTitleBarDialog {
 	public:
-		wdgDialogAbout *wd;
+		dlgAbout *wd;
 
 	public:
-		explicit dlgAbout(QWidget *parent = nullptr);
-		~dlgAbout() override;
+		explicit wdgDlgAbout(QWidget *parent = nullptr);
+		~wdgDlgAbout() override;
 };
 
 #endif /* DLGABOUT_HPP_ */

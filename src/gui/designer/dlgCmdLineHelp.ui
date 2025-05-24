@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>wdgDialogCmdLineHelp</class>
- <widget class="QWidget" name="wdgDialogCmdLineHelp">
+ <class>dlgCmdLineHelp</class>
+ <widget class="QWidget" name="dlgCmdLineHelp">
   <property name="modal" stdset="0">
    <bool>false</bool>
   </property>
@@ -16,7 +16,7 @@
   <property name="windowTitle">
    <string>Command Line Help</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout_wdgDialogCmdLineHelp">
+  <layout class="QVBoxLayout" name="verticalLayout_dlgCmdLineHelp">
    <item>
     <widget class="QTextEdit" name="textEdit_cmdLineHelp">
      <property name="sizeAdjustPolicy">

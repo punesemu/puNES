@@ -64,10 +64,6 @@ void wdgState::wheelEvent(QWheelEvent *event) {
 	event->ignore();
 }
 
-void wdgState::retranslateUi(QWidget *wdgState) {
-	Ui::wdgState::retranslateUi(wdgState);
-}
-
 void wdgState::update_widget(void) {
 	pushButton_load->setEnabled((tas.type == NOTAS) & save_slot.slot[save_slot.slot_in_use].state);
 	update();

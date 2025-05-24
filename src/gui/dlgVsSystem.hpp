@@ -19,17 +19,17 @@
 #ifndef DLGVSSYSTEM_HPP_
 #define DLGVSSYSTEM_HPP_
 
-#include "ui_wdgDialogVsSystem.h"
+#include "ui_dlgVsSystem.h"
 #include "wdgTitleBarWindow.hpp"
 
 // ----------------------------------------------------------------------------------------------
 
-class wdgDialogVsSystem : public QWidget, public Ui::wdgDialogVsSystem {
+class dlgVsSystem : public QWidget, public Ui::dlgVsSystem {
 	Q_OBJECT
 
 	public:
-		explicit wdgDialogVsSystem(QWidget *parent = nullptr);
-		~wdgDialogVsSystem() override;
+		explicit dlgVsSystem(QWidget *parent = nullptr);
+		~dlgVsSystem() override;
 
 	protected:
 		bool eventFilter(QObject *obj, QEvent *event) override;
@@ -50,13 +50,13 @@ class wdgDialogVsSystem : public QWidget, public Ui::wdgDialogVsSystem {
 
 // ----------------------------------------------------------------------------------------------
 
-class dlgVsSystem : public wdgTitleBarDialog {
+class wdgDlgVsSystem : public wdgTitleBarDialog {
 	public:
-		wdgDialogVsSystem *wd;
+		dlgVsSystem *wd;
 
 	public:
-		explicit dlgVsSystem(QWidget *parent = nullptr);
-		~dlgVsSystem() override;
+		explicit wdgDlgVsSystem(QWidget *parent = nullptr);
+		~wdgDlgVsSystem() override;
 
 	protected:
 		void closeEvent(QCloseEvent *event) override;

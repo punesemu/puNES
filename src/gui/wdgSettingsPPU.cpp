@@ -87,7 +87,7 @@ wdgSettingsPPU::~wdgSettingsPPU() = default;
 
 void wdgSettingsPPU::changeEvent(QEvent *event) {
 	if (event->type() == QEvent::LanguageChange) {
-		Ui::wdgSettingsPPU::retranslateUi(this);
+		retranslateUi(this);
 	} else {
 		QWidget::changeEvent(event);
 	}

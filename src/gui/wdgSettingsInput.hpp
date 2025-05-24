@@ -54,7 +54,7 @@ class wdgSettingsInput : public QWidget, public Ui::wdgSettingsInput {
 		} shcut;
 		bool hide_from_setup_button;
 		double last_control;
-		dlgStdPad *dlg_std_pad;
+		wdgDlgStdPad *wdg_dlg_std_pad;
 
 	signals:
 		void et_update_joy_combo(void);

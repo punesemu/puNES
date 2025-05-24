@@ -25,10 +25,10 @@
 #include "info.h"
 #include "detach_barcode.h"
 
-wdgDialogDetachBarcode::name_detach_barcode cardsDefault = {
+dlgDetachBarcode::name_detach_barcode cardsDefault = {
 	{ "",												"" }
 };
-wdgDialogDetachBarcode::name_detach_barcode cardsDragonBallZ = {
+dlgDetachBarcode::name_detach_barcode cardsDragonBallZ = {
 	{ "",												"" },
 	{ "Character Card: 人造人間16",						"0020502044333" },
 	{ "Character Card: 人造人間17",						"0040416100376" },
@@ -67,7 +67,7 @@ wdgDialogDetachBarcode::name_detach_barcode cardsDragonBallZ = {
 	{ "Item Card: ポルンガ",								"0162413545018" },
 	{ "Item Card: 亀仙人",								"0120215307258" }
 };
-wdgDialogDetachBarcode::name_detach_barcode cardsUltramanClub = {
+dlgDetachBarcode::name_detach_barcode cardsUltramanClub = {
 	{ "",												"" },
 	{ "Character Card: ゾフィー",						"0315424322677" },
 	{ "Character Card: ウルトラマン ジャック",				"0344046250372" },
@@ -108,7 +108,7 @@ wdgDialogDetachBarcode::name_detach_barcode cardsUltramanClub = {
 	{ "Item Card: ペガッサ星人",							"0406525340223" },
 	{ "Item Card: ナックル星人",							"0456173047067" }
 };
-wdgDialogDetachBarcode::name_detach_barcode cardsSDGundamWars = {
+dlgDetachBarcode::name_detach_barcode cardsSDGundamWars = {
 	{"",												""},
 	{"Character Card: グンダム",							"0403775140252"},
 	{"Character Card: グンダムGP01F/b",					"0403131741079"},
@@ -190,17 +190,17 @@ wdgDialogDetachBarcode::name_detach_barcode cardsSDGundamWars = {
 
 // ----------------------------------------------------------------------------------------------
 
-dlgDetachBarcode::dlgDetachBarcode(QWidget *parent) : wdgTitleBarDialog(parent) {
-	wd = new wdgDialogDetachBarcode(this);
+wdgDlgDetachBarcode::wdgDlgDetachBarcode(QWidget *parent) : wdgTitleBarDialog(parent) {
+	wd = new dlgDetachBarcode(this);
 	setWindowTitle(wd->windowTitle());
 	setWindowIcon(QIcon(":/icon/icons/barcode.svgz"));
 	set_buttons(barButton::Close);
 	set_permit_resize(false);
 	add_widget(wd);
 }
-dlgDetachBarcode::~dlgDetachBarcode() = default;
+wdgDlgDetachBarcode::~wdgDlgDetachBarcode() = default;
 
-void dlgDetachBarcode::closeEvent(QCloseEvent *event) {
+void wdgDlgDetachBarcode::closeEvent(QCloseEvent *event) {
 	if (!info.stop) {
 		event->ignore();
 		mainwin->s_set_detach_barcode_window();
@@ -211,7 +211,7 @@ void dlgDetachBarcode::closeEvent(QCloseEvent *event) {
 
 // ----------------------------------------------------------------------------------------------
 
-wdgDialogDetachBarcode::wdgDialogDetachBarcode(QWidget *parent) : QWidget(parent) {
+dlgDetachBarcode::dlgDetachBarcode(QWidget *parent) : QWidget(parent) {
 	setupUi(this);
 
 	ndb = cardsDefault;
@@ -224,9 +224,9 @@ wdgDialogDetachBarcode::wdgDialogDetachBarcode(QWidget *parent) : QWidget(parent
 
 	installEventFilter(this);
 }
-wdgDialogDetachBarcode::~wdgDialogDetachBarcode() = default;
+dlgDetachBarcode::~dlgDetachBarcode() = default;
 
-bool wdgDialogDetachBarcode::eventFilter(QObject *obj, QEvent *event) {
+bool dlgDetachBarcode::eventFilter(QObject *obj, QEvent *event) {
 	switch (event->type()) {
 		case QEvent::WindowActivate:
 		case QEvent::WindowDeactivate:
@@ -237,7 +237,7 @@ bool wdgDialogDetachBarcode::eventFilter(QObject *obj, QEvent *event) {
 	}
 	return (QWidget::eventFilter(obj, event));
 }
-void wdgDialogDetachBarcode::changeEvent(QEvent *event) {
+void dlgDetachBarcode::changeEvent(QEvent *event) {
 	if (event->type() == QEvent::LanguageChange) {
 		retranslateUi(this);
 		if(listWidget_Barcodes->count() > 0) {
@@ -250,10 +250,10 @@ void wdgDialogDetachBarcode::changeEvent(QEvent *event) {
 	}
 }
 
-void wdgDialogDetachBarcode::update_dialog(void) {
+void dlgDetachBarcode::update_dialog(void) {
 	widget_Detach_Barcode->setEnabled(detach_barcode.enabled);
 }
-void wdgDialogDetachBarcode::change_rom(void) {
+void dlgDetachBarcode::change_rom(void) {
 	ndb = cardsDefault;
 
 	if (info.crc32.prg == 0x19E81461) {
@@ -278,26 +278,26 @@ void wdgDialogDetachBarcode::change_rom(void) {
 	}
 }
 
-void wdgDialogDetachBarcode::apply_barcode(void) {
+void dlgDetachBarcode::apply_barcode(void) {
 	detach_barcode_bcode(uQStringCD(lineEdit_Barcode->text()));
 	gui_active_window();
 	gui_set_focus();
 }
 
-void wdgDialogDetachBarcode::s_barcode_click(QListWidgetItem *item) {
+void dlgDetachBarcode::s_barcode_click(QListWidgetItem *item) {
 	selected = listWidget_Barcodes->row(item);
 
 	lineEdit_Barcode->setReadOnly(selected > 0);
 	lineEdit_Barcode->setClearButtonEnabled(selected == 0);
 	lineEdit_Barcode->setText(ndb[selected].code);
 }
-void wdgDialogDetachBarcode::s_barcode_doubleclick(QListWidgetItem *item) {
+void dlgDetachBarcode::s_barcode_doubleclick(QListWidgetItem *item) {
 	s_barcode_click(item);
 	apply_barcode();
 }
-void wdgDialogDetachBarcode::s_apply_clicked(UNUSED(bool checked)) {
+void dlgDetachBarcode::s_apply_clicked(UNUSED(bool checked)) {
 	apply_barcode();
 }
-void wdgDialogDetachBarcode::s_x_clicked(UNUSED(bool checked)) {
+void dlgDetachBarcode::s_x_clicked(UNUSED(bool checked)) {
 	mainwin->s_set_detach_barcode_window();
 }

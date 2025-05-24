@@ -25,8 +25,8 @@
 
 // ----------------------------------------------------------------------------------------------
 
-dlgJsc::dlgJsc(QWidget *parent) : wdgTitleBarDialog(parent) {
-	wd = new wdgDialogJsc(this);
+wdgDlgJsc::wdgDlgJsc(QWidget *parent) : wdgTitleBarDialog(parent) {
+	wd = new dlgJsc(this);
 	setWindowTitle(wd->windowTitle());
 	setWindowIcon(QIcon(":/icon/icons/game_controller.svgz"));
 	set_border_color("skyblue");
@@ -36,19 +36,19 @@ dlgJsc::dlgJsc(QWidget *parent) : wdgTitleBarDialog(parent) {
 
 	connect(wd->pushButton_Close, SIGNAL(clicked(bool)), this, SLOT(close(void)));
 }
-dlgJsc::~dlgJsc() = default;
+wdgDlgJsc::~wdgDlgJsc() = default;
 
-void dlgJsc::closeEvent(QCloseEvent *event) {
+void wdgDlgJsc::closeEvent(QCloseEvent *event) {
 	geom = geometry();
 	wdgTitleBarDialog::closeEvent(event);
-}void dlgJsc::hideEvent(QHideEvent *event) {
+}void wdgDlgJsc::hideEvent(QHideEvent *event) {
 	geom = geometry();
 	wdgTitleBarDialog::hideEvent(event);
 }
 
 // ----------------------------------------------------------------------------------------------
 
-wdgDialogJsc::wdgDialogJsc(QWidget *parent) : QWidget(parent) {
+dlgJsc::dlgJsc(QWidget *parent) : QWidget(parent) {
 	unsigned int i;
 
 	js_guid_unset(&guid);
@@ -93,9 +93,9 @@ wdgDialogJsc::wdgDialogJsc(QWidget *parent) : QWidget(parent) {
 
 	installEventFilter(this);
 }
-wdgDialogJsc::~wdgDialogJsc() = default;
+dlgJsc::~dlgJsc() = default;
 
-bool wdgDialogJsc::eventFilter(QObject *obj, QEvent *event) {
+bool dlgJsc::eventFilter(QObject *obj, QEvent *event) {
 	switch (event->type()) {
 		case QEvent::WindowActivate:
 		case QEvent::WindowDeactivate:
@@ -106,28 +106,28 @@ bool wdgDialogJsc::eventFilter(QObject *obj, QEvent *event) {
 	}
 	return (QWidget::eventFilter(obj, event));
 }
-void wdgDialogJsc::changeEvent(QEvent *event) {
+void dlgJsc::changeEvent(QEvent *event) {
 	if (event->type() == QEvent::LanguageChange) {
 		retranslateUi(this);
 	} else {
 		QWidget::changeEvent(event);
 	}
 }
-void wdgDialogJsc::showEvent(QShowEvent *event) {
+void dlgJsc::showEvent(QShowEvent *event) {
 	joy_combo_init();
 	timer->start(50);
 	QWidget::showEvent(event);
 }
-void wdgDialogJsc::hideEvent(QHideEvent *event) {
+void dlgJsc::hideEvent(QHideEvent *event) {
 	timer->stop();
 	QWidget::hideEvent(event);
 }
-void wdgDialogJsc::closeEvent(QCloseEvent *event) {
+void dlgJsc::closeEvent(QCloseEvent *event) {
 	timer->stop();
 	QWidget::closeEvent(event);
 }
 
-void wdgDialogJsc::joy_combo_init(void) {
+void dlgJsc::joy_combo_init(void) {
 	BYTE current_index = 0, current_line = JS_NO_JOYSTICK;
 	int i;
 
@@ -160,7 +160,7 @@ void wdgDialogJsc::joy_combo_init(void) {
 		emit comboBox_joy_ID->currentIndexChanged(current_index);
 	}
 }
-void wdgDialogJsc::clear_all(void) {
+void dlgJsc::clear_all(void) {
 	unsigned int i;
 
 #if !defined (_WIN32)
@@ -198,7 +198,7 @@ void wdgDialogJsc::clear_all(void) {
 		}
 	}
 }
-void wdgDialogJsc::update_info_lines(void) {
+void dlgJsc::update_info_lines(void) {
 	_js_device *jdev = &jstick.jdd.devices[js_jdev_index()];
 	int ad = axes_disabled();
 	int hd = hats_disabled();
@@ -220,7 +220,7 @@ void wdgDialogJsc::update_info_lines(void) {
 	}
 	label_Buttons_line->setText(tmp);
 }
-int wdgDialogJsc::js_jdev_index(void) {
+int dlgJsc::js_jdev_index(void) {
 	int jdev_index = JS_NO_JOYSTICK;
 
 	if ((comboBox_joy_ID->count() > 1) && comboBox_joy_ID->currentData().isValid()) {
@@ -228,7 +228,7 @@ int wdgDialogJsc::js_jdev_index(void) {
 	}
 	return (jdev_index);
 }
-int wdgDialogJsc::axes_disabled(void) {
+int dlgJsc::axes_disabled(void) {
 	_js_device *jdev = &jstick.jdd.devices[js_jdev_index()];
 	int disabled = 0;
 	unsigned int i;
@@ -242,7 +242,7 @@ int wdgDialogJsc::axes_disabled(void) {
 	}
 	return (disabled);
 }
-int wdgDialogJsc::hats_disabled(void) {
+int dlgJsc::hats_disabled(void) {
 	_js_device *jdev = &jstick.jdd.devices[js_jdev_index()];
 	int disabled = 0;
 	unsigned int i;
@@ -256,7 +256,7 @@ int wdgDialogJsc::hats_disabled(void) {
 	}
 	return (disabled);
 }
-int wdgDialogJsc::buttons_disabled(void) {
+int dlgJsc::buttons_disabled(void) {
 	_js_device *jdev = &jstick.jdd.devices[js_jdev_index()];
 	int disabled = 0;
 	unsigned int i;
@@ -271,7 +271,7 @@ int wdgDialogJsc::buttons_disabled(void) {
 	return (disabled);
 }
 
-void wdgDialogJsc::s_joy_read_timer(void) {
+void dlgJsc::s_joy_read_timer(void) {
 	QString styleSheet = "QCheckBox { background-color: %0; }";
 	QString scbg = styleSheet.arg(theme::get_theme_color("#ACFFAC").name());
 	QString scbr = styleSheet.arg(theme::get_theme_color("#FFCFCF").name());
@@ -326,7 +326,7 @@ void wdgDialogJsc::s_joy_read_timer(void) {
 
 	mutex.unlock();
 }
-void wdgDialogJsc::s_combobox_joy_activated(int index) {
+void dlgJsc::s_combobox_joy_activated(int index) {
 	int jdev_index = ((QComboBox *)sender())->itemData(index).toInt();
 
 	if (comboBox_joy_ID->count() == 1) {
@@ -334,7 +334,7 @@ void wdgDialogJsc::s_combobox_joy_activated(int index) {
 	}
 	js_guid_set(jdev_index, &guid);
 }
-void wdgDialogJsc::s_combobox_joy_index_changed(UNUSED(int index)) {
+void dlgJsc::s_combobox_joy_index_changed(UNUSED(int index)) {
 	int jdev_index = js_jdev_index();
 	static int old_jdev_index = -1;
 
@@ -487,7 +487,7 @@ void wdgDialogJsc::s_combobox_joy_index_changed(UNUSED(int index)) {
 		mutex.unlock();
 	}
 }
-void wdgDialogJsc::s_axis_cb_clicked(UNUSED(bool checked)) {
+void dlgJsc::s_axis_cb_clicked(UNUSED(bool checked)) {
 	int index = QVariant(((QCheckBox *)sender())->property("myIndex")).toInt();
 	_js_device *jdev = &jstick.jdd.devices[js_jdev_index()];
 	_js_axis *jsx = index & 0x100 ? &jdev->data.hat[index & 0xFF] : &jdev->data.axis[index];
@@ -495,7 +495,7 @@ void wdgDialogJsc::s_axis_cb_clicked(UNUSED(bool checked)) {
 	jsx->enabled = !jsx->enabled;
 	update_info_lines();
 }
-void wdgDialogJsc::s_button_cb_clicked(UNUSED(bool checked)) {
+void dlgJsc::s_button_cb_clicked(UNUSED(bool checked)) {
 	int index = QVariant(((QCheckBox *)sender())->property("myIndex")).toInt();
 	_js_device *jdev = &jstick.jdd.devices[js_jdev_index()];
 	_js_button *jsx = &jdev->data.button[index];
@@ -503,7 +503,7 @@ void wdgDialogJsc::s_button_cb_clicked(UNUSED(bool checked)) {
 	jsx->enabled = !jsx->enabled;
 	update_info_lines();
 }
-void wdgDialogJsc::s_save_clicked(UNUSED(bool checked)) {
+void dlgJsc::s_save_clicked(UNUSED(bool checked)) {
 	if (js_jdev_index() != JS_NO_JOYSTICK) {
 		_js_device *jdev = &jstick.jdd.devices[js_jdev_index()];
 		unsigned int i, a;
@@ -530,7 +530,7 @@ void wdgDialogJsc::s_save_clicked(UNUSED(bool checked)) {
 	}
 }
 
-void wdgDialogJsc::s_et_update_joy_combo(void) {
+void dlgJsc::s_et_update_joy_combo(void) {
 	// se la combox e' aperta o sto configurando i pulsanti, non devo aggiornarne il contenuto
 	if (!comboBox_joy_ID->view()->isVisible()) {
 		joy_combo_init();

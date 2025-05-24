@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>wdgDialogKeyboard</class>
- <widget class="QWidget" name="wdgDialogKeyboard">
+ <class>dlgKeyboard</class>
+ <widget class="QWidget" name="dlgKeyboard">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -13,7 +13,7 @@
   <property name="windowTitle">
    <string notr="true">Virtual Keyboard</string>
   </property>
-  <layout class="QVBoxLayout" name="layout_wdgDialogKeyboard">
+  <layout class="QVBoxLayout" name="layout_dlgKeyboard">
    <property name="sizeConstraint">
     <enum>QLayout::SetFixedSize</enum>
    </property>
@@ -67,7 +67,7 @@
               </font>
              </property>
              <property name="text">
-              <string>1x</string>
+              <string>1.0x</string>
              </property>
              <property name="checkable">
               <bool>true</bool>
@@ -92,7 +92,7 @@
            <item>
             <widget class="themePushButton" name="pushButton_Size_20x">
              <property name="text">
-              <string>2x</string>
+              <string>2.0x</string>
              </property>
              <property name="checkable">
               <bool>true</bool>

@@ -252,9 +252,9 @@ class suborKeyboard : public wdgKeyboard, public Ui::wdgKeyboardSubor {
 
 // ----------------------------------------------------------------------------------------------
 
-#include "ui_wdgDialogCfgNSCode.h"
+#include "ui_dlgCfgNSCode.h"
 
-class wdgDialogCfgNSCode : public QWidget, public Ui::wdgDialogCfgNSCode {
+class dlgCfgNSCode : public QWidget, public Ui::dlgCfgNSCode {
 	Q_OBJECT
 
 	private:
@@ -262,8 +262,8 @@ class wdgDialogCfgNSCode : public QWidget, public Ui::wdgDialogCfgNSCode {
 		DBWORD nscode;
 
 	public:
-		explicit wdgDialogCfgNSCode(QWidget *parent = nullptr, keyboardButton *button = nullptr);
-		~wdgDialogCfgNSCode() override;
+		explicit dlgCfgNSCode(QWidget *parent = nullptr, keyboardButton *button = nullptr);
+		~dlgCfgNSCode() override;
 
 	protected:
 		bool eventFilter(QObject *obj, QEvent *event) override;
@@ -279,22 +279,22 @@ class wdgDialogCfgNSCode : public QWidget, public Ui::wdgDialogCfgNSCode {
 
 // ----------------------------------------------------------------------------------------------
 
-class dlgCfgNSCode : public wdgTitleBarDialog {
+class wdgDlgCfgNSCode : public wdgTitleBarDialog {
 	Q_OBJECT
 
 	public:
-		wdgDialogCfgNSCode *wd;
+		dlgCfgNSCode *wd;
 
 	public:
-		explicit dlgCfgNSCode(QWidget *parent = nullptr, keyboardButton *button = nullptr);
-		~dlgCfgNSCode() override;
+		explicit wdgDlgCfgNSCode(QWidget *parent = nullptr, keyboardButton *button = nullptr);
+		~wdgDlgCfgNSCode() override;
 };
 
 // ----------------------------------------------------------------------------------------------
 
-#include "ui_wdgDialogKeyboard.h"
+#include "ui_dlgKeyboard.h"
 
-class wdgDialogKeyboard : public QWidget, public Ui::wdgDialogKeyboard {
+class dlgKeyboard : public QWidget, public Ui::dlgKeyboard {
 	Q_OBJECT
 
 	public:
@@ -333,8 +333,8 @@ class wdgDialogKeyboard : public QWidget, public Ui::wdgDialogKeyboard {
 		void et_adjust_size(void);
 
 	public:
-		explicit wdgDialogKeyboard(QWidget *parent = nullptr);
-		~wdgDialogKeyboard() override;
+		explicit dlgKeyboard(QWidget *parent = nullptr);
+		~dlgKeyboard() override;
 
 	protected:
 		bool event(QEvent *event) override;
@@ -343,7 +343,7 @@ class wdgDialogKeyboard : public QWidget, public Ui::wdgDialogKeyboard {
 		void showEvent(QShowEvent *event) override;
 
 	public:
-		void retranslateUi(QWidget *wdgDialogKeyboard);
+		void retranslateUi(QWidget *dlgKeyboard);
 
 	public:
 		void reset(void);
@@ -385,15 +385,15 @@ class wdgDialogKeyboard : public QWidget, public Ui::wdgDialogKeyboard {
 
 // ----------------------------------------------------------------------------------------------
 
-class dlgKeyboard : public wdgTitleBarDialog {
+class wdgDlgKeyboard : public wdgTitleBarDialog {
 	Q_OBJECT
 
 	public:
-		wdgDialogKeyboard *wd;
+		dlgKeyboard *wd;
 
 	public:
-		explicit dlgKeyboard(QWidget *parent = nullptr);
-		~dlgKeyboard() override;
+		explicit wdgDlgKeyboard(QWidget *parent = nullptr);
+		~wdgDlgKeyboard() override;
 
 	protected:
 		void resizeEvent(QResizeEvent *event) override;

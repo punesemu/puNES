@@ -191,7 +191,7 @@ class mainWindow : public QMainWindow, public Ui::mainWindow {
 			QString message;
 		} secondary_instance;
 		struct _nsf_author_note {
-			dlgCmdLineHelp *dlg;
+			wdgDlgCmdLineHelp *dlg;
 			QRect geom;
 		} nsf_author_note;
 		QTranslator *translator;

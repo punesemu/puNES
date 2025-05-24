@@ -26,9 +26,9 @@
 
 // ----------------------------------------------------------------------------------------------
 
-dlgAbout::dlgAbout(QWidget *parent) : wdgTitleBarDialog(parent) {
+wdgDlgAbout::wdgDlgAbout(QWidget *parent) : wdgTitleBarDialog(parent) {
 	setAttribute(Qt::WA_DeleteOnClose);
-	wd = new wdgDialogAbout(this);
+	wd = new dlgAbout(this);
 	setWindowTitle(wd->windowTitle());
 	setWindowIcon(QIcon(":/icon/icons/about.svgz"));
 	set_border_color(Qt::magenta);
@@ -38,11 +38,11 @@ dlgAbout::dlgAbout(QWidget *parent) : wdgTitleBarDialog(parent) {
 
 	connect(wd->pushButton_Ok, SIGNAL(clicked(bool)), this, SLOT(close(void)));
 }
-dlgAbout::~dlgAbout() = default;
+wdgDlgAbout::~wdgDlgAbout() = default;
 
 // ----------------------------------------------------------------------------------------------
 
-wdgDialogAbout::wdgDialogAbout(QWidget *parent) : QWidget(parent) {
+dlgAbout::dlgAbout(QWidget *parent) : QWidget(parent) {
 	QDateTime compiled = QDateTime::fromString(COMPILED, "MMddyyyyhhmmss");
 	QString link_color = theme::is_dark_theme() ? "style=\"color: #A4AAE4\" " : "";
 	QString text;
@@ -88,9 +88,9 @@ wdgDialogAbout::wdgDialogAbout(QWidget *parent) : QWidget(parent) {
 		QString(WEBSITE) + "\">" + "NesDev Forum</a></center>");
 	label_Informative->setText(text);
 }
-wdgDialogAbout::~wdgDialogAbout() = default;
+dlgAbout::~dlgAbout() = default;
 
-void wdgDialogAbout::changeEvent(QEvent *event) {
+void dlgAbout::changeEvent(QEvent *event) {
 	if (event->type() == QEvent::LanguageChange) {
 		retranslateUi(this);
 	} else {

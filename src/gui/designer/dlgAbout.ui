@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>wdgDialogAbout</class>
- <widget class="QWidget" name="wdgDialogAbout">
+ <class>dlgAbout</class>
+ <widget class="QWidget" name="dlgAbout">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -13,7 +13,7 @@
   <property name="windowTitle">
    <string notr="true">About</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout_wdgDialogAbout">
+  <layout class="QVBoxLayout" name="verticalLayout_dlgAbout">
    <property name="spacing">
     <number>24</number>
    </property>

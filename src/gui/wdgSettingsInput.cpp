@@ -45,7 +45,7 @@ wdgSettingsInput::wdgSettingsInput(QWidget *parent) : QWidget(parent) {
 
 	hide_from_setup_button = false;
 	last_control = gui_get_ms();
-	dlg_std_pad = nullptr;
+	wdg_dlg_std_pad = nullptr;
 
 	setupUi(this);
 
@@ -934,12 +934,12 @@ void wdgSettingsInput::s_controller_port_setup(UNUSED(bool checked)) {
 		case CTRL_ZAPPER:
 			break;
 		case CTRL_STANDARD:
-			dlg_std_pad = new dlgStdPad(this, cfg_port);
+			wdg_dlg_std_pad = new wdgDlgStdPad(this, cfg_port);
 
 			hide_from_setup_button = true;
 			dlgsettings->hide();
-			dlg_std_pad->exec();
-			dlg_std_pad = nullptr;
+			wdg_dlg_std_pad->exec();
+			wdg_dlg_std_pad = nullptr;
 			dlgsettings->show();
 			hide_from_setup_button = false;
 			s_et_update_joy_combo();
@@ -1122,8 +1122,8 @@ void wdgSettingsInput::s_et_update_joy_combo(void) {
 		shortcut_joy_combo_init();
 		shortcuts_update(UPDATE_ALL, NO_ACTION, NO_ACTION);
 	}
-	if (dlg_std_pad) {
-		emit dlg_std_pad->wd->et_update_joy_combo();
+	if (wdg_dlg_std_pad) {
+		emit wdg_dlg_std_pad->wd->et_update_joy_combo();
 	}
-	gui_dlgjsc_emit_update_joy_combo();
+	gui_wdgdlgjsc_emit_update_joy_combo();
 }

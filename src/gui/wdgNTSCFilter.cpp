@@ -67,7 +67,7 @@ wdgNTSCFilter::~wdgNTSCFilter() = default;
 
 void wdgNTSCFilter::changeEvent(QEvent *event) {
 	if (event->type() == QEvent::LanguageChange) {
-		Ui::wdgNTSCFilter::retranslateUi(this);
+		retranslateUi(this);
 	} else {
 		QWidget::changeEvent(event);
 	}
@@ -243,7 +243,7 @@ wdgNTSCBisqwitFilter::~wdgNTSCBisqwitFilter() = default;
 
 void wdgNTSCBisqwitFilter::changeEvent(QEvent *event) {
 	if (event->type() == QEvent::LanguageChange) {
-		Ui::wdgNTSCBisqwitFilter::retranslateUi(this);
+		retranslateUi(this);
 	} else {
 		QWidget::changeEvent(event);
 	}
@@ -407,7 +407,7 @@ wdgNTSCLMP88959Filter::~wdgNTSCLMP88959Filter() = default;
 
 void wdgNTSCLMP88959Filter::changeEvent(QEvent *event) {
 	if (event->type() == QEvent::LanguageChange) {
-		Ui::wdgNTSCLMP88959Filter::retranslateUi(this);
+		retranslateUi(this);
 	} else {
 		QWidget::changeEvent(event);
 	}
@@ -577,7 +577,7 @@ wdgNTSCNESRGBLMP88959Filter::~wdgNTSCNESRGBLMP88959Filter() = default;
 
 void wdgNTSCNESRGBLMP88959Filter::changeEvent(QEvent *event) {
 	if (event->type() == QEvent::LanguageChange) {
-		Ui::wdgNTSCNESRGBLMP88959Filter::retranslateUi(this);
+		retranslateUi(this);
 	} else {
 		QWidget::changeEvent(event);
 	}
@@ -750,7 +750,7 @@ wdgPALLMP88959Filter::~wdgPALLMP88959Filter() = default;
 
 void wdgPALLMP88959Filter::changeEvent(QEvent *event) {
 	if (event->type() == QEvent::LanguageChange) {
-		Ui::wdgPALLMP88959Filter::retranslateUi(this);
+		retranslateUi(this);
 	} else {
 		QWidget::changeEvent(event);
 	}
@@ -940,7 +940,7 @@ wdgPALNESRGBLMP88959Filter::~wdgPALNESRGBLMP88959Filter() = default;
 
 void wdgPALNESRGBLMP88959Filter::changeEvent(QEvent *event) {
 	if (event->type() == QEvent::LanguageChange) {
-		Ui::wdgPALNESRGBLMP88959Filter::retranslateUi(this);
+		retranslateUi(this);
 	} else {
 		QWidget::changeEvent(event);
 	}

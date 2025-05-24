@@ -423,7 +423,7 @@ wdgPaletteEditor::~wdgPaletteEditor() = default;
 
 void wdgPaletteEditor::changeEvent(QEvent *event) {
 	if (event->type() == QEvent::LanguageChange) {
-		Ui::wdgPaletteEditor::retranslateUi(this);
+		retranslateUi(this);
 	} else {
 		QWidget::changeEvent(event);
 	}

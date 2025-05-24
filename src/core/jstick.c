@@ -902,7 +902,7 @@ thread_funct(js_detection_loop, UNUSED(void *arg)) {
 		// gestione pads
 		js_jdev_scan();
 		// gestione shortcuts
-		gui_dlgsettings_input_update_joy_combo();
+		gui_wdgdlgsettings_input_update_joy_combo();
 		// pausa caffe'
 		gui_sleep(10);
 	}

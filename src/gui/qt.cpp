@@ -101,24 +101,24 @@ static struct _qt {
 	QByteArray sba;
 
 	// widget dell'overlay
-	dlgLog *log{};
+	wdgDlgLog *log{};
 
 	// widget dell'overlay
 	wdgOverlayUi *overlay{};
 
 	// dialog del settaggio
-	dlgSettings *dset{};
+	wdgDlgSettings *dset{};
 
 	// controlli esterni
-	dlgVsSystem *vssystem{};
-	dlgDetachBarcode *dbarcode{};
-	dlgJsc *djsc{};
+	wdgDlgVsSystem *vssystem{};
+	wdgDlgDetachBarcode *dbarcode{};
+	wdgDlgJsc *djsc{};
 
 	// dialog della tastiera virtuale
-	dlgKeyboard *dkeyb{};
+	wdgDlgKeyboard *dkeyb{};
 
 	// dialog dell'editor di header
-	dlgHeaderEditor *header{};
+	wdgDlgHeaderEditor *header{};
 
 	// QObject che non mandano un pause quando in background
 	QList<QWidget *>no_bck_pause;
@@ -262,7 +262,7 @@ BYTE gui_create(void) {
 
 	qt.mwin->show();
 
-	qt.log = new dlgLog(qt.mwin);
+	qt.log = new wdgDlgLog(qt.mwin);
 	qt.log->wd->start_thread();
 
 	log_info(uL("" uPs("") " (by FHorse) " uPs("") ", " uPs("") ", " uPs("")
@@ -283,15 +283,15 @@ BYTE gui_create(void) {
 	log_info_box(uL("data;" uPs("") ""), gui_data_folder());
 	log_info_box(uL("temp;" uPs("") ""), gui_temp_folder());
 
-	qt.dset = new dlgSettings(qt.mwin);
+	qt.dset = new wdgDlgSettings(qt.mwin);
 	qt.overlay = new wdgOverlayUi();
 
 	memset(&ext_win, 0x00, sizeof(ext_win));
-	qt.vssystem = new dlgVsSystem(qt.mwin);
-	qt.dbarcode = new dlgDetachBarcode(qt.mwin);
-	qt.djsc = new dlgJsc(qt.mwin);
-	qt.dkeyb = new dlgKeyboard(qt.mwin);
-	qt.header = new dlgHeaderEditor(qt.mwin);
+	qt.vssystem = new wdgDlgVsSystem(qt.mwin);
+	qt.dbarcode = new wdgDlgDetachBarcode(qt.mwin);
+	qt.djsc = new wdgDlgJsc(qt.mwin);
+	qt.dkeyb = new wdgDlgKeyboard(qt.mwin);
+	qt.header = new wdgDlgHeaderEditor(qt.mwin);
 
 	qt.no_bck_pause.append(qt.mwin);
 	qt.no_bck_pause.append(qt.dset);
@@ -1000,34 +1000,34 @@ void *gui_wdgoverlayui_get_ptr(void) {
 	return ((void *)qt.overlay);
 }
 
-void *gui_dlgheadereditor_get_ptr(void) {
+void *gui_wdgdlgheadereditor_get_ptr(void) {
 	return ((void *)qt.header);
 }
-void gui_dlgheadereditor_read_header(void) {
-	qt.header->read_header(info.rom.file);
+void gui_wdgdlgheadereditor_read_header(void) {
+	qt.header->wd->read_header(info.rom.file);
 }
 
-void *gui_dlgsettings_get_ptr(void) {
+void *gui_wdgdlgsettings_get_ptr(void) {
 	return ((void *)qt.dset);
 }
-void gui_dlgsettings_input_update_joy_combo(void) {
+void gui_wdgdlgsettings_input_update_joy_combo(void) {
 	qt.dset->wd->widget_Settings_Input->update_joy_list();
 }
 
-void *gui_dlgjsc_get_ptr(void) {
+void *gui_wdgdlgjsc_get_ptr(void) {
 	return ((void *)qt.djsc);
 }
-void gui_dlgjsc_emit_update_joy_combo(void) {
+void gui_wdgdlgjsc_emit_update_joy_combo(void) {
 	if (qt.djsc->isVisible()) {
 		emit qt.djsc->wd->et_update_joy_combo();
 	}
 }
 
-void *gui_dlgkeyboard_get_ptr(void) {
+void *gui_wdgdlgkeyboard_get_ptr(void) {
 	return ((void *)qt.dkeyb);
 }
 
-void *gui_dlglog_get_ptr(void) {
+void *gui_wdgdlglog_get_ptr(void) {
 	return ((void *)qt.log);
 }
 

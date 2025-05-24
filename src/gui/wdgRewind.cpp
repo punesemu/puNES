@@ -61,7 +61,7 @@ wdgRewind::~wdgRewind() = default;
 
 void wdgRewind::changeEvent(QEvent *event) {
 	if (event->type() == QEvent::LanguageChange) {
-		Ui::wdgRewind::retranslateUi(this);
+		retranslateUi(this);
 	} else if (event->type() == QEvent::PaletteChange) {
 		stylesheet_update();
 	} else {

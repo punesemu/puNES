@@ -93,7 +93,7 @@ wdgTitleBar::~wdgTitleBar() = default;
 
 void wdgTitleBar::changeEvent(QEvent *event) {
 	if (event->type() == QEvent::LanguageChange) {
-		Ui::wdgTitleBar::retranslateUi(this);
+		retranslateUi(this);
 	} else if (event->type() == QEvent::PaletteChange) {
 		stylesheet_update();
 	} else {
@@ -343,7 +343,7 @@ bool wdgTitleBarWindow::eventFilter(UNUSED(QObject *obj), QEvent *event) {
 }
 void wdgTitleBarWindow::changeEvent(QEvent *event) {
 	if (event->type() == QEvent::LanguageChange) {
-		Ui::wdgTitleBarWindow::retranslateUi(this);
+		retranslateUi(this);
 	} else {
 		QWidget::changeEvent(event);
 	}

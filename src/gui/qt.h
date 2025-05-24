@@ -35,11 +35,11 @@ enum _overlay_info_alignment {
 	OVERLAY_INFO_RIGHT
 };
 
-#define dlgheader ((dlgHeaderEditor *)gui_dlgheadereditor_get_ptr())
-#define dlgjsc ((dlgJsc *)gui_dlgjsc_get_ptr())
-#define dlgkeyb ((dlgKeyboard *)gui_dlgkeyboard_get_ptr())
-#define dlglog ((dlgLog *)gui_dlglog_get_ptr())
-#define dlgsettings ((dlgSettings *)gui_dlgsettings_get_ptr())
+#define dlgheader ((wdgDlgHeaderEditor *)gui_wdgdlgheadereditor_get_ptr())
+#define dlgjsc ((wdgDlgJsc *)gui_wdgdlgjsc_get_ptr())
+#define dlgkeyb ((wdgDlgKeyboard *)gui_wdgdlgkeyboard_get_ptr())
+#define dlglog ((wdgDlgLog *)gui_wdgdlglog_get_ptr())
+#define dlgsettings ((wdgDlgSettings *)gui_wdgdlgsettings_get_ptr())
 #define mainwin ((mainWindow *)gui_mainwindow_get_ptr())
 #define objcheat ((objCheat *)gui_objcheat_get_ptr())
 #define wdgoverlayui ((wdgOverlayUi *)gui_wdgoverlayui_get_ptr())
@@ -201,18 +201,18 @@ EXTERNC void gui_overlay_slot_preview_set_from_ppu_screen(int slot, void *buffer
 EXTERNC void gui_overlay_slot_preview_set_from_png(int slot, void *buffer, size_t size, uTCHAR *file);
 EXTERNC void *gui_overlay_slot_preview_get(int slot);
 
-EXTERNC void *gui_dlgheadereditor_get_ptr(void);
-EXTERNC void gui_dlgheadereditor_read_header(void);
+EXTERNC void *gui_wdgdlgheadereditor_get_ptr(void);
+EXTERNC void gui_wdgdlgheadereditor_read_header(void);
 
-EXTERNC void *gui_dlgsettings_get_ptr(void);
-EXTERNC void gui_dlgsettings_input_update_joy_combo(void);
+EXTERNC void *gui_wdgdlgsettings_get_ptr(void);
+EXTERNC void gui_wdgdlgsettings_input_update_joy_combo(void);
 
-EXTERNC void *gui_dlgjsc_get_ptr(void);
-EXTERNC void gui_dlgjsc_emit_update_joy_combo(void);
+EXTERNC void *gui_wdgdlgjsc_get_ptr(void);
+EXTERNC void gui_wdgdlgjsc_emit_update_joy_combo(void);
 
-EXTERNC void *gui_dlgkeyboard_get_ptr(void);
+EXTERNC void *gui_wdgdlgkeyboard_get_ptr(void);
 
-EXTERNC void *gui_dlglog_get_ptr(void);
+EXTERNC void *gui_wdgdlglog_get_ptr(void);
 
 EXTERNC void gui_js_joyval_icon_desc(int index, DBWORD input, void *icon, void *desc);
 

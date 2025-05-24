@@ -1596,8 +1596,8 @@ void mainWindow::s_apply_patch(void) {
 }
 void mainWindow::s_open_edit_current_header(void) {
 	set_dialog_geom(dlgheader->geom);
-	dlgheader->setGeometry(dlgheader->geom);
-	dlgheader->reset_dialog();
+	dlgheader->set_geometry();
+	dlgheader->wd->reset_dialog();
 	dlgheader->show();
 }
 void mainWindow::s_open_recent_roms(void) {
@@ -2330,7 +2330,7 @@ void mainWindow::s_show_log(void) {
 	dlglog->activateWindow();
 }
 void mainWindow::s_help(void) {
-	dlgAbout *about = new dlgAbout(this);
+	wdgDlgAbout *about = new wdgDlgAbout(this);
 
 	emu_pause(TRUE);
 
@@ -2784,7 +2784,7 @@ void mainWindow::s_et_nsf_author_note_open(const uTCHAR *string) {
 	if (!nsf_author_note.dlg) {
 		QString sstring = uQString(string);
 
-		nsf_author_note.dlg = new dlgCmdLineHelp(this, "Author's Note", uQStringCD(sstring));
+		nsf_author_note.dlg = new wdgDlgCmdLineHelp(this, "Author's Note", uQStringCD(sstring));
 		if (!nsf_author_note.geom.isEmpty()) {
 			nsf_author_note.dlg->setGeometry(nsf_author_note.geom);
 		}

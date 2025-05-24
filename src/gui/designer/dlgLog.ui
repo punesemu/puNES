@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>wdgDialogLog</class>
- <widget class="QWidget" name="wdgDialogLog">
+ <class>dlgLog</class>
+ <widget class="QWidget" name="dlgLog">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -19,7 +19,7 @@
   <property name="windowTitle">
    <string>Log</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout_wdgDialogLog">
+  <layout class="QVBoxLayout" name="verticalLayout_dlgLog">
    <item>
     <widget class="QPlainTextEdit" name="plainTextEdit_Log">
      <property name="sizeAdjustPolicy">

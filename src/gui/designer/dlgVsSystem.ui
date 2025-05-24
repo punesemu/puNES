@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>wdgDialogVsSystem</class>
- <widget class="QWidget" name="wdgDialogVsSystem">
+ <class>dlgVsSystem</class>
+ <widget class="QWidget" name="dlgVsSystem">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -13,7 +13,7 @@
   <property name="windowTitle">
    <string>Vs System</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout_wdgDialogVsSystem">
+  <layout class="QVBoxLayout" name="verticalLayout_dlgVsSystem">
    <property name="leftMargin">
     <number>6</number>
    </property>

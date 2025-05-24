@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>wdgDialogCfgNSCode</class>
- <widget class="QWidget" name="wdgDialogCfgNSCode">
+ <class>dlgCfgNSCode</class>
+ <widget class="QWidget" name="dlgCfgNSCode">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -11,9 +11,9 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string notr="true">wdgDialogCfgNSCode</string>
+   <string notr="true">dlgCfgNSCode</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout_wdgDialogCfgNSCode" stretch="1,0">
+  <layout class="QVBoxLayout" name="verticalLayout_dlgCfgNSCode" stretch="1,0">
    <property name="sizeConstraint">
     <enum>QLayout::SetFixedSize</enum>
    </property>

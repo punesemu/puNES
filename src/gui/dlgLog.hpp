@@ -21,7 +21,7 @@
 
 #include <QtCore/QThread>
 #include <QtCore/QMutex>
-#include "ui_wdgDialogLog.h"
+#include "ui_dlgLog.h"
 #include "wdgTitleBarWindow.hpp"
 #include "common.h"
 
@@ -43,7 +43,7 @@ class textEditThread : public QThread {
 
 // ----------------------------------------------------------------------------------------------
 
-class wdgDialogLog : public QWidget, public Ui::wdgDialogLog {
+class dlgLog : public QWidget, public Ui::dlgLog {
 	Q_OBJECT
 
 	public:
@@ -76,8 +76,8 @@ class wdgDialogLog : public QWidget, public Ui::wdgDialogLog {
 		void et_close(void);
 
 	public:
-		explicit wdgDialogLog(QWidget *parent = nullptr);
-		~wdgDialogLog() override;
+		explicit dlgLog(QWidget *parent = nullptr);
+		~dlgLog() override;
 
 	protected:
 		void changeEvent(QEvent *event) override;
@@ -115,13 +115,13 @@ class wdgDialogLog : public QWidget, public Ui::wdgDialogLog {
 
 // ----------------------------------------------------------------------------------------------
 
-class dlgLog : public wdgTitleBarDialog {
+class wdgDlgLog : public wdgTitleBarDialog {
 	public:
-		wdgDialogLog *wd;
+		dlgLog *wd;
 
 	public:
-		explicit dlgLog(QWidget *parent = nullptr);
-		~dlgLog() override;
+		explicit wdgDlgLog(QWidget *parent = nullptr);
+		~wdgDlgLog() override;
 
 	protected:
 		void hideEvent(QHideEvent *event) override;
