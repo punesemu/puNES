@@ -159,6 +159,7 @@ class wdgTitleBarWindow : public QWidget, public Ui::wdgTitleBarWindow {
 	public:
 		void init_geom_variable(_last_geometry lg);
 		void set_geometry(void);
+		void exec(void);
 
 	protected:
 		void set_border_color(QColor color);

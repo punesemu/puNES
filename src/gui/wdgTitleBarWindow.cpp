@@ -433,6 +433,13 @@ void wdgTitleBarWindow::set_geometry(void) {
 		setGeometry(geom);
 	}
 }
+void wdgTitleBarWindow::exec(void) {
+	QEventLoop loop;
+
+	QObject::connect(this, SIGNAL(destroyed(QObject *)), &loop, SLOT(quit(void)));
+	show();
+	loop.exec();
+}
 
 void wdgTitleBarWindow::set_border_color(QColor color) {
 	border_color = color;
@@ -443,6 +450,10 @@ void wdgTitleBarWindow::add_widget(QWidget *widget) {
 
 	verticalLayout->insertWidget(verticalLayout->count() - 1, widget);
 	resize(new_size);
+	// mi serve per la corretta gestione del redefine_cursor();
+	if (hasMouseTracking()) {
+		widget->setMouseTracking(true);
+	}
 }
 void wdgTitleBarWindow::set_buttons(barButtons buttons) {
 	if (title_bar == nullptr) {

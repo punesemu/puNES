@@ -34,7 +34,7 @@ dlgJsc::dlgJsc(QWidget *parent) : wdgTitleBarDialog(parent) {
 	set_permit_resize(false);
 	add_widget(wd);
 
-	connect(wd->pushButton_Close, SIGNAL(clicked(bool)), this, SLOT(hide(void)));
+	connect(wd->pushButton_Close, SIGNAL(clicked(bool)), this, SLOT(close(void)));
 }
 dlgJsc::~dlgJsc() = default;
 
