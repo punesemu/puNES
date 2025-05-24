@@ -874,7 +874,7 @@ void mainWindow::hold_fast_forward(BYTE mode) {
 }
 void mainWindow::open_dkeyb(void) {
 	set_dialog_geom(dlgkeyb->geom);
-	dlgkeyb->setGeometry(dlgkeyb->geom);
+	dlgkeyb->set_geometry();
 	dlgkeyb->show();
 }
 void mainWindow::unsupported_hardware(void) {
@@ -2195,6 +2195,7 @@ void mainWindow::s_open_ddip(void) {
 	emu_pause(FALSE);
 }
 void mainWindow::s_open_djsc(void) {
+	dlgjsc->set_geometry();
 	dlgjsc->show();
 }
 void mainWindow::s_tape_play(void) {

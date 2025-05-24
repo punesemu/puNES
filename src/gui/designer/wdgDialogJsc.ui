@@ -1,21 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>dlgJsc</class>
- <widget class="QDialog" name="dlgJsc">
+ <class>wdgDialogJsc</class>
+ <widget class="QWidget" name="wdgDialogJsc">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
     <width>698</width>
-    <height>567</height>
+    <height>569</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string notr="true">Joypad/Gamepad Debug</string>
-  </property>
-  <property name="windowIcon">
-   <iconset resource="resources.qrc">
-    <normaloff>:/icon/icons/application.png</normaloff>:/icon/icons/application.png</iconset>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
@@ -1196,7 +1192,7 @@
       </widget>
      </item>
      <item>
-      <widget class="themePushButton" name="pushButton_CLose">
+      <widget class="themePushButton" name="pushButton_Close">
        <property name="text">
         <string>Close Window</string>
        </property>

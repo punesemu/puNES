@@ -1019,7 +1019,7 @@ void *gui_dlgjsc_get_ptr(void) {
 }
 void gui_dlgjsc_emit_update_joy_combo(void) {
 	if (qt.djsc->isVisible()) {
-		emit qt.djsc->et_update_joy_combo();
+		emit qt.djsc->wd->et_update_joy_combo();
 	}
 }
 

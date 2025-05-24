@@ -72,10 +72,8 @@ void dlgKeyboard::resizeEvent(QResizeEvent *event) {
 	wdgTitleBarDialog::resizeEvent(event);
 }
 void dlgKeyboard::closeEvent(QCloseEvent *event) {
-	event->ignore();
-	QTimer::singleShot(50, this, [this] {
-		setVisible(FALSE);
-	});
+	geom = geometry();
+	wdgTitleBarDialog::closeEvent(event);
 }
 void dlgKeyboard::hideEvent(QHideEvent *event) {
 	geom = geometry();
@@ -579,7 +577,6 @@ dlgCfgNSCode::dlgCfgNSCode(QWidget *parent, keyboardButton *button) : wdgTitleBa
 	set_buttons(barButton::Close);
 	set_permit_resize(false);
 	add_widget(wd);
-	init_geom_variable(cfg->lg_nes_keyboard);
 
 	connect(wd->pushButton_Discard, SIGNAL(clicked(bool)), this, SLOT(close(void)));
 }

@@ -19,27 +19,27 @@
 #ifndef DLGJSC_HPP_
 #define DLGJSC_HPP_
 
-#include <QtWidgets/QDialog>
 #include <QtCore/QMutex>
-#include "ui_dlgJsc.h"
+#include "ui_wdgDialogJsc.h"
+#include "wdgTitleBarWindow.hpp"
 #include "jstick.h"
 
-class dlgJsc : public QDialog, public Ui::dlgJsc {
+// ----------------------------------------------------------------------------------------------
+
+class wdgDialogJsc : public QWidget, public Ui::wdgDialogJsc {
 	Q_OBJECT
 
 	private:
 		_input_guid guid;
 		QTimer *timer;
 		QMutex mutex;
-		QRect geom;
-		bool first_time;
 
 	signals:
 		void et_update_joy_combo(void);
 
 	public:
-		explicit dlgJsc(QWidget *parent = nullptr);
-		~dlgJsc() override;
+		explicit wdgDialogJsc(QWidget *parent = nullptr);
+		~wdgDialogJsc() override;
 
 	protected:
 		bool eventFilter(QObject *obj, QEvent *event) override;
@@ -64,10 +64,24 @@ class dlgJsc : public QDialog, public Ui::dlgJsc {
 		void s_axis_cb_clicked(bool checked);
 		void s_button_cb_clicked(bool checked);
 		void s_save_clicked(bool checked);
-		void s_close_clicked(bool checked);
 
 	private slots:
 		void s_et_update_joy_combo(void);
+};
+
+// ----------------------------------------------------------------------------------------------
+
+class dlgJsc : public wdgTitleBarDialog {
+	public:
+		wdgDialogJsc *wd;
+
+	public:
+		explicit dlgJsc(QWidget *parent = nullptr);
+		~dlgJsc() override;
+
+	protected:
+		void closeEvent(QCloseEvent *event) override;
+		void hideEvent(QHideEvent *event) override;
 };
 
 #endif /* DLGJSC_HPP_ */

@@ -26,7 +26,8 @@
 #include <QtGui/QPainterPath>
 #include <QtCore/QTimer>
 #include "wdgTitleBarWindow.hpp"
-#include "video/gfx.h"
+#include "mainWindow.hpp"
+#include "gui.h"
 
 #ifndef EV_GLOBAL_MACRO
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
@@ -259,6 +260,7 @@ wdgTitleBarWindow::wdgTitleBarWindow(QWidget *parent, Qt::WindowType window_type
 	setWindowFlags(window_type | Qt::FramelessWindowHint | Qt::WindowCloseButtonHint | Qt::WindowMinMaxButtonsHint | Qt::WindowTitleHint);
 	setMouseTracking(true);
 
+	geom = QRect(0, 0, 0, 0);
 	border_color = palette().color(QPalette::Window);
 	resize_threshold = 4;
 	force_custom_move = false;
@@ -419,6 +421,12 @@ void wdgTitleBarWindow::init_geom_variable(_last_geometry lg) {
 	geom.setRect(lg.x, lg.y, lg.w, lg.h);
 }
 void wdgTitleBarWindow::set_geometry(void) {
+	if (geom == QRect(0, 0, 0, 0)) {
+		QPoint center = mainwin->geometry().center();
+
+		center -= QPoint(size().width() / 2, size().height() / 2);
+		geom.setRect(center.x(), center.y(), sizeHint().width(), sizeHint().height());
+	}
 	if (gfx.wayland.enabled) {
 		resize(geom.width(), geom.height());
 	} else {
