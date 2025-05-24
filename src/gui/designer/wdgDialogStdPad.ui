@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>dlgStdPad</class>
- <widget class="QDialog" name="dlgStdPad">
-  <property name="windowModality">
-   <enum>Qt::WindowModal</enum>
-  </property>
+ <class>wdgDialogStdPad</class>
+ <widget class="QWidget" name="wdgDialogStdPad">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -20,10 +17,6 @@
   </property>
   <property name="windowTitle">
    <string>Standard Pad</string>
-  </property>
-  <property name="windowIcon">
-   <iconset resource="resources.qrc">
-    <normaloff>:/icon/icons/application.png</normaloff>:/icon/icons/application.png</iconset>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_3">
    <property name="sizeConstraint">

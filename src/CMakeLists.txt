@@ -562,7 +562,6 @@ set(extra_srcs
 set(gui_ui_srcs
 	gui/designer/dlgDipswitch.ui
 	gui/designer/dlgHeaderEditor.ui
-	gui/designer/dlgStdPad.ui
 	gui/designer/dlgUncomp.ui
 	gui/designer/dlgWizard.ui
 	gui/designer/mainWindow.ui
@@ -576,6 +575,7 @@ set(gui_ui_srcs
 	gui/designer/wdgDialogJsc.ui
 	gui/designer/wdgDialogKeyboard.ui
 	gui/designer/wdgDialogSettings.ui
+	gui/designer/wdgDialogStdPad.ui
 	gui/designer/wdgDialogVsSystem.ui
 	gui/designer/wdgKeyboardFB.ui
 	gui/designer/wdgKeyboardSubor.ui

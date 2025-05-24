@@ -21,8 +21,9 @@
 
 #include <QtCore/QtGlobal>
 #include <QtCore/QTimer>
-#include <QtWidgets/QDialog>
 #include <QtWidgets/QPushButton>
+#include "ui_wdgDialogStdPad.h"
+#include "wdgTitleBarWindow.hpp"
 #include "common.h"
 #include "input.h"
 
@@ -46,9 +47,9 @@ typedef struct _joy_list {
 
 extern _joy_list joy_list;
 
-#include "ui_dlgStdPad.h"
+// ----------------------------------------------------------------------------------------------
 
-class dlgStdPad : public QDialog, public Ui::dlgStdPad {
+class wdgDialogStdPad : public QWidget, public Ui::wdgDialogStdPad {
 	Q_OBJECT
 
 	private:
@@ -76,8 +77,8 @@ class dlgStdPad : public QDialog, public Ui::dlgStdPad {
 		void et_update_joy_combo(void);
 
 	public:
-		explicit dlgStdPad(QWidget *parent = nullptr, _cfg_port *cfg_port = nullptr);
-		~dlgStdPad() override;
+		explicit wdgDialogStdPad(QWidget *parent = nullptr, _cfg_port *cfg_port = nullptr);
+		~wdgDialogStdPad() override;
 
 	protected:
 		bool eventFilter(QObject *obj, QEvent *event) override;
@@ -124,10 +125,20 @@ class dlgStdPad : public QDialog, public Ui::dlgStdPad {
 		void s_pad_joy_read_timer(void);
 		void s_pad_in_sequence_timer(void);
 		void s_apply_clicked(bool checked);
-		void s_discard_clicked(bool checked);
 
 	private slots:
 		void s_et_update_joy_combo(void);
+};
+
+// ----------------------------------------------------------------------------------------------
+
+class dlgStdPad : public wdgTitleBarDialog {
+	public:
+		wdgDialogStdPad *wd;
+
+	public:
+		explicit dlgStdPad(QWidget *parent = nullptr, _cfg_port *cfg_port = nullptr);
+		~dlgStdPad() override;
 };
 
 #endif /* DLGSTDPAD_HPP_ */

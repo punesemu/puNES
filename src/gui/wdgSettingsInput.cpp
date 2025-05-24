@@ -1123,7 +1123,7 @@ void wdgSettingsInput::s_et_update_joy_combo(void) {
 		shortcuts_update(UPDATE_ALL, NO_ACTION, NO_ACTION);
 	}
 	if (dlg_std_pad) {
-		emit dlg_std_pad->et_update_joy_combo();
+		emit dlg_std_pad->wd->et_update_joy_combo();
 	}
 	gui_dlgjsc_emit_update_joy_combo();
 }
