@@ -22,6 +22,7 @@
 
 INLINE static void prg_fix_260(void);
 INLINE static void chr_fix_260(void);
+INLINE static void mirroring_fix_260(void);
 
 struct _m260 {
 	BYTE cpu5xxx[4];
@@ -68,6 +69,7 @@ void map_init_260(void) {
 void extcl_after_mapper_init_260(void) {
 	prg_fix_260();
 	chr_fix_260();
+	mirroring_fix_260();
 }
 void extcl_cpu_wr_mem_260(BYTE nidx, WORD address, BYTE value) {
 	if (address < 0x8000) {
@@ -99,6 +101,7 @@ void extcl_cpu_wr_mem_260(BYTE nidx, WORD address, BYTE value) {
 		if ((m260.cpu5xxx[0] & 0x07) >= 6) {
 			m260.cnrom_chr_reg = value & 0x03;
 			chr_fix_260();
+			mirroring_fix_260();
 		}
 		switch (address & 0xE001) {
 			case 0x8000:
@@ -223,4 +226,13 @@ INLINE static void chr_fix_260(void) {
 	memmap_auto_1k(0, MMPPU(0x1400 ^ swap), bank[5]);
 	memmap_auto_1k(0, MMPPU(0x1800 ^ swap), bank[6]);
 	memmap_auto_1k(0, MMPPU(0x1C00 ^ swap), bank[7]);
+}
+INLINE static void mirroring_fix_260(void) {
+	if ((m260.cpu5xxx[0] & 0x07) >= 6) {
+		if (m260.cnrom_chr_reg & 0x04) {
+			mirroring_H(0);
+		} else {
+			mirroring_V(0);
+		}
+	}
 }
