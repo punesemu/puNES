@@ -184,7 +184,7 @@ wdgSettingsVideo::wdgSettingsVideo(QWidget *parent) : QWidget(parent) {
 		bool visible = false;
 
 #if defined (FULLSCREEN_RESFREQ)
-		if (!gfx.is_wayland) {
+		if (!gfx.wayland.enabled) {
 			visible = true;
 			gfx_monitor_enum_monitors();
 			connect(checkBox_Fullscreen_adaptive_rrate, SIGNAL(clicked(bool)), this, SLOT(s_adaptive_rrate(bool)));
@@ -198,7 +198,7 @@ wdgSettingsVideo::wdgSettingsVideo(QWidget *parent) : QWidget(parent) {
 		checkBox_Fullscreen_adaptive_rrate->setVisible(visible);
 		label_Fullscreen_adaptive_rrate_note_asterisk->setVisible(visible);
 		label_Fullscreen_resolution_note->setVisible(visible);
-		checkBox_Fullscreen_in_window->setVisible(!gfx.is_wayland);
+		checkBox_Fullscreen_in_window->setVisible(!gfx.only_fullscreen_in_window);
 	}
 
 	tabWidget_Video->setCurrentIndex(0);
@@ -335,7 +335,7 @@ void wdgSettingsVideo::update_widget(void) {
 	checkBox_Stretch_in_fullscreen->setChecked(cfg->stretch);
 	checkBox_Stretch_in_fullscreen->setEnabled(!cfg->integer_scaling);
 #if defined (FULLSCREEN_RESFREQ)
-	if (!gfx.is_wayland) {
+	if (!gfx.wayland.enabled) {
 		checkBox_Fullscreen_adaptive_rrate->setEnabled(!checkBox_Fullscreen_in_window->isChecked());
 		checkBox_Fullscreen_adaptive_rrate->setChecked(cfg->adaptive_rrate);
 		resolution_set();

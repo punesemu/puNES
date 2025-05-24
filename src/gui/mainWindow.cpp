@@ -1440,7 +1440,7 @@ void mainWindow::s_set_fullscreen(void) {
 		org_geom = geometry();
 		visibility.menubar = menubar->isVisible();
 		visibility.toolbars = toolbar->isVisible();
-		if (!gfx.is_wayland) {
+		if (!gfx.only_fullscreen_in_window) {
 			// muovo la finestra nell'angolo superiore del monitor, e' importante
 			// perche' in caso di cambio di risoluzione nell fullscreen, se posizionata
 			// nella parte destra del monitor potrebbe non essere visualizzata correttamente.
@@ -1461,7 +1461,7 @@ void mainWindow::s_set_fullscreen(void) {
 	} else {
 		// su Fedora 35 (Wayland, Gnome 41.5 e QT 5.15.2) il Fullscreen non funziona e
 		// quello a finestra funziona solo se non eseguo l'hide().
-		if (!gfx.is_wayland) {
+		if (!gfx.only_fullscreen_in_window) {
 			hide();
 		}
 		if (gfx.type_of_fscreen_in_use == FULLSCR) {
@@ -2353,7 +2353,7 @@ void mainWindow::s_fullscreen(void) {
 #if defined (_WIN32)
 		window_flags = windowFlags();
 #endif
-		if (gfx.is_wayland || cfg->fullscreen_in_window) {
+		if (gfx.only_fullscreen_in_window || cfg->fullscreen_in_window) {
 			QRect fs_win_geom = win_handle_screen()->availableGeometry();
 #if defined (_WIN32)
 			// lo showMaximized sotto windows non considera la presenza della barra delle applicazioni
@@ -2447,7 +2447,7 @@ void mainWindow::s_fullscreen(void) {
 		gfx_set_screen(gfx.scale_before_fscreen, NO_CHANGE, NO_CHANGE, NO_FULLSCR, NO_CHANGE, FALSE, FALSE);
 		setGeometry(org_geom.x(), org_geom.y(), geometry().width(), geometry().height());
 		// al rientro dal fullscreen a finestra devo eseguire un update() ritardato per ridisignare correttamente la GUI.
-		if (gfx.is_wayland) {
+		if (gfx.only_fullscreen_in_window) {
 			QTimer::singleShot(200, this, [this]() { update(); });
 		}
 	}

@@ -1091,12 +1091,20 @@ void gui_screen_info(void) {
 #if QT_VERSION < QT_VERSION_CHECK(5, 10, 0)
 	QByteArray qbwdisplay = qgetenv(cwdisplay);
 
-	gfx.is_wayland = qbwdisplay.length() > 0 ? TRUE : FALSE;
+	gfx.wayland.enabled = qbwdisplay.length() > 0 ? TRUE : FALSE;
 #else
-	gfx.is_wayland = qEnvironmentVariableIsSet(cwdisplay) ? TRUE : FALSE;
+	gfx.wayland.enabled = qEnvironmentVariableIsSet(cwdisplay) ? TRUE : FALSE;
 #endif
+	if (gfx.wayland.enabled) {
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+		gfx.only_fullscreen_in_window = TRUE;
 #else
-	gfx.is_wayland = FALSE;
+		gfx.only_fullscreen_in_window = FALSE;
+#endif
+	}
+#else
+	gfx.wayland.enabled = FALSE;
+	gfx.only_fullscreen_in_window = FALSE;
 #endif
 	gfx.bit_per_pixel = mainApplication::primaryScreen()->depth();
 }
