@@ -19,10 +19,26 @@
 #include "dlgWizard.hpp"
 #include "info.h"
 
-dlgWizard::dlgWizard(QWidget *parent, const QString &config_folder, const QString &application_folder) : QDialog(parent) {
-	setupUi(this);
+// ----------------------------------------------------------------------------------------------
 
+wdgDlgWizard::wdgDlgWizard(QWidget *parent, const QString &config_folder, const QString &application_folder) : wdgTitleBarDialog(parent) {
 	setAttribute(Qt::WA_DeleteOnClose);
+	wd = new dlgWizard(this, config_folder, application_folder);
+	setWindowTitle(wd->windowTitle());
+	setWindowIcon(QIcon(":/icon/icons/preferences_other.svgz"));
+	set_border_color("fuchsia");
+	set_buttons(barButton::Close);
+	set_permit_resize(false);
+	add_widget(wd);
+
+	connect(wd->pushButton_Start, SIGNAL(clicked(bool)), this, SLOT(s_accept(void)));
+}
+wdgDlgWizard::~wdgDlgWizard() = default;
+
+// ----------------------------------------------------------------------------------------------
+
+dlgWizard::dlgWizard(QWidget *parent, const QString &config_folder, const QString &application_folder) : QWidget(parent) {
+	setupUi(this);
 
 	cfg_folder = config_folder;
 	app_folder = application_folder;
@@ -37,13 +53,13 @@ dlgWizard::dlgWizard(QWidget *parent, const QString &config_folder, const QStrin
 
 		connect(grp, SIGNAL(buttonClicked(QAbstractButton*)), this, SLOT(s_grp_storage_type(QAbstractButton*)));
 	}
-	connect(pushButton_Start, SIGNAL(clicked(bool)), this, SLOT(s_accepted(bool)));
 }
 dlgWizard::~dlgWizard() = default;
 
 void dlgWizard::showEvent(UNUSED(QShowEvent *event)) {
 	radioButton_Data_Storage_Portable->click();
 	pushButton_Start->setFocus();
+	QWidget::showEvent(event);
 }
 
 void dlgWizard::s_grp_storage_type(UNUSED(QAbstractButton *button)) {
@@ -61,7 +77,4 @@ void dlgWizard::s_grp_storage_type(UNUSED(QAbstractButton *button)) {
 			break;
 	}
 	label_Folder->setText(folder);
-}
-void dlgWizard::s_accepted(UNUSED(bool checked)) {
-	accept();
 }

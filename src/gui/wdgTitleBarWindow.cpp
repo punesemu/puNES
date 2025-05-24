@@ -261,10 +261,12 @@ wdgTitleBarWindow::wdgTitleBarWindow(QWidget *parent, Qt::WindowType window_type
 	setMouseTracking(true);
 
 	geom = QRect(0, 0, 0, 0);
+	dialog_exit_code = dialogExitCode::REJECTED;
 	border_color = palette().color(QPalette::Window);
 	resize_threshold = 4;
 	force_custom_move = false;
 	force_custom_resize = false;
+	loop_in_exec = FALSE;
 	disabled_resize = false;
 	operation_type = OperationType::NONE;
 	private_hover_watcher = new hoverWatcher(this);
@@ -346,6 +348,14 @@ void wdgTitleBarWindow::changeEvent(QEvent *event) {
 		retranslateUi(this);
 	} else {
 		QWidget::changeEvent(event);
+	}
+}
+void wdgTitleBarWindow::closeEvent(QCloseEvent *event) {
+	if (loop_in_exec) {
+		emit et_quit_loop();
+		event->ignore();
+	} else {
+		QWidget::closeEvent(event);
 	}
 }
 void wdgTitleBarWindow::paintEvent(QPaintEvent *event) {
@@ -433,12 +443,17 @@ void wdgTitleBarWindow::set_geometry(void) {
 		setGeometry(geom);
 	}
 }
-void wdgTitleBarWindow::exec(void) {
+dialogExitCode wdgTitleBarWindow::exec(void) {
 	QEventLoop loop;
 
-	QObject::connect(this, SIGNAL(destroyed(QObject *)), &loop, SLOT(quit(void)));
+	connect(this, SIGNAL(et_quit_loop(void)), &loop, SLOT(quit(void)));
+	loop_in_exec = TRUE;
 	show();
 	loop.exec();
+	loop_in_exec = FALSE;
+	hide();
+	QTimer::singleShot(0, this, [this] { qDebug() << windowTitle() << "SSS" ; close(); });
+	return dialog_exit_code;
 }
 
 void wdgTitleBarWindow::set_border_color(QColor color) {
@@ -591,6 +606,15 @@ bool wdgTitleBarWindow::start_system_resize(void) {
 #else
 	return false;
 #endif
+}
+
+void wdgTitleBarWindow::s_accept(void) {
+	dialog_exit_code = dialogExitCode::ACCEPTED;
+	close();
+}
+void wdgTitleBarWindow::s_reject(void) {
+	dialog_exit_code = dialogExitCode::REJECTED;
+	close();
 }
 
 void wdgTitleBarWindow::s_hover_watcher_entered(void) {

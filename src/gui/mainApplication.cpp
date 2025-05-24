@@ -90,10 +90,9 @@ BYTE mainApplication::control_base_folders(void) {
 
 #if !defined (WITHOUT_PORTABLE_MODE)
 	if (!info.portable && !old.exists() && !config_folder.exists()) {
-		dlgWizard *dlg = new dlgWizard(nullptr, config_folder.absolutePath(), uQString(gui_application_folder()));
+		wdgDlgWizard *dlg = new wdgDlgWizard(nullptr, config_folder.absolutePath(), uQString(gui_application_folder()));
 
-		dlg->show();
-		if (dlg->exec() == QDialog::Rejected) {
+		if (dlg->exec() == dialogExitCode::REJECTED) {
 			return (EXIT_ERROR);
 		}
 		config_folder.setPath(uQString(gui_config_folder()));

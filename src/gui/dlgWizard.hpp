@@ -19,12 +19,14 @@
 #ifndef DLGWIZARD_HPP_
 #define DLGWIZARD_HPP_
 
-#include <QtWidgets/QDialog>
 #include <QtWidgets/QButtonGroup>
 #include "ui_dlgWizard.h"
+#include "wdgTitleBarWindow.hpp"
 #include "common.h"
 
-class dlgWizard : public QDialog, public Ui::dlgWizard {
+// ----------------------------------------------------------------------------------------------
+
+class dlgWizard : public QWidget, public Ui::dlgWizard {
 	Q_OBJECT
 
 	private:
@@ -41,7 +43,19 @@ class dlgWizard : public QDialog, public Ui::dlgWizard {
 
 	private slots:
 		void s_grp_storage_type(QAbstractButton *button);
-		void s_accepted(bool checked);
+};
+
+// ----------------------------------------------------------------------------------------------
+
+class wdgDlgWizard : public wdgTitleBarDialog {
+	Q_OBJECT
+
+	public:
+		dlgWizard *wd;
+
+	public:
+		explicit wdgDlgWizard(QWidget *parent = nullptr, const QString &config_folder = "", const QString &application_folder = "");
+		~wdgDlgWizard() override;
 };
 
 #endif /* DLGWIZARD_HPP_ */

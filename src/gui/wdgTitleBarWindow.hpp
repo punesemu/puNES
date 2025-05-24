@@ -30,6 +30,10 @@
 #include "ui_wdgTitleBar.h"
 #include "conf.h"
 
+enum dialogExitCode {
+	ACCEPTED = 0x00,
+	REJECTED = 0x01
+};
 enum barButton {
 	Fullscreen = 0x01,
 	Minimize = 0x02,
@@ -134,15 +138,20 @@ class wdgTitleBarWindow : public QWidget, public Ui::wdgTitleBarWindow {
 		wdgTitleBar *title_bar = nullptr;
 		wdgTitleBarStatus *status_bar = nullptr;
 		QSizeGrip *size_grip = nullptr;
+		dialogExitCode dialog_exit_code;
 		QPoint cursor_position;
 		Qt::Edges edges;
 		bool force_custom_move;
 		bool force_custom_resize;
 		bool disabled_resize;
+		bool loop_in_exec;
 		int resize_threshold;
 
 	public:
 		QRect geom;
+
+	signals:
+		void et_quit_loop(void);
 
 	public:
 		explicit wdgTitleBarWindow(QWidget *parent = nullptr, Qt::WindowType window_type = Qt::Window);
@@ -150,6 +159,7 @@ class wdgTitleBarWindow : public QWidget, public Ui::wdgTitleBarWindow {
 
 	protected:
 		bool eventFilter(QObject *obj, QEvent *event) override;
+		void closeEvent(QCloseEvent *event) override;
 		void changeEvent(QEvent *event) override;
 		void paintEvent(QPaintEvent *event) override;
 		void mousePressEvent(QMouseEvent *event) override;
@@ -159,7 +169,7 @@ class wdgTitleBarWindow : public QWidget, public Ui::wdgTitleBarWindow {
 	public:
 		void init_geom_variable(_last_geometry lg);
 		void set_geometry(void);
-		void exec(void);
+		dialogExitCode exec(void);
 
 	protected:
 		void set_border_color(QColor color);
@@ -178,6 +188,10 @@ class wdgTitleBarWindow : public QWidget, public Ui::wdgTitleBarWindow {
 		void redefine_cursor(const QPoint &pos);
 		bool start_system_move(void);
 		bool start_system_resize(void);
+
+	public slots:
+		void s_accept(void);
+		void s_reject(void);
 
 	private slots:
 		void s_hover_watcher_entered(void);

@@ -764,9 +764,8 @@ void gui_fullscreen(void) {
 
 void gui_dipswitch_dialog(void) {
 	if (dipswitch.used && dipswitch.show_dlg) {
-		dlgDipswitch *dlg = new dlgDipswitch(qt.mwin);
+		wdgDlgDipswitch *dlg = new wdgDlgDipswitch(qt.mwin);
 
-		dlg->show();
 		dlg->exec();
 	}
 }

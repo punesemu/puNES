@@ -201,11 +201,7 @@ wdgDlgDetachBarcode::wdgDlgDetachBarcode(QWidget *parent) : wdgTitleBarDialog(pa
 wdgDlgDetachBarcode::~wdgDlgDetachBarcode() = default;
 
 void wdgDlgDetachBarcode::closeEvent(QCloseEvent *event) {
-	if (!info.stop) {
-		event->ignore();
-		mainwin->s_set_detach_barcode_window();
-		return;
-	}
+	mainwin->s_set_detach_barcode_window();
 	wdgTitleBarDialog::closeEvent(event);
 }
 

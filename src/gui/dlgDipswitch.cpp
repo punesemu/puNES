@@ -25,10 +25,26 @@
 
 extern _dp_internal dp;
 
-dlgDipswitch::dlgDipswitch(QWidget *parent) : QDialog(parent) {
-	setupUi(this);
+// ----------------------------------------------------------------------------------------------
 
+wdgDlgDipswitch::wdgDlgDipswitch(QWidget *parent) : wdgTitleBarDialog(parent) {
 	setAttribute(Qt::WA_DeleteOnClose);
+	wd = new dlgDipswitch(this);
+	setWindowTitle(wd->windowTitle());
+	setWindowIcon(QIcon(":/icon/icons/dipswitch.svgz"));
+	set_border_color("gold");
+	set_buttons(barButton::Close);
+	set_permit_resize(false);
+	add_widget(wd);
+
+	connect(wd->pushButton_Start, SIGNAL(clicked(bool)), this, SLOT(close(void)));
+}
+wdgDlgDipswitch::~wdgDlgDipswitch() = default;
+
+// ----------------------------------------------------------------------------------------------
+
+dlgDipswitch::dlgDipswitch(QWidget *parent) : QWidget(parent) {
+	setupUi(this);
 
 	for (int i = 0; i < dp.types.length(); i++) {
 		QLabel *lb = new QLabel(this);
@@ -64,12 +80,13 @@ dlgDipswitch::dlgDipswitch(QWidget *parent) : QDialog(parent) {
 		formLayout_Dipswitch->setWidget(i, QFormLayout::LabelRole, lb);
 		formLayout_Dipswitch->setWidget(i, QFormLayout::FieldRole, cb);
 	}
-	connect(pushButton_Start, SIGNAL(clicked(bool)), this, SLOT(s_start(bool)));
 	connect(pushButton_Default, SIGNAL(clicked(bool)), this, SLOT(s_default(bool)));
 
 	if ((info.reset != CHANGE_ROM) && (info.reset != POWER_UP)) {
 		pushButton_Start->setText(tr("Ok"));
 	}
+
+	adjustSize();
 }
 dlgDipswitch::~dlgDipswitch() = default;
 
@@ -81,9 +98,6 @@ void dlgDipswitch::s_dipswitch(int index) {
 	dipswitch.value = (dipswitch.value & ~mask) | value;
 	cfg->dipswitch = dipswitch.value;
 	settings_pgs_save();
-}
-void dlgDipswitch::s_start(UNUSED(bool checked)) {
-	close();
 }
 void dlgDipswitch::s_default(UNUSED(bool checked)) {
 	for (int i = 0; i < dp.types.length(); i++) {

@@ -19,9 +19,9 @@
 #ifndef DLGDIPSWITCH_HPP_
 #define DLGDIPSWITCH_HPP_
 
-#include <QtWidgets/QDialog>
 #include <QtWidgets/QButtonGroup>
 #include "ui_dlgDipswitch.h"
+#include "wdgTitleBarWindow.hpp"
 #include "common.h"
 
 typedef struct _dp_value {
@@ -40,7 +40,9 @@ typedef struct _dp_internal {
 	QVector<_dp_type> types;
 } _dp_internal;
 
-class dlgDipswitch : public QDialog, public Ui::dlgDipswitch {
+// ----------------------------------------------------------------------------------------------
+
+class dlgDipswitch : public QWidget, public Ui::dlgDipswitch {
 	Q_OBJECT
 
 	public:
@@ -49,8 +51,18 @@ class dlgDipswitch : public QDialog, public Ui::dlgDipswitch {
 
 	private slots:
 		void s_dipswitch(int index);
-		void s_start(bool checked);
 		void s_default(bool checked);
+};
+
+// ----------------------------------------------------------------------------------------------
+
+class wdgDlgDipswitch : public wdgTitleBarDialog {
+	public:
+		dlgDipswitch *wd;
+
+	public:
+		explicit wdgDlgDipswitch(QWidget *parent = nullptr);
+		~wdgDlgDipswitch() override;
 };
 
 #endif /* DLGDIPSWITCH_HPP_ */
