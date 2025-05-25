@@ -452,7 +452,7 @@ dialogExitCode wdgTitleBarWindow::exec(void) {
 	loop.exec();
 	loop_in_exec = FALSE;
 	hide();
-	QTimer::singleShot(0, this, [this] { qDebug() << windowTitle() << "SSS" ; close(); });
+	QTimer::singleShot(0, this, &wdgTitleBarWindow::close);
 	return dialog_exit_code;
 }
 
