@@ -771,12 +771,9 @@ void gui_dipswitch_dialog(void) {
 }
 
 int gui_uncompress_selection_dialog(_uncompress_archive *archive, BYTE type) {
-	dlgUncomp *dlg = new dlgUncomp(qt.mwin, (void *)archive, type);
+	wdgDlgUncomp *dlg = new wdgDlgUncomp(qt.mwin, (void *)archive, type);
 
-	dlg->show();
-	dlg->exec();
-
-	return (gui.dlg_rc);
+	return (dlg->exec() == dialogExitCode::REJECTED ? UNCOMPRESS_NO_FILE_SELECTED : gui.dlg_rc);
 }
 
 void gui_control_pause_bck(WORD event) {

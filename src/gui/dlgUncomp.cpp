@@ -21,11 +21,48 @@
 #include <QtCore/QFileInfo>
 #include "gui.h"
 
-dlgUncomp::dlgUncomp(QWidget *parent, void *uncompress_archive, BYTE type) : QDialog(parent) {
+// ----------------------------------------------------------------------------------------------
+
+wdgDlgUncomp::wdgDlgUncomp(QWidget *parent, void *uncompress_archive, BYTE type) : wdgTitleBarDialog(parent) {
+	setAttribute(Qt::WA_DeleteOnClose);
+	selected = UNCOMPRESS_NO_FILE_SELECTED;
+	wd = new dlgUncomp(this, uncompress_archive, type);
+	setWindowTitle(wd->windowTitle());
+	setWindowIcon(QIcon(":/icon/icons/compressed_file.svgz"));
+	set_border_color("gold");
+	set_buttons(barButton::Maximize | barButton::Close);
+	add_widget(wd);
+
+	connect(wd->tableWidget_Selection, SIGNAL(cellDoubleClicked(int,int)), this, SLOT(s_doubleclick(int,int)));
+	connect(wd->pushButton_Ok, SIGNAL(clicked(bool)), this, SLOT(s_ok_clicked(bool)));
+	connect(wd->pushButton_None, SIGNAL(clicked(bool)), this, SLOT(s_reject(void)));
+}
+wdgDlgUncomp::~wdgDlgUncomp() = default;
+
+void wdgDlgUncomp::closeEvent(QCloseEvent *event) {
+	if (gui.start) {
+		emu_pause(FALSE);
+	}
+	gui.dlg_rc = selected;
+	wdgTitleBarDialog::closeEvent(event);
+}
+
+void wdgDlgUncomp::s_doubleclick(int row, UNUSED(int column)) {
+	selected = row;
+	s_accept();
+}
+void wdgDlgUncomp::s_ok_clicked(UNUSED(bool checked)) {
+	QModelIndexList indexList = wd->tableWidget_Selection->selectionModel()->selectedIndexes();
+
+	selected = indexList.first().row();
+	s_accept();
+}
+
+// ----------------------------------------------------------------------------------------------
+
+dlgUncomp::dlgUncomp(QWidget *parent, void *uncompress_archive, BYTE type) : QWidget(parent) {
 	_uncompress_archive *archive = (_uncompress_archive *)uncompress_archive;
 	uint32_t index;
-
-	selected = UNCOMPRESS_NO_FILE_SELECTED;
 
 	if (archive == nullptr) {
 		return;
@@ -33,7 +70,6 @@ dlgUncomp::dlgUncomp(QWidget *parent, void *uncompress_archive, BYTE type) : QDi
 
 	setupUi(this);
 
-	setAttribute(Qt::WA_DeleteOnClose);
 	setWindowTitle(QFileInfo(uQString(archive->file)).fileName());
 
 	switch (type) {
@@ -81,10 +117,6 @@ dlgUncomp::dlgUncomp(QWidget *parent, void *uncompress_archive, BYTE type) : QDi
 
 	tableWidget_Selection->setCurrentCell(0, 0);
 
-	connect(tableWidget_Selection, SIGNAL(cellDoubleClicked(int,int)), this, SLOT(s_doubleclick(int,int)));
-	connect(pushButton_Ok, SIGNAL(clicked(bool)), this, SLOT(s_ok_clicked(bool)));
-	connect(pushButton_None, SIGNAL(clicked(bool)), this, SLOT(s_none_clicked(bool)));
-
 	// se l'archivio compresso e' caricato da riga di comando,
 	// la gui non e' ancora stata avviata.
 	if (gui.start) {
@@ -92,27 +124,3 @@ dlgUncomp::dlgUncomp(QWidget *parent, void *uncompress_archive, BYTE type) : QDi
 	}
 }
 dlgUncomp::~dlgUncomp() = default;
-
-void dlgUncomp::closeEvent(QCloseEvent *event) {
-	if (gui.start) {
-		emu_pause(FALSE);
-	}
-
-	gui.dlg_rc = selected;
-
-	QDialog::closeEvent(event);
-}
-
-void dlgUncomp::s_doubleclick(int row, UNUSED(int column)) {
-	selected = row;
-	close();
-}
-void dlgUncomp::s_ok_clicked(UNUSED(bool checked)) {
-	QModelIndexList indexList = tableWidget_Selection->selectionModel()->selectedIndexes();
-
-	selected = indexList.first().row();
-	close();
-}
-void dlgUncomp::s_none_clicked(UNUSED(bool checked)) {
-	close();
-}

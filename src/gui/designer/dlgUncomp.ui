@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
  <class>dlgUncomp</class>
- <widget class="QDialog" name="dlgUncomp">
+ <widget class="QWidget" name="dlgUncomp">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -12,10 +12,6 @@
   </property>
   <property name="windowTitle">
    <string>Unpacked archive</string>
-  </property>
-  <property name="windowIcon">
-   <iconset resource="resources.qrc">
-    <normaloff>:/icon/icons/application.png</normaloff>:/icon/icons/application.png</iconset>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
@@ -35,22 +31,13 @@
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_Standard_Button">
      <item>
-      <spacer name="horizontalSpacer">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>0</width>
-         <height>0</height>
-        </size>
-       </property>
-      </spacer>
-     </item>
-     <item>
       <widget class="themePushButton" name="pushButton_Ok">
        <property name="text">
         <string>OK</string>
+       </property>
+       <property name="icon">
+        <iconset resource="resources.qrc">
+         <normaloff>:/icon/icons/confirm.svgz</normaloff>:/icon/icons/confirm.svgz</iconset>
        </property>
       </widget>
      </item>
@@ -58,6 +45,10 @@
       <widget class="themePushButton" name="pushButton_None">
        <property name="text">
         <string>None</string>
+       </property>
+       <property name="icon">
+        <iconset resource="resources.qrc">
+         <normaloff>:/icon/icons/window_close.svgz</normaloff>:/icon/icons/window_close.svgz</iconset>
        </property>
       </widget>
      </item>
