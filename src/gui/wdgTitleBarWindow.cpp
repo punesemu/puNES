@@ -75,6 +75,7 @@ void hoverWatcher::paintEvent(QPaintEvent *event) {
 wdgTitleBar::wdgTitleBar(QWidget *parent) : QWidget(parent) {
 	setupUi(this);
 
+	is_maximized = false;
 	stylesheet_update();
 
 	setAttribute(Qt::WA_StyledBackground, true);
@@ -142,13 +143,24 @@ void wdgTitleBar::stylesheet_update(void) {
 	if (theme::is_dark_theme()) {
 		pushButton_fullscreen->setIcon(QIcon(":/icon/icons/fullscreen_white.svgz"));
 		pushButton_minimize->setIcon(QIcon(":/icon/icons/minimize_white.svgz"));
-		pushButton_maximize->setIcon(QIcon(":/icon/icons/maximize_white.svgz"));
 		pushButton_close->setIcon(QIcon(":/icon/icons/close_white.svgz"));
 	} else {
 		pushButton_fullscreen->setIcon(QIcon(":/icon/icons/fullscreen_black.svgz"));
 		pushButton_minimize->setIcon(QIcon(":/icon/icons/minimize_black.svgz"));
-		pushButton_maximize->setIcon(QIcon(":/icon/icons/maximize_black.svgz"));
 		pushButton_close->setIcon(QIcon(":/icon/icons/close_black.svgz"));
+	}
+	set_maximized_button_icon();
+}
+
+void wdgTitleBar::set_maximized_button_icon(void) {
+	if (theme::is_dark_theme()) {
+		pushButton_maximize->setIcon(QIcon(is_maximized
+			? ":/icon/icons/maximize_minimize_white.svgz"
+			: ":/icon/icons/maximize_white.svgz"));
+	} else {
+		pushButton_maximize->setIcon(QIcon(is_maximized
+			? ":/icon/icons/maximize_minimize_black.svgz"
+			: ":/icon/icons/maximize_black.svgz"));
 	}
 }
 void wdgTitleBar::set_buttons(barButtons buttons) {
@@ -624,11 +636,13 @@ void wdgTitleBarWindow::s_hover_watcher_entered(void) {
 	}
 }
 void wdgTitleBarWindow::s_title_bar_maximize(void) {
+	title_bar->is_maximized = !isMaximized();
 	if (isMaximized()) {
 		showNormal();
 	} else {
 		showMaximized();
 	}
+	title_bar->set_maximized_button_icon();
 }
 void wdgTitleBarWindow::s_title_bar_start_window_move(const QPoint &start) {
 	cursor_position = start - geometry().topLeft();

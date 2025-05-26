@@ -68,6 +68,9 @@ class wdgTitleBar : public QWidget, public Ui::wdgTitleBar  {
 	private:
 		barButtons usedButtons;
 
+	public:
+		bool is_maximized;
+
 	signals:
 		void et_fullscreen(void);
 		void et_minimize(void);
@@ -93,6 +96,7 @@ class wdgTitleBar : public QWidget, public Ui::wdgTitleBar  {
 		void stylesheet_update(void);
 
 	public:
+		void set_maximized_button_icon(void);
 		void set_buttons(barButtons buttons);
 		void set_button_text(barButton button, const QString &text);
 		void set_button_enabled(barButton button, bool enabled);
