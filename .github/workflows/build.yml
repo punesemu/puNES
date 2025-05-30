@@ -113,7 +113,8 @@ jobs:
         shell: msys2 {0}
         run: |
           if [[ ${{ matrix.msystem }} == "mingw32" ]] ; then
-            pacman --noconfirm -U http://repo.msys2.org/mingw/${{ matrix.env }}/mingw-w64-${{ matrix.env }}-rav1e-0.7.1-6-any.pkg.tar.zst 
+            pacman --noconfirm -U http://repo.msys2.org/mingw/${{ matrix.env }}/mingw-w64-${{ matrix.env }}-rav1e-0.7.1-6-any.pkg.tar.zst
+            pacman --noconfirm -U http://repo.msys2.org/mingw/${{ matrix.env }}/mingw-w64-${{ matrix.env }}-libmfx-1.35.1-1-any.pkg.tar.zst
           fi
           pacman --noconfirm -U http://repo.msys2.org/mingw/${{ matrix.env }}/mingw-w64-${{ matrix.env }}-ffmpeg4.4-4.4.4-8-any.pkg.tar.zst
           sed -i -e 's,=/${{ matrix.msystem }}/..,=${prefix},' /${{ matrix.msystem }}/lib/ffmpeg4.4/pkgconfig/*.pc
