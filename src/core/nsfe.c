@@ -287,6 +287,17 @@ BYTE nsfe_load_rom(void) {
 
 	return (EXIT_OK);
 }
+BYTE nsfe_init_info_song(BYTE phase) {
+	if ((phase == NSFE_READ) && (nsf.info_song == NULL)) {
+		nsf.info_song = (_nsf_info_song *)malloc(nsf.songs.total * sizeof(_nsf_info_song));
+		if (!nsf.info_song) {
+			log_error(uL("nsfe;out of memory"));
+			return (EXIT_ERROR);
+		}
+		memset(nsf.info_song, 0x00, nsf.songs.total * sizeof(_nsf_info_song));
+	}
+	return (EXIT_OK);
+}
 
 BYTE nsfe_NONE(_rom_mem *rom, BYTE phase) {
 	if (phase == NSFE_COUNT) {
@@ -301,7 +312,7 @@ BYTE nsfe_NONE(_rom_mem *rom, BYTE phase) {
 
 	return (EXIT_OK);
 }
-BYTE nsfe_INFO(_rom_mem *rom, BYTE phase) {
+BYTE nsfe_INFO(_rom_mem *rom, UNUSED(BYTE phase)) {
 	BYTE flags[TOTAL_FL];
 
 	if (nsf.chunk.length < TOTAL_FL) {
@@ -338,15 +349,6 @@ BYTE nsfe_INFO(_rom_mem *rom, BYTE phase) {
 
 	if (!nsf.sound_chips.fds && (nsf.adr.load < 0x8000)) {
 		return (EXIT_ERROR);
-	}
-
-	if (phase == NSFE_READ) {
-		nsf.info_song = (_nsf_info_song *)malloc(nsf.songs.total * sizeof(_nsf_info_song));
-		if (!nsf.info_song) {
-			log_error(uL("nsfe;out of memory"));
-			return (EXIT_ERROR);
-		}
-		memset(nsf.info_song, 0x00, nsf.songs.total * sizeof(_nsf_info_song));
 	}
 
 	return (EXIT_OK);
@@ -495,6 +497,10 @@ BYTE nsfe_time(_rom_mem *rom, BYTE phase) {
 		total = nsf.songs.total;
 	}
 
+	if (nsfe_init_info_song(phase) == EXIT_ERROR) {
+		return (EXIT_ERROR);
+	};
+
 	for (i = 0; i < total; i++) {
 		_nsf_info_song *song = &nsf.info_song[i];
 
@@ -523,6 +529,10 @@ BYTE nsfe_fade(_rom_mem *rom, BYTE phase) {
 	if (total > nsf.songs.total) {
 		total = nsf.songs.total;
 	}
+
+	if (nsfe_init_info_song(phase) == EXIT_ERROR) {
+		return (EXIT_ERROR);
+	};
 
 	for (i = 0; i < total; i++) {
 		_nsf_info_song *song = &nsf.info_song[i];
@@ -556,6 +566,10 @@ BYTE nsfe_tlbl(_rom_mem *rom, BYTE phase) {
 
 	memset(src, 0x00, nsf.chunk.length + 1);
 	rom_mem_memcpy(src, rom, nsf.chunk.length);
+
+	if (nsfe_init_info_song(phase) == EXIT_ERROR) {
+		return (EXIT_ERROR);
+	};
 
 	for (int i = 0; i < nsf.songs.total; i++) {
 		_nsf_info_song *song = &nsf.info_song[i];
@@ -596,6 +610,10 @@ BYTE nsfe_taut(_rom_mem *rom, BYTE phase) {
 
 	memset(src, 0x00, nsf.chunk.length + 1);
 	rom_mem_memcpy(src, rom, nsf.chunk.length);
+
+	if (nsfe_init_info_song(phase) == EXIT_ERROR) {
+		return (EXIT_ERROR);
+	};
 
 	for (int i = 0; i < nsf.songs.total; i++) {
 		_nsf_info_song *song = &nsf.info_song[i];
