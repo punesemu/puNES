@@ -58,6 +58,10 @@ class hoverWatcher: public QWidget{
 	protected:
 		bool eventFilter(QObject *obj, QEvent *event) override;
 		void paintEvent(QPaintEvent *event) override;
+
+	public:
+		QSize sizeHint(void) const override;
+		QSize minimumSizeHint(void) const override;
 };
 
 // ----------------------------------------------------------------------------------------------
@@ -93,16 +97,16 @@ class wdgTitleBar : public QWidget, public Ui::wdgTitleBar  {
 		void mouseDoubleClickEvent(QMouseEvent *event) override;
 
 	private:
-		void stylesheet_update(void);
+		void stylesheet_update(void) const;
 
 	public:
-		void set_maximized_button_icon(void);
+		void set_maximized_button_icon(void) const;
 		void set_buttons(barButtons buttons);
-		void set_button_text(barButton button, const QString &text);
-		void set_button_enabled(barButton button, bool enabled);
+		void set_button_text(barButton button, const QString &text) const;
+		void set_button_enabled(barButton button, bool enabled) const;
 
 	private slots:
-		void s_window_icon_changed(const QIcon &icon);
+		void s_window_icon_changed(const QIcon &icon) const;
 };
 
 // ----------------------------------------------------------------------------------------------
@@ -139,6 +143,7 @@ class wdgTitleBarWindow : public QWidget, public Ui::wdgTitleBarWindow {
 		OperationType operation_type;
 		QMainWindow *private_main_window = nullptr;
 		hoverWatcher *private_hover_watcher = nullptr;
+		QWidget *private_widget = nullptr;
 		wdgTitleBar *title_bar = nullptr;
 		wdgTitleBarStatus *status_bar = nullptr;
 		QSizeGrip *size_grip = nullptr;
@@ -173,25 +178,27 @@ class wdgTitleBarWindow : public QWidget, public Ui::wdgTitleBarWindow {
 	public:
 		void init_geom_variable(_last_geometry lg);
 		void set_geometry(void);
+		static void is_in_desktop(int *x, int *y);
 		dialogExitCode exec(void);
 
 	protected:
 		void set_border_color(QColor color);
 		void add_widget(QWidget *widget);
-		void set_buttons(barButtons buttons);
+		void set_buttons(barButtons buttons) const;
 		void set_force_custom_move(bool force);
 		void set_force_custom_resize(bool force);
 		void set_permit_resize(bool mode);
 
 	private:
-		void update_size_grip_visibility(void);
-		QPainterPath path_rounded(void);
+		void update_track_mouse(void) const;
+		void update_size_grip_visibility(void) const;
+		QPainterPath path_rounded(void) const;
 		void apply_rounded_mask(void);
-		bool is_moving(void);
-		bool is_resizing(void);
+		bool is_moving(void) const;
+		bool is_resizing(void) const;
 		void redefine_cursor(const QPoint &pos);
-		bool start_system_move(void);
-		bool start_system_resize(void);
+		bool start_system_move(void) const;
+		bool start_system_resize(void) const;
 
 	public slots:
 		void s_accept(void);

@@ -107,6 +107,21 @@ wdgSettingsInput::wdgSettingsInput(QWidget *parent) : QWidget(parent) {
 	connect(this, SIGNAL(et_update_joy_combo()), this, SLOT(s_et_update_joy_combo()));
 
 	tabWidget_Input->setCurrentIndex(0);
+
+	{
+		int dim = fontMetrics().height();
+
+		icon_Ports->setPixmap(QIcon(":/icon/icons/rs_232_female.svgz").pixmap(dim, dim));
+		icon_cm->setPixmap(QIcon(":/icon/icons/mode.svgz").pixmap(dim, dim));
+		icon_exp->setPixmap(QIcon(":/icon/icons/circuit_board.svgz").pixmap(dim, dim));
+		icon_cp1->setPixmap(QIcon(":/icon/icons/game_controller.svgz").pixmap(dim, dim));
+		icon_cp2->setPixmap(QIcon(":/icon/icons/game_controller.svgz").pixmap(dim, dim));
+		icon_cp3->setPixmap(QIcon(":/icon/icons/game_controller.svgz").pixmap(dim, dim));
+		icon_cp4->setPixmap(QIcon(":/icon/icons/game_controller.svgz").pixmap(dim, dim));
+		icon_Input_misc->setPixmap(QIcon(":/icon/icons/misc.svgz").pixmap(dim, dim));
+		icon_Shortcuts->setPixmap(QIcon(":/icon/icons/shortcuts.svgz").pixmap(dim, dim));
+		icon_joy_ID->setPixmap(QIcon(":/icon/icons/input_config.svgz").pixmap(dim, dim));
+	}
 }
 wdgSettingsInput::~wdgSettingsInput() = default;
 
@@ -128,28 +143,14 @@ void wdgSettingsInput::changeEvent(QEvent *event) {
 	}
 }
 void wdgSettingsInput::showEvent(QShowEvent *event) {
-	int dim = fontMetrics().height();
-
-	icon_Ports->setPixmap(QIcon(":/icon/icons/rs_232_female.svgz").pixmap(dim, dim));
-	icon_cm->setPixmap(QIcon(":/icon/icons/mode.svgz").pixmap(dim, dim));
-	icon_exp->setPixmap(QIcon(":/icon/icons/circuit_board.svgz").pixmap(dim, dim));
-	icon_cp1->setPixmap(QIcon(":/icon/icons/game_controller.svgz").pixmap(dim, dim));
-	icon_cp2->setPixmap(QIcon(":/icon/icons/game_controller.svgz").pixmap(dim, dim));
-	icon_cp3->setPixmap(QIcon(":/icon/icons/game_controller.svgz").pixmap(dim, dim));
-	icon_cp4->setPixmap(QIcon(":/icon/icons/game_controller.svgz").pixmap(dim, dim));
-	icon_Input_misc->setPixmap(QIcon(":/icon/icons/misc.svgz").pixmap(dim, dim));
-	icon_Shortcuts->setPixmap(QIcon(":/icon/icons/shortcuts.svgz").pixmap(dim, dim));
-	icon_joy_ID->setPixmap(QIcon(":/icon/icons/input_config.svgz").pixmap(dim, dim));
-
-	mainwin->shcjoy_stop();
-
+	mainwin->wd->shcjoy_stop();
 	QWidget::showEvent(event);
 }
 void wdgSettingsInput::hideEvent(QHideEvent *event) {
 	shcut.timeout.timer->stop();
 	shcut.joy.timer->stop();
 
-	mainwin->shcjoy_start();
+	mainwin->wd->shcjoy_start();
 
 	if (shcut.no_other_buttons) {
 		shcut.timeout.seconds = 0;
@@ -163,6 +164,8 @@ void wdgSettingsInput::retranslateUi(QWidget *wdgSettingsInput) {
 	Ui::wdgSettingsInput::retranslateUi(wdgSettingsInput);
 	controller_ports_init();
 	update_widget();
+	adjustSize();
+	updateGeometry();
 }
 void wdgSettingsInput::update_widget(void) {
 	ports_end_misc_set_enabled(true);
@@ -827,57 +830,57 @@ void wdgSettingsInput::shortcuts_set(void) {
 		comboBox_joy_ID->setItemText(comboBox_joy_ID->count() - 1, tr("No usable device"));
 	}
 
-	shortcut_update_text(mainwin->action_Open, SET_INP_SC_OPEN);
-	shortcut_update_text(mainwin->action_Start_Stop_Audio_recording, SET_INP_SC_REC_AUDIO);
+	shortcut_update_text(mainwin->wd->action_Open, SET_INP_SC_OPEN);
+	shortcut_update_text(mainwin->wd->action_Start_Stop_Audio_recording, SET_INP_SC_REC_AUDIO);
 #if defined (WITH_FFMPEG)
-	shortcut_update_text(mainwin->action_Start_Stop_Video_recording, SET_INP_SC_REC_VIDEO);
+	shortcut_update_text(mainwin->wd->action_Start_Stop_Video_recording, SET_INP_SC_REC_VIDEO);
 #endif
-	shortcut_update_text(mainwin->action_Quit, SET_INP_SC_QUIT);
-	shortcut_update_text(mainwin->action_Turn_Off, SET_INP_SC_TURN_OFF);
-	shortcut_update_text(mainwin->action_Hard_Reset, SET_INP_SC_HARD_RESET);
-	shortcut_update_text(mainwin->action_Soft_Reset, SET_INP_SC_SOFT_RESET);
-	shortcut_update_text(mainwin->action_Insert_Coin, SET_INP_SC_INSERT_COIN);
-	shortcut_update_text(mainwin->action_Switch_sides, SET_INP_SC_SWITCH_SIDES);
-	shortcut_update_text(mainwin->action_Eject_Insert_Disk, SET_INP_SC_EJECT_DISK);
-	shortcut_update_text(mainwin->action_Change_Disk, SET_INP_SC_CHANGE_DISK);
-	shortcut_update_text(mainwin->action_Fullscreen, SET_INP_SC_FULLSCREEN);
-	shortcut_update_text(mainwin->action_Save_Screenshot, SET_INP_SC_SCREENSHOT);
-	shortcut_update_text(mainwin->action_Save_Unaltered_NES_screen, SET_INP_SC_SCREENSHOT_1X);
-	shortcut_update_text(mainwin->action_Pause, SET_INP_SC_PAUSE);
-	shortcut_update_text(mainwin->action_Toogle_Fast_Forward, SET_INP_SC_TOGGLE_FAST_FORWARD);
-	shortcut_update_text(mainwin->action_Toggle_GUI_in_window, SET_INP_SC_TOGGLE_GUI_IN_WINDOW);
-	shortcut_update_text(mainwin->action_Shout_into_Microphone, SET_INP_SC_SHOUT_INTO_MIC);
-	shortcut_update_text(mainwin->action_Virtual_Keyboard, SET_INP_SC_TOGGLE_NES_KEYBOARD);
+	shortcut_update_text(mainwin->wd->action_Quit, SET_INP_SC_QUIT);
+	shortcut_update_text(mainwin->wd->action_Turn_Off, SET_INP_SC_TURN_OFF);
+	shortcut_update_text(mainwin->wd->action_Hard_Reset, SET_INP_SC_HARD_RESET);
+	shortcut_update_text(mainwin->wd->action_Soft_Reset, SET_INP_SC_SOFT_RESET);
+	shortcut_update_text(mainwin->wd->action_Insert_Coin, SET_INP_SC_INSERT_COIN);
+	shortcut_update_text(mainwin->wd->action_Switch_sides, SET_INP_SC_SWITCH_SIDES);
+	shortcut_update_text(mainwin->wd->action_Eject_Insert_Disk, SET_INP_SC_EJECT_DISK);
+	shortcut_update_text(mainwin->wd->action_Change_Disk, SET_INP_SC_CHANGE_DISK);
+	shortcut_update_text(mainwin->wd->action_Fullscreen, SET_INP_SC_FULLSCREEN);
+	shortcut_update_text(mainwin->wd->action_Save_Screenshot, SET_INP_SC_SCREENSHOT);
+	shortcut_update_text(mainwin->wd->action_Save_Unaltered_NES_screen, SET_INP_SC_SCREENSHOT_1X);
+	shortcut_update_text(mainwin->wd->action_Pause, SET_INP_SC_PAUSE);
+	shortcut_update_text(mainwin->wd->action_Toogle_Fast_Forward, SET_INP_SC_TOGGLE_FAST_FORWARD);
+	shortcut_update_text(mainwin->wd->action_Toggle_GUI_in_window, SET_INP_SC_TOGGLE_GUI_IN_WINDOW);
+	shortcut_update_text(mainwin->wd->action_Shout_into_Microphone, SET_INP_SC_SHOUT_INTO_MIC);
+	shortcut_update_text(mainwin->wd->action_Virtual_Keyboard, SET_INP_SC_TOGGLE_NES_KEYBOARD);
 
-	shortcut_update_text(mainwin->qaction_shcut.mode_auto, SET_INP_SC_MODE_AUTO);
-	shortcut_update_text(mainwin->qaction_shcut.mode_ntsc, SET_INP_SC_MODE_NTSC);
-	shortcut_update_text(mainwin->qaction_shcut.mode_pal, SET_INP_SC_MODE_PAL);
-	shortcut_update_text(mainwin->qaction_shcut.mode_dendy, SET_INP_SC_MODE_DENDY);
-	shortcut_update_text(mainwin->qaction_shcut.scale_1x, SET_INP_SC_SCALE_1X);
-	shortcut_update_text(mainwin->qaction_shcut.scale_2x, SET_INP_SC_SCALE_2X);
-	shortcut_update_text(mainwin->qaction_shcut.scale_3x, SET_INP_SC_SCALE_3X);
-	shortcut_update_text(mainwin->qaction_shcut.scale_4x, SET_INP_SC_SCALE_4X);
-	shortcut_update_text(mainwin->qaction_shcut.scale_5x, SET_INP_SC_SCALE_5X);
-	shortcut_update_text(mainwin->qaction_shcut.scale_6x, SET_INP_SC_SCALE_6X);
-	shortcut_update_text(mainwin->qaction_shcut.interpolation, SET_INP_SC_INTERPOLATION);
-	shortcut_update_text(mainwin->qaction_shcut.integer_in_fullscreen, SET_INP_SC_INTEGER_FULLSCREEN);
-	shortcut_update_text(mainwin->qaction_shcut.stretch_in_fullscreen, SET_INP_SC_STRETCH_FULLSCREEN);
-	shortcut_update_text(mainwin->qaction_shcut.toggle_menubar_in_fullscreen, SET_INP_SC_TOGGLE_MENUBAR_IN_FULLSCREEN);
-	shortcut_update_text(mainwin->qaction_shcut.toggle_capture_input, SET_INP_SC_TOGGLE_CAPTURE_INPUT);
-	shortcut_update_text(mainwin->qaction_shcut.audio_enable, SET_INP_SC_AUDIO_ENABLE);
-	shortcut_update_text(mainwin->qaction_shcut.save_settings, SET_INP_SC_SAVE_SETTINGS);
-	shortcut_update_text(mainwin->qaction_shcut.hold_fast_forward, SET_INP_SC_HOLD_FAST_FORWARD);
-	shortcut_update_text(mainwin->action_Save_state, SET_INP_SC_SAVE_STATE);
-	shortcut_update_text(mainwin->action_Load_state, SET_INP_SC_LOAD_STATE);
-	shortcut_update_text(mainwin->action_Increment_slot, SET_INP_SC_INC_SLOT);
-	shortcut_update_text(mainwin->action_Decrement_slot, SET_INP_SC_DEC_SLOT);
-	shortcut_update_text(mainwin->qaction_shcut.rwnd.active, SET_INP_SC_RWND_ACTIVE_MODE);
-	shortcut_update_text(mainwin->qaction_shcut.rwnd.step_backward, SET_INP_SC_RWND_STEP_BACKWARD);
-	shortcut_update_text(mainwin->qaction_shcut.rwnd.step_forward, SET_INP_SC_RWND_STEP_FORWARD);
-	shortcut_update_text(mainwin->qaction_shcut.rwnd.fast_backward, SET_INP_SC_RWND_FAST_BACKWARD);
-	shortcut_update_text(mainwin->qaction_shcut.rwnd.fast_forward, SET_INP_SC_RWND_FAST_FORWARD);
-	shortcut_update_text(mainwin->qaction_shcut.rwnd.play, SET_INP_SC_RWND_PLAY);
-	shortcut_update_text(mainwin->qaction_shcut.rwnd.pause, SET_INP_SC_RWND_PAUSE);
+	shortcut_update_text(mainwin->wd->qaction_shcut.mode_auto, SET_INP_SC_MODE_AUTO);
+	shortcut_update_text(mainwin->wd->qaction_shcut.mode_ntsc, SET_INP_SC_MODE_NTSC);
+	shortcut_update_text(mainwin->wd->qaction_shcut.mode_pal, SET_INP_SC_MODE_PAL);
+	shortcut_update_text(mainwin->wd->qaction_shcut.mode_dendy, SET_INP_SC_MODE_DENDY);
+	shortcut_update_text(mainwin->wd->qaction_shcut.scale_1x, SET_INP_SC_SCALE_1X);
+	shortcut_update_text(mainwin->wd->qaction_shcut.scale_2x, SET_INP_SC_SCALE_2X);
+	shortcut_update_text(mainwin->wd->qaction_shcut.scale_3x, SET_INP_SC_SCALE_3X);
+	shortcut_update_text(mainwin->wd->qaction_shcut.scale_4x, SET_INP_SC_SCALE_4X);
+	shortcut_update_text(mainwin->wd->qaction_shcut.scale_5x, SET_INP_SC_SCALE_5X);
+	shortcut_update_text(mainwin->wd->qaction_shcut.scale_6x, SET_INP_SC_SCALE_6X);
+	shortcut_update_text(mainwin->wd->qaction_shcut.interpolation, SET_INP_SC_INTERPOLATION);
+	shortcut_update_text(mainwin->wd->qaction_shcut.integer_in_fullscreen, SET_INP_SC_INTEGER_FULLSCREEN);
+	shortcut_update_text(mainwin->wd->qaction_shcut.stretch_in_fullscreen, SET_INP_SC_STRETCH_FULLSCREEN);
+	shortcut_update_text(mainwin->wd->qaction_shcut.toggle_menubar_in_fullscreen, SET_INP_SC_TOGGLE_MENUBAR_IN_FULLSCREEN);
+	shortcut_update_text(mainwin->wd->qaction_shcut.toggle_capture_input, SET_INP_SC_TOGGLE_CAPTURE_INPUT);
+	shortcut_update_text(mainwin->wd->qaction_shcut.audio_enable, SET_INP_SC_AUDIO_ENABLE);
+	shortcut_update_text(mainwin->wd->qaction_shcut.save_settings, SET_INP_SC_SAVE_SETTINGS);
+	shortcut_update_text(mainwin->wd->qaction_shcut.hold_fast_forward, SET_INP_SC_HOLD_FAST_FORWARD);
+	shortcut_update_text(mainwin->wd->action_Save_state, SET_INP_SC_SAVE_STATE);
+	shortcut_update_text(mainwin->wd->action_Load_state, SET_INP_SC_LOAD_STATE);
+	shortcut_update_text(mainwin->wd->action_Increment_slot, SET_INP_SC_INC_SLOT);
+	shortcut_update_text(mainwin->wd->action_Decrement_slot, SET_INP_SC_DEC_SLOT);
+	shortcut_update_text(mainwin->wd->qaction_shcut.rwnd.active, SET_INP_SC_RWND_ACTIVE_MODE);
+	shortcut_update_text(mainwin->wd->qaction_shcut.rwnd.step_backward, SET_INP_SC_RWND_STEP_BACKWARD);
+	shortcut_update_text(mainwin->wd->qaction_shcut.rwnd.step_forward, SET_INP_SC_RWND_STEP_FORWARD);
+	shortcut_update_text(mainwin->wd->qaction_shcut.rwnd.fast_backward, SET_INP_SC_RWND_FAST_BACKWARD);
+	shortcut_update_text(mainwin->wd->qaction_shcut.rwnd.fast_forward, SET_INP_SC_RWND_FAST_FORWARD);
+	shortcut_update_text(mainwin->wd->qaction_shcut.rwnd.play, SET_INP_SC_RWND_PLAY);
+	shortcut_update_text(mainwin->wd->qaction_shcut.rwnd.pause, SET_INP_SC_RWND_PAUSE);
 }
 
 void wdgSettingsInput::s_controller_mode(bool checked) {
@@ -910,7 +913,7 @@ void wdgSettingsInput::s_expansion_port_setup(UNUSED(bool checked)) {
 	switch (cfg->input.expansion) {
 		case CTRL_FAMILY_BASIC_KEYBOARD:
 		case CTRL_SUBOR_KEYBOARD:
-			mainwin->action_Virtual_Keyboard->trigger();
+			mainwin->wd->action_Virtual_Keyboard->trigger();
 			break;
 		default:
 			break;
@@ -998,7 +1001,7 @@ void wdgSettingsInput::s_shortcut_keyb(void) {
 	shcut.text[KEYBOARD].replace(shcut.row, shortcut.toString());
 
 	settings_inp_wr_sc((void *)&shcut.text[KEYBOARD].at(shcut.row), shcut.row + SET_INP_SC_OPEN, KEYBOARD);
-	mainwin->shortcuts();
+	mainwin->wd->shortcuts();
 
 	shortcuts_update(UPDATE_ALL, NO_ACTION, NO_ACTION);
 	update_widget();
@@ -1040,7 +1043,7 @@ void wdgSettingsInput::s_shortcut_unset_all(UNUSED(bool checked)) {
 		settings_inp_wr_sc((void *)&shcut.text[JOYSTICK].at(i), i + SET_INP_SC_OPEN, JOYSTICK);
 		js_row_pixmapPushButton(i);
 	}
-	mainwin->shortcuts();
+	mainwin->wd->shortcuts();
 	shortcuts_update(UPDATE_ALL, NO_ACTION, NO_ACTION);
 }
 void wdgSettingsInput::s_shortcut_reset(UNUSED(bool checked)) {
@@ -1059,7 +1062,7 @@ void wdgSettingsInput::s_shortcut_reset(UNUSED(bool checked)) {
 		settings_inp_wr_sc((void *)&shcut.text[JOYSTICK].at(i), i + SET_INP_SC_OPEN, JOYSTICK);
 		js_row_pixmapPushButton(i);
 	}
-	mainwin->shortcuts();
+	mainwin->wd->shortcuts();
 	shortcuts_update(UPDATE_ALL, NO_ACTION, NO_ACTION);
 }
 void wdgSettingsInput::s_shortcut_keyb_default(UNUSED(bool checked)) {
@@ -1068,7 +1071,7 @@ void wdgSettingsInput::s_shortcut_keyb_default(UNUSED(bool checked)) {
 	shcut.text[KEYBOARD].replace(row, uQString(inp_cfg[row + SET_INP_SC_OPEN].def).split(",").at(KEYBOARD));
 	tableWidget_Shortcuts->cellWidget(row, 1)->findChild<QKeySequenceEdit *>("value")->setKeySequence(shcut.text[KEYBOARD].at(row));
 	settings_inp_wr_sc((void *)&shcut.text[KEYBOARD].at(row), row + SET_INP_SC_OPEN, KEYBOARD);
-	mainwin->shortcuts();
+	mainwin->wd->shortcuts();
 }
 void wdgSettingsInput::s_shortcut_keyb_unset(UNUSED(bool checked)) {
 	int row = QVariant(((QObject *)sender())->property("myValue")).toInt();
@@ -1076,7 +1079,7 @@ void wdgSettingsInput::s_shortcut_keyb_unset(UNUSED(bool checked)) {
 	shcut.text[KEYBOARD].replace(row, "NULL");
 	tableWidget_Shortcuts->cellWidget(row, 1)->findChild<QKeySequenceEdit *>("value")->clear();
 	settings_inp_wr_sc((void *)&shcut.text[KEYBOARD].at(row), row + SET_INP_SC_OPEN, KEYBOARD);
-	mainwin->shortcuts();
+	mainwin->wd->shortcuts();
 }
 void wdgSettingsInput::s_shortcut_joy_unset(UNUSED(bool checked)) {
 	int row = QVariant(((QObject *)sender())->property("myValue")).toInt();

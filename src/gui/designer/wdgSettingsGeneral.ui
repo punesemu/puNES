@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>861</width>
+    <width>621</width>
     <height>545</height>
    </rect>
   </property>
@@ -81,6 +81,12 @@
         </item>
         <item>
          <widget class="themePushButton" name="pushButton_Rwn_2">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Ignored" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
           <property name="text">
            <string>2</string>
           </property>
@@ -91,6 +97,12 @@
         </item>
         <item>
          <widget class="themePushButton" name="pushButton_Rwn_5">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Ignored" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
           <property name="text">
            <string>5</string>
           </property>
@@ -101,6 +113,12 @@
         </item>
         <item>
          <widget class="themePushButton" name="pushButton_Rwn_15">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Ignored" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
           <property name="font">
            <font>
             <underline>true</underline>
@@ -116,6 +134,12 @@
         </item>
         <item>
          <widget class="themePushButton" name="pushButton_Rwn_30">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Ignored" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
           <property name="text">
            <string>30</string>
           </property>
@@ -126,6 +150,12 @@
         </item>
         <item>
          <widget class="themePushButton" name="pushButton_Rwn_60">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Ignored" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
           <property name="text">
            <string>60</string>
           </property>
@@ -136,6 +166,12 @@
         </item>
         <item>
          <widget class="themePushButton" name="pushButton_Rwn_unlimited">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
           <property name="text">
            <string>Unlim.</string>
           </property>
@@ -508,12 +544,6 @@
      </item>
      <item row="4" column="2">
       <widget class="QComboBox" name="comboBox_Language">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
        <item>
         <property name="text">
          <string>Arabic</string>
@@ -631,8 +661,8 @@
        </property>
        <property name="sizeHint" stdset="0">
         <size>
-         <width>20</width>
-         <height>20</height>
+         <width>0</width>
+         <height>0</height>
         </size>
        </property>
       </spacer>
@@ -845,12 +875,6 @@
      </item>
      <item row="12" column="2">
       <widget class="QComboBox" name="comboBox_FDS_Write_mode">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
        <item>
         <property name="text">
          <string>Write to a separate file (Default)</string>

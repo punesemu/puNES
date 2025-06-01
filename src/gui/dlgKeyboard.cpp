@@ -57,6 +57,7 @@ wdgDlgKeyboard::wdgDlgKeyboard(QWidget *parent) : wdgTitleBarDialog(parent) {
 	set_buttons(barButton::Close);
 	set_permit_resize(false);
 	add_widget(wd);
+	is_in_desktop(&cfg->lg_nes_keyboard.x, &cfg->lg_nes_keyboard.y);
 	init_geom_variable(cfg->lg_nes_keyboard);
 
 	connect(wd, SIGNAL(et_adjust_size(void)), this, SLOT(s_adjust_size(void)));
@@ -78,12 +79,11 @@ void wdgDlgKeyboard::closeEvent(QCloseEvent *event) {
 void wdgDlgKeyboard::hideEvent(QHideEvent *event) {
 	geom = geometry();
 	wdgTitleBarDialog::hideEvent(event);
-	mainwin->statusbar->keyb->update_tooltip();
+	mainwin->wd->statusbar->keyb->update_tooltip();
 }
 
 void wdgDlgKeyboard::s_adjust_size(void) {
 	adjustSize();
-	updateGeometry();
 }
 
 // ----------------------------------------------------------------------------------------------
@@ -163,7 +163,7 @@ void dlgKeyboard::changeEvent(QEvent *event) {
 }
 void dlgKeyboard::showEvent(QShowEvent *event) {
 	QWidget::showEvent(event);
-	mainwin->statusbar->keyb->update_tooltip();
+	mainwin->wd->statusbar->keyb->update_tooltip();
 }
 
 void dlgKeyboard::retranslateUi(QWidget *dlgKeyboard) {
@@ -235,8 +235,8 @@ bool dlgKeyboard::process_event(QEvent *event) {
 				QKeySequence key = ((QShortcutEvent *)event)->key();
 
 				if (gui.capture_input &&
-					(key != mainwin->shortcut[SET_INP_SC_TOGGLE_CAPTURE_INPUT]->key()) &&
-					(key != mainwin->shortcut[SET_INP_SC_TOGGLE_NES_KEYBOARD]->key())) {
+					(key != mainwin->wd->shortcut[SET_INP_SC_TOGGLE_CAPTURE_INPUT]->key()) &&
+					(key != mainwin->wd->shortcut[SET_INP_SC_TOGGLE_NES_KEYBOARD]->key())) {
 					return (true);
 				}
 			}
@@ -252,8 +252,8 @@ void dlgKeyboard::shortcut_toggle(BYTE is_this) {
 	} else {
 		parent = mainwin;
 	}
-	mainwin->shortcut[SET_INP_SC_TOGGLE_CAPTURE_INPUT]->setParent(parent);
-	mainwin->shortcut[SET_INP_SC_TOGGLE_NES_KEYBOARD]->setParent(parent);
+	mainwin->wd->shortcut[SET_INP_SC_TOGGLE_CAPTURE_INPUT]->setParent(parent);
+	mainwin->wd->shortcut[SET_INP_SC_TOGGLE_NES_KEYBOARD]->setParent(parent);
 }
 void dlgKeyboard::button_press(keyboardButton *kb, keyevent_types type) {
 	nes_keyboard.matrix[kb->element] = 0x80;
@@ -489,8 +489,6 @@ void dlgKeyboard::one_click_dec(void) {
 }
 void dlgKeyboard::resize_request(void) {
 	QTimer::singleShot(0, this, [this] {
-		adjustSize();
-		updateGeometry();
 		emit et_adjust_size();
 	});
 }
@@ -520,9 +518,9 @@ void dlgKeyboard::s_nes_keyboard(void) {
 		fake_keyboard();
 		reset();
 	}
-	mainwin->action_Virtual_Keyboard->setEnabled(!disable);
-	mainwin->statusbar->keyb->setEnabled(!disable);
-	mainwin->update_window();
+	mainwin->wd->action_Virtual_Keyboard->setEnabled(!disable);
+	mainwin->wd->statusbar->keyb->setEnabled(!disable);
+	mainwin->wd->update_window();
 }
 void dlgKeyboard::s_mode(bool checked) {
 	if (checked) {
@@ -930,6 +928,13 @@ wdgKeyboard::wdgKeyboard(QWidget *parent) : QWidget(parent) {
 	setLayoutDirection(Qt::LeftToRight);
 }
 wdgKeyboard::~wdgKeyboard() = default;
+
+QSize wdgKeyboard::sizeHint(void) const {
+	return (QSize(0, 0));
+}
+QSize wdgKeyboard::minimumSizeHint(void) const {
+	return (sizeHint());
+}
 
 void wdgKeyboard::init(void) {
 	nes_keyboard.enabled = TRUE;

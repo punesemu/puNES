@@ -82,24 +82,25 @@ wdgSettingsPPU::wdgSettingsPPU(QWidget *parent) : QWidget(parent) {
 	connect(comboBox_CPUPPU_Alignment, SIGNAL(activated(int)), this, SLOT(s_cpuppu_aligment(int)));
 
 	installEventFilter(this);
+
+	{
+		int dim = fontMetrics().height();
+
+		icon_Sprites_and_background->setPixmap(QIcon(":/icon/icons/background.svgz").pixmap(dim, dim));
+		icon_PPU_Overclock->setPixmap(QIcon(":/icon/icons/speedometer.svgz").pixmap(dim, dim));
+		icon_PPU_Advanced->setPixmap(QIcon(":/icon/icons/chip.svgz").pixmap(dim, dim));
+	}
 }
 wdgSettingsPPU::~wdgSettingsPPU() = default;
 
 void wdgSettingsPPU::changeEvent(QEvent *event) {
 	if (event->type() == QEvent::LanguageChange) {
 		retranslateUi(this);
+		adjustSize();
+		updateGeometry();
 	} else {
 		QWidget::changeEvent(event);
 	}
-}
-void wdgSettingsPPU::showEvent(QShowEvent *event) {
-	int dim = fontMetrics().height();
-
-	icon_Sprites_and_background->setPixmap(QIcon(":/icon/icons/background.svgz").pixmap(dim, dim));
-	icon_PPU_Overclock->setPixmap(QIcon(":/icon/icons/speedometer.svgz").pixmap(dim, dim));
-	icon_PPU_Advanced->setPixmap(QIcon(":/icon/icons/chip.svgz").pixmap(dim, dim));
-
-	QWidget::showEvent(event);
 }
 
 void wdgSettingsPPU::update_widget(void) {

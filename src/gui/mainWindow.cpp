@@ -73,6 +73,66 @@
 enum state_incdec_enum { INC, DEC };
 enum state_save_enum { SAVE, LOAD };
 
+// ----------------------------------------------------------------------------------------------
+
+wdgDlgMainWindow::wdgDlgMainWindow(QWidget *parent) : wdgTitleBarDialog(parent) {
+	setAttribute(Qt::WA_DeleteOnClose);
+	wd = new mainWindow();
+	wd->setParent(this);
+	setWindowTitle(wd->windowTitle());
+	setWindowIcon(QIcon(":icon/icons/application.png"));
+	set_border_color("lime");
+	set_buttons(barButton::Fullscreen | barButton::Minimize | barButton::Close);
+	set_permit_resize(false);
+	add_widget(wd);
+	is_in_desktop(&cfg->lg.x, &cfg->lg.y);
+	setGeometry(cfg->lg.x, cfg->lg.y, 0, 0);
+}
+wdgDlgMainWindow::~wdgDlgMainWindow() = default;
+
+
+void wdgDlgMainWindow::closeEvent(QCloseEvent *event) {
+	dlgsettings->close();
+
+	info.stop = TRUE;
+	gui.start = FALSE;
+	gui_sleep(100);
+
+	wd->shcjoy_stop();
+
+	if (cfg->fullscreen == NO_FULLSCR) {
+		cfg->lg.x = geometry().x();
+		cfg->lg.y = geometry().y();
+	}
+
+	geom_to_cfg(dlgsettings->geom, &cfg->lg_settings);
+	geom_to_cfg(dlgkeyb->geom, &cfg->lg_nes_keyboard);
+	geom_to_cfg(dlglog->geom, &cfg->lg_log);
+	geom_to_cfg(dlgheader->geom, &cfg->lg_header_editor);
+
+	settings_save_GUI();
+
+	wdgTitleBarDialog::closeEvent(event);
+}
+
+QScreen *wdgDlgMainWindow::win_handle_screen(void) const {
+#if QT_VERSION < QT_VERSION_CHECK(5, 14, 0)
+	QScreen *screen = QGuiApplication::screens().at(qApp->desktop()->screenNumber(this));
+#else
+	QScreen *screen = windowHandle()->screen();
+#endif
+
+	return (screen);
+}
+
+void wdgDlgMainWindow::geom_to_cfg(const QRect &geom, _last_geometry *lg) {
+	lg->x = geom.x();
+	lg->y = geom.y();
+	lg->w = geom.width();
+	lg->h = geom.height();
+}
+// ----------------------------------------------------------------------------------------------
+
 mainWindow::mainWindow() : QMainWindow() {
 	setupUi(this);
 
@@ -107,7 +167,7 @@ mainWindow::mainWindow() : QMainWindow() {
 	}
 
 	setWindowIcon(QIcon(":icon/icons/application.png"));
-	setWindowFlags(windowFlags() & ~Qt::WindowMaximizeButtonHint);
+	setWindowFlags(Qt::FramelessWindowHint | Qt::WindowCloseButtonHint | Qt::WindowMinMaxButtonsHint | Qt::WindowTitleHint);
 #if defined (_WIN32)
 	setWindowFlags(windowFlags() | Qt::MSWindowsFixedSizeDialogHint);
 #endif
@@ -215,12 +275,10 @@ mainWindow::mainWindow() : QMainWindow() {
 	action_Current_state_to_puNES_image->setVisible(false);
 #endif
 
-	adjustSize();
-
 	installEventFilter(this);
 
 	{
-		bool visibile = !info.start_with_hidden_gui;
+		const bool visibile = !info.start_with_hidden_gui;
 
 		menubar->setVisible(visibile);
 		toolbar->setVisible(visibile && !cfg->toolbar.hidden);
@@ -305,29 +363,7 @@ void mainWindow::resizeEvent(QResizeEvent *event) {
 			gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, FULLSCR, NO_CHANGE, FALSE, FALSE);
 		}
 	}
-
 	QMainWindow::resizeEvent(event);
-}
-void mainWindow::closeEvent(QCloseEvent *event) {
-	dlgsettings->close();
-
-	info.stop = TRUE;
-
-	shcjoy_stop();
-
-	if (cfg->fullscreen == NO_FULLSCR) {
-		cfg->lg.x = geometry().x();
-		cfg->lg.y = geometry().y();
-	}
-
-	geom_to_cfg(dlgsettings->geom, &cfg->lg_settings);
-	geom_to_cfg(dlgkeyb->geom, &cfg->lg_nes_keyboard);
-	geom_to_cfg(dlglog->geom, &cfg->lg_log);
-	geom_to_cfg(dlgheader->geom, &cfg->lg_header_editor);
-
-	settings_save_GUI();
-
-	QMainWindow::closeEvent(event);
 }
 
 void mainWindow::retranslateUi(mainWindow *mainWindow) {
@@ -695,7 +731,7 @@ bool mainWindow::is_rwnd_shortcut_or_not_shcut(const QKeyEvent *event) {
 }
 void mainWindow::update_gfx_monitor_dimension(void) {
 	if (gfx.type_of_fscreen_in_use == FULLSCR_IN_WINDOW) {
-		bool toolbar_is_hidden = toolbar->isHidden() || toolbar->isFloating();
+		const bool toolbar_is_hidden = toolbar->isHidden() || toolbar->isFloating();
 
 #if QT_VERSION == QT_VERSION_CHECK(5, 12, 8)
 		gfx.w[MONITOR] = fs_geom.width() - (frameGeometry().width() - geometry().width());
@@ -714,9 +750,9 @@ void mainWindow::update_gfx_monitor_dimension(void) {
 		gfx.h[MONITOR] -= (menubar->isHidden() ? 0 : menubar->sizeHint().height());
 		gfx.h[MONITOR] -= (statusbar->isHidden() ? 0 : statusbar->sizeHint().height());
 	} else if (gfx.type_of_fscreen_in_use == FULLSCR) {
-		fs_geom = win_handle_screen()->geometry();
+		fs_geom = mainwin->win_handle_screen()->geometry();
 
-		switch (win_handle_screen()->orientation()) {
+		switch (mainwin->win_handle_screen()->orientation()) {
 			default:
 			case Qt::LandscapeOrientation:
 				gfx.screen_rotation = ROTATE_0;
@@ -749,7 +785,7 @@ void mainWindow::update_gfx_monitor_dimension(void) {
 		gfx.h[MONITOR] = fs_geom.height();
 
 		{
-			qreal dpr = win_handle_screen()->devicePixelRatio();
+			const qreal dpr = mainwin->win_handle_screen()->devicePixelRatio();
 
 			gfx.w[MONITOR] = (SDBWORD)((qreal)gfx.w[MONITOR] / dpr);
 			gfx.h[MONITOR] = (SDBWORD)((qreal)gfx.h[MONITOR] / dpr);
@@ -849,15 +885,6 @@ void mainWindow::reset_min_max_size(void) {
 	statusbar->setMinimumSize(QSize(0, 0));
 	statusbar->setMaximumSize(QSize(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX));
 #endif
-}
-QScreen *mainWindow::win_handle_screen(void) {
-#if QT_VERSION < QT_VERSION_CHECK(5, 14, 0)
-	QScreen *screen = QGuiApplication::screens().at(qApp->desktop()->screenNumber(this));
-#else
-	QScreen *screen = windowHandle()->screen();
-#endif
-
-	return (screen);
 }
 void mainWindow::shout_into_mic(BYTE mode) {
 	if ((tas.type == NOTAS) && !rwnd.active) {
@@ -1237,7 +1264,7 @@ void mainWindow::update_menu_recent_roms(void) {
 	}
 }
 void mainWindow::update_menu_recent_disks(void) {
-	if (menu_Change_Disk->isEnabled() && (QThread::currentThread() == this->thread())) {
+	if (menu_Change_Disk->isEnabled() && (QThread::currentThread() == thread())) {
 		foreach (QAction *action, menu_Change_Disk->actions()) {
 			if (action != action_Change_Disk) {
 				delete (action);
@@ -1284,7 +1311,6 @@ void mainWindow::update_menu_recent_disks(void) {
 		}
 	}
 }
-
 
 void mainWindow::update_fds_menu(void) {
 	QString *sc = (QString *)settings_inp_rd_sc(SET_INP_SC_EJECT_DISK, KEYBOARD);
@@ -1372,12 +1398,7 @@ void mainWindow::ctrl_disk_side(QAction *action) {
 		action->setChecked(true);
 	}
 }
-void mainWindow::geom_to_cfg(const QRect &geom, _last_geometry *lg) {
-	lg->x = geom.x();
-	lg->y = geom.y();
-	lg->w = geom.width();
-	lg->h = geom.height();
-}
+
 void mainWindow::set_dialog_geom(QRect &geom) {
 	int frame_w = frameGeometry().width() - geometry().width();
 	int frame_h = frameGeometry().height() - geometry().height();
@@ -1446,7 +1467,7 @@ void mainWindow::s_set_fullscreen(void) {
 			// nella parte destra del monitor potrebbe non essere visualizzata correttamente.
 			// E' importante che lo spostamento avvenga prima dell'hide().
 			if (!cfg->fullscreen_in_window) {
-				QRect mgeom = win_handle_screen()->geometry();
+				QRect mgeom = mainwin->win_handle_screen()->geometry();
 
 				move(mgeom.x() - (geometry().x() - x()), mgeom.y() - (geometry().y() - y()));
 			}
@@ -2354,7 +2375,7 @@ void mainWindow::s_fullscreen(void) {
 		window_flags = windowFlags();
 #endif
 		if (gfx.only_fullscreen_in_window || cfg->fullscreen_in_window) {
-			QRect fs_win_geom = win_handle_screen()->availableGeometry();
+			QRect fs_win_geom = mainwin->win_handle_screen()->availableGeometry();
 #if defined (_WIN32)
 			// lo showMaximized sotto windows non considera la presenza della barra delle applicazioni
 			// cercando di impostare una dimensione falsata percio' ridimensiono la finestra manualmente.
@@ -2368,8 +2389,8 @@ void mainWindow::s_fullscreen(void) {
 			gfx.h[FSCR_RESIZE] = 0;
 #if defined (FULLSCREEN_RESFREQ)
 			if ((cfg->fullscreen_res_w >= 0) && (cfg->fullscreen_res_h >= 0) &&
-				((cfg->fullscreen_res_w != win_handle_screen()->availableGeometry().width()) ||
-				(cfg->fullscreen_res_h != win_handle_screen()->availableGeometry().height()))) {
+				((cfg->fullscreen_res_w != mainwin->win_handle_screen()->availableGeometry().width()) ||
+				(cfg->fullscreen_res_h != mainwin->win_handle_screen()->availableGeometry().height()))) {
 				fs_win_geom = QRect(org_geom.x(), org_geom.y(), cfg->fullscreen_res_w, cfg->fullscreen_res_h);
 				desktop_resolution = false;
 			}
@@ -2923,7 +2944,7 @@ void timerEgds::s_draw_screen(void) {
 	} else if (info.pause) {
 		ret = true;
 	} else if (rwnd.active) {
-		ret = mainwin->toolbar->rewind->egds_rewind();
+		ret = mainwin->wd->toolbar->rewind->egds_rewind();
 	} else if (fps_fast_forward_enabled()) {
 		ret = true;
 

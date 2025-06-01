@@ -43,6 +43,8 @@
 #include "wdgToolBar.hpp"
 #include "dlgCmdLineHelp.hpp"
 
+// ----------------------------------------------------------------------------------------------
+
 class toUpValidator: public QValidator {
 	public:
 		explicit toUpValidator(QObject *parent = nullptr): QValidator(parent) {}
@@ -66,6 +68,9 @@ class qtHelper {
 		static void combox_set_index(void *cbox, int value);
 		static void lineedit_set_text(void *ledit, const QString &txt);
 };
+
+// ----------------------------------------------------------------------------------------------
+
 class timerEgds : public QTimer {
 	Q_OBJECT
 
@@ -107,6 +112,9 @@ class timerEgds : public QTimer {
 	private slots:
 		void s_draw_screen(void);
 };
+
+// ----------------------------------------------------------------------------------------------
+
 class actionOneTrigger : public QAction {
 	public:
 		unsigned int count;
@@ -121,6 +129,9 @@ class actionOneTrigger : public QAction {
 		void only_one_trigger(void);
 		void reset_count(void);
 };
+
+// ----------------------------------------------------------------------------------------------
+
 class mainWindow : public QMainWindow, public Ui::mainWindow {
 	Q_OBJECT
 
@@ -219,7 +230,6 @@ class mainWindow : public QMainWindow, public Ui::mainWindow {
 #endif
 		bool eventFilter(QObject *obj, QEvent *event) override;
 		void changeEvent(QEvent *event) override;
-		void closeEvent(QCloseEvent *event) override;
 		void resizeEvent(QResizeEvent *event) override;
 
 	private:
@@ -244,7 +254,6 @@ class mainWindow : public QMainWindow, public Ui::mainWindow {
 		void state_save_slot_set_tooltip(BYTE slot);
 		void toggle_toolbars(void);
 		void reset_min_max_size(void);
-		QScreen *win_handle_screen(void);
 		void shout_into_mic(BYTE mode);
 		void hold_fast_forward(BYTE mode);
 		void open_dkeyb(void);
@@ -272,7 +281,6 @@ class mainWindow : public QMainWindow, public Ui::mainWindow {
 	private:
 		void action_text(QAction *action, const QString &description, QString *scut);
 		void ctrl_disk_side(QAction *action);
-		void geom_to_cfg(const QRect &geom, _last_geometry *lg);
 		void set_dialog_geom(QRect &geom);
 		int is_shortcut(const QKeyEvent *event);
 		void toggle_menubar(BYTE mode);
@@ -360,6 +368,28 @@ class mainWindow : public QMainWindow, public Ui::mainWindow {
 		void s_et_toggle_menubar_from_mouse(void);
 		void s_et_nsf_author_note_open(const uTCHAR *string);
 		void s_et_nsf_author_note_close(void);
+};
+
+// ----------------------------------------------------------------------------------------------
+
+class wdgDlgMainWindow final : public wdgTitleBarDialog {
+	Q_OBJECT
+
+	public:
+		mainWindow *wd;
+
+	public:
+		explicit wdgDlgMainWindow(QWidget *parent = nullptr);
+		~wdgDlgMainWindow() override;
+
+	protected:
+		void closeEvent(QCloseEvent *event) override;
+
+	public:
+		QScreen *win_handle_screen(void) const;
+
+	private:
+		static void geom_to_cfg(const QRect &geom, _last_geometry *lg);
 };
 
 #endif /* MAINWINDOW_HPP_ */

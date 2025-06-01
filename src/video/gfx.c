@@ -492,6 +492,7 @@ void gfx_set_screen(BYTE scale, DBWORD filter, DBWORD shader, BYTE fullscreen, B
 			case EXIT_ERROR:
 				gui_critical(uL("Unable to initialize gfx context."));
 				info.stop = TRUE;
+				gui_sleep(100);
 				gfx_thread_continue();
 				return;
 			case EXIT_ERROR_SHADER:

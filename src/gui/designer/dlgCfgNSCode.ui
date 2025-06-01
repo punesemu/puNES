@@ -13,10 +13,7 @@
   <property name="windowTitle">
    <string notr="true">dlgCfgNSCode</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout_dlgCfgNSCode" stretch="1,0">
-   <property name="sizeConstraint">
-    <enum>QLayout::SetFixedSize</enum>
-   </property>
+  <layout class="QVBoxLayout" name="verticalLayout_dlgCfgNSCode">
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_Desc">
      <property name="spacing">

@@ -41,7 +41,7 @@ wdgDlgVsSystem::wdgDlgVsSystem(QWidget *parent) : wdgTitleBarDialog(parent) {
 wdgDlgVsSystem::~wdgDlgVsSystem() = default;
 
 void wdgDlgVsSystem::closeEvent(QCloseEvent *event) {
-	mainwin->s_set_vs_window();
+	mainwin->wd->s_set_vs_window();
 	wdgTitleBarDialog::closeEvent(event);
 }
 
@@ -115,6 +115,15 @@ dlgVsSystem::dlgVsSystem(QWidget *parent) : QWidget(parent) {
 		lineEdit_Coin_Counter->setFixedHeight(h);
 	}
 
+	{
+		int dim = fontMetrics().height();
+
+		icon_Coins->setPixmap(QIcon(":/icon/icons/insert_coins.svgz").pixmap(dim, dim));
+		icon_Coin_Counter->setPixmap(QIcon(":/icon/icons/stereo_delay.svgz").pixmap(dim, dim));
+		icon_Monitor->setPixmap(QIcon(":/icon/icons/monitor_screen.svgz").pixmap(dim, dim));
+		icon_Dipswitches->setPixmap(QIcon(":/icon/icons/dipswitch.svgz").pixmap(dim, dim));
+	}
+
 	installEventFilter(this);
 }
 dlgVsSystem::~dlgVsSystem() = default;
@@ -136,14 +145,6 @@ void dlgVsSystem::changeEvent(QEvent *event) {
 	} else {
 		QWidget::changeEvent(event);
 	}
-}
-void dlgVsSystem::showEvent(UNUSED(QShowEvent *event)) {
-	int dim = fontMetrics().height();
-
-	icon_Coins->setPixmap(QIcon(":/icon/icons/insert_coins.svgz").pixmap(dim, dim));
-	icon_Coin_Counter->setPixmap(QIcon(":/icon/icons/stereo_delay.svgz").pixmap(dim, dim));
-	icon_Monitor->setPixmap(QIcon(":/icon/icons/monitor_screen.svgz").pixmap(dim, dim));
-	icon_Dipswitches->setPixmap(QIcon(":/icon/icons/dipswitch.svgz").pixmap(dim, dim));
 }
 
 void dlgVsSystem::update_dialog(void) {

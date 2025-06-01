@@ -88,9 +88,6 @@ dlgJsc::dlgJsc(QWidget *parent) : QWidget(parent) {
 
 	connect(timer, SIGNAL(timeout()), this, SLOT(s_joy_read_timer()));
 
-	adjustSize();
-	setFixedSize(size());
-
 	installEventFilter(this);
 }
 dlgJsc::~dlgJsc() = default;

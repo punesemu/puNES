@@ -227,10 +227,6 @@ void dlgStdPad::changeEvent(QEvent *event) {
 		QWidget::changeEvent(event);
 	}
 }
-void dlgStdPad::showEvent(QShowEvent *event) {
-	adjustSize();
-	QWidget::showEvent(event);
-}
 void dlgStdPad::closeEvent(QCloseEvent *event) {
 	data.joy.timer->stop();
 	data.seq.timer->stop();
@@ -241,7 +237,7 @@ void dlgStdPad::closeEvent(QCloseEvent *event) {
 		js_init(FALSE);
 	}
 
-	mainwin->shcjoy_start();
+	mainwin->wd->shcjoy_start();
 
 	data.no_other_buttons = false;
 	data.vbutton = 0;

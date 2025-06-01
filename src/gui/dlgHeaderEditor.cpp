@@ -63,7 +63,6 @@ void wdgDlgHeaderEditor::hideEvent(QHideEvent *event) {
 
 void wdgDlgHeaderEditor::s_adjust_size(void) {
 	adjustSize();
-	updateGeometry();
 }
 
 // ----------------------------------------------------------------------------------------------
@@ -103,8 +102,6 @@ dlgHeaderEditor::dlgHeaderEditor(QWidget *parent) : QWidget(parent) {
 	connect(comboBox_VS_Type, SIGNAL(currentIndexChanged(int)), this, SLOT(s_control_changed()));
 	connect(comboBox_VS_PPU, SIGNAL(currentIndexChanged(int)), this, SLOT(s_control_changed()));
 	connect(comboBox_Input, SIGNAL(currentIndexChanged(int)), this, SLOT(s_control_changed()));
-
-	adjustSize();
 }
 dlgHeaderEditor::~dlgHeaderEditor() {
 	delete (grp);
@@ -431,11 +428,8 @@ int dlgHeaderEditor::find_multiplier(int size) {
 	return (multiplier);
 }
 void dlgHeaderEditor::resize_request(void) {
-	QTimer::singleShot(0, this, [this] {
-		adjustSize();
-		updateGeometry();
-		emit et_adjust_size();
-	});
+	adjustSize();
+	emit et_adjust_size();
 }
 
 void dlgHeaderEditor::s_control_changed(void) {

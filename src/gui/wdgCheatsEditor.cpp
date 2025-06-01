@@ -144,6 +144,13 @@ wdgCheatsEditor::wdgCheatsEditor(QWidget *parent) : QWidget(parent) {
 		lineEdit_ProAR->setMinimumWidth(w);
 	}
 
+	{
+		int dim = fontMetrics().height();
+
+		icon_Cheat_List_Editor->setPixmap(QIcon(":/icon/icons/cheats_list.svgz").pixmap(dim, dim));
+		icon_Editor_Tools->setPixmap(QIcon(":/icon/icons/pencil.svgz").pixmap(dim, dim));
+	}
+
 	installEventFilter(this);
 
 	populate_cheat_table();
@@ -166,14 +173,8 @@ void wdgCheatsEditor::changeEvent(QEvent *event) {
 	}
 }
 void wdgCheatsEditor::showEvent(QShowEvent *event) {
-	int dim = fontMetrics().height();
-
-	icon_Cheat_List_Editor->setPixmap(QIcon(":/icon/icons/cheats_list.svgz").pixmap(dim, dim));
-	icon_Editor_Tools->setPixmap(QIcon(":/icon/icons/pencil.svgz").pixmap(dim, dim));
-
 	lineEdit_CPU_Ram->setVisible(false);
 	radioButton_CPU_Ram->setFixedHeight(radioButton_ProAR->height());
-
 	QWidget::showEvent(event);
 }
 

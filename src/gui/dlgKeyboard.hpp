@@ -140,6 +140,10 @@ class wdgKeyboard : public QWidget {
 		explicit wdgKeyboard(QWidget *parent = nullptr);
 		~wdgKeyboard() override;
 
+	public:
+		QSize sizeHint(void) const override;
+		QSize minimumSizeHint(void) const override;
+
 	protected:
 		void init(void);
 		virtual void set_buttons(void);

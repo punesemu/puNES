@@ -201,7 +201,7 @@ wdgDlgDetachBarcode::wdgDlgDetachBarcode(QWidget *parent) : wdgTitleBarDialog(pa
 wdgDlgDetachBarcode::~wdgDlgDetachBarcode() = default;
 
 void wdgDlgDetachBarcode::closeEvent(QCloseEvent *event) {
-	mainwin->s_set_detach_barcode_window();
+	mainwin->wd->s_set_detach_barcode_window();
 	wdgTitleBarDialog::closeEvent(event);
 }
 
@@ -215,8 +215,6 @@ dlgDetachBarcode::dlgDetachBarcode(QWidget *parent) : QWidget(parent) {
 	connect(listWidget_Barcodes, SIGNAL(itemClicked(QListWidgetItem*)), this, SLOT(s_barcode_click(QListWidgetItem*)));
 	connect(listWidget_Barcodes, SIGNAL(itemDoubleClicked(QListWidgetItem*)), this, SLOT(s_barcode_doubleclick(QListWidgetItem*)));
 	connect(pushButton_Apply, SIGNAL(clicked(bool)), this, SLOT(s_apply_clicked(bool)));
-
-	adjustSize();
 
 	installEventFilter(this);
 }
@@ -295,5 +293,5 @@ void dlgDetachBarcode::s_apply_clicked(UNUSED(bool checked)) {
 	apply_barcode();
 }
 void dlgDetachBarcode::s_x_clicked(UNUSED(bool checked)) {
-	mainwin->s_set_detach_barcode_window();
+	mainwin->wd->s_set_detach_barcode_window();
 }

@@ -14,9 +14,6 @@
    <string notr="true">Virtual Keyboard</string>
   </property>
   <layout class="QVBoxLayout" name="layout_dlgKeyboard">
-   <property name="sizeConstraint">
-    <enum>QLayout::SetFixedSize</enum>
-   </property>
    <item>
     <widget class="QGroupBox" name="groupBox_Options">
      <property name="title">

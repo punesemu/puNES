@@ -85,8 +85,6 @@ dlgDipswitch::dlgDipswitch(QWidget *parent) : QWidget(parent) {
 	if ((info.reset != CHANGE_ROM) && (info.reset != POWER_UP)) {
 		pushButton_Start->setText(tr("Ok"));
 	}
-
-	adjustSize();
 }
 dlgDipswitch::~dlgDipswitch() = default;
 

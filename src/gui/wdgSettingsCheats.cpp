@@ -33,6 +33,12 @@ wdgSettingsCheats::wdgSettingsCheats(QWidget *parent) : QWidget(parent) {
 	connect(pushButton_Cheats_Mode_disabled, SIGNAL(toggled(bool)), this, SLOT(s_cheat_mode(bool)));
 	connect(pushButton_Cheats_Mode_gg, SIGNAL(toggled(bool)), this, SLOT(s_cheat_mode(bool)));
 	connect(pushButton_Cheats_Mode_list, SIGNAL(toggled(bool)), this, SLOT(s_cheat_mode(bool)));
+
+	{
+		int dim = fontMetrics().height();
+
+		icon_Cheats_settings->setPixmap(QIcon(":/icon/icons/settings.svgz").pixmap(dim, dim));
+	}
 }
 wdgSettingsCheats::~wdgSettingsCheats() = default;
 
@@ -43,16 +49,12 @@ void wdgSettingsCheats::changeEvent(QEvent *event) {
 		QWidget::changeEvent(event);
 	}
 }
-void wdgSettingsCheats::showEvent(QShowEvent *event) {
-	int dim = fontMetrics().height();
-
-	icon_Cheats_settings->setPixmap(QIcon(":/icon/icons/settings.svgz").pixmap(dim, dim));
-	QWidget::showEvent(event);
-}
 
 void wdgSettingsCheats::retranslateUi(QWidget *wdgSettingsCheats) {
 	Ui::wdgSettingsCheats::retranslateUi(wdgSettingsCheats);
 	update_widget();
+	adjustSize();
+	updateGeometry();
 }
 void wdgSettingsCheats::update_widget(void) {
 	cheat_mode_set();

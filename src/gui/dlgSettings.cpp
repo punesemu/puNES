@@ -29,6 +29,7 @@ wdgDlgSettings::wdgDlgSettings(QWidget *parent) : wdgTitleBarDialog(parent) {
 	set_border_color(Qt::cyan);
 	set_buttons(barButton::Close);
 	add_widget(wd);
+	is_in_desktop(&cfg->lg_settings.x, &cfg->lg_settings.y);
 	init_geom_variable(cfg->lg_settings);
 
 	connect(wd->pushButton_Close_Settings, SIGNAL(clicked(bool)), this, SLOT(close(void)));
@@ -85,20 +86,20 @@ void dlgSettings::retranslateUi(QWidget *dlgSettings) {
 	Ui::dlgSettings::retranslateUi(dlgSettings);
 
 	// Rewind operations
-	mainwin->qaction_shcut.save_settings->setText(pushButton_Save_Settings->text());
-	mainwin->qaction_shcut.rwnd.active->setText(tr("Rewind Mode On/Off"));
-	mainwin->qaction_shcut.rwnd.step_backward->setText(tr("Rewind Step Backward"));
-	mainwin->qaction_shcut.rwnd.step_forward->setText(tr("Rewind Step Forward"));
-	mainwin->qaction_shcut.rwnd.fast_backward->setText(tr("Rewind Fast Backward"));
-	mainwin->qaction_shcut.rwnd.fast_forward->setText(tr("Rewind Fast Forward"));
-	mainwin->qaction_shcut.rwnd.play->setText(tr("Rewind Play"));
-	mainwin->qaction_shcut.rwnd.pause->setText(tr("Rewind Pause"));
+	mainwin->wd->qaction_shcut.save_settings->setText(pushButton_Save_Settings->text());
+	mainwin->wd->qaction_shcut.rwnd.active->setText(tr("Rewind Mode On/Off"));
+	mainwin->wd->qaction_shcut.rwnd.step_backward->setText(tr("Rewind Step Backward"));
+	mainwin->wd->qaction_shcut.rwnd.step_forward->setText(tr("Rewind Step Forward"));
+	mainwin->wd->qaction_shcut.rwnd.fast_backward->setText(tr("Rewind Fast Backward"));
+	mainwin->wd->qaction_shcut.rwnd.fast_forward->setText(tr("Rewind Fast Forward"));
+	mainwin->wd->qaction_shcut.rwnd.play->setText(tr("Rewind Play"));
+	mainwin->wd->qaction_shcut.rwnd.pause->setText(tr("Rewind Pause"));
 
 	// Toggle Menubar
-	mainwin->qaction_shcut.toggle_menubar_in_fullscreen->setText(tr("Toggle the Menu Bar in Fullscreen"));
+	mainwin->wd->qaction_shcut.toggle_menubar_in_fullscreen->setText(tr("Toggle the Menu Bar in Fullscreen"));
 
 	// nes keyboard
-	mainwin->qaction_shcut.toggle_capture_input->setText(tr("Capture/Release Input"));
+	mainwin->wd->qaction_shcut.toggle_capture_input->setText(tr("Capture/Release Input"));
 }
 void dlgSettings::update_dialog(void) {
 	update_tab_general();

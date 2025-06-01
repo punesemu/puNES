@@ -6,14 +6,9 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>656</width>
-    <height>599</height>
+    <width>644</width>
+    <height>616</height>
    </rect>
-  </property>
-  <property name="font">
-   <font>
-    <pointsize>8</pointsize>
-   </font>
   </property>
   <property name="windowTitle">
    <string>Standard Pad</string>
@@ -114,11 +109,6 @@
           </item>
           <item>
            <widget class="QFrame" name="frame_kbd_buttons">
-            <property name="font">
-             <font>
-              <pointsize>8</pointsize>
-             </font>
-            </property>
             <property name="frameShape">
              <enum>QFrame::StyledPanel</enum>
             </property>
@@ -126,9 +116,6 @@
              <enum>QFrame::Sunken</enum>
             </property>
             <layout class="QVBoxLayout" name="verticalLayout">
-             <property name="topMargin">
-              <number>9</number>
-             </property>
              <item>
               <layout class="QGridLayout" name="gridLayout_kbd_buttons">
                <item row="4" column="6">
@@ -1337,9 +1324,6 @@
            <layout class="QGridLayout" name="gridLayout_kbd_Deadzone">
             <item row="0" column="3">
              <widget class="QLabel" name="label_kbd_Deadzone_value_slider">
-              <property name="enabled">
-               <bool>false</bool>
-              </property>
               <property name="sizePolicy">
                <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
                 <horstretch>0</horstretch>
@@ -1353,9 +1337,6 @@
             </item>
             <item row="0" column="2">
              <widget class="QSlider" name="horizontalSlider_kbd_Deadzone">
-              <property name="enabled">
-               <bool>false</bool>
-              </property>
               <property name="minimum">
                <number>0</number>
               </property>
@@ -1369,9 +1350,6 @@
             </item>
             <item row="0" column="1">
              <widget class="QLabel" name="label_kbd_Deadzone_slider">
-              <property name="enabled">
-               <bool>false</bool>
-              </property>
               <property name="text">
                <string>Deadzone</string>
               </property>
@@ -1382,9 +1360,6 @@
             </item>
             <item row="0" column="4">
              <widget class="themePushButton" name="pushButton_kbd_Deadzone">
-              <property name="enabled">
-               <bool>false</bool>
-              </property>
               <property name="toolTip">
                <string>Default</string>
               </property>
@@ -1455,11 +1430,6 @@
           </item>
           <item>
            <widget class="QFrame" name="frame_joy_buttons">
-            <property name="font">
-             <font>
-              <pointsize>8</pointsize>
-             </font>
-            </property>
             <property name="frameShape">
              <enum>QFrame::StyledPanel</enum>
             </property>
@@ -2675,6 +2645,12 @@
            <layout class="QGridLayout" name="gridLayout_joy_Deadzone">
             <item row="0" column="3">
              <widget class="QLabel" name="label_joy_Deadzone_value_slider">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
               <property name="text">
                <string notr="true">00</string>
               </property>
@@ -2874,15 +2850,15 @@
    <header>theme.hpp</header>
   </customwidget>
   <customwidget>
-   <class>pixmapPushButton</class>
-   <extends>QPushButton</extends>
-   <header>theme.hpp</header>
-  </customwidget>
-  <customwidget>
    <class>themeGroupBox</class>
    <extends>QGroupBox</extends>
    <header>theme.hpp</header>
    <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>pixmapPushButton</class>
+   <extends>QPushButton</extends>
+   <header>theme.hpp</header>
   </customwidget>
  </customwidgets>
  <tabstops>

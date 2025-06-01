@@ -893,6 +893,7 @@ INLINE static BYTE alsa_xrun_recovery(snd_pcm_t *handle, int err) {
 		if (err < 0) {
 			log_error(uL("alsa;can't recovery from underrun, %s"), snd_strerror(err));
 			info.stop = TRUE;
+			gui_sleep(100);
 			return (EXIT_ERROR);
 		}
 		gui_sleep(150);
@@ -905,6 +906,7 @@ INLINE static BYTE alsa_xrun_recovery(snd_pcm_t *handle, int err) {
 			if (err < 0) {
 				log_error(uL("alsa;can't recovery from suspend, %s"), snd_strerror(err));
 				info.stop = TRUE;
+				gui_sleep(100);
 				return (EXIT_ERROR);
 			}
 		}

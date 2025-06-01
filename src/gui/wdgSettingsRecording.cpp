@@ -89,6 +89,19 @@ wdgSettingsRecording::wdgSettingsRecording(QWidget *parent) : QWidget(parent) {
 	connect(checkBox_Use_emu_resolution, SIGNAL(stateChanged(int)), this, SLOT(s_use_emu_resolution(int)));
 	connect(checkBox_Follow_rotation, SIGNAL(stateChanged(int)), this, SLOT(s_follow_rotation(int)));
 #endif
+
+	{
+		int dim = fontMetrics().height();
+
+		icon_Audio_recording_settings->setPixmap(QIcon(":/icon/icons/microphone.svgz").pixmap(dim, dim));
+		icon_Output_Audio_Format->setPixmap(QIcon(":/icon/icons/nsf_file.svgz").pixmap(dim, dim));
+		icon_Video_recording_settings->setPixmap(QIcon(":/icon/icons/camera.svgz").pixmap(dim, dim));
+		icon_Output_Video_Format->setPixmap(QIcon(":/icon/icons/film.svgz").pixmap(dim, dim));
+		icon_Output_Quality->setPixmap(QIcon(":/icon/icons/recording_quality.svgz").pixmap(dim, dim));
+		icon_Output_Resolution->setPixmap(QIcon(":/icon/icons/resolution.svgz").pixmap(dim, dim));
+		icon_Output_Custom_Width->setPixmap(QIcon(":/icon/icons/width.svgz").pixmap(dim, dim));
+		icon_Output_Custom_Height->setPixmap(QIcon(":/icon/icons/height.svgz").pixmap(dim, dim));
+	}
 }
 wdgSettingsRecording::~wdgSettingsRecording() = default;
 
@@ -101,24 +114,16 @@ void wdgSettingsRecording::changeEvent(QEvent *event) {
 	}
 }
 void wdgSettingsRecording::showEvent(UNUSED(QShowEvent *event)) {
-	int dim = fontMetrics().height();
-
-	icon_Audio_recording_settings->setPixmap(QIcon(":/icon/icons/microphone.svgz").pixmap(dim, dim));
-	icon_Output_Audio_Format->setPixmap(QIcon(":/icon/icons/nsf_file.svgz").pixmap(dim, dim));
-	icon_Video_recording_settings->setPixmap(QIcon(":/icon/icons/camera.svgz").pixmap(dim, dim));
-	icon_Output_Video_Format->setPixmap(QIcon(":/icon/icons/film.svgz").pixmap(dim, dim));
-	icon_Output_Quality->setPixmap(QIcon(":/icon/icons/recording_quality.svgz").pixmap(dim, dim));
-	icon_Output_Resolution->setPixmap(QIcon(":/icon/icons/resolution.svgz").pixmap(dim, dim));
-	icon_Output_Custom_Width->setPixmap(QIcon(":/icon/icons/width.svgz").pixmap(dim, dim));
-	icon_Output_Custom_Height->setPixmap(QIcon(":/icon/icons/height.svgz").pixmap(dim, dim));
-
 	update_widget();
+	QWidget::showEvent(event);
 }
 
 void wdgSettingsRecording::retranslateUi(QWidget *wdgSettingsRecording) {
 	Ui::wdgSettingsRecording::retranslateUi(wdgSettingsRecording);
 	output_format_init();
 	update_widget();
+	adjustSize();
+	updateGeometry();
 }
 void wdgSettingsRecording::update_widget(void) {
 	bool mode = true;

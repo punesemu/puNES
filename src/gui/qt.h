@@ -40,7 +40,7 @@ enum _overlay_info_alignment {
 #define dlgkeyb ((wdgDlgKeyboard *)gui_wdgdlgkeyboard_get_ptr())
 #define dlglog ((wdgDlgLog *)gui_wdgdlglog_get_ptr())
 #define dlgsettings ((wdgDlgSettings *)gui_wdgdlgsettings_get_ptr())
-#define mainwin ((mainWindow *)gui_mainwindow_get_ptr())
+#define mainwin ((wdgDlgMainWindow *)gui_wdgdlgmainwindow_get_ptr())
 #define objcheat ((objCheat *)gui_objcheat_get_ptr())
 #define wdgoverlayui ((wdgOverlayUi *)gui_wdgoverlayui_get_ptr())
 #define wdgrewind dynamic_cast<wdgRewind *>((wdgRewind *)gui_wdgrewind_get_ptr())
@@ -161,9 +161,9 @@ EXTERNC void gui_cursor_set(void);
 EXTERNC void gui_cursor_hide(BYTE hide);
 EXTERNC void gui_control_visible_cursor(void);
 
-EXTERNC void *gui_mainwindow_get_ptr(void);
-EXTERNC void gui_mainwindow_coords(int *x, int *y, BYTE border);
-EXTERNC void gui_mainwindow_before_set_res(void);
+EXTERNC void *gui_wdgdlgmainwindow_get_ptr(void);
+EXTERNC void gui_wdgdlgmainwindow_coords(int *x, int *y, BYTE border);
+EXTERNC void gui_wdgdlgmainwindow_before_set_res(void);
 
 EXTERNC void *gui_wdgrewind_get_ptr(void);
 EXTERNC void gui_wdgrewind_play(void);

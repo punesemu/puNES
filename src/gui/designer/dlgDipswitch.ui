@@ -6,17 +6,14 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>338</width>
-    <height>75</height>
+    <width>186</width>
+    <height>52</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Dip Switches</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
-   <property name="sizeConstraint">
-    <enum>QLayout::SetFixedSize</enum>
-   </property>
    <item>
     <layout class="QFormLayout" name="formLayout_Dipswitch"/>
    </item>

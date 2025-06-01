@@ -79,7 +79,7 @@ bool wdgScreen::eventFilter(QObject *obj, QEvent *event) {
 	} else if (event->type() == QEvent::ShortcutOverride) {
 		keyEvent = ((QKeyEvent *)event);
 
-		if (rwnd.active || !mainwin->is_rwnd_shortcut_or_not_shcut(keyEvent)) {
+		if (rwnd.active || !mainwin->wd->is_rwnd_shortcut_or_not_shcut(keyEvent)) {
 			return (true);
 		}
 
@@ -101,7 +101,7 @@ bool wdgScreen::eventFilter(QObject *obj, QEvent *event) {
 	} else if (event->type() == QEvent::KeyRelease) {
 		keyEvent = ((QKeyEvent *)event);
 
-		if (rwnd.active || !mainwin->is_rwnd_shortcut_or_not_shcut(keyEvent)) {
+		if (rwnd.active || !mainwin->wd->is_rwnd_shortcut_or_not_shcut(keyEvent)) {
 			return (true);
 		}
 
@@ -131,18 +131,18 @@ bool wdgScreen::eventFilter(QObject *obj, QEvent *event) {
 	// gestione della menubar durante il fullscreen
 	if ((cfg->fullscreen == FULLSCR) && (gfx.type_of_fscreen_in_use == FULLSCR)) {
 		if (event->type() == QEvent::MouseMove) {
-			if (mapFromGlobal(QCursor::pos()).y() <= mainwin->menuBar()->height()) {
-				if (mainwin->menuBar()->isHidden()) {
-					emit mainwin->et_toggle_menubar_from_mouse();
+			if (mapFromGlobal(QCursor::pos()).y() <= mainwin->wd->menuBar()->height()) {
+				if (mainwin->wd->menuBar()->isHidden()) {
+					emit mainwin->wd->et_toggle_menubar_from_mouse();
 				}
 			} else {
-				if (mainwin->menuBar()->isVisible() && (mainwin->tmm != (BYTE)mainwin->TOGGLE_MENUBAR_FROM_SHORTCUT)) {
-					emit mainwin->et_toggle_menubar_from_mouse();
+				if (mainwin->wd->menuBar()->isVisible() && (mainwin->wd->tmm != (BYTE)mainwin->wd->TOGGLE_MENUBAR_FROM_SHORTCUT)) {
+					emit mainwin->wd->et_toggle_menubar_from_mouse();
 				}
 			}
 		} else if (event->type() == QEvent::Enter) {
-			if (mainwin->menuBar()->isVisible() && (mainwin->tmm != (BYTE)mainwin->TOGGLE_MENUBAR_FROM_SHORTCUT)) {
-				emit mainwin->et_toggle_menubar_from_mouse();
+			if (mainwin->wd->menuBar()->isVisible() && (mainwin->wd->tmm != (BYTE)mainwin->wd->TOGGLE_MENUBAR_FROM_SHORTCUT)) {
+				emit mainwin->wd->et_toggle_menubar_from_mouse();
 			}
 		}
 	}
@@ -223,7 +223,7 @@ void wdgScreen::dropEvent(QDropEvent *event) {
 			patcher.file = emu_ustrncpy(patcher.file, patch);
 		}
 
-		mainwin->change_rom(rom);
+		mainwin->wd->change_rom(rom);
 		if (is_rom) {
 			ustrncpy(gui.last_open_path, uQStringCD(fileinfo.absolutePath()), usizeof(gui.last_open_path) - 1);
 		}
@@ -316,16 +316,16 @@ void wdgScreen::s_paste_event(void) {
 	}
 }
 void wdgScreen::s_capture_input_event(void) {
-	mainwin->qaction_shcut.toggle_capture_input->trigger();
+	mainwin->wd->qaction_shcut.toggle_capture_input->trigger();
 }
 void wdgScreen::s_context_menu(const QPoint &pos) {
 	QPoint global_pos = mapToGlobal(pos);
 	QMenu menu(this);
 
 	menu.addSection(tr("Files"));
-	menu_copy(mainwin->menu_Recent_Roms, &menu, true);
+	menu_copy(mainwin->wd->menu_Recent_Roms, &menu, true);
 	menu.addSection(tr("NES"));
-	menu_copy(mainwin->menu_NES, &menu, false);
+	menu_copy(mainwin->wd->menu_NES, &menu, false);
 	if (nes_keyboard.enabled) {
 		QString *sc = (QString *)settings_inp_rd_sc(SET_INP_SC_TOGGLE_CAPTURE_INPUT, KEYBOARD);
 		const QClipboard *clipboard = QApplication::clipboard();

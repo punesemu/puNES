@@ -83,7 +83,6 @@ class dlgStdPad : public QWidget, public Ui::dlgStdPad {
 	protected:
 		bool eventFilter(QObject *obj, QEvent *event) override;
 		void changeEvent(QEvent *event) override;
-		void showEvent(QShowEvent *event) override;
 		void closeEvent(QCloseEvent *event) override;
 
 	private:

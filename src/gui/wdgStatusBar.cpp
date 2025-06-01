@@ -181,9 +181,9 @@ void recStatusBar::mousePressEvent(QMouseEvent *event) {
 	if (event->button() == Qt::LeftButton) {
 #if defined (WITH_FFMPEG)
 		if (desc->text() == tr("Audio")) {
-			mainwin->action_Start_Stop_Audio_recording->trigger();
+			mainwin->wd->action_Start_Stop_Audio_recording->trigger();
 		} else {
-			mainwin->action_Start_Stop_Video_recording->trigger();
+			mainwin->wd->action_Start_Stop_Video_recording->trigger();
 		}
 #else
 		mainwin->action_Start_Stop_Audio_recording->trigger();
@@ -239,9 +239,9 @@ void recStatusBar::s_context_menu(const QPoint &pos) {
 	QPoint global_pos = mapToGlobal(pos);
 	QMenu menu;
 
-	menu.addAction(mainwin->action_Start_Stop_Audio_recording);
+	menu.addAction(mainwin->wd->action_Start_Stop_Audio_recording);
 #if defined (WITH_FFMPEG)
-	menu.addAction(mainwin->action_Start_Stop_Video_recording);
+	menu.addAction(mainwin->wd->action_Start_Stop_Video_recording);
 #endif
 	menu.exec(global_pos);
 }
@@ -287,8 +287,8 @@ void nesKeyboardStatusBar::update_tooltip(void) {
 	if (isEnabled()) {
 		tooltip += "<body style=\"margin-up:0px; margin-down:0px; margin-left:0px; vertical-align:middle;\">";
 		tooltip += "<img src=':/pics/pics/mouse_left_button.png'>";
-		if (!mainwin->shortcut[SET_INP_SC_TOGGLE_CAPTURE_INPUT]->key().toString().isEmpty()) {
-			tooltip += " / [" + mainwin->shortcut[SET_INP_SC_TOGGLE_CAPTURE_INPUT]->key().toString() + "]";
+		if (!mainwin->wd->shortcut[SET_INP_SC_TOGGLE_CAPTURE_INPUT]->key().toString().isEmpty()) {
+			tooltip += " / [" + mainwin->wd->shortcut[SET_INP_SC_TOGGLE_CAPTURE_INPUT]->key().toString() + "]";
 		}
 		tooltip += " : ";
 		tooltip += tr("Capture/Release the Input");
@@ -301,8 +301,8 @@ void nesKeyboardStatusBar::update_tooltip(void) {
 		tooltip += "</body>";
 		tooltip += "<br>";
 		tooltip += "<img src=':/pics/pics/mouse_right_button.png'> ";
-		if (!mainwin->shortcut[SET_INP_SC_TOGGLE_NES_KEYBOARD]->key().toString().isEmpty()) {
-			tooltip += " / [" + mainwin->shortcut[SET_INP_SC_TOGGLE_NES_KEYBOARD]->key().toString() + "]";
+		if (!mainwin->wd->shortcut[SET_INP_SC_TOGGLE_NES_KEYBOARD]->key().toString().isEmpty()) {
+			tooltip += " / [" + mainwin->wd->shortcut[SET_INP_SC_TOGGLE_NES_KEYBOARD]->key().toString() + "]";
 		}
 		tooltip += " : ";
 		tooltip += tr("Toggle Virtual Keyboard");
@@ -320,9 +320,9 @@ void nesKeyboardStatusBar::icon_pixmap(QIcon::Mode mode) const {
 void nesKeyboardStatusBar::s_clicked(int button) {
 	if (nes_keyboard.enabled) {
 		if (button == Qt::LeftButton) {
-			mainwin->qaction_shcut.toggle_capture_input->trigger();
+			mainwin->wd->qaction_shcut.toggle_capture_input->trigger();
 		} else if (button == Qt::RightButton) {
-			mainwin->action_Virtual_Keyboard->trigger();
+			mainwin->wd->action_Virtual_Keyboard->trigger();
 		}
 	}
 }

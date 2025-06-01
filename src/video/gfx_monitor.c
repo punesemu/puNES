@@ -144,7 +144,7 @@ void gfx_monitor_enum_monitors(void) {
 	for (a = 0; (a < 5) && (monitor.active == -1); a++) {
 		int b;
 
-		gui_mainwindow_coords(&emu_x, &emu_y, a);
+		gui_wdgdlgmainwindow_coords(&emu_x, &emu_y, a);
 
 		for (b = 0; b < monitor.nmonitor; b++) {
 			_monitor_info *mi = &monitor.monitors[b];
@@ -265,7 +265,7 @@ BYTE gfx_monitor_set_res(int w, int h, BYTE adaptive_rrate, BYTE change_rom_mode
 			mi->desc, mode_info_new->w, mode_info_new->h, mode_info_new->rrate);
 
 		if (!change_rom_mode) {
-			gui_mainwindow_before_set_res();
+			gui_wdgdlgmainwindow_before_set_res();
 		}
 		gui_monitor_set_res((void *)mi, (void *)mode_info_new);
 

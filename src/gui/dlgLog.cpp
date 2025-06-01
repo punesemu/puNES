@@ -202,7 +202,10 @@ dlgLog::dlgLog(QWidget *parent) : QWidget(parent) {
 		plainTextEdit_Log->setPalette(p);
 	}
 }
-dlgLog::~dlgLog() = default;
+dlgLog::~dlgLog() {
+	textedit_thread.quit();
+	textedit_thread.wait();
+};
 
 void dlgLog::changeEvent(QEvent *event) {
 	if (event->type() == QEvent::LanguageChange) {

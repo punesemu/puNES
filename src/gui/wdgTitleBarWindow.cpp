@@ -20,11 +20,12 @@
 // https://github.com/Nintersoft/QCustomWindow
 
 #include <QtGui/QWindow>
-#include <QtWidgets/QStyleOption>
+#include <QtCore/QTimer>
 #include <QtGui/QMouseEvent>
 #include <QtGui/QPainter>
 #include <QtGui/QPainterPath>
-#include <QtCore/QTimer>
+#include <QtGui/QScreen>
+#include <QtWidgets/QStyleOption>
 #include "wdgTitleBarWindow.hpp"
 #include "mainWindow.hpp"
 #include "gui.h"
@@ -68,6 +69,13 @@ void hoverWatcher::paintEvent(QPaintEvent *event) {
 	opt.initFrom(this);
 	style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
 	QWidget::paintEvent(event);
+}
+
+QSize hoverWatcher::sizeHint(void) const {
+	return (QSize(0, 0));
+}
+QSize hoverWatcher::minimumSizeHint(void) const {
+	return (sizeHint());
 }
 
 // ----------------------------------------------------------------------------------------------
@@ -139,7 +147,7 @@ void wdgTitleBar::mouseDoubleClickEvent(QMouseEvent *event) {
 	QWidget::mouseDoubleClickEvent(event);
 }
 
-void wdgTitleBar::stylesheet_update(void) {
+void wdgTitleBar::stylesheet_update(void) const {
 	if (theme::is_dark_theme()) {
 		pushButton_fullscreen->setIcon(QIcon(":/icon/icons/fullscreen_white.svgz"));
 		pushButton_minimize->setIcon(QIcon(":/icon/icons/minimize_white.svgz"));
@@ -152,7 +160,7 @@ void wdgTitleBar::stylesheet_update(void) {
 	set_maximized_button_icon();
 }
 
-void wdgTitleBar::set_maximized_button_icon(void) {
+void wdgTitleBar::set_maximized_button_icon(void) const {
 	if (theme::is_dark_theme()) {
 		pushButton_maximize->setIcon(QIcon(is_maximized
 			? ":/icon/icons/maximize_minimize_white.svgz"
@@ -163,14 +171,14 @@ void wdgTitleBar::set_maximized_button_icon(void) {
 			: ":/icon/icons/maximize_black.svgz"));
 	}
 }
-void wdgTitleBar::set_buttons(barButtons buttons) {
+void wdgTitleBar::set_buttons(const barButtons buttons) {
 	usedButtons = buttons;
 	pushButton_fullscreen->setVisible(buttons & barButton::Fullscreen);
 	pushButton_minimize->setVisible(buttons & barButton::Minimize);
 	pushButton_maximize->setVisible(buttons & barButton::Maximize);
 	pushButton_close->setVisible(buttons & barButton::Close);
 }
-void wdgTitleBar::set_button_text(barButton button, const QString &text) {
+void wdgTitleBar::set_button_text(const barButton button, const QString &text) const {
 	switch (button) {
 		case barButton::Fullscreen:
 			pushButton_fullscreen->setText(text);
@@ -187,7 +195,7 @@ void wdgTitleBar::set_button_text(barButton button, const QString &text) {
 			break;
 	}
 }
-void wdgTitleBar::set_button_enabled(barButton button, bool enabled) {
+void wdgTitleBar::set_button_enabled(const barButton button, const bool enabled) const {
 	switch (button) {
 		case barButton::Fullscreen:
 			pushButton_fullscreen->setEnabled(enabled);
@@ -205,7 +213,7 @@ void wdgTitleBar::set_button_enabled(barButton button, bool enabled) {
 	}
 }
 
-void wdgTitleBar::s_window_icon_changed(const QIcon &icon) {
+void wdgTitleBar::s_window_icon_changed(const QIcon &icon) const {
 	label_icon->setPixmap(icon.pixmap(label_icon->size()));
 	label_icon->setVisible(!icon.isNull());
 }
@@ -303,6 +311,7 @@ wdgTitleBarWindow::wdgTitleBarWindow(QWidget *parent, Qt::WindowType window_type
 	verticalLayout->addWidget(private_hover_watcher);
 	private_layout = new QVBoxLayout(private_hover_watcher);
 	private_layout->setContentsMargins(0, 0, 0, 0);
+	private_layout->setSizeConstraint(QLayout::SetDefaultConstraint);
 	private_layout->setSpacing(4);
 	private_layout->addWidget(title_bar);
 	private_layout->addWidget(private_main_window);
@@ -439,7 +448,7 @@ void wdgTitleBarWindow::customMouseMoveEvent(QMouseEvent *event) {
 	setGeometry(QRect(tl, br));
 }
 
-void wdgTitleBarWindow::init_geom_variable(_last_geometry lg) {
+void wdgTitleBarWindow::init_geom_variable(const _last_geometry lg) {
 	geom.setRect(lg.x, lg.y, lg.w, lg.h);
 }
 void wdgTitleBarWindow::set_geometry(void) {
@@ -455,6 +464,33 @@ void wdgTitleBarWindow::set_geometry(void) {
 		setGeometry(geom);
 	}
 }
+void wdgTitleBarWindow::is_in_desktop(int *x, int *y) {
+	QList<QScreen *> screens = QGuiApplication::screens();
+	int i, x_min = 0, x_max = 0, y_min = 0, y_max = 0;
+
+	for (i = 0; i < screens.count(); i++) {
+		QRect g = screens[i]->availableGeometry();
+
+		if (g.x() < x_min) {
+			x_min = g.x();
+		}
+		if ((g.x() + g.width()) > x_max) {
+			x_max = g.x() + g.width();
+		}
+		if (g.y() < y_min) {
+			y_min = g.y();
+		}
+		if ((g.y() + g.height()) > y_max) {
+			y_max = g.y() + g.height();
+		}
+	}
+	if (((*x) == 0) || ((*x) < x_min) || ((*x) > x_max)) {
+		(*x) = 80;
+	}
+	if (((*y) == 0) || ((*y) < y_min) || ((*y) > y_max)) {
+		(*y) = 80;
+	}
+}
 dialogExitCode wdgTitleBarWindow::exec(void) {
 	QEventLoop loop;
 
@@ -468,7 +504,7 @@ dialogExitCode wdgTitleBarWindow::exec(void) {
 	return dialog_exit_code;
 }
 
-void wdgTitleBarWindow::set_border_color(QColor color) {
+void wdgTitleBarWindow::set_border_color(const QColor color) {
 	border_color = color;
 }
 void wdgTitleBarWindow::add_widget(QWidget *widget) {
@@ -477,12 +513,10 @@ void wdgTitleBarWindow::add_widget(QWidget *widget) {
 
 	verticalLayout->insertWidget(verticalLayout->count() - 1, widget);
 	resize(new_size);
-	// mi serve per la corretta gestione del redefine_cursor();
-	if (hasMouseTracking()) {
-		widget->setMouseTracking(true);
-	}
+	private_widget = widget;
+	update_track_mouse();
 }
-void wdgTitleBarWindow::set_buttons(barButtons buttons) {
+void wdgTitleBarWindow::set_buttons(const barButtons buttons) const {
 	if (title_bar == nullptr) {
 		Qt::WindowFlags flags = windowFlags();
 
@@ -505,21 +539,29 @@ void wdgTitleBarWindow::set_buttons(barButtons buttons) {
 		title_bar->set_buttons(buttons);
 	}
 }
-void wdgTitleBarWindow::set_force_custom_move(bool force) {
+void wdgTitleBarWindow::set_force_custom_move(const bool force) {
 	force_custom_move = force;
 }
-void wdgTitleBarWindow::set_force_custom_resize(bool force) {
+void wdgTitleBarWindow::set_force_custom_resize(const bool force) {
 	force_custom_resize = force;
 }
-void wdgTitleBarWindow::set_permit_resize(bool permit) {
-	disabled_resize = !permit;
+void wdgTitleBarWindow::set_permit_resize(const bool mode) {
+	disabled_resize = !mode;
 	if (disabled_resize && (title_bar == nullptr)) {
 		layout()->setSizeConstraint(QLayout::SetFixedSize);
 	}
 	update_size_grip_visibility();
+	// mi serve per la corretta gestione del redefine_cursor();
+	update_track_mouse();
 }
 
-void wdgTitleBarWindow::update_size_grip_visibility(void) {
+void wdgTitleBarWindow::update_track_mouse(void) const {
+	// mi serve per la corretta gestione del redefine_cursor();
+	if (private_widget) {
+		private_widget->setMouseTracking(hasMouseTracking() & !disabled_resize);
+	}
+}
+void wdgTitleBarWindow::update_size_grip_visibility(void) const {
 	if (size_grip) {
 		size_grip->setVisible(!disabled_resize);
 	}
@@ -537,10 +579,10 @@ void wdgTitleBarWindow::update_size_grip_visibility(void) {
 		status_bar->setVisible(other_widgets || !disabled_resize);
 	}
 }
-QPainterPath wdgTitleBarWindow::path_rounded(void) {
-	QRectF r = rect();
+QPainterPath wdgTitleBarWindow::path_rounded(void) const {
+	const QRectF r = rect();
+	constexpr qreal radius = 4;
 	QPainterPath path;
-	qreal radius = 4;
 
 	path.moveTo(r.left() + radius, r.top());
 	path.arcTo(r.left(), r.top(), radius * 2, radius * 2, 90, 90);
@@ -552,21 +594,22 @@ QPainterPath wdgTitleBarWindow::path_rounded(void) {
 	return (path);
 }
 void wdgTitleBarWindow::apply_rounded_mask(void) {
-	QPainterPath path = path_rounded();
-	QRegion region(path.toFillPolygon().toPolygon());
+	const QPainterPath path = path_rounded();
+	const QRegion region(path.toFillPolygon().toPolygon());
 
 	setMask(region);
 }
-bool wdgTitleBarWindow::is_moving(void) {
+bool wdgTitleBarWindow::is_moving(void) const {
 	return (operation_type & (OperationType::CUSTOM_MOVE | OperationType::SYSTEM_MOVE));
 }
-bool wdgTitleBarWindow::is_resizing(void) {
+bool wdgTitleBarWindow::is_resizing(void) const {
 	return (operation_type & (OperationType::CUSTOM_RESIZE | OperationType::SYSTEM_RESIZE));
 }
 void wdgTitleBarWindow::redefine_cursor(const QPoint &pos) {
 	if (!disabled_resize) {
-		int x = pos.x() - this->x(), y = pos.y() - this->y();
-		int bottom = height() - resize_threshold, right = width() - resize_threshold;
+		const int x = pos.x() - this->x(), y = pos.y() - this->y();
+		const int bottom = height() - resize_threshold;
+		const int right = width() - resize_threshold;
 		Qt::Edges new_edges = {};
 
 		if (x < resize_threshold) {
@@ -605,14 +648,14 @@ void wdgTitleBarWindow::redefine_cursor(const QPoint &pos) {
 		edges = new_edges;
 	}
 }
-bool wdgTitleBarWindow::start_system_move(void) {
+bool wdgTitleBarWindow::start_system_move(void) const {
 #if QT_VERSION >= QT_VERSION_CHECK(5, 15, 0)
 	return (windowHandle()->startSystemMove());
 #else
 	return false;
 #endif
 }
-bool wdgTitleBarWindow::start_system_resize(void) {
+bool wdgTitleBarWindow::start_system_resize(void) const {
 #if QT_VERSION >= QT_VERSION_CHECK(5, 15, 0)
 	return (windowHandle()->startSystemResize(edges));
 #else

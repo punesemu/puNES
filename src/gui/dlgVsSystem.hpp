@@ -34,7 +34,6 @@ class dlgVsSystem : public QWidget, public Ui::dlgVsSystem {
 	protected:
 		bool eventFilter(QObject *obj, QEvent *event) override;
 		void changeEvent(QEvent *event) override;
-		void showEvent(QShowEvent *event) override;
 
 	public:
 		void update_dialog(void);
