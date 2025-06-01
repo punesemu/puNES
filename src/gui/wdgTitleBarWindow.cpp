@@ -450,6 +450,7 @@ void wdgTitleBarWindow::customMouseMoveEvent(QMouseEvent *event) {
 
 void wdgTitleBarWindow::init_geom_variable(const _last_geometry lg) {
 	geom.setRect(lg.x, lg.y, lg.w, lg.h);
+	set_geometry();
 }
 void wdgTitleBarWindow::set_geometry(void) {
 	if (geom == QRect(0, 0, 0, 0)) {

@@ -90,7 +90,6 @@ wdgDlgMainWindow::wdgDlgMainWindow(QWidget *parent) : wdgTitleBarDialog(parent) 
 }
 wdgDlgMainWindow::~wdgDlgMainWindow() = default;
 
-
 void wdgDlgMainWindow::closeEvent(QCloseEvent *event) {
 	dlgsettings->close();
 
@@ -131,6 +130,7 @@ void wdgDlgMainWindow::geom_to_cfg(const QRect &geom, _last_geometry *lg) {
 	lg->w = geom.width();
 	lg->h = geom.height();
 }
+
 // ----------------------------------------------------------------------------------------------
 
 mainWindow::mainWindow() : QMainWindow() {
