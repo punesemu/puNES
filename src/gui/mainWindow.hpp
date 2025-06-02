@@ -229,7 +229,6 @@ class mainWindow : public QMainWindow, public Ui::mainWindow {
 
 	private:
 		void retranslateUi(mainWindow *mainWindow);
-		void stylesheet_update(void);
 
 	public:
 		void update_window(void);
@@ -384,8 +383,12 @@ class wdgDlgMainWindow final : public wdgTitleBarDialog {
 		bool nativeEvent(const QByteArray &eventType, void *message, long *result);
 #endif
 		bool eventFilter(QObject *obj, QEvent *event) override;
+		void changeEvent(QEvent *event) override;
 		void closeEvent(QCloseEvent *event) override;
 		void resizeEvent(QResizeEvent *event) override;
+
+	private:
+		void stylesheet_update(void);
 
 	public:
 		QScreen *win_handle_screen(void) const;
