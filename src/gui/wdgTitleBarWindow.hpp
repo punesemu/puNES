@@ -176,6 +176,7 @@ class wdgTitleBarWindow : public QWidget, public Ui::wdgTitleBarWindow {
 		virtual void customMouseMoveEvent(QMouseEvent* event);
 
 	public:
+		void set_gui_visible(bool mode) const;
 		void init_geom_variable(_last_geometry lg);
 		void set_geometry(void);
 		static void is_in_desktop(int *x, int *y);

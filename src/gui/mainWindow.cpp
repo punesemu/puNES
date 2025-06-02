@@ -76,6 +76,13 @@ enum state_save_enum { SAVE, LOAD };
 // ----------------------------------------------------------------------------------------------
 
 wdgDlgMainWindow::wdgDlgMainWindow(QWidget *parent) : wdgTitleBarDialog(parent) {
+	fullscreen_resize = false;
+	setup_in_out_fullscreen = false;
+	org_geom.setX(100);
+	org_geom.setY(100);
+	fs_geom.setX(0);
+	fs_geom.setY(0);
+
 	setAttribute(Qt::WA_DeleteOnClose);
 	wd = new mainWindow();
 	wd->setParent(this);
@@ -87,9 +94,58 @@ wdgDlgMainWindow::wdgDlgMainWindow(QWidget *parent) : wdgTitleBarDialog(parent) 
 	add_widget(wd);
 	is_in_desktop(&cfg->lg.x, &cfg->lg.y);
 	setGeometry(cfg->lg.x, cfg->lg.y, 0, 0);
+
+	connect(wd, SIGNAL(et_set_fullscreen(void)), this, SLOT(s_set_fullscreen(void)));
+
+	installEventFilter(this);
 }
 wdgDlgMainWindow::~wdgDlgMainWindow() = default;
 
+#if defined (_WIN32)
+bool wdgDlgMainWindow::nativeEvent(const QByteArray &eventType, void *message, long *result) {
+	MSG *msg = (MSG *)message;
+
+	switch (msg->message) {
+		case WM_ENTERSIZEMOVE:
+			break;
+		case WM_EXITSIZEMOVE: {
+			QTimer::singleShot(10, this, [this]() {
+				HMONITOR monitor = MonitorFromWindow((HWND)winId(), MONITOR_DEFAULTTOPRIMARY);
+
+				gfx_control_changed_adapter(&monitor);
+			});
+			break;
+		}
+		case WM_SYSCOMMAND: {
+			switch (msg->wParam & 0xFFF0) {
+				// disabilito screensaver e spegnimento del monitor
+				case SC_MONITORPOWER:
+				case SC_SCREENSAVE:
+					SetThreadExecutionState(ES_DISPLAY_REQUIRED | ES_SYSTEM_REQUIRED);
+					(*result) = 0;
+					return (true);
+			}
+			break;
+		}
+		default:
+			break;
+	}
+	return QWidget::nativeEvent(eventType, message, result);
+}
+#endif
+bool wdgDlgMainWindow::eventFilter(QObject *obj, QEvent *event) {
+	switch (event->type()) {
+		case QEvent::WindowActivate:
+		case QEvent::WindowDeactivate:
+			if (!setup_in_out_fullscreen) {
+				gui_control_pause_bck(event->type());
+			}
+			break;
+		default:
+			break;
+	}
+	return (wdgTitleBarDialog::eventFilter(obj, event));
+}
 void wdgDlgMainWindow::closeEvent(QCloseEvent *event) {
 	dlgsettings->close();
 
@@ -113,6 +169,24 @@ void wdgDlgMainWindow::closeEvent(QCloseEvent *event) {
 
 	wdgTitleBarDialog::closeEvent(event);
 }
+void wdgDlgMainWindow::resizeEvent(QResizeEvent *event) {
+	if (gui.start) {
+		if (fullscreen_resize && (event->size().width() >= SCR_COLUMNS)) {
+			fullscreen_resize = false;
+			if (gfx.type_of_fscreen_in_use == FULLSCR_IN_WINDOW) {
+				fs_geom = QRect(0, 0, event->size().width(), event->size().height());
+				update_gfx_monitor_dimension();
+#if !defined (_WIN32)
+			} else if (gfx.type_of_fscreen_in_use == FULLSCR) {
+				gfx.w[FSCR_RESIZE] = event->size().width();
+				gfx.h[FSCR_RESIZE] = event->size().height();
+#endif
+			}
+			gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, FULLSCR, NO_CHANGE, FALSE, FALSE);
+		}
+	}
+	wdgTitleBarDialog::resizeEvent(event);
+}
 
 QScreen *wdgDlgMainWindow::win_handle_screen(void) const {
 #if QT_VERSION < QT_VERSION_CHECK(5, 14, 0)
@@ -123,12 +197,266 @@ QScreen *wdgDlgMainWindow::win_handle_screen(void) const {
 
 	return (screen);
 }
+void wdgDlgMainWindow::update_gfx_monitor_dimension(void) {
+	if (gfx.type_of_fscreen_in_use == FULLSCR_IN_WINDOW) {
+		const bool toolbar_is_hidden = wd->toolbar->isHidden() || wd->toolbar->isFloating();
 
-void wdgDlgMainWindow::geom_to_cfg(const QRect &geom, _last_geometry *lg) {
-	lg->x = geom.x();
-	lg->y = geom.y();
-	lg->w = geom.width();
-	lg->h = geom.height();
+#if QT_VERSION == QT_VERSION_CHECK(5, 12, 8)
+		gfx.w[MONITOR] = fs_geom.width() - (frameGeometry().width() - geometry().width());
+		gfx.h[MONITOR] = fs_geom.height() - (frameGeometry().height() - geometry().height());
+#else
+		gfx.w[MONITOR] = fs_geom.width();
+		gfx.h[MONITOR] = fs_geom.height();
+#endif
+
+		if (wd->toolbar->orientation() == Qt::Vertical) {
+			gfx.w[MONITOR] -= (toolbar_is_hidden ? 0 : wd->toolbar->sizeHint().width());
+		} else {
+			gfx.h[MONITOR] -= (toolbar_is_hidden ? 0 : wd->toolbar->sizeHint().height());
+		}
+
+		gfx.h[MONITOR] -= (wd->menubar->isHidden() ? 0 : wd->menubar->sizeHint().height());
+		gfx.h[MONITOR] -= (wd->statusbar->isHidden() ? 0 : wd->statusbar->sizeHint().height());
+	} else if (gfx.type_of_fscreen_in_use == FULLSCR) {
+		fs_geom = mainwin->win_handle_screen()->geometry();
+
+		switch (mainwin->win_handle_screen()->orientation()) {
+			default:
+			case Qt::LandscapeOrientation:
+				gfx.screen_rotation = ROTATE_0;
+				break;
+			case Qt::InvertedPortraitOrientation:
+				gfx.screen_rotation = ROTATE_90;
+				break;
+			case Qt::InvertedLandscapeOrientation:
+				gfx.screen_rotation = ROTATE_180;
+				break;
+			case Qt::PortraitOrientation:
+				gfx.screen_rotation = ROTATE_270;
+				break;
+		}
+
+#if defined (FULLSCREEN_RESFREQ)
+		if (setup_in_out_fullscreen) {
+			int w, h, x, y;
+
+			if (gfx_monitor_mode_in_use_info(&x, &y, &w, &h, nullptr) == EXIT_OK) {
+				if ((gfx.screen_rotation == ROTATE_90) || (gfx.screen_rotation == ROTATE_270)) {
+					fs_geom = QRect(x, y, h, w);
+				} else {
+					fs_geom = QRect(x, y, w, h);
+				}
+			}
+		}
+#endif
+		gfx.w[MONITOR] = fs_geom.width();
+		gfx.h[MONITOR] = fs_geom.height();
+
+		{
+			const qreal dpr = mainwin->win_handle_screen()->devicePixelRatio();
+
+			gfx.w[MONITOR] = (SDBWORD)((qreal)gfx.w[MONITOR] / dpr);
+			gfx.h[MONITOR] = (SDBWORD)((qreal)gfx.h[MONITOR] / dpr);
+		}
+	}
+}
+void wdgDlgMainWindow::set_dialog_geom(QRect &new_geom) const {
+	const int frame_w = frameGeometry().width() - geometry().width();
+	const int frame_h = frameGeometry().height() - geometry().height();
+
+	if (new_geom.x() < frame_w) {
+		new_geom.setX(frame_w);
+	}
+	if (new_geom.y() < frame_h) {
+		new_geom.setY(frame_h);
+	}
+}
+
+void wdgDlgMainWindow::set_fullscreen(void) {
+#if defined (_WIN32)
+	static Qt::WindowFlags window_flags = windowFlags();
+#endif
+
+	if (gui.in_update) {
+		return;
+	}
+
+	if ((cfg->fullscreen == NO_FULLSCR) || (cfg->fullscreen == NO_CHANGE)) {
+#if defined (_WIN32)
+		window_flags = windowFlags();
+#endif
+		if (gfx.only_fullscreen_in_window || cfg->fullscreen_in_window) {
+			QRect fs_win_geom = win_handle_screen()->availableGeometry();
+#if defined (_WIN32)
+			// lo showMaximized sotto windows non considera la presenza della barra delle applicazioni
+			// cercando di impostare una dimensione falsata percio' ridimensiono la finestra manualmente.
+			bool desktop_resolution = false;
+#else
+			bool desktop_resolution = true;
+#endif
+
+			gfx.type_of_fscreen_in_use = FULLSCR_IN_WINDOW;
+			gfx.w[FSCR_RESIZE] = 0;
+			gfx.h[FSCR_RESIZE] = 0;
+#if defined (FULLSCREEN_RESFREQ)
+			if ((cfg->fullscreen_res_w >= 0) && (cfg->fullscreen_res_h >= 0) &&
+				((cfg->fullscreen_res_w != win_handle_screen()->availableGeometry().width()) ||
+				(cfg->fullscreen_res_h != win_handle_screen()->availableGeometry().height()))) {
+				fs_win_geom = QRect(org_geom.x(), org_geom.y(), cfg->fullscreen_res_w, cfg->fullscreen_res_h);
+				desktop_resolution = false;
+			}
+#endif
+			wd->reset_min_max_size();
+			if (desktop_resolution) {
+#if QT_VERSION == QT_VERSION_CHECK(5, 12, 8)
+				// con le QT 5.12.8 (Xubuntu 2004) lo showMaximized non funziona per un bug
+				// nelle Qt quindi utilizzo il vecchio metodo.
+				fs_geom = fs_win_geom;
+				update_gfx_monitor_dimension();
+				move(fs_geom.x() - (geometry().x() - x()), fs_geom.y() - (geometry().y() - y()));
+				show();
+				fullscreen_resize = false;
+				gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, FULLSCR, NO_CHANGE, FALSE, FALSE);
+#else
+				fullscreen_resize = true;
+				showMaximized();
+#endif
+			} else {
+				show();
+				fullscreen_resize = true;
+				setGeometry(fs_win_geom);
+			}
+		} else {
+			gfx.type_of_fscreen_in_use = FULLSCR;
+			update_gfx_monitor_dimension();
+			set_gui_visible(false);
+			wd->menubar->setVisible(false);
+			wd->toolbar->setVisible(false);
+			wd->statusbar->setVisible(false);
+			wd->reset_min_max_size();
+#if defined (_WIN32)
+			// when a window is using an OpenGL based surface and is appearing in full screen mode,
+			// problems can occur with other top-level windows which are part of the application. Due
+			// to limitations of the Windows DWM, compositing is not handled correctly for OpenGL based
+			// windows when going into full screen mode. As a result, other top-level windows are not
+			// placed on top of the full screen window when they are made visible. For example, menus
+			// may not appear correctly, or dialogs fail to show up.
+			// https://doc.qt.io/qt-5/windows-issues.html#fullscreen-opengl-based-windows
+			// https://bugreports.qt.io/browse/QTBUG-49258
+			// https://bugreports.qt.io/browse/QTBUG-47156
+			// come workaround incremento di 1 l'altezza del mainWindow e non utilizzo il
+			// showFullScreen ma lo simulo.
+
+			// sposto la finestra nell'angolo superiore del monitor
+			move(fs_geom.x() - (geometry().x() - x()), fs_geom.y() - (geometry().y() - y()));
+			setWindowFlags(Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);
+			showNormal();
+			gfx.w[FSCR_RESIZE] = 0;
+			gfx.h[FSCR_RESIZE] = 0;
+			fullscreen_resize = false;
+			gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, FULLSCR, NO_CHANGE, FALSE, FALSE);
+#else
+			move(fs_geom.x(), fs_geom.y());
+			show();
+			fullscreen_resize = true;
+			showFullScreen();
+#endif
+		}
+	} else {
+		if (gfx.type_of_fscreen_in_use == FULLSCR) {
+			wd->menubar->setVisible(wd->visibility.menubar);
+			wd->statusbar->setVisible(wd->visibility.toolbars);
+			wd->toolbar->setVisible(wd->visibility.toolbars);
+		}
+		gfx.type_of_fscreen_in_use = NO_FULLSCR;
+		wd->tmm = (BYTE)mainWindow::TOGGLE_MENUBAR_NONE;
+#if defined (_WIN32)
+		setWindowFlags(window_flags);
+#endif
+		gfx.w[FSCR_RESIZE] = 0;
+		gfx.h[FSCR_RESIZE] = 0;
+		fullscreen_resize = false;
+		set_gui_visible(true);
+		showNormal();
+		gfx_set_screen(gfx.scale_before_fscreen, NO_CHANGE, NO_CHANGE, NO_FULLSCR, NO_CHANGE, FALSE, FALSE);
+		setGeometry(org_geom.x(), org_geom.y(), geometry().width(), geometry().height());
+		// al rientro dal fullscreen a finestra devo eseguire un update() ritardato per ridisignare correttamente la GUI.
+		if (gfx.only_fullscreen_in_window) {
+			QTimer::singleShot(200, this, [this]() { update(); });
+		}
+	}
+
+	emu_thread_continue();
+
+	gui_external_control_windows_show();
+	wd->wscreen->activateWindow();
+	setup_in_out_fullscreen = false;
+}
+void wdgDlgMainWindow::geom_to_cfg(const QRect &save_geom, _last_geometry *lg) {
+	lg->x = save_geom.x();
+	lg->y = save_geom.y();
+	lg->w = save_geom.width();
+	lg->h = save_geom.height();
+}
+
+void wdgDlgMainWindow::s_set_fullscreen(void) {
+	BYTE delay = FALSE;
+
+	if (gui.in_update || setup_in_out_fullscreen) {
+		return;
+	}
+
+	// quando nascondo la finestra al momento dell'attivazione/disattivazione del
+	// fullscreen vengono eseguiti nell'ordine un
+	// QEvent::WindowActivate
+	// seguito da un
+	// QEvent::WindowDeactivate
+	// che lascia la finestra disattivata. In caso di "Pause when in background" attivo
+	// il gui_control_pause_bck non riprende l'emulazione pensando appunto di essere in background.
+	setup_in_out_fullscreen = true;
+
+	emu_thread_pause();
+
+	if ((cfg->fullscreen == NO_FULLSCR) || (cfg->fullscreen == NO_CHANGE)) {
+		gfx.scale_before_fscreen = cfg->scale;
+		org_geom = geometry();
+		wd->visibility.menubar = wd->menubar->isVisible();
+		wd->visibility.toolbars = wd->toolbar->isVisible();
+		if (!gfx.only_fullscreen_in_window) {
+			// muovo la finestra nell'angolo superiore del monitor, e' importante
+			// perche' in caso di cambio di risoluzione nell fullscreen, se posizionata
+			// nella parte destra del monitor potrebbe non essere visualizzata correttamente.
+			// E' importante che lo spostamento avvenga prima dell'hide().
+			if (!cfg->fullscreen_in_window) {
+				const QRect mgeom = mainwin->win_handle_screen()->geometry();
+
+				move(mgeom.x() - (geometry().x() - x()), mgeom.y() - (geometry().y() - y()));
+			}
+			hide();
+#if defined (FULLSCREEN_RESFREQ)
+			if (!cfg->fullscreen_in_window) {
+				delay = gfx_monitor_set_res(cfg->fullscreen_res_w, cfg->fullscreen_res_h, cfg->adaptive_rrate, FALSE);
+			}
+#endif
+		}
+#if defined (FULLSCREEN_RESFREQ)
+	} else {
+		// su Fedora 35 (Wayland, Gnome 41.5 e QT 5.15.2) il Fullscreen non funziona e
+		// quello a finestra funziona solo se non eseguo l'hide().
+		if (!gfx.only_fullscreen_in_window) {
+			hide();
+		}
+		if (gfx.type_of_fscreen_in_use == FULLSCR) {
+			delay = gfx_monitor_restore_res();
+		}
+#endif
+	}
+
+	if (delay) {
+		QTimer::singleShot(1000, this, [this]() { set_fullscreen(); });
+	} else {
+		set_fullscreen();
+	}
 }
 
 // ----------------------------------------------------------------------------------------------
@@ -141,23 +469,16 @@ mainWindow::mainWindow() : QMainWindow() {
 	update_menu_recent_roms();
 	update_menu_recent_disks();
 
-	org_geom.setX(100);
-	org_geom.setY(100);
-	fs_geom.setX(0);
-	fs_geom.setY(0);
-
 	wscreen = new wdgScreen(this);
 	statusbar = new wdgStatusBar(this);
 	toolbar = new wdgToolBar(this);
 	translator = new QTranslator();
 	qtTranslator = new QTranslator();
 	shcjoy.timer = new QTimer(this);
-	setup_in_out_fullscreen = false;
-	fullscreen_resize = false;
 	visibility.menubar = true;
 	visibility.toolbars = true;
 	tmm = (BYTE)TOGGLE_MENUBAR_NONE;
-	nsf_author_note.dlg = NULL;
+	nsf_author_note.dlg = nullptr;
 
 	{
 		QHBoxLayout *layout = new QHBoxLayout(central_widget);
@@ -275,8 +596,6 @@ mainWindow::mainWindow() : QMainWindow() {
 	action_Current_state_to_puNES_image->setVisible(false);
 #endif
 
-	installEventFilter(this);
-
 	{
 		const bool visibile = !info.start_with_hidden_gui;
 
@@ -293,51 +612,6 @@ mainWindow::mainWindow() : QMainWindow() {
 }
 mainWindow::~mainWindow() = default;
 
-#if defined (_WIN32)
-bool mainWindow::nativeEvent(const QByteArray &eventType, void *message, long *result) {
-	MSG *msg = (MSG *)message;
-
-	switch (msg->message) {
-		case WM_ENTERSIZEMOVE:
-			break;
-		case WM_EXITSIZEMOVE: {
-			QTimer::singleShot(10, this, [this]() {
-				HMONITOR monitor = MonitorFromWindow((HWND)winId(), MONITOR_DEFAULTTOPRIMARY);
-
-				gfx_control_changed_adapter(&monitor);
-			});
-			break;
-		}
-		case WM_SYSCOMMAND: {
-			switch (msg->wParam & 0xFFF0) {
-				// disabilito screensaver e spegnimento del monitor
-				case SC_MONITORPOWER:
-				case SC_SCREENSAVE:
-					SetThreadExecutionState(ES_DISPLAY_REQUIRED | ES_SYSTEM_REQUIRED);
-					(*result) = 0;
-					return (true);
-			}
-			break;
-		}
-		default:
-			break;
-	}
-	return QWidget::nativeEvent(eventType, message, result);
-}
-#endif
-bool mainWindow::eventFilter(QObject *obj, QEvent *event) {
-	switch (event->type()) {
-		case QEvent::WindowActivate:
-		case QEvent::WindowDeactivate:
-			if (!setup_in_out_fullscreen) {
-				gui_control_pause_bck(event->type());
-			}
-			break;
-		default:
-			break;
-	}
-	return (QObject::eventFilter(obj, event));
-}
 void mainWindow::changeEvent(QEvent *event) {
 	if (event->type() == QEvent::LanguageChange) {
 		retranslateUi(this);
@@ -346,24 +620,6 @@ void mainWindow::changeEvent(QEvent *event) {
 	} else {
 		QMainWindow::changeEvent(event);
 	}
-}
-void mainWindow::resizeEvent(QResizeEvent *event) {
-	if (gui.start) {
-		if (fullscreen_resize && (event->size().width() >= SCR_COLUMNS)) {
-			fullscreen_resize = false;
-			if (gfx.type_of_fscreen_in_use == FULLSCR_IN_WINDOW) {
-				fs_geom = QRect(0, 0, event->size().width(), event->size().height());
-				update_gfx_monitor_dimension();
-#if !defined (_WIN32)
-			} else if (gfx.type_of_fscreen_in_use == FULLSCR) {
-				gfx.w[FSCR_RESIZE] = event->size().width();
-				gfx.h[FSCR_RESIZE] = event->size().height();
-#endif
-			}
-			gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, FULLSCR, NO_CHANGE, FALSE, FALSE);
-		}
-	}
-	QMainWindow::resizeEvent(event);
 }
 
 void mainWindow::retranslateUi(mainWindow *mainWindow) {
@@ -398,7 +654,7 @@ void mainWindow::update_window(void) {
 	toolbar->update_toolbar();
 	statusbar->update_statusbar();
 }
-void mainWindow::update_recording_widgets(void) {
+void mainWindow::update_recording_widgets(void) const {
 #if defined (WITH_FFMPEG)
 	QIcon ia = QIcon(":/icon/icons/nsf_file.svgz"), iv = QIcon(":/icon/icons/film.svgz");
 	QString sa = tr("Start &AUDIO recording"), sv = tr("Start &VIDEO recording");
@@ -459,8 +715,9 @@ void mainWindow::update_recording_widgets(void) {
 	action_Start_Stop_Video_recording->setVisible(false);
 #endif
 }
-void mainWindow::set_language(int lang) {
-	QString lng = "en", file = "en_EN", dir = ":/tr/translations";
+void mainWindow::set_language(const int lang) const {
+	QString lng = "en", file = "en_EN";
+	const QString dir = ":/tr/translations";
 
 	if ((lang == cfg->language) && gui.start) {
 		return;
@@ -530,7 +787,7 @@ void mainWindow::set_language(int lang) {
 			break;
 	}
 
-	QLocale locale = QLocale(lng);
+	const QLocale locale = QLocale(lng);
 	QLocale::setDefault(locale);
 
 	if (qtTranslator->load("qt_" + lng, dir)) {
@@ -615,7 +872,7 @@ void mainWindow::make_reset(int type) {
 	emu_thread_continue();
 }
 void mainWindow::change_rom(const uTCHAR *rom) {
-	bool menubar_is_visible = (cfg->fullscreen == FULLSCR) && (gfx.type_of_fscreen_in_use == FULLSCR) && menubar->isVisible();
+	const bool menubar_is_visible = (cfg->fullscreen == FULLSCR) && (gfx.type_of_fscreen_in_use == FULLSCR) && menubar->isVisible();
 
 	if (info.turn_off) {
 		s_turn_on_off();
@@ -642,7 +899,7 @@ void mainWindow::change_disk(const QString disk) {
 		update_window();
 	};
 }
-void mainWindow::shortcuts(void) {
+void mainWindow::shortcuts(void) const {
 	// se non voglio che gli shortcuts funzionino durante il fullscreen, basta
 	// utilizzare lo shortcut associato al QAction. In questo modo quando nascondero'
 	// la barra del menu, automaticamente questi saranno disabilitati.
@@ -720,7 +977,7 @@ void mainWindow::shortcuts(void) {
 		statusbar->update_statusbar();
 	}
 }
-bool mainWindow::is_rwnd_shortcut_or_not_shcut(const QKeyEvent *event) {
+bool mainWindow::is_rwnd_shortcut_or_not_shcut(const QKeyEvent *event) const {
 	int shcut = is_shortcut(event);
 
 	if ((shcut >= 0) && ((shcut < SET_INP_SC_RWND_STEP_BACKWARD) || (shcut > SET_INP_SC_RWND_PAUSE))) {
@@ -729,73 +986,10 @@ bool mainWindow::is_rwnd_shortcut_or_not_shcut(const QKeyEvent *event) {
 
 	return (true);
 }
-void mainWindow::update_gfx_monitor_dimension(void) {
-	if (gfx.type_of_fscreen_in_use == FULLSCR_IN_WINDOW) {
-		const bool toolbar_is_hidden = toolbar->isHidden() || toolbar->isFloating();
-
-#if QT_VERSION == QT_VERSION_CHECK(5, 12, 8)
-		gfx.w[MONITOR] = fs_geom.width() - (frameGeometry().width() - geometry().width());
-		gfx.h[MONITOR] = fs_geom.height() - (frameGeometry().height() - geometry().height());
-#else
-		gfx.w[MONITOR] = fs_geom.width();
-		gfx.h[MONITOR] = fs_geom.height();
-#endif
-
-		if (toolbar->orientation() == Qt::Vertical) {
-			gfx.w[MONITOR] -= (toolbar_is_hidden ? 0 : toolbar->sizeHint().width());
-		} else {
-			gfx.h[MONITOR] -= (toolbar_is_hidden ? 0 : toolbar->sizeHint().height());
-		}
-
-		gfx.h[MONITOR] -= (menubar->isHidden() ? 0 : menubar->sizeHint().height());
-		gfx.h[MONITOR] -= (statusbar->isHidden() ? 0 : statusbar->sizeHint().height());
-	} else if (gfx.type_of_fscreen_in_use == FULLSCR) {
-		fs_geom = mainwin->win_handle_screen()->geometry();
-
-		switch (mainwin->win_handle_screen()->orientation()) {
-			default:
-			case Qt::LandscapeOrientation:
-				gfx.screen_rotation = ROTATE_0;
-				break;
-			case Qt::InvertedPortraitOrientation:
-				gfx.screen_rotation = ROTATE_90;
-				break;
-			case Qt::InvertedLandscapeOrientation:
-				gfx.screen_rotation = ROTATE_180;
-				break;
-			case Qt::PortraitOrientation:
-				gfx.screen_rotation = ROTATE_270;
-				break;
-		}
-
-#if defined (FULLSCREEN_RESFREQ)
-		if (setup_in_out_fullscreen) {
-			int w, h, x, y;
-
-			if (gfx_monitor_mode_in_use_info(&x, &y, &w, &h, nullptr) == EXIT_OK) {
-				if ((gfx.screen_rotation == ROTATE_90) || (gfx.screen_rotation == ROTATE_270)) {
-					fs_geom = QRect(x, y, h, w);
-				} else {
-					fs_geom = QRect(x, y, w, h);
-				}
-			}
-		}
-#endif
-		gfx.w[MONITOR] = fs_geom.width();
-		gfx.h[MONITOR] = fs_geom.height();
-
-		{
-			const qreal dpr = mainwin->win_handle_screen()->devicePixelRatio();
-
-			gfx.w[MONITOR] = (SDBWORD)((qreal)gfx.w[MONITOR] / dpr);
-			gfx.h[MONITOR] = (SDBWORD)((qreal)gfx.h[MONITOR] / dpr);
-		}
-	}
-}
-QAction *mainWindow::state_save_slot_action(BYTE slot) {
+QAction *mainWindow::state_save_slot_action(const BYTE slot) const {
 	return (findChild<QAction *>(QString("action_State_Slot_%1").arg(QString::number(slot, 16).toUpper())));
 }
-void mainWindow::state_save_slot_set(int slot, bool on_video) {
+void mainWindow::state_save_slot_set(const int slot, const bool on_video) {
 	if (info.no_rom | info.turn_off) {
 		return;
 	}
@@ -805,8 +999,8 @@ void mainWindow::state_save_slot_set(int slot, bool on_video) {
 	}
 	update_window();
 }
-void mainWindow::state_save_slot_set_tooltip(BYTE slot) {
-	QImage *preview = (QImage *)gui_overlay_slot_preview_get(slot);
+void mainWindow::state_save_slot_set_tooltip(const BYTE slot) const {
+	const QImage *preview = (QImage *)gui_overlay_slot_preview_get(slot);
 	QString tooltip;
 
 	if (preview) {
@@ -817,7 +1011,7 @@ void mainWindow::state_save_slot_set_tooltip(BYTE slot) {
 		QByteArray data;
 		QBuffer png(&data);
 		int x = 0, y = 0, w = 0, h = 0;
-		const double mul = 1.5f;
+		constexpr double mul = 1.5f;
 		QImage img = preview->scaled((int)(SCR_COLUMNS * mul), (int)(SCR_ROWS * mul), Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
 
 		// scrivo le info
@@ -859,14 +1053,14 @@ void mainWindow::state_save_slot_set_tooltip(BYTE slot) {
 
 	state_save_slot_action(slot)->setToolTip(tooltip);
 }
-void mainWindow::toggle_toolbars(void) {
+void mainWindow::toggle_toolbars(void) const {
 	const bool visible = !toolbar->isVisible();
 
 	emu_thread_pause();
 
 	toolbar->setVisible(visible);
 	statusbar->setVisible(visible);
-	update_gfx_monitor_dimension();
+	mainwin->update_gfx_monitor_dimension();
 	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, FALSE);
 
 	emu_thread_continue();
@@ -886,7 +1080,7 @@ void mainWindow::reset_min_max_size(void) {
 	statusbar->setMaximumSize(QSize(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX));
 #endif
 }
-void mainWindow::shout_into_mic(BYTE mode) {
+void mainWindow::shout_into_mic(const BYTE mode) {
 	if ((tas.type == NOTAS) && !rwnd.active) {
 		if (mode) {
 			mic.mode = MIC_RESET;
@@ -894,13 +1088,13 @@ void mainWindow::shout_into_mic(BYTE mode) {
 		}
 	}
 }
-void mainWindow::hold_fast_forward(BYTE mode) {
+void mainWindow::hold_fast_forward(const BYTE mode) const {
 	if (fps.fast_forward != mode) {
 		s_fast_forward();
 	}
 }
 void mainWindow::open_dkeyb(void) {
-	set_dialog_geom(dlgkeyb->geom);
+	mainwin->set_dialog_geom(dlgkeyb->geom);
 	dlgkeyb->set_geometry();
 	dlgkeyb->show();
 }
@@ -911,7 +1105,7 @@ void mainWindow::unsupported_hardware(void) {
 		QMessageBox::Ok);
 }
 
-void mainWindow::connect_menu_signals(void) {
+void mainWindow::connect_menu_signals(void) const {
 	// File
 	connect_action(action_Open, SLOT(s_open()));
 	connect_action(action_Apply_Patch, SLOT(s_apply_patch()));
@@ -1031,14 +1225,14 @@ void mainWindow::connect_menu_signals(void) {
 	connect_action(qaction_extern.max_speed.start, SLOT(s_max_speed_start()));
 	connect_action(qaction_extern.max_speed.stop, SLOT(s_max_speed_stop()));
 }
-void mainWindow::connect_action(QAction *action, const char *member) {
+void mainWindow::connect_action(const QAction *action, const char *member) const {
 	connect(action, SIGNAL(triggered()), this, member);
 }
-void mainWindow::connect_action(QAction *action, int value, const char *member) {
+void mainWindow::connect_action(QAction *action, const int value, const char *member) const {
 	action->setProperty("myValue", QVariant(value));
 	connect_action(action, member);
 }
-void mainWindow::connect_shortcut(QAction *action, int index) {
+void mainWindow::connect_shortcut(QAction *action, const int index) {
 	QString *sc = (QString *)settings_inp_rd_sc(index, KEYBOARD);
 
 	if (!sc->isEmpty()) {
@@ -1048,7 +1242,7 @@ void mainWindow::connect_shortcut(QAction *action, int index) {
 		action_text(action, text.at(0), sc);
 	}
 }
-void mainWindow::connect_shortcut(QAction *action, int index, const char *member) {
+void mainWindow::connect_shortcut(QAction *action, const int index, const char *member) const {
 	QString *sc = (QString *)settings_inp_rd_sc(index, KEYBOARD);
 
 	if (!sc->isEmpty()) {
@@ -1124,7 +1318,7 @@ void mainWindow::update_menu_file(void) {
 		}
 	}
 }
-void mainWindow::update_menu_nes(void) {
+void mainWindow::update_menu_nes(void) const {
 	QString *sc = (QString *)settings_inp_rd_sc(SET_INP_SC_TURN_OFF, KEYBOARD);
 
 	if (info.turn_off) {
@@ -1178,7 +1372,7 @@ void mainWindow::update_menu_nes(void) {
 		action_Toogle_Fast_Forward->setEnabled(false);
 	}
 }
-void mainWindow::update_menu_state(void) {
+void mainWindow::update_menu_state(void) const {
 	bool state = false;
 
 	if (!(info.no_rom | info.turn_off)) {
@@ -1312,7 +1506,7 @@ void mainWindow::update_menu_recent_disks(void) {
 	}
 }
 
-void mainWindow::update_fds_menu(void) {
+void mainWindow::update_fds_menu(void) const {
 	QString *sc = (QString *)settings_inp_rd_sc(SET_INP_SC_EJECT_DISK, KEYBOARD);
 
 	if (fds.info.enabled && !rwnd.active) {
@@ -1344,7 +1538,7 @@ void mainWindow::update_fds_menu(void) {
 		menu_Export_Current_state->setEnabled(false);
 	}
 }
-void mainWindow::update_tape_menu(void) {
+void mainWindow::update_tape_menu(void) const {
 	menu_Tape->setEnabled(!info.no_rom && tape_data_recorder.enabled);
 
 	switch (tape_data_recorder.mode) {
@@ -1366,7 +1560,7 @@ void mainWindow::update_tape_menu(void) {
 			break;
 	}
 }
-void mainWindow::update_menu_tools(void) {
+void mainWindow::update_menu_tools(void) const {
 	action_Dipswitch->setEnabled(dipswitch.used && dipswitch.show_dlg);
 	action_Virtual_Keyboard->setEnabled(nes_keyboard.enabled);
 	if (!action_Virtual_Keyboard->isEnabled() && dlgkeyb->isVisible()) {
@@ -1374,7 +1568,7 @@ void mainWindow::update_menu_tools(void) {
 	}
 }
 
-void mainWindow::action_text(QAction *action, const QString &description, QString *scut) {
+void mainWindow::action_text(QAction *action, const QString &description, const QString *scut) {
 	if ((*scut) == "NULL") {
 		action->setText(description);
 	} else {
@@ -1399,18 +1593,7 @@ void mainWindow::ctrl_disk_side(QAction *action) {
 	}
 }
 
-void mainWindow::set_dialog_geom(QRect &geom) {
-	int frame_w = frameGeometry().width() - geometry().width();
-	int frame_h = frameGeometry().height() - geometry().height();
-
-	if (geom.x() < frame_w) {
-		geom.setX(frame_w);
-	}
-	if (geom.y() < frame_h) {
-		geom.setY(frame_h);
-	}
-}
-int mainWindow::is_shortcut(const QKeyEvent *event) {
+int mainWindow::is_shortcut(const QKeyEvent *event) const {
 	int i;
 
 	for (i = 0; i < SET_MAX_NUM_SC; i++) {
@@ -1425,7 +1608,7 @@ int mainWindow::is_shortcut(const QKeyEvent *event) {
 
 	return (-1);
 }
-void mainWindow::toggle_menubar(BYTE mode) {
+void mainWindow::toggle_menubar(const BYTE mode) {
 	if ((cfg->fullscreen != FULLSCR) || (gfx.type_of_fscreen_in_use != FULLSCR)) {
 		return;
 	}
@@ -1439,63 +1622,7 @@ void mainWindow::toggle_menubar(BYTE mode) {
 }
 
 void mainWindow::s_set_fullscreen(void) {
-	BYTE delay = FALSE;
-
-	if (gui.in_update || setup_in_out_fullscreen) {
-		return;
-	}
-
-	// quando nascondo la finestra al momento dell'attivazione/disattivazione del
-	// fullscreen vengono eseguiti nell'ordine un
-	// QEvent::WindowActivate
-	// seguito da un
-	// QEvent::WindowDeactivate
-	// che lascia la finestra disattivata. In caso di "Pause when in background" attivo
-	// il gui_control_pause_bck non riprende l'emulazione pensando appunto di essere in background.
-	setup_in_out_fullscreen = true;
-
-	emu_thread_pause();
-
-	if ((cfg->fullscreen == NO_FULLSCR) || (cfg->fullscreen == NO_CHANGE)) {
-		gfx.scale_before_fscreen = cfg->scale;
-		org_geom = geometry();
-		visibility.menubar = menubar->isVisible();
-		visibility.toolbars = toolbar->isVisible();
-		if (!gfx.only_fullscreen_in_window) {
-			// muovo la finestra nell'angolo superiore del monitor, e' importante
-			// perche' in caso di cambio di risoluzione nell fullscreen, se posizionata
-			// nella parte destra del monitor potrebbe non essere visualizzata correttamente.
-			// E' importante che lo spostamento avvenga prima dell'hide().
-			if (!cfg->fullscreen_in_window) {
-				QRect mgeom = mainwin->win_handle_screen()->geometry();
-
-				move(mgeom.x() - (geometry().x() - x()), mgeom.y() - (geometry().y() - y()));
-			}
-			hide();
-#if defined (FULLSCREEN_RESFREQ)
-			if (!cfg->fullscreen_in_window) {
-				delay = gfx_monitor_set_res(cfg->fullscreen_res_w, cfg->fullscreen_res_h, cfg->adaptive_rrate, FALSE);
-			}
-#endif
-		}
-#if defined (FULLSCREEN_RESFREQ)
-	} else {
-		// su Fedora 35 (Wayland, Gnome 41.5 e QT 5.15.2) il Fullscreen non funziona e
-		// quello a finestra funziona solo se non eseguo l'hide().
-		if (!gfx.only_fullscreen_in_window) {
-			hide();
-		}
-		if (gfx.type_of_fscreen_in_use == FULLSCR) {
-			delay = gfx_monitor_restore_res();
-		}
-#endif
-	}
-
-	if (delay) {
-		QTimer::singleShot(1000, this, [this]() { s_fullscreen(); });
-	} else {
-		s_fullscreen();
-	}
+	emit et_set_fullscreen();
 }
 void mainWindow::s_set_vs_window(void) {
 	ext_win.vs_system = !ext_win.vs_system;
@@ -1616,7 +1743,7 @@ void mainWindow::s_apply_patch(void) {
 	emu_pause(FALSE);
 }
 void mainWindow::s_open_edit_current_header(void) {
-	set_dialog_geom(dlgheader->geom);
+	mainwin->set_dialog_geom(dlgheader->geom);
 	dlgheader->set_geometry();
 	dlgheader->wd->reset_dialog();
 	dlgheader->show();
@@ -1631,12 +1758,10 @@ void mainWindow::s_open_recent_roms(void) {
 	if (current != item) {
 		change_rom(uQStringCD(item));
 	} else {
-		// se l'archivio e' compresso e contiene piu' di una rom allora lo carico
-		_uncompress_archive *archive;
 		BYTE rc;
+		_uncompress_archive *archive = uncompress_archive_alloc(uQStringCD(item), &rc);
 
-		archive = uncompress_archive_alloc(uQStringCD(item), &rc);
-
+		// se l'archivio e' compresso e contiene piu' di una rom allora lo carico
 		if (rc == UNCOMPRESS_EXIT_OK) {
 			if (archive->rom.count > 1) {
 				change_rom(uQStringCD(item));
@@ -1648,12 +1773,12 @@ void mainWindow::s_open_recent_roms(void) {
 	emu_pause(FALSE);
 }
 void mainWindow::s_open_config_folder(void) {
-	QString url = QString("file:///%0").arg(QDir(uQString(gui_config_folder())).absolutePath());
+	const QString url = QString("file:///%0").arg(QDir(uQString(gui_config_folder())).absolutePath());
 
 	QDesktopServices::openUrl(QUrl(url, QUrl::TolerantMode));
 }
 void mainWindow::s_open_working_folder(void) {
-	QString url = QString("file:///%0").arg(QDir(uQString(gui_data_folder())).absolutePath());
+	const QString url = QString("file:///%0").arg(QDir(uQString(gui_data_folder())).absolutePath());
 
 	QDesktopServices::openUrl(QUrl(url, QUrl::TolerantMode));
 }
@@ -1681,7 +1806,7 @@ void mainWindow::s_turn_on_off(void) {
 	emu_thread_continue();
 }
 void mainWindow::s_make_reset(void) {
-	int type = QVariant(((QObject *)sender())->property("myValue")).toInt();
+	const int type = QVariant(((QObject *)sender())->property("myValue")).toInt();
 
 	make_reset(type);
 }
@@ -1691,7 +1816,7 @@ void mainWindow::s_insert_coin(void) {
 void mainWindow::s_shout_into_mic(void) {
 	shout_into_mic(PRESSED);
 }
-void mainWindow::s_disk_side(void) {
+void mainWindow::s_disk_side(void) const {
 	int side = QVariant(((QObject *)sender())->property("myValue")).toInt();
 
 	emu_thread_pause();
@@ -1724,7 +1849,7 @@ void mainWindow::s_disk_side(void) {
 
 	update_menu_nes();
 }
-void mainWindow::s_eject_disk(void) {
+void mainWindow::s_eject_disk(void) const {
 	emu_thread_pause();
 	if (!fds.drive.disk_ejected) {
 		fds_disk_op(FDS_DISK_EJECT, 0, FALSE);
@@ -1862,7 +1987,7 @@ void mainWindow::s_create_empty_disk(void) {
 	emu_thread_continue();
 }
 void mainWindow::s_export_fds_image(void) {
-	int format = QVariant(((QObject *)sender())->property("myValue")).toInt();
+	const int format = QVariant(((QObject *)sender())->property("myValue")).toInt();
 	QStringList filters;
 	QString file;
 
@@ -2000,14 +2125,13 @@ void mainWindow::s_start_stop_video_recording(void) {
 
 	if (!info.recording_on_air) {
 		wdgRecGetSaveFileName *fd = new wdgRecGetSaveFileName(this);
-		QString file;
 
 		emu_pause(TRUE);
 
-		file = fd->video_get_save_file_name();
+		const QString file = fd->video_get_save_file_name();
 
 		if (!file.isNull()) {
-			QFileInfo fileinfo = QFileInfo(file);
+			const QFileInfo fileinfo = QFileInfo(file);
 
 			umemset(cfg->last_rec_video_path, 0x00, usizeof(cfg->last_rec_video_path));
 			ustrncpy(cfg->last_rec_video_path, uQStringCD(fileinfo.absolutePath()), usizeof(cfg->last_rec_video_path) - 1);
@@ -2026,14 +2150,14 @@ void mainWindow::s_save_screenshot(void) {
 void mainWindow::s_save_screenshot_1x(void) {
 	info.screenshot = SCRSH_ORIGINAL_SIZE;
 }
-void mainWindow::s_pause(void) {
+void mainWindow::s_pause(void) const {
 	emu_thread_pause();
 	info.pause_from_gui = !info.pause_from_gui;
 	emu_pause(info.pause_from_gui);
 	emu_thread_continue();
 	update_menu_nes();
 }
-void mainWindow::s_fast_forward(void) {
+void mainWindow::s_fast_forward(void) const {
 	if (!nsf.enabled) {
 		emu_thread_pause();
 		if (!fps.fast_forward) {
@@ -2065,7 +2189,7 @@ void mainWindow::s_max_speed_stop(void) const {
 	egds->stop_max_speed();
 	emu_thread_continue();
 }
-void mainWindow::s_toggle_gui_in_window(void) {
+void mainWindow::s_toggle_gui_in_window(void) const {
 	bool gui_visibility = false;
 
 	if (gfx.type_of_fscreen_in_use == FULLSCR) {
@@ -2081,22 +2205,22 @@ void mainWindow::s_toggle_gui_in_window(void) {
 	}
 	toolbar->setVisible(gui_visibility);
 	statusbar->setVisible(gui_visibility);
-	update_gfx_monitor_dimension();
+	mainwin->update_gfx_monitor_dimension();
 	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, FALSE);
 
 	emu_thread_continue();
 }
-void mainWindow::s_open_settings(void) {
-	int index = QVariant(((QObject *)sender())->property("myValue")).toInt();
+void mainWindow::s_open_settings(void) const {
+	const int index = QVariant(((QObject *)sender())->property("myValue")).toInt();
 
-	set_dialog_geom(dlgsettings->geom);
+	mainwin->set_dialog_geom(dlgsettings->geom);
 	dlgsettings->set_geometry();
 	dlgsettings->wd->tabWidget_Settings->setCurrentIndex(index);
 	dlgsettings->show();
 	dlgsettings->activateWindow();
 }
 void mainWindow::s_state_save_slot_action(void) {
-	int mode = QVariant(((QObject *)sender())->property("myValue")).toInt();
+	const int mode = QVariant(((QObject *)sender())->property("myValue")).toInt();
 
 	emu_thread_pause();
 	if (mode == SAVE) {
@@ -2109,7 +2233,7 @@ void mainWindow::s_state_save_slot_action(void) {
 	update_window();
 }
 void mainWindow::s_state_save_slot_incdec(void) {
-	int mode = QVariant(((QObject *)sender())->property("myValue")).toInt();
+	const int mode = QVariant(((QObject *)sender())->property("myValue")).toInt();
 	BYTE new_slot = 0;
 
 	if (mode == INC) {
@@ -2132,8 +2256,7 @@ void mainWindow::s_state_save_slot_set(void) {
 }
 void mainWindow::s_state_save_file(void) {
 	QStringList filters;
-	QString file;
-	uTCHAR *fl = NULL;
+	uTCHAR *fl = nullptr;
 
 	emu_thread_pause();
 
@@ -2154,7 +2277,7 @@ void mainWindow::s_state_save_file(void) {
 		fl = info.rom.file;
 	}
 
-	file = QFileDialog::getSaveFileName(this, tr("Save state on file"),
+	QString file = QFileDialog::getSaveFileName(this, tr("Save state on file"),
 		QFileInfo(uQString(cfg->save_file)).dir().absolutePath() + "/" + QFileInfo(uQString(fl)).baseName(),
 		filters.join(";;"));
 
@@ -2220,9 +2343,9 @@ void mainWindow::s_open_djsc(void) {
 	dlgjsc->show();
 }
 void mainWindow::s_tape_play(void) {
-	QFileInfo rom = QFileInfo(uQString(info.rom.file));
+	const QFileInfo rom = QFileInfo(uQString(info.rom.file));
 	QStringList filters;
-	QString file, dir, selected;
+	QString selected;
 
 	if (info.no_rom || !tape_data_recorder.enabled || (tape_data_recorder.mode != TAPE_DATA_NONE)) {
 		return;
@@ -2242,9 +2365,9 @@ void mainWindow::s_tape_play(void) {
 	filters[3].append(" (*.tp *.TP)");
 	filters[4].append(" (*.*)");
 
-	dir = rom.dir().absolutePath();
-
-	file = QFileDialog::getOpenFileName(this, tr("Open tape image"), dir + "/" + rom.completeBaseName() + ".tap",
+	const QString dir = rom.dir().absolutePath();
+	const QString file = QFileDialog::getOpenFileName(this, tr("Open tape image"),
+		dir + "/" + rom.completeBaseName() + ".tap",
 		filters.join(";;"), &selected, QFileDialog::DontUseNativeDialog);
 
 	if (!file.isNull()) {
@@ -2275,9 +2398,9 @@ void mainWindow::s_tape_play(void) {
 	emu_pause(FALSE);
 }
 void mainWindow::s_tape_record(void) {
-	QFileInfo rom = QFileInfo(uQString(info.rom.file));
+	const QFileInfo rom = QFileInfo(uQString(info.rom.file));
 	QStringList filters;
-	QString file, dir, selected;
+	QString selected;
 
 	if (info.no_rom || !tape_data_recorder.enabled || (tape_data_recorder.mode != TAPE_DATA_NONE)) {
 		return;
@@ -2297,9 +2420,9 @@ void mainWindow::s_tape_record(void) {
 	filters[3].append(" (*.wav *.WAV)");
 	filters[4].append(" (*.*)");
 
-	dir = rom.dir().absolutePath();
-
-	file = QFileDialog::getSaveFileName(this, tr("Save tape image"), dir + "/" + rom.completeBaseName() + ".tap",
+	const QString dir = rom.dir().absolutePath();
+	const QString file = QFileDialog::getSaveFileName(this, tr("Save tape image"),
+		dir + "/" + rom.completeBaseName() + ".tap",
 		filters.join(";;"), &selected, QFileDialog::DontUseNativeDialog);
 
 	if (!file.isNull()) {
@@ -2345,7 +2468,7 @@ void mainWindow::s_tape_stop(void) {
 	emu_pause(FALSE);
 }
 void mainWindow::s_show_log(void) {
-	set_dialog_geom(dlglog->geom);
+	mainwin->set_dialog_geom(dlglog->geom);
 	dlglog->set_geometry();
 	dlglog->show();
 	dlglog->activateWindow();
@@ -2361,124 +2484,6 @@ void mainWindow::s_help(void) {
 	emu_pause(FALSE);
 }
 
-void mainWindow::s_fullscreen(void) {
-#if defined (_WIN32)
-	static Qt::WindowFlags window_flags = windowFlags();
-#endif
-
-	if (gui.in_update) {
-		return;
-	}
-
-	if ((cfg->fullscreen == NO_FULLSCR) || (cfg->fullscreen == NO_CHANGE)) {
-#if defined (_WIN32)
-		window_flags = windowFlags();
-#endif
-		if (gfx.only_fullscreen_in_window || cfg->fullscreen_in_window) {
-			QRect fs_win_geom = mainwin->win_handle_screen()->availableGeometry();
-#if defined (_WIN32)
-			// lo showMaximized sotto windows non considera la presenza della barra delle applicazioni
-			// cercando di impostare una dimensione falsata percio' ridimensiono la finestra manualmente.
-			bool desktop_resolution = false;
-#else
-			bool desktop_resolution = true;
-#endif
-
-			gfx.type_of_fscreen_in_use = FULLSCR_IN_WINDOW;
-			gfx.w[FSCR_RESIZE] = 0;
-			gfx.h[FSCR_RESIZE] = 0;
-#if defined (FULLSCREEN_RESFREQ)
-			if ((cfg->fullscreen_res_w >= 0) && (cfg->fullscreen_res_h >= 0) &&
-				((cfg->fullscreen_res_w != mainwin->win_handle_screen()->availableGeometry().width()) ||
-				(cfg->fullscreen_res_h != mainwin->win_handle_screen()->availableGeometry().height()))) {
-				fs_win_geom = QRect(org_geom.x(), org_geom.y(), cfg->fullscreen_res_w, cfg->fullscreen_res_h);
-				desktop_resolution = false;
-			}
-#endif
-			reset_min_max_size();
-			if (desktop_resolution) {
-#if QT_VERSION == QT_VERSION_CHECK(5, 12, 8)
-				// con le QT 5.12.8 (Xubuntu 2004) lo showMaximized non funziona per un bug
-				// nelle Qt quindi utilizzo il vecchio metodo.
-				fs_geom = fs_win_geom;
-				update_gfx_monitor_dimension();
-				move(fs_geom.x() - (geometry().x() - x()), fs_geom.y() - (geometry().y() - y()));
-				show();
-				fullscreen_resize = false;
-				gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, FULLSCR, NO_CHANGE, FALSE, FALSE);
-#else
-				fullscreen_resize = true;
-				showMaximized();
-#endif
-			} else {
-				show();
-				fullscreen_resize = true;
-				setGeometry(fs_win_geom);
-			}
-		} else {
-			gfx.type_of_fscreen_in_use = FULLSCR;
-			update_gfx_monitor_dimension();
-			menubar->setVisible(false);
-			toolbar->setVisible(false);
-			statusbar->setVisible(false);
-			reset_min_max_size();
-#if defined (_WIN32)
-			// when a window is using an OpenGL based surface and is appearing in full screen mode,
-			// problems can occur with other top-level windows which are part of the application. Due
-			// to limitations of the Windows DWM, compositing is not handled correctly for OpenGL based
-			// windows when going into full screen mode. As a result, other top-level windows are not
-			// placed on top of the full screen window when they are made visible. For example, menus
-			// may not appear correctly, or dialogs fail to show up.
-			// https://doc.qt.io/qt-5/windows-issues.html#fullscreen-opengl-based-windows
-			// https://bugreports.qt.io/browse/QTBUG-49258
-			// https://bugreports.qt.io/browse/QTBUG-47156
-			// come workaround incremento di 1 l'altezza del mainWindow e non utilizzo il
-			// showFullScreen ma lo simulo.
-
-			// sposto la finestra nell'angolo superiore del monitor
-			move(fs_geom.x() - (geometry().x() - x()), fs_geom.y() - (geometry().y() - y()));
-			setWindowFlags(Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);
-			showNormal();
-			gfx.w[FSCR_RESIZE] = 0;
-			gfx.h[FSCR_RESIZE] = 0;
-			fullscreen_resize = false;
-			gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, FULLSCR, NO_CHANGE, FALSE, FALSE);
-#else
-			move(fs_geom.x(), fs_geom.y());
-			show();
-			fullscreen_resize = true;
-			showFullScreen();
-#endif
-		}
-	} else {
-		if (gfx.type_of_fscreen_in_use == FULLSCR) {
-			menubar->setVisible(visibility.menubar);
-			statusbar->setVisible(visibility.toolbars);
-			toolbar->setVisible(visibility.toolbars);
-		}
-		gfx.type_of_fscreen_in_use = NO_FULLSCR;
-		tmm = (BYTE)TOGGLE_MENUBAR_NONE;
-#if defined (_WIN32)
-		setWindowFlags(window_flags);
-#endif
-		gfx.w[FSCR_RESIZE] = 0;
-		gfx.h[FSCR_RESIZE] = 0;
-		fullscreen_resize = false;
-		showNormal();
-		gfx_set_screen(gfx.scale_before_fscreen, NO_CHANGE, NO_CHANGE, NO_FULLSCR, NO_CHANGE, FALSE, FALSE);
-		setGeometry(org_geom.x(), org_geom.y(), geometry().width(), geometry().height());
-		// al rientro dal fullscreen a finestra devo eseguire un update() ritardato per ridisignare correttamente la GUI.
-		if (gfx.only_fullscreen_in_window) {
-			QTimer::singleShot(200, this, [this]() { update(); });
-		}
-	}
-
-	emu_thread_continue();
-
-	gui_external_control_windows_show();
-	wscreen->activateWindow();
-	setup_in_out_fullscreen = false;
-}
 void mainWindow::s_shcjoy_read_timer(void) {
 	if (!shcjoy.enabled) {
 		return;
@@ -2663,7 +2668,7 @@ void mainWindow::s_received_message(UNUSED(quint32 instanceId), const QByteArray
 }
 void mainWindow::s_exec_message(void) {
 	secondary_instance.mutex.lock();
-	QFileInfo fileinfo(secondary_instance.message);
+	const QFileInfo fileinfo(secondary_instance.message);
 	secondary_instance.mutex.unlock();
 
 	emu_pause(TRUE);
@@ -2686,16 +2691,16 @@ void mainWindow::s_exec_message(void) {
 }
 void mainWindow::s_nsf_author_note_close(void) {
 	nsf_author_note.geom = nsf_author_note.dlg->geometry();
-	nsf_author_note.dlg = NULL;
+	nsf_author_note.dlg = nullptr;
 }
 
-void mainWindow::s_shcut_mode(void) {
-	int mode = QVariant(((QObject *)sender())->property("myValue")).toInt();
+void mainWindow::s_shcut_mode(void) const {
+	const int mode = QVariant(((QObject *)sender())->property("myValue")).toInt();
 
 	dlgsettings->wd->shcut_mode(mode);
 }
-void mainWindow::s_shcut_scale(void) {
-	int scale = QVariant(((QObject *)sender())->property("myValue")).toInt();
+void mainWindow::s_shcut_scale(void) const {
+	const int scale = QVariant(((QObject *)sender())->property("myValue")).toInt();
 
 	dlgsettings->wd->shcut_scale(scale);
 }
@@ -2813,7 +2818,7 @@ void mainWindow::s_et_nsf_author_note_open(const uTCHAR *string) {
 		nsf_author_note.dlg->show();
 	}
 }
-void mainWindow::s_et_nsf_author_note_close(void) {
+void mainWindow::s_et_nsf_author_note_close(void) const {
 	if (nsf_author_note.dlg) {
 		nsf_author_note.dlg->close();
 	}
@@ -2905,24 +2910,24 @@ void timerEgds::_start(void) {
 		start();
 	}
 }
-void timerEgds::_start_with_emu_thread_pause(enum with_emu_pause type) {
+void timerEgds::_start_with_emu_thread_pause(const enum with_emu_pause type) {
 	calls[type].count++;
 	emu_thread_pause();
 	_start();
 }
-void timerEgds::_stop(BYTE is_necessary) {
+void timerEgds::_stop(const BYTE is_necessary) {
 	if (is_necessary) {
 		return;
 	}
 	stop();
 }
-void timerEgds::_stop_with_emu_thread_continue(enum with_emu_pause type, BYTE is_necessary) {
+void timerEgds::_stop_with_emu_thread_continue(const enum with_emu_pause type, const BYTE is_necessary) {
 	if (calls[type].count && (--calls[type].count == 0)) {
 		emu_thread_continue();
 	}
 	_stop(is_necessary);
 }
-void timerEgds::_etc(enum with_emu_pause type) {
+void timerEgds::_etc(const enum with_emu_pause type) const {
 	int i;
 
 	for (i = 0 ; i < calls[type].count; i++) {
@@ -2952,6 +2957,7 @@ void timerEgds::s_draw_screen(void) {
 			case DBG_STEP:
 			case DBG_BREAKPOINT:
 				return;
+			default:
 			case DBG_GO:
 				if (debugger.breakframe) {
 					return;
@@ -2972,36 +2978,45 @@ void timerEgds::s_draw_screen(void) {
 
 // ----------------------------------------------------------------------------------------------
 
+toUpValidator::toUpValidator(QObject *parent): QValidator(parent) {}
+
+QValidator::State toUpValidator::validate(QString &input, UNUSED(int &pos)) const {
+	input = input.toUpper();
+	return (QValidator::Acceptable);
+}
+
+// ----------------------------------------------------------------------------------------------
+
 QRegularExpression qtHelper::rx_any_numbers("\\s*$");
 QRegularExpression qtHelper::rx_comment_0("#.*");
 QRegularExpression qtHelper::rx_comment_1("//.*");
 
-void qtHelper::widget_set_visible(void *wdg, bool mode) {
+void qtHelper::widget_set_visible(void *wdg, const bool mode) {
 	((QWidget *)wdg)->blockSignals(true);
 	((QWidget *)wdg)->setVisible(mode);
 	((QWidget *)wdg)->blockSignals(false);
 }
-void qtHelper::pushbutton_set_checked(void *btn, bool mode) {
+void qtHelper::pushbutton_set_checked(void *btn, const bool mode) {
 	((QPushButton *)btn)->blockSignals(true);
 	((QPushButton *)btn)->setChecked(mode);
 	((QPushButton *)btn)->blockSignals(false);
 }
-void qtHelper::checkbox_set_checked(void *cbox, bool mode) {
+void qtHelper::checkbox_set_checked(void *cbox, const bool mode) {
 	((QCheckBox *)cbox)->blockSignals(true);
 	((QCheckBox *)cbox)->setChecked(mode);
 	((QCheckBox *)cbox)->blockSignals(false);
 }
-void qtHelper::slider_set_value(void *slider, int value) {
+void qtHelper::slider_set_value(void *slider, const int value) {
 	((QSlider *)slider)->blockSignals(true);
 	((QSlider *)slider)->setValue(value);
 	((QSlider *)slider)->blockSignals(false);
 }
-void qtHelper::spinbox_set_value(void *sbox, int value) {
+void qtHelper::spinbox_set_value(void *sbox, const int value) {
 	((QSpinBox *)sbox)->blockSignals(true);
 	((QSpinBox *)sbox)->setValue(value);
 	((QSpinBox *)sbox)->blockSignals(false);
 }
-void qtHelper::combox_set_index(void *cbox, int value) {
+void qtHelper::combox_set_index(void *cbox, const int value) {
 	((QComboBox *)cbox)->blockSignals(true);
 	((QComboBox *)cbox)->setCurrentIndex(value);
 	((QComboBox *)cbox)->blockSignals(false);

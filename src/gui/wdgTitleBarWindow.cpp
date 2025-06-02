@@ -448,6 +448,12 @@ void wdgTitleBarWindow::customMouseMoveEvent(QMouseEvent *event) {
 	setGeometry(QRect(tl, br));
 }
 
+void wdgTitleBarWindow::set_gui_visible(const bool mode) const {
+	private_hover_watcher->setVisible(mode);
+	if (!disabled_resize) {
+		status_bar->setVisible(mode);
+	}
+}
 void wdgTitleBarWindow::init_geom_variable(const _last_geometry lg) {
 	geom.setRect(lg.x, lg.y, lg.w, lg.h);
 	set_geometry();
