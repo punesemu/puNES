@@ -219,6 +219,7 @@ class mainWindow : public QMainWindow, public Ui::mainWindow {
 		void et_nsf_author_note_open(const uTCHAR *string);
 		void et_nsf_author_note_close(void);
 		void et_set_fullscreen(void);
+		void et_toggle_gui_in_window(void);
 
 	public:
 		mainWindow();
@@ -312,7 +313,7 @@ class mainWindow : public QMainWindow, public Ui::mainWindow {
 		void s_fast_forward(void) const;
 		void s_max_speed_start(void) const;
 		void s_max_speed_stop(void) const;
-		void s_toggle_gui_in_window(void) const;
+		void s_toggle_gui_in_window(void);
 		void s_open_settings(void) const;
 		void s_state_save_slot_action(void);
 		void s_state_save_slot_incdec(void);
@@ -401,6 +402,7 @@ class wdgDlgMainWindow final : public wdgTitleBarDialog {
 
 	private slots:
 		void s_set_fullscreen(void);
+		void s_toggle_gui_in_window(void);
 };
 
 #endif /* MAINWINDOW_HPP_ */

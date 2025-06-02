@@ -45,7 +45,7 @@ Q_DECLARE_OPERATORS_FOR_FLAGS(barButtons)
 
 // ----------------------------------------------------------------------------------------------
 
-class hoverWatcher: public QWidget{
+class hoverWatcher final : public QWidget{
 	Q_OBJECT
 
 	signals:
@@ -66,7 +66,7 @@ class hoverWatcher: public QWidget{
 
 // ----------------------------------------------------------------------------------------------
 
-class wdgTitleBar : public QWidget, public Ui::wdgTitleBar  {
+class wdgTitleBar final : public QWidget, public Ui::wdgTitleBar  {
 	Q_OBJECT
 
 	private:
@@ -111,7 +111,7 @@ class wdgTitleBar : public QWidget, public Ui::wdgTitleBar  {
 
 // ----------------------------------------------------------------------------------------------
 
-class wdgTitleBarStatus : public QStatusBar {
+class wdgTitleBarStatus final : public QStatusBar {
 	Q_OBJECT
 
 	public:
@@ -137,23 +137,24 @@ class wdgTitleBarWindow : public QWidget, public Ui::wdgTitleBarWindow {
 		};
 		Q_DECLARE_FLAGS(OperationTypes, OperationType)
 
-	private:
-		QColor border_color;
+	protected:
 		QVBoxLayout *private_layout = nullptr;
-		OperationType operation_type = NONE;
+		wdgTitleBar *title_bar = nullptr;
+		wdgTitleBarStatus *status_bar = nullptr;
 		QMainWindow *private_main_window = nullptr;
 		hoverWatcher *private_hover_watcher = nullptr;
 		QWidget *private_widget = nullptr;
-		wdgTitleBar *title_bar = nullptr;
-		wdgTitleBarStatus *status_bar = nullptr;
 		QSizeGrip *size_grip = nullptr;
 		dialogExitCode dialog_exit_code = REJECTED;
+		OperationType operation_type = NONE;
+		QColor border_color;
 		QPoint cursor_position;
 		Qt::Edges edges;
 		bool force_custom_move = false;
 		bool force_custom_resize = false;
 		bool disabled_resize = false;
 		bool loop_in_exec = false;
+		bool wm_disabled = false;
 		int resize_threshold = 4;
 
 	public:
@@ -185,7 +186,7 @@ class wdgTitleBarWindow : public QWidget, public Ui::wdgTitleBarWindow {
 	protected:
 		void set_border_color(QColor color);
 		void add_widget(QWidget *widget);
-		void set_buttons(barButtons buttons) const;
+		void set_buttons(barButtons buttons);
 		void set_force_custom_move(bool force);
 		void set_force_custom_resize(bool force);
 		void set_permit_resize(bool mode);
@@ -216,7 +217,6 @@ class wdgTitleBarWindow : public QWidget, public Ui::wdgTitleBarWindow {
 // ----------------------------------------------------------------------------------------------
 
 class wdgTitleBarDialog : public wdgTitleBarWindow {
-
 	public:
 		explicit wdgTitleBarDialog(QWidget *parent = nullptr);
 		~wdgTitleBarDialog() override;

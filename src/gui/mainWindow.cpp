@@ -98,6 +98,7 @@ wdgDlgMainWindow::wdgDlgMainWindow(QWidget *parent) : wdgTitleBarDialog(parent) 
 	setGeometry(cfg->lg.x, cfg->lg.y, 0, 0);
 
 	connect(wd, SIGNAL(et_set_fullscreen(void)), this, SLOT(s_set_fullscreen(void)));
+	connect(wd, SIGNAL(et_toggle_gui_in_window(void)), this, SLOT(s_toggle_gui_in_window(void)));
 
 	installEventFilter(this);
 }
@@ -234,6 +235,11 @@ void wdgDlgMainWindow::update_gfx_monitor_dimension(void) {
 			gfx.h[MONITOR] -= (toolbar_is_hidden ? 0 : wd->toolbar->sizeHint().height());
 		}
 
+		if (wm_disabled) {
+			gfx.w[MONITOR] -= verticalLayout->contentsMargins().left() + verticalLayout->contentsMargins().right();
+			gfx.h[MONITOR] -= verticalLayout->contentsMargins().top() + verticalLayout->contentsMargins().bottom();
+			gfx.h[MONITOR] -= (title_bar->isHidden() ? 0 : private_hover_watcher->size().height());
+		}
 		gfx.h[MONITOR] -= (wd->menubar->isHidden() ? 0 : wd->menubar->sizeHint().height());
 		gfx.h[MONITOR] -= (wd->statusbar->isHidden() ? 0 : wd->statusbar->sizeHint().height());
 	} else if (gfx.type_of_fscreen_in_use == FULLSCR) {
@@ -337,13 +343,13 @@ void wdgDlgMainWindow::set_fullscreen(void) {
 				fullscreen_resize = false;
 				gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, FULLSCR, NO_CHANGE, FALSE, FALSE);
 #else
-				fullscreen_resize = true;
 				showMaximized();
+				fullscreen_resize = true;
 #endif
 			} else {
 				show();
 				fullscreen_resize = true;
-				setGeometry(fs_win_geom);
+				wd->setFixedSize(fs_win_geom.width(), fs_win_geom.height());
 			}
 		} else {
 			gfx.type_of_fscreen_in_use = FULLSCR;
@@ -475,6 +481,25 @@ void wdgDlgMainWindow::s_set_fullscreen(void) {
 		QTimer::singleShot(1000, this, [this]() { set_fullscreen(); });
 	} else {
 		set_fullscreen();
+	}
+}
+void wdgDlgMainWindow::s_toggle_gui_in_window(void) {
+	if (gfx.type_of_fscreen_in_use != FULLSCR) {
+		bool gui_visibility = !wd->menubar->isVisible();
+
+		emu_thread_pause();
+
+		wd->menubar->setVisible(gui_visibility);
+		if (gui_visibility) {
+			gui_visibility = !cfg->toolbar.hidden;
+		}
+		wd->toolbar->setVisible(gui_visibility);
+		wd->statusbar->setVisible(gui_visibility);
+		update_gfx_monitor_dimension();
+		gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, FALSE);
+		wd->setFixedSize(wd->size());
+
+		emu_thread_continue();
 	}
 }
 
@@ -1010,10 +1035,9 @@ void mainWindow::state_save_slot_set_tooltip(const BYTE slot) const {
 	QString tooltip;
 
 	if (preview) {
-		static QPainter painter;
-		static QFont f;
-		static QRect rect;
-		static QPen pen;
+		QPainter painter;
+		QRect rect;
+		QPen pen;
 		QByteArray data;
 		QBuffer png(&data);
 		int x = 0, y = 0, w = 0, h = 0;
@@ -1028,7 +1052,7 @@ void mainWindow::state_save_slot_set_tooltip(const BYTE slot) const {
 
 		rect.setRect(x, y, w, h);
 
-		f = font();
+		QFont f = font();
 		f.setPixelSize((int)(h / mul));
 
 		painter.begin(&img);
@@ -1239,21 +1263,21 @@ void mainWindow::connect_action(QAction *action, const int value, const char *me
 	connect_action(action, member);
 }
 void mainWindow::connect_shortcut(QAction *action, const int index) {
-	QString *sc = (QString *)settings_inp_rd_sc(index, KEYBOARD);
+	const QString *sc = (QString *)settings_inp_rd_sc(index, KEYBOARD);
 
 	if (!sc->isEmpty()) {
-		QStringList text = action->text().split('\t');
+		const QStringList text = action->text().split('\t');
 
 		action->setShortcut(sc->compare("NULL") ? QKeySequence((*sc)) : 0);
 		action_text(action, text.at(0), sc);
 	}
 }
 void mainWindow::connect_shortcut(QAction *action, const int index, const char *member) const {
-	QString *sc = (QString *)settings_inp_rd_sc(index, KEYBOARD);
+	const QString *sc = (QString *)settings_inp_rd_sc(index, KEYBOARD);
 
 	if (!sc->isEmpty()) {
-		QStringList text = action->text().split('\t');
-		QVariant value = action->property("myValue");
+		const QStringList text = action->text().split('\t');
+		const QVariant value = action->property("myValue");
 
 		shortcut[index]->setKey(sc->compare("NULL") ? QKeySequence((*sc)) : 0);
 		if (!value.isNull()) {
@@ -1325,7 +1349,7 @@ void mainWindow::update_menu_file(void) {
 	}
 }
 void mainWindow::update_menu_nes(void) const {
-	QString *sc = (QString *)settings_inp_rd_sc(SET_INP_SC_TURN_OFF, KEYBOARD);
+	const QString *sc = (QString *)settings_inp_rd_sc(SET_INP_SC_TURN_OFF, KEYBOARD);
 
 	if (info.turn_off) {
 		action_text(action_Turn_Off, tr("&Turn On"), sc);
@@ -1513,7 +1537,7 @@ void mainWindow::update_menu_recent_disks(void) {
 }
 
 void mainWindow::update_fds_menu(void) const {
-	QString *sc = (QString *)settings_inp_rd_sc(SET_INP_SC_EJECT_DISK, KEYBOARD);
+	const QString *sc = (QString *)settings_inp_rd_sc(SET_INP_SC_EJECT_DISK, KEYBOARD);
 
 	if (fds.info.enabled && !rwnd.active) {
 		if (fds.drive.disk_ejected) {
@@ -1582,7 +1606,7 @@ void mainWindow::action_text(QAction *action, const QString &description, const 
 	}
 }
 void mainWindow::ctrl_disk_side(QAction *action) {
-	int side = QVariant(action->property("myValue")).toInt();
+	const int side = QVariant(action->property("myValue")).toInt();
 
 	if (side < fds.info.total_sides) {
 		action->setEnabled(true);
@@ -1651,7 +1675,6 @@ void mainWindow::s_open_dkeyb(void) {
 void mainWindow::s_fake_slot(void) {}
 void mainWindow::s_open(void) {
 	QStringList filters;
-	QString file;
 
 	emu_pause(TRUE);
 
@@ -1686,10 +1709,13 @@ void mainWindow::s_open(void) {
 	filters[7].append(" (*.fm2 *.FM2)");
 	filters[8].append(" (*.*)");
 
-	file = QFileDialog::getOpenFileName(this, tr("Open File"), uQString(gui.last_open_path), filters.join(";;"));
+	const QString file = QFileDialog::getOpenFileName(this,
+		tr("Open File"),
+		uQString(gui.last_open_path),
+		filters.join(";;"));
 
 	if (!file.isNull()) {
-		QFileInfo fileinfo(file);
+		const QFileInfo fileinfo(file);
 
 		change_rom(uQStringCD(fileinfo.absoluteFilePath()));
 		ustrncpy(gui.last_open_path, uQStringCD(fileinfo.absolutePath()), usizeof(gui.last_open_path) - 1);
@@ -1699,7 +1725,6 @@ void mainWindow::s_open(void) {
 }
 void mainWindow::s_apply_patch(void) {
 	QStringList filters;
-	QString file;
 
 	emu_pause(TRUE);
 
@@ -1728,11 +1753,13 @@ void mainWindow::s_apply_patch(void) {
 	filters[4].append(" (*.xdelta *.XDELTA)");
 	filters[5].append(" (*.*)");
 
-	file = QFileDialog::getOpenFileName(this, tr("Open IPS/BPS/XDELTA Patch"), uQString(gui.last_open_patch_path),
+	const QString file = QFileDialog::getOpenFileName(this,
+		tr("Open IPS/BPS/XDELTA Patch"),
+		uQString(gui.last_open_patch_path),
 		filters.join(";;"));
 
 	if (!file.isNull()) {
-		QFileInfo fileinfo(file);
+		const QFileInfo fileinfo(file);
 
 		patcher_ctrl_if_exist(uQStringCD(fileinfo.absoluteFilePath()));
 
@@ -1755,9 +1782,9 @@ void mainWindow::s_open_edit_current_header(void) {
 	dlgheader->show();
 }
 void mainWindow::s_open_recent_roms(void) {
-	int index = QVariant(((QObject *)sender())->property("myValue")).toInt();
-	QString current = QString((const QChar *)recent_roms_current(), recent_roms_current_size());
-	QString item = QString((const QChar *)recent_roms_item(index), recent_roms_item_size(index));
+	const int index = QVariant(((QObject *)sender())->property("myValue")).toInt();
+	const QString current = QString((const QChar *)recent_roms_current(), recent_roms_current_size());
+	const QString item = QString((const QChar *)recent_roms_item(index), recent_roms_item_size(index));
 
 	emu_pause(TRUE);
 
@@ -2195,26 +2222,8 @@ void mainWindow::s_max_speed_stop(void) const {
 	egds->stop_max_speed();
 	emu_thread_continue();
 }
-void mainWindow::s_toggle_gui_in_window(void) const {
-	bool gui_visibility = false;
-
-	if (gfx.type_of_fscreen_in_use == FULLSCR) {
-		return;
-	}
-
-	emu_thread_pause();
-
-	gui_visibility = !menubar->isVisible();
-	menubar->setVisible(gui_visibility);
-	if (gui_visibility) {
-		gui_visibility = !cfg->toolbar.hidden;
-	}
-	toolbar->setVisible(gui_visibility);
-	statusbar->setVisible(gui_visibility);
-	mainwin->update_gfx_monitor_dimension();
-	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, FALSE);
-
-	emu_thread_continue();
+void mainWindow::s_toggle_gui_in_window(void) {
+	emit et_toggle_gui_in_window();
 }
 void mainWindow::s_open_settings(void) const {
 	const int index = QVariant(((QObject *)sender())->property("myValue")).toInt();

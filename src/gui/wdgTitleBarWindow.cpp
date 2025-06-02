@@ -271,6 +271,7 @@ wdgTitleBarWindow::wdgTitleBarWindow(QWidget *parent, Qt::WindowType window_type
 
 	// if (!gfx.wayland.enabled) {
 	// 	setWindowFlags(window_type);
+	// 	verticalLayout->setContentsMargins(0, 0, 0, 0);
 	// 	return;
 	// }
 
@@ -280,12 +281,14 @@ wdgTitleBarWindow::wdgTitleBarWindow(QWidget *parent, Qt::WindowType window_type
 	setWindowFlags(window_type | Qt::FramelessWindowHint | Qt::WindowCloseButtonHint | Qt::WindowMinMaxButtonsHint | Qt::WindowTitleHint);
 	setMouseTracking(true);
 
+	wm_disabled = true;
 	border_color = palette().color(QPalette::Window);
 	private_hover_watcher = new hoverWatcher(this);
 	private_main_window = new QMainWindow();
 	private_main_window->setSizePolicy(QSizePolicy::Policy::Preferred, QSizePolicy::Policy::Fixed);
-	private_main_window->setMaximumSize(0, 0);
+	private_main_window->setFixedHeight(0);
 	title_bar = new wdgTitleBar(this);
+	title_bar->setFixedHeight(23);
 	title_bar->setWindowIcon(windowIcon());
 	title_bar->setWindowTitle(windowTitle());
 	status_bar = new wdgTitleBarStatus(this);
@@ -304,13 +307,13 @@ wdgTitleBarWindow::wdgTitleBarWindow(QWidget *parent, Qt::WindowType window_type
 	private_layout = new QVBoxLayout(private_hover_watcher);
 	private_layout->setContentsMargins(0, 0, 0, 0);
 	private_layout->setSizeConstraint(QLayout::SetDefaultConstraint);
-	private_layout->setSpacing(4);
+	private_layout->setSpacing(0);
 	private_layout->addWidget(title_bar);
 	private_layout->addWidget(private_main_window);
 	verticalLayout->addWidget(private_hover_watcher);
 	verticalLayout->addWidget(status_bar);
 	private_hover_watcher->setLayout(private_layout);
-	private_hover_watcher->setFixedHeight(private_hover_watcher->height());
+	private_hover_watcher->setFixedHeight(title_bar->height());
 
 	connect(private_hover_watcher, SIGNAL(et_entered(void)), this, SLOT(s_hover_watcher_entered(void)));
 	connect(this, &QMainWindow::windowIconChanged, title_bar, &QWidget::setWindowIcon);
@@ -372,58 +375,64 @@ void wdgTitleBarWindow::closeEvent(QCloseEvent *event) {
 	}
 }
 void wdgTitleBarWindow::paintEvent(QPaintEvent *event) {
-	QStyleOption opt;
-	QPainter p(this);
+	if (wm_disabled) {
+		QStyleOption opt;
+		QPainter p(this);
 
-	opt.initFrom(this);
-	style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
+		opt.initFrom(this);
+		style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
 
-	if (title_bar != nullptr) {
-		QPainterPath path = path_rounded();
+		if (title_bar != nullptr) {
+			QPainterPath path = path_rounded();
 
-		p.setRenderHint(QPainter::Antialiasing);
-		p.fillPath(path, palette().color(QPalette::Window));
-		p.setPen(QPen(border_color, 1));
-		p.drawPath(path);
+			p.setRenderHint(QPainter::Antialiasing);
+			p.fillPath(path, palette().color(QPalette::Window));
+			p.setPen(QPen(border_color, 1));
+			p.drawPath(path);
+		}
 	}
-
 	QWidget::paintEvent(event);
 }
 void wdgTitleBarWindow::mousePressEvent(QMouseEvent *event) {
-	redefine_cursor(EV_GLOBAL_POS(event));
-	if ((event->button() & Qt::LeftButton) && edges) {
-		if (!force_custom_resize && start_system_resize()) {
-			operation_type = OperationType::SYSTEM_RESIZE;
-		} else {
-			QPoint position = EV_GLOBAL_POS(event);
+	if (wm_disabled) {
+		redefine_cursor(EV_GLOBAL_POS(event));
+		if ((event->button() & Qt::LeftButton) && edges) {
+			if (!force_custom_resize && start_system_resize()) {
+				operation_type = OperationType::SYSTEM_RESIZE;
+			} else {
+				QPoint position = EV_GLOBAL_POS(event);
 
-			if (edges & Qt::TopEdge) {
-				position.ry() -= y();
+				if (edges & Qt::TopEdge) {
+					position.ry() -= y();
+				}
+				if (edges & Qt::LeftEdge) {
+					position.rx() -= x();
+				}
+				if (edges & Qt::RightEdge) {
+					position.rx() -= (x() + width());
+				}
+				if (edges & Qt::BottomEdge) {
+					position.ry() -= (y() + height());
+				}
+				operation_type = OperationType::CUSTOM_RESIZE;
 			}
-			if (edges & Qt::LeftEdge) {
-				position.rx() -= x();
-			}
-			if (edges & Qt::RightEdge) {
-				position.rx() -= (x() + width());
-			}
-			if (edges & Qt::BottomEdge) {
-				position.ry() -= (y() + height());
-			}
-			operation_type = OperationType::CUSTOM_RESIZE;
 		}
 	}
 	QWidget::mousePressEvent(event);
 }
 void wdgTitleBarWindow::mouseReleaseEvent(QMouseEvent *event) {
-	operation_type = OperationType::NONE;
-	redefine_cursor(EV_GLOBAL_POS(event));
+	if (wm_disabled) {
+		operation_type = OperationType::NONE;
+		redefine_cursor(EV_GLOBAL_POS(event));
+	}
 	QWidget::mouseReleaseEvent(event);
 }
 void wdgTitleBarWindow::customMouseMoveEvent(QMouseEvent *event) {
 	QPoint tl = geometry().topLeft(), br = geometry().bottomRight();
-	int gx = EV_GLOBAL_X(event), gy = EV_GLOBAL_Y(event);
-	bool crh = br.x() - tl.x() > minimumWidth();
-	bool crv = br.y() - tl.y() > minimumHeight();
+	const int gx = EV_GLOBAL_X(event);
+	const int gy = EV_GLOBAL_Y(event);
+	const bool crh = br.x() - tl.x() > minimumWidth();
+	const bool crv = br.y() - tl.y() > minimumHeight();
 
 	if ((edges & Qt::TopEdge) && (crv || (gy < tl.y()))) {
 		tl.ry() = gy;
@@ -441,9 +450,11 @@ void wdgTitleBarWindow::customMouseMoveEvent(QMouseEvent *event) {
 }
 
 void wdgTitleBarWindow::set_gui_visible(const bool mode) const {
-	private_hover_watcher->setVisible(mode);
-	if (!disabled_resize) {
-		status_bar->setVisible(mode);
+	if (wm_disabled) {
+		private_hover_watcher->setVisible(mode);
+		if (!disabled_resize) {
+			status_bar->setVisible(mode);
+		}
 	}
 }
 void wdgTitleBarWindow::init_geom_variable(const _last_geometry lg) {
@@ -510,13 +521,17 @@ void wdgTitleBarWindow::add_widget(QWidget *widget) {
 	const int w = widget->size().width() + layout()->contentsMargins().left() + layout()->contentsMargins().right();
 	const QSize new_size(qMax(size().width(), w), widget->height() + size().height());
 
-	verticalLayout->insertWidget(verticalLayout->count() - 1, widget);
+	if (!verticalLayout->count()) {
+		verticalLayout->addWidget(widget);
+	} else {
+		verticalLayout->insertWidget(verticalLayout->count() - 1, widget);
+	}
 	resize(new_size);
 	private_widget = widget;
 	update_track_mouse();
 }
-void wdgTitleBarWindow::set_buttons(const barButtons buttons) const {
-	if (title_bar == nullptr) {
+void wdgTitleBarWindow::set_buttons(const barButtons buttons) {
+	if (wm_disabled) {
 		Qt::WindowFlags flags = windowFlags();
 
 		if (buttons & barButton::Minimize) {
@@ -534,7 +549,7 @@ void wdgTitleBarWindow::set_buttons(const barButtons buttons) const {
 		} else {
 			flags &= ~Qt::WindowCloseButtonHint;
 		}
-	} else {
+		setWindowFlags(flags);
 		title_bar->set_buttons(buttons);
 	}
 }
@@ -546,7 +561,7 @@ void wdgTitleBarWindow::set_force_custom_resize(const bool force) {
 }
 void wdgTitleBarWindow::set_permit_resize(const bool mode) {
 	disabled_resize = !mode;
-	if (disabled_resize && (title_bar == nullptr)) {
+	if (disabled_resize && !wm_disabled) {
 		layout()->setSizeConstraint(QLayout::SetFixedSize);
 	}
 	update_size_grip_visibility();
@@ -556,7 +571,7 @@ void wdgTitleBarWindow::set_permit_resize(const bool mode) {
 
 void wdgTitleBarWindow::update_track_mouse(void) const {
 	// mi serve per la corretta gestione del redefine_cursor();
-	if (private_widget) {
+	if (wm_disabled && private_widget) {
 		private_widget->setMouseTracking(hasMouseTracking() & !disabled_resize);
 	}
 }
