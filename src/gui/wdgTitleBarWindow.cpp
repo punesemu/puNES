@@ -233,11 +233,11 @@ void wdgTitleBarStatus::paintEvent(UNUSED(QPaintEvent *event)) {
 	QColor border;
 
 	if (theme::is_dark_theme()) {
-		background = palette().color(QPalette::Dark);//QColor(45, 45, 45);
-		border = palette().color(QPalette::Light);//QColor(25, 25, 25);
+		background = palette().color(QPalette::Dark);
+		border = palette().color(QPalette::Light);
 	} else {
-		background = palette().color(QPalette::Light);//QColor(200, 200, 200);
-		border = palette().color(QPalette::Dark);// QColor(200, 200, 200);
+		background = palette().color(QPalette::Light);
+		border = palette().color(QPalette::Dark);
 	}
 	opt.initFrom(this);
 	painter.setRenderHint(QPainter::Antialiasing);
@@ -269,10 +269,10 @@ void wdgTitleBarStatus::paintEvent(UNUSED(QPaintEvent *event)) {
 wdgTitleBarWindow::wdgTitleBarWindow(QWidget *parent, Qt::WindowType window_type) : QWidget(parent) {
 	setupUi(this);
 
-//	if (!gfx.wayland.enabled) {
-//		setWindowFlags(window_type);
-//		return;
-//	}
+	// if (!gfx.wayland.enabled) {
+	// 	setWindowFlags(window_type);
+	// 	return;
+	// }
 
 	//setAttribute(Qt::WA_NativeWindow);
 	// abilita la trasparenza della finestra
@@ -280,15 +280,7 @@ wdgTitleBarWindow::wdgTitleBarWindow(QWidget *parent, Qt::WindowType window_type
 	setWindowFlags(window_type | Qt::FramelessWindowHint | Qt::WindowCloseButtonHint | Qt::WindowMinMaxButtonsHint | Qt::WindowTitleHint);
 	setMouseTracking(true);
 
-	geom = QRect(0, 0, 0, 0);
-	dialog_exit_code = dialogExitCode::REJECTED;
 	border_color = palette().color(QPalette::Window);
-	resize_threshold = 4;
-	force_custom_move = false;
-	force_custom_resize = false;
-	loop_in_exec = FALSE;
-	disabled_resize = false;
-	operation_type = OperationType::NONE;
 	private_hover_watcher = new hoverWatcher(this);
 	private_main_window = new QMainWindow();
 	private_main_window->setSizePolicy(QSizePolicy::Policy::Preferred, QSizePolicy::Policy::Fixed);
@@ -515,8 +507,8 @@ void wdgTitleBarWindow::set_border_color(const QColor color) {
 	border_color = color;
 }
 void wdgTitleBarWindow::add_widget(QWidget *widget) {
-	int w = widget->size().width() + layout()->contentsMargins().left() + layout()->contentsMargins().right();
-	QSize new_size(qMax(size().width(), w), widget->height() + size().height());
+	const int w = widget->size().width() + layout()->contentsMargins().left() + layout()->contentsMargins().right();
+	const QSize new_size(qMax(size().width(), w), widget->height() + size().height());
 
 	verticalLayout->insertWidget(verticalLayout->count() - 1, widget);
 	resize(new_size);

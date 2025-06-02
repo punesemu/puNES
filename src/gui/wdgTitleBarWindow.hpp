@@ -140,24 +140,24 @@ class wdgTitleBarWindow : public QWidget, public Ui::wdgTitleBarWindow {
 	private:
 		QColor border_color;
 		QVBoxLayout *private_layout = nullptr;
-		OperationType operation_type;
+		OperationType operation_type = NONE;
 		QMainWindow *private_main_window = nullptr;
 		hoverWatcher *private_hover_watcher = nullptr;
 		QWidget *private_widget = nullptr;
 		wdgTitleBar *title_bar = nullptr;
 		wdgTitleBarStatus *status_bar = nullptr;
 		QSizeGrip *size_grip = nullptr;
-		dialogExitCode dialog_exit_code;
+		dialogExitCode dialog_exit_code = REJECTED;
 		QPoint cursor_position;
 		Qt::Edges edges;
-		bool force_custom_move;
-		bool force_custom_resize;
-		bool disabled_resize;
-		bool loop_in_exec;
-		int resize_threshold;
+		bool force_custom_move = false;
+		bool force_custom_resize = false;
+		bool disabled_resize = false;
+		bool loop_in_exec = false;
+		int resize_threshold = 4;
 
 	public:
-		QRect geom;
+		QRect geom = QRect(0, 0, 0, 0);
 
 	signals:
 		void et_quit_loop(void);
