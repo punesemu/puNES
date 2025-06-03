@@ -269,6 +269,8 @@ void wdgTitleBarStatus::paintEvent(UNUSED(QPaintEvent *event)) {
 wdgTitleBarWindow::wdgTitleBarWindow(QWidget *parent, Qt::WindowType window_type) : QWidget(parent) {
 	setupUi(this);
 
+	layout_margins = verticalLayout->contentsMargins();
+
 	// if (!gfx.wayland.enabled) {
 	// 	setWindowFlags(window_type);
 	// 	verticalLayout->setContentsMargins(0, 0, 0, 0);
@@ -449,6 +451,14 @@ void wdgTitleBarWindow::customMouseMoveEvent(QMouseEvent *event) {
 	setGeometry(QRect(tl, br));
 }
 
+void wdgTitleBarWindow::init_fullscreen(const bool mode) const {
+	if (wm_disabled) {
+		constexpr QMargins zero = QMargins(0, 0 , 0, 0);
+
+		verticalLayout->setContentsMargins(mode ? zero : layout_margins);
+		set_gui_visible(!mode);
+	}
+}
 void wdgTitleBarWindow::set_gui_visible(const bool mode) const {
 	if (wm_disabled) {
 		private_hover_watcher->setVisible(mode);

@@ -211,7 +211,6 @@ void wdgDlgMainWindow::stylesheet_update(void) {
 	);
 }
 
-
 QScreen *wdgDlgMainWindow::win_handle_screen(void) const {
 #if QT_VERSION < QT_VERSION_CHECK(5, 14, 0)
 	QScreen *screen = QGuiApplication::screens().at(qApp->desktop()->screenNumber(this));
@@ -232,13 +231,11 @@ void wdgDlgMainWindow::update_gfx_monitor_dimension(void) {
 		gfx.w[MONITOR] = fs_geom.width();
 		gfx.h[MONITOR] = fs_geom.height();
 #endif
-
 		if (wd->toolbar->orientation() == Qt::Vertical) {
 			gfx.w[MONITOR] -= (toolbar_is_hidden ? 0 : wd->toolbar->sizeHint().width());
 		} else {
 			gfx.h[MONITOR] -= (toolbar_is_hidden ? 0 : wd->toolbar->sizeHint().height());
 		}
-
 		if (wm_disabled) {
 			gfx.w[MONITOR] -= verticalLayout->contentsMargins().left() + verticalLayout->contentsMargins().right();
 			gfx.h[MONITOR] -= verticalLayout->contentsMargins().top() + verticalLayout->contentsMargins().bottom();
@@ -247,9 +244,9 @@ void wdgDlgMainWindow::update_gfx_monitor_dimension(void) {
 		gfx.h[MONITOR] -= (wd->menubar->isHidden() ? 0 : wd->menubar->sizeHint().height());
 		gfx.h[MONITOR] -= (wd->statusbar->isHidden() ? 0 : wd->statusbar->sizeHint().height());
 	} else if (gfx.type_of_fscreen_in_use == FULLSCR) {
-		fs_geom = mainwin->win_handle_screen()->geometry();
+		fs_geom = win_handle_screen()->geometry();
 
-		switch (mainwin->win_handle_screen()->orientation()) {
+		switch (win_handle_screen()->orientation()) {
 			default:
 			case Qt::LandscapeOrientation:
 				gfx.screen_rotation = ROTATE_0;
@@ -278,11 +275,19 @@ void wdgDlgMainWindow::update_gfx_monitor_dimension(void) {
 			}
 		}
 #endif
+
+		if (wm_disabled) {
+			QMargins margins = verticalLayout->contentsMargins();
+
+			fs_geom.setWidth(fs_geom.width() - (margins.left() + margins.right()));
+			fs_geom.setHeight(fs_geom.height() - (margins.top() + margins.bottom()));
+		}
+
 		gfx.w[MONITOR] = fs_geom.width();
 		gfx.h[MONITOR] = fs_geom.height();
 
 		{
-			const qreal dpr = mainwin->win_handle_screen()->devicePixelRatio();
+			const qreal dpr = win_handle_screen()->devicePixelRatio();
 
 			gfx.w[MONITOR] = (SDBWORD)((qreal)gfx.w[MONITOR] / dpr);
 			gfx.h[MONITOR] = (SDBWORD)((qreal)gfx.h[MONITOR] / dpr);
@@ -302,18 +307,13 @@ void wdgDlgMainWindow::set_dialog_geom(QRect &new_geom) const {
 }
 
 void wdgDlgMainWindow::set_fullscreen(void) {
-#if defined (_WIN32)
 	static Qt::WindowFlags window_flags = windowFlags();
-#endif
 
 	if (gui.in_update) {
 		return;
 	}
-
 	if ((cfg->fullscreen == NO_FULLSCR) || (cfg->fullscreen == NO_CHANGE)) {
-#if defined (_WIN32)
 		window_flags = windowFlags();
-#endif
 		if (gfx.only_fullscreen_in_window || cfg->fullscreen_in_window) {
 			QRect fs_win_geom = win_handle_screen()->availableGeometry();
 #if defined (_WIN32)
@@ -357,8 +357,9 @@ void wdgDlgMainWindow::set_fullscreen(void) {
 			}
 		} else {
 			gfx.type_of_fscreen_in_use = FULLSCR;
+			verticalLayout->setContentsMargins(0, 0, 0, 0);
 			update_gfx_monitor_dimension();
-			set_gui_visible(false);
+			init_fullscreen(true);
 			wd->menubar->setVisible(false);
 			wd->toolbar->setVisible(false);
 			wd->statusbar->setVisible(false);
@@ -385,10 +386,14 @@ void wdgDlgMainWindow::set_fullscreen(void) {
 			fullscreen_resize = false;
 			gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, FULLSCR, NO_CHANGE, FALSE, FALSE);
 #else
-			move(fs_geom.x(), fs_geom.y());
+			move(fs_geom.x() - (geometry().x() - x()), fs_geom.y() - (geometry().y() - y()));
+			setWindowState(Qt::WindowFullScreen);
 			show();
-			fullscreen_resize = true;
-			showFullScreen();
+			gfx.w[FSCR_RESIZE] = 0;
+			gfx.h[FSCR_RESIZE] = 0;
+			fullscreen_resize = false;
+			wd->setFixedSize(fs_geom.width(), fs_geom.height());
+			gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, FULLSCR, NO_CHANGE, FALSE, FALSE);
 #endif
 		}
 	} else {
@@ -399,13 +404,11 @@ void wdgDlgMainWindow::set_fullscreen(void) {
 		}
 		gfx.type_of_fscreen_in_use = NO_FULLSCR;
 		wd->tmm = (BYTE)mainWindow::TOGGLE_MENUBAR_NONE;
-#if defined (_WIN32)
 		setWindowFlags(window_flags);
-#endif
 		gfx.w[FSCR_RESIZE] = 0;
 		gfx.h[FSCR_RESIZE] = 0;
 		fullscreen_resize = false;
-		set_gui_visible(true);
+		init_fullscreen(false);
 		showNormal();
 		gfx_set_screen(gfx.scale_before_fscreen, NO_CHANGE, NO_CHANGE, NO_FULLSCR, NO_CHANGE, FALSE, FALSE);
 		setGeometry(org_geom.x(), org_geom.y(), geometry().width(), geometry().height());
@@ -457,7 +460,7 @@ void wdgDlgMainWindow::s_set_fullscreen(void) {
 			// nella parte destra del monitor potrebbe non essere visualizzata correttamente.
 			// E' importante che lo spostamento avvenga prima dell'hide().
 			if (!cfg->fullscreen_in_window) {
-				const QRect mgeom = mainwin->win_handle_screen()->geometry();
+				const QRect mgeom = win_handle_screen()->geometry();
 
 				move(mgeom.x() - (geometry().x() - x()), mgeom.y() - (geometry().y() - y()));
 			}

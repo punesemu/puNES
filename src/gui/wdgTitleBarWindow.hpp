@@ -150,6 +150,7 @@ class wdgTitleBarWindow : public QWidget, public Ui::wdgTitleBarWindow {
 		QColor border_color;
 		QPoint cursor_position;
 		Qt::Edges edges;
+		QMargins layout_margins;
 		bool force_custom_move = false;
 		bool force_custom_resize = false;
 		bool disabled_resize = false;
@@ -177,6 +178,7 @@ class wdgTitleBarWindow : public QWidget, public Ui::wdgTitleBarWindow {
 		virtual void customMouseMoveEvent(QMouseEvent* event);
 
 	public:
+		void init_fullscreen(bool mode) const;
 		void set_gui_visible(bool mode) const;
 		void init_geom_variable(_last_geometry lg);
 		void set_geometry(void);
