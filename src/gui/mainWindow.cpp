@@ -357,7 +357,6 @@ void wdgDlgMainWindow::set_fullscreen(void) {
 			}
 		} else {
 			gfx.type_of_fscreen_in_use = FULLSCR;
-			verticalLayout->setContentsMargins(0, 0, 0, 0);
 			update_gfx_monitor_dimension();
 			init_fullscreen(true);
 			wd->menubar->setVisible(false);
