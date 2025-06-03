@@ -18,8 +18,8 @@
 
 #include <QtGui/QScreen>
 #include "dlgVsSystem.hpp"
-#include "mainWindow.hpp"
 #include "dlgSettings.hpp"
+#include "mainWindow.hpp"
 #include "vs_system.h"
 #include "clock.h"
 #include "conf.h"

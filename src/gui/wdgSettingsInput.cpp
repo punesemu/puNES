@@ -18,8 +18,8 @@
 
 #include <QtWidgets/QScrollBar>
 #include "wdgSettingsInput.hpp"
-#include "mainWindow.hpp"
 #include "dlgSettings.hpp"
+#include "mainWindow.hpp"
 #include "dlgStdPad.hpp"
 #include "dlgKeyboard.hpp"
 #include "emu_thread.h"

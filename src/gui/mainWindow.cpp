@@ -105,7 +105,11 @@ wdgDlgMainWindow::wdgDlgMainWindow(QWidget *parent) : wdgTitleBarDialog(parent) 
 wdgDlgMainWindow::~wdgDlgMainWindow() = default;
 
 #if defined (_WIN32)
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+bool wdgDlgMainWindow::nativeEvent(const QByteArray &eventType, void *message, qintptr *result) {
+#else
 bool wdgDlgMainWindow::nativeEvent(const QByteArray &eventType, void *message, long *result) {
+#endif
 	MSG *msg = (MSG *)message;
 
 	switch (msg->message) {

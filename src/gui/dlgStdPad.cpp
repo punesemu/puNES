@@ -20,9 +20,9 @@
 #include <QtGui/QPainter>
 #include <QtWidgets/QAbstractItemView>
 #include <QtWidgets/QStylePainter>
+#include "objSettings.hpp"
 #include "dlgStdPad.hpp"
 #include "mainWindow.hpp"
-#include "objSettings.hpp"
 #include "clock.h"
 #include "gui.h"
 #include "input/standard_controller.h"

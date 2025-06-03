@@ -13,12 +13,12 @@
 // * do so, delete this exception statement from your version.                *
 // ****************************************************************************
 
+#include <vector>
 #include <algorithm>
 #include "c++/xBRZ/xbrz_wrap.h"
 #include "c++/xBRZ/xbrz.h"
 #include <cassert>
 #include <cmath>
-#include <vector>
 
 namespace
 {
