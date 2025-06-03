@@ -278,8 +278,10 @@ wdgTitleBarWindow::wdgTitleBarWindow(QWidget *parent, Qt::WindowType window_type
 	// }
 
 	//setAttribute(Qt::WA_NativeWindow);
+#if !defined (_WIN32)
 	// abilita la trasparenza della finestra
 	setAttribute(Qt::WA_TranslucentBackground);
+#endif
 	setWindowFlags(window_type | Qt::FramelessWindowHint | Qt::WindowCloseButtonHint | Qt::WindowMinMaxButtonsHint | Qt::WindowTitleHint);
 	setMouseTracking(true);
 

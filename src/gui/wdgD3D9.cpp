@@ -45,9 +45,9 @@ void wdgD3D9::paintEvent(UNUSED(QPaintEvent *event)) {
 	d3d9_draw_scene();
 
 	if (++gfps.count > gfps.frequency) {
-		qint64 ms = gfps.timer.elapsed();
-		BYTE nidx = emu_active_nidx();
-		double sec = (double)ms / 1000.0;
+		const qint64 ms = gfps.timer.elapsed();
+		const BYTE nidx = emu_active_nidx();
+		const double sec = (double)ms / 1000.0;
 
 		gfx_ppu_thread_lock();
 		fps.emu = lround(nes[nidx].p.fps / sec);
