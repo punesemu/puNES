@@ -88,6 +88,8 @@ wdgDlgMainWindow::wdgDlgMainWindow(QWidget *parent) : wdgTitleBarDialog(parent) 
 	setAttribute(Qt::WA_DeleteOnClose);
 	wd = new mainWindow();
 	wd->setParent(this);
+	// per la mainWindow preferisco impostare l'expanding
+	wd->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 	setWindowTitle(wd->windowTitle());
 	setWindowIcon(QIcon(":icon/icons/application.png"));
 	set_border_color("lime");
@@ -276,13 +278,6 @@ void wdgDlgMainWindow::update_gfx_monitor_dimension(void) {
 		}
 #endif
 
-		if (wm_disabled) {
-			QMargins margins = verticalLayout->contentsMargins();
-
-			fs_geom.setWidth(fs_geom.width() - (margins.left() + margins.right()));
-			fs_geom.setHeight(fs_geom.height() - (margins.top() + margins.bottom()));
-		}
-
 		gfx.w[MONITOR] = fs_geom.width();
 		gfx.h[MONITOR] = fs_geom.height();
 
@@ -362,7 +357,9 @@ void wdgDlgMainWindow::set_fullscreen(void) {
 			wd->menubar->setVisible(false);
 			wd->toolbar->setVisible(false);
 			wd->statusbar->setVisible(false);
-			wd->reset_min_max_size();
+			// se utilizzo il reset_min_max_size() la finestra
+			// viene spostata nel monitor accanto
+			//wd->reset_min_max_size();
 #if defined (_WIN32)
 			// when a window is using an OpenGL based surface and is appearing in full screen mode,
 			// problems can occur with other top-level windows which are part of the application. Due
