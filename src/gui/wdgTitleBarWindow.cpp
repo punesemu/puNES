@@ -573,7 +573,7 @@ void wdgTitleBarWindow::set_force_custom_resize(const bool force) {
 }
 void wdgTitleBarWindow::set_permit_resize(const bool mode) {
 	disabled_resize = !mode;
-	if (disabled_resize && !wm_disabled) {
+	if (disabled_resize) {
 		layout()->setSizeConstraint(QLayout::SetFixedSize);
 	}
 	update_size_grip_visibility();
