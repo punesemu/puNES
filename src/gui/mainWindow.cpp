@@ -360,7 +360,7 @@ void wdgDlgMainWindow::set_fullscreen(void) {
 			// se utilizzo il reset_min_max_size() la finestra
 			// viene spostata nel monitor accanto
 			//wd->reset_min_max_size();
-#if defined (_WIN32)
+
 			// when a window is using an OpenGL based surface and is appearing in full screen mode,
 			// problems can occur with other top-level windows which are part of the application. Due
 			// to limitations of the Windows DWM, compositing is not handled correctly for OpenGL based
@@ -375,22 +375,17 @@ void wdgDlgMainWindow::set_fullscreen(void) {
 
 			// sposto la finestra nell'angolo superiore del monitor
 			move(fs_geom.x() - (geometry().x() - x()), fs_geom.y() - (geometry().y() - y()));
+#if defined (_WIN32)
 			setWindowFlags(Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);
-			showNormal();
-			gfx.w[FSCR_RESIZE] = 0;
-			gfx.h[FSCR_RESIZE] = 0;
-			fullscreen_resize = false;
-			gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, FULLSCR, NO_CHANGE, FALSE, FALSE);
 #else
-			move(fs_geom.x() - (geometry().x() - x()), fs_geom.y() - (geometry().y() - y()));
 			setWindowState(Qt::WindowFullScreen);
+#endif
 			show();
 			gfx.w[FSCR_RESIZE] = 0;
 			gfx.h[FSCR_RESIZE] = 0;
 			fullscreen_resize = false;
 			wd->setFixedSize(fs_geom.width(), fs_geom.height());
 			gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, FULLSCR, NO_CHANGE, FALSE, FALSE);
-#endif
 		}
 	} else {
 		if (gfx.type_of_fscreen_in_use == FULLSCR) {
