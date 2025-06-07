@@ -397,7 +397,7 @@ class wdgDlgMainWindow final : public wdgTitleBarDialog {
 
 	public:
 		QScreen *win_handle_screen(void) const;
-		void update_gfx_monitor_dimension(void);
+		void update_gfx_monitor_dimension(bool adjust_fs_geom);
 		void set_dialog_geom(QRect &new_geom) const;
 
 	private:

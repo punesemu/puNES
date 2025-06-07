@@ -189,7 +189,7 @@ void wdgDlgMainWindow::resizeEvent(QResizeEvent *event) {
 		if (fullscreen_resize && (event->size().width() >= SCR_COLUMNS)) {
 			if (gfx.type_of_fscreen_in_use == FULLSCR_IN_WINDOW) {
 				fs_geom = QRect(0, 0, event->size().width(), event->size().height());
-				update_gfx_monitor_dimension();
+				update_gfx_monitor_dimension(true);
 			}
 			fullscreen_resize = false;
 			wd->setFixedSize(fs_geom.width(), fs_geom.height());
@@ -218,22 +218,25 @@ QScreen *wdgDlgMainWindow::win_handle_screen(void) const {
 
 	return (screen);
 }
-void wdgDlgMainWindow::update_gfx_monitor_dimension(void) {
+void wdgDlgMainWindow::update_gfx_monitor_dimension(bool adjust_fs_geom) {
 	if (gfx.type_of_fscreen_in_use == FULLSCR_IN_WINDOW) {
 		const bool toolbar_is_hidden = wd->toolbar->isHidden() || wd->toolbar->isFloating();
-		const QMargins margins = verticalLayout->contentsMargins();
 
-		// calcolo le reali dimensioni di fs_geom
-		if (!fullscreen_resize) {
-			fs_geom.setWidth(fs_geom.width() - (frameGeometry().width() - geometry().width()));
-			fs_geom.setHeight(fs_geom.height() - (frameGeometry().height() - geometry().height()));
-		}
+		if (adjust_fs_geom) {
+			const QMargins margins = verticalLayout->contentsMargins();
 
-		fs_geom.setWidth(fs_geom.width() - (margins.left() + margins.right()));
-		fs_geom.setHeight(fs_geom.height() - (margins.top() + margins.bottom()));
+			// calcolo le reali dimensioni di fs_geom
+			if (!fullscreen_resize) {
+				fs_geom.setWidth(fs_geom.width() - (frameGeometry().width() - geometry().width()));
+				fs_geom.setHeight(fs_geom.height() - (frameGeometry().height() - geometry().height()));
+			}
 
-		if (wm_disabled) {
-			fs_geom.setHeight(fs_geom.height() - (title_bar->isHidden() ? 0 : private_hover_watcher->size().height()));
+			fs_geom.setWidth(fs_geom.width() - (margins.left() + margins.right()));
+			fs_geom.setHeight(fs_geom.height() - (margins.top() + margins.bottom()));
+
+			if (wm_disabled) {
+				fs_geom.setHeight(fs_geom.height() - (title_bar->isHidden() ? 0 : private_hover_watcher->size().height()));
+			}
 		}
 
 		// calcolo le gfx.x[MONITOR]
@@ -305,6 +308,7 @@ void wdgDlgMainWindow::set_dialog_geom(QRect &new_geom) const {
 
 void wdgDlgMainWindow::set_fullscreen(void) {
 	static Qt::WindowFlags window_flags = windowFlags();
+	static QLayout::SizeConstraint size_constraint = layout()->sizeConstraint();
 
 	fullscreen_resize = false;
 	if (gui.in_update) {
@@ -312,6 +316,7 @@ void wdgDlgMainWindow::set_fullscreen(void) {
 	}
 	if ((cfg->fullscreen == NO_FULLSCR) || (cfg->fullscreen == NO_CHANGE)) {
 		window_flags = windowFlags();
+		size_constraint = layout()->sizeConstraint();
 		if (gfx.only_fullscreen_in_window || cfg->fullscreen_in_window) {
 			QRect fs_win_geom = win_handle_screen()->availableGeometry();
 #if defined (_WIN32)
@@ -340,11 +345,13 @@ void wdgDlgMainWindow::set_fullscreen(void) {
 			}
 #endif
 			if (desktop_resolution) {
+				wd->reset_min_max_size();
+				layout()->setSizeConstraint(QLayout::SetDefaultConstraint);
 				showMaximized();
 				fullscreen_resize = true;
 			} else {
 				fs_geom = fs_win_geom;
-				update_gfx_monitor_dimension();
+				update_gfx_monitor_dimension(true);
 				move(fs_geom.x(), fs_geom.y());
 				show();
 				wd->setFixedSize(fs_geom.width(), fs_geom.height());
@@ -352,7 +359,7 @@ void wdgDlgMainWindow::set_fullscreen(void) {
 			}
 		} else {
 			gfx.type_of_fscreen_in_use = FULLSCR;
-			update_gfx_monitor_dimension();
+			update_gfx_monitor_dimension(true);
 			init_fullscreen(true);
 			wd->menubar->setVisible(false);
 			wd->toolbar->setVisible(false);
@@ -398,6 +405,7 @@ void wdgDlgMainWindow::set_fullscreen(void) {
 		gfx.h[FSCR_RESIZE] = 0;
 		init_fullscreen(false);
 		showNormal();
+		layout()->setSizeConstraint(size_constraint);
 		gfx_set_screen(gfx.scale_before_fscreen, NO_CHANGE, NO_CHANGE, NO_FULLSCR, NO_CHANGE, FALSE, FALSE);
 		setGeometry(org_geom.x(), org_geom.y(), geometry().width(), geometry().height());
 		// al rientro dal fullscreen a finestra devo eseguire un update() ritardato per ridisignare correttamente la GUI.
@@ -490,7 +498,7 @@ void wdgDlgMainWindow::s_toggle_gui_in_window(void) {
 		}
 		wd->toolbar->setVisible(gui_visibility);
 		wd->statusbar->setVisible(gui_visibility);
-		update_gfx_monitor_dimension();
+		update_gfx_monitor_dimension(false);
 		gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, FALSE);
 		wd->setFixedSize(wd->size());
 
@@ -1085,7 +1093,7 @@ void mainWindow::toggle_toolbars(void) const {
 
 	toolbar->setVisible(visible);
 	statusbar->setVisible(visible);
-	mainwin->update_gfx_monitor_dimension();
+	mainwin->update_gfx_monitor_dimension(false);
 	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, FALSE);
 
 	emu_thread_continue();
@@ -1099,10 +1107,6 @@ void mainWindow::reset_min_max_size(void) {
 	// a sbloccarla.
 	setMinimumSize(QSize(0, 0));
 	setMaximumSize(QSize(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX));
-	toolbar->setMinimumSize(QSize(0, 0));
-	toolbar->setMaximumSize(QSize(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX));
-	statusbar->setMinimumSize(QSize(0, 0));
-	statusbar->setMaximumSize(QSize(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX));
 #endif
 }
 void mainWindow::shout_into_mic(const BYTE mode) {
