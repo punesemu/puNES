@@ -664,8 +664,6 @@ void gui_set_window_size(void) {
 #endif
 
 	qt.mwin->wd->setFixedSize(QSize(w, h));
-	qt.mwin->wd->menubar->setFixedWidth(w);
-	qt.mwin->wd->statusbar->setFixedWidth(w);
 	qt.mwin->adjustSize();
 }
 

@@ -26,7 +26,9 @@
 #include "ui_mainWindow.h"
 #include "common.h"
 
-class infoStatusBar : public QWidget {
+// ----------------------------------------------------------------------------------------------
+
+class infoStatusBar final : public QWidget {
 	private:
 		QHBoxLayout *hbox;
 		QLabel *label;
@@ -36,9 +38,12 @@ class infoStatusBar : public QWidget {
 		~infoStatusBar() override;
 
 	public:
-		void update_label(void);
+		void update_label(void) const;
 };
-class recStatusBar : public QFrame {
+
+// ----------------------------------------------------------------------------------------------
+
+class recStatusBar final : public QFrame {
 	Q_OBJECT
 
 	private:
@@ -59,15 +64,18 @@ class recStatusBar : public QFrame {
 		void mousePressEvent(QMouseEvent *event) override;
 
 	private:
-		void desc_text(void);
-		void icon_pixmap(QIcon::Mode mode);
+		void desc_text(void) const;
+		void icon_pixmap(QIcon::Mode mode) const;
 
 	private slots:
-		void s_et_blink_icon(void);
-		void s_blink_icon(void);
-		void s_context_menu(const QPoint& pos);
+		void s_et_blink_icon(void) const;
+		void s_blink_icon(void) const;
+		void s_context_menu(const QPoint& pos) const;
 };
-class alignmentStatusBar : public QFrame {
+
+// ----------------------------------------------------------------------------------------------
+
+class alignmentStatusBar final : public QFrame {
 	Q_OBJECT
 
 	private:
@@ -80,7 +88,10 @@ class alignmentStatusBar : public QFrame {
 	public:
 		void update_label(void);
 };
-class nesKeyboardIcon: public QLabel {
+
+// ----------------------------------------------------------------------------------------------
+
+class nesKeyboardIcon final : public QLabel {
 	Q_OBJECT
 
 	public:
@@ -93,7 +104,10 @@ class nesKeyboardIcon: public QLabel {
 	protected:
 		void mousePressEvent(QMouseEvent *event) override;
 };
-class nesKeyboardStatusBar : public QFrame {
+
+// ----------------------------------------------------------------------------------------------
+
+class nesKeyboardStatusBar final : public QFrame {
 	Q_OBJECT
 
 	public:
@@ -107,13 +121,16 @@ class nesKeyboardStatusBar : public QFrame {
 		void changeEvent(QEvent *event) override;
 
 	public:
-		void update_tooltip(void);
+		void update_tooltip(void) const;
 		void icon_pixmap(QIcon::Mode mode) const;
 
 	private slots:
-		void s_clicked(int button);
+		static void s_clicked(int button);
 };
-class wdgStatusBar : public QStatusBar {
+
+// ----------------------------------------------------------------------------------------------
+
+class wdgStatusBar final : public QStatusBar {
 	public:
 		infoStatusBar *info;
 		nesKeyboardStatusBar *keyb;

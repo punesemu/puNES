@@ -27,14 +27,16 @@
 #include "recording.h"
 #include "gui.h"
 
-// -------------------------------- Statusbar -----------------------------------------
+// ----------------------------------------------------------------------------------------------
 
 wdgStatusBar::wdgStatusBar(QWidget *parent) : QStatusBar(parent) {
 	setObjectName("statusbar");
 	setSizeGripEnabled(false);
+	setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
 
 	layout()->setContentsMargins(QMargins(0, 0, 0, 0));
 	layout()->setSpacing(0);
+	layout()->setSizeConstraint(QLayout::SetDefaultConstraint);
 
 	info = new infoStatusBar(this);
 	addWidget(info, 1);
@@ -60,7 +62,6 @@ bool wdgStatusBar::eventFilter(QObject *obj, QEvent *event) {
 	return (QObject::eventFilter(obj, event));
 }
 void wdgStatusBar::showEvent(QShowEvent *event) {
-	rec->setFixedHeight(info->height());
 	QStatusBar::showEvent(event);
 }
 
@@ -70,7 +71,7 @@ void wdgStatusBar::update_statusbar(void) const {
 	keyb->update_tooltip();
 }
 
-// ---------------------------------- Info --------------------------------------------
+// ----------------------------------------------------------------------------------------------
 
 infoStatusBar::infoStatusBar(QWidget *parent) : QWidget(parent) {
 	hbox = new QHBoxLayout(this);
@@ -85,7 +86,7 @@ infoStatusBar::infoStatusBar(QWidget *parent) : QWidget(parent) {
 }
 infoStatusBar::~infoStatusBar() = default;
 
-void infoStatusBar::update_label(void) {
+void infoStatusBar::update_label(void) const {
 	BYTE patch = FALSE;
 	uTCHAR *rom;
 
@@ -117,7 +118,7 @@ void infoStatusBar::update_label(void) {
 	}
 }
 
-// ----------------------------- Alignment CPU PPU ------------------------------------
+// ----------------------------------------------------------------------------------------------
 
 alignmentStatusBar::alignmentStatusBar(QWidget *parent) : QFrame(parent) {
 	QHBoxLayout *layout = new QHBoxLayout(this);
@@ -142,7 +143,7 @@ void alignmentStatusBar::update_label(void) {
 	}
 }
 
-// ----------------------------------- Rec --------------------------------------------
+// ----------------------------------------------------------------------------------------------
 
 recStatusBar::recStatusBar(QWidget *parent) : QFrame(parent) {
 	QHBoxLayout *layout = new QHBoxLayout(this);
@@ -191,7 +192,7 @@ void recStatusBar::mousePressEvent(QMouseEvent *event) {
 	}
 }
 
-void recStatusBar::desc_text(void) {
+void recStatusBar::desc_text(void) const {
 #if defined (WITH_FFMPEG)
 	if (cfg->recording.last_type == REC_FORMAT_AUDIO) {
 		desc->setText(tr("Audio"));
@@ -207,11 +208,11 @@ void recStatusBar::desc_text(void) {
 		desc->setEnabled(false);
 	}
 }
-void recStatusBar::icon_pixmap(QIcon::Mode mode) {
+void recStatusBar::icon_pixmap(const QIcon::Mode mode) const {
 	icon->setPixmap(QIcon(":/icon/icons/recording_red.svgz").pixmap(height(), height() - 4,  mode));
 }
 
-void recStatusBar::s_et_blink_icon(void) {
+void recStatusBar::s_et_blink_icon(void) const {
 	if (info.recording_on_air) {
 		if (!timer->isActive()) {
 			desc_text();
@@ -223,7 +224,7 @@ void recStatusBar::s_et_blink_icon(void) {
 		icon_pixmap(QIcon::Disabled);
 	}
 }
-void recStatusBar::s_blink_icon(void) {
+void recStatusBar::s_blink_icon(void) const {
 	QIcon::Mode mode = QIcon::Disabled;
 	static bool state = true;
 
@@ -235,8 +236,8 @@ void recStatusBar::s_blink_icon(void) {
 	}
 	icon_pixmap(mode);
 }
-void recStatusBar::s_context_menu(const QPoint &pos) {
-	QPoint global_pos = mapToGlobal(pos);
+void recStatusBar::s_context_menu(const QPoint &pos) const {
+	const QPoint global_pos = mapToGlobal(pos);
 	QMenu menu;
 
 	menu.addAction(mainwin->wd->action_Start_Stop_Audio_recording);
@@ -246,7 +247,7 @@ void recStatusBar::s_context_menu(const QPoint &pos) {
 	menu.exec(global_pos);
 }
 
-// --------------------------------- Keyboard -----------------------------------------
+// ----------------------------------------------------------------------------------------------
 
 nesKeyboardIcon::nesKeyboardIcon(QWidget* parent) : QLabel(parent) {}
 nesKeyboardIcon::~nesKeyboardIcon() = default;
@@ -255,7 +256,7 @@ void nesKeyboardIcon::mousePressEvent(QMouseEvent *event) {
 	emit clicked(event->button());
 }
 
-// --
+// ----------------------------------------------------------------------------------------------
 
 nesKeyboardStatusBar::nesKeyboardStatusBar(QWidget *parent) : QFrame(parent) {
 	QHBoxLayout *layout = new QHBoxLayout(this);
@@ -281,7 +282,7 @@ void nesKeyboardStatusBar::changeEvent(QEvent *event) {
 	}
 }
 
-void nesKeyboardStatusBar::update_tooltip(void) {
+void nesKeyboardStatusBar::update_tooltip(void) const {
 	QString tooltip = "";
 
 	if (isEnabled()) {
@@ -311,13 +312,13 @@ void nesKeyboardStatusBar::update_tooltip(void) {
 
 	icon->setToolTip(tooltip);
 }
-void nesKeyboardStatusBar::icon_pixmap(QIcon::Mode mode) const {
+void nesKeyboardStatusBar::icon_pixmap(const QIcon::Mode mode) const {
 	icon->setPixmap(QIcon(gui.capture_input
 		? ":/pics/pics/hostkey_captured.png"
 		: ":/pics/pics/hostkey.png").pixmap(16, 16,  mode));
 }
 
-void nesKeyboardStatusBar::s_clicked(int button) {
+void nesKeyboardStatusBar::s_clicked(const int button) {
 	if (nes_keyboard.enabled) {
 		if (button == Qt::LeftButton) {
 			mainwin->wd->qaction_shcut.toggle_capture_input->trigger();

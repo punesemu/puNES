@@ -339,27 +339,29 @@ wdgTitleBarWindow::wdgTitleBarWindow(QWidget *parent, Qt::WindowType window_type
 wdgTitleBarWindow::~wdgTitleBarWindow() = default;
 
 bool wdgTitleBarWindow::eventFilter(UNUSED(QObject *obj), QEvent *event) {
-	switch (event->type()) {
-		case QEvent::Leave:
-		case QEvent::HoverLeave:
-			if (!(operation_type & OperationType::CUSTOM_RESIZE)) {
-				operation_type = OperationType::NONE;
-				unsetCursor();
-			}
-			break;
-		case QEvent::MouseMove:
-			if (operation_type & OperationType::CUSTOM_RESIZE) {
-				customMouseMoveEvent(static_cast<QMouseEvent*>(event));
-			} else if (!is_moving()) {
-				redefine_cursor(EV_GLOBAL_POS(static_cast<QMouseEvent*>(event)));
-			}
-			break;
-		case QEvent::Resize:
-			// riapplico la maschera quando la finestra viene ridimensionata
-			QTimer::singleShot(0, this, &wdgTitleBarWindow::apply_rounded_mask);
-			break;
-		default:
-			break;
+	if (wm_disabled) {
+		switch (event->type()) {
+			case QEvent::Leave:
+			case QEvent::HoverLeave:
+				if (!(operation_type & OperationType::CUSTOM_RESIZE)) {
+					operation_type = OperationType::NONE;
+					unsetCursor();
+				}
+				break;
+			case QEvent::MouseMove:
+				if (operation_type & OperationType::CUSTOM_RESIZE) {
+					customMouseMoveEvent(static_cast<QMouseEvent*>(event));
+				} else if (!is_moving()) {
+					redefine_cursor(EV_GLOBAL_POS(static_cast<QMouseEvent*>(event)));
+				}
+				break;
+			case QEvent::Resize:
+				// riapplico la maschera quando la finestra viene ridimensionata
+				QTimer::singleShot(0, this, &wdgTitleBarWindow::apply_rounded_mask);
+				break;
+			default:
+				break;
+		}
 	}
 	return (false);
 }
