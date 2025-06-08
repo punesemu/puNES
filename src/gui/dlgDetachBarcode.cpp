@@ -16,9 +16,7 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#include <QtCore/QTimer>
 #include <QtCore/QList>
-#include <QtGui/QScreen>
 #include "mainWindow.hpp"
 #include "dlgDetachBarcode.hpp"
 #include "gui.h"
@@ -194,6 +192,7 @@ wdgDlgDetachBarcode::wdgDlgDetachBarcode(QWidget *parent) : wdgTitleBarDialog(pa
 	wd = new dlgDetachBarcode(this);
 	setWindowTitle(wd->windowTitle());
 	setWindowIcon(QIcon(":/icon/icons/barcode.svgz"));
+	set_border_color("yellow");
 	set_buttons(barButton::Close);
 	set_permit_resize(false);
 	add_widget(wd);
@@ -244,7 +243,7 @@ void dlgDetachBarcode::changeEvent(QEvent *event) {
 	}
 }
 
-void dlgDetachBarcode::update_dialog(void) {
+void dlgDetachBarcode::update_dialog(void) const {
 	widget_Detach_Barcode->setEnabled(detach_barcode.enabled);
 }
 void dlgDetachBarcode::change_rom(void) {
@@ -272,24 +271,24 @@ void dlgDetachBarcode::change_rom(void) {
 	}
 }
 
-void dlgDetachBarcode::apply_barcode(void) {
+void dlgDetachBarcode::apply_barcode(void) const {
 	detach_barcode_bcode(uQStringCD(lineEdit_Barcode->text()));
 	gui_active_window();
 	gui_set_focus();
 }
 
-void dlgDetachBarcode::s_barcode_click(QListWidgetItem *item) {
+void dlgDetachBarcode::s_barcode_click(const QListWidgetItem *item) {
 	selected = listWidget_Barcodes->row(item);
 
 	lineEdit_Barcode->setReadOnly(selected > 0);
 	lineEdit_Barcode->setClearButtonEnabled(selected == 0);
 	lineEdit_Barcode->setText(ndb[selected].code);
 }
-void dlgDetachBarcode::s_barcode_doubleclick(QListWidgetItem *item) {
+void dlgDetachBarcode::s_barcode_doubleclick(const QListWidgetItem *item) {
 	s_barcode_click(item);
 	apply_barcode();
 }
-void dlgDetachBarcode::s_apply_clicked(UNUSED(bool checked)) {
+void dlgDetachBarcode::s_apply_clicked(UNUSED(bool checked)) const {
 	apply_barcode();
 }
 void dlgDetachBarcode::s_x_clicked(UNUSED(bool checked)) {
