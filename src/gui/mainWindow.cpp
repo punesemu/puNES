@@ -99,6 +99,7 @@ wdgDlgMainWindow::wdgDlgMainWindow(QWidget *parent) : wdgTitleBarDialog(parent) 
 	is_in_desktop(&cfg->lg.x, &cfg->lg.y);
 	setGeometry(cfg->lg.x, cfg->lg.y, 0, 0);
 
+	connect(title_bar, SIGNAL(et_fullscreen(void)), this, SLOT(s_set_fullscreen(void)));
 	connect(wd, SIGNAL(et_set_fullscreen(void)), this, SLOT(s_set_fullscreen(void)));
 	connect(wd, SIGNAL(et_toggle_gui_in_window(void)), this, SLOT(s_toggle_gui_in_window(void)));
 
@@ -318,6 +319,8 @@ void wdgDlgMainWindow::set_fullscreen(void) {
 		window_flags = windowFlags();
 		size_constraint = layout()->sizeConstraint();
 		enable_custom_events = false;
+		title_bar->is_in_fullscreen = true;
+		title_bar->set_fullscreen_button_icon();
 		if (gfx.only_fullscreen_in_window || cfg->fullscreen_in_window) {
 			QRect fs_win_geom = win_handle_screen()->availableGeometry();
 #if defined (_WIN32)
@@ -395,6 +398,8 @@ void wdgDlgMainWindow::set_fullscreen(void) {
 		}
 	} else {
 		enable_custom_events = true;
+		title_bar->is_in_fullscreen = false;
+		title_bar->set_fullscreen_button_icon();
 		if (gfx.type_of_fscreen_in_use == FULLSCR) {
 			wd->menubar->setVisible(wd->visibility.menubar);
 			wd->statusbar->setVisible(wd->visibility.toolbars);

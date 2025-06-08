@@ -84,6 +84,7 @@ wdgTitleBar::wdgTitleBar(QWidget *parent) : QWidget(parent) {
 	setupUi(this);
 
 	is_maximized = false;
+	is_in_fullscreen = false;
 	stylesheet_update();
 
 	setAttribute(Qt::WA_StyledBackground, true);
@@ -160,6 +161,17 @@ void wdgTitleBar::stylesheet_update(void) const {
 	set_maximized_button_icon();
 }
 
+void wdgTitleBar::set_fullscreen_button_icon(void) const {
+	if (theme::is_dark_theme()) {
+		pushButton_fullscreen->setIcon(QIcon(is_in_fullscreen
+			? ":/icon/icons/fullscreen_exit_white.svgz"
+			: ":/icon/icons/fullscreen_white.svgz"));
+	} else {
+		pushButton_fullscreen->setIcon(QIcon(is_in_fullscreen
+			? ":/icon/icons/fullscreen_exit_black.svgz"
+			: ":/icon/icons/fullscreen_black.svgz"));
+	}
+}
 void wdgTitleBar::set_maximized_button_icon(void) const {
 	if (theme::is_dark_theme()) {
 		pushButton_maximize->setIcon(QIcon(is_maximized
