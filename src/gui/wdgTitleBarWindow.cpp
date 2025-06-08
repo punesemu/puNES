@@ -150,14 +150,13 @@ void wdgTitleBar::mouseDoubleClickEvent(QMouseEvent *event) {
 
 void wdgTitleBar::stylesheet_update(void) const {
 	if (theme::is_dark_theme()) {
-		pushButton_fullscreen->setIcon(QIcon(":/icon/icons/fullscreen_white.svgz"));
 		pushButton_minimize->setIcon(QIcon(":/icon/icons/minimize_white.svgz"));
 		pushButton_close->setIcon(QIcon(":/icon/icons/close_white.svgz"));
 	} else {
-		pushButton_fullscreen->setIcon(QIcon(":/icon/icons/fullscreen_black.svgz"));
 		pushButton_minimize->setIcon(QIcon(":/icon/icons/minimize_black.svgz"));
 		pushButton_close->setIcon(QIcon(":/icon/icons/close_black.svgz"));
 	}
+	set_fullscreen_button_icon();
 	set_maximized_button_icon();
 }
 
