@@ -343,16 +343,20 @@ bool wdgTitleBarWindow::eventFilter(UNUSED(QObject *obj), QEvent *event) {
 		switch (event->type()) {
 			case QEvent::Leave:
 			case QEvent::HoverLeave:
-				if (!(operation_type & OperationType::CUSTOM_RESIZE)) {
-					operation_type = OperationType::NONE;
-					unsetCursor();
+				if (enable_custom_events) {
+					if (!(operation_type & OperationType::CUSTOM_RESIZE)) {
+						operation_type = OperationType::NONE;
+						unsetCursor();
+					}
 				}
 				break;
 			case QEvent::MouseMove:
-				if (operation_type & OperationType::CUSTOM_RESIZE) {
-					customMouseMoveEvent(static_cast<QMouseEvent*>(event));
-				} else if (!is_moving()) {
-					redefine_cursor(EV_GLOBAL_POS(static_cast<QMouseEvent*>(event)));
+				if (enable_custom_events) {
+					if (operation_type & OperationType::CUSTOM_RESIZE) {
+						customMouseMoveEvent(static_cast<QMouseEvent*>(event));
+					} else if (!is_moving()) {
+						redefine_cursor(EV_GLOBAL_POS(static_cast<QMouseEvent*>(event)));
+					}
 				}
 				break;
 			case QEvent::Resize:
@@ -389,7 +393,7 @@ void wdgTitleBarWindow::paintEvent(QPaintEvent *event) {
 		style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
 
 		if (title_bar != nullptr) {
-			QPainterPath path = path_rounded();
+			const QPainterPath path = path_rounded();
 
 			p.setRenderHint(QPainter::Antialiasing);
 			p.fillPath(path, palette().color(QPalette::Window));
@@ -400,7 +404,7 @@ void wdgTitleBarWindow::paintEvent(QPaintEvent *event) {
 	QWidget::paintEvent(event);
 }
 void wdgTitleBarWindow::mousePressEvent(QMouseEvent *event) {
-	if (wm_disabled) {
+	if (wm_disabled && enable_custom_events) {
 		redefine_cursor(EV_GLOBAL_POS(event));
 		if ((event->button() & Qt::LeftButton) && edges) {
 			if (!force_custom_resize && start_system_resize()) {
@@ -427,7 +431,7 @@ void wdgTitleBarWindow::mousePressEvent(QMouseEvent *event) {
 	QWidget::mousePressEvent(event);
 }
 void wdgTitleBarWindow::mouseReleaseEvent(QMouseEvent *event) {
-	if (wm_disabled) {
+	if (wm_disabled && enable_custom_events) {
 		operation_type = OperationType::NONE;
 		redefine_cursor(EV_GLOBAL_POS(event));
 	}
@@ -716,23 +720,29 @@ void wdgTitleBarWindow::s_title_bar_maximize(void) {
 	title_bar->set_maximized_button_icon();
 }
 void wdgTitleBarWindow::s_title_bar_start_window_move(const QPoint &start) {
-	cursor_position = start - geometry().topLeft();
+	if (enable_custom_events) {
+		cursor_position = start - geometry().topLeft();
+	}
 }
 void wdgTitleBarWindow::s_title_bar_stop_window_move(void) {
-	if (operation_type & OperationType::CUSTOM_MOVE) {
-		unsetCursor();
+	if (enable_custom_events) {
+		if (operation_type & OperationType::CUSTOM_MOVE) {
+			unsetCursor();
+		}
+		operation_type = OperationType::NONE;
 	}
-	operation_type = OperationType::NONE;
 }
 void wdgTitleBarWindow::s_title_bar_change_window_position(const QPoint &to) {
-	if (operation_type & OperationType::CUSTOM_MOVE) {
-		move(to - cursor_position);
-	} else if (!is_moving()) {
-		if (!force_custom_move && start_system_move()) {
-			operation_type = OperationType::SYSTEM_MOVE;
-		} else {
-			operation_type = OperationType::CUSTOM_MOVE;
-			setCursor(QCursor(Qt::SizeAllCursor));
+	if (enable_custom_events) {
+		if (operation_type & OperationType::CUSTOM_MOVE) {
+			move(to - cursor_position);
+		} else if (!is_moving()) {
+			if (!force_custom_move && start_system_move()) {
+				operation_type = OperationType::SYSTEM_MOVE;
+			} else {
+				operation_type = OperationType::CUSTOM_MOVE;
+				setCursor(QCursor(Qt::SizeAllCursor));
+			}
 		}
 	}
 }

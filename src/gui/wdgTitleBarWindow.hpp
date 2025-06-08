@@ -153,6 +153,7 @@ class wdgTitleBarWindow : public QWidget, public Ui::wdgTitleBarWindow {
 		QMargins layout_margins;
 		bool force_custom_move = false;
 		bool force_custom_resize = false;
+		bool enable_custom_events = true;
 		bool disabled_resize = false;
 		bool loop_in_exec = false;
 		bool wm_disabled = false;

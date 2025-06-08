@@ -317,6 +317,7 @@ void wdgDlgMainWindow::set_fullscreen(void) {
 	if ((cfg->fullscreen == NO_FULLSCR) || (cfg->fullscreen == NO_CHANGE)) {
 		window_flags = windowFlags();
 		size_constraint = layout()->sizeConstraint();
+		enable_custom_events = false;
 		if (gfx.only_fullscreen_in_window || cfg->fullscreen_in_window) {
 			QRect fs_win_geom = win_handle_screen()->availableGeometry();
 #if defined (_WIN32)
@@ -393,6 +394,7 @@ void wdgDlgMainWindow::set_fullscreen(void) {
 			gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, FULLSCR, NO_CHANGE, FALSE, FALSE);
 		}
 	} else {
+		enable_custom_events = true;
 		if (gfx.type_of_fscreen_in_use == FULLSCR) {
 			wd->menubar->setVisible(wd->visibility.menubar);
 			wd->statusbar->setVisible(wd->visibility.toolbars);
