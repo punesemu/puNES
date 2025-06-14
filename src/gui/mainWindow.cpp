@@ -76,8 +76,6 @@ enum state_save_enum { SAVE, LOAD };
 // ----------------------------------------------------------------------------------------------
 
 wdgDlgMainWindow::wdgDlgMainWindow(QWidget *parent) : wdgTitleBarDialog(parent) {
-	stylesheet_update();
-
 	fullscreen_resize = false;
 	setup_in_out_fullscreen = false;
 	org_geom.setX(100);
@@ -156,12 +154,6 @@ bool wdgDlgMainWindow::eventFilter(QObject *obj, QEvent *event) {
 	}
 	return (wdgTitleBarDialog::eventFilter(obj, event));
 }
-void wdgDlgMainWindow::changeEvent(QEvent *event) {
-	if (event->type() == QEvent::PaletteChange) {
-		stylesheet_update();
-	}
-	wdgTitleBarDialog::changeEvent(event);
-}
 void wdgDlgMainWindow::closeEvent(QCloseEvent *event) {
 	dlgsettings->close();
 
@@ -198,16 +190,6 @@ void wdgDlgMainWindow::resizeEvent(QResizeEvent *event) {
 		}
 	}
 	wdgTitleBarDialog::resizeEvent(event);
-}
-
-void wdgDlgMainWindow::stylesheet_update(void) {
-	setStyleSheet(QString("%0%1%2%3%4")
-		.arg(theme::stylesheet_wdgroupbox())
-		.arg(theme::stylesheet_wdgbutton())
-		.arg(theme::stylesheet_wdgtoolgroupbox())
-		.arg(theme::stylesheet_wdgtoolbutton())
-		.arg(theme::stylesheet_pixmapbutton())
-	);
 }
 
 QScreen *wdgDlgMainWindow::win_handle_screen(void) const {

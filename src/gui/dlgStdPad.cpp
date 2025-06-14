@@ -30,8 +30,8 @@
 #define SPT(ind) QString(std_pad_input_type[ind])
 #define SPB(ind) QString(std_pad_button[ind])
 
-static const char std_pad_input_type[2][4] = { "kbd", "joy" };
-static const char std_pad_button[10][15] = {
+static constexpr char std_pad_input_type[2][4] = { "kbd", "joy" };
+static constexpr char std_pad_button[10][15] = {
 	"A",      "B",     "Select", "Start",
 	"Up",     "Down",  "Left",   "Right",
 	"TurboA", "TurboB"
@@ -122,7 +122,7 @@ dlgStdPad::dlgStdPad(QWidget *parent, _cfg_port *cfg_port) : QWidget(parent) {
 		connect(bt, SIGNAL(clicked(bool)), this, SLOT(s_defaults_clicked(bool)));
 
 		for (a = BUT_A; a < MAX_STD_PAD_BUTTONS; a++) {
-			int vbutton = a + (i * MAX_STD_PAD_BUTTONS);
+			const int vbutton = a + (i * MAX_STD_PAD_BUTTONS);
 			QPushButton *def = findChild<QPushButton *>("pushButton_" + SPT(i) + "_default_" + SPB(a));
 			QPushButton *unset = findChild<QPushButton *>("pushButton_" + SPT(i) + "_unset_" + SPB(a));
 			pixmapPushButton *pbt = findChild<pixmapPushButton *>("pushButton_" + SPT(i) + "_" + SPB(a));
@@ -247,7 +247,7 @@ void dlgStdPad::closeEvent(QCloseEvent *event) {
 	QWidget::closeEvent(event);
 }
 
-void dlgStdPad::stylesheet_update(void) {
+void dlgStdPad::stylesheet_update(void) const {
 	int i;
 
 	tabWidget_kbd_joy->setStyleSheet("QTabWidget { font-weight: normal; }");
@@ -309,7 +309,7 @@ QString dlgStdPad::stylesheet_label(const QColor &background) {
 		.arg(disabled_text.name());
 }
 QString dlgStdPad::stylesheet_frame(const QColor &border, const QColor &background) {
-	QString stylesheet =
+	const QString stylesheet =
 		"QFrame {"\
 		"	border-width: 1px;"\
 		"	border-color: %0;"\
@@ -375,9 +375,9 @@ QString dlgStdPad::stylesheet_pixmapbutton(void) {
 		.arg(hover_gradient1.name())
 		.arg(theme::get_focus_color().name());
 }
-QString dlgStdPad::stylesheet_left_button(void) {
-	QColor baseColor = theme::get_theme_color(QApplication::palette().light().color());
-	QColor lightGray = theme::is_dark_theme() ? baseColor.lighter(125) : baseColor.darker(145);
+QString dlgStdPad::stylesheet_left_button(void) const {
+	QColor base_color = theme::get_theme_color(palette().light().color());
+	QColor lightGray = theme::is_dark_theme() ? base_color.lighter(125) : base_color.darker(145);
 	QColor darkGray = lightGray.darker(125);
 	QString stylesheet =
 		"QPushButton {"\
@@ -418,23 +418,20 @@ QString dlgStdPad::stylesheet_left_button(void) {
 		"	border-color: %2;"\
 		"}";
 
-
 	return stylesheet
 		.arg(lightGray.name())
 		.arg(darkGray.name())
 		.arg(theme::get_focus_color().name());
 }
-QString dlgStdPad::stylesheet_right_button(void) {
+QString dlgStdPad::stylesheet_right_button(void) const {
 	return stylesheet_left_button()
 		.replace("border-left", "border-right")
 		.replace("border-bottom-left-radius", "border-bottom-right-radius");
 }
 
 bool dlgStdPad::keypress(QKeyEvent *event) {
-	int type, vbutton;
-
-	type = data.vbutton / MAX_STD_PAD_BUTTONS;
-	vbutton = data.vbutton - (type * MAX_STD_PAD_BUTTONS);
+	const int type = data.vbutton / MAX_STD_PAD_BUTTONS;
+	const int vbutton = data.vbutton - (type * MAX_STD_PAD_BUTTONS);
 
 	if (type == KEYBOARD) {
 		if (event->key() != Qt::Key_Escape) {
@@ -549,7 +546,7 @@ void dlgStdPad::joy_combo_init(void) {
 
 	update_dialog();
 }
-void dlgStdPad::setEnable_tab_buttons(int type, bool mode) {
+void dlgStdPad::setEnable_tab_buttons(const int type, const bool mode) const {
 	int i;
 
 	for (i = BUT_A; i < MAX_STD_PAD_BUTTONS; i++) {
@@ -560,7 +557,7 @@ void dlgStdPad::setEnable_tab_buttons(int type, bool mode) {
 		findChild<QPushButton *>("pushButton_" + SPT(type) + "_unset_" + SPB(i))->setEnabled(mode);
 	}
 }
-void dlgStdPad::disable_tab_and_other(int type, int vbutton) {
+void dlgStdPad::disable_tab_and_other(const int type, const int vbutton) const {
 	// altro tab
 	tabWidget_kbd_joy->setTabEnabled(type == KEYBOARD ? JOYSTICK : KEYBOARD, false);
 
@@ -581,7 +578,7 @@ void dlgStdPad::disable_tab_and_other(int type, int vbutton) {
 	// misc
 	groupBox_Misc->setEnabled(false);
 }
-void dlgStdPad::info_entry_print(int type, const QString &txt) {
+void dlgStdPad::info_entry_print(const int type, const QString &txt) const {
 	findChild<QLabel *>("label_" + SPT(type) + "_info")->setText(txt);
 }
 void dlgStdPad::js_press_event(void) {
@@ -598,15 +595,15 @@ void dlgStdPad::js_press_event(void) {
 	data.joy.value = 0;
 	data.joy.timer->start(150);
 }
-void dlgStdPad::td_update_label(int type, int value) {
+void dlgStdPad::td_update_label(const int type, const int value) const {
 	QLabel *label = findChild<QLabel *>("label_value_slider_" + SPB(type + TRB_A));
 
 	label->setText(QString("%1").arg(value, 2));
 }
-void dlgStdPad::deadzone_update_label(int value) {
+void dlgStdPad::deadzone_update_label(const int value) const {
 	label_joy_Deadzone_value_slider->setText(QString("%1").arg(value, 2));
 }
-void dlgStdPad::js_pixmapPushButton(int index, DBWORD input, pixmapPushButton *bt) {
+void dlgStdPad::js_pixmapPushButton(const int index, const DBWORD input, pixmapPushButton *bt) {
 	QString icon, desc;
 
 	gui_js_joyval_icon_desc(index, input, &icon, &desc);
@@ -615,7 +612,7 @@ void dlgStdPad::js_pixmapPushButton(int index, DBWORD input, pixmapPushButton *b
 	bt->setText(desc);
 }
 
-int dlgStdPad::js_jdev_index(void) {
+int dlgStdPad::js_jdev_index(void) const {
 	int jdev_index = JS_NO_JOYSTICK;
 
 	if (comboBox_joy_ID->currentData().isValid()) {
@@ -634,7 +631,8 @@ void dlgStdPad::s_combobox_joy_activated(int index) {
 	update_dialog();
 }
 void dlgStdPad::s_combobox_joy_index_changed(UNUSED(int index)) {
-	int a, jdev_index = js_jdev_index();
+	const int jdev_index = js_jdev_index();
+	int a;
 
 	if (jdev_index != last_js_index) {
 		if (jdev_index < MAX_JOYSTICK) {
@@ -650,11 +648,10 @@ void dlgStdPad::s_combobox_joy_index_changed(UNUSED(int index)) {
 	}
 
 	for (a = KEYBOARD; a < INPUT_TYPES; a++) {
-		pixmapPushButton *bt;
 		int b;
 
 		for (b = BUT_A; b < MAX_STD_PAD_BUTTONS; b++) {
-			bt = findChild<pixmapPushButton *>("pushButton_" + SPT(a) + "_" + SPB(b));
+			pixmapPushButton *bt = findChild<pixmapPushButton *>("pushButton_" + SPT(a) + "_" + SPB(b));
 
 			if (a == KEYBOARD) {
 				bt->setText(objInp::kbd_keyval_to_name(data.cfg.port.input[a][b]));

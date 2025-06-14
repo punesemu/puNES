@@ -71,13 +71,6 @@ void hoverWatcher::paintEvent(QPaintEvent *event) {
 	QWidget::paintEvent(event);
 }
 
-QSize hoverWatcher::sizeHint(void) const {
-	return (QSize(0, 0));
-}
-QSize hoverWatcher::minimumSizeHint(void) const {
-	return (sizeHint());
-}
-
 // ----------------------------------------------------------------------------------------------
 
 wdgTitleBar::wdgTitleBar(QWidget *parent) : QWidget(parent) {
@@ -88,6 +81,7 @@ wdgTitleBar::wdgTitleBar(QWidget *parent) : QWidget(parent) {
 	stylesheet_update();
 
 	setAttribute(Qt::WA_StyledBackground, true);
+	setAutoFillBackground(false);
 
 	set_buttons(barButton::Fullscreen | barButton::Minimize | barButton::Maximize | barButton::Close);
 
@@ -109,17 +103,6 @@ void wdgTitleBar::changeEvent(QEvent *event) {
 	} else {
 		QWidget::changeEvent(event);
 	}
-}
-void wdgTitleBar::paintEvent(QPaintEvent *event){
-	QStyleOption opt;
-	QPainter p(this);
-	QRect r = rect();
-
-	opt.initFrom(this);
-	r.adjust(1, 0, -1, 0);
-	opt.rect = r;
-	style()->drawPrimitive(QStyle::PE_PanelButtonCommand, &opt, &p, this);
-	QWidget::paintEvent(event);
 }
 void wdgTitleBar::mouseMoveEvent(QMouseEvent *event){
 	if (event->buttons() & Qt::LeftButton) {
@@ -233,47 +216,9 @@ void wdgTitleBar::s_window_icon_changed(const QIcon &icon) const {
 
 wdgTitleBarStatus::wdgTitleBarStatus(QWidget *parent) : QStatusBar(parent) {
 	setAttribute(Qt::WA_StyledBackground, true);
+	setAutoFillBackground(false);
 }
 wdgTitleBarStatus::~wdgTitleBarStatus() = default;
-
-void wdgTitleBarStatus::paintEvent(UNUSED(QPaintEvent *event)) {
-	QPainter painter(this);
-	QStyleOption opt;
-	QRectF r = rect();
-	QColor background;
-	QColor border;
-
-	if (theme::is_dark_theme()) {
-		background = palette().color(QPalette::Dark);
-		border = palette().color(QPalette::Light);
-	} else {
-		background = palette().color(QPalette::Light);
-		border = palette().color(QPalette::Dark);
-	}
-	opt.initFrom(this);
-	painter.setRenderHint(QPainter::Antialiasing);
-	// background
-	painter.fillRect(r, background);
-	// bordo
-	painter.setPen(QPen(border, 1));
-	painter.drawLine(r.left(), r.top(), r.right(), r.top());
-	// contenuto della statusbar
-	painter.save();
-	// imposto un clip per assicurarMi che il contenuto non esca dai bordi arrotondati
-	painter.setClipRect(r);
-	// gli elementi della statusbar
-	for (QObject *child : children()) {
-		if (QWidget *widget = qobject_cast<QWidget*>(child)) {
-			if (widget->isVisible()) {
-				painter.save();
-				painter.translate(widget->pos());
-				widget->render(&painter, QPoint(), QRegion(), QWidget::DrawChildren);
-				painter.restore();
-			}
-		}
-	}
-	painter.restore();
-}
 
 // ----------------------------------------------------------------------------------------------
 
@@ -318,17 +263,17 @@ wdgTitleBarWindow::wdgTitleBarWindow(QWidget *parent, Qt::WindowType window_type
 		//size_grip->setToolTip(tr("Drag to resize the window"));
 	}
 
-	verticalLayout->addWidget(private_hover_watcher);
 	private_layout = new QVBoxLayout(private_hover_watcher);
 	private_layout->setContentsMargins(0, 0, 0, 0);
 	private_layout->setSizeConstraint(QLayout::SetDefaultConstraint);
 	private_layout->setSpacing(0);
 	private_layout->addWidget(title_bar);
 	private_layout->addWidget(private_main_window);
-	verticalLayout->addWidget(private_hover_watcher);
-	verticalLayout->addWidget(status_bar);
 	private_hover_watcher->setLayout(private_layout);
 	private_hover_watcher->setFixedHeight(title_bar->height());
+
+	verticalLayout->addWidget(private_hover_watcher);
+	verticalLayout->addWidget(status_bar);
 
 	connect(private_hover_watcher, SIGNAL(et_entered(void)), this, SLOT(s_hover_watcher_entered(void)));
 	connect(this, &QMainWindow::windowIconChanged, title_bar, &QWidget::setWindowIcon);
@@ -383,6 +328,8 @@ bool wdgTitleBarWindow::eventFilter(UNUSED(QObject *obj), QEvent *event) {
 void wdgTitleBarWindow::changeEvent(QEvent *event) {
 	if (event->type() == QEvent::LanguageChange) {
 		retranslateUi(this);
+	} else if (event->type() == QEvent::PaletteChange) {
+		stylesheet_update();
 	} else {
 		QWidget::changeEvent(event);
 	}
@@ -397,20 +344,37 @@ void wdgTitleBarWindow::closeEvent(QCloseEvent *event) {
 }
 void wdgTitleBarWindow::paintEvent(QPaintEvent *event) {
 	if (wm_disabled) {
+		const QColor base_color = palette().light().color();
+		const QColor border = palette().dark().color();
+		QPainter painter(this);
 		QStyleOption opt;
-		QPainter p(this);
+
+		painter.setRenderHint(QPainter::Antialiasing);
+		painter.fillRect(rect(), palette().window().color().darker(108));
+
+		// disegno la title_bar
+		if ((title_bar != nullptr) && title_bar->isVisible()) {
+			painter.fillRect(private_hover_watcher->geometry(), base_color);
+			painter.setPen(QPen(border, 1));
+			painter.drawLine(
+				rect().left(),
+				private_hover_watcher->pos().y() + title_bar->rect().bottom() + 1,
+				rect().right(),
+				private_hover_watcher->pos().y() + title_bar->rect().bottom() + 1);
+		}
+		// disegno la status_bar
+		if ((status_bar != nullptr) && status_bar->isVisible()) {
+			painter.fillRect(status_bar->geometry(), base_color);
+			painter.setPen(QPen(border, 1));
+			painter.drawLine(
+				rect().left(),
+				status_bar->pos().y() - 1,
+				rect().right(),
+				status_bar->pos().y() - 1);
+		}
 
 		opt.initFrom(this);
-		style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
-
-		if (title_bar != nullptr) {
-			const QPainterPath path = path_rounded();
-
-			p.setRenderHint(QPainter::Antialiasing);
-			p.fillPath(path, palette().color(QPalette::Window));
-			p.setPen(QPen(border_color, 1));
-			p.drawPath(path);
-		}
+		style()->drawPrimitive(QStyle::PE_Widget, &opt, &painter, this);
 	}
 	QWidget::paintEvent(event);
 }
@@ -468,6 +432,28 @@ void wdgTitleBarWindow::customMouseMoveEvent(QMouseEvent *event) {
 		br.rx() = gx;
 	}
 	setGeometry(QRect(tl, br));
+}
+
+void wdgTitleBarWindow::stylesheet_update(void) {
+	if (!stylesheet_in_update) {
+		const QString stylesheet = QString(
+		"wdgTitleBarWindow {"\
+		"	border: 1px solid %0;"\
+		"	border-top-left-radius: 4px;"\
+		"	border-top-right-radius: 4px;"\
+		"}"\
+		"%1%2%3%4%5")
+			.arg(border_color.name())
+			.arg(theme::stylesheet_wdgroupbox())
+			.arg(theme::stylesheet_wdgbutton())
+			.arg(theme::stylesheet_wdgtoolgroupbox())
+			.arg(theme::stylesheet_wdgtoolbutton())
+			.arg(theme::stylesheet_pixmapbutton());
+
+		stylesheet_in_update = true;
+		setStyleSheet(stylesheet);
+		stylesheet_in_update = false;
+	}
 }
 
 void wdgTitleBarWindow::init_fullscreen(const bool mode) const {
@@ -545,6 +531,7 @@ dialogExitCode wdgTitleBarWindow::exec(void) {
 
 void wdgTitleBarWindow::set_border_color(const QColor color) {
 	border_color = color;
+	stylesheet_update();
 }
 void wdgTitleBarWindow::add_widget(QWidget *widget) {
 	const int w = widget->size().width() + layout()->contentsMargins().left() + layout()->contentsMargins().right();
@@ -623,7 +610,7 @@ void wdgTitleBarWindow::update_size_grip_visibility(void) const {
 	}
 }
 QPainterPath wdgTitleBarWindow::path_rounded(void) const {
-	const QRectF r = rect();
+	const QRectF r = rect().adjusted(0.5, 0.5, -0.5, -0.5);
 	constexpr qreal radius = 4;
 	QPainterPath path;
 

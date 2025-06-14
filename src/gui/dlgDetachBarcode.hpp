@@ -59,8 +59,8 @@ class dlgDetachBarcode : public QWidget, public Ui::dlgDetachBarcode {
 		void apply_barcode(void) const;
 
 	private slots:
-		void s_barcode_click(const QListWidgetItem *item);
-		void s_barcode_doubleclick(const QListWidgetItem *item);
+		void s_barcode_click(QListWidgetItem *item);
+		void s_barcode_doubleclick(QListWidgetItem *item);
 		void s_apply_clicked(bool checked) const;
 		static void s_x_clicked(bool checked);
 };

@@ -45,7 +45,7 @@ Q_DECLARE_OPERATORS_FOR_FLAGS(barButtons)
 
 // ----------------------------------------------------------------------------------------------
 
-class hoverWatcher final : public QWidget{
+class hoverWatcher final : public QWidget {
 	Q_OBJECT
 
 	signals:
@@ -58,15 +58,11 @@ class hoverWatcher final : public QWidget{
 	protected:
 		bool eventFilter(QObject *obj, QEvent *event) override;
 		void paintEvent(QPaintEvent *event) override;
-
-	public:
-		QSize sizeHint(void) const override;
-		QSize minimumSizeHint(void) const override;
 };
 
 // ----------------------------------------------------------------------------------------------
 
-class wdgTitleBar final : public QWidget, public Ui::wdgTitleBar  {
+class wdgTitleBar final : public QWidget, public Ui::wdgTitleBar {
 	Q_OBJECT
 
 	private:
@@ -91,7 +87,6 @@ class wdgTitleBar final : public QWidget, public Ui::wdgTitleBar  {
 
 	protected:
 		void changeEvent(QEvent *event) override;
-		void paintEvent(QPaintEvent *event) override;
 		void mouseMoveEvent(QMouseEvent *event) override;
 		void mousePressEvent(QMouseEvent *event) override;
 		void mouseReleaseEvent(QMouseEvent *event) override;
@@ -119,9 +114,6 @@ class wdgTitleBarStatus final : public QStatusBar {
 	public:
 		explicit wdgTitleBarStatus(QWidget *parent = nullptr);
 		~wdgTitleBarStatus() override;
-
-	protected:
-		void paintEvent(QPaintEvent *event) override;
 };
 
 // ----------------------------------------------------------------------------------------------
@@ -159,6 +151,7 @@ class wdgTitleBarWindow : public QWidget, public Ui::wdgTitleBarWindow {
 		bool disabled_resize = false;
 		bool loop_in_exec = false;
 		bool wm_disabled = false;
+		bool stylesheet_in_update = false;
 		int resize_threshold = 4;
 
 	public:
@@ -179,6 +172,9 @@ class wdgTitleBarWindow : public QWidget, public Ui::wdgTitleBarWindow {
 		void mousePressEvent(QMouseEvent *event) override;
 		void mouseReleaseEvent(QMouseEvent *event) override;
 		virtual void customMouseMoveEvent(QMouseEvent* event);
+
+	private:
+		void stylesheet_update(void);
 
 	public:
 		void init_fullscreen(bool mode) const;

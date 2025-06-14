@@ -86,27 +86,27 @@ class dlgStdPad : public QWidget, public Ui::dlgStdPad {
 		void closeEvent(QCloseEvent *event) override;
 
 	private:
-		void stylesheet_update(void);
+		void stylesheet_update(void) const;
 
 	private:
-		QString stylesheet_label(const QColor &background);
-		QString stylesheet_frame(const QColor &border, const QColor &background);
-		QString stylesheet_pixmapbutton(void);
-		QString stylesheet_left_button(void);
-		QString stylesheet_right_button(void);
+		static QString stylesheet_label(const QColor &background);
+		static QString stylesheet_frame(const QColor &border, const QColor &background);
+		static QString stylesheet_pixmapbutton(void);
+		QString stylesheet_left_button(void) const;
+		QString stylesheet_right_button(void) const;
 
 	private:
 		bool keypress(QKeyEvent *event);
 		void update_dialog(void);
 		void joy_combo_init(void);
-		void setEnable_tab_buttons(int type, bool mode);
-		void disable_tab_and_other(int type, int vbutton);
-		void info_entry_print(int type, const QString &txt);
+		void setEnable_tab_buttons(int type, bool mode) const;
+		void disable_tab_and_other(int type, int vbutton) const;
+		void info_entry_print(int type, const QString &txt) const;
 		void js_press_event(void);
-		void td_update_label(int type, int value);
-		void deadzone_update_label(int value);
-		void js_pixmapPushButton(int index, DBWORD input, pixmapPushButton *bt);
-		int js_jdev_index(void);
+		void td_update_label(int type, int value) const;
+		void deadzone_update_label(int value) const;
+		static void js_pixmapPushButton(int index, DBWORD input, pixmapPushButton *bt);
+		int js_jdev_index(void) const;
 
 	private slots:
 		void s_combobox_joy_activated(int index);

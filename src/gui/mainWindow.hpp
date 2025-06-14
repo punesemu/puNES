@@ -388,12 +388,8 @@ class wdgDlgMainWindow final : public wdgTitleBarDialog {
 #endif
 #endif
 		bool eventFilter(QObject *obj, QEvent *event) override;
-		void changeEvent(QEvent *event) override;
 		void closeEvent(QCloseEvent *event) override;
 		void resizeEvent(QResizeEvent *event) override;
-
-	private:
-		void stylesheet_update(void);
 
 	public:
 		QScreen *win_handle_screen(void) const;

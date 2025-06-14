@@ -277,14 +277,14 @@ void dlgDetachBarcode::apply_barcode(void) const {
 	gui_set_focus();
 }
 
-void dlgDetachBarcode::s_barcode_click(const QListWidgetItem *item) {
+void dlgDetachBarcode::s_barcode_click(QListWidgetItem *item) {
 	selected = listWidget_Barcodes->row(item);
 
 	lineEdit_Barcode->setReadOnly(selected > 0);
 	lineEdit_Barcode->setClearButtonEnabled(selected == 0);
 	lineEdit_Barcode->setText(ndb[selected].code);
 }
-void dlgDetachBarcode::s_barcode_doubleclick(const QListWidgetItem *item) {
+void dlgDetachBarcode::s_barcode_doubleclick(QListWidgetItem *item) {
 	s_barcode_click(item);
 	apply_barcode();
 }

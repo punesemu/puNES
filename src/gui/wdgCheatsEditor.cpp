@@ -352,7 +352,7 @@ void wdgCheatsEditor::update_color_row(int row, bool active) {
 		if (active == 1) {
 			item->setForeground(theme::get_foreground_color(brush.color()));
 		} else {
-			item->setForeground(QApplication::palette().text().color());
+			item->setForeground(palette().text().color());
 		}
 	}
 }
