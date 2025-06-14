@@ -351,7 +351,7 @@ void wdgTitleBarWindow::paintEvent(QPaintEvent *event) {
 		QStyleOption opt;
 
 		painter.setRenderHint(QPainter::Antialiasing);
-		painter.fillPath(path, palette().window().color().darker(108));
+		painter.fillPath(path, base_color.darker(105));
 
 		// disegno la title_bar
 		if ((title_bar != nullptr) && title_bar->isVisible()) {
