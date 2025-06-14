@@ -198,7 +198,7 @@ wdgDlgDetachBarcode::wdgDlgDetachBarcode(QWidget *parent) : wdgTitleBarDialog(pa
 	add_widget(wd);
 
 	disconnect(title_bar, SIGNAL(et_close(void)), this, SLOT(close(void)));
-	connect(title_bar, SIGNAL(et_close(void)), this, SLOT(s_x_clicked(void)));
+	connect(title_bar, SIGNAL(et_close(void)), this, SLOT(wd->s_x_clicked(void)));
 }
 wdgDlgDetachBarcode::~wdgDlgDetachBarcode() = default;
 
@@ -292,7 +292,4 @@ void dlgDetachBarcode::s_barcode_doubleclick(QListWidgetItem *item) {
 }
 void dlgDetachBarcode::s_apply_clicked(UNUSED(bool checked)) const {
 	apply_barcode();
-}
-void dlgDetachBarcode::s_x_clicked(UNUSED(bool checked)) {
-	mainwin->wd->s_set_detach_barcode_window();
 }
