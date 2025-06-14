@@ -36,20 +36,22 @@ class dlgVsSystem : public QWidget, public Ui::dlgVsSystem {
 		void changeEvent(QEvent *event) override;
 
 	public:
-		void update_dialog(void);
-		void insert_coin(int index);
+		void update_dialog(void) const;
+		static void insert_coin(int index);
 
 	private slots:
-		void s_coins_clicked(bool checked);
-		void s_monitor_clicked(bool checked);
-		void s_ds_changed(int state);
-		void s_ds_clicked(bool checked);
-		void s_ds_defaults_clicked(bool checked);
+		void s_coins_clicked(bool checked) const;
+		void s_monitor_clicked(bool checked) const;
+		void s_ds_changed(int state) const;
+		void s_ds_clicked(bool checked) const;
+		void s_ds_defaults_clicked(bool checked) const;
 };
 
 // ----------------------------------------------------------------------------------------------
 
 class wdgDlgVsSystem : public wdgTitleBarDialog {
+	Q_OBJECT
+
 	public:
 		dlgVsSystem *wd;
 
@@ -57,8 +59,8 @@ class wdgDlgVsSystem : public wdgTitleBarDialog {
 		explicit wdgDlgVsSystem(QWidget *parent = nullptr);
 		~wdgDlgVsSystem() override;
 
-	protected:
-		void closeEvent(QCloseEvent *event) override;
+	private slots:
+		static void s_x_clicked(void);
 };
 
 #endif /* DLGVSSYSTEM_HPP_ */

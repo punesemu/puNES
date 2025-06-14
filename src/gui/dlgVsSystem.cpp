@@ -37,12 +37,14 @@ wdgDlgVsSystem::wdgDlgVsSystem(QWidget *parent) : wdgTitleBarDialog(parent) {
 	set_buttons(barButton::Close);
 	set_permit_resize(false);
 	add_widget(wd);
+
+	disconnect(title_bar, SIGNAL(et_close(void)), this, SLOT(close(void)));
+	connect(title_bar, SIGNAL(et_close(void)), this, SLOT(s_x_clicked(void)));
 }
 wdgDlgVsSystem::~wdgDlgVsSystem() = default;
 
-void wdgDlgVsSystem::closeEvent(QCloseEvent *event) {
+void wdgDlgVsSystem::s_x_clicked(void) {
 	mainwin->wd->s_set_vs_window();
-	wdgTitleBarDialog::closeEvent(event);
 }
 
 // ----------------------------------------------------------------------------------------------
@@ -147,7 +149,7 @@ void dlgVsSystem::changeEvent(QEvent *event) {
 	}
 }
 
-void dlgVsSystem::update_dialog(void) {
+void dlgVsSystem::update_dialog(void) const {
 	widget_Vs_System->setEnabled(vs_system.enabled);
 
 	lineEdit_Coin_Counter->setText(QString("%1").arg(vs_system.coins.counter));
@@ -183,8 +185,8 @@ void dlgVsSystem::update_dialog(void) {
 
 	pushButton_Dip_Switches->setEnabled(dipswitch_type_length() > 0);
 }
-void dlgVsSystem::insert_coin(int index) {
-	int base = vs_system_cn_next()
+void dlgVsSystem::insert_coin(const int index) {
+	const int base = vs_system_cn_next()
 
 	switch (index) {
 		default:
@@ -200,16 +202,16 @@ void dlgVsSystem::insert_coin(int index) {
 	}
 }
 
-void dlgVsSystem::s_coins_clicked(UNUSED(bool checked)) {
-	int index = QVariant(((QCheckBox *)sender())->property("myIndex")).toInt();
+void dlgVsSystem::s_coins_clicked(UNUSED(bool checked)) const {
+	const int index = QVariant(((QCheckBox *)sender())->property("myIndex")).toInt();
 
 	insert_coin(index);
 	gui_active_window();
 	gui_set_focus();
 }
-void dlgVsSystem::s_monitor_clicked(bool checked) {
+void dlgVsSystem::s_monitor_clicked(bool checked) const {
 	if (checked) {
-		int monitor = QVariant(((themePushButton *)sender())->property("myIndex")).toInt();
+		const int monitor = QVariant(((themePushButton *)sender())->property("myIndex")).toInt();
 
 		if (cfg->vs_monitor == monitor) {
 			return;
@@ -222,8 +224,8 @@ void dlgVsSystem::s_monitor_clicked(bool checked) {
 	gui_active_window();
 	gui_set_focus();
 }
-void dlgVsSystem::s_ds_changed(int state) {
-	int index = QVariant(((QCheckBox *)sender())->property("myIndex")).toInt();
+void dlgVsSystem::s_ds_changed(int state) const {
+	const int index = QVariant(((QCheckBox *)sender())->property("myIndex")).toInt();
 
 	switch (index) {
 		case 1:
@@ -281,7 +283,7 @@ void dlgVsSystem::s_ds_changed(int state) {
 	gui_active_window();
 	gui_set_focus();
 }
-void dlgVsSystem::s_ds_clicked(UNUSED(bool checked)) {
+void dlgVsSystem::s_ds_clicked(UNUSED(bool checked)) const {
 	emu_thread_pause();
 	gui_dipswitch_dialog();
 	emu_thread_continue();
@@ -290,7 +292,7 @@ void dlgVsSystem::s_ds_clicked(UNUSED(bool checked)) {
 	gui_active_window();
 	gui_set_focus();
 }
-void dlgVsSystem::s_ds_defaults_clicked(UNUSED(bool checked)) {
+void dlgVsSystem::s_ds_defaults_clicked(UNUSED(bool checked)) const {
 	cfg->dipswitch = dipswitch.def;
 	update_dialog();
 
