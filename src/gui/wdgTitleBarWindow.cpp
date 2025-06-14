@@ -346,15 +346,17 @@ void wdgTitleBarWindow::paintEvent(QPaintEvent *event) {
 	if (wm_disabled) {
 		const QColor base_color = palette().light().color();
 		const QColor border = palette().dark().color();
+		QPainterPath path = path_rounded(rect());
 		QPainter painter(this);
 		QStyleOption opt;
 
 		painter.setRenderHint(QPainter::Antialiasing);
-		painter.fillRect(rect(), palette().window().color().darker(108));
+		painter.fillPath(path, palette().window().color().darker(108));
 
 		// disegno la title_bar
 		if ((title_bar != nullptr) && title_bar->isVisible()) {
-			painter.fillRect(private_hover_watcher->geometry(), base_color);
+			path = path_rounded(private_hover_watcher->geometry());
+			painter.fillPath(path, base_color);
 			painter.setPen(QPen(border, 1));
 			painter.drawLine(
 				rect().left(),
@@ -609,8 +611,8 @@ void wdgTitleBarWindow::update_size_grip_visibility(void) const {
 		status_bar->setVisible(other_widgets || !disabled_resize);
 	}
 }
-QPainterPath wdgTitleBarWindow::path_rounded(void) const {
-	const QRectF r = rect().adjusted(0.5, 0.5, -0.5, -0.5);
+QPainterPath wdgTitleBarWindow::path_rounded(const QRectF &rect_src) {
+	const QRectF r = rect_src;
 	constexpr qreal radius = 4;
 	QPainterPath path;
 
@@ -624,7 +626,7 @@ QPainterPath wdgTitleBarWindow::path_rounded(void) const {
 	return (path);
 }
 void wdgTitleBarWindow::apply_rounded_mask(void) {
-	const QPainterPath path = path_rounded();
+	const QPainterPath path = path_rounded(rect());
 	const QRegion region(path.toFillPolygon().toPolygon());
 
 	setMask(region);

@@ -195,7 +195,7 @@ class wdgTitleBarWindow : public QWidget, public Ui::wdgTitleBarWindow {
 	private:
 		void update_track_mouse(void) const;
 		void update_size_grip_visibility(void) const;
-		QPainterPath path_rounded(void) const;
+		static QPainterPath path_rounded(const QRectF &rect_src);
 		void apply_rounded_mask(void);
 		bool is_moving(void) const;
 		bool is_resizing(void) const;
