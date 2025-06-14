@@ -100,6 +100,7 @@ wdgDlgMainWindow::wdgDlgMainWindow(QWidget *parent) : wdgTitleBarDialog(parent) 
 	connect(title_bar, SIGNAL(et_fullscreen(void)), this, SLOT(s_set_fullscreen(void)));
 	connect(wd, SIGNAL(et_set_fullscreen(void)), this, SLOT(s_set_fullscreen(void)));
 	connect(wd, SIGNAL(et_toggle_gui_in_window(void)), this, SLOT(s_toggle_gui_in_window(void)));
+	connect(wd, SIGNAL(et_quit(void)), this, SLOT(close(void)));
 
 	installEventFilter(this);
 }
@@ -1804,7 +1805,7 @@ void mainWindow::s_open_working_folder(void) {
 	QDesktopServices::openUrl(QUrl(url, QUrl::TolerantMode));
 }
 void mainWindow::s_quit(void) {
-	close();
+	emit et_quit();
 }
 void mainWindow::s_turn_on_off(void) {
 	emu_thread_pause();

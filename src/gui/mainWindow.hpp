@@ -220,6 +220,7 @@ class mainWindow : public QMainWindow, public Ui::mainWindow {
 		void et_nsf_author_note_close(void);
 		void et_set_fullscreen(void);
 		void et_toggle_gui_in_window(void);
+		void et_quit(void);
 
 	public:
 		mainWindow();
