@@ -198,7 +198,7 @@ wdgDlgDetachBarcode::wdgDlgDetachBarcode(QWidget *parent) : wdgTitleBarDialog(pa
 	add_widget(wd);
 
 	disconnect(title_bar, SIGNAL(et_close(void)), this, SLOT(close(void)));
-	connect(title_bar, SIGNAL(et_close(void)), this, SLOT(wd->s_x_clicked(void)));
+	connect(title_bar, SIGNAL(et_close(void)), this, SLOT(s_x_clicked(void)));
 }
 wdgDlgDetachBarcode::~wdgDlgDetachBarcode() = default;
 
