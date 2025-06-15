@@ -101,7 +101,7 @@ void dlgSettings::retranslateUi(QWidget *dlgSettings) {
 	// nes keyboard
 	mainwin->wd->qaction_shcut.toggle_capture_input->setText(tr("Capture/Release Input"));
 }
-void dlgSettings::update_dialog(void) {
+void dlgSettings::update_dialog(void) const {
 	update_tab_general();
 	update_tab_video();
 	update_tab_audio();
@@ -110,36 +110,36 @@ void dlgSettings::update_dialog(void) {
 	update_tab_cheats();
 	update_tab_recording();
 }
-void dlgSettings::change_rom(void) {
+void dlgSettings::change_rom(void) const {
 	widget_Settings_Video->change_rom();
 }
-void dlgSettings::shcut_mode(int mode) {
+void dlgSettings::shcut_mode(const int mode) const {
 	widget_Settings_General->shcut_mode(mode);
 }
-void dlgSettings::shcut_scale(int scale) {
+void dlgSettings::shcut_scale(const int scale) const {
 	widget_Settings_Video->shcut_scale(scale + 1);
 }
 
-void dlgSettings::update_tab_general(void) {
+void dlgSettings::update_tab_general(void) const {
 	widget_Settings_General->update_widget();
 }
-void dlgSettings::update_tab_input(void) {
+void dlgSettings::update_tab_input(void) const {
 	widget_Settings_Input->update_widget();
 }
-void dlgSettings::update_tab_ppu(void) {
+void dlgSettings::update_tab_ppu(void) const {
 	widget_Settings_PPU->update_widget();
 }
-void dlgSettings::update_tab_cheats(void) {
+void dlgSettings::update_tab_cheats(void) const {
 	widget_Settings_Cheats->update_widget();
 }
 
-void dlgSettings::update_tab_video(void) {
+void dlgSettings::update_tab_video(void) const {
 	widget_Settings_Video->update_widget();
 }
-void dlgSettings::update_tab_audio(void) {
+void dlgSettings::update_tab_audio(void) const {
 	widget_Settings_Audio->update_widget();
 }
-void dlgSettings::update_tab_recording(void) {
+void dlgSettings::update_tab_recording(void) const {
 #if defined (WITH_FFMPEG)
 	widget_Settings_Recording->update_widget();
 #endif

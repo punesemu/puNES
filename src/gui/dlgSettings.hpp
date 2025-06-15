@@ -24,7 +24,7 @@
 
 // ----------------------------------------------------------------------------------------------
 
-class dlgSettings : public QWidget, public Ui::dlgSettings {
+class dlgSettings final : public QWidget, public Ui::dlgSettings {
 	Q_OBJECT
 
 	signals:
@@ -40,29 +40,29 @@ class dlgSettings : public QWidget, public Ui::dlgSettings {
 
 	public:
 		void retranslateUi(QWidget *dlgSettings);
-		void update_dialog(void);
-		void change_rom(void);
-		void shcut_mode(int mode);
-		void shcut_scale(int scale);
+		void update_dialog(void) const;
+		void change_rom(void) const;
+		void shcut_mode(int mode) const;
+		void shcut_scale(int scale) const;
 
 	private:
-		void update_tab_general(void);
-		void update_tab_input(void);
-		void update_tab_ppu(void);
-		void update_tab_cheats(void);
+		void update_tab_general(void) const;
+		void update_tab_input(void) const;
+		void update_tab_ppu(void) const;
+		void update_tab_cheats(void) const;
 
 	public:
-		void update_tab_video(void);
-		void update_tab_audio(void);
-		void update_tab_recording(void);
+		void update_tab_video(void) const;
+		void update_tab_audio(void) const;
+		void update_tab_recording(void) const;
 
 	private slots:
-		void s_save_settings(bool checked);
+		static void s_save_settings(bool checked);
 };
 
 // ----------------------------------------------------------------------------------------------
 
-class wdgDlgSettings : public wdgTitleBarDialog {
+class wdgDlgSettings final : public wdgTitleBarDialog {
 	public:
 		dlgSettings *wd;
 

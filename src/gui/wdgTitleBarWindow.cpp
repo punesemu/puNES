@@ -227,11 +227,11 @@ wdgTitleBarWindow::wdgTitleBarWindow(QWidget *parent, Qt::WindowType window_type
 
 	layout_margins = verticalLayout->contentsMargins();
 
-	// if (!gfx.wayland.enabled) {
-	// 	setWindowFlags(window_type);
-	// 	verticalLayout->setContentsMargins(0, 0, 0, 0);
-	// 	return;
-	// }
+	//if (!gfx.wayland.enabled) {
+	//	setWindowFlags(window_type);
+	//	verticalLayout->setContentsMargins(0, 0, 0, 0);
+	//	return;
+	//}
 
 	//setAttribute(Qt::WA_NativeWindow);
 #if !defined (_WIN32)
@@ -290,7 +290,7 @@ wdgTitleBarWindow::wdgTitleBarWindow(QWidget *parent, Qt::WindowType window_type
 
 	// applico la maschera arrotondata dopo che la finestra è stata mostrata
 	QTimer::singleShot(0, this, &wdgTitleBarWindow::apply_rounded_mask);
-	update_size_grip_visibility();
+	set_permit_resize(!disabled_resize);
 }
 wdgTitleBarWindow::~wdgTitleBarWindow() = default;
 
