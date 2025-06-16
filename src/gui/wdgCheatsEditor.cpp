@@ -720,7 +720,7 @@ void wdgCheatsEditor::s_export(UNUSED(bool checked)) {
 		QFileInfo fileinfo(file);
 
 		if (fileinfo.suffix().isEmpty()) {
-			fileinfo.setFile(QString(file) + ".xml");
+			fileinfo.setFile(QString("%0.xml").arg(file));
 		}
 
 		objch->save_Nestopia_xml(this, fileinfo.absoluteFilePath());

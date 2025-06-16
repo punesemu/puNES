@@ -131,6 +131,10 @@ void wdgTitleBar::mouseDoubleClickEvent(QMouseEvent *event) {
 	QWidget::mouseDoubleClickEvent(event);
 }
 
+void wdgTitleBar::retranslateUi(QWidget *wdgTitleBar) {
+	Ui::wdgTitleBar::retranslateUi(wdgTitleBar);
+	update_tooltips();
+}
 void wdgTitleBar::stylesheet_update(void) const {
 	if (theme::is_dark_theme()) {
 		pushButton_minimize->setIcon(QIcon(":/icon/icons/minimize_white.svgz"));
@@ -143,6 +147,14 @@ void wdgTitleBar::stylesheet_update(void) const {
 	set_maximized_button_icon();
 }
 
+void wdgTitleBar::update_tooltips(void) const {
+	pushButton_fullscreen->setToolTip(is_in_fullscreen
+		? tr("Leave Fullscreen")
+		: tr("Fullscreen"));
+	pushButton_maximize->setToolTip(is_maximized
+		? tr("Restore Window")
+		: tr("Maximize Window"));
+}
 void wdgTitleBar::set_fullscreen_button_icon(void) const {
 	if (theme::is_dark_theme()) {
 		pushButton_fullscreen->setIcon(QIcon(is_in_fullscreen
@@ -153,6 +165,7 @@ void wdgTitleBar::set_fullscreen_button_icon(void) const {
 			? ":/icon/icons/fullscreen_exit_black.svgz"
 			: ":/icon/icons/fullscreen_black.svgz"));
 	}
+	update_tooltips();
 }
 void wdgTitleBar::set_maximized_button_icon(void) const {
 	if (theme::is_dark_theme()) {
@@ -164,6 +177,7 @@ void wdgTitleBar::set_maximized_button_icon(void) const {
 			? ":/icon/icons/maximize_minimize_black.svgz"
 			: ":/icon/icons/maximize_black.svgz"));
 	}
+	update_tooltips();
 }
 void wdgTitleBar::set_buttons(const barButtons buttons) {
 	usedButtons = buttons;

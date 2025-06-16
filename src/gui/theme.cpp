@@ -161,7 +161,6 @@ QColor theme::get_theme_color(const QColor &base_color) {
 QColor theme::get_theme_aware_color(const QColor &base_color) {
 	if (is_dark_theme()) {
 		int h, s, l;
-		double brightness;
 
 		if (base_color == QApplication::palette().dark().color()) {
 			return QApplication::palette().light().color();
@@ -172,7 +171,7 @@ QColor theme::get_theme_aware_color(const QColor &base_color) {
 		base_color.getHsl(&h, &s, &l);
 		// calcolo la luminosità complementare
 		// 0.8 per mantenere un po' di contrasto
-		brightness = 255 - (l * 0.8f);
+		const double brightness = 255 - (l * 0.8f);
 		// riduco leggermente la saturazione per i temi scuri
 		s = s * 0.9f;
 
@@ -208,7 +207,7 @@ QColor theme::get_theme_adaptive_color(const QColor &base_color) {
 }
 QColor theme::get_grayed_color(const QColor &base_color) {
 	const QColor background = is_dark_theme() ? base_color.darker(190) : base_color;
-	constexpr QColor gray(128, 128, 128);
+	const QColor gray(128, 128, 128);
 
 	return QColor(
 		background.red() * 0.7 + gray.red() * 0.5,
@@ -244,7 +243,7 @@ pixmapPushButton::~pixmapPushButton() = default;
 
 void pixmapPushButton::paintEvent(QPaintEvent *e) {
 	if (!pixmap.isNull()) {
-		QPixmap img = pixmap.scaled(iconSize(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+		const QPixmap img = pixmap.scaled(iconSize(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
 		QStylePainter spainter(this);
 		QStyleOptionButton option;
 

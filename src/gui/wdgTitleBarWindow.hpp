@@ -93,9 +93,11 @@ class wdgTitleBar final : public QWidget, public Ui::wdgTitleBar {
 		void mouseDoubleClickEvent(QMouseEvent *event) override;
 
 	private:
+		void retranslateUi(QWidget *wdgTitleBar);
 		void stylesheet_update(void) const;
 
 	public:
+		void update_tooltips(void) const;
 		void set_fullscreen_button_icon(void) const;
 		void set_maximized_button_icon(void) const;
 		void set_buttons(barButtons buttons);

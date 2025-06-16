@@ -122,6 +122,9 @@
      <property name="focusPolicy">
       <enum>Qt::NoFocus</enum>
      </property>
+     <property name="toolTip">
+      <string>Minimize Window</string>
+     </property>
      <property name="text">
       <string notr="true"/>
      </property>
@@ -173,6 +176,9 @@
      </property>
      <property name="focusPolicy">
       <enum>Qt::NoFocus</enum>
+     </property>
+     <property name="toolTip">
+      <string>Close Window</string>
      </property>
      <property name="text">
       <string notr="true"/>

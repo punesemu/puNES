@@ -575,10 +575,9 @@ mainWindow::mainWindow() : QMainWindow() {
 	qaction_extern.max_speed.stop->setObjectName("max_speed.stop");
 
 	{
-		QActionGroup *grp;
+		QActionGroup *grp = new QActionGroup(this);
 
 		// NES
-		grp = new QActionGroup(this);
 		grp->setExclusive(true);
 		grp->addAction(action_Disk_1_side_A);
 		grp->addAction(action_Disk_1_side_B);
@@ -655,7 +654,7 @@ void mainWindow::changeEvent(QEvent *event) {
 	}
 }
 
-void mainWindow::retranslateUi(mainWindow *mainWindow) {
+void mainWindow::retranslateUi(QMainWindow *mainWindow) {
 	Ui::mainWindow::retranslateUi(mainWindow);
 	qaction_shcut.hold_fast_forward->setText(tr("Fast Forward (hold button)"));
 	shortcuts();
@@ -683,7 +682,6 @@ void mainWindow::update_recording_widgets(void) const {
 	QIcon ia = QIcon(":/icon/icons/nsf_file.svgz"), iv = QIcon(":/icon/icons/film.svgz");
 	QString sa = tr("Start &AUDIO recording"), sv = tr("Start &VIDEO recording");
 	bool audio = false, video = false;
-	QString *sc;
 
 	emit statusbar->rec->et_blink_icon();
 
@@ -706,7 +704,7 @@ void mainWindow::update_recording_widgets(void) const {
 		}
 	}
 
-	sc = (QString *)settings_inp_rd_sc(SET_INP_SC_REC_AUDIO, KEYBOARD);
+	QString *sc = (QString *)settings_inp_rd_sc(SET_INP_SC_REC_AUDIO, KEYBOARD);
 	action_Start_Stop_Audio_recording->setEnabled(audio);
 	action_text(action_Start_Stop_Audio_recording, sa, sc);
 	action_Start_Stop_Audio_recording->setIcon(ia);
@@ -719,7 +717,6 @@ void mainWindow::update_recording_widgets(void) const {
 	QIcon ia = QIcon(":/icon/icons/multimedia_record.svgz");
 	QString sa = tr("Start &WAV recording");
 	bool audio = false;
-	QString *sc;
 
 	emit statusbar->rec->et_blink_icon();
 
@@ -731,7 +728,7 @@ void mainWindow::update_recording_widgets(void) const {
 		}
 	}
 
-	sc = (QString *)settings_inp_rd_sc(SET_INP_SC_REC_AUDIO, KEYBOARD);
+	QString *sc = (QString *)settings_inp_rd_sc(SET_INP_SC_REC_AUDIO, KEYBOARD);
 	action_Start_Stop_Audio_recording->setEnabled(audio);
 	action_text(action_Start_Stop_Audio_recording, sa, sc);
 	action_Start_Stop_Audio_recording->setIcon(ia);
@@ -915,8 +912,8 @@ void mainWindow::change_rom(const uTCHAR *rom) {
 	}
 	emu_thread_continue();
 }
-void mainWindow::change_disk(const QString disk) {
-	QFileInfo fileinfo(disk);
+void mainWindow::change_disk(const QString &disk) {
+	const QFileInfo fileinfo(disk);
 
 	if (!fds_change_disk(uQStringCD(fileinfo.absoluteFilePath()))) {
 		ustrncpy(gui.last_open_path, uQStringCD(fileinfo.absolutePath()), usizeof(gui.last_open_path) - 1);
@@ -1002,7 +999,7 @@ void mainWindow::shortcuts(void) const {
 	}
 }
 bool mainWindow::is_rwnd_shortcut_or_not_shcut(const QKeyEvent *event) const {
-	int shcut = is_shortcut(event);
+	const int shcut = is_shortcut(event);
 
 	if ((shcut >= 0) && ((shcut < SET_INP_SC_RWND_STEP_BACKWARD) || (shcut > SET_INP_SC_RWND_PAUSE))) {
 		return (false);
@@ -1338,14 +1335,16 @@ void mainWindow::update_menu_file(void) {
 	}
 }
 void mainWindow::update_menu_nes(void) const {
-	const QString *sc = (QString *)settings_inp_rd_sc(SET_INP_SC_TURN_OFF, KEYBOARD);
+	{
+		const QString *sc = (QString *)settings_inp_rd_sc(SET_INP_SC_TURN_OFF, KEYBOARD);
 
-	if (info.turn_off) {
-		action_text(action_Turn_Off, tr("&Turn On"), sc);
-		action_Turn_Off->setIcon(QIcon(":/icon/icons/turn_on.svgz"));
-	} else {
-		action_text(action_Turn_Off, tr("&Turn Off"), sc);
-		action_Turn_Off->setIcon(QIcon(":/icon/icons/turn_off.svgz"));
+		if (info.turn_off) {
+			action_text(action_Turn_Off, tr("&Turn On"), sc);
+			action_Turn_Off->setIcon(QIcon(":/icon/icons/turn_on.svgz"));
+		} else {
+			action_text(action_Turn_Off, tr("&Turn Off"), sc);
+			action_Turn_Off->setIcon(QIcon(":/icon/icons/turn_off.svgz"));
+		}
 	}
 
 	if (info.no_rom | rwnd.active) {
@@ -1372,6 +1371,18 @@ void mainWindow::update_menu_nes(void) const {
 
 	update_fds_menu();
 	update_tape_menu();
+
+	{
+		const QString *sc = (QString *)settings_inp_rd_sc(SET_INP_SC_FULLSCREEN, KEYBOARD);
+
+		if (gfx.type_of_fscreen_in_use == NO_FULLSCR) {
+			action_text(action_Fullscreen, tr("F&ullscreen"), sc);
+			action_Fullscreen->setIcon(QIcon(":/icon/icons/fullscreen.svgz"));
+		} else {
+			action_text(action_Fullscreen, tr("Leave F&ullscreen"), sc);
+			action_Fullscreen->setIcon(QIcon(":/icon/icons/fullscreen_exit.svgz"));
+		}
+	}
 
 	if (info.pause_from_gui && !rwnd.active) {
 		action_Pause->setChecked(true);
@@ -1613,9 +1624,7 @@ void mainWindow::ctrl_disk_side(QAction *action) {
 }
 
 int mainWindow::is_shortcut(const QKeyEvent *event) const {
-	int i;
-
-	for (i = 0; i < SET_MAX_NUM_SC; i++) {
+	for (int i = 0; i < SET_MAX_NUM_SC; i++) {
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 		if ((unsigned int)shortcut[i]->key()[0] == (event->key() | event->modifiers())) {
 #else
@@ -1882,9 +1891,9 @@ void mainWindow::s_eject_disk(void) const {
 	update_menu_nes();
 }
 void mainWindow::s_open_recent_disks(void) {
-	int index = QVariant(((QObject *)sender())->property("myValue")).toInt();
-	QString current = QString((const QChar *)recent_disks_current(), recent_disks_current_size());
-	QString item = QString((const QChar *)recent_disks_item(index), recent_disks_item_size(index));
+	const int index = QVariant(((QObject *)sender())->property("myValue")).toInt();
+	const QString current = QString((const QChar *)recent_disks_current(), recent_disks_current_size());
+	const QString item = QString((const QChar *)recent_disks_item(index), recent_disks_item_size(index));
 
 	emu_pause(TRUE);
 
@@ -1909,7 +1918,6 @@ void mainWindow::s_open_recent_disks(void) {
 }
 void mainWindow::s_change_disk(void) {
 	QStringList filters;
-	QString file;
 
 	emu_thread_pause();
 
@@ -1933,8 +1941,10 @@ void mainWindow::s_change_disk(void) {
 	filters[2].append(" (*.fds *.FDS *.qd *.QD)");
 	filters[3].append(" (*.*)");
 
-	file = QFileDialog::getOpenFileName(this, tr("Open Floppy Disk Image"),
-		uQString(info.rom.compress_file[0] ? &info.rom.compress_file[0] : &gui.last_open_path[0]), filters.join(";;"));
+	const QString file = QFileDialog::getOpenFileName(this, tr("Open Floppy Disk Image"),
+		uQString(info.rom.compress_file[0]
+			? &info.rom.compress_file[0]
+			: &gui.last_open_path[0]), filters.join(";;"));
 
 	if (!file.isNull()) {
 		change_disk(file);
@@ -1943,9 +1953,8 @@ void mainWindow::s_change_disk(void) {
 	emu_thread_continue();
 }
 void mainWindow::s_create_empty_disk(void) {
-	int format = QVariant(((QObject *)sender())->property("myValue")).toInt();
+	const int format = QVariant(((QObject *)sender())->property("myValue")).toInt();
 	QStringList filters;
-	QString file;
 
 	emu_thread_pause();
 
@@ -1974,7 +1983,7 @@ void mainWindow::s_create_empty_disk(void) {
 	filters.append(tr("All files"));
 	filters[1].append(" (*.*)");
 
-	file = QFileDialog::getSaveFileName(this, tr("Create an image of an empty disk"),
+	const QString file = QFileDialog::getSaveFileName(this, tr("Create an image of an empty disk"),
 		uQString(gui.last_open_path), filters.join(";;"));
 
 	if (!file.isNull()) {
@@ -1988,11 +1997,11 @@ void mainWindow::s_create_empty_disk(void) {
 				case 1:
 				case 3:
 				case 4:
-					fileinfo.setFile(QString(file) + ".fds");
+					fileinfo.setFile(QString("%0.fds").arg(file));
 					break;
 				case 2:
 				case 5:
-					fileinfo.setFile(QString(file) + ".qd");
+					fileinfo.setFile(QString("%0.qd").arg(file));
 					break;
 			}
 		}
@@ -2011,7 +2020,6 @@ void mainWindow::s_create_empty_disk(void) {
 void mainWindow::s_export_fds_image(void) {
 	const int format = QVariant(((QObject *)sender())->property("myValue")).toInt();
 	QStringList filters;
-	QString file;
 
 	emu_thread_pause();
 
@@ -2035,7 +2043,7 @@ void mainWindow::s_export_fds_image(void) {
 	filters.append(tr("All files"));
 	filters[1].append(" (*.*)");
 
-	file = QFileDialog::getSaveFileName(this, tr("Exports the current state of the disk"),
+	const QString file = QFileDialog::getSaveFileName(this, tr("Exports the current state of the disk"),
 		uQString(gui.last_open_path), filters.join(";;"));
 
 	if (!file.isNull()) {
@@ -2047,13 +2055,13 @@ void mainWindow::s_export_fds_image(void) {
 				default:
 				case 0:
 				case 1:
-					fileinfo.setFile(QString(file) + ".fds");
+					fileinfo.setFile(QString("%0.fds").arg(file));
 					break;
 				case 2:
-					fileinfo.setFile(QString(file) + ".qd");
+					fileinfo.setFile(QString("%0.qd").arg(file));
 					break;
 				case 3:
-					fileinfo.setFile(QString(file) + ".image");
+					fileinfo.setFile(QString("%0.image").arg(file));
 					break;
 			}
 		}
@@ -2080,14 +2088,13 @@ void mainWindow::s_start_stop_audio_recording(void) {
 #if defined (WITH_FFMPEG)
 	if (!info.recording_on_air) {
 		wdgRecGetSaveFileName *fd = new wdgRecGetSaveFileName(this);
-		QString file;
 
 		emu_pause(TRUE);
 
-		file = fd->audio_get_save_file_name();
+		const QString file = fd->audio_get_save_file_name();
 
 		if (!file.isNull()) {
-			QFileInfo fileinfo = QFileInfo(file);
+			const QFileInfo fileinfo = QFileInfo(file);
 
 			umemset(cfg->last_rec_audio_path, 0x00, usizeof(cfg->last_rec_audio_path));
 			ustrncpy(cfg->last_rec_audio_path, uQStringCD(fileinfo.absolutePath()), usizeof(cfg->last_rec_audio_path) - 1);
@@ -2100,9 +2107,9 @@ void mainWindow::s_start_stop_audio_recording(void) {
 	}
 #else
 	if (!info.recording_on_air) {
+		const QFileInfo rom = QFileInfo(uQString(info.rom.file));
 		QStringList filters;
-		QString file, dir;
-		QFileInfo rom = QFileInfo(uQString(info.rom.file));
+		QString dir;
 
 		emu_pause(TRUE);
 
@@ -2118,13 +2125,14 @@ void mainWindow::s_start_stop_audio_recording(void) {
 			dir = uQString(cfg->last_rec_audio_path);
 		}
 
-		file = QFileDialog::getSaveFileName(this, tr("Record sound"), dir + "/" + rom.completeBaseName(), filters.join(";;"));
+		const QString file = QFileDialog::getSaveFileName(this, tr("Record sound"),
+			dir + "/" + rom.completeBaseName(), filters.join(";;"));
 
 		if (!file.isNull()) {
-			QFileInfo fileinfo(file);
+			const QFileInfo fileinfo(file);
 
 			if (fileinfo.suffix().isEmpty()) {
-				fileinfo.setFile(QString(file) + ".wav");
+				fileinfo.setFile(QString("%0.wav").arg(file));
 			}
 
 			umemset(cfg->last_rec_audio_path, 0x00, usizeof(cfg->last_rec_audio_path));
@@ -2144,7 +2152,6 @@ void mainWindow::s_start_stop_video_recording(void) {
 	if (info.no_rom) {
 		return;
 	}
-
 	if (!info.recording_on_air) {
 		wdgRecGetSaveFileName *fd = new wdgRecGetSaveFileName(this);
 
@@ -2254,7 +2261,7 @@ void mainWindow::s_state_save_slot_incdec(void) {
 	state_save_slot_set(new_slot, true);
 }
 void mainWindow::s_state_save_slot_set(void) {
-	int slot = QVariant(((QObject *)sender())->property("myValue")).toInt();
+	const int slot = QVariant(((QObject *)sender())->property("myValue")).toInt();
 
 	state_save_slot_set(slot, true);
 }
@@ -2281,7 +2288,7 @@ void mainWindow::s_state_save_file(void) {
 		fl = info.rom.file;
 	}
 
-	QString file = QFileDialog::getSaveFileName(this, tr("Save state on file"),
+	const QString file = QFileDialog::getSaveFileName(this, tr("Save state on file"),
 		QFileInfo(uQString(cfg->save_file)).dir().absolutePath() + "/" + QFileInfo(uQString(fl)).baseName(),
 		filters.join(";;"));
 
@@ -2289,11 +2296,7 @@ void mainWindow::s_state_save_file(void) {
 		QFileInfo fileinfo(file);
 
 		if (fileinfo.suffix().isEmpty()) {
-			if (nsf.enabled) {
-				fileinfo.setFile(QString(file) + ".nns");
-			} else {
-				fileinfo.setFile(QString(file) + ".pns");
-			}
+			fileinfo.setFile(QString("%0.%1").arg(file).arg(nsf.enabled ? "nns" : "pns"));
 		}
 
 		umemset(cfg->save_file, 0x00, usizeof(cfg->save_file));
@@ -2306,7 +2309,6 @@ void mainWindow::s_state_save_file(void) {
 }
 void mainWindow::s_state_load_file(void) {
 	QStringList filters;
-	QString file;
 
 	emu_thread_pause();
 
@@ -2320,7 +2322,7 @@ void mainWindow::s_state_load_file(void) {
 	}
 	filters[1].append(" (*.*)");
 
-	file = QFileDialog::getOpenFileName(this, tr("Open save state"),
+	const QString file = QFileDialog::getOpenFileName(this, tr("Open save state"),
 		QFileInfo(uQString(cfg->save_file)).dir().absolutePath(), filters.join(";;"));
 
 	if (!file.isNull()) {
@@ -2379,7 +2381,7 @@ void mainWindow::s_tape_play(void) {
 		QFileInfo fileinfo(file);
 
 		if (fileinfo.suffix().isEmpty()) {
-			fileinfo.setFile(file + ".tap");
+			fileinfo.setFile(QString("%0.tap").arg(file));
 		}
 
 		if (fileinfo.suffix().compare("tap", Qt::CaseInsensitive) == 0) {
@@ -2434,7 +2436,7 @@ void mainWindow::s_tape_record(void) {
 		QFileInfo fileinfo(file);
 
 		if (fileinfo.suffix().isEmpty()) {
-			fileinfo.setFile(file + ".tap");
+			fileinfo.setFile(QString("%0.tap").arg(file));
 		}
 
 		if (fileinfo.suffix().compare("tap", Qt::CaseInsensitive) == 0) {
@@ -2446,7 +2448,7 @@ void mainWindow::s_tape_record(void) {
 		} else if (fileinfo.suffix().compare("wav", Qt::CaseInsensitive) == 0) {
 			mode = TAPE_DATA_TYPE_WAV;
 		} else {
-			fileinfo.setFile(fileinfo.absoluteFilePath() + ".tap");
+			fileinfo.setFile(QString("%0.tap").arg(fileinfo.absoluteFilePath()));
 			mode = TAPE_DATA_TYPE_TAP;
 		}
 
@@ -2494,11 +2496,9 @@ void mainWindow::s_shcjoy_read_timer(void) {
 	}
 
 	if (js_jdev_read_shcut(&shcjoy.sch) == EXIT_OK) {
-		int index;
-
-		for (index = 0; index < SET_MAX_NUM_SC; index++) {
+		for (int index = 0; index < SET_MAX_NUM_SC; index++) {
 			if (shcjoy.sch.value == shcjoy.shortcut[index]) {
-				int sch = index + SET_INP_SC_OPEN;
+				const int sch = index + SET_INP_SC_OPEN;
 
 				// shortcut attivi finche' il pulsante/asse e' premuto
 				switch (sch) {
@@ -2932,15 +2932,13 @@ void timerEgds::_stop_with_emu_thread_continue(const enum with_emu_pause type, c
 	_stop(is_necessary);
 }
 void timerEgds::_etc(const enum with_emu_pause type) const {
-	int i;
-
-	for (i = 0 ; i < calls[type].count; i++) {
+	for (int i = 0 ; i < calls[type].count; i++) {
 		emu_thread_continue();
 	}
 }
 
 void timerEgds::s_draw_screen(void) {
-	BYTE nidx = emu_active_nidx();
+	const BYTE nidx = emu_active_nidx();
 	bool ret = false;
 
 	if (info.no_rom) {
@@ -2996,37 +2994,51 @@ QRegularExpression qtHelper::rx_comment_0("#.*");
 QRegularExpression qtHelper::rx_comment_1("//.*");
 
 void qtHelper::widget_set_visible(void *wdg, const bool mode) {
-	((QWidget *)wdg)->blockSignals(true);
-	((QWidget *)wdg)->setVisible(mode);
-	((QWidget *)wdg)->blockSignals(false);
+	if (QWidget *w = static_cast<QWidget *>(wdg)) {
+		w->blockSignals(true);
+		w->setVisible(mode);
+		w->blockSignals(false);
+	}
 }
 void qtHelper::pushbutton_set_checked(void *btn, const bool mode) {
-	((QPushButton *)btn)->blockSignals(true);
-	((QPushButton *)btn)->setChecked(mode);
-	((QPushButton *)btn)->blockSignals(false);
+	if (QPushButton *b = static_cast<QPushButton *>(btn)) {
+		b->blockSignals(true);
+		b->setChecked(mode);
+		b->blockSignals(false);
+	}
 }
 void qtHelper::checkbox_set_checked(void *cbox, const bool mode) {
-	((QCheckBox *)cbox)->blockSignals(true);
-	((QCheckBox *)cbox)->setChecked(mode);
-	((QCheckBox *)cbox)->blockSignals(false);
+	if (QCheckBox *c = static_cast<QCheckBox *>(cbox)) {
+		c->blockSignals(true);
+		c->setChecked(mode);
+		c->blockSignals(false);
+	}
 }
 void qtHelper::slider_set_value(void *slider, const int value) {
-	((QSlider *)slider)->blockSignals(true);
-	((QSlider *)slider)->setValue(value);
-	((QSlider *)slider)->blockSignals(false);
+	if (QSlider *s = static_cast<QSlider *>(slider)) {
+		s->blockSignals(true);
+		s->setValue(value);
+		s->blockSignals(false);
+	}
 }
 void qtHelper::spinbox_set_value(void *sbox, const int value) {
-	((QSpinBox *)sbox)->blockSignals(true);
-	((QSpinBox *)sbox)->setValue(value);
-	((QSpinBox *)sbox)->blockSignals(false);
+	if (QSpinBox *s = static_cast<QSpinBox *>(sbox)) {
+		s->blockSignals(true);
+		s->setValue(value);
+		s->blockSignals(false);
+	}
 }
 void qtHelper::combox_set_index(void *cbox, const int value) {
-	((QComboBox *)cbox)->blockSignals(true);
-	((QComboBox *)cbox)->setCurrentIndex(value);
-	((QComboBox *)cbox)->blockSignals(false);
+	if (QComboBox *c = static_cast<QComboBox *>(cbox)) {
+		c->blockSignals(true);
+		c->setCurrentIndex(value);
+		c->blockSignals(false);
+	}
 }
 void qtHelper::lineedit_set_text(void *ledit, const QString &txt) {
-	((QLineEdit *)ledit)->blockSignals(true);
-	((QLineEdit *)ledit)->setText(txt);
-	((QLineEdit *)ledit)->blockSignals(false);
+	if (QLineEdit *l = static_cast<QLineEdit *>(ledit)) {
+		l->blockSignals(true);
+		l->setText(txt);
+		l->blockSignals(false);
+	}
 }

@@ -230,7 +230,7 @@ class mainWindow : public QMainWindow, public Ui::mainWindow {
 		void changeEvent(QEvent *event) override;
 
 	private:
-		void retranslateUi(mainWindow *mainWindow);
+		void retranslateUi(QMainWindow *mainWindow);
 
 	public:
 		void update_window(void);
@@ -241,7 +241,7 @@ class mainWindow : public QMainWindow, public Ui::mainWindow {
 		static void control_visible_cursor(void);
 		void make_reset(int type);
 		void change_rom(const uTCHAR *rom);
-		void change_disk(const QString disk);
+		void change_disk(const QString &disk);
 		void shortcuts(void) const;
 		bool is_rwnd_shortcut_or_not_shcut(const QKeyEvent *event) const;
 		QAction *state_save_slot_action(BYTE slot) const;
