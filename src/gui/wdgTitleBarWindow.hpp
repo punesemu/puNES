@@ -176,6 +176,7 @@ class wdgTitleBarWindow : public QWidget, public Ui::wdgTitleBarWindow {
 		virtual void customMouseMoveEvent(QMouseEvent* event);
 
 	private:
+		void retranslateUi(QWidget *wdgTitleBarWindow);
 		void stylesheet_update(void);
 
 	public:

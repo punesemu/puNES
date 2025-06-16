@@ -271,10 +271,11 @@ wdgTitleBarWindow::wdgTitleBarWindow(QWidget *parent, Qt::WindowType window_type
 	size_grip = status_bar->findChild<QSizeGrip *>();
 
 	if (size_grip) {
-		// Assicuro che il sizegrip sia visibile
 		size_grip->setVisible(true);
-		// Imposto un tooltip per il sizegrip
-		//size_grip->setToolTip(tr("Drag to resize the window"));
+		status_bar->setFixedHeight(
+			size_grip->sizeHint().height() +
+			status_bar->layout()->contentsMargins().top() +
+			status_bar->layout()->contentsMargins().bottom());
 	}
 
 	private_layout = new QVBoxLayout(private_hover_watcher);
@@ -450,6 +451,12 @@ void wdgTitleBarWindow::customMouseMoveEvent(QMouseEvent *event) {
 	setGeometry(QRect(tl, br));
 }
 
+void wdgTitleBarWindow::retranslateUi(QWidget *wdgTitleBarWindow) {
+	Ui::wdgTitleBarWindow::retranslateUi(wdgTitleBarWindow);
+	if (size_grip) {
+		size_grip->setToolTip(tr("Drag to resize the Window"));
+	}
+}
 void wdgTitleBarWindow::stylesheet_update(void) {
 	if (!stylesheet_in_update) {
 		const QString stylesheet = QString("%0%1%2%3%4%5")
