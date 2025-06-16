@@ -438,14 +438,8 @@ void wdgTitleBarWindow::customMouseMoveEvent(QMouseEvent *event) {
 
 void wdgTitleBarWindow::stylesheet_update(void) {
 	if (!stylesheet_in_update) {
-		const QString stylesheet = QString(
-		"wdgTitleBarWindow {"\
-		"	border: 1px solid %0;"\
-		"	border-top-left-radius: 4px;"\
-		"	border-top-right-radius: 4px;"\
-		"}"\
-		"%1%2%3%4%5")
-			.arg(border_color.name())
+		const QString stylesheet = QString("%0%1%2%3%4%5")
+			.arg(theme::stylesheet_wdgtitlebarwindow(border_color.name()))
 			.arg(theme::stylesheet_wdgroupbox())
 			.arg(theme::stylesheet_wdgbutton())
 			.arg(theme::stylesheet_wdgtoolgroupbox())

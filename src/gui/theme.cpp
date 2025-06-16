@@ -23,8 +23,18 @@
 
 // ----------------------------------------------------------------------------------------------
 
+QString theme::stylesheet_wdgtitlebarwindow(const QColor border_color) {
+	const QString stylesheet =
+		"wdgTitleBarWindow {"\
+		"	border: 1px solid %0;"\
+		"	border-top-left-radius: 4px;"\
+		"	border-top-right-radius: 4px;"\
+		"}";
+
+	return stylesheet.arg(border_color.name());
+}
 QString theme::stylesheet_wdgroupbox(void) {
-	QString stylesheet =
+	const QString stylesheet =
 		"themeGroupBox {"\
 		"	font-weight: bold;"\
 		"}";
@@ -32,9 +42,9 @@ QString theme::stylesheet_wdgroupbox(void) {
 	return stylesheet;
 }
 QString theme::stylesheet_wdgtoolgroupbox(void) {
-	QColor border_color0 = QApplication::palette().light().color();
-	QColor border_color1 = QApplication::palette().dark().color();
-	QString stylesheet =
+	const QColor border_color0 = QApplication::palette().light().color();
+	const QColor border_color1 = QApplication::palette().dark().color();
+	const QString stylesheet =
 		"themeToolGroupBox {"\
 		"	border-radius: 10px;"\
 		"	border: 1px solid %0;"\
@@ -54,13 +64,13 @@ QString theme::stylesheet_wdgtoolgroupbox(void) {
 		.arg(border_color1.name());
 }
 QString theme::stylesheet_wdgbutton(void) {
-	QColor base_color = QApplication::palette().dark().color().lighter(is_dark_theme() ? 100 : 120);
-	QColor border_color0 = get_theme_adaptive_color(base_color);
-	QColor border_color1 = border_color0.darker(is_dark_theme() ? 155 : 105);
-	QColor background_normal = border_color0.lighter(is_dark_theme() ? 115 : 190);
-	QColor background_hover = border_color1.lighter(is_dark_theme() ? 190 : 115);
-	QColor background_checked = base_color.lighter(is_dark_theme() ? 80 : 115);
-	QString stylesheet =
+	const QColor base_color = QApplication::palette().dark().color().lighter(is_dark_theme() ? 100 : 120);
+	const QColor border_color0 = get_theme_adaptive_color(base_color);
+	const QColor border_color1 = border_color0.darker(is_dark_theme() ? 155 : 105);
+	const QColor background_normal = border_color0.lighter(is_dark_theme() ? 115 : 190);
+	const QColor background_hover = border_color1.lighter(is_dark_theme() ? 190 : 115);
+	const QColor background_checked = base_color.lighter(is_dark_theme() ? 80 : 115);
+	const QString stylesheet =
 		"themePushButton {"\
 		"	margin: 0;"\
 		"	border: 2px groove %0;"\
@@ -173,7 +183,7 @@ QColor theme::get_theme_aware_color(const QColor &base_color) {
 QColor theme::get_theme_adaptive_color(const QColor &base_color) {
 	if (is_dark_theme()) {
 		// calcolo la luminosità percepita
-		float brightness = calculate_brightness(base_color);
+		const float brightness = calculate_brightness(base_color);
 		int h, s, l;
 
 		if (base_color == QApplication::palette().dark().color()) {
@@ -197,8 +207,8 @@ QColor theme::get_theme_adaptive_color(const QColor &base_color) {
 	return base_color;
 }
 QColor theme::get_grayed_color(const QColor &base_color) {
-	QColor background = is_dark_theme() ? base_color.darker(190) : base_color;
-	QColor gray(128, 128, 128);
+	const QColor background = is_dark_theme() ? base_color.darker(190) : base_color;
+	constexpr QColor gray(128, 128, 128);
 
 	return QColor(
 		background.red() * 0.7 + gray.red() * 0.5,
