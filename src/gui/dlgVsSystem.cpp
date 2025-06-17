@@ -41,8 +41,10 @@ wdgDlgVsSystem::wdgDlgVsSystem(QWidget *parent) : wdgTitleBarDialog(parent) {
 wdgDlgVsSystem::~wdgDlgVsSystem() = default;
 
 void wdgDlgVsSystem::closeEvent(QCloseEvent *event) {
-	mainwin->wd->s_set_vs_window();
-	event->ignore();
+	if (gui.start) {
+		mainwin->wd->s_set_vs_window();
+		event->ignore();
+	}
 	wdgTitleBarDialog::closeEvent(event);
 }
 

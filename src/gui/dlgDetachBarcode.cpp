@@ -23,6 +23,10 @@
 #include "info.h"
 #include "detach_barcode.h"
 
+
+#include <QtCore/QDebug>
+
+
 dlgDetachBarcode::name_detach_barcode cardsDefault = {
 	{ "",												"" }
 };
@@ -200,8 +204,10 @@ wdgDlgDetachBarcode::wdgDlgDetachBarcode(QWidget *parent) : wdgTitleBarDialog(pa
 wdgDlgDetachBarcode::~wdgDlgDetachBarcode() = default;
 
 void wdgDlgDetachBarcode::closeEvent(QCloseEvent *event) {
-	mainwin->wd->s_set_detach_barcode_window();
-	event->ignore();
+	if (gui.start) {
+		mainwin->wd->s_set_detach_barcode_window();
+		event->ignore();
+	}
 	wdgTitleBarDialog::closeEvent(event);
 }
 
