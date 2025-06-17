@@ -241,21 +241,31 @@ wdgTitleBarWindow::wdgTitleBarWindow(QWidget *parent, Qt::WindowType window_type
 
 	layout_margins = verticalLayout->contentsMargins();
 
-	//if (!gfx.wayland.enabled) {
-	//	setWindowFlags(window_type);
-	//	verticalLayout->setContentsMargins(0, 0, 0, 0);
-	//	return;
-	//}
+#if !defined (_WIN32)
+	{
+		const char *qt_version = qVersion();
 
-	//setAttribute(Qt::WA_NativeWindow);
+		native_wm_disabled = (qt_version[0] == '6') || gfx.wayland.enabled;
+	}
+#else
+	native_wm_disabled = false;
+#endif
+
+	if (!native_wm_disabled) {
+		setWindowFlags(window_type);
+		verticalLayout->setContentsMargins(0, 0, 0, 0);
+		return;
+	}
+
 #if !defined (_WIN32)
 	// abilita la trasparenza della finestra
 	setAttribute(Qt::WA_TranslucentBackground);
 #endif
+
 	setWindowFlags(window_type | Qt::FramelessWindowHint | Qt::WindowCloseButtonHint | Qt::WindowMinMaxButtonsHint | Qt::WindowTitleHint);
 	setMouseTracking(true);
 
-	wm_disabled = true;
+	border_color_enabled = false;
 	border_color = palette().color(QPalette::Window);
 	private_hover_watcher = new hoverWatcher(this);
 	private_main_window = new QMainWindow();
@@ -310,7 +320,7 @@ wdgTitleBarWindow::wdgTitleBarWindow(QWidget *parent, Qt::WindowType window_type
 wdgTitleBarWindow::~wdgTitleBarWindow() = default;
 
 bool wdgTitleBarWindow::eventFilter(UNUSED(QObject *obj), QEvent *event) {
-	if (wm_disabled) {
+	if (native_wm_disabled) {
 		switch (event->type()) {
 			case QEvent::Leave:
 			case QEvent::HoverLeave:
@@ -358,7 +368,7 @@ void wdgTitleBarWindow::closeEvent(QCloseEvent *event) {
 	}
 }
 void wdgTitleBarWindow::paintEvent(QPaintEvent *event) {
-	if (wm_disabled) {
+	if (native_wm_disabled) {
 		const QColor base_color = palette().light().color();
 		const QColor border = palette().dark().color();
 		QPainterPath path = path_rounded(rect());
@@ -396,7 +406,7 @@ void wdgTitleBarWindow::paintEvent(QPaintEvent *event) {
 	QWidget::paintEvent(event);
 }
 void wdgTitleBarWindow::mousePressEvent(QMouseEvent *event) {
-	if (wm_disabled && enable_custom_events) {
+	if (native_wm_disabled && enable_custom_events) {
 		redefine_cursor(EV_GLOBAL_POS(event));
 		if ((event->button() & Qt::LeftButton) && edges) {
 			if (!force_custom_resize && start_system_resize()) {
@@ -423,7 +433,7 @@ void wdgTitleBarWindow::mousePressEvent(QMouseEvent *event) {
 	QWidget::mousePressEvent(event);
 }
 void wdgTitleBarWindow::mouseReleaseEvent(QMouseEvent *event) {
-	if (wm_disabled && enable_custom_events) {
+	if (native_wm_disabled && enable_custom_events) {
 		operation_type = OperationType::NONE;
 		redefine_cursor(EV_GLOBAL_POS(event));
 	}
@@ -453,14 +463,16 @@ void wdgTitleBarWindow::customMouseMoveEvent(QMouseEvent *event) {
 
 void wdgTitleBarWindow::retranslateUi(QWidget *wdgTitleBarWindow) {
 	Ui::wdgTitleBarWindow::retranslateUi(wdgTitleBarWindow);
-	if (size_grip) {
-		size_grip->setToolTip(tr("Drag to resize the Window"));
+	if (native_wm_disabled) {
+		if (size_grip) {
+			size_grip->setToolTip(tr("Drag to resize the Window"));
+		}
 	}
 }
 void wdgTitleBarWindow::stylesheet_update(void) {
 	if (!stylesheet_in_update) {
 		const QString stylesheet = QString("%0%1%2%3%4%5")
-			.arg(theme::stylesheet_wdgtitlebarwindow(border_color.name()))
+			.arg(theme::stylesheet_wdgtitlebarwindow(native_wm_disabled & border_color_enabled, border_color))
 			.arg(theme::stylesheet_wdgroupbox())
 			.arg(theme::stylesheet_wdgbutton())
 			.arg(theme::stylesheet_wdgtoolgroupbox())
@@ -474,7 +486,7 @@ void wdgTitleBarWindow::stylesheet_update(void) {
 }
 
 void wdgTitleBarWindow::init_fullscreen(const bool mode) const {
-	if (wm_disabled) {
+	if (native_wm_disabled) {
 		constexpr QMargins zero = QMargins(0, 0 , 0, 0);
 
 		verticalLayout->setContentsMargins(mode ? zero : layout_margins);
@@ -482,7 +494,7 @@ void wdgTitleBarWindow::init_fullscreen(const bool mode) const {
 	}
 }
 void wdgTitleBarWindow::set_gui_visible(const bool mode) const {
-	if (wm_disabled) {
+	if (native_wm_disabled) {
 		private_hover_watcher->setVisible(mode);
 		if (!disabled_resize) {
 			status_bar->setVisible(mode);
@@ -508,9 +520,9 @@ void wdgTitleBarWindow::set_geometry(void) {
 }
 void wdgTitleBarWindow::is_in_desktop(int *x, int *y) {
 	QList<QScreen *> screens = QGuiApplication::screens();
-	int i, x_min = 0, x_max = 0, y_min = 0, y_max = 0;
+	int x_min = 0, x_max = 0, y_min = 0, y_max = 0;
 
-	for (i = 0; i < screens.count(); i++) {
+	for (int i = 0; i < screens.count(); i++) {
 		QRect g = screens[i]->availableGeometry();
 
 		if (g.x() < x_min) {
@@ -546,7 +558,7 @@ dialogExitCode wdgTitleBarWindow::exec(void) {
 	return dialog_exit_code;
 }
 
-void wdgTitleBarWindow::set_border_color(const QColor color) {
+void wdgTitleBarWindow::set_border_color(const QColor &color) {
 	border_color = color;
 	stylesheet_update();
 }
@@ -564,7 +576,7 @@ void wdgTitleBarWindow::add_widget(QWidget *widget) {
 	update_track_mouse();
 }
 void wdgTitleBarWindow::set_buttons(const barButtons buttons) {
-	if (wm_disabled) {
+	if (native_wm_disabled) {
 		Qt::WindowFlags flags = windowFlags();
 
 		if (buttons & barButton::Minimize) {
@@ -587,24 +599,30 @@ void wdgTitleBarWindow::set_buttons(const barButtons buttons) {
 	}
 }
 void wdgTitleBarWindow::set_force_custom_move(const bool force) {
-	force_custom_move = force;
+	if (native_wm_disabled) {
+		force_custom_move = force;
+	}
 }
 void wdgTitleBarWindow::set_force_custom_resize(const bool force) {
-	force_custom_resize = force;
+	if (native_wm_disabled) {
+		force_custom_resize = force;
+	}
 }
 void wdgTitleBarWindow::set_permit_resize(const bool mode) {
-	disabled_resize = !mode;
-	if (disabled_resize) {
-		layout()->setSizeConstraint(QLayout::SetFixedSize);
+	if (native_wm_disabled) {
+		disabled_resize = !mode;
+		if (disabled_resize) {
+			layout()->setSizeConstraint(QLayout::SetFixedSize);
+		}
+		update_size_grip_visibility();
+		// mi serve per la corretta gestione del redefine_cursor();
+		update_track_mouse();
 	}
-	update_size_grip_visibility();
-	// mi serve per la corretta gestione del redefine_cursor();
-	update_track_mouse();
 }
 
 void wdgTitleBarWindow::update_track_mouse(void) const {
 	// mi serve per la corretta gestione del redefine_cursor();
-	if (wm_disabled && private_widget) {
+	if (native_wm_disabled && private_widget) {
 		private_widget->setMouseTracking(hasMouseTracking() & !disabled_resize);
 	}
 }

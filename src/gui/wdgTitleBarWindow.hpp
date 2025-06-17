@@ -152,7 +152,8 @@ class wdgTitleBarWindow : public QWidget, public Ui::wdgTitleBarWindow {
 		bool enable_custom_events = true;
 		bool disabled_resize = false;
 		bool loop_in_exec = false;
-		bool wm_disabled = false;
+		bool native_wm_disabled = false;
+		bool border_color_enabled = true;
 		bool stylesheet_in_update = false;
 		int resize_threshold = 4;
 
@@ -188,7 +189,7 @@ class wdgTitleBarWindow : public QWidget, public Ui::wdgTitleBarWindow {
 		dialogExitCode exec(void);
 
 	protected:
-		void set_border_color(QColor color);
+		void set_border_color(const QColor &color);
 		void add_widget(QWidget *widget);
 		void set_buttons(barButtons buttons);
 		void set_force_custom_move(bool force);

@@ -23,7 +23,7 @@
 
 // ----------------------------------------------------------------------------------------------
 
-QString theme::stylesheet_wdgtitlebarwindow(const QColor border_color) {
+QString theme::stylesheet_wdgtitlebarwindow(const bool native_wm_disabled, const QColor &border_color) {
 	const QString stylesheet =
 		"wdgTitleBarWindow {"\
 		"	border: 1px solid %0;"\
@@ -31,7 +31,7 @@ QString theme::stylesheet_wdgtitlebarwindow(const QColor border_color) {
 		"	border-top-right-radius: 4px;"\
 		"}";
 
-	return stylesheet.arg(border_color.name());
+	return (native_wm_disabled ? stylesheet.arg(border_color.name()) : "");
 }
 QString theme::stylesheet_wdgroupbox(void) {
 	const QString stylesheet =
@@ -39,7 +39,7 @@ QString theme::stylesheet_wdgroupbox(void) {
 		"	font-weight: bold;"\
 		"}";
 
-	return stylesheet;
+	return (stylesheet);
 }
 QString theme::stylesheet_wdgtoolgroupbox(void) {
 	const QColor border_color0 = QApplication::palette().light().color();
@@ -59,9 +59,9 @@ QString theme::stylesheet_wdgtoolgroupbox(void) {
 		"	padding: 0 0px;"\
 		"}";
 
-	return stylesheet
+	return (stylesheet
 		.arg(border_color0.name())
-		.arg(border_color1.name());
+		.arg(border_color1.name()));
 }
 QString theme::stylesheet_wdgbutton(void) {
 	const QColor base_color = QApplication::palette().dark().color().lighter(is_dark_theme() ? 100 : 120);
@@ -115,19 +115,19 @@ QString theme::stylesheet_wdgbutton(void) {
 		"	color: gray;"\
 		"}";
 
-	return stylesheet
+	return (stylesheet
 		.arg(is_dark_theme() ? border_color1.name() : border_color0.name())
 		.arg(is_dark_theme() ? border_color0.name() : border_color1.name())
 		.arg(background_normal.name())
 		.arg(background_hover.name())
 		.arg(background_checked.name())
-		.arg(get_focus_color().name());
+		.arg(get_focus_color().name()));
 }
 QString theme::stylesheet_wdgtoolbutton(void) {
-	return stylesheet_wdgbutton().replace("themePushButton", "themeToolButton");
+	return (stylesheet_wdgbutton().replace("themePushButton", "themeToolButton"));
 }
 QString theme::stylesheet_pixmapbutton(void) {
-	return stylesheet_wdgbutton().replace("themePushButton", "pixmapPushButton");
+	return (stylesheet_wdgbutton().replace("themePushButton", "pixmapPushButton"));
 }
 
 float theme::calculate_brightness(const QColor &color) {
@@ -137,10 +137,10 @@ bool theme::is_dark_theme(void) {
 	return (calculate_brightness(QApplication::palette().window().color()) < 0.5f);
 }
 QColor theme::get_focus_color(void) {
-	return QApplication::palette().highlight().color();
+	return (QApplication::palette().highlight().color());
 }
 QColor theme::get_foreground_color(const QColor &background_color) {
-	return calculate_brightness(background_color) >= 0.5f ? Qt::black : Qt::white;
+	return (calculate_brightness(background_color) >= 0.5f ? Qt::black : Qt::white);
 }
 QColor theme::get_theme_color(const QColor &base_color) {
 	if (is_dark_theme()) {
@@ -156,7 +156,7 @@ QColor theme::get_theme_color(const QColor &base_color) {
 		l = 255 - l;
 		return QColor::fromHsl(h, s, l);
 	}
-	return base_color;
+	return (base_color);
 }
 QColor theme::get_theme_aware_color(const QColor &base_color) {
 	if (is_dark_theme()) {
@@ -177,7 +177,7 @@ QColor theme::get_theme_aware_color(const QColor &base_color) {
 
 		return QColor::fromHsl(h, s, brightness);
 	}
-	return base_color;
+	return (base_color);
 }
 QColor theme::get_theme_adaptive_color(const QColor &base_color) {
 	if (is_dark_theme()) {
@@ -203,17 +203,17 @@ QColor theme::get_theme_adaptive_color(const QColor &base_color) {
 			return QColor::fromHsl(h, s, l);
 		}
 	}
-	return base_color;
+	return (base_color);
 }
 QColor theme::get_grayed_color(const QColor &base_color) {
 	const QColor background = is_dark_theme() ? base_color.darker(190) : base_color;
 	const QColor gray(128, 128, 128);
 
-	return QColor(
+	return (QColor(
 		background.red() * 0.7 + gray.red() * 0.5,
 		background.green() * 0.7 + gray.green() * 0.5,
 		background.blue() * 0.7 + gray.blue() * 0.5
-	);
+	));
 }
 
 // ----------------------------------------------------------------------------------------------

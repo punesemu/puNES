@@ -21,8 +21,6 @@
 
 #include "ui_dlgDetachBarcode.h"
 #include "wdgTitleBarWindow.hpp"
-#include "common.h"
-#include "uncompress.h"
 
 // ----------------------------------------------------------------------------------------------
 
@@ -67,8 +65,6 @@ class dlgDetachBarcode final : public QWidget, public Ui::dlgDetachBarcode {
 // ----------------------------------------------------------------------------------------------
 
 class wdgDlgDetachBarcode final : public wdgTitleBarDialog {
-	Q_OBJECT
-
 	public:
 		dlgDetachBarcode *wd;
 
@@ -76,8 +72,8 @@ class wdgDlgDetachBarcode final : public wdgTitleBarDialog {
 		explicit wdgDlgDetachBarcode(QWidget *parent = nullptr);
 		~wdgDlgDetachBarcode() override;
 
-	private slots:
-		static void s_x_clicked(void);
+	protected:
+		void closeEvent(QCloseEvent *event) override;
 };
 
 #endif /* DLGDETACHBARCODE_HPP_ */

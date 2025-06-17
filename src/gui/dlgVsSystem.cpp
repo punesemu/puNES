@@ -37,14 +37,13 @@ wdgDlgVsSystem::wdgDlgVsSystem(QWidget *parent) : wdgTitleBarDialog(parent) {
 	set_buttons(barButton::Close);
 	set_permit_resize(false);
 	add_widget(wd);
-
-	disconnect(title_bar, SIGNAL(et_close(void)), this, SLOT(close(void)));
-	connect(title_bar, SIGNAL(et_close(void)), this, SLOT(s_x_clicked(void)));
 }
 wdgDlgVsSystem::~wdgDlgVsSystem() = default;
 
-void wdgDlgVsSystem::s_x_clicked(void) {
+void wdgDlgVsSystem::closeEvent(QCloseEvent *event) {
 	mainwin->wd->s_set_vs_window();
+	event->ignore();
+	wdgTitleBarDialog::closeEvent(event);
 }
 
 // ----------------------------------------------------------------------------------------------

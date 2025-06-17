@@ -24,7 +24,7 @@
 
 // ----------------------------------------------------------------------------------------------
 
-class dlgVsSystem : public QWidget, public Ui::dlgVsSystem {
+class dlgVsSystem final : public QWidget, public Ui::dlgVsSystem {
 	Q_OBJECT
 
 	public:
@@ -49,9 +49,7 @@ class dlgVsSystem : public QWidget, public Ui::dlgVsSystem {
 
 // ----------------------------------------------------------------------------------------------
 
-class wdgDlgVsSystem : public wdgTitleBarDialog {
-	Q_OBJECT
-
+class wdgDlgVsSystem final : public wdgTitleBarDialog {
 	public:
 		dlgVsSystem *wd;
 
@@ -59,8 +57,8 @@ class wdgDlgVsSystem : public wdgTitleBarDialog {
 		explicit wdgDlgVsSystem(QWidget *parent = nullptr);
 		~wdgDlgVsSystem() override;
 
-	private slots:
-		static void s_x_clicked(void);
+	protected:
+		void closeEvent(QCloseEvent *event) override;
 };
 
 #endif /* DLGVSSYSTEM_HPP_ */
