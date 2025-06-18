@@ -230,7 +230,7 @@ jobs:
             libswscale-dev \
             libavutil-dev
 
-      - name: 'Install Qt6'
+      - name: 'Install Qt ${{ matrix.config.qtver }}'
         run: |
           sudo apt-get install -y python3-pip
           pip install -U pip --break-system-packages
