@@ -23,10 +23,6 @@
 #include "info.h"
 #include "detach_barcode.h"
 
-
-#include <QtCore/QDebug>
-
-
 dlgDetachBarcode::name_detach_barcode cardsDefault = {
 	{ "",												"" }
 };

@@ -21,6 +21,7 @@
 
 void prg_swap_vrc2and4_302(WORD address, WORD value);
 void chr_swap_vrc2and4_302(WORD address, WORD value);
+void mirroring_fix_vrc2and4_302(void);
 
 void map_init_302(void) {
 	EXTCL_AFTER_MAPPER_INIT(VRC2and4);
@@ -32,6 +33,7 @@ void map_init_302(void) {
 	init_VRC2and4(VRC24_VRC2, 0x01, 0x02, TRUE, info.reset);
 	VRC2and4_prg_swap = prg_swap_vrc2and4_302;
 	VRC2and4_chr_swap = chr_swap_vrc2and4_302;
+	VRC2and4_mirroring_fix = mirroring_fix_vrc2and4_302;
 
 	info.mapper.extend_rd = TRUE;
 }
@@ -52,4 +54,15 @@ void prg_swap_vrc2and4_302(WORD address, WORD value) {
 }
 void chr_swap_vrc2and4_302(WORD address, UNUSED(WORD value)) {
 	chr_swap_VRC2and4_base(address, (address >> 10));
+}
+void mirroring_fix_vrc2and4_302(void) {
+	switch (vrc2and4.mirroring & 0x01) {
+		default:
+		case 0:
+			mirroring_H(0);
+			return;
+		case 1:
+			mirroring_V(0);
+			return;
+	}
 }

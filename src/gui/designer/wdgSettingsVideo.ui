@@ -1947,6 +1947,17 @@
    <header>wdgNTSCFilter.hpp</header>
    <container>1</container>
   </customwidget>
+  <customwidget>
+   <class>themePushButton</class>
+   <extends>QPushButton</extends>
+   <header>theme.hpp</header>
+  </customwidget>
+  <customwidget>
+   <class>themeGroupBox</class>
+   <extends>QGroupBox</extends>
+   <header>theme.hpp</header>
+   <container>1</container>
+  </customwidget>
  </customwidgets>
  <tabstops>
   <tabstop>tabWidget_Video</tabstop>
