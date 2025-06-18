@@ -680,14 +680,6 @@
       <translation>虚拟键盘</translation>
     </message>
     <message>
-      <source>Subor Keyboard</source>
-      <translation>小霸王键盘</translation>
-    </message>
-    <message>
-      <source>Options</source>
-      <translation>选项</translation>
-    </message>
-    <message>
       <source>Size</source>
       <translation>尺寸</translation>
     </message>
@@ -1685,6 +1677,74 @@
       <source>&amp;Dip Switches</source>
       <translation>&amp;Dip 开关</translation>
     </message>
+    <message>
+      <source>list of last used roms still empty</source>
+      <translation type="unfinished">list of last used roms still empty</translation>
+    </message>
+    <message>
+      <source>list of last used disks still empty</source>
+      <translation type="unfinished">list of last used disks still empty</translation>
+    </message>
+    <message>
+      <source>Single Side FDS Format Disk</source>
+      <translation type="unfinished">Single Side FDS Format Disk</translation>
+    </message>
+    <message>
+      <source>Single Side Quick Disk Format Disk</source>
+      <translation type="unfinished">Single Side Quick Disk Format Disk</translation>
+    </message>
+    <message>
+      <source>Double Sides FDS Format Disk</source>
+      <translation type="unfinished">Double Sides FDS Format Disk</translation>
+    </message>
+    <message>
+      <source>Double Sides Quick Disk Format Disk</source>
+      <translation type="unfinished">Double Sides Quick Disk Format Disk</translation>
+    </message>
+    <message>
+      <source>Create an image of an empty disk</source>
+      <translation type="unfinished">Create an image of an empty disk</translation>
+    </message>
+    <message>
+      <source>Error creating file</source>
+      <translation type="unfinished">Error creating file</translation>
+    </message>
+    <message>
+      <source>Single Side &amp;FDS Format (with Header)</source>
+      <translation type="unfinished">Single Side &amp;FDS Format (with Header)</translation>
+    </message>
+    <message>
+      <source>Single Side F&amp;DS Format (without Header)</source>
+      <translation type="unfinished">Single Side F&amp;DS Format (without Header)</translation>
+    </message>
+    <message>
+      <source>Single Side &amp;Quick Disk Format</source>
+      <translation type="unfinished">Single Side &amp;Quick Disk Format</translation>
+    </message>
+    <message>
+      <source>Double Sides &amp;FDS Format (with Header)</source>
+      <translation type="unfinished">Double Sides &amp;FDS Format (with Header)</translation>
+    </message>
+    <message>
+      <source>Double Sides F&amp;DS Format (without Header)</source>
+      <translation type="unfinished">Double Sides F&amp;DS Format (without Header)</translation>
+    </message>
+    <message>
+      <source>Double Sides &amp;Quick Disk Format</source>
+      <translation type="unfinished">Double Sides &amp;Quick Disk Format</translation>
+    </message>
+    <message>
+      <source>&amp;Load from File</source>
+      <translation type="unfinished">&amp;Load from File</translation>
+    </message>
+    <message>
+      <source>Load from File</source>
+      <translation type="unfinished">Load from File</translation>
+    </message>
+    <message>
+      <source>Create Empt&amp;y Disk</source>
+      <translation type="unfinished">Create Empt&amp;y Disk</translation>
+    </message>
   </context>
   <context>
     <name>nesKeyboardStatusBar</name>
@@ -2607,20 +2667,20 @@
       <translation>粘贴</translation>
     </message>
     <message>
-      <source>Tape</source>
-      <translation>磁带</translation>
+      <source>Files</source>
+      <translation type="unfinished">Files</translation>
     </message>
     <message>
-      <source>Play</source>
-      <translation>播放</translation>
+      <source>NES</source>
+      <translation type="unfinished">NES</translation>
     </message>
     <message>
-      <source>Record</source>
-      <translation>录制</translation>
+      <source>Release input</source>
+      <translation type="unfinished">Release input</translation>
     </message>
     <message>
-      <source>Stop</source>
-      <translation>停止</translation>
+      <source>Capure Input</source>
+      <translation type="unfinished">Capure Input</translation>
     </message>
   </context>
   <context>
