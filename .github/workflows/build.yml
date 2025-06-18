@@ -281,9 +281,7 @@ jobs:
       - name: 'Create AppDir'
         run: |
           mkdir -p AppDir
-          cmake \
-            --install build \ 
-            --prefix AppDir/usr
+          cmake --install build --prefix AppDir/usr
 
       - name: 'Deploy AppImage'
         run: |
