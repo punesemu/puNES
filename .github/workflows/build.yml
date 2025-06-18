@@ -215,12 +215,35 @@ jobs:
           sudo apt-get update -qq
           sudo apt-get install -y \
             git \
-            ubuntu-desktop \
             cmake \
             ninja-build \
             libtool \
             build-essential \
             pkg-config \
+            libgl1-mesa-dri \
+            libglib2.0-0 \
+            libxkbcommon0 \
+            libwayland-client0 \
+            libwayland-cursor0 \
+            libwayland-egl1 \
+            libxcb1 \
+            libxcb-xinput0 \
+            libxcb-xkb1 \
+            libxcb-render0 \
+            libxcb-shm0 \
+            libxcb-randr0 \
+            libxcb-sync1 \
+            libxcb-icccm4 \
+            libxcb-keysyms1 \
+            libxcb-image0 \
+            libfontconfig1 \
+            libfreetype6 \
+            libdbus-1-3 \
+            libicu70 \
+            libharfbuzz0b \
+            libdouble-conversion3 \
+            libbrotli1 \
+            zlib1g \
             mesa-common-dev \
             freeglut3-dev \
             nvidia-cg-toolkit \
@@ -285,6 +308,8 @@ jobs:
           cmake --install build --prefix AppDir/usr
 
       - name: 'Deploy AppImage'
+        env:
+          EXTQTDIR: '${{ github.workspace }}/${{ matrix.config.qtver }}/gcc_64'
         run: |
           unset QTDIR
           unset QT_PLUGIN_PATH
