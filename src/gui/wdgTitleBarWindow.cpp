@@ -248,7 +248,7 @@ wdgTitleBarWindow::wdgTitleBarWindow(QWidget *parent, Qt::WindowType window_type
 		native_wm_disabled = (qt_version[0] == '6') || gfx.wayland.enabled;
 	}
 #else
-	native_wm_disabled = false;
+	native_wm_disabled = true;
 #endif
 
 	if (!native_wm_disabled) {
