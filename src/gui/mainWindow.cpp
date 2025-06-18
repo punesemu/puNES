@@ -181,6 +181,15 @@ void wdgDlgMainWindow::closeEvent(QCloseEvent *event) {
 	wdgTitleBarDialog::closeEvent(event);
 }
 void wdgDlgMainWindow::resizeEvent(QResizeEvent *event) {
+	// sotto wayland (con GNOME) capita di avere dei resize spontanei
+	// quando effettuo un hide e uno show della GUI seguito dall'apertura
+	// di una finestra esterna (tipo dlgSettings). Cerca di effettuare un resize alla
+	// dimensione della finestra con la GUI nascosta tagliando l'area visibile.
+	if (event->spontaneous() && (size().height() < sizeHint().height())) {
+		resize(sizeHint());
+		event->ignore();
+		return;
+	}
 	if (gui.start) {
 		if (fullscreen_resize && (event->size().width() >= SCR_COLUMNS)) {
 			if (gfx.type_of_fscreen_in_use == FULLSCR_IN_WINDOW) {
@@ -496,7 +505,6 @@ void wdgDlgMainWindow::s_toggle_gui_in_window(void) {
 		wd->statusbar->setVisible(gui_visibility);
 		update_gfx_monitor_dimension(false);
 		gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, FALSE);
-		wd->setFixedSize(wd->size());
 
 		emu_thread_continue();
 	}
