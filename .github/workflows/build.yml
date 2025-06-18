@@ -221,8 +221,8 @@ jobs:
             build-essential \
             pkg-config \
             libgl1-mesa-dri \
-            libglib2.0-0 \
             libxkbcommon0 \
+            libxkbcommon-x11-0 \
             libwayland-client0 \
             libwayland-cursor0 \
             libwayland-egl1 \
@@ -236,6 +236,7 @@ jobs:
             libxcb-icccm4 \
             libxcb-keysyms1 \
             libxcb-image0 \
+            libxcb-shape0 \
             libfontconfig1 \
             libfreetype6 \
             libdbus-1-3 \
