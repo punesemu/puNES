@@ -33,26 +33,31 @@ jobs:
         run: |
           sudo apt-get update -qq
           sudo apt-get install -y \
+            git \
             cmake \
+            ninja-build \
+            libtool \
+            build-essential \
+            pkg-config \
             mesa-common-dev \
-            libopengl-dev \
             freeglut3-dev \
-            libopengl-dev \
-            libasound2-dev \
+            nvidia-cg-toolkit \
+            libx11-dev \
             libxrandr-dev \
+            libxcb-cursor-dev \
+            libasound2-dev \
             libudev-dev \
             libglvnd-dev \
-            ninja-build \
             libavformat-dev \
             libavcodec-dev \
             libswresample-dev \
             libswscale-dev \
             libavutil-dev \
-            nvidia-cg-dev \
             libqt6svg6-dev \
             qt6-base-dev \
             qt6-base-dev-tools \
             qt6-tools-dev \
+            qt6-tools-dev-tools \
             qt6-l10n-tools \
             qt6-image-formats-plugins
 
@@ -199,7 +204,7 @@ jobs:
       fail-fast: false
       matrix:
         config:
-          - { os: ubuntu-24.04, cc: "gcc", cxx: "g++", env: x86_64, qtver: "6.9.1", opts: "-DENABLE_RELEASE:BOOL=ON -DENABLE_FFMPEG:BOOL=ON -DENABLE_OPENGL_CG:BOOL=ON -DDISABLE_PORTABLE_MODE:BOOL=ON" }
+          - { os: ubuntu-22.04, cc: "gcc", cxx: "g++", env: x86_64, qtver: "6.9.1", opts: "-DENABLE_RELEASE:BOOL=ON -DENABLE_FFMPEG:BOOL=ON -DENABLE_OPENGL_CG:BOOL=ON -DDISABLE_PORTABLE_MODE:BOOL=ON" }
 
     steps:
       - name: 'Checkout'
@@ -233,8 +238,10 @@ jobs:
       - name: 'Install Qt ${{ matrix.config.qtver }}'
         run: |
           sudo apt-get install -y python3-pip
-          pip install -U pip --break-system-packages
-          $HOME/.local/bin/pip install aqtinstall --break-system-packages
+          # pip install -U pip --break-system-packages (per la 24.04)
+          # $HOME/.local/bin/pip install aqtinstall --break-system-packages (per la 24.04)
+          pip install -U pip
+          $HOME/.local/bin/pip install aqtinstall
           $HOME/.local/bin/aqt \
             install-qt linux desktop ${{ matrix.config.qtver }} \
             -m qtimageformats
@@ -280,8 +287,8 @@ jobs:
 
       - name: 'Deploy AppImage'
         run: |
-          unset QTDIR;
-          unset QT_PLUGIN_PATH;
+          unset QTDIR
+          unset QT_PLUGIN_PATH
           unset LD_LIBRARY_PATH
           QMAKE="${EXTQTDIR}/bin/qmake" \
           LD_LIBRARY_PATH="${EXTQTDIR}/lib" \
