@@ -248,7 +248,7 @@ class mainWindow : public QMainWindow, public Ui::mainWindow {
 		void state_save_slot_set(int slot, bool on_video);
 		void state_save_slot_set_tooltip(BYTE slot) const;
 		void toggle_toolbars(void) const;
-		static void reset_min_max_size(void);
+		void reset_min_max_size(void);
 		static void shout_into_mic(BYTE mode);
 		void hold_fast_forward(BYTE mode) const;
 		static void open_dkeyb(void);
