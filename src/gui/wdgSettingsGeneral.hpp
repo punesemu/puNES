@@ -31,7 +31,6 @@ class wdgSettingsGeneral : public QWidget, public Ui::wdgSettingsGeneral {
 
 	private:
 		void changeEvent(QEvent *event) override;
-		void showEvent(QShowEvent *event) override;
 
 	public:
 		void retranslateUi(QWidget *wdgSettingsGeneral);

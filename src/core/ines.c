@@ -433,7 +433,7 @@ BYTE ines_load_rom(void) {
 
 		free(rom.data);
 
-		gui_dlgheadereditor_read_header();
+		gui_wdgdlgheadereditor_read_header();
 
 		return (EXIT_OK);
 	}

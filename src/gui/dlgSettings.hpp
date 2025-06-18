@@ -19,14 +19,16 @@
 #ifndef DLGSETTINGS_HPP_
 #define DLGSETTINGS_HPP_
 
-#include <QtWidgets/QDialog>
 #include "ui_dlgSettings.h"
+#include "wdgTitleBarWindow.hpp"
 
-class dlgSettings : public QDialog, public Ui::dlgSettings {
+// ----------------------------------------------------------------------------------------------
+
+class dlgSettings final : public QWidget, public Ui::dlgSettings {
 	Q_OBJECT
 
-	public:
-		QRect geom;
+	signals:
+		void et_close(void);
 
 	public:
 		explicit dlgSettings(QWidget *parent = nullptr);
@@ -35,29 +37,42 @@ class dlgSettings : public QDialog, public Ui::dlgSettings {
 	private:
 		bool eventFilter(QObject *obj, QEvent *event) override;
 		void changeEvent(QEvent *event) override;
-		void hideEvent(QHideEvent *event) override;
 
 	public:
-		void retranslateUi(QDialog *dlgSettings);
-		void update_dialog(void);
-		void change_rom(void);
-		void shcut_mode(int mode);
-		void shcut_scale(int scale);
+		void retranslateUi(QWidget *dlgSettings);
+		void update_dialog(void) const;
+		void change_rom(void) const;
+		void shcut_mode(int mode) const;
+		void shcut_scale(int scale) const;
 
 	private:
-		void update_tab_general(void);
-		void update_tab_input(void);
-		void update_tab_ppu(void);
-		void update_tab_cheats(void);
+		void update_tab_general(void) const;
+		void update_tab_input(void) const;
+		void update_tab_ppu(void) const;
+		void update_tab_cheats(void) const;
 
 	public:
-		void update_tab_video(void);
-		void update_tab_audio(void);
-		void update_tab_recording(void);
+		void update_tab_video(void) const;
+		void update_tab_audio(void) const;
+		void update_tab_recording(void) const;
 
 	private slots:
-		void s_save_settings(bool checked);
-		void s_close_settings(bool checked);
+		static void s_save_settings(bool checked);
+};
+
+// ----------------------------------------------------------------------------------------------
+
+class wdgDlgSettings final : public wdgTitleBarDialog {
+	public:
+		dlgSettings *wd;
+
+	public:
+		explicit wdgDlgSettings(QWidget *parent = nullptr);
+		~wdgDlgSettings() override;
+
+	protected:
+		void hideEvent(QHideEvent *event) override;
+		void closeEvent(QCloseEvent *event) override;
 };
 
 #endif /* DLGSETTINGS_HPP_ */

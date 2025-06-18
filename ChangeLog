@@ -19,6 +19,7 @@ Changelog:
 - [FDS] Added a keyboard shortcut for the action "Change Disk".
 - Fixed joystick axes input handling: add RELEASED event trigger when needed before new PRESSED events (#415).
 - Fixed rewind state handling and ensured proper cleanup during reset.
+- Default framework switched to Qt6 with improved Wayland compatibility.
 - Refactor GUI : removed hard-coded stylesheets and centralize theme updates.
 - Added a context menu to the emulator window that shows "Recent Roms", the entire "NES" menu and adds "Paste" and "Release/Capture Input" entries for the Family BASIC/Subor keyboard.
 

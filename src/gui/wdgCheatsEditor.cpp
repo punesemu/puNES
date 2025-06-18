@@ -144,6 +144,13 @@ wdgCheatsEditor::wdgCheatsEditor(QWidget *parent) : QWidget(parent) {
 		lineEdit_ProAR->setMinimumWidth(w);
 	}
 
+	{
+		int dim = fontMetrics().height();
+
+		icon_Cheat_List_Editor->setPixmap(QIcon(":/icon/icons/cheats_list.svgz").pixmap(dim, dim));
+		icon_Editor_Tools->setPixmap(QIcon(":/icon/icons/pencil.svgz").pixmap(dim, dim));
+	}
+
 	installEventFilter(this);
 
 	populate_cheat_table();
@@ -158,7 +165,7 @@ wdgCheatsEditor::~wdgCheatsEditor() = default;
 
 void wdgCheatsEditor::changeEvent(QEvent *event) {
 	if (event->type() == QEvent::LanguageChange) {
-		wdgCheatsEditor::retranslateUi(this);
+		retranslateUi(this);
 	} else if (event->type() == QEvent::PaletteChange) {
 		stylesheet_update();
 	} else {
@@ -166,14 +173,8 @@ void wdgCheatsEditor::changeEvent(QEvent *event) {
 	}
 }
 void wdgCheatsEditor::showEvent(QShowEvent *event) {
-	int dim = fontMetrics().height();
-
-	icon_Cheat_List_Editor->setPixmap(QIcon(":/icon/icons/cheats_list.svgz").pixmap(dim, dim));
-	icon_Editor_Tools->setPixmap(QIcon(":/icon/icons/pencil.svgz").pixmap(dim, dim));
-
 	lineEdit_CPU_Ram->setVisible(false);
 	radioButton_CPU_Ram->setFixedHeight(radioButton_ProAR->height());
-
 	QWidget::showEvent(event);
 }
 
@@ -351,7 +352,7 @@ void wdgCheatsEditor::update_color_row(int row, bool active) {
 		if (active == 1) {
 			item->setForeground(theme::get_foreground_color(brush.color()));
 		} else {
-			item->setForeground(QApplication::palette().text().color());
+			item->setForeground(palette().text().color());
 		}
 	}
 }
@@ -719,7 +720,7 @@ void wdgCheatsEditor::s_export(UNUSED(bool checked)) {
 		QFileInfo fileinfo(file);
 
 		if (fileinfo.suffix().isEmpty()) {
-			fileinfo.setFile(QString(file) + ".xml");
+			fileinfo.setFile(QString("%0.xml").arg(file));
 		}
 
 		objch->save_Nestopia_xml(this, fileinfo.absoluteFilePath());

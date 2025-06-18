@@ -19,28 +19,38 @@
 #ifndef DLGUNCOMP_HPP_
 #define DLGUNCOMP_HPP_
 
-#include <QtWidgets/QDialog>
 #include "ui_dlgUncomp.h"
+#include "wdgTitleBarWindow.hpp"
 #include "common.h"
 #include "uncompress.h"
 
-class dlgUncomp : public QDialog, public Ui::dlgUncomp {
-	Q_OBJECT
+// ----------------------------------------------------------------------------------------------
 
-	private:
-		int selected;
-
+class dlgUncomp : public QWidget, public Ui::dlgUncomp {
 	public:
 		explicit dlgUncomp(QWidget *parent = nullptr, void *uncompress_archive = nullptr, BYTE type = UNCOMPRESS_TYPE_ALL);
 		~dlgUncomp() override;
+};
 
-	private:
+// ----------------------------------------------------------------------------------------------
+
+class wdgDlgUncomp : public wdgTitleBarDialog {
+	Q_OBJECT
+
+	public:
+		dlgUncomp *wd;
+		int selected;
+
+	public:
+		explicit wdgDlgUncomp(QWidget *parent = nullptr, void *uncompress_archive = nullptr, BYTE type = UNCOMPRESS_TYPE_ALL);
+		~wdgDlgUncomp() override;
+
+	protected:
 		void closeEvent(QCloseEvent *event) override;
 
 	private slots:
 		void s_doubleclick(int row, int column);
 		void s_ok_clicked(bool checked);
-		void s_none_clicked(bool checked);
 };
 
 #endif /* DLGUNCOMP_HPP_ */

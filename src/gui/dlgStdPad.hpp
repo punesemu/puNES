@@ -21,8 +21,9 @@
 
 #include <QtCore/QtGlobal>
 #include <QtCore/QTimer>
-#include <QtWidgets/QDialog>
 #include <QtWidgets/QPushButton>
+#include "ui_dlgStdPad.h"
+#include "wdgTitleBarWindow.hpp"
 #include "common.h"
 #include "input.h"
 
@@ -46,9 +47,9 @@ typedef struct _joy_list {
 
 extern _joy_list joy_list;
 
-#include "ui_dlgStdPad.h"
+// ----------------------------------------------------------------------------------------------
 
-class dlgStdPad : public QDialog, public Ui::dlgStdPad {
+class dlgStdPad : public QWidget, public Ui::dlgStdPad {
 	Q_OBJECT
 
 	private:
@@ -72,41 +73,40 @@ class dlgStdPad : public QDialog, public Ui::dlgStdPad {
 		} data;
 		int last_js_index;
 
+	signals:
+		void et_update_joy_combo(void);
+
 	public:
 		explicit dlgStdPad(QWidget *parent = nullptr, _cfg_port *cfg_port = nullptr);
 		~dlgStdPad() override;
 
-	signals:
-		void et_update_joy_combo(void);
-
 	protected:
 		bool eventFilter(QObject *obj, QEvent *event) override;
 		void changeEvent(QEvent *event) override;
-		void showEvent(QShowEvent *event) override;
 		void closeEvent(QCloseEvent *event) override;
 
 	private:
-		void stylesheet_update(void);
+		void stylesheet_update(void) const;
 
 	private:
-		QString stylesheet_label(const QColor &background);
-		QString stylesheet_frame(const QColor &border, const QColor &background);
-		QString stylesheet_pixmapbutton(void);
-		QString stylesheet_left_button(void);
-		QString stylesheet_right_button(void);
+		static QString stylesheet_label(const QColor &background);
+		static QString stylesheet_frame(const QColor &border, const QColor &background);
+		static QString stylesheet_pixmapbutton(void);
+		QString stylesheet_left_button(void) const;
+		QString stylesheet_right_button(void) const;
 
 	private:
 		bool keypress(QKeyEvent *event);
 		void update_dialog(void);
 		void joy_combo_init(void);
-		void setEnable_tab_buttons(int type, bool mode);
-		void disable_tab_and_other(int type, int vbutton);
-		void info_entry_print(int type, const QString &txt);
+		void setEnable_tab_buttons(int type, bool mode) const;
+		void disable_tab_and_other(int type, int vbutton) const;
+		void info_entry_print(int type, const QString &txt) const;
 		void js_press_event(void);
-		void td_update_label(int type, int value);
-		void deadzone_update_label(int value);
-		void js_pixmapPushButton(int index, DBWORD input, pixmapPushButton *bt);
-		int js_jdev_index(void);
+		void td_update_label(int type, int value) const;
+		void deadzone_update_label(int value) const;
+		static void js_pixmapPushButton(int index, DBWORD input, pixmapPushButton *bt);
+		int js_jdev_index(void) const;
 
 	private slots:
 		void s_combobox_joy_activated(int index);
@@ -124,10 +124,20 @@ class dlgStdPad : public QDialog, public Ui::dlgStdPad {
 		void s_pad_joy_read_timer(void);
 		void s_pad_in_sequence_timer(void);
 		void s_apply_clicked(bool checked);
-		void s_discard_clicked(bool checked);
 
 	private slots:
 		void s_et_update_joy_combo(void);
+};
+
+// ----------------------------------------------------------------------------------------------
+
+class wdgDlgStdPad : public wdgTitleBarDialog {
+	public:
+		dlgStdPad *wd;
+
+	public:
+		explicit wdgDlgStdPad(QWidget *parent = nullptr, _cfg_port *cfg_port = nullptr);
+		~wdgDlgStdPad() override;
 };
 
 #endif /* DLGSTDPAD_HPP_ */

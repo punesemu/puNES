@@ -423,7 +423,7 @@ wdgPaletteEditor::~wdgPaletteEditor() = default;
 
 void wdgPaletteEditor::changeEvent(QEvent *event) {
 	if (event->type() == QEvent::LanguageChange) {
-		Ui::wdgPaletteEditor::retranslateUi(this);
+		retranslateUi(this);
 	} else {
 		QWidget::changeEvent(event);
 	}
@@ -565,7 +565,7 @@ void wdgPaletteEditor::s_palette_save(UNUSED(bool checked)) {
 		QFileInfo fileinfo(file);
 
 		if (fileinfo.suffix().isEmpty()) {
-			fileinfo.setFile(QString(file) + ".pal");
+			fileinfo.setFile(QString("%0.pal").arg(file));
 		}
 
 		palette_save_on_file(uQStringCD(fileinfo.absoluteFilePath()));

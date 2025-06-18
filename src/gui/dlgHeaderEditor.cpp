@@ -35,15 +35,40 @@
 #include "ines.h"
 #include "conf.h"
 
-dlgHeaderEditor::dlgHeaderEditor(QWidget *parent) : QDialog(parent) {
+// ----------------------------------------------------------------------------------------------
+
+wdgDlgHeaderEditor::wdgDlgHeaderEditor(QWidget *parent) : wdgTitleBarDialog(parent) {
+	wd = new dlgHeaderEditor(this);
+	setWindowTitle(wd->windowTitle());
+	setWindowIcon(QIcon(":/icon/icons/header.svgz"));
+	set_border_color("chocolate");
+	set_buttons(barButton::Close);
+	set_permit_resize(false);
+	add_widget(wd);
+	init_geom_variable(cfg->lg_header_editor);
+
+	connect(wd, SIGNAL(et_adjust_size(void)), this, SLOT(s_adjust_size(void)));
+	connect(wd->pushButton_Cancel, SIGNAL(clicked(bool)), this, SLOT(close(void)));
+}
+wdgDlgHeaderEditor::~wdgDlgHeaderEditor() = default;
+
+void wdgDlgHeaderEditor::closeEvent(QCloseEvent *event) {
+	geom = geometry();
+	wdgTitleBarDialog::closeEvent(event);
+}
+void wdgDlgHeaderEditor::hideEvent(QHideEvent *event) {
+	geom = geometry();
+	wdgTitleBarDialog::hideEvent(event);
+}
+
+void wdgDlgHeaderEditor::s_adjust_size(void) {
+	adjustSize();
+}
+
+// ----------------------------------------------------------------------------------------------
+
+dlgHeaderEditor::dlgHeaderEditor(QWidget *parent) : QWidget(parent) {
 	setupUi(this);
-
-	setAttribute(Qt::WA_DeleteOnClose);
-
-	geom.setX(cfg->lg_header_editor.x);
-	geom.setY(cfg->lg_header_editor.y);
-	geom.setWidth(cfg->lg_header_editor.w);
-	geom.setHeight(cfg->lg_header_editor.h);
 
 	grp = new QButtonGroup(this);
 	grp->addButton(radioButton_ines10);
@@ -58,7 +83,6 @@ dlgHeaderEditor::dlgHeaderEditor(QWidget *parent) : QDialog(parent) {
 
 	connect(pushButton_Reset, SIGNAL(clicked(bool)), this, SLOT(s_reset_clicked(bool)));
 	connect(pushButton_Save, SIGNAL(clicked(bool)), this, SLOT(s_save_clicked(bool)));
-	connect(pushButton_Cancel, SIGNAL(clicked(bool)), this, SLOT(s_cancel_clicked(bool)));
 
 	connect(grp, SIGNAL(buttonClicked(QAbstractButton*)), this, SLOT(s_control_changed()));
 	connect(spinBox_Mapper, SIGNAL(valueChanged(int)), this, SLOT(s_control_changed()));
@@ -87,19 +111,7 @@ void dlgHeaderEditor::changeEvent(QEvent *event) {
 	if (event->type() == QEvent::LanguageChange) {
 		retranslateUi(this);
 	} else {
-		QDialog::changeEvent(event);
-	}
-}
-void dlgHeaderEditor::hideEvent(QHideEvent *event) {
-	geom = geometry();
-	QDialog::hideEvent(event);
-}
-void dlgHeaderEditor::closeEvent(QCloseEvent *event) {
-	if (this == dlgheader) {
-		event->ignore();
-		QTimer::singleShot(50, this, [this] { setVisible(FALSE); });
-	} else {
-		geom = geometry();
+		QWidget::changeEvent(event);
 	}
 }
 
@@ -415,6 +427,10 @@ int dlgHeaderEditor::find_multiplier(int size) {
 	}
 	return (multiplier);
 }
+void dlgHeaderEditor::resize_request(void) {
+	adjustSize();
+	emit et_adjust_size();
+}
 
 void dlgHeaderEditor::s_control_changed(void) {
 	std::array<BYTE, HEADER_SIZE> tmp = { 0 };
@@ -481,6 +497,8 @@ void dlgHeaderEditor::s_grp_type(UNUSED(QAbstractButton *button)) {
 	// Input
 	label_Input->setVisible(is_nes_20);
 	comboBox_Input->setVisible(is_nes_20);
+
+	resize_request();
 }
 void dlgHeaderEditor::s_console_type(int index) {
 	const bool is_nes_20 = radioButton_nes20->isChecked();
@@ -516,7 +534,7 @@ void dlgHeaderEditor::s_reset_clicked(UNUSED(bool checked)) {
 	reset_dialog();
 }
 void dlgHeaderEditor::s_save_clicked(UNUSED(bool checked)) {
-	if (write_header() && (this == dlgheader)) {
+	if (write_header()) {
 		const QMessageBox::StandardButton reply = QMessageBox::question(this,
 			tr("Attention"),
 			tr("Do you want to boot the ROM with the changes made?"),
@@ -526,12 +544,5 @@ void dlgHeaderEditor::s_save_clicked(UNUSED(bool checked)) {
 			info.block_recent_roms_update = TRUE;
 			gui_emit_et_reset(CHANGE_ROM);
 		}
-	}
-}
-void dlgHeaderEditor::s_cancel_clicked(UNUSED(bool checked)) {
-	if (this == dlgheader) {
-		hide();
-	} else {
-		close();
 	}
 }

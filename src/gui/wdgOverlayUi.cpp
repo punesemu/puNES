@@ -391,9 +391,6 @@ void wdgOverlayUi::closeEvent(QCloseEvent *event) {
 	QWidget::closeEvent(event);
 }
 
-void wdgOverlayUi::retranslateUi(QWidget *wdgOverlayUi) {
-	Ui::wdgOverlayUi::retranslateUi(wdgOverlayUi);
-}
 void wdgOverlayUi::update_dpr(void) {
 	QFont font = this->font();
 

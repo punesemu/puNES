@@ -19,10 +19,12 @@
 #ifndef DLGVSSYSTEM_HPP_
 #define DLGVSSYSTEM_HPP_
 
-#include <QtWidgets/QDialog>
 #include "ui_dlgVsSystem.h"
+#include "wdgTitleBarWindow.hpp"
 
-class dlgVsSystem : public QDialog, public Ui::dlgVsSystem {
+// ----------------------------------------------------------------------------------------------
+
+class dlgVsSystem final : public QWidget, public Ui::dlgVsSystem {
 	Q_OBJECT
 
 	public:
@@ -32,20 +34,31 @@ class dlgVsSystem : public QDialog, public Ui::dlgVsSystem {
 	protected:
 		bool eventFilter(QObject *obj, QEvent *event) override;
 		void changeEvent(QEvent *event) override;
-		void showEvent(QShowEvent *event) override;
 
 	public:
-		int update_pos(int startY);
-		void update_dialog(void);
-		void insert_coin(int index);
+		void update_dialog(void) const;
+		static void insert_coin(int index);
 
 	private slots:
-		void s_coins_clicked(bool checked);
-		void s_monitor_clicked(bool checked);
-		void s_ds_changed(int state);
-		void s_ds_clicked(bool checked);
-		void s_ds_defaults_clicked(bool checked);
-		void s_x_clicked(bool checked);
+		void s_coins_clicked(bool checked) const;
+		void s_monitor_clicked(bool checked) const;
+		void s_ds_changed(int state) const;
+		void s_ds_clicked(bool checked) const;
+		void s_ds_defaults_clicked(bool checked) const;
+};
+
+// ----------------------------------------------------------------------------------------------
+
+class wdgDlgVsSystem final : public wdgTitleBarDialog {
+	public:
+		dlgVsSystem *wd;
+
+	public:
+		explicit wdgDlgVsSystem(QWidget *parent = nullptr);
+		~wdgDlgVsSystem() override;
+
+	protected:
+		void closeEvent(QCloseEvent *event) override;
 };
 
 #endif /* DLGVSSYSTEM_HPP_ */

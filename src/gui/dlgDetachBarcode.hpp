@@ -19,12 +19,12 @@
 #ifndef DLGDETACHBARCODE_HPP_
 #define DLGDETACHBARCODE_HPP_
 
-#include <QtWidgets/QDialog>
 #include "ui_dlgDetachBarcode.h"
-#include "common.h"
-#include "uncompress.h"
+#include "wdgTitleBarWindow.hpp"
 
-class dlgDetachBarcode : public QDialog, public Ui::dlgDetachBarcode {
+// ----------------------------------------------------------------------------------------------
+
+class dlgDetachBarcode final : public QWidget, public Ui::dlgDetachBarcode {
 	Q_OBJECT
 
 	public:
@@ -50,18 +50,30 @@ class dlgDetachBarcode : public QDialog, public Ui::dlgDetachBarcode {
 		void changeEvent(QEvent *event) override;
 
 	public:
-		int update_pos(int startY);
-		void update_dialog(void);
+		void update_dialog(void) const;
 		void change_rom(void);
 
 	private:
-		void apply_barcode(void);
+		void apply_barcode(void) const;
 
 	private slots:
 		void s_barcode_click(QListWidgetItem *item);
 		void s_barcode_doubleclick(QListWidgetItem *item);
-		void s_apply_clicked(bool checked);
-		void s_x_clicked(bool checked);
+		void s_apply_clicked(bool checked) const;
+};
+
+// ----------------------------------------------------------------------------------------------
+
+class wdgDlgDetachBarcode final : public wdgTitleBarDialog {
+	public:
+		dlgDetachBarcode *wd;
+
+	public:
+		explicit wdgDlgDetachBarcode(QWidget *parent = nullptr);
+		~wdgDlgDetachBarcode() override;
+
+	protected:
+		void closeEvent(QCloseEvent *event) override;
 };
 
 #endif /* DLGDETACHBARCODE_HPP_ */

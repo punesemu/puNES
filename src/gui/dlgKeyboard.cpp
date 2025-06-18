@@ -47,24 +47,61 @@ void gui_nes_keyboard_frame_finished(void) {
 	}
 }
 
-// dlgKeyboard -------------------------------------------------------------------------------------------------------------------
+// ----------------------------------------------------------------------------------------------
 
-dlgKeyboard::dlgKeyboard(QWidget *parent) : QDialog(parent) {
-	QFont f8;
+wdgDlgKeyboard::wdgDlgKeyboard(QWidget *parent) : wdgTitleBarDialog(parent) {
+	wd = new dlgKeyboard(this);
+	setWindowTitle(wd->windowTitle());
+	setWindowIcon(QIcon(":/icon/icons/virtual_keyboard.svgz"));
+	set_border_color(Qt::red);
+	set_buttons(barButton::Close);
+	set_permit_resize(false);
+	add_widget(wd);
+	is_in_desktop(&cfg->lg_nes_keyboard.x, &cfg->lg_nes_keyboard.y);
+	init_geom_variable(cfg->lg_nes_keyboard);
 
-	f8.setPointSize(8);
-	f8.setWeight(QFont::Light);
-	setFont(f8);
+	connect(wd, SIGNAL(et_adjust_size(void)), this, SLOT(s_adjust_size(void)));
+}
+wdgDlgKeyboard::~wdgDlgKeyboard() = default;
 
+void wdgDlgKeyboard::resizeEvent(QResizeEvent *event) {
+	// sotto wayland (almeno con GNOME) ogni tanto ricevo un evento di Resize
+	// spontaneo (con dimensioni non corrette) che provo a filtrare
+	if (gfx.wayland.enabled &&  event->spontaneous()) {
+		setMaximumSize((event->oldSize()));
+	}
+	wdgTitleBarDialog::resizeEvent(event);
+}
+void wdgDlgKeyboard::closeEvent(QCloseEvent *event) {
+	geom = geometry();
+	wdgTitleBarDialog::closeEvent(event);
+}
+void wdgDlgKeyboard::hideEvent(QHideEvent *event) {
+	geom = geometry();
+	wdgTitleBarDialog::hideEvent(event);
+	mainwin->wd->statusbar->keyb->update_tooltip();
+}
+
+void wdgDlgKeyboard::s_adjust_size(void) {
+	adjustSize();
+}
+
+// ----------------------------------------------------------------------------------------------
+
+dlgKeyboard::dlgKeyboard(QWidget *parent) : QWidget(parent) {
 	setupUi(this);
+
+	{
+		QFont f8;
+
+		f8.setPointSize(8);
+		f8.setWeight(QFont::Light);
+		setFont(f8);
+	}
 
 	mode = DK_VIRTUAL;
 	paste = new pasteObject(this);
 
-	geom.setX(cfg->lg_nes_keyboard.x);
-	geom.setY(cfg->lg_nes_keyboard.y);
-	geom.setWidth(cfg->lg_nes_keyboard.w);
-	geom.setHeight(cfg->lg_nes_keyboard.h);
 	font_point_size = font().pointSize();
 
 	dlgkbd = this;
@@ -89,6 +126,7 @@ dlgKeyboard::dlgKeyboard(QWidget *parent) : QDialog(parent) {
 
 	switch_mode(DK_VIRTUAL);
 	switch_size_factor(cfg_from_file.input.vk_size);
+
 	checkBox_Subor_Extende_Mode->setChecked(cfg->input.vk_subor_extended_mode);
 
 	installEventFilter(this);
@@ -103,13 +141,13 @@ bool dlgKeyboard::event(QEvent *event) {
 		keyevent->accept();
 		return (true);
 	}
-	return (QDialog::event(event));
+	return (QWidget::event(event));
 }
 bool dlgKeyboard::eventFilter(QObject *obj, QEvent *event) {
 	if (process_event(event)) {
 		return (true);
 	}
-	return (QDialog::eventFilter(obj, event));
+	return (QWidget::eventFilter(obj, event));
 }
 void dlgKeyboard::changeEvent(QEvent *event) {
 	if (event->type() == QEvent::LanguageChange) {
@@ -124,22 +162,11 @@ void dlgKeyboard::changeEvent(QEvent *event) {
 	QWidget::changeEvent(event);
 }
 void dlgKeyboard::showEvent(QShowEvent *event) {
-	QDialog::showEvent(event);
-	mainwin->statusbar->keyb->update_tooltip();
-}
-void dlgKeyboard::hideEvent(QHideEvent *event) {
-	geom = geometry();
-	QDialog::hideEvent(event);
-	mainwin->statusbar->keyb->update_tooltip();
-}
-void dlgKeyboard::closeEvent(QCloseEvent *event) {
-	event->ignore();
-	QTimer::singleShot(50, this, [this] {
-		setVisible(FALSE);
-	});
+	QWidget::showEvent(event);
+	mainwin->wd->statusbar->keyb->update_tooltip();
 }
 
-void dlgKeyboard::retranslateUi(QDialog *dlgKeyboard) {
+void dlgKeyboard::retranslateUi(QWidget *dlgKeyboard) {
 	Ui::dlgKeyboard::retranslateUi(dlgKeyboard);
 	if (nes_keyboard.enabled) {
 		setWindowTitle(keyboard->keyboard_name());
@@ -208,8 +235,8 @@ bool dlgKeyboard::process_event(QEvent *event) {
 				QKeySequence key = ((QShortcutEvent *)event)->key();
 
 				if (gui.capture_input &&
-					(key != mainwin->shortcut[SET_INP_SC_TOGGLE_CAPTURE_INPUT]->key()) &&
-					(key != mainwin->shortcut[SET_INP_SC_TOGGLE_NES_KEYBOARD]->key())) {
+					(key != mainwin->wd->shortcut[SET_INP_SC_TOGGLE_CAPTURE_INPUT]->key()) &&
+					(key != mainwin->wd->shortcut[SET_INP_SC_TOGGLE_NES_KEYBOARD]->key())) {
 					return (true);
 				}
 			}
@@ -225,8 +252,8 @@ void dlgKeyboard::shortcut_toggle(BYTE is_this) {
 	} else {
 		parent = mainwin;
 	}
-	mainwin->shortcut[SET_INP_SC_TOGGLE_CAPTURE_INPUT]->setParent(parent);
-	mainwin->shortcut[SET_INP_SC_TOGGLE_NES_KEYBOARD]->setParent(parent);
+	mainwin->wd->shortcut[SET_INP_SC_TOGGLE_CAPTURE_INPUT]->setParent(parent);
+	mainwin->wd->shortcut[SET_INP_SC_TOGGLE_NES_KEYBOARD]->setParent(parent);
 }
 void dlgKeyboard::button_press(keyboardButton *kb, keyevent_types type) {
 	nes_keyboard.matrix[kb->element] = 0x80;
@@ -380,13 +407,9 @@ void dlgKeyboard::replace_keyboard(wdgKeyboard *wk) {
 	delete (keyboard);
 	keyboard = wk;
 	keyboard->ext_setup();
-	if (get_size_factor() == cfg_from_file.input.vk_size) {
-		s_size_factor(cfg_from_file.input.vk_size);
-	} else {
-		switch_size_factor(cfg_from_file.input.vk_size);
-	}
 	keyboard->show();
 	setWindowTitle(keyboard->keyboard_name());
+	switch_size_factor(cfg_from_file.input.vk_size);
 }
 void dlgKeyboard::switch_size_factor(BYTE vk_size) {
 	QList<themePushButton *> btn_list = widget_Size->findChildren<themePushButton *>();
@@ -418,10 +441,10 @@ void dlgKeyboard::apply_size_factor(double size_factor) {
 	wdg_list.append(groupBox_Options->findChildren<QWidget *>());
 	foreach (QWidget *wdg, wdg_list) {
 		QFont font = wdg->font();
+
 		font.setPointSize(font_point_size * size_factor);
 		wdg->setFont(font);
 	}
-
 	// keyboard
 	kb_list.append(keyboard->findChildren<keyboardButton *>());
 	foreach (keyboardButton *kb, kb_list) {
@@ -464,6 +487,11 @@ void dlgKeyboard::one_click_dec(void) {
 		one_click.activies--;
 	}
 }
+void dlgKeyboard::resize_request(void) {
+	QTimer::singleShot(0, this, [this] {
+		emit et_adjust_size();
+	});
+}
 
 void dlgKeyboard::s_nes_keyboard(void) {
 	BYTE disable = !nes_keyboard.enabled;
@@ -490,9 +518,9 @@ void dlgKeyboard::s_nes_keyboard(void) {
 		fake_keyboard();
 		reset();
 	}
-	mainwin->action_Virtual_Keyboard->setEnabled(!disable);
-	mainwin->statusbar->keyb->setEnabled(!disable);
-	mainwin->update_window();
+	mainwin->wd->action_Virtual_Keyboard->setEnabled(!disable);
+	mainwin->wd->statusbar->keyb->setEnabled(!disable);
+	mainwin->wd->update_window();
 }
 void dlgKeyboard::s_mode(bool checked) {
 	if (checked) {
@@ -512,20 +540,22 @@ void dlgKeyboard::s_mode(bool checked) {
 	}
 }
 void dlgKeyboard::s_size_factor(bool checked) {
-	if (checked) {
-		QList<themePushButton *> btn_list = widget_Size->findChildren<themePushButton *>();
+	QList<themePushButton *> btn_list = widget_Size->findChildren<themePushButton *>();
 
-		foreach (themePushButton *btn, btn_list) {
-			if ((themePushButton *)sender() == btn) {
-				int index = btn->property("mtype").toInt();
+	foreach (themePushButton *btn, btn_list) {
+		int index = btn->property("mtype").toInt();
+		QPushButton *button = qobject_cast<themePushButton*>(sender());
 
-				cfg_from_file.input.vk_size = index;
+		if (button == btn) {
+			qtHelper::pushbutton_set_checked(btn, true);
+			if (checked) {
 				apply_size_factor(1.0f + ((double)index * 0.5f));
+				resize_request();
+				cfg_from_file.input.vk_size = index;
 				settings_inp_save();
-				qtHelper::pushbutton_set_checked(btn, true);
-			} else {
-				qtHelper::pushbutton_set_checked(btn, false);
 			}
+		} else {
+			qtHelper::pushbutton_set_checked(btn, false);
 		}
 	}
 }
@@ -534,15 +564,29 @@ void dlgKeyboard::s_subor_extended_mode(UNUSED(bool checked)) {
 	settings_inp_save();
 }
 
-// dlgCfgNSCode ------------------------------------------------------------------------------------------------------------------
+// ----------------------------------------------------------------------------------------------
 
-dlgCfgNSCode::dlgCfgNSCode(QWidget *parent, keyboardButton *button) : QDialog(parent) {
+wdgDlgCfgNSCode::wdgDlgCfgNSCode(QWidget *parent, keyboardButton *button) : wdgTitleBarDialog(parent) {
+	setAttribute(Qt::WA_DeleteOnClose);
+	wd = new dlgCfgNSCode(this, button);
+	setWindowTitle(wd->windowTitle());
+	setWindowIcon(QIcon(":/icon/icons/virtual_keyboard.svgz"));
+	set_border_color(Qt::red);
+	set_buttons(barButton::Close);
+	set_permit_resize(false);
+	add_widget(wd);
+
+	connect(wd->pushButton_Discard, SIGNAL(clicked(bool)), this, SLOT(close(void)));
+}
+wdgDlgCfgNSCode::~wdgDlgCfgNSCode() = default;
+
+// ----------------------------------------------------------------------------------------------
+
+dlgCfgNSCode::dlgCfgNSCode(QWidget *parent, keyboardButton *button) : QWidget(parent) {
 	this->button = button;
 	nscode = button->nscode;
 
 	setupUi(this);
-
-	setAttribute(Qt::WA_DeleteOnClose);
 
 	{
 		QString title = "???";
@@ -566,7 +610,6 @@ dlgCfgNSCode::dlgCfgNSCode(QWidget *parent, keyboardButton *button) : QDialog(pa
 	connect(pushButton_Desc_Default, SIGNAL(clicked(bool)), this, SLOT(s_default_clicked(bool)));
 	connect(pushButton_Desc_Unset, SIGNAL(clicked(bool)), this, SLOT(s_unset_clicked(bool)));
 	connect(pushButton_Apply, SIGNAL(clicked(bool)), this, SLOT(s_apply_clicked(bool)));
-	connect(pushButton_Discard, SIGNAL(clicked(bool)), this, SLOT(s_discard_clicked(bool)));
 
 	installEventFilter(this);
 }
@@ -579,7 +622,7 @@ bool dlgCfgNSCode::eventFilter(QObject *obj, QEvent *event) {
 		default:
 			break;
 	}
-	return (QDialog::eventFilter(obj, event));
+	return (QWidget::eventFilter(obj, event));
 }
 
 bool dlgCfgNSCode::keypress(QKeyEvent *event) {
@@ -600,13 +643,10 @@ void dlgCfgNSCode::s_apply_clicked(UNUSED(bool checked)) {
 	button->nscode = nscode;
 	settings_inp_nes_keyboard_set_nscode(uQStringCD(button->objectName()), nscode);
 	settings_inp_save();
-	close();
-}
-void dlgCfgNSCode::s_discard_clicked(UNUSED(bool checked)) {
-	close();
+	pushButton_Discard->click();
 }
 
-// keyboardButton ----------------------------------------------------------------------------------------------------------------
+// ----------------------------------------------------------------------------------------------
 
 keyboardButton::keyboardButton(QWidget *parent) : QPushButton(parent) {
 	nscode = 0;
@@ -787,9 +827,9 @@ void keyboardButton::mousePressEvent(QMouseEvent *event) {
 void keyboardButton::mouseReleaseEvent(QMouseEvent *event) {
 	if (dlgkbd->mode == dlgKeyboard::DK_SETUP) {
 		QTimer::singleShot(75, this, [this] {
-			dlgCfgNSCode *cfg = new dlgCfgNSCode(dlgkeyb, this);
+			wdgDlgCfgNSCode *cfg = new wdgDlgCfgNSCode(dlgkeyb, this);
 
-			cfg->exec();
+			cfg->show();
 			update();
 		});
 	} else {
@@ -877,7 +917,7 @@ void keyboardButton::reset(void) {
 	setStyleSheet("");
 }
 
-// wdgKeyboard -------------------------------------------------------------------------------------------------------------------
+// ----------------------------------------------------------------------------------------------
 
 wdgKeyboard::wdgKeyboard(QWidget *parent) : QWidget(parent) {
 	rows = 0;
@@ -888,6 +928,13 @@ wdgKeyboard::wdgKeyboard(QWidget *parent) : QWidget(parent) {
 	setLayoutDirection(Qt::LeftToRight);
 }
 wdgKeyboard::~wdgKeyboard() = default;
+
+QSize wdgKeyboard::sizeHint(void) const {
+	return (QSize(0, 0));
+}
+QSize wdgKeyboard::minimumSizeHint(void) const {
+	return (sizeHint());
+}
 
 void wdgKeyboard::init(void) {
 	nes_keyboard.enabled = TRUE;
@@ -920,7 +967,7 @@ QList<QList<SBYTE>> wdgKeyboard::parse_character(_character *ch) {
 	return (elements);
 }
 
-// pasteObject -------------------------------------------------------------------------------------------------------------------
+// ----------------------------------------------------------------------------------------------
 
 pasteObject::pasteObject(QObject *parent) : QObject(parent) {
 	reset();
@@ -1079,7 +1126,7 @@ void pasteObject::set_elements(BYTE value) {
 	}
 }
 
-// familyBasicKeyboard -----------------------------------------------------------------------------------------------------------
+// ----------------------------------------------------------------------------------------------
 
 // |-----------|-------------------------------------|-----------------------------------|
 // |           |              Column 0               |              Column 1             |
@@ -1921,7 +1968,7 @@ SBYTE familyBasicKeyboard::calc_v(void) {
 	return (calc_element(4, 5));
 }
 
-// suborKeyboard -----------------------------------------------------------------------------------------------------------------
+// ----------------------------------------------------------------------------------------------
 
 // |-----------|-------------------------------------------|--------------------------------------|
 // |           |                 Column 0                  |               Column 1               |

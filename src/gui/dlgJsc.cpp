@@ -23,12 +23,36 @@
 #include "settings.h"
 #include "gui.h"
 
-dlgJsc::dlgJsc(QWidget *parent) : QDialog(parent) {
+// ----------------------------------------------------------------------------------------------
+
+wdgDlgJsc::wdgDlgJsc(QWidget *parent) : wdgTitleBarDialog(parent) {
+	wd = new dlgJsc(this);
+	setWindowTitle(wd->windowTitle());
+	setWindowIcon(QIcon(":/icon/icons/game_controller.svgz"));
+	set_border_color("skyblue");
+	set_buttons(barButton::Close);
+	set_permit_resize(false);
+	add_widget(wd);
+
+	connect(wd->pushButton_Close, SIGNAL(clicked(bool)), this, SLOT(close(void)));
+}
+wdgDlgJsc::~wdgDlgJsc() = default;
+
+void wdgDlgJsc::closeEvent(QCloseEvent *event) {
+	geom = geometry();
+	wdgTitleBarDialog::closeEvent(event);
+}void wdgDlgJsc::hideEvent(QHideEvent *event) {
+	geom = geometry();
+	wdgTitleBarDialog::hideEvent(event);
+}
+
+// ----------------------------------------------------------------------------------------------
+
+dlgJsc::dlgJsc(QWidget *parent) : QWidget(parent) {
 	unsigned int i;
 
 	js_guid_unset(&guid);
 	timer = new QTimer(this);
-	first_time = true;
 
 	setupUi(this);
 
@@ -61,12 +85,8 @@ dlgJsc::dlgJsc(QWidget *parent) : QDialog(parent) {
 	connect(comboBox_joy_ID, SIGNAL(activated(int)), this, SLOT(s_combobox_joy_activated(int)));
 	connect(comboBox_joy_ID, SIGNAL(currentIndexChanged(int)), this, SLOT(s_combobox_joy_index_changed(int)));
 	connect(pushButton_Save, SIGNAL(clicked(bool)), this, SLOT(s_save_clicked(bool)));
-	connect(pushButton_CLose, SIGNAL(clicked(bool)), this, SLOT(s_close_clicked(bool)));
 
 	connect(timer, SIGNAL(timeout()), this, SLOT(s_joy_read_timer()));
-
-	adjustSize();
-	setFixedSize(size());
 
 	installEventFilter(this);
 }
@@ -81,33 +101,27 @@ bool dlgJsc::eventFilter(QObject *obj, QEvent *event) {
 		default:
 			break;
 	}
-	return (QDialog::eventFilter(obj, event));
+	return (QWidget::eventFilter(obj, event));
 }
 void dlgJsc::changeEvent(QEvent *event) {
 	if (event->type() == QEvent::LanguageChange) {
 		retranslateUi(this);
 	} else {
-		QDialog::changeEvent(event);
+		QWidget::changeEvent(event);
 	}
 }
 void dlgJsc::showEvent(QShowEvent *event) {
-	if (first_time) {
-		first_time = false;
-	} else {
-		setGeometry(geom);
-	}
 	joy_combo_init();
 	timer->start(50);
-	QDialog::showEvent(event);
+	QWidget::showEvent(event);
 }
 void dlgJsc::hideEvent(QHideEvent *event) {
 	timer->stop();
-	geom = geometry();
-	QDialog::hideEvent(event);
+	QWidget::hideEvent(event);
 }
 void dlgJsc::closeEvent(QCloseEvent *event) {
 	timer->stop();
-	QDialog::closeEvent(event);
+	QWidget::closeEvent(event);
 }
 
 void dlgJsc::joy_combo_init(void) {
@@ -511,9 +525,6 @@ void dlgJsc::s_save_clicked(UNUSED(bool checked)) {
 		}
 		settings_jsc_save();
 	}
-}
-void dlgJsc::s_close_clicked(UNUSED(bool checked)) {
-	close();
 }
 
 void dlgJsc::s_et_update_joy_combo(void) {

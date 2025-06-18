@@ -35,12 +35,12 @@ enum _overlay_info_alignment {
 	OVERLAY_INFO_RIGHT
 };
 
-#define dlgheader ((dlgHeaderEditor *)gui_dlgheadereditor_get_ptr())
-#define dlgjsc ((dlgJsc *)gui_dlgjsc_get_ptr())
-#define dlgkeyb ((dlgKeyboard *)gui_dlgkeyboard_get_ptr())
-#define dlglog ((dlgLog *)gui_dlglog_get_ptr())
-#define dlgsettings ((dlgSettings *)gui_dlgsettings_get_ptr())
-#define mainwin ((mainWindow *)gui_mainwindow_get_ptr())
+#define dlgheader ((wdgDlgHeaderEditor *)gui_wdgdlgheadereditor_get_ptr())
+#define dlgjsc ((wdgDlgJsc *)gui_wdgdlgjsc_get_ptr())
+#define dlgkeyb ((wdgDlgKeyboard *)gui_wdgdlgkeyboard_get_ptr())
+#define dlglog ((wdgDlgLog *)gui_wdgdlglog_get_ptr())
+#define dlgsettings ((wdgDlgSettings *)gui_wdgdlgsettings_get_ptr())
+#define mainwin ((wdgDlgMainWindow *)gui_wdgdlgmainwindow_get_ptr())
 #define objcheat ((objCheat *)gui_objcheat_get_ptr())
 #define wdgoverlayui ((wdgOverlayUi *)gui_wdgoverlayui_get_ptr())
 #define wdgrewind dynamic_cast<wdgRewind *>((wdgRewind *)gui_wdgrewind_get_ptr())
@@ -161,9 +161,9 @@ EXTERNC void gui_cursor_set(void);
 EXTERNC void gui_cursor_hide(BYTE hide);
 EXTERNC void gui_control_visible_cursor(void);
 
-EXTERNC void *gui_mainwindow_get_ptr(void);
-EXTERNC void gui_mainwindow_coords(int *x, int *y, BYTE border);
-EXTERNC void gui_mainwindow_before_set_res(void);
+EXTERNC void *gui_wdgdlgmainwindow_get_ptr(void);
+EXTERNC void gui_wdgdlgmainwindow_coords(int *x, int *y, BYTE border);
+EXTERNC void gui_wdgdlgmainwindow_before_set_res(void);
 
 EXTERNC void *gui_wdgrewind_get_ptr(void);
 EXTERNC void gui_wdgrewind_play(void);
@@ -201,18 +201,18 @@ EXTERNC void gui_overlay_slot_preview_set_from_ppu_screen(int slot, void *buffer
 EXTERNC void gui_overlay_slot_preview_set_from_png(int slot, void *buffer, size_t size, uTCHAR *file);
 EXTERNC void *gui_overlay_slot_preview_get(int slot);
 
-EXTERNC void *gui_dlgheadereditor_get_ptr(void);
-EXTERNC void gui_dlgheadereditor_read_header(void);
+EXTERNC void *gui_wdgdlgheadereditor_get_ptr(void);
+EXTERNC void gui_wdgdlgheadereditor_read_header(void);
 
-EXTERNC void *gui_dlgsettings_get_ptr(void);
-EXTERNC void gui_dlgsettings_input_update_joy_combo(void);
+EXTERNC void *gui_wdgdlgsettings_get_ptr(void);
+EXTERNC void gui_wdgdlgsettings_input_update_joy_combo(void);
 
-EXTERNC void *gui_dlgjsc_get_ptr(void);
-EXTERNC void gui_dlgjsc_emit_update_joy_combo(void);
+EXTERNC void *gui_wdgdlgjsc_get_ptr(void);
+EXTERNC void gui_wdgdlgjsc_emit_update_joy_combo(void);
 
-EXTERNC void *gui_dlgkeyboard_get_ptr(void);
+EXTERNC void *gui_wdgdlgkeyboard_get_ptr(void);
 
-EXTERNC void *gui_dlglog_get_ptr(void);
+EXTERNC void *gui_wdgdlglog_get_ptr(void);
 
 EXTERNC void gui_js_joyval_icon_desc(int index, DBWORD input, void *icon, void *desc);
 
@@ -220,7 +220,6 @@ EXTERNC void *gui_dlgdebugger_get_ptr(void);
 EXTERNC void gui_dlgdebugger_click_step(void);
 
 EXTERNC void gui_external_control_windows_show(void);
-EXTERNC void gui_external_control_windows_update_pos(void);
 
 EXTERNC void gui_vs_system_update_dialog(void);
 EXTERNC void gui_vs_system_insert_coin(void);

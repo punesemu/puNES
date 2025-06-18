@@ -24,14 +24,30 @@
 #include "version.h"
 #include "info.h"
 
-dlgAbout::dlgAbout(QWidget *parent) : QDialog(parent) {
+// ----------------------------------------------------------------------------------------------
+
+wdgDlgAbout::wdgDlgAbout(QWidget *parent) : wdgTitleBarDialog(parent) {
+	setAttribute(Qt::WA_DeleteOnClose);
+	wd = new dlgAbout(this);
+	setWindowTitle(wd->windowTitle());
+	setWindowIcon(QIcon(":/icon/icons/about.svgz"));
+	set_border_color(Qt::magenta);
+	set_buttons(barButton::Close);
+	set_permit_resize(false);
+	add_widget(wd);
+
+	connect(wd->pushButton_Ok, SIGNAL(clicked(bool)), this, SLOT(close(void)));
+}
+wdgDlgAbout::~wdgDlgAbout() = default;
+
+// ----------------------------------------------------------------------------------------------
+
+dlgAbout::dlgAbout(QWidget *parent) : QWidget(parent) {
 	QDateTime compiled = QDateTime::fromString(COMPILED, "MMddyyyyhhmmss");
 	QString link_color = theme::is_dark_theme() ? "style=\"color: #A4AAE4\" " : "";
 	QString text;
 
 	setupUi(this);
-
-	setAttribute(Qt::WA_DeleteOnClose);
 
 	if (font().pointSize() > 9) {
 		QFont font;
@@ -71,8 +87,6 @@ dlgAbout::dlgAbout(QWidget *parent) : QDialog(parent) {
 	text.append(QString("<center><a %0href=\"").arg(link_color) +
 		QString(WEBSITE) + "\">" + "NesDev Forum</a></center>");
 	label_Informative->setText(text);
-
-	connect(pushButton_Ok, SIGNAL(clicked(bool)), this, SLOT(s_ok_clicked(bool)));
 }
 dlgAbout::~dlgAbout() = default;
 
@@ -80,10 +94,6 @@ void dlgAbout::changeEvent(QEvent *event) {
 	if (event->type() == QEvent::LanguageChange) {
 		retranslateUi(this);
 	} else {
-		QDialog::changeEvent(event);
+		QWidget::changeEvent(event);
 	}
-}
-
-void dlgAbout::s_ok_clicked(UNUSED(bool checked)) {
-	close();
 }

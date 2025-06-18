@@ -18,8 +18,8 @@
 
 #include <QtGui/QScreen>
 #include "dlgVsSystem.hpp"
-#include "mainWindow.hpp"
 #include "dlgSettings.hpp"
+#include "mainWindow.hpp"
 #include "vs_system.h"
 #include "clock.h"
 #include "conf.h"
@@ -27,11 +27,31 @@
 #include "dipswitch.h"
 #include "emu_thread.h"
 
-dlgVsSystem::dlgVsSystem(QWidget *parent) : QDialog(parent) {
-	setupUi(this);
+// ----------------------------------------------------------------------------------------------
 
-	setWindowFlags(Qt::Dialog | Qt::FramelessWindowHint);
-	setAttribute(Qt::WA_DeleteOnClose);
+wdgDlgVsSystem::wdgDlgVsSystem(QWidget *parent) : wdgTitleBarDialog(parent) {
+	wd = new dlgVsSystem(this);
+	setWindowTitle(wd->windowTitle());
+	setWindowIcon(QIcon(":/icon/icons/insert_coins.svgz"));
+	set_border_color("orange");
+	set_buttons(barButton::Close);
+	set_permit_resize(false);
+	add_widget(wd);
+}
+wdgDlgVsSystem::~wdgDlgVsSystem() = default;
+
+void wdgDlgVsSystem::closeEvent(QCloseEvent *event) {
+	if (gui.start) {
+		mainwin->wd->s_set_vs_window();
+		event->ignore();
+	}
+	wdgTitleBarDialog::closeEvent(event);
+}
+
+// ----------------------------------------------------------------------------------------------
+
+dlgVsSystem::dlgVsSystem(QWidget *parent) : QWidget(parent) {
+	setupUi(this);
 
 	pushButton_Left_Coin->setProperty("myIndex", QVariant(1));
 	pushButton_Right_Coin->setProperty("myIndex", QVariant(2));
@@ -98,29 +118,13 @@ dlgVsSystem::dlgVsSystem(QWidget *parent) : QDialog(parent) {
 		lineEdit_Coin_Counter->setFixedHeight(h);
 	}
 
-	adjustSize();
-	// Se setto il fixed size, su windows xp non mi visualizza il dialog correttamente.
-	//setFixedSize(size());
-
 	{
-		QMargins vgbm = verticalLayout_groupBox_Vs_System->contentsMargins();
-		QMargins vdia = verticalLayout_Vs_System->contentsMargins();
-		themePushButton *close = new themePushButton(this);
-		int x = 0, y = 0, w = 0, h = 0;
+		int dim = fontMetrics().height();
 
-		w = close->fontMetrics().size(0, "x").width() + 10;
-		h = close->fontMetrics().size(0, "x").height() + 5;
-		x = normalGeometry().width() - w - vdia.right() - 2 - vgbm.right();
-		y = vdia.top() + 2 + 1;
-
-		close->setGeometry(x, y, w, h);
-		close->setText("x");
-
-		connect(close, SIGNAL(clicked(bool)), this, SLOT(s_x_clicked(bool)));
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-		vgbm.setTop(close->sizeHint().height() + 2);
-		verticalLayout_groupBox_Vs_System->setContentsMargins(vgbm);
-#endif
+		icon_Coins->setPixmap(QIcon(":/icon/icons/insert_coins.svgz").pixmap(dim, dim));
+		icon_Coin_Counter->setPixmap(QIcon(":/icon/icons/stereo_delay.svgz").pixmap(dim, dim));
+		icon_Monitor->setPixmap(QIcon(":/icon/icons/monitor_screen.svgz").pixmap(dim, dim));
+		icon_Dipswitches->setPixmap(QIcon(":/icon/icons/dipswitch.svgz").pixmap(dim, dim));
 	}
 
 	installEventFilter(this);
@@ -136,42 +140,18 @@ bool dlgVsSystem::eventFilter(QObject *obj, QEvent *event) {
 		default:
 			break;
 	}
-	return (QDialog::eventFilter(obj, event));
+	return (QWidget::eventFilter(obj, event));
 }
 void dlgVsSystem::changeEvent(QEvent *event) {
 	if (event->type() == QEvent::LanguageChange) {
-		Ui::dlgVsSystem::retranslateUi(this);
+		retranslateUi(this);
 	} else {
 		QWidget::changeEvent(event);
 	}
 }
-void dlgVsSystem::showEvent(UNUSED(QShowEvent *event)) {
-	int dim = fontMetrics().height();
 
-	icon_Coins->setPixmap(QIcon(":/icon/icons/insert_coins.svgz").pixmap(dim, dim));
-	icon_Coin_Counter->setPixmap(QIcon(":/icon/icons/stereo_delay.svgz").pixmap(dim, dim));
-	icon_Monitor->setPixmap(QIcon(":/icon/icons/monitor_screen.svgz").pixmap(dim, dim));
-	icon_Dipswitches->setPixmap(QIcon(":/icon/icons/dipswitch.svgz").pixmap(dim, dim));
-}
-
-int dlgVsSystem::update_pos(int startY) {
-	int x = parentWidget()->pos().x() + parentWidget()->frameGeometry().width();
-	int y = parentWidget()->geometry().y() + startY;
-	QRect g = QGuiApplication::primaryScreen()->virtualGeometry();
-
-	if ((x + frameGeometry().width() - g.left()) > g.width()) {
-		x = parentWidget()->pos().x() - frameGeometry().width();
-	}
-	move(QPoint(x, y));
-
-	if (isHidden()) {
-		return (0);
-	}
-
-	return (frameGeometry().height());
-}
-void dlgVsSystem::update_dialog(void) {
-	groupBox_Vs_System->setEnabled(vs_system.enabled);
+void dlgVsSystem::update_dialog(void) const {
+	widget_Vs_System->setEnabled(vs_system.enabled);
 
 	lineEdit_Coin_Counter->setText(QString("%1").arg(vs_system.coins.counter));
 
@@ -206,8 +186,8 @@ void dlgVsSystem::update_dialog(void) {
 
 	pushButton_Dip_Switches->setEnabled(dipswitch_type_length() > 0);
 }
-void dlgVsSystem::insert_coin(int index) {
-	int base = vs_system_cn_next()
+void dlgVsSystem::insert_coin(const int index) {
+	const int base = vs_system_cn_next()
 
 	switch (index) {
 		default:
@@ -223,16 +203,16 @@ void dlgVsSystem::insert_coin(int index) {
 	}
 }
 
-void dlgVsSystem::s_coins_clicked(UNUSED(bool checked)) {
-	int index = QVariant(((QCheckBox *)sender())->property("myIndex")).toInt();
+void dlgVsSystem::s_coins_clicked(UNUSED(bool checked)) const {
+	const int index = QVariant(((QCheckBox *)sender())->property("myIndex")).toInt();
 
 	insert_coin(index);
 	gui_active_window();
 	gui_set_focus();
 }
-void dlgVsSystem::s_monitor_clicked(bool checked) {
+void dlgVsSystem::s_monitor_clicked(bool checked) const {
 	if (checked) {
-		int monitor = QVariant(((themePushButton *)sender())->property("myIndex")).toInt();
+		const int monitor = QVariant(((themePushButton *)sender())->property("myIndex")).toInt();
 
 		if (cfg->vs_monitor == monitor) {
 			return;
@@ -245,8 +225,8 @@ void dlgVsSystem::s_monitor_clicked(bool checked) {
 	gui_active_window();
 	gui_set_focus();
 }
-void dlgVsSystem::s_ds_changed(int state) {
-	int index = QVariant(((QCheckBox *)sender())->property("myIndex")).toInt();
+void dlgVsSystem::s_ds_changed(int state) const {
+	const int index = QVariant(((QCheckBox *)sender())->property("myIndex")).toInt();
 
 	switch (index) {
 		case 1:
@@ -304,7 +284,7 @@ void dlgVsSystem::s_ds_changed(int state) {
 	gui_active_window();
 	gui_set_focus();
 }
-void dlgVsSystem::s_ds_clicked(UNUSED(bool checked)) {
+void dlgVsSystem::s_ds_clicked(UNUSED(bool checked)) const {
 	emu_thread_pause();
 	gui_dipswitch_dialog();
 	emu_thread_continue();
@@ -313,14 +293,11 @@ void dlgVsSystem::s_ds_clicked(UNUSED(bool checked)) {
 	gui_active_window();
 	gui_set_focus();
 }
-void dlgVsSystem::s_ds_defaults_clicked(UNUSED(bool checked)) {
+void dlgVsSystem::s_ds_defaults_clicked(UNUSED(bool checked)) const {
 	cfg->dipswitch = dipswitch.def;
 	update_dialog();
 
 	settings_pgs_save();
 	gui_active_window();
 	gui_set_focus();
-}
-void dlgVsSystem::s_x_clicked(UNUSED(bool checked)) {
-	mainwin->s_set_vs_window();
 }

@@ -596,6 +596,8 @@ set(gui_ui_srcs
 	gui/designer/wdgSettingsRecording.ui
 	gui/designer/wdgSettingsVideo.ui
 	gui/designer/wdgState.ui
+	gui/designer/wdgTitleBar.ui
+	gui/designer/wdgTitleBarWindow.ui
 	gui/designer/resources.qrc
 	)
 
@@ -684,6 +686,8 @@ set(gui_srcs
 	gui/wdgStatusBar.hpp
 	gui/theme.cpp
 	gui/theme.hpp
+	gui/wdgTitleBarWindow.cpp
+	gui/wdgTitleBarWindow.hpp
 	gui/wdgToolBar.cpp
 	gui/wdgToolBar.hpp
 

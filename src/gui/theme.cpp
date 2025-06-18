@@ -23,18 +23,28 @@
 
 // ----------------------------------------------------------------------------------------------
 
+QString theme::stylesheet_wdgtitlebarwindow(const bool native_wm_disabled, const QColor &border_color) {
+	const QString stylesheet =
+		"wdgTitleBarWindow {"\
+		"	border: 1px solid %0;"\
+		"	border-top-left-radius: 4px;"\
+		"	border-top-right-radius: 4px;"\
+		"}";
+
+	return (native_wm_disabled ? stylesheet.arg(border_color.name()) : "");
+}
 QString theme::stylesheet_wdgroupbox(void) {
-	QString stylesheet =
+	const QString stylesheet =
 		"themeGroupBox {"\
 		"	font-weight: bold;"\
 		"}";
 
-	return stylesheet;
+	return (stylesheet);
 }
 QString theme::stylesheet_wdgtoolgroupbox(void) {
-	QColor border_color0 = QApplication::palette().light().color();
-	QColor border_color1 = QApplication::palette().dark().color();
-	QString stylesheet =
+	const QColor border_color0 = QApplication::palette().light().color();
+	const QColor border_color1 = QApplication::palette().dark().color();
+	const QString stylesheet =
 		"themeToolGroupBox {"\
 		"	border-radius: 10px;"\
 		"	border: 1px solid %0;"\
@@ -49,18 +59,18 @@ QString theme::stylesheet_wdgtoolgroupbox(void) {
 		"	padding: 0 0px;"\
 		"}";
 
-	return stylesheet
+	return (stylesheet
 		.arg(border_color0.name())
-		.arg(border_color1.name());
+		.arg(border_color1.name()));
 }
 QString theme::stylesheet_wdgbutton(void) {
-	QColor base_color = QApplication::palette().dark().color().lighter(is_dark_theme() ? 100 : 120);
-	QColor border_color0 = get_theme_adaptive_color(base_color);
-	QColor border_color1 = border_color0.darker(is_dark_theme() ? 155 : 105);
-	QColor background_normal = border_color0.lighter(is_dark_theme() ? 115 : 190);
-	QColor background_hover = border_color1.lighter(is_dark_theme() ? 190 : 115);
-	QColor background_checked = base_color.lighter(is_dark_theme() ? 80 : 115);
-	QString stylesheet =
+	const QColor base_color = QApplication::palette().dark().color().lighter(is_dark_theme() ? 100 : 120);
+	const QColor border_color0 = get_theme_adaptive_color(base_color);
+	const QColor border_color1 = border_color0.darker(is_dark_theme() ? 155 : 105);
+	const QColor background_normal = border_color0.lighter(is_dark_theme() ? 115 : 190);
+	const QColor background_hover = border_color1.lighter(is_dark_theme() ? 190 : 115);
+	const QColor background_checked = base_color.lighter(is_dark_theme() ? 80 : 115);
+	const QString stylesheet =
 		"themePushButton {"\
 		"	margin: 0;"\
 		"	border: 2px groove %0;"\
@@ -105,19 +115,19 @@ QString theme::stylesheet_wdgbutton(void) {
 		"	color: gray;"\
 		"}";
 
-	return stylesheet
+	return (stylesheet
 		.arg(is_dark_theme() ? border_color1.name() : border_color0.name())
 		.arg(is_dark_theme() ? border_color0.name() : border_color1.name())
 		.arg(background_normal.name())
 		.arg(background_hover.name())
 		.arg(background_checked.name())
-		.arg(get_focus_color().name());
+		.arg(get_focus_color().name()));
 }
 QString theme::stylesheet_wdgtoolbutton(void) {
-	return stylesheet_wdgbutton().replace("themePushButton", "themeToolButton");
+	return (stylesheet_wdgbutton().replace("themePushButton", "themeToolButton"));
 }
 QString theme::stylesheet_pixmapbutton(void) {
-	return stylesheet_wdgbutton().replace("themePushButton", "pixmapPushButton");
+	return (stylesheet_wdgbutton().replace("themePushButton", "pixmapPushButton"));
 }
 
 float theme::calculate_brightness(const QColor &color) {
@@ -127,10 +137,10 @@ bool theme::is_dark_theme(void) {
 	return (calculate_brightness(QApplication::palette().window().color()) < 0.5f);
 }
 QColor theme::get_focus_color(void) {
-	return QApplication::palette().highlight().color();
+	return (QApplication::palette().highlight().color());
 }
 QColor theme::get_foreground_color(const QColor &background_color) {
-	return calculate_brightness(background_color) >= 0.5f ? Qt::black : Qt::white;
+	return (calculate_brightness(background_color) >= 0.5f ? Qt::black : Qt::white);
 }
 QColor theme::get_theme_color(const QColor &base_color) {
 	if (is_dark_theme()) {
@@ -146,12 +156,11 @@ QColor theme::get_theme_color(const QColor &base_color) {
 		l = 255 - l;
 		return QColor::fromHsl(h, s, l);
 	}
-	return base_color;
+	return (base_color);
 }
 QColor theme::get_theme_aware_color(const QColor &base_color) {
 	if (is_dark_theme()) {
 		int h, s, l;
-		double brightness;
 
 		if (base_color == QApplication::palette().dark().color()) {
 			return QApplication::palette().light().color();
@@ -162,18 +171,18 @@ QColor theme::get_theme_aware_color(const QColor &base_color) {
 		base_color.getHsl(&h, &s, &l);
 		// calcolo la luminosità complementare
 		// 0.8 per mantenere un po' di contrasto
-		brightness = 255 - (l * 0.8f);
+		const double brightness = 255 - (l * 0.8f);
 		// riduco leggermente la saturazione per i temi scuri
 		s = s * 0.9f;
 
 		return QColor::fromHsl(h, s, brightness);
 	}
-	return base_color;
+	return (base_color);
 }
 QColor theme::get_theme_adaptive_color(const QColor &base_color) {
 	if (is_dark_theme()) {
 		// calcolo la luminosità percepita
-		float brightness = calculate_brightness(base_color);
+		const float brightness = calculate_brightness(base_color);
 		int h, s, l;
 
 		if (base_color == QApplication::palette().dark().color()) {
@@ -194,17 +203,17 @@ QColor theme::get_theme_adaptive_color(const QColor &base_color) {
 			return QColor::fromHsl(h, s, l);
 		}
 	}
-	return base_color;
+	return (base_color);
 }
 QColor theme::get_grayed_color(const QColor &base_color) {
-	QColor background = is_dark_theme() ? base_color.darker(190) : base_color;
-	QColor gray(128, 128, 128);
+	const QColor background = is_dark_theme() ? base_color.darker(190) : base_color;
+	const QColor gray(128, 128, 128);
 
-	return QColor(
+	return (QColor(
 		background.red() * 0.7 + gray.red() * 0.5,
 		background.green() * 0.7 + gray.green() * 0.5,
 		background.blue() * 0.7 + gray.blue() * 0.5
-	);
+	));
 }
 
 // ----------------------------------------------------------------------------------------------
@@ -234,7 +243,7 @@ pixmapPushButton::~pixmapPushButton() = default;
 
 void pixmapPushButton::paintEvent(QPaintEvent *e) {
 	if (!pixmap.isNull()) {
-		QPixmap img = pixmap.scaled(iconSize(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+		const QPixmap img = pixmap.scaled(iconSize(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
 		QStylePainter spainter(this);
 		QStyleOptionButton option;
 

@@ -90,6 +90,24 @@ wdgSettingsGeneral::wdgSettingsGeneral(QWidget *parent) : QWidget(parent) {
 	connect(checkBox_Pause_when_in_background, SIGNAL(clicked(bool)), this, SLOT(s_pause_in_background(bool)));
 	connect(checkBox_Save_settings_on_exit, SIGNAL(clicked(bool)), this, SLOT(s_save_settings_on_exit(bool)));
 	connect(checkBox_Multiple_instances, SIGNAL(clicked(bool)), this, SLOT(s_multiple_settings(bool)));
+
+	{
+		int dim = fontMetrics().height();
+
+		icon_General_settings->setPixmap(QIcon(":/icon/icons/settings.svgz").pixmap(dim, dim));
+		icon_Mode->setPixmap(QIcon(":/icon/icons/mode.svgz").pixmap(dim, dim));
+		icon_Fast_Forward_velocity->setPixmap(QIcon(":/icon/icons/fast_forward.svgz").pixmap(dim, dim));
+		icon_Rewind_minutes->setPixmap(QIcon(":/icon/icons/rewind.svgz").pixmap(dim, dim));
+		icon_Language->setPixmap(QIcon(":/icon/icons/language.svgz").pixmap(dim, dim));
+		icon_System_Roms->setPixmap(QIcon(":/icon/icons/microprocessor.svgz").pixmap(dim, dim));
+		icon_General_ram->setPixmap(QIcon(":/icon/icons/buffer_size.svgz").pixmap(dim, dim));
+		icon_Init_RAM_Value->setPixmap(QIcon(":/icon/icons/hexadecimal.svgz").pixmap(dim, dim));
+		icon_General_FDS->setPixmap(QIcon(":/icon/icons/fds_file.svgz").pixmap(dim, dim));
+		icon_General_misc->setPixmap(QIcon(":/icon/icons/misc.svgz").pixmap(dim, dim));
+		icon_Game_Genie_rom_file->setPixmap(QIcon(":/icon/icons/bios.svgz").pixmap(dim, dim));
+		icon_FDS_Bios->setPixmap(QIcon(":/icon/icons/bios.svgz").pixmap(dim, dim));
+		icon_FDS_Write_mode->setPixmap(QIcon(":/icon/icons/pencil.svgz").pixmap(dim, dim));
+	}
 }
 wdgSettingsGeneral::~wdgSettingsGeneral() = default;
 
@@ -100,31 +118,16 @@ void wdgSettingsGeneral::changeEvent(QEvent *event) {
 		QWidget::changeEvent(event);
 	}
 }
-void wdgSettingsGeneral::showEvent(UNUSED(QShowEvent *event)) {
-	int dim = fontMetrics().height();
-
-	icon_General_settings->setPixmap(QIcon(":/icon/icons/settings.svgz").pixmap(dim, dim));
-	icon_Mode->setPixmap(QIcon(":/icon/icons/mode.svgz").pixmap(dim, dim));
-	icon_Fast_Forward_velocity->setPixmap(QIcon(":/icon/icons/fast_forward.svgz").pixmap(dim, dim));
-	icon_Rewind_minutes->setPixmap(QIcon(":/icon/icons/rewind.svgz").pixmap(dim, dim));
-	icon_Language->setPixmap(QIcon(":/icon/icons/language.svgz").pixmap(dim, dim));
-	icon_System_Roms->setPixmap(QIcon(":/icon/icons/microprocessor.svgz").pixmap(dim, dim));
-	icon_General_ram->setPixmap(QIcon(":/icon/icons/buffer_size.svgz").pixmap(dim, dim));
-	icon_Init_RAM_Value->setPixmap(QIcon(":/icon/icons/hexadecimal.svgz").pixmap(dim, dim));
-	icon_General_FDS->setPixmap(QIcon(":/icon/icons/fds_file.svgz").pixmap(dim, dim));
-	icon_General_misc->setPixmap(QIcon(":/icon/icons/misc.svgz").pixmap(dim, dim));
-	icon_Game_Genie_rom_file->setPixmap(QIcon(":/icon/icons/bios.svgz").pixmap(dim, dim));
-	icon_FDS_Bios->setPixmap(QIcon(":/icon/icons/bios.svgz").pixmap(dim, dim));
-	icon_FDS_Write_mode->setPixmap(QIcon(":/icon/icons/pencil.svgz").pixmap(dim, dim));
-}
 
 void wdgSettingsGeneral::retranslateUi(QWidget *wdgSettingsGeneral) {
 	Ui::wdgSettingsGeneral::retranslateUi(wdgSettingsGeneral);
-	mainwin->qaction_shcut.mode_auto->setText(pushButton_Mode_Auto->text());
-	mainwin->qaction_shcut.mode_ntsc->setText(pushButton_Mode_NTSC->text());
-	mainwin->qaction_shcut.mode_pal->setText(pushButton_Mode_PAL->text());
-	mainwin->qaction_shcut.mode_dendy->setText(pushButton_Mode_Dendy->text());
+	mainwin->wd->qaction_shcut.mode_auto->setText(pushButton_Mode_Auto->text());
+	mainwin->wd->qaction_shcut.mode_ntsc->setText(pushButton_Mode_NTSC->text());
+	mainwin->wd->qaction_shcut.mode_pal->setText(pushButton_Mode_PAL->text());
+	mainwin->wd->qaction_shcut.mode_dendy->setText(pushButton_Mode_Dendy->text());
 	update_widget();
+	adjustSize();
+	updateGeometry();
 }
 void wdgSettingsGeneral::update_widget(void) {
 	mode_set();
@@ -457,7 +460,7 @@ void wdgSettingsGeneral::s_language(int index) {
 			break;
 	}
 
-	mainwin->set_language(lang);
+	mainwin->wd->set_language(lang);
 }
 void wdgSettingsGeneral::s_game_genie_rom_file(UNUSED(bool checked)) {
 	QStringList filters;

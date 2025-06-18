@@ -524,7 +524,6 @@ class wdgOverlayUi : public QWidget, public Ui::wdgOverlayUi {
 		void closeEvent(QCloseEvent *event) override;
 
 	public:
-		void retranslateUi(QWidget *wdgOverlayUi);
 		void update_dpr(void);
 		void update_widget(void);
 		void overlay_blit(void);

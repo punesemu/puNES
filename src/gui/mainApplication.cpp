@@ -90,10 +90,9 @@ BYTE mainApplication::control_base_folders(void) {
 
 #if !defined (WITHOUT_PORTABLE_MODE)
 	if (!info.portable && !old.exists() && !config_folder.exists()) {
-		dlgWizard *dlg = new dlgWizard(nullptr, config_folder.absolutePath(), uQString(gui_application_folder()));
+		wdgDlgWizard *dlg = new wdgDlgWizard(nullptr, config_folder.absolutePath(), uQString(gui_application_folder()));
 
-		dlg->show();
-		if (dlg->exec() == QDialog::Rejected) {
+		if (dlg->exec() == dialogExitCode::REJECTED) {
 			return (EXIT_ERROR);
 		}
 		config_folder.setPath(uQString(gui_config_folder()));
@@ -172,12 +171,12 @@ QKeySequence mainApplication::key_sequence_from_key_event(QKeyEvent *event) {
 	return (QKeySequence(modifiers ? (int)modifiers : key, modifiers ? key : 0).toString().remove(", "));
 }
 bool mainApplication::is_set_inp_shortcut(QEvent *event, int set_inp) {
-	return (mainwin && !mainwin->shortcut[set_inp]->key().isEmpty() &&
-		(key_sequence_from_key_event((QKeyEvent *)event) == mainwin->shortcut[set_inp]->key()));
+	return (mainwin && !mainwin->wd->shortcut[set_inp]->key().isEmpty() &&
+		(key_sequence_from_key_event((QKeyEvent *)event) == mainwin->wd->shortcut[set_inp]->key()));
 }
 bool mainApplication::dlgkeyb_event(QEvent *event) {
 	// il resto degli eventi
-	if (dlgkeyb && dlgkeyb->process_event(event)) {
+	if (dlgkeyb && dlgkeyb->wd->process_event(event)) {
 		return (true);
 	}
 	return (false);
@@ -187,12 +186,12 @@ bool mainApplication::shortcut_override_event(QEvent *event) {
 		// shortcut attivi finche' il tasto della tastiera e' premuto
 		if (is_set_inp_shortcut(event, SET_INP_SC_SHOUT_INTO_MIC)) {
 			if (!((QKeyEvent *)event)->isAutoRepeat()) {
-				mainwin->shout_into_mic(PRESSED);
+				mainwin->wd->shout_into_mic(PRESSED);
 			}
 			return (true);
 		} else if (is_set_inp_shortcut(event, SET_INP_SC_HOLD_FAST_FORWARD)) {
 			if (!((QKeyEvent *)event)->isAutoRepeat()) {
-				mainwin->hold_fast_forward(TRUE);
+				mainwin->wd->hold_fast_forward(TRUE);
 			}
 			return (true);
 		}
@@ -205,12 +204,12 @@ bool mainApplication::key_release_event(QEvent *event) {
 		// shortcut attivi finche' il tasto della tastiera e' premuto
 		if (is_set_inp_shortcut(event, SET_INP_SC_SHOUT_INTO_MIC)) {
 			if (!((QKeyEvent *)event)->isAutoRepeat()) {
-				mainwin->shout_into_mic(RELEASED);
+				mainwin->wd->shout_into_mic(RELEASED);
 			}
 			return (true);
 		} else if (is_set_inp_shortcut(event, SET_INP_SC_HOLD_FAST_FORWARD)) {
 			if (!((QKeyEvent *)event)->isAutoRepeat()) {
-				mainwin->hold_fast_forward(FALSE);
+				mainwin->wd->hold_fast_forward(FALSE);
 			}
 			return (true);
 		}

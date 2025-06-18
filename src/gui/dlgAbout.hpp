@@ -19,11 +19,13 @@
 #ifndef DLGABOUT_HPP_
 #define DLGABOUT_HPP_
 
-#include <QtWidgets/QDialog>
 #include "ui_dlgAbout.h"
+#include "wdgTitleBarWindow.hpp"
 #include "common.h"
 
-class dlgAbout : public QDialog, public Ui::dlgAbout {
+// ----------------------------------------------------------------------------------------------
+
+class dlgAbout : public QWidget, public Ui::dlgAbout {
 	Q_OBJECT
 
 	public:
@@ -32,9 +34,17 @@ class dlgAbout : public QDialog, public Ui::dlgAbout {
 
 	protected:
 		void changeEvent(QEvent *event) override;
+};
 
-	private slots:
-		void s_ok_clicked(bool checked);
+// ----------------------------------------------------------------------------------------------
+
+class wdgDlgAbout : public wdgTitleBarDialog {
+	public:
+		dlgAbout *wd;
+
+	public:
+		explicit wdgDlgAbout(QWidget *parent = nullptr);
+		~wdgDlgAbout() override;
 };
 
 #endif /* DLGABOUT_HPP_ */

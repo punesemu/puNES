@@ -21,16 +21,18 @@
 
 #include <array>
 #include <QtCore/QFileInfo>
-#include <QtWidgets/QDialog>
 #include <QtWidgets/QButtonGroup>
 #include "ui_dlgHeaderEditor.h"
+#include "wdgTitleBarWindow.hpp"
 #include "common.h"
 
 enum _header_misc {
 	HEADER_SIZE = 16
 };
 
-class dlgHeaderEditor : public QDialog, public Ui::dlgHeaderEditor {
+// ----------------------------------------------------------------------------------------------
+
+class dlgHeaderEditor : public QWidget, public Ui::dlgHeaderEditor {
 	Q_OBJECT
 
 	private:
@@ -63,8 +65,8 @@ class dlgHeaderEditor : public QDialog, public Ui::dlgHeaderEditor {
 		QFileInfo finfo;
 		std::array<BYTE, HEADER_SIZE> horg;
 
-	public:
-		QRect geom;
+	signals:
+		void et_adjust_size(void);
 
 	public:
 		explicit dlgHeaderEditor(QWidget *parent = nullptr);
@@ -72,8 +74,6 @@ class dlgHeaderEditor : public QDialog, public Ui::dlgHeaderEditor {
 
 	protected:
 		void changeEvent(QEvent *event) override;
-		void hideEvent(QHideEvent *event) override;
-		void closeEvent(QCloseEvent *event) override;
 
 	public:
 		bool read_header(const uTCHAR *rom);
@@ -86,6 +86,7 @@ class dlgHeaderEditor : public QDialog, public Ui::dlgHeaderEditor {
 		void dialog_to_struct(_header_info &hi);
 		void struct_to_dialog(const _header_info &hi, bool save_enabled);
 		int find_multiplier(int size);
+		void resize_request(void);
 
 	private slots:
 		void s_control_changed(void);
@@ -95,7 +96,26 @@ class dlgHeaderEditor : public QDialog, public Ui::dlgHeaderEditor {
 		void s_console_type(int index);
 		void s_reset_clicked(bool checked);
 		void s_save_clicked(bool checked);
-		void s_cancel_clicked(bool checked);
 };
 
-#endif /* DLGHEADEREDITOR_HPP_ */
+// ----------------------------------------------------------------------------------------------
+
+class wdgDlgHeaderEditor : public wdgTitleBarDialog {
+	Q_OBJECT
+
+	public:
+		dlgHeaderEditor *wd;
+
+	public:
+		explicit wdgDlgHeaderEditor(QWidget *parent = nullptr);
+		~wdgDlgHeaderEditor() override;
+
+	protected:
+		void hideEvent(QHideEvent *event) override;
+		void closeEvent(QCloseEvent *event) override;
+
+	private slots:
+		void s_adjust_size(void);
+};
+
+#endif /* dlgHeaderEditor_HPP_ */

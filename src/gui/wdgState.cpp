@@ -64,10 +64,6 @@ void wdgState::wheelEvent(QWheelEvent *event) {
 	event->ignore();
 }
 
-void wdgState::retranslateUi(wdgState *wdgState) {
-	Ui::wdgState::retranslateUi(wdgState);
-}
-
 void wdgState::update_widget(void) {
 	pushButton_load->setEnabled((tas.type == NOTAS) & save_slot.slot[save_slot.slot_in_use].state);
 	update();
@@ -77,12 +73,12 @@ void wdgState::s_slot_actived(void) {
 	update_widget();
 }
 void wdgState::s_save_clicked(UNUSED(bool checked)) {
-	mainwin->action_Save_state->trigger();
+	mainwin->wd->action_Save_state->trigger();
 	update_widget();
 	gui_set_focus();
 }
 void wdgState::s_load_clicked(UNUSED(bool checked)) {
-	mainwin->action_Load_state->trigger();
+	mainwin->wd->action_Load_state->trigger();
 	gui_set_focus();
 }
 
@@ -103,7 +99,7 @@ bool stateBar::eventFilter(QObject *obj, QEvent *event) {
 		int slot = slot_at(helpEvent->pos());
 
 		if (isEnabled() && (slot != -1)) {
-			QToolTip::showText(helpEvent->globalPos(), mainwin->state_save_slot_action(slot)->toolTip());
+			QToolTip::showText(helpEvent->globalPos(), mainwin->wd->state_save_slot_action(slot)->toolTip());
 		} else {
 			QToolTip::hideText();
 			event->ignore();

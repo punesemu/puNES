@@ -130,7 +130,7 @@ void wdgToolBar::s_toplevel_changed(UNUSED(bool toplevel)) {
 		this->setOrientation(Qt::Vertical);
 	}
 
-	area = mainwin->toolBarArea(this);
+	area = mainwin->wd->toolBarArea(this);
 
 	switch (area) {
 		default:

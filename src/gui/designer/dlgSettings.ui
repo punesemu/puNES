@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
  <class>dlgSettings</class>
- <widget class="QDialog" name="dlgSettings">
+ <widget class="QWidget" name="dlgSettings">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -13,18 +13,11 @@
   <property name="windowTitle">
    <string>Settings</string>
   </property>
-  <property name="windowIcon">
-   <iconset resource="resources.qrc">
-    <normaloff>:/icon/icons/application.png</normaloff>:/icon/icons/application.png</iconset>
-  </property>
-  <property name="sizeGripEnabled">
-   <bool>true</bool>
-  </property>
   <layout class="QVBoxLayout" name="verticalLayout_dlgSettings">
    <item>
     <widget class="QTabWidget" name="tabWidget_Settings">
      <property name="currentIndex">
-      <number>6</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="tab_General">
       <attribute name="icon">
@@ -155,6 +148,11 @@
   </layout>
  </widget>
  <customwidgets>
+  <customwidget>
+   <class>themePushButton</class>
+   <extends>QPushButton</extends>
+   <header>theme.hpp</header>
+  </customwidget>
   <customwidget>
    <class>wdgSettingsPPU</class>
    <extends>QWidget</extends>

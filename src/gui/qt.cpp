@@ -90,35 +90,33 @@ Q_IMPORT_PLUGIN(QSvgPlugin)
 INLINE void gui_init_os(void);
 INLINE uTCHAR *gui_home(void);
 
-static void gui_is_in_desktop(int *x, int *y);
-
 static struct _qt {
 	mainApplication *app{};
-	mainWindow *mwin{};
+	wdgDlgMainWindow *mwin{};
 	wdgScreen *screen{};
 	objCheat *objch{};
 	QImage qimage;
 	QByteArray sba;
 
 	// widget dell'overlay
-	dlgLog *log{};
+	wdgDlgLog *log{};
 
 	// widget dell'overlay
 	wdgOverlayUi *overlay{};
 
 	// dialog del settaggio
-	dlgSettings *dset{};
+	wdgDlgSettings *dset{};
 
 	// controlli esterni
-	dlgVsSystem *vssystem{};
-	dlgDetachBarcode *dbarcode{};
-	dlgJsc *djsc{};
+	wdgDlgVsSystem *vssystem{};
+	wdgDlgDetachBarcode *dbarcode{};
+	wdgDlgJsc *djsc{};
 
 	// dialog della tastiera virtuale
-	dlgKeyboard *dkeyb{};
+	wdgDlgKeyboard *dkeyb{};
 
 	// dialog dell'editor di header
-	dlgHeaderEditor *header{};
+	wdgDlgHeaderEditor *header{};
 
 	// QObject che non mandano un pause quando in background
 	QList<QWidget *>no_bck_pause;
@@ -187,13 +185,14 @@ BYTE gui_control_instance(void) {
 	if (qt.app->isSecondary() && !cfg->multiple_instances) {
 		if (info.rom.file[0]) {
 			QFileInfo finfo(uQString(info.rom.file));
-			unsigned int count = 0;
 
 #if defined (_WIN32)
 			// https://github.com/itay-grudev/SingleApplication/blob/master/Windows.md
 			AllowSetForegroundWindow(DWORD(qt.app->primaryPid()));
 #endif
 			if (finfo.exists()) {
+				unsigned int count = 0;
+
 				do {
 					if (qt.app->sendMessage(finfo.absoluteFilePath().toUtf8(), 200)) {
 						break;
@@ -249,21 +248,16 @@ BYTE gui_create(void) {
 	// "Commodore 64 Pixelized" (10px)
 	QFontDatabase::addApplicationFont(":/fonts/fonts/Commodore_Pixelized_v1.2.ttf");
 
-	qt.mwin = new mainWindow();
-	qt.screen = qt.mwin->wscreen;
+	qt.mwin = new wdgDlgMainWindow();
+	qt.screen = qt.mwin->wd->wscreen;
 	qt.objch->setParent(qt.mwin);
 
 	qt.app->installEventFilter(new appEventFilter());
 
-	gui_is_in_desktop(&cfg->lg.x, &cfg->lg.y);
-	gui_is_in_desktop(&cfg->lg_settings.x, &cfg->lg_settings.y);
-	gui_is_in_desktop(&cfg->lg_nes_keyboard.x, &cfg->lg_nes_keyboard.y);
-	qt.mwin->setGeometry(cfg->lg.x, cfg->lg.y, 0, 0);
-
 	qt.mwin->show();
 
-	qt.log = new dlgLog(qt.mwin);
-	qt.log->start_thread();
+	qt.log = new wdgDlgLog(qt.mwin);
+	qt.log->wd->start_thread();
 
 	log_info(uL("" uPs("") " (by FHorse) " uPs("") ", " uPs("") ", " uPs("")
 #if defined (WITH_GIT_INFO)
@@ -283,15 +277,15 @@ BYTE gui_create(void) {
 	log_info_box(uL("data;" uPs("") ""), gui_data_folder());
 	log_info_box(uL("temp;" uPs("") ""), gui_temp_folder());
 
-	qt.dset = new dlgSettings(qt.mwin);
+	qt.dset = new wdgDlgSettings(qt.mwin);
 	qt.overlay = new wdgOverlayUi();
 
 	memset(&ext_win, 0x00, sizeof(ext_win));
-	qt.vssystem = new dlgVsSystem(qt.mwin);
-	qt.dbarcode = new dlgDetachBarcode(qt.mwin);
-	qt.djsc = new dlgJsc(qt.mwin);
-	qt.dkeyb = new dlgKeyboard(qt.mwin);
-	qt.header = new dlgHeaderEditor(qt.mwin);
+	qt.vssystem = new wdgDlgVsSystem(qt.mwin);
+	qt.dbarcode = new wdgDlgDetachBarcode(qt.mwin);
+	qt.djsc = new wdgDlgJsc(qt.mwin);
+	qt.dkeyb = new wdgDlgKeyboard(qt.mwin);
+	qt.header = new wdgDlgHeaderEditor(qt.mwin);
 
 	qt.no_bck_pause.append(qt.mwin);
 	qt.no_bck_pause.append(qt.dset);
@@ -414,7 +408,6 @@ void gui_set_dark_theme(void) {
 
 	QApplication::setPalette(palette);
 }
-
 void gui_set_light_theme(void) {
 	QPalette palette = qt.mwin->palette();
 
@@ -624,25 +617,25 @@ void gui_set_window_size(void) {
 	}
 
 	if (cfg->scale == X1) {
-		qt.mwin->toolbar->rotate_setVisible(false);
-		qt.mwin->toolbar->state_setVisible(false);
+		qt.mwin->wd->toolbar->rotate_setVisible(false);
+		qt.mwin->wd->toolbar->state_setVisible(false);
 		if (overscan.enabled) {
-			qt.mwin->menu_Help->menuAction()->setVisible(false);
+			qt.mwin->wd->menu_Help->menuAction()->setVisible(false);
 		} else {
-			qt.mwin->menu_Help->menuAction()->setVisible(true);
+			qt.mwin->wd->menu_Help->menuAction()->setVisible(true);
 		}
 	} else {
-		qt.mwin->toolbar->rotate_setVisible(true);
-		qt.mwin->toolbar->state_setVisible(true);
-		qt.mwin->menu_Help->menuAction()->setVisible(true);
+		qt.mwin->wd->toolbar->rotate_setVisible(true);
+		qt.mwin->wd->toolbar->state_setVisible(true);
+		qt.mwin->wd->menu_Help->menuAction()->setVisible(true);
 	}
 
-	toolbar = qt.mwin->toolbar->isHidden() || qt.mwin->toolbar->isFloating();
+	toolbar = qt.mwin->wd->toolbar->isHidden() || qt.mwin->wd->toolbar->isFloating();
 
-	if (qt.mwin->toolbar->orientation() == Qt::Vertical) {
-		w += (toolbar ? 0 : qt.mwin->toolbar->sizeHint().width());
+	if (qt.mwin->wd->toolbar->orientation() == Qt::Vertical) {
+		w += (toolbar ? 0 : qt.mwin->wd->toolbar->sizeHint().width());
 	} else {
-		h += (toolbar ? 0 : qt.mwin->toolbar->sizeHint().height());
+		h += (toolbar ? 0 : qt.mwin->wd->toolbar->sizeHint().height());
 	}
 
 	// nella versione D3D9, con le shaders CRT, quando e' visibile il menu (le toolbars non influiscono) la shader
@@ -650,8 +643,8 @@ void gui_set_window_size(void) {
 	// non venga applicata correttamente dalle QT ma che in presenza del menu venga ridotta di 1.
 	// Aumentare di 1 l'altrezza quando e' visibile mitiga il problema e non sembra influenzi in alcun modo
 	// anche la versione OpenGL.
-	h += (qt.mwin->menubar->isHidden() ? 0 : qt.mwin->menubar->sizeHint().height() + 1);
-	h += (qt.mwin->statusbar->isHidden() ? 0 : qt.mwin->statusbar->sizeHint().height());
+	h += (qt.mwin->wd->menubar->isHidden() ? 0 : qt.mwin->wd->menubar->sizeHint().height() + 1);
+	h += (qt.mwin->wd->statusbar->isHidden() ? 0 : qt.mwin->wd->statusbar->sizeHint().height());
 
 #if defined (_WIN32) && defined(WITH_OPENGL)
 	// when a window is using an OpenGL based surface and is appearing in full screen mode,
@@ -670,23 +663,18 @@ void gui_set_window_size(void) {
 	}
 #endif
 
-#if defined (_WIN32)
-	qt.mwin->resize(QSize(w, h));
-#else
-	qt.mwin->setFixedSize(QSize(w, h));
-	qt.mwin->menubar->setFixedWidth(w);
-	qt.mwin->statusbar->setFixedWidth(w);
-#endif
+	qt.mwin->wd->setFixedSize(QSize(w, h));
+	qt.mwin->adjustSize();
 }
 
 void gui_state_save_slot_set(BYTE slot, BYTE on_video) {
 	if (slot >= SAVE_SLOTS) {
 		slot = SAVE_SLOTS - 1;
 	}
-	qt.mwin->state_save_slot_set(slot, on_video);
+	qt.mwin->wd->state_save_slot_set(slot, on_video);
 }
 void gui_state_save_slot_set_tooltip(BYTE slot) {
-	qt.mwin->state_save_slot_set_tooltip(slot);
+	qt.mwin->wd->state_save_slot_set_tooltip(slot);
 }
 
 void gui_update(void) {
@@ -696,62 +684,62 @@ void gui_update(void) {
 
 	emu_set_title(title, usizeof(title));
 	qt.mwin->setWindowTitle(uQString(title));
-	qt.mwin->update_window();
-	qt.dset->update_dialog();
+	qt.mwin->wd->update_window();
+	qt.dset->wd->update_dialog();
 	qt.overlay->update_widget();
 
 	gui.in_update = FALSE;
 }
 void gui_update_gps_settings(void) {
-	qt.dset->change_rom();
+	qt.dset->wd->change_rom();
 }
 void gui_update_status_bar(void) {
-	qt.mwin->statusbar->update_statusbar();
+	qt.mwin->wd->statusbar->update_statusbar();
 }
 
 void gui_update_ntsc_widgets(void) {
-	qt.dset->update_tab_video();
+	qt.dset->wd->update_tab_video();
 }
 void gui_update_apu_channels_widgets(void) {
-	qt.dset->update_tab_audio();
+	qt.dset->wd->update_tab_audio();
 }
 void gui_update_recording_widgets(void) {
-	qt.mwin->update_recording_widgets();
+	qt.mwin->wd->update_recording_widgets();
 }
 
 void gui_update_ppu_hacks_lag_frames(void) {
-	qt.dset->widget_Settings_PPU->lag_counter_update();
+	qt.dset->wd->widget_Settings_PPU->lag_counter_update();
 }
 
 void gui_update_fds_menu(void) {
-	qt.mwin->update_fds_menu();
+	qt.mwin->wd->update_fds_menu();
 }
 void gui_update_tape_menu(void) {
-	qt.mwin->update_tape_menu();
+	qt.mwin->wd->update_tape_menu();
 }
 void gui_update_recording_tab(void) {
-	qt.dset->update_tab_recording();
+	qt.dset->wd->update_tab_recording();
 }
 
 void gui_egds_set_fps(void) {
-	qt.mwin->egds->set_fps();
+	qt.mwin->wd->egds->set_fps();
 }
 void gui_egds_stop_unnecessary(void) {
 	if (gui.start) {
-		qt.mwin->egds->stop_unnecessary();
+		qt.mwin->wd->egds->stop_unnecessary();
 	}
 }
 void gui_egds_start_pause(void) {
-	qt.mwin->egds->start_pause();
+	qt.mwin->wd->egds->start_pause();
 }
 void gui_egds_stop_pause(void) {
-	qt.mwin->egds->stop_pause();
+	qt.mwin->wd->egds->stop_pause();
 }
 void gui_egds_start_rwnd(void) {
-	qt.mwin->egds->start_rwnd();
+	qt.mwin->wd->egds->start_rwnd();
 }
 void gui_egds_stop_rwnd(void) {
-	qt.mwin->egds->stop_rwnd();
+	qt.mwin->wd->egds->stop_rwnd();
 }
 
 void gui_fullscreen(void) {
@@ -764,20 +752,16 @@ void gui_fullscreen(void) {
 
 void gui_dipswitch_dialog(void) {
 	if (dipswitch.used && dipswitch.show_dlg) {
-		dlgDipswitch *dlg = new dlgDipswitch(qt.mwin);
+		wdgDlgDipswitch *dlg = new wdgDlgDipswitch(qt.mwin);
 
-		dlg->show();
 		dlg->exec();
 	}
 }
 
 int gui_uncompress_selection_dialog(_uncompress_archive *archive, BYTE type) {
-	dlgUncomp *dlg = new dlgUncomp(qt.mwin, (void *)archive, type);
+	wdgDlgUncomp *dlg = new wdgDlgUncomp(qt.mwin, (void *)archive, type);
 
-	dlg->show();
-	dlg->exec();
-
-	return (gui.dlg_rc);
+	return (dlg->exec() == dialogExitCode::REJECTED ? UNCOMPRESS_NO_FILE_SELECTED : gui.dlg_rc);
 }
 
 void gui_control_pause_bck(WORD event) {
@@ -839,13 +823,13 @@ void gui_cursor_hide(BYTE hide) {
 	qt.screen->cursor_hide(hide);
 }
 void gui_control_visible_cursor(void) {
-	qt.mwin->control_visible_cursor();
+	qt.mwin->wd->control_visible_cursor();
 }
 
-void *gui_mainwindow_get_ptr(void) {
+void *gui_wdgdlgmainwindow_get_ptr(void) {
 	return ((void *)qt.mwin);
 }
-void gui_mainwindow_coords(int *x, int *y, BYTE border) {
+void gui_wdgdlgmainwindow_coords(int *x, int *y, BYTE border) {
 	switch (border) {
 		default:
 		// top center
@@ -875,58 +859,58 @@ void gui_mainwindow_coords(int *x, int *y, BYTE border) {
 			break;
 	}
 }
-void gui_mainwindow_before_set_res(void) {
-	qt.mwin->reset_min_max_size();
-	qt.mwin->menubar->setVisible(false);
-	qt.mwin->toolbar->setVisible(false);
-	qt.mwin->statusbar->setVisible(false);
+void gui_wdgdlgmainwindow_before_set_res(void) {
+	qt.mwin->wd->reset_min_max_size();
+	qt.mwin->wd->menubar->setVisible(false);
+	qt.mwin->wd->toolbar->setVisible(false);
+	qt.mwin->wd->statusbar->setVisible(false);
 	qt.mwin->setGeometry(0, 0, 1, 1);
 }
 
 void *gui_wdgrewind_get_ptr(void) {
-	return ((void *)qt.mwin->toolbar->rewind);
+	return ((void *)qt.mwin->wd->toolbar->rewind);
 }
 void gui_wdgrewind_play(void) {
 	wdgrewind->toolButton_Play->click();
 }
 
 void gui_emit_et_reset(BYTE type) {
-	emit qt.mwin->et_reset(type);
+	emit qt.mwin->wd->et_reset(type);
 }
 void gui_emit_et_gg_reset(void) {
-	emit qt.mwin->et_gg_reset();
+	emit qt.mwin->wd->et_gg_reset();
 }
 void gui_emit_et_vs_reset(void) {
-	emit qt.mwin->et_vs_reset();
+	emit qt.mwin->wd->et_vs_reset();
 }
 void gui_emit_et_external_control_windows_show(void) {
-	emit qt.mwin->et_external_control_windows_show();
+	emit qt.mwin->wd->et_external_control_windows_show();
 }
 
 void gui_max_speed_start(void) {
 	if (fps.max_speed) {
 		return;
 	}
-	qt.mwin->qaction_extern.max_speed.start->only_one_trigger();
+	qt.mwin->wd->qaction_extern.max_speed.start->only_one_trigger();
 }
 void gui_max_speed_stop(void) {
 	if (!fps.max_speed) {
 		return;
 	}
-	qt.mwin->qaction_extern.max_speed.stop->only_one_trigger();
+	qt.mwin->wd->qaction_extern.max_speed.stop->only_one_trigger();
 }
 
 void gui_nsf_author_note_open(const uTCHAR *string) {
-	emit qt.mwin->et_nsf_author_note_open(string);
+	emit qt.mwin->wd->et_nsf_author_note_open(string);
 }
 void gui_nsf_author_note_close(void) {
 	if (qt.mwin) {
-		emit qt.mwin->et_nsf_author_note_close();
+		emit qt.mwin->wd->et_nsf_author_note_close();
 	}
 }
 
 void gui_toggle_audio(void) {
-	qt.mwin->qaction_shcut.audio_enable->trigger();
+	qt.mwin->wd->qaction_shcut.audio_enable->trigger();
 }
 
 void gui_decode_all_input_events(void) {
@@ -993,41 +977,41 @@ void gui_screen_update(void) {
 #elif defined (WITH_D3D9)
 	qt.screen->wd3d9->update();
 #endif
-	qt.dset->widget_Settings_Video->widget_Palette_Editor->widget_Palette_PPU->update();
+	qt.dset->wd->widget_Settings_Video->widget_Palette_Editor->widget_Palette_PPU->update();
 }
 
 void *gui_wdgoverlayui_get_ptr(void) {
 	return ((void *)qt.overlay);
 }
 
-void *gui_dlgheadereditor_get_ptr(void) {
+void *gui_wdgdlgheadereditor_get_ptr(void) {
 	return ((void *)qt.header);
 }
-void gui_dlgheadereditor_read_header(void) {
-	qt.header->read_header(info.rom.file);
+void gui_wdgdlgheadereditor_read_header(void) {
+	qt.header->wd->read_header(info.rom.file);
 }
 
-void *gui_dlgsettings_get_ptr(void) {
+void *gui_wdgdlgsettings_get_ptr(void) {
 	return ((void *)qt.dset);
 }
-void gui_dlgsettings_input_update_joy_combo(void) {
-	qt.dset->widget_Settings_Input->update_joy_list();
+void gui_wdgdlgsettings_input_update_joy_combo(void) {
+	qt.dset->wd->widget_Settings_Input->update_joy_list();
 }
 
-void *gui_dlgjsc_get_ptr(void) {
+void *gui_wdgdlgjsc_get_ptr(void) {
 	return ((void *)qt.djsc);
 }
-void gui_dlgjsc_emit_update_joy_combo(void) {
+void gui_wdgdlgjsc_emit_update_joy_combo(void) {
 	if (qt.djsc->isVisible()) {
-		emit qt.djsc->et_update_joy_combo();
+		emit qt.djsc->wd->et_update_joy_combo();
 	}
 }
 
-void *gui_dlgkeyboard_get_ptr(void) {
+void *gui_wdgdlgkeyboard_get_ptr(void) {
 	return ((void *)qt.dkeyb);
 }
 
-void *gui_dlglog_get_ptr(void) {
+void *gui_wdgdlglog_get_ptr(void) {
 	return ((void *)qt.log);
 }
 
@@ -1042,44 +1026,37 @@ void gui_js_joyval_icon_desc(int index, DBWORD input, void *icon, void *desc) {
 
 void gui_external_control_windows_show(void) {
 	if (ext_win.vs_system && (cfg->fullscreen != FULLSCR)) {
-		qt.vssystem->update_dialog();
+		qt.vssystem->wd->update_dialog();
 		qt.vssystem->show();
 	} else {
 		qt.vssystem->hide();
 	}
 	if (ext_win.detach_barcode && (cfg->fullscreen != FULLSCR)) {
-		qt.dbarcode->update_dialog();
+		qt.dbarcode->wd->update_dialog();
 		qt.dbarcode->show();
 	} else {
 		qt.dbarcode->hide();
 	}
 	gui_update();
-	gui_external_control_windows_update_pos();
 	gui_active_window();
 	gui_set_focus();
 }
-void gui_external_control_windows_update_pos(void) {
-	unsigned int y = 0;
-
-	y += qt.vssystem->update_pos((int)y);
-	y += qt.dbarcode->update_pos((int)y);
-}
 
 void gui_vs_system_update_dialog(void) {
-	qt.vssystem->update_dialog();
+	qt.vssystem->wd->update_dialog();
 }
 void gui_vs_system_insert_coin(void) {
 	if (vs_system.enabled) {
-		qt.vssystem->insert_coin(1);
+		qt.vssystem->wd->insert_coin(1);
 	}
 }
 
 void gui_detach_barcode_change_rom(void) {
-	qt.dbarcode->change_rom();
+	qt.dbarcode->wd->change_rom();
 }
 
 void gui_unsupported_hardware(void) {
-	qt.mwin->unsupported_hardware();
+	qt.mwin->wd->unsupported_hardware();
 }
 
 #if defined (WITH_OPENGL)
@@ -1098,12 +1075,20 @@ void gui_screen_info(void) {
 #if QT_VERSION < QT_VERSION_CHECK(5, 10, 0)
 	QByteArray qbwdisplay = qgetenv(cwdisplay);
 
-	gfx.is_wayland = qbwdisplay.length() > 0 ? TRUE : FALSE;
+	gfx.wayland.enabled = qbwdisplay.length() > 0 ? TRUE : FALSE;
 #else
-	gfx.is_wayland = qEnvironmentVariableIsSet(cwdisplay) ? TRUE : FALSE;
+	gfx.wayland.enabled = qEnvironmentVariableIsSet(cwdisplay) ? TRUE : FALSE;
 #endif
+	if (gfx.wayland.enabled) {
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+		gfx.only_fullscreen_in_window = TRUE;
 #else
-	gfx.is_wayland = FALSE;
+		gfx.only_fullscreen_in_window = FALSE;
+#endif
+	}
+#else
+	gfx.wayland.enabled = FALSE;
+	gfx.only_fullscreen_in_window = FALSE;
 #endif
 	gfx.bit_per_pixel = mainApplication::primaryScreen()->depth();
 }
@@ -1239,33 +1224,5 @@ void gui_critical(const uTCHAR *txt) {
 	msgBox.exec();
 	if (qt.log) {
 		log_error(txt);
-	}
-}
-
-static void gui_is_in_desktop(int *x, int *y) {
-	QList<QScreen *> screens = QGuiApplication::screens();
-	int i, x_min = 0, x_max = 0, y_min = 0, y_max = 0;
-
-	for (i = 0; i < screens.count(); i++) {
-		QRect g = screens[i]->availableGeometry();
-
-		if (g.x() < x_min) {
-			x_min = g.x();
-		}
-		if ((g.x() + g.width()) > x_max) {
-			x_max = g.x() + g.width();
-		}
-		if (g.y() < y_min) {
-			y_min = g.y();
-		}
-		if ((g.y() + g.height()) > y_max) {
-			y_max = g.y() + g.height();
-		}
-	}
-	if (((*x) == 0) || ((*x) < x_min) || ((*x) > x_max)) {
-		(*x) = 80;
-	}
-	if (((*y) == 0) || ((*y) < y_min) || ((*y) > y_max)) {
-		(*y) = 80;
 	}
 }

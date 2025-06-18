@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
  <class>dlgWizard</class>
- <widget class="QDialog" name="dlgWizard">
+ <widget class="QWidget" name="dlgWizard">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -24,10 +24,6 @@
   </property>
   <property name="windowTitle">
    <string notr="true">Wizard</string>
-  </property>
-  <property name="windowIcon">
-   <iconset resource="resources.qrc">
-    <normaloff>:/icon/icons/preferences_other.svgz</normaloff>:/icon/icons/preferences_other.svgz</iconset>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_dlgWizard">
    <item>

@@ -74,6 +74,19 @@ wdgSettingsAudio::wdgSettingsAudio(QWidget *parent) : QWidget(parent) {
 		label_Buffer_Size_factor_value->setFixedWidth(w);
 		label_Channels_Delay_value->setFixedWidth(w);
 	}
+
+	{
+		int dim = fontMetrics().height();
+
+		icon_Audio_settings->setPixmap(QIcon(":/icon/icons/settings.svgz").pixmap(dim, dim));
+		icon_Output_Devices->setPixmap(QIcon(":/icon/icons/audio_output.svgz").pixmap(dim, dim));
+		icon_Buffer_Size_factor->setPixmap(QIcon(":/icon/icons/buffer_size.svgz").pixmap(dim, dim));
+		icon_Sample_Rate->setPixmap(QIcon(":/icon/icons/samplerate.svgz").pixmap(dim, dim));
+		icon_Channels->setPixmap(QIcon(":/icon/icons/channels.svgz").pixmap(dim, dim));
+		icon_Channels_Delay->setPixmap(QIcon(":/icon/icons/stereo_delay.svgz").pixmap(dim, dim));
+		icon_APU_Channels->setPixmap(QIcon(":/icon/icons/volume.svgz").pixmap(dim, dim));
+		icon_Audio_misc->setPixmap(QIcon(":/icon/icons/misc.svgz").pixmap(dim, dim));
+	}
 }
 wdgSettingsAudio::~wdgSettingsAudio() = default;
 
@@ -85,24 +98,16 @@ void wdgSettingsAudio::changeEvent(QEvent *event) {
 	}
 }
 void wdgSettingsAudio::showEvent(UNUSED(QShowEvent *event)) {
-	int dim = fontMetrics().height();
-
 	output_devices_init();
-
-	icon_Audio_settings->setPixmap(QIcon(":/icon/icons/settings.svgz").pixmap(dim, dim));
-	icon_Output_Devices->setPixmap(QIcon(":/icon/icons/audio_output.svgz").pixmap(dim, dim));
-	icon_Buffer_Size_factor->setPixmap(QIcon(":/icon/icons/buffer_size.svgz").pixmap(dim, dim));
-	icon_Sample_Rate->setPixmap(QIcon(":/icon/icons/samplerate.svgz").pixmap(dim, dim));
-	icon_Channels->setPixmap(QIcon(":/icon/icons/channels.svgz").pixmap(dim, dim));
-	icon_Channels_Delay->setPixmap(QIcon(":/icon/icons/stereo_delay.svgz").pixmap(dim, dim));
-	icon_APU_Channels->setPixmap(QIcon(":/icon/icons/volume.svgz").pixmap(dim, dim));
-	icon_Audio_misc->setPixmap(QIcon(":/icon/icons/misc.svgz").pixmap(dim, dim));
+	QWidget::showEvent(event);
 }
 
 void wdgSettingsAudio::retranslateUi(QWidget *wdgSettingsAudio) {
 	Ui::wdgSettingsAudio::retranslateUi(wdgSettingsAudio);
-	mainwin->qaction_shcut.audio_enable->setText(checkBox_Enable_Audio->text());
+	mainwin->wd->qaction_shcut.audio_enable->setText(checkBox_Enable_Audio->text());
 	update_widget();
+	adjustSize();
+	updateGeometry();
 }
 void wdgSettingsAudio::update_widget(void) {
 	audio_buffer_factor_set();

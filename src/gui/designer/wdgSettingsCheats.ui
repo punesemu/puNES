@@ -143,6 +143,11 @@
  </widget>
  <customwidgets>
   <customwidget>
+   <class>themePushButton</class>
+   <extends>QPushButton</extends>
+   <header>theme.hpp</header>
+  </customwidget>
+  <customwidget>
    <class>wdgCheatsEditor</class>
    <extends>QWidget</extends>
    <header>wdgCheatsEditor.hpp</header>

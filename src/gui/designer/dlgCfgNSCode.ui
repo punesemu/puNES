@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
  <class>dlgCfgNSCode</class>
- <widget class="QDialog" name="dlgCfgNSCode">
+ <widget class="QWidget" name="dlgCfgNSCode">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -13,14 +13,7 @@
   <property name="windowTitle">
    <string notr="true">dlgCfgNSCode</string>
   </property>
-  <property name="windowIcon">
-   <iconset resource="resources.qrc">
-    <normaloff>:/icon/icons/application.png</normaloff>:/icon/icons/application.png</iconset>
-  </property>
-  <layout class="QVBoxLayout" name="verticalLayout_dlgCfgNSCode" stretch="1,0">
-   <property name="sizeConstraint">
-    <enum>QLayout::SetFixedSize</enum>
-   </property>
+  <layout class="QVBoxLayout" name="verticalLayout_dlgCfgNSCode">
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_Desc">
      <property name="spacing">
@@ -41,7 +34,7 @@
         </size>
        </property>
        <property name="frameShape">
-        <enum>QFrame::Box</enum>
+        <enum>QFrame::StyledPanel</enum>
        </property>
        <property name="text">
         <string notr="true">description</string>

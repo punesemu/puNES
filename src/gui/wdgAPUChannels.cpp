@@ -58,7 +58,7 @@ wdgAPUChannels::~wdgAPUChannels() = default;
 
 void wdgAPUChannels::changeEvent(QEvent *event) {
 	if (event->type() == QEvent::LanguageChange) {
-		Ui::wdgAPUChannels::retranslateUi(this);
+		retranslateUi(this);
 	} else {
 		QWidget::changeEvent(event);
 	}

@@ -104,7 +104,9 @@ void tape_data_recorder_quit(void) {
 
 	tape_data_reset();
 
-	gui_update_tape_menu();
+	if (gui.start) {
+		gui_update_tape_menu();
+	}
 }
 void tape_data_recorder_stop(void) {
 	if (tape_data_recorder.file) {

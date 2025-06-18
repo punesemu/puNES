@@ -30,7 +30,7 @@ void recent_roms_init(void) {
 }
 void recent_roms_add(uTCHAR *file) {
 	recent_roms.add(file);
-	mainwin->update_menu_recent_roms();
+	mainwin->wd->update_menu_recent_roms();
 }
 void recent_roms_parse(void) {
 	recent_roms.parse();
@@ -63,7 +63,7 @@ void recent_disks_init(void) {
 }
 void recent_disks_add(uTCHAR *file) {
 	recent_disks.add(file);
-	mainwin->update_menu_recent_disks();
+	mainwin->wd->update_menu_recent_disks();
 }
 void recent_disks_parse(void) {
 	recent_disks.parse();

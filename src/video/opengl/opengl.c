@@ -471,7 +471,7 @@ BYTE opengl_context_create(void) {
 		if (cfg->fullscreen) {
 			float div = 0;
 
-			if (!gfx.is_wayland && !cfg->fullscreen_in_window) {
+			if (!gfx.only_fullscreen_in_window && !cfg->fullscreen_in_window) {
 				vmw *= gfx.device_pixel_ratio;
 				vmh *= gfx.device_pixel_ratio;
 			}

@@ -186,7 +186,9 @@ void nsf_quit(void) {
 		extcl_mapper_quit_VRC7();
 	}
 
-	gui_nsf_author_note_close();
+	if (gui.start) {
+		gui_nsf_author_note_close();
+	}
 
 	nsf_init();
 }

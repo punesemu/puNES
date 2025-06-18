@@ -83,17 +83,8 @@
       </item>
       <item>
        <widget class="QTableWidget" name="tableWidget_Cheats">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
         <property name="focusPolicy">
          <enum>Qt::StrongFocus</enum>
-        </property>
-        <property name="horizontalScrollBarPolicy">
-         <enum>Qt::ScrollBarAsNeeded</enum>
         </property>
         <property name="editTriggers">
          <set>QAbstractItemView::NoEditTriggers</set>
@@ -119,9 +110,6 @@
         <property name="columnCount">
          <number>6</number>
         </property>
-        <attribute name="horizontalHeaderDefaultSectionSize">
-         <number>120</number>
-        </attribute>
         <column>
          <property name="text">
           <string/>

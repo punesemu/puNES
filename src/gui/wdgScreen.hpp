@@ -69,13 +69,13 @@ class wdgScreen : public QWidget {
 	private:
 		QCursor *target;
 
-	public:
-		explicit wdgScreen(QWidget *parent = nullptr);
-		~wdgScreen() override;
-
 	signals:
 		void et_cursor_set(void);
 		void et_cursor_hide(int hide);
+
+	public:
+		explicit wdgScreen(QWidget *parent = nullptr);
+		~wdgScreen() override;
 
 	protected:
 		QPaintEngine *paintEngine() const override;

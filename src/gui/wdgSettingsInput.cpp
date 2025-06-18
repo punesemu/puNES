@@ -18,8 +18,8 @@
 
 #include <QtWidgets/QScrollBar>
 #include "wdgSettingsInput.hpp"
-#include "mainWindow.hpp"
 #include "dlgSettings.hpp"
+#include "mainWindow.hpp"
 #include "dlgStdPad.hpp"
 #include "dlgKeyboard.hpp"
 #include "emu_thread.h"
@@ -45,7 +45,7 @@ wdgSettingsInput::wdgSettingsInput(QWidget *parent) : QWidget(parent) {
 
 	hide_from_setup_button = false;
 	last_control = gui_get_ms();
-	dlg_std_pad = nullptr;
+	wdg_dlg_std_pad = nullptr;
 
 	setupUi(this);
 
@@ -107,6 +107,21 @@ wdgSettingsInput::wdgSettingsInput(QWidget *parent) : QWidget(parent) {
 	connect(this, SIGNAL(et_update_joy_combo()), this, SLOT(s_et_update_joy_combo()));
 
 	tabWidget_Input->setCurrentIndex(0);
+
+	{
+		int dim = fontMetrics().height();
+
+		icon_Ports->setPixmap(QIcon(":/icon/icons/rs_232_female.svgz").pixmap(dim, dim));
+		icon_cm->setPixmap(QIcon(":/icon/icons/mode.svgz").pixmap(dim, dim));
+		icon_exp->setPixmap(QIcon(":/icon/icons/circuit_board.svgz").pixmap(dim, dim));
+		icon_cp1->setPixmap(QIcon(":/icon/icons/game_controller.svgz").pixmap(dim, dim));
+		icon_cp2->setPixmap(QIcon(":/icon/icons/game_controller.svgz").pixmap(dim, dim));
+		icon_cp3->setPixmap(QIcon(":/icon/icons/game_controller.svgz").pixmap(dim, dim));
+		icon_cp4->setPixmap(QIcon(":/icon/icons/game_controller.svgz").pixmap(dim, dim));
+		icon_Input_misc->setPixmap(QIcon(":/icon/icons/misc.svgz").pixmap(dim, dim));
+		icon_Shortcuts->setPixmap(QIcon(":/icon/icons/shortcuts.svgz").pixmap(dim, dim));
+		icon_joy_ID->setPixmap(QIcon(":/icon/icons/input_config.svgz").pixmap(dim, dim));
+	}
 }
 wdgSettingsInput::~wdgSettingsInput() = default;
 
@@ -128,28 +143,14 @@ void wdgSettingsInput::changeEvent(QEvent *event) {
 	}
 }
 void wdgSettingsInput::showEvent(QShowEvent *event) {
-	int dim = fontMetrics().height();
-
-	icon_Ports->setPixmap(QIcon(":/icon/icons/rs_232_female.svgz").pixmap(dim, dim));
-	icon_cm->setPixmap(QIcon(":/icon/icons/mode.svgz").pixmap(dim, dim));
-	icon_exp->setPixmap(QIcon(":/icon/icons/circuit_board.svgz").pixmap(dim, dim));
-	icon_cp1->setPixmap(QIcon(":/icon/icons/game_controller.svgz").pixmap(dim, dim));
-	icon_cp2->setPixmap(QIcon(":/icon/icons/game_controller.svgz").pixmap(dim, dim));
-	icon_cp3->setPixmap(QIcon(":/icon/icons/game_controller.svgz").pixmap(dim, dim));
-	icon_cp4->setPixmap(QIcon(":/icon/icons/game_controller.svgz").pixmap(dim, dim));
-	icon_Input_misc->setPixmap(QIcon(":/icon/icons/misc.svgz").pixmap(dim, dim));
-	icon_Shortcuts->setPixmap(QIcon(":/icon/icons/shortcuts.svgz").pixmap(dim, dim));
-	icon_joy_ID->setPixmap(QIcon(":/icon/icons/input_config.svgz").pixmap(dim, dim));
-
-	mainwin->shcjoy_stop();
-
+	mainwin->wd->shcjoy_stop();
 	QWidget::showEvent(event);
 }
 void wdgSettingsInput::hideEvent(QHideEvent *event) {
 	shcut.timeout.timer->stop();
 	shcut.joy.timer->stop();
 
-	mainwin->shcjoy_start();
+	mainwin->wd->shcjoy_start();
 
 	if (shcut.no_other_buttons) {
 		shcut.timeout.seconds = 0;
@@ -163,6 +164,8 @@ void wdgSettingsInput::retranslateUi(QWidget *wdgSettingsInput) {
 	Ui::wdgSettingsInput::retranslateUi(wdgSettingsInput);
 	controller_ports_init();
 	update_widget();
+	adjustSize();
+	updateGeometry();
 }
 void wdgSettingsInput::update_widget(void) {
 	ports_end_misc_set_enabled(true);
@@ -176,7 +179,7 @@ void wdgSettingsInput::update_widget(void) {
 	checkBox_Hide_Zapper_cursor->setChecked(cfg->input.hide_zapper_cursor);
 }
 void wdgSettingsInput::update_joy_list(void) {
-	double this_control = gui_get_ms();
+	const double this_control = gui_get_ms();
 
 	if ((this_control - last_control) >= JS_MS_UPDATE_DETECT_DEVICE_DLG) {
 		last_control = this_control;
@@ -219,9 +222,10 @@ void wdgSettingsInput::controller_ports_init(void) {
 		{ tr("Standard Pad"),    CTRL_STANDARD }
 	};
 	_cb_ports *ctrl_port1 = nullptr, *ctrl_port2 = nullptr;
-	unsigned int i, length1 = 0, length2 = 0;
+	unsigned int length1 = 0, length2 = 0;
 
 	switch (cfg->input.controller_mode) {
+		default:
 		case CTRL_MODE_NES:
 			ctrl_port1 = (_cb_ports *)&ctrl_mode_nes;
 			ctrl_port2 = (_cb_ports *)&ctrl_mode_nes;
@@ -242,7 +246,7 @@ void wdgSettingsInput::controller_ports_init(void) {
 
 	// Expansion Port
 	comboBox_exp->clear();
-	for (i = 0; i < LENGTH(ctrl_mode_famicom_expansion_port); i++) {
+	for (unsigned int i = 0; i < LENGTH(ctrl_mode_famicom_expansion_port); i++) {
 		comboBox_exp->addItem(ctrl_mode_famicom_expansion_port[i].desc);
 		comboBox_exp->setItemData((int)i, ctrl_mode_famicom_expansion_port[i].index);
 	}
@@ -253,14 +257,13 @@ void wdgSettingsInput::controller_ports_init(void) {
 	controller_port_init(comboBox_cp3, &input.cport[2], (void *)ctrl_mode_four_score, LENGTH(ctrl_mode_four_score));
 	controller_port_init(comboBox_cp4, &input.cport[3], (void *)ctrl_mode_four_score, LENGTH(ctrl_mode_four_score));
 }
-void wdgSettingsInput::controller_port_init(QComboBox *cb, _cfg_port *cfg_port, void *list, int length) {
-	_cb_ports *cbp = (_cb_ports *)list;
+void wdgSettingsInput::controller_port_init(QComboBox *cb, _cfg_port *cfg_port, void *list, const int length) {
+	const _cb_ports *cbp = (_cb_ports *)list;
 	bool found = false;
-	int i;
 
 	cb->clear();
 
-	for (i = 0; i < length; i++) {
+	for (int i = 0; i < length; i++) {
 		QList<QVariant> type;
 
 		type.append(cbp[i].index);
@@ -305,19 +308,15 @@ void wdgSettingsInput::shortcuts_init(void) {
 
 	shortcuts_update(UPDATE_ALL, NO_ACTION, NO_ACTION);
 }
-void wdgSettingsInput::shortcut_init(int index, QString *string) {
-	int row = index - SET_INP_SC_OPEN;
-	QTableWidgetItem *col;
-	QHBoxLayout *layout;
-	QWidget *widget;
-	themePushButton *bicon;
-	QFontMetrics fm = tableWidget_Shortcuts->fontMetrics();
-	int icon_size = 21;
-	int btexth = fm.boundingRect("Ppj0q").height() < (icon_size + 6) ? icon_size + 6 : fm.boundingRect("Ppj0q").height();
+void wdgSettingsInput::shortcut_init(const int index, const QString *string) {
+	const int row = index - SET_INP_SC_OPEN;
+	const QFontMetrics fm = tableWidget_Shortcuts->fontMetrics();
+	constexpr int icon_size = 21;
+	const int btexth = fm.boundingRect("Ppj0q").height() < (icon_size + 6) ? icon_size + 6 : fm.boundingRect("Ppj0q").height();
 
 	tableWidget_Shortcuts->insertRow(row);
 
-	col = new QTableWidgetItem();
+	QTableWidgetItem *col = new QTableWidgetItem();
 	col->setTextAlignment(Qt::AlignCenter);
 	tableWidget_Shortcuts->setItem(row, 0, col);
 
@@ -327,12 +326,11 @@ void wdgSettingsInput::shortcut_init(int index, QString *string) {
 	} else {
 		shcut.text[KEYBOARD].replace(row, (QString(*(QString *)settings_inp_rd_sc(index, KEYBOARD))));
 	}
-	widget = new QWidget(this);
-	layout = new QHBoxLayout(widget);
+	QWidget *widget = new QWidget(this);
+	QHBoxLayout *layout = new QHBoxLayout(widget);
 	{
-		QKeySequenceEdit *btext;
+		QKeySequenceEdit *btext = new keySequenceEdit();
 
-		btext = new keySequenceEdit();
 		btext->setObjectName("value");
 		btext->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::MinimumExpanding);
 		btext->setMinimumHeight(btexth);
@@ -341,7 +339,7 @@ void wdgSettingsInput::shortcut_init(int index, QString *string) {
 		connect(btext, SIGNAL(editingFinished()), this, SLOT(s_shortcut_keyb()));
 		layout->addWidget(btext);
 	}
-	bicon = new themePushButton(this);
+	themePushButton *bicon = new themePushButton(this);
 	bicon->setObjectName("default");
 	bicon->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Preferred);
 	bicon->setIcon(QIcon(":/icon/icons/default.svgz"));
@@ -370,9 +368,8 @@ void wdgSettingsInput::shortcut_init(int index, QString *string) {
 	widget = new QWidget(this);
 	layout = new QHBoxLayout(widget);
 	{
-		pixmapPushButton *btext;
+		pixmapPushButton *btext = new pixmapPushButton(this);
 
-		btext = new pixmapPushButton(this);
 		btext->setObjectName("value");
 		btext->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::MinimumExpanding);
 		btext->setIconSize(QSize(21, 21));
@@ -433,16 +430,16 @@ void wdgSettingsInput::shortcut_joy_list_init(void) {
 		joy_list.count++;
 	}
 }
-void wdgSettingsInput::shortcut_joy_combo_init(void) {
-	int i, last_index = comboBox_joy_ID->currentIndex();
-	QString last_text = comboBox_joy_ID->itemText(last_index);
+void wdgSettingsInput::shortcut_joy_combo_init(void) const {
+	const int last_index = comboBox_joy_ID->currentIndex();
+	const QString last_text = comboBox_joy_ID->itemText(last_index);
 	BYTE current_index = 0, current_line = JS_NO_JOYSTICK;
 
 	comboBox_joy_ID->blockSignals(true);
 	comboBox_joy_ID->clear();
 
-	for (i = 0; i < joy_list.count; i++) {
-		_cb_ports *cb = &joy_list.ele[i];
+	for (int i = 0; i < joy_list.count; i++) {
+		const _cb_ports *cb = &joy_list.ele[i];
 
 		if (js_is_this(cb->index, &cfg->input.jguid_sch)) {
 			current_line = i;
@@ -467,7 +464,7 @@ void wdgSettingsInput::shortcut_joy_combo_init(void) {
 		s_joy_index_changed(0);
 	}
 }
-void wdgSettingsInput::shortcut_update_text(QAction *action, int index) {
+void wdgSettingsInput::shortcut_update_text(const QAction *action, int index) const {
 	QStringList text = action->text().remove('&').split('\t');
 	int row = index - SET_INP_SC_OPEN;
 
@@ -479,6 +476,9 @@ void wdgSettingsInput::shortcut_update_text(QAction *action, int index) {
 	} else if (index == SET_INP_SC_REC_VIDEO) {
 		tableWidget_Shortcuts->item(row, 0)->setText(tr("Start/Stop VIDEO recording"));
 		tableWidget_Shortcuts->item(row, 0)->setToolTip(tr("Start/Stop VIDEO recording"));
+	} else if (index == SET_INP_SC_FULLSCREEN) {
+		tableWidget_Shortcuts->item(row, 0)->setText(tr("Enter/Leave Fullscreen"));
+		tableWidget_Shortcuts->item(row, 0)->setToolTip(tr("Enter/Leave Fullscreen"));
 	} else {
 		tableWidget_Shortcuts->item(row, 0)->setText(text.at(0));
 		tableWidget_Shortcuts->item(row, 0)->setToolTip(text.at(0));
@@ -499,7 +499,7 @@ void wdgSettingsInput::shortcut_update_text(QAction *action, int index) {
 	// joystick
 	js_row_pixmapPushButton(row);
 }
-bool wdgSettingsInput::shortcut_keypressEvent(QKeyEvent *event) {
+bool wdgSettingsInput::shortcut_keypressEvent(const QKeyEvent *event) {
 	if (!shcut.no_other_buttons) {
 		return (true);
 	}
@@ -521,19 +521,15 @@ bool wdgSettingsInput::shortcut_keypressEvent(QKeyEvent *event) {
 
 	return (true);
 }
-void wdgSettingsInput::shortcuts_update(int mode, int type, int row) {
-	int i;
-
-	for (i = 0; i < SET_MAX_NUM_SC; i++) {
+void wdgSettingsInput::shortcuts_update(const int mode, const int type, const int row) const {
+	for (int i = 0; i < SET_MAX_NUM_SC; i++) {
 		if (shcut.text[KEYBOARD].at(i + SET_INP_SC_OPEN).isEmpty()) {
 			continue;
 		}
 
 		switch (mode) {
 			case UPDATE_ALL: {
-				QWidget *widget;
 				bool joy_mode = false;
-				BYTE joy_index;
 
 				if (comboBox_joy_ID->count() > 1) {
 					joy_mode = true;
@@ -546,14 +542,14 @@ void wdgSettingsInput::shortcuts_update(int mode, int type, int row) {
 				tableWidget_Shortcuts->item(i, 0)->setForeground(shcut.fg);
 				tableWidget_Shortcuts->item(i, 0)->setBackground(shcut.bg);
 
-				widget = tableWidget_Shortcuts->cellWidget(i, 1);
+				QWidget *widget = tableWidget_Shortcuts->cellWidget(i, 1);
 				widget->setEnabled(true);
 				widget->findChild<QKeySequenceEdit *>("value")->setEnabled(true);
 				widget->findChild<themePushButton *>("default")->setEnabled(true);
 
 				tableWidget_Shortcuts->cellWidget(i, 1)->setEnabled(true);
 
-				joy_index = comboBox_joy_ID->itemData(comboBox_joy_ID->currentIndex()).toInt();
+				const BYTE joy_index = comboBox_joy_ID->itemData(comboBox_joy_ID->currentIndex()).toInt();
 
 				if ((comboBox_joy_ID->count() > 1) && (joy_index != JS_NO_JOYSTICK)) {
 					joy_mode = true;
@@ -570,7 +566,6 @@ void wdgSettingsInput::shortcuts_update(int mode, int type, int row) {
 			}
 			case BUTTON_PRESSED: {
 				QWidget *widget;
-				BYTE joy_index;
 
 				ports_end_misc_set_enabled(false);
 
@@ -593,7 +588,7 @@ void wdgSettingsInput::shortcuts_update(int mode, int type, int row) {
 					tableWidget_Shortcuts->cellWidget(i, 1)->setEnabled(false);
 				}
 
-				joy_index = comboBox_joy_ID->itemData(comboBox_joy_ID->currentIndex()).toInt();
+				const BYTE joy_index = comboBox_joy_ID->itemData(comboBox_joy_ID->currentIndex()).toInt();
 
 				if ((comboBox_joy_ID->count() > 1) && (joy_index != JS_NO_JOYSTICK)) {
 					if ((type == JOYSTICK) && (row == i)) {
@@ -614,8 +609,8 @@ void wdgSettingsInput::shortcuts_update(int mode, int type, int row) {
 }
 void wdgSettingsInput::shortcuts_tableview_resize(void) {
 	QAction *p = new QAction(this);
-	QString text = " Ctrl+Alt+Backspace ";
-	int i, w, h;
+	const QString text = " Ctrl+Alt+Backspace ";
+	int i;
 
 	tableWidget_Shortcuts->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
 
@@ -628,13 +623,13 @@ void wdgSettingsInput::shortcuts_tableview_resize(void) {
 	p->setText("test");
 	shortcut_update_text(p, SET_MAX_NUM_SC);
 
-	w = tableWidget_Shortcuts->verticalHeader()->width() + 2;
+	int w = tableWidget_Shortcuts->verticalHeader()->width() + 2;
 	for (i = 0; i < tableWidget_Shortcuts->columnCount(); i++) {
 		w += tableWidget_Shortcuts->columnWidth(i);
 	}
 	w += tableWidget_Shortcuts->verticalScrollBar()->sizeHint().width() + 24;
 
-	h = tableWidget_Shortcuts->horizontalHeader()->height() + 2;
+	int h = tableWidget_Shortcuts->horizontalHeader()->height() + 2;
 	for (i = 0; i < 3; i++) {
 		h += tableWidget_Shortcuts->rowHeight(i);
 	}
@@ -643,7 +638,7 @@ void wdgSettingsInput::shortcuts_tableview_resize(void) {
 	tableWidget_Shortcuts->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 	tableWidget_Shortcuts->removeRow(SET_MAX_NUM_SC);
 }
-void wdgSettingsInput::ports_end_misc_set_enabled(bool mode) {
+void wdgSettingsInput::ports_end_misc_set_enabled(const bool mode) const {
 	icon_cm->setEnabled(mode);
 	icon_cp1->setEnabled(mode);
 	icon_cp2->setEnabled(mode);
@@ -676,15 +671,15 @@ void wdgSettingsInput::ports_end_misc_set_enabled(bool mode) {
 
 	pushButton_Input_reset->setEnabled(mode);
 }
-void wdgSettingsInput::info_entry_print(const QString &txt) {
+void wdgSettingsInput::info_entry_print(const QString &txt) const {
 	label_Input_info->setText(txt);
 }
-void wdgSettingsInput::js_row_pixmapPushButton(int row) {
+void wdgSettingsInput::js_row_pixmapPushButton(const int row) const {
 	pixmapPushButton *pbt = tableWidget_Shortcuts->cellWidget(row, 2)->findChild<pixmapPushButton *>("value");
 
 	js_pixmapPushButton(js_jdev_index(), js_joyval_from_name(uQStringCD(shcut.text[JOYSTICK].at(row))), pbt);
 }
-void wdgSettingsInput::js_pixmapPushButton(int index, DBWORD in, pixmapPushButton *bt) {
+void wdgSettingsInput::js_pixmapPushButton(const int index, const DBWORD in, pixmapPushButton *bt) {
 	QString icon, desc;
 
 	gui_js_joyval_icon_desc(index, in, &icon, &desc);
@@ -692,7 +687,7 @@ void wdgSettingsInput::js_pixmapPushButton(int index, DBWORD in, pixmapPushButto
 	bt->setPixmap(QPixmap(icon));
 	bt->setText(desc == "" ? "NULL" : desc);
 }
-int wdgSettingsInput::js_jdev_index(void) {
+int wdgSettingsInput::js_jdev_index(void) const {
 	int jdev_index = JS_NO_JOYSTICK;
 
 	if (comboBox_joy_ID->currentData().isValid()) {
@@ -701,7 +696,7 @@ int wdgSettingsInput::js_jdev_index(void) {
 	return (jdev_index);
 }
 
-void wdgSettingsInput::controller_mode_set(void) {
+void wdgSettingsInput::controller_mode_set(void) const {
 	qtHelper::pushbutton_set_checked(pushButton_cm_nes, false);
 	qtHelper::pushbutton_set_checked(pushButton_cm_famicom, false);
 	qtHelper::pushbutton_set_checked(pushButton_cm_fscore, false);
@@ -718,16 +713,15 @@ void wdgSettingsInput::controller_mode_set(void) {
 			break;
 	}
 }
-void wdgSettingsInput::expansion_port_set(void) {
-	int index;
-
-	for (index = 0; index < comboBox_exp->count(); index++) {
+void wdgSettingsInput::expansion_port_set(void) const {
+	for (int index = 0; index < comboBox_exp->count(); index++) {
 		if (cfg->input.expansion == comboBox_exp->itemData(index).toInt()) {
 			comboBox_exp->setCurrentIndex(index);
 		}
 	}
 
 	switch (cfg->input.controller_mode) {
+		default:
 		case CTRL_MODE_NES:
 		case CTRL_MODE_FOUR_SCORE:
 			comboBox_exp->setEnabled(false);
@@ -753,13 +747,13 @@ void wdgSettingsInput::expansion_port_set(void) {
 	label_exp->setEnabled(comboBox_exp->isEnabled());
 }
 void wdgSettingsInput::controller_ports_set(void) {
-	int i, index;
+	int index;
 
-	for (i = PORT1; i < PORT_MAX; i++) {
+	for (int i = PORT1; i < PORT_MAX; i++) {
 		_cfg_port *ctrl_in = &input.cport[i];
 		QComboBox *cb = findChild<QComboBox *>(QString("comboBox_cp%1").arg(ctrl_in->id));
 		themePushButton *pb = findChild<themePushButton *>(QString("pushButton_cp%1").arg(ctrl_in->id));
-		bool mode = true, finded = false;
+		bool finded = false;
 
 		for (index = 0; index < cb->count(); index++) {
 			QList<QVariant> type = cb->itemData(index).toList();
@@ -794,10 +788,12 @@ void wdgSettingsInput::controller_ports_set(void) {
 		}
 
 		if ((i >= PORT3) && (i <= PORT4)) {
+			bool mode = true;
 			QLabel *ic = findChild<QLabel *>(QString("icon_cp%1").arg(ctrl_in->id));
 			QLabel *lb = findChild<QLabel *>(QString("label_cp%1").arg(ctrl_in->id));
 
 			switch (cfg->input.controller_mode) {
+				default:
 				case CTRL_MODE_NES:
 					mode = false;
 					break;
@@ -820,69 +816,69 @@ void wdgSettingsInput::controller_ports_set(void) {
 		}
 	}
 }
-void wdgSettingsInput::shortcuts_set(void) {
+void wdgSettingsInput::shortcuts_set(void) const {
 	if (comboBox_joy_ID->count() > 1) {
 		comboBox_joy_ID->setItemText(comboBox_joy_ID->count() - 1, tr("Disabled"));
 	} else {
 		comboBox_joy_ID->setItemText(comboBox_joy_ID->count() - 1, tr("No usable device"));
 	}
 
-	shortcut_update_text(mainwin->action_Open, SET_INP_SC_OPEN);
-	shortcut_update_text(mainwin->action_Start_Stop_Audio_recording, SET_INP_SC_REC_AUDIO);
+	shortcut_update_text(mainwin->wd->action_Open, SET_INP_SC_OPEN);
+	shortcut_update_text(mainwin->wd->action_Start_Stop_Audio_recording, SET_INP_SC_REC_AUDIO);
 #if defined (WITH_FFMPEG)
-	shortcut_update_text(mainwin->action_Start_Stop_Video_recording, SET_INP_SC_REC_VIDEO);
+	shortcut_update_text(mainwin->wd->action_Start_Stop_Video_recording, SET_INP_SC_REC_VIDEO);
 #endif
-	shortcut_update_text(mainwin->action_Quit, SET_INP_SC_QUIT);
-	shortcut_update_text(mainwin->action_Turn_Off, SET_INP_SC_TURN_OFF);
-	shortcut_update_text(mainwin->action_Hard_Reset, SET_INP_SC_HARD_RESET);
-	shortcut_update_text(mainwin->action_Soft_Reset, SET_INP_SC_SOFT_RESET);
-	shortcut_update_text(mainwin->action_Insert_Coin, SET_INP_SC_INSERT_COIN);
-	shortcut_update_text(mainwin->action_Switch_sides, SET_INP_SC_SWITCH_SIDES);
-	shortcut_update_text(mainwin->action_Eject_Insert_Disk, SET_INP_SC_EJECT_DISK);
-	shortcut_update_text(mainwin->action_Change_Disk, SET_INP_SC_CHANGE_DISK);
-	shortcut_update_text(mainwin->action_Fullscreen, SET_INP_SC_FULLSCREEN);
-	shortcut_update_text(mainwin->action_Save_Screenshot, SET_INP_SC_SCREENSHOT);
-	shortcut_update_text(mainwin->action_Save_Unaltered_NES_screen, SET_INP_SC_SCREENSHOT_1X);
-	shortcut_update_text(mainwin->action_Pause, SET_INP_SC_PAUSE);
-	shortcut_update_text(mainwin->action_Toogle_Fast_Forward, SET_INP_SC_TOGGLE_FAST_FORWARD);
-	shortcut_update_text(mainwin->action_Toggle_GUI_in_window, SET_INP_SC_TOGGLE_GUI_IN_WINDOW);
-	shortcut_update_text(mainwin->action_Shout_into_Microphone, SET_INP_SC_SHOUT_INTO_MIC);
-	shortcut_update_text(mainwin->action_Virtual_Keyboard, SET_INP_SC_TOGGLE_NES_KEYBOARD);
+	shortcut_update_text(mainwin->wd->action_Quit, SET_INP_SC_QUIT);
+	shortcut_update_text(mainwin->wd->action_Turn_Off, SET_INP_SC_TURN_OFF);
+	shortcut_update_text(mainwin->wd->action_Hard_Reset, SET_INP_SC_HARD_RESET);
+	shortcut_update_text(mainwin->wd->action_Soft_Reset, SET_INP_SC_SOFT_RESET);
+	shortcut_update_text(mainwin->wd->action_Insert_Coin, SET_INP_SC_INSERT_COIN);
+	shortcut_update_text(mainwin->wd->action_Switch_sides, SET_INP_SC_SWITCH_SIDES);
+	shortcut_update_text(mainwin->wd->action_Eject_Insert_Disk, SET_INP_SC_EJECT_DISK);
+	shortcut_update_text(mainwin->wd->action_Change_Disk, SET_INP_SC_CHANGE_DISK);
+	shortcut_update_text(mainwin->wd->action_Fullscreen, SET_INP_SC_FULLSCREEN);
+	shortcut_update_text(mainwin->wd->action_Save_Screenshot, SET_INP_SC_SCREENSHOT);
+	shortcut_update_text(mainwin->wd->action_Save_Unaltered_NES_screen, SET_INP_SC_SCREENSHOT_1X);
+	shortcut_update_text(mainwin->wd->action_Pause, SET_INP_SC_PAUSE);
+	shortcut_update_text(mainwin->wd->action_Toogle_Fast_Forward, SET_INP_SC_TOGGLE_FAST_FORWARD);
+	shortcut_update_text(mainwin->wd->action_Toggle_GUI_in_window, SET_INP_SC_TOGGLE_GUI_IN_WINDOW);
+	shortcut_update_text(mainwin->wd->action_Shout_into_Microphone, SET_INP_SC_SHOUT_INTO_MIC);
+	shortcut_update_text(mainwin->wd->action_Virtual_Keyboard, SET_INP_SC_TOGGLE_NES_KEYBOARD);
 
-	shortcut_update_text(mainwin->qaction_shcut.mode_auto, SET_INP_SC_MODE_AUTO);
-	shortcut_update_text(mainwin->qaction_shcut.mode_ntsc, SET_INP_SC_MODE_NTSC);
-	shortcut_update_text(mainwin->qaction_shcut.mode_pal, SET_INP_SC_MODE_PAL);
-	shortcut_update_text(mainwin->qaction_shcut.mode_dendy, SET_INP_SC_MODE_DENDY);
-	shortcut_update_text(mainwin->qaction_shcut.scale_1x, SET_INP_SC_SCALE_1X);
-	shortcut_update_text(mainwin->qaction_shcut.scale_2x, SET_INP_SC_SCALE_2X);
-	shortcut_update_text(mainwin->qaction_shcut.scale_3x, SET_INP_SC_SCALE_3X);
-	shortcut_update_text(mainwin->qaction_shcut.scale_4x, SET_INP_SC_SCALE_4X);
-	shortcut_update_text(mainwin->qaction_shcut.scale_5x, SET_INP_SC_SCALE_5X);
-	shortcut_update_text(mainwin->qaction_shcut.scale_6x, SET_INP_SC_SCALE_6X);
-	shortcut_update_text(mainwin->qaction_shcut.interpolation, SET_INP_SC_INTERPOLATION);
-	shortcut_update_text(mainwin->qaction_shcut.integer_in_fullscreen, SET_INP_SC_INTEGER_FULLSCREEN);
-	shortcut_update_text(mainwin->qaction_shcut.stretch_in_fullscreen, SET_INP_SC_STRETCH_FULLSCREEN);
-	shortcut_update_text(mainwin->qaction_shcut.toggle_menubar_in_fullscreen, SET_INP_SC_TOGGLE_MENUBAR_IN_FULLSCREEN);
-	shortcut_update_text(mainwin->qaction_shcut.toggle_capture_input, SET_INP_SC_TOGGLE_CAPTURE_INPUT);
-	shortcut_update_text(mainwin->qaction_shcut.audio_enable, SET_INP_SC_AUDIO_ENABLE);
-	shortcut_update_text(mainwin->qaction_shcut.save_settings, SET_INP_SC_SAVE_SETTINGS);
-	shortcut_update_text(mainwin->qaction_shcut.hold_fast_forward, SET_INP_SC_HOLD_FAST_FORWARD);
-	shortcut_update_text(mainwin->action_Save_state, SET_INP_SC_SAVE_STATE);
-	shortcut_update_text(mainwin->action_Load_state, SET_INP_SC_LOAD_STATE);
-	shortcut_update_text(mainwin->action_Increment_slot, SET_INP_SC_INC_SLOT);
-	shortcut_update_text(mainwin->action_Decrement_slot, SET_INP_SC_DEC_SLOT);
-	shortcut_update_text(mainwin->qaction_shcut.rwnd.active, SET_INP_SC_RWND_ACTIVE_MODE);
-	shortcut_update_text(mainwin->qaction_shcut.rwnd.step_backward, SET_INP_SC_RWND_STEP_BACKWARD);
-	shortcut_update_text(mainwin->qaction_shcut.rwnd.step_forward, SET_INP_SC_RWND_STEP_FORWARD);
-	shortcut_update_text(mainwin->qaction_shcut.rwnd.fast_backward, SET_INP_SC_RWND_FAST_BACKWARD);
-	shortcut_update_text(mainwin->qaction_shcut.rwnd.fast_forward, SET_INP_SC_RWND_FAST_FORWARD);
-	shortcut_update_text(mainwin->qaction_shcut.rwnd.play, SET_INP_SC_RWND_PLAY);
-	shortcut_update_text(mainwin->qaction_shcut.rwnd.pause, SET_INP_SC_RWND_PAUSE);
+	shortcut_update_text(mainwin->wd->qaction_shcut.mode_auto, SET_INP_SC_MODE_AUTO);
+	shortcut_update_text(mainwin->wd->qaction_shcut.mode_ntsc, SET_INP_SC_MODE_NTSC);
+	shortcut_update_text(mainwin->wd->qaction_shcut.mode_pal, SET_INP_SC_MODE_PAL);
+	shortcut_update_text(mainwin->wd->qaction_shcut.mode_dendy, SET_INP_SC_MODE_DENDY);
+	shortcut_update_text(mainwin->wd->qaction_shcut.scale_1x, SET_INP_SC_SCALE_1X);
+	shortcut_update_text(mainwin->wd->qaction_shcut.scale_2x, SET_INP_SC_SCALE_2X);
+	shortcut_update_text(mainwin->wd->qaction_shcut.scale_3x, SET_INP_SC_SCALE_3X);
+	shortcut_update_text(mainwin->wd->qaction_shcut.scale_4x, SET_INP_SC_SCALE_4X);
+	shortcut_update_text(mainwin->wd->qaction_shcut.scale_5x, SET_INP_SC_SCALE_5X);
+	shortcut_update_text(mainwin->wd->qaction_shcut.scale_6x, SET_INP_SC_SCALE_6X);
+	shortcut_update_text(mainwin->wd->qaction_shcut.interpolation, SET_INP_SC_INTERPOLATION);
+	shortcut_update_text(mainwin->wd->qaction_shcut.integer_in_fullscreen, SET_INP_SC_INTEGER_FULLSCREEN);
+	shortcut_update_text(mainwin->wd->qaction_shcut.stretch_in_fullscreen, SET_INP_SC_STRETCH_FULLSCREEN);
+	shortcut_update_text(mainwin->wd->qaction_shcut.toggle_menubar_in_fullscreen, SET_INP_SC_TOGGLE_MENUBAR_IN_FULLSCREEN);
+	shortcut_update_text(mainwin->wd->qaction_shcut.toggle_capture_input, SET_INP_SC_TOGGLE_CAPTURE_INPUT);
+	shortcut_update_text(mainwin->wd->qaction_shcut.audio_enable, SET_INP_SC_AUDIO_ENABLE);
+	shortcut_update_text(mainwin->wd->qaction_shcut.save_settings, SET_INP_SC_SAVE_SETTINGS);
+	shortcut_update_text(mainwin->wd->qaction_shcut.hold_fast_forward, SET_INP_SC_HOLD_FAST_FORWARD);
+	shortcut_update_text(mainwin->wd->action_Save_state, SET_INP_SC_SAVE_STATE);
+	shortcut_update_text(mainwin->wd->action_Load_state, SET_INP_SC_LOAD_STATE);
+	shortcut_update_text(mainwin->wd->action_Increment_slot, SET_INP_SC_INC_SLOT);
+	shortcut_update_text(mainwin->wd->action_Decrement_slot, SET_INP_SC_DEC_SLOT);
+	shortcut_update_text(mainwin->wd->qaction_shcut.rwnd.active, SET_INP_SC_RWND_ACTIVE_MODE);
+	shortcut_update_text(mainwin->wd->qaction_shcut.rwnd.step_backward, SET_INP_SC_RWND_STEP_BACKWARD);
+	shortcut_update_text(mainwin->wd->qaction_shcut.rwnd.step_forward, SET_INP_SC_RWND_STEP_FORWARD);
+	shortcut_update_text(mainwin->wd->qaction_shcut.rwnd.fast_backward, SET_INP_SC_RWND_FAST_BACKWARD);
+	shortcut_update_text(mainwin->wd->qaction_shcut.rwnd.fast_forward, SET_INP_SC_RWND_FAST_FORWARD);
+	shortcut_update_text(mainwin->wd->qaction_shcut.rwnd.play, SET_INP_SC_RWND_PLAY);
+	shortcut_update_text(mainwin->wd->qaction_shcut.rwnd.pause, SET_INP_SC_RWND_PAUSE);
 }
 
 void wdgSettingsInput::s_controller_mode(bool checked) {
 	if (checked) {
-		int mode = QVariant(((themePushButton *)sender())->property("mtype")).toInt();
+		const int mode = QVariant(((themePushButton *)sender())->property("mtype")).toInt();
 
 		if (cfg->input.controller_mode == mode) {
 			return;
@@ -897,7 +893,7 @@ void wdgSettingsInput::s_controller_mode(bool checked) {
 	update_widget();
 }
 void wdgSettingsInput::s_expansion_port(int index) {
-	int type = comboBox_exp->itemData(index).toInt();
+	const int type = comboBox_exp->itemData(index).toInt();
 
 	emu_thread_pause();
 	cfg->input.expansion = type;
@@ -910,7 +906,7 @@ void wdgSettingsInput::s_expansion_port_setup(UNUSED(bool checked)) {
 	switch (cfg->input.expansion) {
 		case CTRL_FAMILY_BASIC_KEYBOARD:
 		case CTRL_SUBOR_KEYBOARD:
-			mainwin->action_Virtual_Keyboard->trigger();
+			mainwin->wd->action_Virtual_Keyboard->trigger();
 			break;
 		default:
 			break;
@@ -918,7 +914,7 @@ void wdgSettingsInput::s_expansion_port_setup(UNUSED(bool checked)) {
 }
 void wdgSettingsInput::s_controller_port(int index) {
 	QList<QVariant> type = ((QComboBox *)sender())->itemData(index).toList();
-	_cfg_port *cfg_port = ((_cfg_port *)type.at(2).value<void *>());
+	const _cfg_port *cfg_port = ((_cfg_port *)type.at(2).value<void *>());
 
 	emu_thread_pause();
 	cfg_port->port->type = type.at(0).toInt();
@@ -930,16 +926,17 @@ void wdgSettingsInput::s_controller_port_setup(UNUSED(bool checked)) {
 	_cfg_port *cfg_port = ((_cfg_port *)((themePushButton *)sender())->property("myPointer").value<void *>());
 
 	switch (cfg_port->port->type) {
+		default:
 		case CTRL_DISABLED:
 		case CTRL_ZAPPER:
 			break;
 		case CTRL_STANDARD:
-			dlg_std_pad = new dlgStdPad(this, cfg_port);
+			wdg_dlg_std_pad = new wdgDlgStdPad(this, cfg_port);
 
 			hide_from_setup_button = true;
 			dlgsettings->hide();
-			dlg_std_pad->exec();
-			dlg_std_pad = nullptr;
+			wdg_dlg_std_pad->exec();
+			wdg_dlg_std_pad = nullptr;
 			dlgsettings->show();
 			hide_from_setup_button = false;
 			s_et_update_joy_combo();
@@ -963,8 +960,8 @@ void wdgSettingsInput::s_permit_updown_leftright(UNUSED(bool checked)) {
 void wdgSettingsInput::s_hide_zapper_cursor(UNUSED(bool checked)) {
 	cfg->input.hide_zapper_cursor = !cfg->input.hide_zapper_cursor;
 }
-void wdgSettingsInput::s_joy_id(int index) {
-	int data = ((QComboBox *)sender())->itemData(index).toInt();
+void wdgSettingsInput::s_joy_id(int index) const {
+	const int data = ((QComboBox *)sender())->itemData(index).toInt();
 
 	if (comboBox_joy_ID->count() == 1) {
 		return;
@@ -973,10 +970,8 @@ void wdgSettingsInput::s_joy_id(int index) {
 	js_guid_set(data, &cfg->input.jguid_sch);
 	shortcuts_update(UPDATE_ALL, NO_ACTION, NO_ACTION);
 }
-void wdgSettingsInput::s_joy_index_changed(UNUSED(int index)) {
-	int i;
-
-	for (i = 0; i < SET_MAX_NUM_SC; i++) {
+void wdgSettingsInput::s_joy_index_changed(UNUSED(int index)) const {
+	for (int i = 0; i < SET_MAX_NUM_SC; i++) {
 		js_row_pixmapPushButton(i);
 	}
 }
@@ -987,7 +982,7 @@ void wdgSettingsInput::s_shortcut_keyb(void) {
 #else
 	int value = se->keySequence()[0].toCombined();
 #endif
-	QKeySequence shortcut(value);
+	const QKeySequence shortcut(value);
 
 	shcut.type = QVariant(((QObject *)sender())->property("myType")).toInt();
 	shcut.row = QVariant(((QObject *)sender())->property("myValue")).toInt();
@@ -998,7 +993,7 @@ void wdgSettingsInput::s_shortcut_keyb(void) {
 	shcut.text[KEYBOARD].replace(shcut.row, shortcut.toString());
 
 	settings_inp_wr_sc((void *)&shcut.text[KEYBOARD].at(shcut.row), shcut.row + SET_INP_SC_OPEN, KEYBOARD);
-	mainwin->shortcuts();
+	mainwin->wd->shortcuts();
 
 	shortcuts_update(UPDATE_ALL, NO_ACTION, NO_ACTION);
 	update_widget();
@@ -1029,9 +1024,7 @@ void wdgSettingsInput::s_shortcut_joy(UNUSED(bool checked)) {
 	shcut.joy.timer->start(150);
 }
 void wdgSettingsInput::s_shortcut_unset_all(UNUSED(bool checked)) {
-	int i;
-
-	for (i = 0; i < SET_MAX_NUM_SC; i++) {
+	for (int i = 0; i < SET_MAX_NUM_SC; i++) {
 		shcut.text[KEYBOARD].replace(i, "NULL");
 		settings_inp_wr_sc((void *)&shcut.text[KEYBOARD].at(i), i + SET_INP_SC_OPEN, KEYBOARD);
 		tableWidget_Shortcuts->cellWidget(i, 1)->findChild<QKeySequenceEdit *>("value")->setKeySequence(shcut.text[KEYBOARD].at(i));
@@ -1040,17 +1033,15 @@ void wdgSettingsInput::s_shortcut_unset_all(UNUSED(bool checked)) {
 		settings_inp_wr_sc((void *)&shcut.text[JOYSTICK].at(i), i + SET_INP_SC_OPEN, JOYSTICK);
 		js_row_pixmapPushButton(i);
 	}
-	mainwin->shortcuts();
+	mainwin->wd->shortcuts();
 	shortcuts_update(UPDATE_ALL, NO_ACTION, NO_ACTION);
 }
 void wdgSettingsInput::s_shortcut_reset(UNUSED(bool checked)) {
-	int i;
-
 	js_guid_unset(&cfg->input.jguid_sch);
 
 	comboBox_joy_ID->setCurrentIndex(comboBox_joy_ID->count() - 1);
 
-	for (i = 0; i < SET_MAX_NUM_SC; i++) {
+	for (int i = 0; i < SET_MAX_NUM_SC; i++) {
 		shcut.text[KEYBOARD].replace(i, uQString(inp_cfg[i + SET_INP_SC_OPEN].def).split(",").at(KEYBOARD));
 		settings_inp_wr_sc((void *)&shcut.text[KEYBOARD].at(i), i + SET_INP_SC_OPEN, KEYBOARD);
 		tableWidget_Shortcuts->cellWidget(i, 1)->findChild<QKeySequenceEdit *>("value")->setKeySequence(shcut.text[KEYBOARD].at(i));
@@ -1059,27 +1050,27 @@ void wdgSettingsInput::s_shortcut_reset(UNUSED(bool checked)) {
 		settings_inp_wr_sc((void *)&shcut.text[JOYSTICK].at(i), i + SET_INP_SC_OPEN, JOYSTICK);
 		js_row_pixmapPushButton(i);
 	}
-	mainwin->shortcuts();
+	mainwin->wd->shortcuts();
 	shortcuts_update(UPDATE_ALL, NO_ACTION, NO_ACTION);
 }
 void wdgSettingsInput::s_shortcut_keyb_default(UNUSED(bool checked)) {
-	int row = QVariant(((QObject *)sender())->property("myValue")).toInt();
+	const int row = QVariant(((QObject *)sender())->property("myValue")).toInt();
 
 	shcut.text[KEYBOARD].replace(row, uQString(inp_cfg[row + SET_INP_SC_OPEN].def).split(",").at(KEYBOARD));
 	tableWidget_Shortcuts->cellWidget(row, 1)->findChild<QKeySequenceEdit *>("value")->setKeySequence(shcut.text[KEYBOARD].at(row));
 	settings_inp_wr_sc((void *)&shcut.text[KEYBOARD].at(row), row + SET_INP_SC_OPEN, KEYBOARD);
-	mainwin->shortcuts();
+	mainwin->wd->shortcuts();
 }
 void wdgSettingsInput::s_shortcut_keyb_unset(UNUSED(bool checked)) {
-	int row = QVariant(((QObject *)sender())->property("myValue")).toInt();
+	const int row = QVariant(((QObject *)sender())->property("myValue")).toInt();
 
 	shcut.text[KEYBOARD].replace(row, "NULL");
 	tableWidget_Shortcuts->cellWidget(row, 1)->findChild<QKeySequenceEdit *>("value")->clear();
 	settings_inp_wr_sc((void *)&shcut.text[KEYBOARD].at(row), row + SET_INP_SC_OPEN, KEYBOARD);
-	mainwin->shortcuts();
+	mainwin->wd->shortcuts();
 }
 void wdgSettingsInput::s_shortcut_joy_unset(UNUSED(bool checked)) {
-	int row = QVariant(((QObject *)sender())->property("myValue")).toInt();
+	const int row = QVariant(((QObject *)sender())->property("myValue")).toInt();
 
 	shcut.text[JOYSTICK].replace(row, "NULL");
 	js_row_pixmapPushButton(row);
@@ -1095,7 +1086,7 @@ void wdgSettingsInput::s_input_timeout(void) {
 	}
 }
 void wdgSettingsInput::s_joy_read_timer(void) {
-	DBWORD value = js_jdev_read_in_dialog(&cfg->input.jguid_sch);
+	const DBWORD value = js_jdev_read_in_dialog(&cfg->input.jguid_sch);
 
 	if (shcut.joy.value && !value) {
 		shcut.text[JOYSTICK].replace(shcut.row, uQString(js_joyval_to_name(shcut.joy.value)));
@@ -1114,7 +1105,7 @@ void wdgSettingsInput::s_joy_read_timer(void) {
 	shcut.joy.value = value;
 }
 
-void wdgSettingsInput::s_et_update_joy_combo(void) {
+void wdgSettingsInput::s_et_update_joy_combo(void) const {
 	// se la combox e' aperta o sono in attessa di impostare uno shortcut, non devo aggiornarne il contenuto
 	if (!comboBox_joy_ID->view()->isVisible() &&
 		!shcut.timeout.timer->isActive() &&
@@ -1122,8 +1113,8 @@ void wdgSettingsInput::s_et_update_joy_combo(void) {
 		shortcut_joy_combo_init();
 		shortcuts_update(UPDATE_ALL, NO_ACTION, NO_ACTION);
 	}
-	if (dlg_std_pad) {
-		emit dlg_std_pad->et_update_joy_combo();
+	if (wdg_dlg_std_pad) {
+		emit wdg_dlg_std_pad->wd->et_update_joy_combo();
 	}
-	gui_dlgjsc_emit_update_joy_combo();
+	gui_wdgdlgjsc_emit_update_joy_combo();
 }

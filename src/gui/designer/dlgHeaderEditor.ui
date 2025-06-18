@@ -1,26 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
  <class>dlgHeaderEditor</class>
- <widget class="QDialog" name="dlgHeaderEditor">
+ <widget class="QWidget" name="dlgHeaderEditor">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>418</width>
+    <width>460</width>
     <height>484</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Header Editor</string>
   </property>
-  <property name="windowIcon">
-   <iconset resource="resources.qrc">
-    <normaloff>:/icon/icons/application.png</normaloff>:/icon/icons/application.png</iconset>
-  </property>
   <layout class="QVBoxLayout" name="verticalLayout_dlgHeaderEditor">
-   <property name="sizeConstraint">
-    <enum>QLayout::SetFixedSize</enum>
-   </property>
    <item>
     <layout class="QGridLayout" name="gridLayout_HeaderEditor" columnstretch="0,0,0,0">
      <item row="4" column="0">
@@ -882,7 +875,7 @@
       </widget>
      </item>
      <item row="0" column="1" colspan="3">
-      <layout class="QHBoxLayout" name="horizontalLayout_2">
+      <layout class="QHBoxLayout" name="horizontalLayout_File">
        <item>
         <widget class="QLineEdit" name="lineEdit_File">
          <property name="enabled">

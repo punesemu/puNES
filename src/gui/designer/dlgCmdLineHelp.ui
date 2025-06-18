@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
  <class>dlgCmdLineHelp</class>
- <widget class="QDialog" name="dlgCmdLineHelp">
+ <widget class="QWidget" name="dlgCmdLineHelp">
+  <property name="modal" stdset="0">
+   <bool>false</bool>
+  </property>
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -12,16 +15,6 @@
   </property>
   <property name="windowTitle">
    <string>Command Line Help</string>
-  </property>
-  <property name="windowIcon">
-   <iconset resource="resources.qrc">
-    <normaloff>:/icon/icons/application.png</normaloff>:/icon/icons/application.png</iconset>
-  </property>
-  <property name="sizeGripEnabled">
-   <bool>true</bool>
-  </property>
-  <property name="modal">
-   <bool>true</bool>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_dlgCmdLineHelp">
    <item>

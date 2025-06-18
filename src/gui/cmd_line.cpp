@@ -376,8 +376,7 @@ BYTE cmd_line_check_portable(int argc, uTCHAR **argv) {
 }
 
 static void usage(QString &name) {
-	dlgCmdLineHelp *dlg = new dlgCmdLineHelp(nullptr, name);
+	wdgDlgCmdLineHelp *dlg = new wdgDlgCmdLineHelp(nullptr, name);
 
-	dlg->show();
 	dlg->exec();
 }

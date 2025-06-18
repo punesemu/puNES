@@ -22,7 +22,6 @@ jobs:
       fail-fast: false
       matrix:
         config:
-          # ubuntu-latest (20.04) don't have qt 5.15 yet
           - { os: ubuntu-22.04, cc: "gcc", cxx: "g++", opts: "-DENABLE_RELEASE:BOOL=ON -DENABLE_FFMPEG:BOOL=ON -DENABLE_OPENGL_CG:BOOL=ON" }
           - { os: ubuntu-22.04, cc: "clang", cxx: "clang++", opts: "-DENABLE_RELEASE:BOOL=ON -DENABLE_FFMPEG:BOOL=ON -DENABLE_OPENGL_CG:BOOL=ON" }
 
@@ -34,21 +33,33 @@ jobs:
         run: |
           sudo apt-get update -qq
           sudo apt-get install -y \
-            libasound2-dev \
+            git \
+            cmake \
+            ninja-build \
+            libtool \
+            build-essential \
+            pkg-config \
+            mesa-common-dev \
+            freeglut3-dev \
+            nvidia-cg-toolkit \
+            libx11-dev \
             libxrandr-dev \
+            libxcb-cursor-dev \
+            libasound2-dev \
             libudev-dev \
             libglvnd-dev \
-            ninja-build \
             libavformat-dev \
             libavcodec-dev \
             libswresample-dev \
             libswscale-dev \
             libavutil-dev \
-            nvidia-cg-dev \
-            libqt5svg5-dev \
-            qtbase5-dev \
-            qtbase5-dev-tools \
-            qttools5-dev
+            libqt6svg6-dev \
+            qt6-base-dev \
+            qt6-base-dev-tools \
+            qt6-tools-dev \
+            qt6-tools-dev-tools \
+            qt6-l10n-tools \
+            qt6-image-formats-plugins
 
       - name: 'Build with ${{ matrix.config.cc }}/${{ matrix.config.cxx }}'
         env:
@@ -65,7 +76,7 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - { msystem: mingw64, cc: "gcc", cxx: "g++", env: x86_64, bit: 64, qt5ver: 5.15.8, url1: www.dropbox.com/s/e8ejq25mdg1cuub, url2: www.dropbox.com/s/d632cjezybz6a74, opts: '-DENABLE_WIN_STATIC_QT:BOOL=ON' }
+          - { msystem: mingw64, cc: "gcc", cxx: "g++", env: x86_64, bit: 64, qt5ver: 5.15.8, url1: www.dropbox.com/s/e8ejq25mdg1cuub, url2: www.dropbox.com/s/d632cjezybz6a74, opts: '-DENABLE_WIN_STATIC_QT5:BOOL=ON' }
           - { msystem: mingw32, cc: "gcc", cxx: "g++", env: i686,   bit: 32, qt5ver: 5.6.3,  url1: www.dropbox.com/s/k25y87k94cldb62, url2: www.dropbox.com/s/ye00129nyacdl05, opts: '-DENABLE_WIN_STATIC_QT560:BOOL=ON' }
     env:
       CC: ${{ matrix.config.cc }}
@@ -193,7 +204,7 @@ jobs:
       fail-fast: false
       matrix:
         config:
-          - { os: ubuntu-22.04, cc: "gcc", cxx: "g++", env: x86_64, opts: "-DENABLE_RELEASE:BOOL=ON -DENABLE_FFMPEG:BOOL=ON -DENABLE_OPENGL_CG:BOOL=ON -DDISABLE_PORTABLE_MODE:BOOL=ON" }
+          - { os: ubuntu-22.04, cc: "gcc", cxx: "g++", env: x86_64, qtver: "6.9.1", opts: "-DENABLE_RELEASE:BOOL=ON -DENABLE_FFMPEG:BOOL=ON -DENABLE_OPENGL_CG:BOOL=ON -DDISABLE_PORTABLE_MODE:BOOL=ON" }
 
     steps:
       - name: 'Checkout'
@@ -203,23 +214,62 @@ jobs:
         run: |
           sudo apt-get update -qq
           sudo apt-get install -y \
-            libasound2-dev \
+            git \
+            cmake \
+            ninja-build \
+            libtool \
+            build-essential \
+            pkg-config \
+            libgl1-mesa-dri \
+            libxkbcommon0 \
+            libxkbcommon-x11-0 \
+            libwayland-client0 \
+            libwayland-cursor0 \
+            libwayland-egl1 \
+            libxcb1 \
+            libxcb-xinput0 \
+            libxcb-xkb1 \
+            libxcb-render0 \
+            libxcb-shm0 \
+            libxcb-randr0 \
+            libxcb-sync1 \
+            libxcb-icccm4 \
+            libxcb-keysyms1 \
+            libxcb-image0 \
+            libxcb-shape0 \
+            libfontconfig1 \
+            libfreetype6 \
+            libdbus-1-3 \
+            libicu70 \
+            libharfbuzz0b \
+            libdouble-conversion3 \
+            libbrotli1 \
+            zlib1g \
+            mesa-common-dev \
+            freeglut3-dev \
+            nvidia-cg-toolkit \
+            libx11-dev \
             libxrandr-dev \
+            libxcb-cursor-dev \
+            libasound2-dev \
             libudev-dev \
             libglvnd-dev \
-            ninja-build \
             libavformat-dev \
             libavcodec-dev \
             libswresample-dev \
             libswscale-dev \
-            libavutil-dev \
-            nvidia-cg-dev \
-            qtbase5-dev \
-            qtbase5-dev-tools \
-            qt5-qmake \
-            qttools5-dev \
-            libqt5svg5-dev \
-            qt5-image-formats-plugins
+            libavutil-dev
+
+      - name: 'Install Qt ${{ matrix.config.qtver }}'
+        run: |
+          sudo apt-get install -y python3-pip
+          # pip install -U pip --break-system-packages (per la 24.04)
+          # $HOME/.local/bin/pip install aqtinstall --break-system-packages (per la 24.04)
+          pip install -U pip
+          $HOME/.local/bin/pip install aqtinstall
+          $HOME/.local/bin/aqt \
+            install-qt linux desktop ${{ matrix.config.qtver }} \
+            -m qtimageformats
 
       - name: 'Set WIP env'
         if: github.ref == 'refs/heads/master'
@@ -235,8 +285,12 @@ jobs:
           CXX: ${{ matrix.config.cxx }}
           CFLAGS: '-O3 -mmmx -msse -msse2 -msse3 -mfpmath=sse'
           CXXFLAGS: '-O3 -mmmx -msse -msse2 -msse3 -mfpmath=sse'
+          EXTQTDIR: '${{ github.workspace }}/${{ matrix.config.qtver }}/gcc_64'
         run: |
-          cmake -B build -G Ninja ${{ matrix.config.opts }} ${{ env.git_info }}
+          cmake \
+            -B build \
+            -G Ninja \
+            -DCMAKE_PREFIX_PATH="${EXTQTDIR}" ${{ matrix.config.opts }} ${{ env.git_info }}
           cmake --build build -j2
 
       - name: 'Install linuxdeploy'
@@ -255,11 +309,27 @@ jobs:
           cmake --install build --prefix AppDir/usr
 
       - name: 'Deploy AppImage'
+        env:
+          EXTQTDIR: '${{ github.workspace }}/${{ matrix.config.qtver }}/gcc_64'
         run: |
-          unset QTDIR; unset QT_PLUGIN_PATH; unset LD_LIBRARY_PATH
-          ./linuxdeploy-x86_64.AppImage --appdir AppDir -d AppDir/usr/share/applications/io.github.punesemu.puNES.desktop -i AppDir/usr/share/icons/hicolor/256x256/apps/io.github.punesemu.puNES.png --plugin qt
+          unset QTDIR
+          unset QT_PLUGIN_PATH
+          unset LD_LIBRARY_PATH
+          echo "EXTQTDIR is $EXTQTDIR"
+          export QMAKE="${EXTQTDIR}/bin/qmake"
+          export LD_LIBRARY_PATH="${EXTQTDIR}/lib"
+          export EXTRA_PLATFORM_PLUGINS="libqwayland-egl.so;libqwayland-generic.so"
+          ./linuxdeploy-x86_64.AppImage \
+            --appdir AppDir \
+            -d AppDir/usr/share/applications/io.github.punesemu.puNES.desktop \
+            -i AppDir/usr/share/icons/hicolor/256x256/apps/io.github.punesemu.puNES.png \
+            --plugin qt
           rm -f AppDir/usr/lib/libmpg123.so.0
-          ./linuxdeploy-x86_64.AppImage --appdir AppDir --exclude-library "*mpg123*" --output appimage
+          cp -avf "${EXTQTDIR}/plugins/"wayland* AppDir/usr/plugins/.
+          ./linuxdeploy-x86_64.AppImage \
+            --appdir AppDir \
+            --exclude-library "*mpg123*" \
+            --output appimage
 
       - name: 'Setup tmate session (only for debug)'
         if: ${{ failure() }}

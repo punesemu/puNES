@@ -43,14 +43,18 @@
 #include "wdgToolBar.hpp"
 #include "dlgCmdLineHelp.hpp"
 
-class toUpValidator: public QValidator {
+// ----------------------------------------------------------------------------------------------
+
+class toUpValidator final : public QValidator {
 	public:
-		explicit toUpValidator(QObject *parent = nullptr): QValidator(parent) {}
-		QValidator::State validate(QString &input, UNUSED(int &pos)) const override {
-			input = input.toUpper();
-			return (QValidator::Acceptable);
-		}
+		explicit toUpValidator(QObject *parent = nullptr);
+
+	public:
+		State validate(QString &input, int &pos) const override;
 };
+
+// ----------------------------------------------------------------------------------------------
+
 class qtHelper {
 	public:
 		static QRegularExpression rx_any_numbers;
@@ -66,7 +70,10 @@ class qtHelper {
 		static void combox_set_index(void *cbox, int value);
 		static void lineedit_set_text(void *ledit, const QString &txt);
 };
-class timerEgds : public QTimer {
+
+// ----------------------------------------------------------------------------------------------
+
+class timerEgds final : public QTimer {
 	Q_OBJECT
 
 	private:
@@ -102,11 +109,14 @@ class timerEgds : public QTimer {
 		void _start_with_emu_thread_pause(enum with_emu_pause type);
 		void _stop(BYTE is_necessary);
 		void _stop_with_emu_thread_continue(enum with_emu_pause type, BYTE is_necessary);
-		void _etc(enum with_emu_pause type);
+		void _etc(enum with_emu_pause type) const;
 
 	private slots:
-		void s_draw_screen(void);
+		static void s_draw_screen(void);
 };
+
+// ----------------------------------------------------------------------------------------------
+
 class actionOneTrigger : public QAction {
 	public:
 		unsigned int count;
@@ -121,6 +131,9 @@ class actionOneTrigger : public QAction {
 		void only_one_trigger(void);
 		void reset_count(void);
 };
+
+// ----------------------------------------------------------------------------------------------
+
 class mainWindow : public QMainWindow, public Ui::mainWindow {
 	Q_OBJECT
 
@@ -175,7 +188,7 @@ class mainWindow : public QMainWindow, public Ui::mainWindow {
 		QShortcut *shortcut[SET_MAX_NUM_SC];
 		BYTE tmm;
 
-	private:
+	public:
 		struct _shcjoy {
 			bool enabled;
 			QTimer *timer;
@@ -191,18 +204,11 @@ class mainWindow : public QMainWindow, public Ui::mainWindow {
 			QString message;
 		} secondary_instance;
 		struct _nsf_author_note {
-			dlgCmdLineHelp *dlg;
+			wdgDlgCmdLineHelp *dlg;
 			QRect geom;
 		} nsf_author_note;
 		QTranslator *translator;
 		QTranslator *qtTranslator;
-		bool setup_in_out_fullscreen;
-		bool fullscreen_resize;
-		QRect org_geom, fs_geom;
-
-	public:
-		mainWindow();
-		~mainWindow() override;
 
 	signals:
 		void et_reset(BYTE type);
@@ -212,93 +218,88 @@ class mainWindow : public QMainWindow, public Ui::mainWindow {
 		void et_toggle_menubar_from_mouse(void);
 		void et_nsf_author_note_open(const uTCHAR *string);
 		void et_nsf_author_note_close(void);
+		void et_set_fullscreen(void);
+		void et_toggle_gui_in_window(void);
+		void et_quit(void);
+
+	public:
+		mainWindow();
+		~mainWindow() override;
 
 	protected:
-#if defined (_WIN32)
-		bool nativeEvent(const QByteArray &eventType, void *message, long *result);
-#endif
-		bool eventFilter(QObject *obj, QEvent *event) override;
 		void changeEvent(QEvent *event) override;
-		void closeEvent(QCloseEvent *event) override;
-		void moveEvent(QMoveEvent *event) override;
-		void resizeEvent(QResizeEvent *event) override;
 
 	private:
-		void retranslateUi(mainWindow *mainWindow);
-		void stylesheet_update(void);
+		void retranslateUi(QMainWindow *mainWindow);
 
 	public:
 		void update_window(void);
-		void update_recording_widgets(void);
-		void set_language(int lang);
+		void update_recording_widgets(void) const;
+		void set_language(int lang) const;
 		void shcjoy_start(void);
 		void shcjoy_stop(void);
-		void control_visible_cursor(void);
+		static void control_visible_cursor(void);
 		void make_reset(int type);
 		void change_rom(const uTCHAR *rom);
-		void change_disk(const QString disk);
-		void shortcuts(void);
-		bool is_rwnd_shortcut_or_not_shcut(const QKeyEvent *event);
-		void update_gfx_monitor_dimension(void);
-		QAction *state_save_slot_action(BYTE slot);
+		void change_disk(const QString &disk);
+		void shortcuts(void) const;
+		bool is_rwnd_shortcut_or_not_shcut(const QKeyEvent *event) const;
+		QAction *state_save_slot_action(BYTE slot) const;
 		void state_save_slot_set(int slot, bool on_video);
-		void state_save_slot_set_tooltip(BYTE slot);
-		void toggle_toolbars(void);
+		void state_save_slot_set_tooltip(BYTE slot) const;
+		void toggle_toolbars(void) const;
 		void reset_min_max_size(void);
-		QScreen *win_handle_screen(void);
-		void shout_into_mic(BYTE mode);
-		void hold_fast_forward(BYTE mode);
-		void open_dkeyb(void);
+		static void shout_into_mic(BYTE mode);
+		void hold_fast_forward(BYTE mode) const;
+		static void open_dkeyb(void);
 		void unsupported_hardware(void);
 
 	private:
-		void connect_menu_signals(void);
-		void connect_action(QAction *action, const char *member);
-		void connect_action(QAction *action, int value, const char *member);
-		void connect_shortcut(QAction *action, int index);
-		void connect_shortcut(QAction *action, int index, const char *member);
+		void connect_menu_signals(void) const;
+		void connect_action(const QAction *action, const char *member) const;
+		void connect_action(QAction *action, int value, const char *member) const;
+		static void connect_shortcut(QAction *action, int index);
+		void connect_shortcut(QAction *action, int index, const char *member) const;
 
 	private:
 		void update_menu_file(void);
-		void update_menu_nes(void);
-		void update_menu_state(void);
+		void update_menu_nes(void) const;
+		void update_menu_state(void) const;
 
 	public:
-		void update_fds_menu(void);
-		void update_tape_menu(void);
-		void update_menu_tools(void);
+		void update_fds_menu(void) const;
+		void update_tape_menu(void) const;
+		void update_menu_tools(void) const;
 		void update_menu_recent_roms(void);
 		void update_menu_recent_disks(void);
 
 	private:
-		void action_text(QAction *action, const QString &description, QString *scut);
-		void ctrl_disk_side(QAction *action);
-		void geom_to_cfg(const QRect &geom, _last_geometry *lg);
-		void set_dialog_geom(QRect &geom);
-		int is_shortcut(const QKeyEvent *event);
+		static void action_text(QAction *action, const QString &description, const QString *scut);
+		static void ctrl_disk_side(QAction *action);
+		int is_shortcut(const QKeyEvent *event) const;
 		void toggle_menubar(BYTE mode);
 
 	public slots:
 		void s_set_fullscreen(void);
-		void s_set_vs_window(void);
-		void s_set_detach_barcode_window(void);
-		void s_open_dkeyb(void);
+		static void s_set_vs_window(void);
+		static void s_set_detach_barcode_window(void);
+		static void s_open_dkeyb(void);
 
 	private slots:
-		void s_fake_slot(void);
+		static void s_fake_slot(void);
 		void s_open(void);
 		void s_apply_patch(void);
-		void s_open_edit_current_header(void);
+		static void s_open_edit_current_header(void);
 		void s_open_recent_roms(void);
-		void s_open_config_folder(void);
-		void s_open_working_folder(void);
+		static void s_open_config_folder(void);
+		static void s_open_working_folder(void);
 		void s_quit(void);
 		void s_turn_on_off(void);
 		void s_make_reset(void);
-		void s_insert_coin(void);
-		void s_shout_into_mic(void);
-		void s_disk_side(void);
-		void s_eject_disk(void);
+		static void s_insert_coin(void);
+		static void s_shout_into_mic(void);
+		void s_disk_side(void) const;
+		void s_eject_disk(void) const;
 		void s_change_disk(void);
 		void s_open_recent_disks(void);
 		void s_create_empty_disk(void);
@@ -307,42 +308,41 @@ class mainWindow : public QMainWindow, public Ui::mainWindow {
 #if defined (WITH_FFMPEG)
 		void s_start_stop_video_recording(void);
 #endif
-		void s_save_screenshot(void);
-		void s_save_screenshot_1x(void);
-		void s_pause(void);
-		void s_fast_forward(void);
+		static void s_save_screenshot(void);
+		static void s_save_screenshot_1x(void);
+		void s_pause(void) const;
+		void s_fast_forward(void) const;
 		void s_max_speed_start(void) const;
 		void s_max_speed_stop(void) const;
 		void s_toggle_gui_in_window(void);
-		void s_open_settings(void);
+		void s_open_settings(void) const;
 		void s_state_save_slot_action(void);
 		void s_state_save_slot_incdec(void);
 		void s_state_save_slot_set(void);
 		void s_state_save_file(void);
 		void s_state_load_file(void);
-		void s_open_ddip(void);
-		void s_open_djsc(void);
+		static void s_open_ddip(void);
+		static void s_open_djsc(void);
 		void s_tape_play(void);
 		void s_tape_record(void);
-		void s_tape_stop(void);
-		void s_show_log(void);
+		static void s_tape_stop(void);
+		static void s_show_log(void);
 		void s_help(void);
 
 	private slots:
-		void s_fullscreen(void);
 		void s_shcjoy_read_timer(void);
 		void s_received_message(quint32 instanceId, const QByteArray &message);
 		void s_exec_message(void);
 		void s_nsf_author_note_close(void);
 
 	private slots:
-		void s_shcut_mode(void);
-		void s_shcut_scale(void);
-		void s_shcut_interpolation(void);
-		void s_shcut_integer_in_fullscreen(void);
-		void s_shcut_stretch_in_fullscreen(void);
-		void s_shcut_audio_enable(void);
-		void s_shcut_save_settings(void);
+		void s_shcut_mode(void) const;
+		void s_shcut_scale(void) const;
+		static void s_shcut_interpolation(void);
+		static void s_shcut_integer_in_fullscreen(void);
+		static void s_shcut_stretch_in_fullscreen(void);
+		static void s_shcut_audio_enable(void);
+		static void s_shcut_save_settings(void);
 		void s_shcut_rwnd_active_deactive_mode(void) const;
 		void s_shcut_rwnd_step_backward(void) const;
 		void s_shcut_rwnd_fast_backward(void) const;
@@ -357,10 +357,53 @@ class mainWindow : public QMainWindow, public Ui::mainWindow {
 		void s_et_reset(BYTE type);
 		void s_et_gg_reset(void);
 		void s_et_vs_reset(void);
-		void s_et_external_control_windows_show(void);
+		static void s_et_external_control_windows_show(void);
 		void s_et_toggle_menubar_from_mouse(void);
 		void s_et_nsf_author_note_open(const uTCHAR *string);
-		void s_et_nsf_author_note_close(void);
+		void s_et_nsf_author_note_close(void) const;
+};
+
+// ----------------------------------------------------------------------------------------------
+
+class wdgDlgMainWindow final : public wdgTitleBarDialog {
+	Q_OBJECT
+
+	public:
+		mainWindow *wd;
+
+	private:
+		bool fullscreen_resize;
+		bool setup_in_out_fullscreen;
+		QRect org_geom, fs_geom;
+
+	public:
+		explicit wdgDlgMainWindow(QWidget *parent = nullptr);
+		~wdgDlgMainWindow() override;
+
+	protected:
+#if defined (_WIN32)
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+		bool nativeEvent(const QByteArray &eventType, void *message, qintptr *result);
+#else
+		bool nativeEvent(const QByteArray &eventType, void *message, long *result);
+#endif
+#endif
+		bool eventFilter(QObject *obj, QEvent *event) override;
+		void closeEvent(QCloseEvent *event) override;
+		void resizeEvent(QResizeEvent *event) override;
+
+	public:
+		QScreen *win_handle_screen(void) const;
+		void update_gfx_monitor_dimension(bool adjust_fs_geom);
+		void set_dialog_geom(QRect &new_geom) const;
+
+	private:
+		void set_fullscreen(void);
+		static void geom_to_cfg(const QRect &save_geom, _last_geometry *lg);
+
+	private slots:
+		void s_set_fullscreen(void);
+		void s_toggle_gui_in_window(void);
 };
 
 #endif /* MAINWINDOW_HPP_ */

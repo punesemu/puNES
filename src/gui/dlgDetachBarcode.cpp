@@ -16,9 +16,7 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#include <QtCore/QTimer>
 #include <QtCore/QList>
-#include <QtGui/QScreen>
 #include "mainWindow.hpp"
 #include "dlgDetachBarcode.hpp"
 #include "gui.h"
@@ -188,40 +186,37 @@ dlgDetachBarcode::name_detach_barcode cardsSDGundamWars = {
 	{"Command Card: デンドロビウム",						"9366723460578"}
 };
 
-dlgDetachBarcode::dlgDetachBarcode(QWidget *parent) : QDialog(parent) {
-	setupUi(this);
+// ----------------------------------------------------------------------------------------------
 
-	setWindowFlags(Qt::Dialog | Qt::FramelessWindowHint);
-	setAttribute(Qt::WA_DeleteOnClose);
+wdgDlgDetachBarcode::wdgDlgDetachBarcode(QWidget *parent) : wdgTitleBarDialog(parent) {
+	wd = new dlgDetachBarcode(this);
+	setWindowTitle(wd->windowTitle());
+	setWindowIcon(QIcon(":/icon/icons/barcode.svgz"));
+	set_border_color("yellow");
+	set_buttons(barButton::Close);
+	set_permit_resize(false);
+	add_widget(wd);
+}
+wdgDlgDetachBarcode::~wdgDlgDetachBarcode() = default;
+
+void wdgDlgDetachBarcode::closeEvent(QCloseEvent *event) {
+	if (gui.start) {
+		mainwin->wd->s_set_detach_barcode_window();
+		event->ignore();
+	}
+	wdgTitleBarDialog::closeEvent(event);
+}
+
+// ----------------------------------------------------------------------------------------------
+
+dlgDetachBarcode::dlgDetachBarcode(QWidget *parent) : QWidget(parent) {
+	setupUi(this);
 
 	ndb = cardsDefault;
 
 	connect(listWidget_Barcodes, SIGNAL(itemClicked(QListWidgetItem*)), this, SLOT(s_barcode_click(QListWidgetItem*)));
 	connect(listWidget_Barcodes, SIGNAL(itemDoubleClicked(QListWidgetItem*)), this, SLOT(s_barcode_doubleclick(QListWidgetItem*)));
 	connect(pushButton_Apply, SIGNAL(clicked(bool)), this, SLOT(s_apply_clicked(bool)));
-
-	adjustSize();
-
-	{
-		QMargins vgbm = verticalLayout_groupBox_Detach_Barcode->contentsMargins();
-		QMargins vdia = verticalLayout_Detach_Barcode->contentsMargins();
-		themePushButton *close = new themePushButton(this);
-		int x = 0, y = 0, w = 0, h = 0;
-
-		w = close->fontMetrics().size(0, "x").width() + 10;
-		h = close->fontMetrics().size(0, "x").height() + 5;
-		x = normalGeometry().width() - w - vdia.right() - 2 - vgbm.right();
-		y = vdia.top() + 2 + 1;
-
-		close->setGeometry(x, y, w, h);
-		close->setText("x");
-
-		connect(close, SIGNAL(clicked(bool)), this, SLOT(s_x_clicked(bool)));
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-		vgbm.setTop(close->sizeHint().height() + 2);
-		verticalLayout_groupBox_Detach_Barcode->setContentsMargins(vgbm);
-#endif
-	}
 
 	installEventFilter(this);
 }
@@ -236,11 +231,11 @@ bool dlgDetachBarcode::eventFilter(QObject *obj, QEvent *event) {
 		default:
 			break;
 	}
-	return (QDialog::eventFilter(obj, event));
+	return (QWidget::eventFilter(obj, event));
 }
 void dlgDetachBarcode::changeEvent(QEvent *event) {
 	if (event->type() == QEvent::LanguageChange) {
-		Ui::dlgDetachBarcode::retranslateUi(this);
+		retranslateUi(this);
 		if(listWidget_Barcodes->count() > 0) {
 			QListWidgetItem* item = listWidget_Barcodes->item(0);
 
@@ -251,24 +246,8 @@ void dlgDetachBarcode::changeEvent(QEvent *event) {
 	}
 }
 
-int dlgDetachBarcode::update_pos(int startY) {
-	int x = parentWidget()->pos().x() + parentWidget()->frameGeometry().width();
-	int y = parentWidget()->geometry().y() + startY;
-	QRect g = QGuiApplication::primaryScreen()->virtualGeometry();
-
-	if ((x + frameGeometry().width() - g.left()) > g.width()) {
-		x = parentWidget()->pos().x() - frameGeometry().width();
-	}
-	move(QPoint(x, y));
-
-	if (isHidden()) {
-		return (0);
-	}
-
-	return (frameGeometry().height());
-}
-void dlgDetachBarcode::update_dialog(void) {
-	groupBox_Detach_Barcode->setEnabled(detach_barcode.enabled);
+void dlgDetachBarcode::update_dialog(void) const {
+	widget_Detach_Barcode->setEnabled(detach_barcode.enabled);
 }
 void dlgDetachBarcode::change_rom(void) {
 	ndb = cardsDefault;
@@ -295,7 +274,7 @@ void dlgDetachBarcode::change_rom(void) {
 	}
 }
 
-void dlgDetachBarcode::apply_barcode(void) {
+void dlgDetachBarcode::apply_barcode(void) const {
 	detach_barcode_bcode(uQStringCD(lineEdit_Barcode->text()));
 	gui_active_window();
 	gui_set_focus();
@@ -312,9 +291,6 @@ void dlgDetachBarcode::s_barcode_doubleclick(QListWidgetItem *item) {
 	s_barcode_click(item);
 	apply_barcode();
 }
-void dlgDetachBarcode::s_apply_clicked(UNUSED(bool checked)) {
+void dlgDetachBarcode::s_apply_clicked(UNUSED(bool checked)) const {
 	apply_barcode();
-}
-void dlgDetachBarcode::s_x_clicked(UNUSED(bool checked)) {
-	mainwin->s_set_detach_barcode_window();
 }

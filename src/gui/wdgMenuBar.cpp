@@ -30,9 +30,9 @@ void wdgMenuBar::mouseDoubleClickEvent(QMouseEvent *event) {
 	}
 
 	if (event->button() == Qt::LeftButton) {
-		mainwin->toggle_toolbars();
-		cfg->toolbar.hidden = mainwin->toolbar->isHidden();
+		mainwin->wd->toggle_toolbars();
+		cfg->toolbar.hidden = mainwin->wd->toolbar->isHidden();
 	} else if (event->button() == Qt::RightButton) {
-		mainwin->action_Toggle_GUI_in_window->trigger();
+		mainwin->wd->action_Toggle_GUI_in_window->trigger();
 	}
 }

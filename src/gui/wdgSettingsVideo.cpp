@@ -184,7 +184,7 @@ wdgSettingsVideo::wdgSettingsVideo(QWidget *parent) : QWidget(parent) {
 		bool visible = false;
 
 #if defined (FULLSCREEN_RESFREQ)
-		if (!gfx.is_wayland) {
+		if (!gfx.wayland.enabled) {
 			visible = true;
 			gfx_monitor_enum_monitors();
 			connect(checkBox_Fullscreen_adaptive_rrate, SIGNAL(clicked(bool)), this, SLOT(s_adaptive_rrate(bool)));
@@ -198,10 +198,42 @@ wdgSettingsVideo::wdgSettingsVideo(QWidget *parent) : QWidget(parent) {
 		checkBox_Fullscreen_adaptive_rrate->setVisible(visible);
 		label_Fullscreen_adaptive_rrate_note_asterisk->setVisible(visible);
 		label_Fullscreen_resolution_note->setVisible(visible);
-		checkBox_Fullscreen_in_window->setVisible(!gfx.is_wayland);
+		checkBox_Fullscreen_in_window->setVisible(!gfx.only_fullscreen_in_window);
 	}
 
 	tabWidget_Video->setCurrentIndex(0);
+
+	widget_NTSC_Bisqwit_Filter->setVisible(false);
+	widget_NTSC_Filter->setVisible(false);
+	widget_NTSC_LMP88959_Filter->setVisible(false);
+	widget_NTSC_NESRGB_LMP88959_Filter->setVisible(false);
+	widget_PAL_LMP88959_Filter->setVisible(false);
+	widget_PAL_NESRGB_LMP88959_Filter->setVisible(false);
+
+	{
+		int dim = fontMetrics().height();
+
+		icon_Misc->setPixmap(QIcon(":/icon/icons/misc.svgz").pixmap(dim, dim));
+		icon_Screen_Scale->setPixmap(QIcon(":/icon/icons/scale.svgz").pixmap(dim, dim));
+		icon_Screen_Oscan->setPixmap(QIcon(":/icon/icons/overscan_set_borders.svgz").pixmap(dim, dim));
+		icon_Screen_PAR->setPixmap(QIcon(":/icon/icons/pixel.svgz").pixmap(dim, dim));
+		icon_Screen_Rotation->setPixmap(QIcon(":/icon/icons/switch_sides.svgz").pixmap(dim, dim));
+		icon_Software_Filters->setPixmap(QIcon(":/icon/icons/graphic_design.svgz").pixmap(dim, dim));
+		icon_Filter->setPixmap(QIcon(":/icon/icons/chip.svgz").pixmap(dim, dim));
+		icon_GPU_Shaders->setPixmap(QIcon(":/icon/icons/cube.svgz").pixmap(dim, dim));
+		icon_Shader->setPixmap(QIcon(":/icon/icons/360_view.svgz").pixmap(dim, dim));
+		icon_Shader_file->setPixmap(QIcon(":/icon/icons/paper.svgz").pixmap(dim, dim));
+		icon_Filters_misc->setPixmap(QIcon(":/icon/icons/misc.svgz").pixmap(dim, dim));
+		icon_Palette_Selection->setPixmap(QIcon(":/icon/icons/palette.svgz").pixmap(dim, dim));
+		icon_Palette->setPixmap(QIcon(":/icon/icons/palettes_list.svgz").pixmap(dim, dim));
+		icon_Palette_file->setPixmap(QIcon(":/icon/icons/paper.svgz").pixmap(dim, dim));
+		icon_Palette_editor->setPixmap(QIcon(":/icon/icons/color_picker.svgz").pixmap(dim, dim));
+		icon_Palette_misc->setPixmap(QIcon(":/icon/icons/misc.svgz").pixmap(dim, dim));
+		icon_Fullscreen->setPixmap(QIcon(":/icon/icons/fullscreen.svgz").pixmap(dim, dim));
+#if defined (FULLSCREEN_RESFREQ)
+		icon_Fullscreen_resolution->setPixmap(QIcon(":/icon/icons/resolution.svgz").pixmap(dim, dim));
+#endif
+	}
 }
 wdgSettingsVideo::~wdgSettingsVideo() = default;
 
@@ -212,43 +244,21 @@ void wdgSettingsVideo::changeEvent(QEvent *event) {
 		QWidget::changeEvent(event);
 	}
 }
-void wdgSettingsVideo::showEvent(UNUSED(QShowEvent *event)) {
-	int dim = fontMetrics().height();
-
-	icon_Misc->setPixmap(QIcon(":/icon/icons/misc.svgz").pixmap(dim, dim));
-	icon_Screen_Scale->setPixmap(QIcon(":/icon/icons/scale.svgz").pixmap(dim, dim));
-	icon_Screen_Oscan->setPixmap(QIcon(":/icon/icons/overscan_set_borders.svgz").pixmap(dim, dim));
-	icon_Screen_PAR->setPixmap(QIcon(":/icon/icons/pixel.svgz").pixmap(dim, dim));
-	icon_Screen_Rotation->setPixmap(QIcon(":/icon/icons/switch_sides.svgz").pixmap(dim, dim));
-	icon_Software_Filters->setPixmap(QIcon(":/icon/icons/graphic_design.svgz").pixmap(dim, dim));
-	icon_Filter->setPixmap(QIcon(":/icon/icons/chip.svgz").pixmap(dim, dim));
-	icon_GPU_Shaders->setPixmap(QIcon(":/icon/icons/cube.svgz").pixmap(dim, dim));
-	icon_Shader->setPixmap(QIcon(":/icon/icons/360_view.svgz").pixmap(dim, dim));
-	icon_Shader_file->setPixmap(QIcon(":/icon/icons/paper.svgz").pixmap(dim, dim));
-	icon_Filters_misc->setPixmap(QIcon(":/icon/icons/misc.svgz").pixmap(dim, dim));
-	icon_Palette_Selection->setPixmap(QIcon(":/icon/icons/palette.svgz").pixmap(dim, dim));
-	icon_Palette->setPixmap(QIcon(":/icon/icons/palettes_list.svgz").pixmap(dim, dim));
-	icon_Palette_file->setPixmap(QIcon(":/icon/icons/paper.svgz").pixmap(dim, dim));
-	icon_Palette_editor->setPixmap(QIcon(":/icon/icons/color_picker.svgz").pixmap(dim, dim));
-	icon_Palette_misc->setPixmap(QIcon(":/icon/icons/misc.svgz").pixmap(dim, dim));
-	icon_Fullscreen->setPixmap(QIcon(":/icon/icons/fullscreen.svgz").pixmap(dim, dim));
-#if defined (FULLSCREEN_RESFREQ)
-	icon_Fullscreen_resolution->setPixmap(QIcon(":/icon/icons/resolution.svgz").pixmap(dim, dim));
-#endif
-}
 
 void wdgSettingsVideo::retranslateUi(QWidget *wdgSettingsVideo) {
 	Ui::wdgSettingsVideo::retranslateUi(wdgSettingsVideo);
-	mainwin->qaction_shcut.scale_1x->setText(pushButton_Scale_1x->text());
-	mainwin->qaction_shcut.scale_2x->setText(pushButton_Scale_2x->text());
-	mainwin->qaction_shcut.scale_3x->setText(pushButton_Scale_3x->text());
-	mainwin->qaction_shcut.scale_4x->setText(pushButton_Scale_4x->text());
-	mainwin->qaction_shcut.scale_5x->setText(pushButton_Scale_5x->text());
-	mainwin->qaction_shcut.scale_6x->setText(pushButton_Scale_6x->text());
-	mainwin->qaction_shcut.interpolation->setText(checkBox_Interpolation->text());
-	mainwin->qaction_shcut.integer_in_fullscreen->setText(checkBox_Use_integer_scaling_in_fullscreen->text());
-	mainwin->qaction_shcut.stretch_in_fullscreen->setText(checkBox_Stretch_in_fullscreen->text());
+	mainwin->wd->qaction_shcut.scale_1x->setText(pushButton_Scale_1x->text());
+	mainwin->wd->qaction_shcut.scale_2x->setText(pushButton_Scale_2x->text());
+	mainwin->wd->qaction_shcut.scale_3x->setText(pushButton_Scale_3x->text());
+	mainwin->wd->qaction_shcut.scale_4x->setText(pushButton_Scale_4x->text());
+	mainwin->wd->qaction_shcut.scale_5x->setText(pushButton_Scale_5x->text());
+	mainwin->wd->qaction_shcut.scale_6x->setText(pushButton_Scale_6x->text());
+	mainwin->wd->qaction_shcut.interpolation->setText(checkBox_Interpolation->text());
+	mainwin->wd->qaction_shcut.integer_in_fullscreen->setText(checkBox_Use_integer_scaling_in_fullscreen->text());
+	mainwin->wd->qaction_shcut.stretch_in_fullscreen->setText(checkBox_Stretch_in_fullscreen->text());
 	update_widget();
+	adjustSize();
+	updateGeometry();
 }
 void wdgSettingsVideo::update_widget(void) {
 	scale_set();
@@ -335,7 +345,7 @@ void wdgSettingsVideo::update_widget(void) {
 	checkBox_Stretch_in_fullscreen->setChecked(cfg->stretch);
 	checkBox_Stretch_in_fullscreen->setEnabled(!cfg->integer_scaling);
 #if defined (FULLSCREEN_RESFREQ)
-	if (!gfx.is_wayland) {
+	if (!gfx.wayland.enabled) {
 		checkBox_Fullscreen_adaptive_rrate->setEnabled(!checkBox_Fullscreen_in_window->isChecked());
 		checkBox_Fullscreen_adaptive_rrate->setChecked(cfg->adaptive_rrate);
 		resolution_set();

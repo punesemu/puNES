@@ -121,7 +121,6 @@ typedef struct _gfx {
 	BYTE scale_before_fscreen;
 	BYTE type_of_fscreen_in_use;
 	BYTE bit_per_pixel;
-	BYTE is_wayland;
 	BYTE screen_rotation;
 	float width_pixel;
 	WORD rows, lines;
@@ -133,6 +132,10 @@ typedef struct _gfx {
 	uTCHAR last_shader_file[LENGTH_FILE_NAME_LONG];
 	_viewport vp;
 	BYTE filter_linear;
+	BYTE only_fullscreen_in_window;
+	struct _wayland {
+		BYTE enabled;
+	} wayland;
 	struct _gfx_frame {
 		uint64_t totals;
 		uint64_t filtered;

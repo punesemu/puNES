@@ -43,7 +43,7 @@ wdgRotateScreen::~wdgRotateScreen() = default;
 
 void wdgRotateScreen::changeEvent(QEvent *event) {
 	if (event->type() == QEvent::LanguageChange) {
-		Ui::wdgRotateScreen::retranslateUi(this);
+		retranslateUi(this);
 	} else {
 		QWidget::changeEvent(event);
 	}
