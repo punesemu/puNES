@@ -84,7 +84,7 @@ wdgCheatsEditor::wdgCheatsEditor(QWidget *parent) : QWidget(parent) {
 	}
 
 	{
-		toUpValidator *val = new toUpValidator(this);
+		const toUpValidator *val = new toUpValidator(this);
 
 		lineEdit_GG->setValidator(val);
 		lineEdit_ProAR->setValidator(val);
@@ -137,7 +137,7 @@ wdgCheatsEditor::wdgCheatsEditor(QWidget *parent) : QWidget(parent) {
 	connect(pushButton_Cancel_Cheat, SIGNAL(clicked(bool)), this, SLOT(s_cancel(bool)));
 
 	{
-		int w = QLabel("0000000000").sizeHint().width() + 10;
+		const int w = QLabel("0000000000").sizeHint().width() + 10;
 
 		lineEdit_CPU_Ram->setMinimumWidth(w);
 		lineEdit_GG->setMinimumWidth(w);
@@ -178,13 +178,13 @@ void wdgCheatsEditor::showEvent(QShowEvent *event) {
 	QWidget::showEvent(event);
 }
 
-void wdgCheatsEditor::stylesheet_update(void) {
+void wdgCheatsEditor::stylesheet_update(void) const {
 	label_color_CPU_Ram->setStyleSheet(stylesheet_label(QColor("#FCD7F8")));
 	label_color_GG->setStyleSheet(stylesheet_label(QColor("cyan")));
 	label_color_ProAR->setStyleSheet(stylesheet_label(QColor("yellow")));
 }
 
-void wdgCheatsEditor::hide_tools_widgets(bool state) {
+void wdgCheatsEditor::hide_tools_widgets(const bool state) const {
 	if (widget_Edit->isHidden() == state) {
 		return;
 	}
@@ -216,16 +216,16 @@ void wdgCheatsEditor::populate_cheat_table(void) {
 }
 
 QString wdgCheatsEditor::stylesheet_label(const QColor &color) {
-	QColor background = theme::get_grayed_color(color);
-	QString stylesheet =
-			"QLabel {"\
-"	background-color: %0;"\
-" }";
+	const QColor background = theme::get_grayed_color(color);
+	const QString stylesheet =
+		"QLabel {"\
+		"	background-color: %0;"\
+		" }";
 
-	return stylesheet.arg(background.name());
+	return (stylesheet.arg(background.name()));
 }
 
-chl_map wdgCheatsEditor::extract_cheat_from_row(int row) {
+chl_map wdgCheatsEditor::extract_cheat_from_row(const int row) const {
 	chl_map cheat;
 
 	cheat.clear();
@@ -247,7 +247,7 @@ chl_map wdgCheatsEditor::extract_cheat_from_row(int row) {
 
 	return (cheat);
 }
-void wdgCheatsEditor::insert_cheat_row(int row) {
+void wdgCheatsEditor::insert_cheat_row(const int row) {
 	chl_map cheat = objch->cheats.at(row);
 	QTableWidgetItem *col;
 
@@ -297,7 +297,7 @@ void wdgCheatsEditor::insert_cheat_row(int row) {
 
 	update_cheat_row(row, &cheat);
 }
-void wdgCheatsEditor::update_cheat_row(int row, chl_map *cheat) {
+void wdgCheatsEditor::update_cheat_row(const int row, chl_map *cheat) const {
 	QCheckBox *active = tableWidget_Cheats->cellWidget(row, CR_ACTIVE)->findChild<QCheckBox*>("active");
 
 	active->blockSignals(true);
@@ -334,15 +334,14 @@ void wdgCheatsEditor::update_cheat_row(int row, chl_map *cheat) {
 
 	update_color_row(row, (*cheat)["enabled"].toInt() == 1);
 }
-void wdgCheatsEditor::update_color_row(int row, bool active) {
+void wdgCheatsEditor::update_color_row(const int row, const bool active) const {
 	QBrush brush = QBrush(QColor::fromRgb(255, 255, 255, 0));
-	int i;
 
 	if (active == 1) {
 		brush = QBrush(theme::get_grayed_color(QColor::fromRgb(214, 255, 182, 255)));
 	}
 
-	for (i = 0; i < tableWidget_Cheats->columnCount(); i++) {
+	for (int i = 0; i < tableWidget_Cheats->columnCount(); i++) {
 		QTableWidgetItem *item = tableWidget_Cheats->item(row, i);
 
 		if (!item || (i == CR_CODE)) {
@@ -371,7 +370,7 @@ void wdgCheatsEditor::linedit_select_all(QLineEdit *le) {
 	le->setFocus(Qt::ActiveWindowFocusReason);
 	QTimer::singleShot(0, le, &QLineEdit::selectAll);
 }
-void wdgCheatsEditor::cheat_tableview_resize(void) {
+void wdgCheatsEditor::cheat_tableview_resize(void) const {
 	QHeaderView *hv = tableWidget_Cheats->horizontalHeader();
 
 	tableWidget_Cheats->setColumnCount(tableWidget_Cheats->columnCount() + 1);
@@ -398,7 +397,7 @@ void wdgCheatsEditor::cheat_tableview_resize(void) {
 	hv->setSectionResizeMode(CR_VALUE, QHeaderView::ResizeToContents);
 	hv->setSectionResizeMode(CR_COMPARE, QHeaderView::ResizeToContents);
 }
-void wdgCheatsEditor::populate_lineedit_gg_rocky(bool control_widgets) {
+void wdgCheatsEditor::populate_lineedit_gg_rocky(const bool control_widgets) const {
 	bool gg = true, rocky = true;
 	_cheat ch;
 
@@ -458,7 +457,7 @@ void wdgCheatsEditor::populate_lineedit_gg_rocky(bool control_widgets) {
 		return;
 	}
 }
-void wdgCheatsEditor::populate_edit_raw(_cheat *cheat) {
+void wdgCheatsEditor::populate_edit_raw(const _cheat *cheat) {
 	if (cheat) {
 		hexSpinBox_Address->setValue(cheat->address);
 		hexSpinBox_Value->setValue(cheat->replace);
@@ -468,7 +467,7 @@ void wdgCheatsEditor::populate_edit_raw(_cheat *cheat) {
 		s_compare(cheat->enabled_compare ? Qt::Checked : Qt::Unchecked);
 	}
 }
-chl_map wdgCheatsEditor::extract_cheat_from_edit_widget(void) {
+chl_map wdgCheatsEditor::extract_cheat_from_edit_widget(void) const {
 	chl_map cheat;
 
 	cheat.clear();
@@ -499,7 +498,7 @@ chl_map wdgCheatsEditor::extract_cheat_from_edit_widget(void) {
 
 	return (cheat);
 }
-void wdgCheatsEditor::populate_edit_widgets(int row) {
+void wdgCheatsEditor::populate_edit_widgets(const int row) {
 	chl_map cheat;
 
 	if (row < 0) {
@@ -539,7 +538,7 @@ void wdgCheatsEditor::clear_edit_widgets(void) {
 	populate_edit_raw(&ch);
 	populate_lineedit_gg_rocky(false);
 }
-void wdgCheatsEditor::set_edit_widget(void) {
+void wdgCheatsEditor::set_edit_widget(void) const {
 	if (new_cheat || (tableWidget_Cheats->currentRow() >= 0)) {
 		label_Description->setEnabled(true);
 		lineEdit_Description->setEnabled(true);
@@ -554,7 +553,7 @@ void wdgCheatsEditor::set_edit_widget(void) {
 		frame_Buttons->setEnabled(true);
 	}
 }
-void wdgCheatsEditor::set_type_cheat_checkbox(chl_map *cheat) {
+void wdgCheatsEditor::set_type_cheat_checkbox(chl_map *cheat) const {
 	QRadioButton *button;
 
 	if (!cheat) {
@@ -579,7 +578,7 @@ void wdgCheatsEditor::set_type_cheat_checkbox(chl_map *cheat) {
 	button->setEnabled(true);
 	button->click();
 }
-void wdgCheatsEditor::set_edit_buttons(void) {
+void wdgCheatsEditor::set_edit_buttons(void) const {
 	if (new_cheat || modified_cheat) {
 		pushButton_Delete_Cheat->setEnabled(false);
 
@@ -606,7 +605,7 @@ void wdgCheatsEditor::set_edit_buttons(void) {
 }
 
 void wdgCheatsEditor::s_table_data_changed(const QModelIndex &topLeft, UNUSED(const QModelIndex &bottomRight),
-	UNUSED(const QVector<int> &roles)) {
+	UNUSED(const QVector<int> &roles)) const {
 	if (in_populate_cheat_table) {
 		return;
 	}
@@ -616,10 +615,8 @@ void wdgCheatsEditor::s_table_data_changed(const QModelIndex &topLeft, UNUSED(co
 	}
 }
 void wdgCheatsEditor::s_table_layout_changed(UNUSED(const QList<QPersistentModelIndex> &sourceParents),
-	UNUSED(QAbstractItemModel::LayoutChangeHint hint)) {
-	int i;
-
-	for (i = 0; i < tableWidget_Cheats->rowCount(); i++) {
+	UNUSED(QAbstractItemModel::LayoutChangeHint hint)) const {
+	for (int i = 0; i < tableWidget_Cheats->rowCount(); i++) {
 		update_color_row(i, (tableWidget_Cheats->item(i, CR_ACTIVE)->text() == "1"));
 	}
 }
@@ -661,12 +658,11 @@ void wdgCheatsEditor::s_cheat_item_state(int state) {
 
 	objch->apply_cheats();
 }
-void wdgCheatsEditor::s_hide_show_tools(UNUSED(bool checked)) {
+void wdgCheatsEditor::s_hide_show_tools(UNUSED(bool checked)) const {
 	hide_tools_widgets(!widget_Edit->isHidden());
 }
 void wdgCheatsEditor::s_import(UNUSED(bool checked)) {
 	QStringList filters;
-	QString file;
 
 	filters.append(tr("All supported formats"));
 	filters.append(tr("Nestopia XML files"));
@@ -680,11 +676,12 @@ void wdgCheatsEditor::s_import(UNUSED(bool checked)) {
 	filters[3].append(" (*.cht *.CHT)");
 	filters[3].append(" (*.cht *.CHT)");
 
-	file = QFileDialog::getOpenFileName(this, tr("Import Cheats"),
-		uQString(cfg->last_import_cheat_path), filters.join(";;"));
+	const QString file = QFileDialog::getOpenFileName(this, tr("Import Cheats"),
+		uQString(cfg->last_import_cheat_path),
+		filters.join(";;"));
 
 	if (!file.isNull()) {
-		QFileInfo fileinfo(file);
+		const QFileInfo fileinfo(file);
 
 		if (!fileinfo.suffix().compare("xml", Qt::CaseInsensitive)) {
 			objch->import_Nestopia_xml(this, fileinfo.absoluteFilePath());
@@ -705,7 +702,6 @@ void wdgCheatsEditor::s_import(UNUSED(bool checked)) {
 }
 void wdgCheatsEditor::s_export(UNUSED(bool checked)) {
 	QStringList filters;
-	QString file;
 
 	filters.append(tr("Nestopia XML files"));
 	filters.append(tr("All files"));
@@ -713,8 +709,9 @@ void wdgCheatsEditor::s_export(UNUSED(bool checked)) {
 	filters[0].append(" (*.xml *.XML)");
 	filters[1].append(" (*.*)");
 
-	file = QFileDialog::getSaveFileName(this, tr("Export cheats on file"),
-		QFileInfo(uQString(info.rom.file)).completeBaseName() + ".xml", filters.join(";;"));
+	const QString file = QFileDialog::getSaveFileName(this, tr("Export cheats on file"),
+		QFileInfo(uQString(info.rom.file)).completeBaseName() + ".xml",
+		filters.join(";;"));
 
 	if (!file.isNull()) {
 		QFileInfo fileinfo(file);
@@ -768,7 +765,7 @@ void wdgCheatsEditor::s_grp_type_cheat(UNUSED(QAbstractButton *button)) {
 	s_hexspinbox_value_changed(0);
 }
 void wdgCheatsEditor::s_gg_proar_text_edited(UNUSED(const QString &text)) {
-	QLineEdit *le = qobject_cast<QLineEdit *>(sender());
+	const QLineEdit *le = qobject_cast<QLineEdit *>(sender());
 	bool enabled = true;
 	_cheat cheat;
 
@@ -801,8 +798,8 @@ void wdgCheatsEditor::s_gg_proar_text_edited(UNUSED(const QString &text)) {
 	populate_edit_raw(&cheat);
 	in_lineedit_text_changed = false;
 }
-void wdgCheatsEditor::s_copy(UNUSED(bool checked)) {
-	int index = QVariant(((QObject *)sender())->property("myValue")).toInt();
+void wdgCheatsEditor::s_copy(UNUSED(bool checked)) const {
+	const int index = QVariant(((QObject *)sender())->property("myValue")).toInt();
 	QClipboard *clip = QApplication::clipboard();
 	QLineEdit *le;
 
@@ -832,7 +829,7 @@ void wdgCheatsEditor::s_compare(int state) {
 	s_hexspinbox_value_changed(0);
 }
 void wdgCheatsEditor::s_new(UNUSED(bool checked)) {
-	int index = QVariant(((QObject *)sender())->property("myValue")).toInt();
+	const int index = QVariant(((QObject *)sender())->property("myValue")).toInt();
 	QLineEdit *le = nullptr;
 	QRadioButton *rb;
 
@@ -941,7 +938,7 @@ void wdgCheatsEditor::s_cancel(UNUSED(bool checked)) {
 
 // ----------------------------------------------------------------------------------------------
 
-hexSpinBox::hexSpinBox(QWidget *parent, int dgts) : QSpinBox(parent) {
+hexSpinBox::hexSpinBox(QWidget *parent, const int dgts) : QSpinBox(parent) {
 	digits = dgts;
 	no_prefix = false;
 
@@ -976,13 +973,12 @@ bool hexSpinBox::eventFilter(QObject *obj, QEvent *event) {
 	} else if (event->type() == QEvent::FocusOut) {
 		no_prefix = false;
 	}
-
 	return (QObject::eventFilter(obj, event));
 }
 QValidator::State hexSpinBox::validate(QString &text, int &pos) const {
 	return (validator->validate(text, pos));
 }
-QString hexSpinBox::textFromValue(int value) const {
+QString hexSpinBox::textFromValue(const int value) const {
 	if (no_prefix) {
 		return (QString(QString("%1").arg(value, digits, 16, QChar('0')).toUpper()));
 	} else {

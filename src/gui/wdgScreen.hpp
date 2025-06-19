@@ -49,7 +49,7 @@ typedef struct _wdgScreen_mouse_event {
 	int x, y;
 } _wdgScreen_mouse_event;
 
-class wdgScreen : public QWidget {
+class wdgScreen final : public QWidget {
 	Q_OBJECT
 
 	public:
@@ -90,13 +90,13 @@ class wdgScreen : public QWidget {
 		void cursor_hide(BYTE hide);
 
 	private:
-		void menu_copy(QMenu *src, QMenu *dst, bool src_as_root);
+		static void menu_copy(const QMenu *src, QMenu *dst, bool src_as_root);
 
 	private slots:
 		void s_cursor_set(void);
 		void s_cursor_hide(int hide);
 		void s_paste_event(void);
-		void s_capture_input_event(void);
+		static void s_capture_input_event(void);
 		void s_context_menu(const QPoint &pos);
 };
 

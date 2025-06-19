@@ -159,8 +159,7 @@ void wdgScreen::dragEnterEvent(QDragEnterEvent *event) {
 }
 void wdgScreen::dropEvent(QDropEvent *event) {
 	foreach (const QUrl &url, event->mimeData()->urls()) {
-		QFileInfo fileinfo(url.toLocalFile());
-		_uncompress_archive *archive;
+		const QFileInfo fileinfo(url.toLocalFile());
 		BYTE is_rom = FALSE, is_patch = FALSE, rc;
 		uTCHAR *rom, *patch = nullptr;
 
@@ -170,7 +169,7 @@ void wdgScreen::dropEvent(QDropEvent *event) {
 			rom = info.rom.file;
 		}
 
-		archive = uncompress_archive_alloc(uQStringCD(fileinfo.absoluteFilePath()), &rc);
+		_uncompress_archive *archive = uncompress_archive_alloc(uQStringCD(fileinfo.absoluteFilePath()), &rc);
 
 		if (rc == UNCOMPRESS_EXIT_OK) {
 			if (archive->rom.count > 0) {
@@ -257,10 +256,10 @@ void wdgScreen::cursor_init(void) {
 void wdgScreen::cursor_set(void) {
 	emit et_cursor_set();
 }
-void wdgScreen::cursor_hide(BYTE hide) {
+void wdgScreen::cursor_hide(const BYTE hide) {
 	emit et_cursor_hide(hide);
 }
-void wdgScreen::menu_copy(QMenu *src, QMenu *dst, bool src_as_root) {
+void wdgScreen::menu_copy(const QMenu *src, QMenu *dst, const bool src_as_root) {
 	QMenu *submenu, *root = dst;
 
 	if (src_as_root) {
@@ -298,7 +297,7 @@ void wdgScreen::s_cursor_set(void) {
 		unsetCursor();
 	}
 }
-void wdgScreen::s_cursor_hide(int hide) {
+void wdgScreen::s_cursor_hide(const int hide) {
 	if (hide) {
 		setCursor(Qt::BlankCursor);
 	} else {
@@ -327,7 +326,7 @@ void wdgScreen::s_context_menu(const QPoint &pos) {
 	menu.addSection(tr("NES"));
 	menu_copy(mainwin->wd->menu_NES, &menu, false);
 	if (nes_keyboard.enabled) {
-		QString *sc = (QString *)settings_inp_rd_sc(SET_INP_SC_TOGGLE_CAPTURE_INPUT, KEYBOARD);
+		const QString *sc = (QString *)settings_inp_rd_sc(SET_INP_SC_TOGGLE_CAPTURE_INPUT, KEYBOARD);
 		const QClipboard *clipboard = QApplication::clipboard();
 		const QMimeData *mimeData = clipboard->mimeData();
 		QAction *action = new QAction(this);
@@ -348,8 +347,8 @@ void wdgScreen::s_context_menu(const QPoint &pos) {
 		//release/capture input
 		action = new QAction(this);
 		action->setText(
-			(gui.capture_input ? tr("Release input") : tr("Capure Input")) +
-			(sc == NULL ? "" : QString("\t%0").arg((*sc))));
+			(gui.capture_input ? tr("Release input") : tr("Capture Input")) +
+			(sc == nullptr ? "" : QString("\t%0").arg((*sc))));
 		action->setIcon(QIcon(gui.capture_input
 			? ":/pics/pics/hostkey.png"
 			: ":/pics/pics/hostkey_captured.png"));

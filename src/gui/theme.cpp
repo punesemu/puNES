@@ -147,14 +147,14 @@ QColor theme::get_theme_color(const QColor &base_color) {
 		int h, s, l;
 
 		if (base_color == QApplication::palette().dark().color()) {
-			return QApplication::palette().light().color();
+			return (QApplication::palette().light().color());
 		}
 		if (base_color == QApplication::palette().light().color()) {
-			return QApplication::palette().dark().color();
+			return (QApplication::palette().dark().color());
 		}
 		base_color.getHsl(&h, &s, &l);
 		l = 255 - l;
-		return QColor::fromHsl(h, s, l);
+		return (QColor::fromHsl(h, s, l));
 	}
 	return (base_color);
 }
@@ -163,10 +163,10 @@ QColor theme::get_theme_aware_color(const QColor &base_color) {
 		int h, s, l;
 
 		if (base_color == QApplication::palette().dark().color()) {
-			return QApplication::palette().light().color();
+			return (QApplication::palette().light().color());
 		}
 		if (base_color == QApplication::palette().light().color()) {
-			return QApplication::palette().dark().color();
+			return (QApplication::palette().dark().color());
 		}
 		base_color.getHsl(&h, &s, &l);
 		// calcolo la luminosità complementare
@@ -175,7 +175,7 @@ QColor theme::get_theme_aware_color(const QColor &base_color) {
 		// riduco leggermente la saturazione per i temi scuri
 		s = s * 0.9f;
 
-		return QColor::fromHsl(h, s, brightness);
+		return (QColor::fromHsl(h, s, brightness));
 	}
 	return (base_color);
 }
@@ -186,21 +186,21 @@ QColor theme::get_theme_adaptive_color(const QColor &base_color) {
 		int h, s, l;
 
 		if (base_color == QApplication::palette().dark().color()) {
-			return QApplication::palette().light().color();
+			return (QApplication::palette().light().color());
 		}
 		if (base_color == QApplication::palette().light().color()) {
-			return QApplication::palette().dark().color();
+			return (QApplication::palette().dark().color());
 		}
 		base_color.getHsl(&h, &s, &l);
 		if (brightness > 0.5f) {
 			// per colori chiari, scurisco mantenendo la tonalità
 			// riduco la luminosità del 60%
 			l = l * 0.4f;
-			return QColor::fromHsl(h, s, l);
+			return (QColor::fromHsl(h, s, l));
 		} else {
 			// per colori scuri, aumento la luminosità
 			l = qMin(255, l * 2);
-			return QColor::fromHsl(h, s, l);
+			return (QColor::fromHsl(h, s, l));
 		}
 	}
 	return (base_color);

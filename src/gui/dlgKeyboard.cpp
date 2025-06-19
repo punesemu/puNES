@@ -183,19 +183,25 @@ void dlgKeyboard::reset(void) {
 
 	retranslateUi(this);
 }
-void dlgKeyboard::add_buttons(wdgKeyboard *wk, wdgKeyboard::_button buttons[], int totals) {
+void dlgKeyboard::add_buttons(const wdgKeyboard *wk, wdgKeyboard::_button buttons[], const int totals) {
 	QList<keyboardButton *> kb_list= wk->findChildren<keyboardButton *>();
-	int i;
 
-	for (i = 0; i < totals; i++) {
-		wdgKeyboard::_button *btn = &buttons[i];
-		int element = (btn->row * nes_keyboard.columns) + btn->column;
+	for (int i = 0; i < totals; i++) {
+		const wdgKeyboard::_button *btn = &buttons[i];
+		const int element = (btn->row * nes_keyboard.columns) + btn->column;
 
 		foreach (keyboardButton *kb, kb_list) {
 			if (!kb->objectName().compare(btn->object_name, Qt::CaseInsensitive)) {
-				DBWORD nscode = settings_inp_nes_keyboard_nscode(uQStringCD(kb->objectName()));
+				const DBWORD nscode = settings_inp_nes_keyboard_nscode(uQStringCD(kb->objectName()));
 
-				kb->set(nscode, (SWORD)(nes_keyboard.totals + i), (SBYTE)btn->row, (SBYTE)btn->column, (SWORD)element, btn->modifier, btn->clr, btn->labels);
+				kb->set(nscode,
+					(SWORD)(nes_keyboard.totals + i),
+					(SBYTE)btn->row,
+					(SBYTE)btn->column,
+					(SWORD)element,
+					btn->modifier,
+					btn->clr,
+					btn->labels);
 				kbuttons[nes_keyboard.totals + i] = kb;
 				break;
 			}
@@ -204,14 +210,14 @@ void dlgKeyboard::add_buttons(wdgKeyboard *wk, wdgKeyboard::_button buttons[], i
 	nes_keyboard.totals += totals;
 	retranslateUi(this);
 }
-void dlgKeyboard::set_buttons(wdgKeyboard *wk, wdgKeyboard::_button buttons[], int totals) {
+void dlgKeyboard::set_buttons(const wdgKeyboard *wk, wdgKeyboard::_button buttons[], const int totals) {
 	reset();
 	memset(nes_keyboard.matrix, 0x00, sizeof(nes_keyboard.matrix));
 	nes_keyboard.totals = 0;
 	add_buttons(wk, buttons, totals);
 }
 
-void dlgKeyboard::set_charset(wdgKeyboard::_charset charset, wdgKeyboard::_delay delay) const {
+void dlgKeyboard::set_charset(const wdgKeyboard::_charset charset, const wdgKeyboard::_delay delay) const {
 	paste->set_charset(charset, delay);
 }
 bool dlgKeyboard::process_event(QEvent *event) {
@@ -232,7 +238,7 @@ bool dlgKeyboard::process_event(QEvent *event) {
 			return (gui.capture_input);
 		} else if (event->type() == QEvent::Shortcut) {
 			if (!paste->enable) {
-				QKeySequence key = ((QShortcutEvent *)event)->key();
+				const QKeySequence key = ((QShortcutEvent *)event)->key();
 
 				if (gui.capture_input &&
 					(key != mainwin->wd->shortcut[SET_INP_SC_TOGGLE_CAPTURE_INPUT]->key()) &&
@@ -244,7 +250,7 @@ bool dlgKeyboard::process_event(QEvent *event) {
 	}
 	return (false);
 }
-void dlgKeyboard::shortcut_toggle(BYTE is_this) {
+void dlgKeyboard::shortcut_toggle(const BYTE is_this) {
 	QObject *parent = nullptr;
 
 	if (is_this) {
@@ -255,7 +261,7 @@ void dlgKeyboard::shortcut_toggle(BYTE is_this) {
 	mainwin->wd->shortcut[SET_INP_SC_TOGGLE_CAPTURE_INPUT]->setParent(parent);
 	mainwin->wd->shortcut[SET_INP_SC_TOGGLE_NES_KEYBOARD]->setParent(parent);
 }
-void dlgKeyboard::button_press(keyboardButton *kb, keyevent_types type) {
+void dlgKeyboard::button_press(keyboardButton *kb, const keyevent_types type) {
 	nes_keyboard.matrix[kb->element] = 0x80;
 
 	switch (kb->modifier.type) {
@@ -323,12 +329,10 @@ void dlgKeyboard::button_press(keyboardButton *kb, keyevent_types type) {
 			break;
 	}
 }
-void dlgKeyboard::key_event_press(QKeyEvent *event, keyevent_types type) {
-	int i;
-
-	for (i = 0; i < nes_keyboard.totals; i++) {
+void dlgKeyboard::key_event_press(QKeyEvent *event, const keyevent_types type) {
+	for (int i = 0; i < nes_keyboard.totals; i++) {
 		if (kbuttons[i]->nscode == (DBWORD)qkeycode::toKeycode(event)) {
-			double now = gui_get_ms();
+			const double now = gui_get_ms();
 
 			if ((kbuttons[i]->nscode == last_press.nscode) && ((now - last_press.time) < 70)) {
 				break;
@@ -343,7 +347,7 @@ void dlgKeyboard::key_event_press(QKeyEvent *event, keyevent_types type) {
 		}
 	}
 }
-void dlgKeyboard::button_release(keyboardButton *kb, keyevent_types type) {
+void dlgKeyboard::button_release(keyboardButton *kb, const keyevent_types type) {
 	switch (kb->modifier.type) {
 		default:
 		case keyboardButton::MODIFIERS_NONE:
@@ -359,10 +363,8 @@ void dlgKeyboard::button_release(keyboardButton *kb, keyevent_types type) {
 			break;
 	}
 }
-void dlgKeyboard::key_event_release(QKeyEvent *event, keyevent_types type) {
-	int i;
-
-	for (i = 0; i < nes_keyboard.totals; i++) {
+void dlgKeyboard::key_event_release(QKeyEvent *event, const keyevent_types type) {
+	for (int i = 0; i < nes_keyboard.totals; i++) {
 		if (kbuttons[i]->nscode == (DBWORD)qkeycode::toKeycode(event)) {
 			button_release(kbuttons[i], type);
 			kbuttons[i]->pressed = FALSE;
@@ -371,11 +373,11 @@ void dlgKeyboard::key_event_release(QKeyEvent *event, keyevent_types type) {
 		}
 	}
 }
-void dlgKeyboard::switch_mode(BYTE dk_mode) {
+void dlgKeyboard::switch_mode(const BYTE dk_mode) const {
 	QList<themePushButton *> btn_list = widget_Mode->findChildren<themePushButton *>();
 
 	foreach (themePushButton *btn, btn_list) {
-		int index = btn->property("mtype").toInt();
+		const int index = btn->property("mtype").toInt();
 
 		if (index == dk_mode) {
 			emit btn->toggled(true);
@@ -411,18 +413,18 @@ void dlgKeyboard::replace_keyboard(wdgKeyboard *wk) {
 	setWindowTitle(keyboard->keyboard_name());
 	switch_size_factor(cfg_from_file.input.vk_size);
 }
-void dlgKeyboard::switch_size_factor(BYTE vk_size) {
+void dlgKeyboard::switch_size_factor(const BYTE vk_size) const {
 	QList<themePushButton *> btn_list = widget_Size->findChildren<themePushButton *>();
 
 	foreach (themePushButton *btn, btn_list) {
-		int index = btn->property("mtype").toInt();
+		const int index = btn->property("mtype").toInt();
 
 		if (index == vk_size) {
 			emit btn->toggled(true);
 		}
 	}
 }
-BYTE dlgKeyboard::get_size_factor(void) {
+BYTE dlgKeyboard::get_size_factor(void) const {
 	QList<themePushButton *> btn_list = widget_Size->findChildren<themePushButton *>();
 
 	foreach (themePushButton *btn, btn_list) {
@@ -430,9 +432,9 @@ BYTE dlgKeyboard::get_size_factor(void) {
 			return (BYTE)btn->property("mtype").toInt();
 		}
 	}
-	return VK_SIZE_10X;
+	return (VK_SIZE_10X);
 }
-void dlgKeyboard::apply_size_factor(double size_factor) {
+void dlgKeyboard::apply_size_factor(const double size_factor) const {
 	QList<keyboardButton *> kb_list;
 	QList<QWidget *> wdg_list = {};
 
@@ -451,8 +453,8 @@ void dlgKeyboard::apply_size_factor(double size_factor) {
 		kb->apply_size_factor(size_factor);
 	}
 }
-bool dlgKeyboard::one_click_find(keyboardButton *kb) {
-	QList<keyboardButton *>::iterator it = std::find(one_click.list.begin(), one_click.list.end(), kb);
+bool dlgKeyboard::one_click_find(const keyboardButton *kb) {
+	const QList<keyboardButton *>::iterator it = std::find(one_click.list.begin(), one_click.list.end(), kb);
 
 	if (it == one_click.list.end()) {
 		return (false);
@@ -543,8 +545,8 @@ void dlgKeyboard::s_size_factor(bool checked) {
 	QList<themePushButton *> btn_list = widget_Size->findChildren<themePushButton *>();
 
 	foreach (themePushButton *btn, btn_list) {
-		int index = btn->property("mtype").toInt();
-		QPushButton *button = qobject_cast<themePushButton*>(sender());
+		const int index = btn->property("mtype").toInt();
+		const QPushButton *button = qobject_cast<themePushButton*>(sender());
 
 		if (button == btn) {
 			qtHelper::pushbutton_set_checked(btn, true);
@@ -590,9 +592,8 @@ dlgCfgNSCode::dlgCfgNSCode(QWidget *parent, keyboardButton *button) : QWidget(pa
 
 	{
 		QString title = "???";
-		int i;
 
-		for (i = 0; i < button->labels.count(); i++) {
+		for (int i = 0; i < button->labels.count(); i++) {
 			if (!i) {
 				title = button->labels.at(i).label.simplified();
 			}
@@ -639,7 +640,7 @@ void dlgCfgNSCode::s_unset_clicked(UNUSED(bool checked)) {
 	nscode = 0;
 	label_Desc->setText("NULL");
 }
-void dlgCfgNSCode::s_apply_clicked(UNUSED(bool checked)) {
+void dlgCfgNSCode::s_apply_clicked(UNUSED(bool checked)) const {
 	button->nscode = nscode;
 	settings_inp_nes_keyboard_set_nscode(uQStringCD(button->objectName()), nscode);
 	settings_inp_save();
@@ -672,9 +673,9 @@ void keyboardButton::paintEvent(QPaintEvent *event) {
 		QPainter painter(this);
 		QStylePainter spainter(this);
 		QStyleOptionButton option;
-		qreal x, y, w, h;
 		QFont font = dlgkbd->font();
-		int i, corner = 4;
+		const int corner = 4;
+		int i;
 
 		initStyleOption(&option);
 
@@ -690,10 +691,10 @@ void keyboardButton::paintEvent(QPaintEvent *event) {
 		painter.setFont(font);
 		painter.setRenderHint(QPainter::Antialiasing);
 
-		x = 0;
-		y = 0;
-		w = (qreal)rect().width();
-		h = (qreal)rect().height();
+		qreal x = 0;
+		qreal y = 0;
+		const qreal w = (qreal)rect().width();
+		const qreal h = (qreal)rect().height();
 
 		if (dlgkbd->mode == dlgKeyboard::DK_SETUP) {
 			painter.save();
@@ -848,9 +849,10 @@ void keyboardButton::setMinimumSize(const QSize &s) {
 	QPushButton::setMinimumSize(s);
 }
 
-void keyboardButton::apply_size_factor(double factor) {
-	int min_width = (int)((double)minw * factor), min_heigth = (int)((double)minh * factor);
-	QSize ms = minimumSize();
+void keyboardButton::apply_size_factor(const double factor) {
+	const int min_width = (int)((double)minw * factor);
+	const int min_heigth = (int)((double)minh * factor);
+	const QSize ms = minimumSize();
 
 	if ((min_width > 0) && (min_width != ms.width())) {
 		setMinimumWidth(min_width);
@@ -860,8 +862,14 @@ void keyboardButton::apply_size_factor(double factor) {
 	}
 	size_factor = factor;
 }
-void keyboardButton::set(DBWORD nscode, SWORD index, SBYTE row, SBYTE column, SWORD element, modifier_types mtype,
-	const _color &clr, QList<_label> labels) {
+void keyboardButton::set(const DBWORD nscode,
+	const SWORD index,
+	const SBYTE row,
+	const SBYTE column,
+	const SWORD element,
+	const modifier_types mtype,
+	const _color &clr,
+	const QList<_label> &labels) {
 	this->row = row;
 	this->column = column;
 	this->nscode = nscode;
@@ -873,7 +881,7 @@ void keyboardButton::set(DBWORD nscode, SWORD index, SBYTE row, SBYTE column, SW
 	pressed = FALSE;
 	setEnabled(true);
 	{
-		QString style =
+		const QString style =
 			"keyboardButton {"\
 			"	background-color: %0;"\
 			"	border: 1px groove %1;"\
@@ -950,15 +958,14 @@ QString wdgKeyboard::keyboard_name(void) {
 	return (tr("Virtual Keyboard"));
 }
 void wdgKeyboard::ext_setup(void) {}
-SBYTE wdgKeyboard::calc_element(BYTE row, BYTE column) {
+SBYTE wdgKeyboard::calc_element(const BYTE row, const BYTE column) {
 	return ((SBYTE)((row * columns) + column));
 }
 QList<QList<SBYTE>> wdgKeyboard::parse_character(_character *ch) {
 	QList<QList<SBYTE>> elements;
 	QList<SBYTE> element;
-	int i;
 
-	for (i = 0; i < 4; i++) {
+	for (int i = 0; i < 4; i++) {
 		if (ch->elements[i] > 0) {
 			element.append(ch->elements[i]);
 		}
@@ -982,16 +989,14 @@ void pasteObject::reset(void) {
 	charset.clear();
 	parse_reset();
 }
-void pasteObject::set_charset(wdgKeyboard::_charset charset, wdgKeyboard::_delay delay) {
-	int i;
-
+void pasteObject::set_charset(const wdgKeyboard::_charset charset, const wdgKeyboard::_delay delay) {
 	this->delay.set = delay.set;
 	this->delay.unset = delay.unset;
 
 	this->charset.clear();
 
-	for (i = 0; i < charset.length; i++) {
-		wdgKeyboard::_character *c = &charset.set[i];
+	for (int i = 0; i < charset.length; i++) {
+		const wdgKeyboard::_character *c = &charset.set[i];
 
 		this->charset.append({ c->string, { c->elements[0], c->elements[1], c->elements[2], c->elements[3] } });
 	}
@@ -1060,9 +1065,8 @@ void pasteObject::parse_text(void) {
 
 				for (i = 0; i < charset.count(); i++) {
 					BYTE found = FALSE;
-					int a;
 
-					for (a = 0; a < charset[i].string.length(); a++) {
+					for (int a = 0; a < charset[i].string.length(); a++) {
 						if (!charset[i].string[a].compare(actual, cs)) {
 							character = &charset[i];
 							elements = dlgkbd->keyboard->parse_character(character);
@@ -1114,11 +1118,9 @@ void pasteObject::parse_reset(void) {
 	elements.clear();
 	element_index = 0;
 }
-void pasteObject::set_elements(BYTE value) {
+void pasteObject::set_elements(const BYTE value) const {
 	if (character) {
-		int i;
-
-		for (i = 0; i < 4; i++) {
+		for (int i = 0; i < 4; i++) {
 			if (character->elements[i] > 0) {
 				nes_keyboard.matrix[character->elements[i]] = value;
 			}
@@ -1909,9 +1911,8 @@ QList<QList<SBYTE>> familyBasicKeyboard::parse_character(wdgKeyboard::_character
 	QList<QList<SBYTE>> elements;
 	QList<SBYTE> element;
 	BYTE kana_found = FALSE;
-	int i;
 
-	for (i = 0; i < 4; i++) {
+	for (int i = 0; i < 4; i++) {
 		if (ch->elements[i] > 0) {
 			if (ch->elements[i] == calc_kana()) {
 				kana_found = TRUE;

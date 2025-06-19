@@ -300,13 +300,13 @@ QString dlgStdPad::stylesheet_label(const QColor &background) {
 		"	color: %6;"\
 		"}";
 
-	return stylesheet
+	return (stylesheet
 		.arg(background.name())
 		.arg(border.name())
 		.arg(text.name())
 		.arg(disabled_border.name())
 		.arg(disabled_background.name())
-		.arg(disabled_text.name());
+		.arg(disabled_text.name()));
 }
 QString dlgStdPad::stylesheet_frame(const QColor &border, const QColor &background) {
 	const QString stylesheet =
@@ -319,9 +319,9 @@ QString dlgStdPad::stylesheet_frame(const QColor &border, const QColor &backgrou
 		"	font-size: 8pt;"\
 		"}";
 
-	return stylesheet
+	return (stylesheet
 		.arg(border.name())
-		.arg(background.name());
+		.arg(background.name()));
 }
 QString dlgStdPad::stylesheet_pixmapbutton(void) {
 	QColor border = theme::get_theme_adaptive_color("#8F8F91");
@@ -364,7 +364,7 @@ QString dlgStdPad::stylesheet_pixmapbutton(void) {
 		"	border-color: %8;"\
 		"}";
 
-	return stylesheet
+	return (stylesheet
 		.arg(border.name())
 		.arg(gradient0.name())
 		.arg(gradient1.name())
@@ -373,7 +373,7 @@ QString dlgStdPad::stylesheet_pixmapbutton(void) {
 		.arg(disabled_text.name())
 		.arg(hover_gradient0.name())
 		.arg(hover_gradient1.name())
-		.arg(theme::get_focus_color().name());
+		.arg(theme::get_focus_color().name()));
 }
 QString dlgStdPad::stylesheet_left_button(void) const {
 	QColor base_color = theme::get_theme_color(palette().light().color());
@@ -418,15 +418,15 @@ QString dlgStdPad::stylesheet_left_button(void) const {
 		"	border-color: %2;"\
 		"}";
 
-	return stylesheet
+	return (stylesheet
 		.arg(lightGray.name())
 		.arg(darkGray.name())
-		.arg(theme::get_focus_color().name());
+		.arg(theme::get_focus_color().name()));
 }
 QString dlgStdPad::stylesheet_right_button(void) const {
-	return stylesheet_left_button()
+	return (stylesheet_left_button()
 		.replace("border-left", "border-right")
-		.replace("border-bottom-left-radius", "border-bottom-right-radius");
+		.replace("border-bottom-left-radius", "border-bottom-right-radius"));
 }
 
 bool dlgStdPad::keypress(QKeyEvent *event) {

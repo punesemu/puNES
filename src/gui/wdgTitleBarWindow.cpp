@@ -60,7 +60,7 @@ bool hoverWatcher::eventFilter(UNUSED(QObject *obj), QEvent *event) {
 		default:
 			break;
 	}
-	return false;
+	return (false);
 }
 void hoverWatcher::paintEvent(QPaintEvent *event) {
 	QStyleOption opt;
@@ -555,7 +555,7 @@ dialogExitCode wdgTitleBarWindow::exec(void) {
 	loop_in_exec = FALSE;
 	hide();
 	QTimer::singleShot(0, this, &wdgTitleBarWindow::close);
-	return dialog_exit_code;
+	return (dialog_exit_code);
 }
 
 void wdgTitleBarWindow::set_border_color(const QColor &color) {
@@ -717,14 +717,14 @@ bool wdgTitleBarWindow::start_system_move(void) const {
 #if QT_VERSION >= QT_VERSION_CHECK(5, 15, 0)
 	return (windowHandle()->startSystemMove());
 #else
-	return false;
+	return (false);
 #endif
 }
 bool wdgTitleBarWindow::start_system_resize(void) const {
 #if QT_VERSION >= QT_VERSION_CHECK(5, 15, 0)
 	return (windowHandle()->startSystemResize(edges));
 #else
-	return false;
+	return (false);
 #endif
 }
 

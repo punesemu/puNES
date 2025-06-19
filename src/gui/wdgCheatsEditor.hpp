@@ -25,7 +25,7 @@
 #include <QtWidgets/QSpinBox>
 #include "objCheat.hpp"
 
-class hexSpinBox : public QSpinBox {
+class hexSpinBox final : public QSpinBox {
 	private:
 		int digits;
 		bool no_prefix;
@@ -44,7 +44,7 @@ class hexSpinBox : public QSpinBox {
 
 #include "ui_wdgCheatsEditor.h"
 
-class wdgCheatsEditor : public QWidget, public Ui::wdgCheatEditor {
+class wdgCheatsEditor final : public QWidget, public Ui::wdgCheatEditor {
 	Q_OBJECT
 
 	private:
@@ -72,40 +72,40 @@ class wdgCheatsEditor : public QWidget, public Ui::wdgCheatEditor {
 		void showEvent(QShowEvent *event) override;
 
 	private:
-		void stylesheet_update(void);
+		void stylesheet_update(void) const;
 
 	public:
-		void hide_tools_widgets(bool state);
+		void hide_tools_widgets(bool state) const;
 		void populate_cheat_table(void);
 
 	private:
-		QString stylesheet_label(const QColor &color);
+		static QString stylesheet_label(const QColor &color);
 
 	private:
-		chl_map extract_cheat_from_row(int row);
+		chl_map extract_cheat_from_row(int row) const;
 		void insert_cheat_row(int row);
-		void update_cheat_row(int row, chl_map *cheat);
-		void update_color_row(int row, bool active);
+		void update_cheat_row(int row, chl_map *cheat) const;
+		void update_color_row(int row, bool active) const;
 
 	private:
 		void ctrl_last_cheat(void);
-		void linedit_select_all(QLineEdit *le);
-		void cheat_tableview_resize(void);
-		void populate_lineedit_gg_rocky(bool control_widgets);
-		void populate_edit_raw(_cheat *cheat);
-		chl_map extract_cheat_from_edit_widget(void);
+		static void linedit_select_all(QLineEdit *le);
+		void cheat_tableview_resize(void) const;
+		void populate_lineedit_gg_rocky(bool control_widgets) const;
+		void populate_edit_raw(const _cheat *cheat);
+		chl_map extract_cheat_from_edit_widget(void) const;
 		void populate_edit_widgets(int row);
 		void clear_edit_widgets(void);
-		void set_edit_widget(void);
-		void set_type_cheat_checkbox(chl_map *cheat);
-		void set_edit_buttons(void);
+		void set_edit_widget(void) const;
+		void set_type_cheat_checkbox(chl_map *cheat) const;
+		void set_edit_buttons(void) const;
 
 	private slots:
-		void s_table_data_changed(const QModelIndex &topLeft, const QModelIndex &bottomRight, const QVector<int> &roles);
-		void s_table_layout_changed(const QList<QPersistentModelIndex> &sourceParents, QAbstractItemModel::LayoutChangeHint hint);
+		void s_table_data_changed(const QModelIndex &topLeft, const QModelIndex &bottomRight, const QVector<int> &roles) const;
+		void s_table_layout_changed(const QList<QPersistentModelIndex> &sourceParents, QAbstractItemModel::LayoutChangeHint hint) const;
 		void s_cheat_item(void);
 		void s_cheat_item_state(int state);
-		void s_hide_show_tools(bool checked);
+		void s_hide_show_tools(bool checked) const;
 		void s_import(bool checked);
 		void s_export(bool checked);
 		void s_delete(bool checked);
@@ -114,7 +114,7 @@ class wdgCheatsEditor : public QWidget, public Ui::wdgCheatEditor {
 	private slots:
 		void s_grp_type_cheat(QAbstractButton *button);
 		void s_gg_proar_text_edited(const QString &text);
-		void s_copy(bool checked);
+		void s_copy(bool checked) const;
 		void s_hexspinbox_value_changed(int i);
 		void s_compare(int state);
 		void s_new(bool checked);

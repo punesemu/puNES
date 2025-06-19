@@ -27,7 +27,7 @@
 
 // ----------------------------------------------------------------------------------------------
 
-class keyboardButton : public QPushButton {
+class keyboardButton final : public QPushButton {
 	Q_OBJECT
 
 	public:
@@ -98,16 +98,20 @@ class keyboardButton : public QPushButton {
 
 	public:
 		void apply_size_factor(double factor);
-		void set(DBWORD nscode, SWORD index, SBYTE row, SBYTE column, SWORD element, modifier_types mtype,
-			const _color &clr, QList<_label> labels);
+		void set(DBWORD nscode,
+			SWORD index,
+			SBYTE row,
+			SBYTE column,
+			SWORD element,
+			modifier_types mtype,
+			const _color &clr,
+			const QList<_label> &labels);
 		void reset(void);
 };
 
 // ----------------------------------------------------------------------------------------------
 
 class wdgKeyboard : public QWidget {
-	Q_OBJECT
-
 	public:
 		typedef struct _character {
 			QList<QString> string;
@@ -158,9 +162,7 @@ class wdgKeyboard : public QWidget {
 
 // ----------------------------------------------------------------------------------------------
 
-class pasteObject : public QObject {
-	Q_OBJECT
-
+class pasteObject final : public QObject {
 	private:
 		enum paste_modes {
 			PASTE_SET,
@@ -197,16 +199,14 @@ class pasteObject : public QObject {
 
 	private:
 		void parse_reset(void);
-		void set_elements(BYTE value);
+		void set_elements(BYTE value) const;
 };
 
 // ----------------------------------------------------------------------------------------------
 
 #include "ui_wdgKeyboardFB.h"
 
-class familyBasicKeyboard : public wdgKeyboard, public Ui::wdgKeyboardFB {
-	Q_OBJECT
-
+class familyBasicKeyboard final : public wdgKeyboard, public Ui::wdgKeyboardFB {
 	public:
 		explicit familyBasicKeyboard(QWidget *parent = nullptr);
 		~familyBasicKeyboard() override;
@@ -221,7 +221,7 @@ class familyBasicKeyboard : public wdgKeyboard, public Ui::wdgKeyboardFB {
 		QList<QList<SBYTE>> parse_character(wdgKeyboard::_character *ch) override;
 
 	private:
-		keyboardButton::_color red_button(void);
+		static keyboardButton::_color red_button(void);
 		SBYTE calc_kana(void);
 		SBYTE calc_shift(void);
 		SBYTE calc_ctr(void);
@@ -234,9 +234,7 @@ class familyBasicKeyboard : public wdgKeyboard, public Ui::wdgKeyboardFB {
 
 #include "ui_wdgKeyboardSubor.h"
 
-class suborKeyboard : public wdgKeyboard, public Ui::wdgKeyboardSubor {
-	Q_OBJECT
-
+class suborKeyboard final : public wdgKeyboard, public Ui::wdgKeyboardSubor {
 	public:
 		explicit suborKeyboard(QWidget *parent = nullptr);
 		~suborKeyboard() override;
@@ -250,7 +248,7 @@ class suborKeyboard : public wdgKeyboard, public Ui::wdgKeyboardSubor {
 		void ext_setup(void) override;
 
 	private:
-		keyboardButton::_color gray_button(void);
+		static keyboardButton::_color gray_button(void);
 		SBYTE calc_shift(void);
 };
 
@@ -258,7 +256,7 @@ class suborKeyboard : public wdgKeyboard, public Ui::wdgKeyboardSubor {
 
 #include "ui_dlgCfgNSCode.h"
 
-class dlgCfgNSCode : public QWidget, public Ui::dlgCfgNSCode {
+class dlgCfgNSCode final : public QWidget, public Ui::dlgCfgNSCode {
 	Q_OBJECT
 
 	private:
@@ -278,14 +276,12 @@ class dlgCfgNSCode : public QWidget, public Ui::dlgCfgNSCode {
 	private slots:
 		void s_default_clicked(bool checked);
 		void s_unset_clicked(bool checked);
-		void s_apply_clicked(bool checked);
+		void s_apply_clicked(bool checked) const;
 };
 
 // ----------------------------------------------------------------------------------------------
 
-class wdgDlgCfgNSCode : public wdgTitleBarDialog {
-	Q_OBJECT
-
+class wdgDlgCfgNSCode final : public wdgTitleBarDialog {
 	public:
 		dlgCfgNSCode *wd;
 
@@ -298,7 +294,7 @@ class wdgDlgCfgNSCode : public wdgTitleBarDialog {
 
 #include "ui_dlgKeyboard.h"
 
-class dlgKeyboard : public QWidget, public Ui::dlgKeyboard {
+class dlgKeyboard final : public QWidget, public Ui::dlgKeyboard {
 	Q_OBJECT
 
 	public:
@@ -351,8 +347,8 @@ class dlgKeyboard : public QWidget, public Ui::dlgKeyboard {
 
 	public:
 		void reset(void);
-		void add_buttons(wdgKeyboard *wk, wdgKeyboard::_button buttons[], int totals);
-		void set_buttons(wdgKeyboard *wk, wdgKeyboard::_button buttons[], int totals);
+		void add_buttons(const wdgKeyboard *wk, wdgKeyboard::_button buttons[], int totals);
+		void set_buttons(const wdgKeyboard *wk, wdgKeyboard::_button buttons[], int totals);
 		void set_charset(wdgKeyboard::_charset charset, wdgKeyboard::_delay delay) const;
 		bool process_event(QEvent *event);
 		void shortcut_toggle(BYTE is_this);
@@ -360,7 +356,7 @@ class dlgKeyboard : public QWidget, public Ui::dlgKeyboard {
 		void key_event_press(QKeyEvent *event, keyevent_types type);
 		void button_release(keyboardButton *kb, keyevent_types type);
 		void key_event_release(QKeyEvent *event, keyevent_types type);
-		void switch_mode(BYTE dk_mode);
+		void switch_mode(BYTE dk_mode) const;
 
 	public:
 		void fake_keyboard(void);
@@ -369,10 +365,10 @@ class dlgKeyboard : public QWidget, public Ui::dlgKeyboard {
 
 	private:
 		void replace_keyboard(wdgKeyboard *wk);
-		BYTE get_size_factor(void);
-		void switch_size_factor(BYTE vk_size);
-		void apply_size_factor(double size_factor);
-		bool one_click_find(keyboardButton *kb);
+		BYTE get_size_factor(void) const;
+		void switch_size_factor(BYTE vk_size) const;
+		void apply_size_factor(double size_factor) const;
+		bool one_click_find(const keyboardButton *kb);
 		void one_click_append(keyboardButton *kb);
 		void one_click_remove(keyboardButton *kb);
 		void one_click_oneshot(keyboardButton *kb);
@@ -384,12 +380,12 @@ class dlgKeyboard : public QWidget, public Ui::dlgKeyboard {
 		void s_nes_keyboard(void);
 		void s_mode(bool checked);
 		void s_size_factor(bool checked);
-		void s_subor_extended_mode(bool checked);
+		static void s_subor_extended_mode(bool checked);
 };
 
 // ----------------------------------------------------------------------------------------------
 
-class wdgDlgKeyboard : public wdgTitleBarDialog {
+class wdgDlgKeyboard final : public wdgTitleBarDialog {
 	Q_OBJECT
 
 	public:
