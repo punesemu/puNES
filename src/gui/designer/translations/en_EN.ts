@@ -1745,6 +1745,10 @@
         <source>Create Empt&amp;y Disk</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Leave F&amp;ullscreen</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>nesKeyboardStatusBar</name>
@@ -2679,7 +2683,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Capure Input</source>
+        <source>Capture Input</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -3168,6 +3172,10 @@
     </message>
     <message>
         <source>Subor Keyboard</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Enter/Leave Fullscreen</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -4015,6 +4023,40 @@
     </message>
     <message>
         <source>Load state</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>wdgTitleBar</name>
+    <message>
+        <source>Leave Fullscreen</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fullscreen</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Restore Window</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Maximize Window</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Minimize Window</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Close Window</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>wdgTitleBarWindow</name>
+    <message>
+        <source>Drag to resize the Window</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
