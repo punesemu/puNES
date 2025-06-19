@@ -62,7 +62,6 @@ void wdgDlgUncomp::s_ok_clicked(UNUSED(bool checked)) {
 
 dlgUncomp::dlgUncomp(QWidget *parent, void *uncompress_archive, BYTE type) : QWidget(parent) {
 	_uncompress_archive *archive = (_uncompress_archive *)uncompress_archive;
-	uint32_t index;
 
 	if (archive == nullptr) {
 		return;
@@ -97,7 +96,7 @@ dlgUncomp::dlgUncomp(QWidget *parent, void *uncompress_archive, BYTE type) : QWi
 		}
 	}
 
-	index = 0;
+	uint32_t index = 0;
 
 	for (unsigned int i = 0; i < uncompress_archive_counter(archive, type); i++) {
 		uTCHAR *file;

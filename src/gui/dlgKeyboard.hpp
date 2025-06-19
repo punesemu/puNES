@@ -112,6 +112,8 @@ class keyboardButton final : public QPushButton {
 // ----------------------------------------------------------------------------------------------
 
 class wdgKeyboard : public QWidget {
+	Q_OBJECT
+
 	public:
 		typedef struct _character {
 			QList<QString> string;
@@ -207,6 +209,8 @@ class pasteObject final : public QObject {
 #include "ui_wdgKeyboardFB.h"
 
 class familyBasicKeyboard final : public wdgKeyboard, public Ui::wdgKeyboardFB {
+	Q_OBJECT
+
 	public:
 		explicit familyBasicKeyboard(QWidget *parent = nullptr);
 		~familyBasicKeyboard() override;
@@ -235,6 +239,8 @@ class familyBasicKeyboard final : public wdgKeyboard, public Ui::wdgKeyboardFB {
 #include "ui_wdgKeyboardSubor.h"
 
 class suborKeyboard final : public wdgKeyboard, public Ui::wdgKeyboardSubor {
+	Q_OBJECT
+
 	public:
 		explicit suborKeyboard(QWidget *parent = nullptr);
 		~suborKeyboard() override;

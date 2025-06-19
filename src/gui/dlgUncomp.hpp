@@ -26,7 +26,9 @@
 
 // ----------------------------------------------------------------------------------------------
 
-class dlgUncomp : public QWidget, public Ui::dlgUncomp {
+class dlgUncomp final : public QWidget, public Ui::dlgUncomp {
+	Q_OBJECT
+
 	public:
 		explicit dlgUncomp(QWidget *parent = nullptr, void *uncompress_archive = nullptr, BYTE type = UNCOMPRESS_TYPE_ALL);
 		~dlgUncomp() override;
@@ -34,7 +36,7 @@ class dlgUncomp : public QWidget, public Ui::dlgUncomp {
 
 // ----------------------------------------------------------------------------------------------
 
-class wdgDlgUncomp : public wdgTitleBarDialog {
+class wdgDlgUncomp final : public wdgTitleBarDialog {
 	Q_OBJECT
 
 	public:
