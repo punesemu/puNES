@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2024 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2026 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -40,7 +40,7 @@
 #define GITLAB      "https://gitlab.com/FHorse/puNES"
 #define DONATE      "https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=QPPXNRL5NAHDC"
 
-#define COPYRIGTH   " 2025 by " AUTHOR
+#define COPYRIGTH   " 2026 by " AUTHOR
 #define COPYRANSI   "(C)" COPYRIGTH
 #define COPYRUTF8   "&#169;" COPYRIGTH
 
