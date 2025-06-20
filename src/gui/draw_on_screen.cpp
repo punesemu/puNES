@@ -36,8 +36,15 @@ static INLINE int dos_ctr_w(int w, int min_w, int max_w);
 static INLINE int dos_ctr_h(int h, int min_h, int max_h);
 static INLINE int dos_round(double d0, double d1);
 static INLINE QSize dos_image_dim(const uTCHAR *resource);
-static WORD *_dos_text_to_ppu_image(int rect_x, int rect_y, int rect_w, int rect_h,
-	const WORD fg_def, const WORD bg_def, const uTCHAR *font_family, const int font_size, const uTCHAR *text);
+static WORD *_dos_text_to_ppu_image(int rect_x,
+	int rect_y,
+	int rect_w,
+	int rect_h,
+	const WORD fg_def,
+	const WORD bg_def,
+	const uTCHAR *font_family,
+	const int font_size,
+	const uTCHAR *text);
 
 typedef struct _dos_tag_ele {
 	QString desc;
@@ -114,8 +121,18 @@ static QList<_dos_tag_ele> dos_tags = {
 };
 #undef gdt
 
-void dos_text(BYTE nidx, int ppu_x, int ppu_y, int rect_x, int rect_y, int rect_w, int rect_h,
-	const WORD fg_def, const WORD bg_def, const uTCHAR *font_family, const int font_size, const uTCHAR *fmt, ...) {
+void dos_text(const BYTE nidx,
+	int ppu_x,
+	int ppu_y,
+	int rect_x,
+	int rect_y,
+	int rect_w,
+	int rect_h,
+	const WORD fg_def,
+	const WORD bg_def,
+	const uTCHAR *font_family,
+	const int font_size,
+	const uTCHAR *fmt, ...) {
 	static uint mask0 = qRgb(255, 255, 255), mask1 = qRgb(0, 0, 0);
 	QFont font(uQString(font_family));
 	WORD fg = fg_def, bg = bg_def;
@@ -168,7 +185,8 @@ void dos_text(BYTE nidx, int ppu_x, int ppu_y, int rect_x, int rect_y, int rect_
 		// pulisco l'intera zona
 		for (int iy = 0; iy < rect_h; iy++) {
 			for (int ix = 0; ix < rect_w; ix++) {
-				int px = ix + ppu_x, py = iy + ppu_y;
+				const int px = ix + ppu_x;
+				const int py = iy + ppu_y;
 
 				if (not_in_ppu() || (bg_def == DOS_TRASPARENT)) {
 					continue;
@@ -181,14 +199,14 @@ void dos_text(BYTE nidx, int ppu_x, int ppu_y, int rect_x, int rect_y, int rect_
 
 		// disegno la stringa
 		for (int i = 0; i < line.length(); i++) {
-			QChar ch = line[i];
+			const QChar ch = line[i];
 			int chw = 0;
 
 			if (ch == '[') {
 				bool is_tag = false;
 
 				for (const _dos_tag_ele &ele : dos_tags) {
-					int len = ele.desc.length();
+					const int len = ele.desc.length();
 
 					if ((i + len) < line.length()) {
 #if QT_VERSION >= QT_VERSION_CHECK(5, 10, 0)
@@ -241,7 +259,7 @@ void dos_text(BYTE nidx, int ppu_x, int ppu_y, int rect_x, int rect_y, int rect_
 				continue;
 			}
 			if (is_subimage) {
-				QSize dim = dos_image_dim(uQStringCD(subimage));
+				const QSize dim = dos_image_dim(uQStringCD(subimage));
 
 				chw = dim.width();
 				char_x = rect_x;
@@ -249,7 +267,7 @@ void dos_text(BYTE nidx, int ppu_x, int ppu_y, int rect_x, int rect_y, int rect_
 				if (char_x >= rect_w) {
 					break;
 				}
-				dos_image(nidx, ppu_x + char_x, ppu_y, alignh, alignv, chw, rect_h, uQStringCD(subimage), NULL, 0);
+				dos_image(nidx, ppu_x + char_x, ppu_y, alignh, alignv, chw, rect_h, uQStringCD(subimage), nullptr, 0);
 				subimage = "";
 				is_subimage = false;
 			} else {
@@ -264,7 +282,8 @@ void dos_text(BYTE nidx, int ppu_x, int ppu_y, int rect_x, int rect_y, int rect_
 				// disegno sullo schermo PPU
 				for (int iy = 0; iy < rect_h; iy++) {
 					for (int ix = char_x; ix < (char_x + chw); ix++) {
-						int px = ix + ppu_x, py = iy + ppu_y;
+						const int px = ix + ppu_x;
+						const int py = iy + ppu_y;
 						WORD ppu_pixel = DOS_TRASPARENT;
 
 						if (not_in_ppu() || not_in_qimage()) {
@@ -281,8 +300,15 @@ void dos_text(BYTE nidx, int ppu_x, int ppu_y, int rect_x, int rect_y, int rect_
 	}
 }
 
-WORD *dos_text_to_ppu_image(int rect_x, int rect_y, int rect_w, int rect_h, const WORD fg_def, const WORD bg_def,
-	const uTCHAR *font_family, const int font_size, const uTCHAR *fmt, ...) {
+WORD *dos_text_to_ppu_image(const int rect_x,
+	const int rect_y,
+	const int rect_w,
+	const int rect_h,
+	const WORD fg_def,
+	const WORD bg_def,
+	const uTCHAR *font_family,
+	const int font_size,
+	const uTCHAR *fmt, ...) {
 	uTCHAR text[1024];
 	va_list ap;
 
@@ -293,8 +319,15 @@ WORD *dos_text_to_ppu_image(int rect_x, int rect_y, int rect_w, int rect_h, cons
 	return (_dos_text_to_ppu_image(rect_x, rect_y, rect_w, rect_h, fg_def, bg_def, font_family, font_size, &text[0]));
 }
 
-void dos_text_scroll_tick(BYTE nidx, int ppu_x, int ppu_y, const WORD fg_def, const WORD bg_def,
-	const uTCHAR *font_family, const int font_size, _dos_text_scroll *scroll, const uTCHAR *fmt, ...) {
+void dos_text_scroll_tick(const BYTE nidx,
+	const int ppu_x,
+	const int ppu_y,
+	const WORD fg_def,
+	const WORD bg_def,
+	const uTCHAR *font_family,
+	const int font_size,
+	_dos_text_scroll *scroll,
+	const uTCHAR *fmt, ...) {
 	uTCHAR text[1024];
 	QString line;
 	va_list ap;
@@ -377,13 +410,13 @@ void dos_text_curtain(BYTE nidx, int ppu_x, int ppu_y, _dos_text_curtain *curtai
 				}
 			}
 			free(curtain->line);
-			curtain->line = NULL;
+			curtain->line = nullptr;
 		}
 	}
 }
 void dos_text_curtain_add_line(_dos_text_curtain *curtain, const WORD fg_def, const WORD bg_def,
 	const uTCHAR *font_family, const int font_size, const uTCHAR *fmt, ...) {
-	WORD *ppu_image = NULL;
+	WORD *ppu_image = nullptr;
 	uTCHAR text[1024];
 	va_list ap;
 
@@ -404,7 +437,7 @@ void dos_text_curtain_add_line(_dos_text_curtain *curtain, const WORD fg_def, co
 			(curtain->count + 1) * sizeof(_dos_text_ppu_image));
 
 		if (line) {
-			int index = curtain->count;
+			const int index = curtain->count;
 
 			curtain->line = line;
 			curtain->line[index].data = ppu_image;
@@ -415,27 +448,26 @@ void dos_text_curtain_add_line(_dos_text_curtain *curtain, const WORD fg_def, co
 
 void dos_text_pixels_size(int *w, int *h, const uTCHAR *font_family, int font_size, const uTCHAR *txt) {
 	QFont font(uQString(font_family));
-	QString line, subimage = "";
+	QString subimage = "";
 	bool is_name_subimage = false;
 	bool is_subimage = false;
 	int tw = 0, th = 0;
 	QSize size(0, 0);
-
-	line = uQString(txt);
+	QString line = uQString(txt);
 
 	font.setPixelSize(font_size);
 	font.setStretch(QFont::Unstretched);
 
-	QFontMetrics fontMetrics(font);
+	const QFontMetrics fontMetrics(font);
 
 	for (int i = 0; i < line.length(); i++) {
-		QChar ch = line[i];
+		const QChar ch = line[i];
 
 		if (ch == '[') {
 			bool is_tag = false;
 
 			for (const _dos_tag_ele &ele: dos_tags) {
-				int len = ele.desc.length();
+				const int len = ele.desc.length();
 
 				if ((i + len) < line.length()) {
 #if QT_VERSION >= QT_VERSION_CHECK(5, 10, 0)
@@ -486,22 +518,23 @@ void dos_text_pixels_size(int *w, int *h, const uTCHAR *font_family, int font_si
 int dos_text_pixels_w(const uTCHAR *font_family, const int font_size, const uTCHAR *txt) {
 	int w = 0;
 
-	dos_text_pixels_size(&w, NULL, font_family, font_size, txt);
+	dos_text_pixels_size(&w, nullptr, font_family, font_size, txt);
 	return (w);
 }
 int dos_text_pixels_h(const uTCHAR *font_family, const int font_size, const uTCHAR *txt) {
 	int h = 0;
 
-	dos_text_pixels_size(NULL, &h, font_family, font_size, txt);
+	dos_text_pixels_size(nullptr, &h, font_family, font_size, txt);
 	return (h);
 }
 
-void dos_vline(BYTE nidx, int ppu_x, int ppu_y, int h, WORD color) {
+void dos_vline(const BYTE nidx, int ppu_x, int ppu_y, const int h, const WORD color) {
 	ppu_x = dos_ctr_x(ppu_x, 1, SCR_COLUMNS);
 	ppu_y = dos_ctr_y(ppu_y, h, SCR_ROWS);
 
 	for (int y1 = 0; y1 < h; y1++) {
-		int px = ppu_x, py = ppu_y + y1;
+		const int px = ppu_x;
+		const int py = ppu_y + y1;
 
 		if (not_in_ppu() || (color == DOS_TRASPARENT)) {
 			continue;
@@ -509,12 +542,13 @@ void dos_vline(BYTE nidx, int ppu_x, int ppu_y, int h, WORD color) {
 		nes[nidx].p.ppu_screen.wr->line[py][px] = color;
 	}
 }
-void dos_hline(BYTE nidx, int ppu_x, int ppu_y, int w, WORD color) {
+void dos_hline(const BYTE nidx, int ppu_x, int ppu_y, const int w, const WORD color) {
 	ppu_x = dos_ctr_x(ppu_x, w, SCR_COLUMNS);
 	ppu_y = dos_ctr_y(ppu_y, 1, SCR_ROWS);
 
 	for (int x1 = 0; x1 < w; x1++) {
-		int px = ppu_x + x1, py = ppu_y;
+		const int px = ppu_x + x1;
+		const int py = ppu_y;
 
 		if (not_in_ppu() || (color == DOS_TRASPARENT)) {
 			continue;
@@ -522,7 +556,7 @@ void dos_hline(BYTE nidx, int ppu_x, int ppu_y, int w, WORD color) {
 		nes[nidx].p.ppu_screen.wr->line[py][px] = color;
 	}
 }
-void dos_box(BYTE nidx, int ppu_x, int ppu_y, int w, int h, WORD color1, WORD color2, WORD bck) {
+void dos_box(const BYTE nidx, int ppu_x, int ppu_y, const int w, const int h, const WORD color1, const WORD color2, const WORD bck) {
 	ppu_x = dos_ctr_x(ppu_x, w, SCR_COLUMNS);
 	ppu_y = dos_ctr_y(ppu_y, h, SCR_ROWS);
 
@@ -533,7 +567,8 @@ void dos_box(BYTE nidx, int ppu_x, int ppu_y, int w, int h, WORD color1, WORD co
 
 	for (int y1 = 1; y1 < (h - 1); y1++) {
 		for (int x1 = 1; x1 < (w - 1); x1++) {
-			int px = x1 + ppu_x, py = y1 + ppu_y;
+			const int px = x1 + ppu_x;
+			const int py = y1 + ppu_y;
 
 			if (not_in_ppu() || (bck == DOS_TRASPARENT)) {
 				continue;
@@ -543,10 +578,11 @@ void dos_box(BYTE nidx, int ppu_x, int ppu_y, int w, int h, WORD color1, WORD co
 	}
 }
 
-void dos_image(BYTE nidx, int ppu_x, int ppu_y, int rect_x, int rect_y, int rect_w, int rect_h,
+void dos_image(const BYTE nidx, int ppu_x, int ppu_y, int rect_x, int rect_y, int rect_w, int rect_h,
 	const uTCHAR *resource, WORD *ppu_image, uint32_t ppu_image_pitch) {
-	QImage src(uQString(resource));
-	int max_w = rect_w, max_h = rect_h;
+	const QImage src(uQString(resource));
+	const int max_w = rect_w;
+	const int max_h = rect_h;
 
 	rect_w = dos_ctr_w(rect_w, src.width(), rect_w);
 	rect_h = dos_ctr_h(rect_h, src.height(), rect_h);
@@ -570,7 +606,8 @@ void dos_image(BYTE nidx, int ppu_x, int ppu_y, int rect_x, int rect_y, int rect
 
 		for (int iy = 0; iy < rect_h; iy++) {
 			for (int ix = 0; ix < rect_w; ix++) {
-				int px = ix + ppu_x, py = iy + ppu_y;
+				const int px = ix + ppu_x;
+				const int py = iy + ppu_y;
 				long long pixel = 0;
 
 				if (not_in_ppu() || not_in_qimage()) {
@@ -590,17 +627,17 @@ void dos_image(BYTE nidx, int ppu_x, int ppu_y, int rect_x, int rect_y, int rect
 	}
 }
 
-void dos_draw_ppu_image(BYTE nidx, int ppu_x, int ppu_y, int rect_x, int rect_y, int rect_w, int rect_h,
-	int img_w, int img_h, int scroll_x, int scroll_y, WORD *ppu_image) {
+void dos_draw_ppu_image(const BYTE nidx, const int ppu_x, const int ppu_y, const int rect_x, const int rect_y, const int rect_w, const int rect_h,
+	const int img_w, const int img_h, const int scroll_x, const int scroll_y, const WORD *ppu_image) {
 	if (ppu_image) {
-		int ppux0 = (rect_x + ppu_x) < 0 ? 0 : rect_x + ppu_x;
-		int ppuy0 = (rect_y + ppu_y) < 0 ? 0 : rect_y + ppu_y;
-		int ppux1 = (ppux0 + rect_w) >= SCR_COLUMNS ? SCR_COLUMNS : ppux0 + rect_w;
-		int ppuy1 = (ppuy0 + rect_h) >= SCR_ROWS ? SCR_ROWS : ppuy0 + rect_h;
+		const int ppux0 = (rect_x + ppu_x) < 0 ? 0 : rect_x + ppu_x;
+		const int ppuy0 = (rect_y + ppu_y) < 0 ? 0 : rect_y + ppu_y;
+		const int ppux1 = (ppux0 + rect_w) >= SCR_COLUMNS ? SCR_COLUMNS : ppux0 + rect_w;
+		const int ppuy1 = (ppuy0 + rect_h) >= SCR_ROWS ? SCR_ROWS : ppuy0 + rect_h;
 
 		for (int iy = 0; iy < img_h; iy++) {
 			const WORD *src_line = ppu_image + ((iy + rect_y) * img_w);
-			int py = (ppuy0 + iy) + scroll_y;
+			const int py = (ppuy0 + iy) + scroll_y;
 
 			if ((py < ppuy0) || (py >= ppuy1)) {
 				continue;
@@ -609,7 +646,7 @@ void dos_draw_ppu_image(BYTE nidx, int ppu_x, int ppu_y, int rect_x, int rect_y,
 				WORD *dst_line = nes[nidx].p.ppu_screen.wr->line[py];
 
 				for (int ix = 0; ix < img_w; ix++) {
-					int px = (ppux0 + ix) + scroll_x;
+					const int px = (ppux0 + ix) + scroll_x;
 
 					if ((px < ppux0) || (px >= ppux1)) {
 						continue;
@@ -628,7 +665,7 @@ int dos_resource_h(const uTCHAR *resource) {
 	return (QImageReader(uQString(resource)).size().height());
 }
 void dos_resource_size(int *w, int *h, const uTCHAR *resource) {
-	QSize size = QImageReader(uQString(resource)).size();
+	const QSize size = QImageReader(uQString(resource)).size();
 
 	if (w) {
 		(*w) = size.width();
@@ -663,7 +700,7 @@ WORD dos_tag_value_from_opt(const long long opt) {
 	return (DOS_NONE);
 }
 
-static INLINE int dos_ctr_x(int x, int w, int max_w) {
+static INLINE int dos_ctr_x(int x, const int w, const int max_w) {
 	if (x == DOS_ALIGNHCENTER) {
 		x = dos_round((double)(max_w - w), 2.0f);
 	} else if (x == DOS_ALIGNLEFT) {
@@ -673,7 +710,7 @@ static INLINE int dos_ctr_x(int x, int w, int max_w) {
 	}
 	return (x);
 }
-static INLINE int dos_ctr_y(int y, int h, int max_h) {
+static INLINE int dos_ctr_y(int y, const int h, const int max_h) {
 	if (y == DOS_ALIGNVCENTER) {
 		y = dos_round((double)(max_h - h), 2.0f);
 	} else if (y == DOS_ALIGNTOP) {
@@ -683,7 +720,7 @@ static INLINE int dos_ctr_y(int y, int h, int max_h) {
 	}
 	return (y);
 }
-static INLINE int dos_ctr_w(int w, int min_w, int max_w) {
+static INLINE int dos_ctr_w(int w, const int min_w, int max_w) {
 	if (w < 0) {
 		w = min_w;
 	}
@@ -695,7 +732,7 @@ static INLINE int dos_ctr_w(int w, int min_w, int max_w) {
 	}
 	return (w);
 }
-static INLINE int dos_ctr_h(int h, int min_h, int max_h) {
+static INLINE int dos_ctr_h(int h, const int min_h, int max_h) {
 	if (h < 0) {
 		h = min_h;
 	}
@@ -707,7 +744,7 @@ static INLINE int dos_ctr_h(int h, int min_h, int max_h) {
 	}
 	return (h);
 }
-static INLINE int dos_round(double d0, double d1) {
+static INLINE int dos_round(const double d0, const double d1) {
 	double result = d0 / d1;
 
 	if (remainder(d0, d1) >= 0.5) {
@@ -718,15 +755,20 @@ static INLINE int dos_round(double d0, double d1) {
 static INLINE QSize dos_image_dim(const uTCHAR *resource) {
 	return (QImageReader(uQString(resource)).size());
 }
-static WORD *_dos_text_to_ppu_image(int rect_x, int rect_y, int rect_w, int rect_h,
-	const WORD fg_def, const WORD bg_def, const uTCHAR *font_family, const int font_size, const uTCHAR *text) {
+static WORD *_dos_text_to_ppu_image(int rect_x,
+	int rect_y,
+	int rect_w,
+	int rect_h,
+	const WORD fg_def,
+	const WORD bg_def,
+	const uTCHAR *font_family,
+	const int font_size,
+	const uTCHAR *text) {
 	static uint mask0 = qRgb(255, 255, 255), mask1 = qRgb(0, 0, 0);
 	QFont font(uQString(font_family));
 	WORD fg = fg_def, bg = bg_def;
-	WORD *ppu_image = NULL;
-	QString line;
-
-	line = uQString(text);
+	WORD *ppu_image = nullptr;
+	QString line = uQString(text);
 
 	// minimo 11 per i caratteri unicode
 	font.setPixelSize(font_size);
@@ -734,19 +776,20 @@ static WORD *_dos_text_to_ppu_image(int rect_x, int rect_y, int rect_w, int rect
 
 	{
 		int char_x = 0, wpixels = 0, hpixels = 0;
-		QFontMetrics fontMetrics(font);
+		const QFontMetrics fontMetrics(font);
 		QString subimage = "";
 		bool is_bck_tag = false;
 		bool is_subimage = false;
 		bool is_name_subimage = false;
 		int alignv = DOS_ALIGNVCENTER;
 		int alignh = DOS_ALIGNLEFT;
-		int max_w = rect_w, max_h = rect_h;
+		const int max_w = rect_w;
+		const int max_h = rect_h;
 
 		dos_text_pixels_size(&wpixels, &hpixels, font_family, font_size, &text[0]);
 
 		if (!wpixels || !hpixels) {
-			return (NULL);
+			return (nullptr);
 		}
 
 		rect_w = dos_ctr_w(rect_w, wpixels, rect_w);
@@ -776,14 +819,14 @@ static WORD *_dos_text_to_ppu_image(int rect_x, int rect_y, int rect_w, int rect
 
 		// disegno la stringa
 		for (int i = 0; i < line.length(); i++) {
-			QChar ch = line[i];
+			const QChar ch = line[i];
 			int chw = 0;
 
 			if (ch == '[') {
 				bool is_tag = false;
 
 				for (const _dos_tag_ele &ele : dos_tags) {
-					int len = ele.desc.length();
+					const int len = ele.desc.length();
 
 					if ((i + len) < line.length()) {
 #if QT_VERSION >= QT_VERSION_CHECK(5, 10, 0)
@@ -813,7 +856,7 @@ static WORD *_dos_text_to_ppu_image(int rect_x, int rect_y, int rect_w, int rect
 							} else if (tag == QStringLiteral("[hcenter]")) {
 								alignh = DOS_ALIGNHCENTER;
 							} else {
-								bool is_normal = tag == QStringLiteral("[normal]");
+								const bool is_normal = tag == QStringLiteral("[normal]");
 
 								if (is_bck_tag) {
 									bg = is_normal ? bg_def : ele.value;
@@ -836,7 +879,7 @@ static WORD *_dos_text_to_ppu_image(int rect_x, int rect_y, int rect_w, int rect
 				continue;
 			}
 			if (is_subimage) {
-				QImage src(subimage);
+				const QImage src(subimage);
 
 				chw = src.width();
 				char_x = rect_x;

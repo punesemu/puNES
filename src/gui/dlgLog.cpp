@@ -170,7 +170,7 @@ void textEditThread::run() {
 	exec();
 }
 
-void textEditThread::time_out(void) {
+void textEditThread::time_out(void) const {
 	dlglog->wd->mutex.lock();
 	for (QString &msg : dlglog->wd->messages) {
 		dlglog->wd->plainTextEdit_Log->appendHtml(msg);
@@ -240,14 +240,14 @@ void dlgLog::error_box(const uTCHAR *utxt, va_list ap) {
 	print_box(types::LERROR,utxt, ap);
 }
 
-void dlgLog::lopen(types type, const uTCHAR *utxt, va_list ap) {
+void dlgLog::lopen(const types type, const uTCHAR *utxt, va_list ap) {
 	_lopen(type, ">", ">", utxt, ap);
 }
 void dlgLog::lclose(const uTCHAR *utxt, va_list ap) {
 	_lclose(TRUE, utxt, ap);
 }
 
-void dlgLog::lopen_box(types type, const uTCHAR *utxt, va_list ap) {
+void dlgLog::lopen_box(const types type, const uTCHAR *utxt, va_list ap) {
 	_lopen(type, " ", " ", utxt, ap);
 }
 void dlgLog::lclose_box(const uTCHAR *utxt, va_list ap) {
@@ -269,7 +269,7 @@ void dlgLog::lnewline(void) {
 	mutex.unlock();
 }
 
-void dlgLog::_lopen(types type, const QString &shtml, const QString &snohtml, const uTCHAR *utxt, va_list ap) {
+void dlgLog::_lopen(const types type, const QString &shtml, const QString &snohtml, const uTCHAR *utxt, va_list ap) {
 	mutex.lock();
 	buffer.type = type;
 	buffer.symbol.html = shtml;
@@ -292,37 +292,32 @@ void dlgLog::_lopen(types type, const QString &shtml, const QString &snohtml, co
 			break;
 	}
 }
-void dlgLog::_lclose(BYTE color, const uTCHAR *utxt, va_list ap) {
-	QString symbol, html, txt;
-	QStringList list;
-
+void dlgLog::_lclose(const BYTE color, const uTCHAR *utxt, va_list ap) {
 	if (utxt) {
 		lappend(utxt, ap);
 	}
 	extract();
-	txt = ctrl_special_characters(buffer.txt);
-	list = txt.split(':');
-	symbol = color
-	 	? QString("<font color=%0>%1").arg(buffer.color, buffer.symbol.html)
+	const QString txt = ctrl_special_characters(buffer.txt);
+	const QStringList list = txt.split(':');
+	const QString symbol = color
+		? QString("<font color=%0>%1").arg(buffer.color, buffer.symbol.html)
 		: QString("%1").arg(buffer.symbol.html);
-	html = list.count() == 2
+	const QString html = list.count() == 2
 		? QString("<pre>%0 %1:%2</font></pre>").arg(symbol, list.at(0), list.at(1))
 		: QString("<pre>%0 %1</pre>").arg(symbol, txt);
 	messages.append(html);
 	std_err(QString("%0 %1").arg(buffer.symbol.nohtml, buffer.txt));
 	mutex.unlock();
 }
-void dlgLog::print(types type, const uTCHAR *utxt, va_list ap) {
+void dlgLog::print(const types type, const uTCHAR *utxt, va_list ap) {
 	lopen(type, utxt, ap);
 	lclose(nullptr, ap);
 }
-void dlgLog::print_box(types type, const uTCHAR *utxt, va_list ap) {
+void dlgLog::print_box(const types type, const uTCHAR *utxt, va_list ap) {
 	lopen_box(type, utxt, ap);
 	lclose_box(nullptr, ap);
 }
 void dlgLog::extract(void) {
-	QStringList list;
-
 	if (buffer.tmp.count(';') > 1) {
 		int count = 0, index = buffer.tmp.indexOf(';');
 
@@ -334,7 +329,7 @@ void dlgLog::extract(void) {
 			count++;
 		}
 	}
-	list = buffer.tmp.split(';');
+	const QStringList list = buffer.tmp.split(';');
 	buffer.txt = list.count() >= 2
 		? QString("%0 : %1").arg(list.at(0), -max).arg(list.at(1))
 		: list.count() == 1

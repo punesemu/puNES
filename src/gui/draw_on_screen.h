@@ -102,18 +102,46 @@ typedef struct _dos_text_curtain {
 #define EXTERNC
 #endif
 
-EXTERNC void dos_text(BYTE nidx, int ppu_x, int ppu_y, int img_x, int img_y, int img_w, int img_h,
-	const WORD fg_def, const WORD bg_def, const uTCHAR *font_family, const int font_size, const uTCHAR *fmt, ...);
+EXTERNC void dos_text(BYTE nidx,
+	int ppu_x,
+	int ppu_y,
+	int img_x,
+	int img_y,
+	int img_w,
+	int img_h,
+	const WORD fg_def,
+	const WORD bg_def,
+	const uTCHAR *font_family,
+	const int font_size,
+	const uTCHAR *fmt, ...);
 
-EXTERNC WORD *dos_text_to_ppu_image(int rect_x, int rect_y, int rect_w, int rect_h, const WORD fg_def, const WORD bg_def,
-	const uTCHAR *font_family, const int font_size, const uTCHAR *fmt, ...);
+EXTERNC WORD *dos_text_to_ppu_image(int rect_x,
+	int rect_y,
+	int rect_w,
+	int rect_h,
+	const WORD fg_def,
+	const WORD bg_def,
+	const uTCHAR *font_family,
+	const int font_size,
+	const uTCHAR *fmt, ...);
 
-EXTERNC void dos_text_scroll_tick(BYTE nidx, int ppu_x, int ppu_y, const WORD fg_def, const WORD bg_def,
-	const uTCHAR *font_family, const int font_size, _dos_text_scroll *scroll, const uTCHAR *fmt, ...);
+EXTERNC void dos_text_scroll_tick(BYTE nidx,
+	int ppu_x,
+	int ppu_y,
+	const WORD fg_def,
+	const WORD bg_def,
+	const uTCHAR *font_family,
+	const int font_size,
+	_dos_text_scroll *scroll,
+	const uTCHAR *fmt, ...);
 
 EXTERNC void dos_text_curtain(BYTE nidx, int ppu_x, int ppu_y, _dos_text_curtain *curtain, BYTE mode);
-EXTERNC void dos_text_curtain_add_line(_dos_text_curtain *curtain, const WORD fg_def, const WORD bg_def,
-	const uTCHAR *font_family, const int font_size, const uTCHAR *fmt, ...);
+EXTERNC void dos_text_curtain_add_line(_dos_text_curtain *curtain,
+	const WORD fg_def,
+	const WORD bg_def,
+	const uTCHAR *font_family,
+	const int font_size,
+	const uTCHAR *fmt, ...);
 
 EXTERNC void dos_text_pixels_size(int *w, int *h, const uTCHAR *font_family, int font_size, const uTCHAR *txt);
 EXTERNC int dos_text_pixels_w(const uTCHAR *font_family, const int font_size, const uTCHAR *txt);
@@ -123,11 +151,29 @@ EXTERNC void dos_vline(BYTE nidx, int ppu_x, int ppu_y, int h, WORD color);
 EXTERNC void dos_hline(BYTE nidx, int ppu_x, int ppu_y, int w, WORD color);
 EXTERNC void dos_box(BYTE nidx, int ppu_x, int ppu_y, int w, int h, WORD color1, WORD color2, WORD bck);
 
-EXTERNC void dos_image(BYTE nidx, int ppu_x, int ppu_y, int rect_x, int rect_y, int rect_w, int rect_h,
-	const uTCHAR *resource, WORD *ppu_image, uint32_t pitch);
+EXTERNC void dos_image(BYTE nidx,
+	int ppu_x,
+	int ppu_y,
+	int rect_x,
+	int rect_y,
+	int rect_w,
+	int rect_h,
+	const uTCHAR *resource,
+	WORD *ppu_image,
+	uint32_t pitch);
 
-EXTERNC void dos_draw_ppu_image(BYTE nidx, int ppu_x, int ppu_y, int rect_x, int rect_y, int rect_w, int rect_h,
-	int img_w, int img_h, int scroll_x, int scroll_y, WORD *ppu_image);
+EXTERNC void dos_draw_ppu_image(BYTE nidx,
+	int ppu_x,
+	int ppu_y,
+	int rect_x,
+	int rect_y,
+	int rect_w,
+	int rect_h,
+	int img_w,
+	int img_h,
+	int scroll_x,
+	int scroll_y,
+	const WORD *ppu_image);
 
 EXTERNC int dos_resource_w(const uTCHAR *resource);
 EXTERNC int dos_resource_h(const uTCHAR *resource);

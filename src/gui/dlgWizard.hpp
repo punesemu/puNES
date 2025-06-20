@@ -26,7 +26,7 @@
 
 // ----------------------------------------------------------------------------------------------
 
-class dlgWizard : public QWidget, public Ui::dlgWizard {
+class dlgWizard final : public QWidget, public Ui::dlgWizard {
 	Q_OBJECT
 
 	private:
@@ -42,12 +42,12 @@ class dlgWizard : public QWidget, public Ui::dlgWizard {
 		void showEvent(QShowEvent *event) override;
 
 	private slots:
-		void s_grp_storage_type(QAbstractButton *button);
+		void s_grp_storage_type(QAbstractButton *button) const;
 };
 
 // ----------------------------------------------------------------------------------------------
 
-class wdgDlgWizard : public wdgTitleBarDialog {
+class wdgDlgWizard final : public wdgTitleBarDialog {
 	Q_OBJECT
 
 	public:

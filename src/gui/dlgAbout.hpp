@@ -25,7 +25,7 @@
 
 // ----------------------------------------------------------------------------------------------
 
-class dlgAbout : public QWidget, public Ui::dlgAbout {
+class dlgAbout final : public QWidget, public Ui::dlgAbout {
 	Q_OBJECT
 
 	public:
@@ -38,7 +38,7 @@ class dlgAbout : public QWidget, public Ui::dlgAbout {
 
 // ----------------------------------------------------------------------------------------------
 
-class wdgDlgAbout : public wdgTitleBarDialog {
+class wdgDlgAbout final : public wdgTitleBarDialog {
 	public:
 		dlgAbout *wd;
 

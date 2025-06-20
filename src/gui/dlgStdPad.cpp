@@ -106,10 +106,8 @@ dlgStdPad::dlgStdPad(QWidget *parent, _cfg_port *cfg_port) : QWidget(parent) {
 	joy_combo_init();
 
 	for (i = KEYBOARD; i < INPUT_TYPES; i++) {
-		themePushButton *bt;
-		int a;
+		themePushButton *bt = findChild<themePushButton *>("pushButton_" + SPT(i) + "_Sequence");
 
-		bt = findChild<themePushButton *>("pushButton_" + SPT(i) + "_Sequence");
 		bt->setProperty("myType", QVariant(i));
 		connect(bt, SIGNAL(clicked(bool)), this, SLOT(s_in_sequence_clicked(bool)));
 
@@ -121,7 +119,7 @@ dlgStdPad::dlgStdPad(QWidget *parent, _cfg_port *cfg_port) : QWidget(parent) {
 		bt->setProperty("myType", QVariant(i));
 		connect(bt, SIGNAL(clicked(bool)), this, SLOT(s_defaults_clicked(bool)));
 
-		for (a = BUT_A; a < MAX_STD_PAD_BUTTONS; a++) {
+		for (int a = BUT_A; a < MAX_STD_PAD_BUTTONS; a++) {
 			const int vbutton = a + (i * MAX_STD_PAD_BUTTONS);
 			QPushButton *def = findChild<QPushButton *>("pushButton_" + SPT(i) + "_default_" + SPB(a));
 			QPushButton *unset = findChild<QPushButton *>("pushButton_" + SPT(i) + "_unset_" + SPB(a));
@@ -163,7 +161,7 @@ dlgStdPad::dlgStdPad(QWidget *parent, _cfg_port *cfg_port) : QWidget(parent) {
 	}
 
 	{
-		int w = QLabel("00").sizeHint().width();
+		const int w = QLabel("00").sizeHint().width();
 
 		label_value_slider_TurboA->setFixedWidth(w);
 		label_value_slider_TurboB->setFixedWidth(w);
@@ -248,17 +246,13 @@ void dlgStdPad::closeEvent(QCloseEvent *event) {
 }
 
 void dlgStdPad::stylesheet_update(void) const {
-	int i;
-
 	tabWidget_kbd_joy->setStyleSheet("QTabWidget { font-weight: normal; }");
 
 	frame_kbd_buttons->setStyleSheet(stylesheet_frame(_color_frame().tbrd, _color_frame().kbd));
 	frame_joy_buttons->setStyleSheet(stylesheet_frame(_color_frame().tbrd, _color_frame().joy));
 
-	for (i = KEYBOARD; i < INPUT_TYPES; i++) {
-		int a;
-
-		for (a = BUT_A; a < MAX_STD_PAD_BUTTONS; a++) {
+	for (int i = KEYBOARD; i < INPUT_TYPES; i++) {
+		for (int a = BUT_A; a < MAX_STD_PAD_BUTTONS; a++) {
 			QPushButton *def = findChild<QPushButton *>("pushButton_" + SPT(i) + "_default_" + SPB(a));
 			QPushButton *unset = findChild<QPushButton *>("pushButton_" + SPT(i) + "_unset_" + SPB(a));
 			pixmapPushButton *pbt = findChild<pixmapPushButton *>("pushButton_" + SPT(i) + "_" + SPB(a));
@@ -275,12 +269,12 @@ void dlgStdPad::stylesheet_update(void) const {
 }
 
 QString dlgStdPad::stylesheet_label(const QColor &background) {
-	QColor border = theme::get_theme_adaptive_color("#BAB9B7");
-	QColor text = theme::get_theme_color("#000000");
-	QColor disabled_border = theme::get_theme_adaptive_color("#BABDB6");
-	QColor disabled_background = theme::get_theme_adaptive_color("#EFEFEF");
-	QColor disabled_text = theme::get_theme_color("#BABDB6");
-	QString stylesheet =
+	const QColor border = theme::get_theme_adaptive_color("#BAB9B7");
+	const QColor text = theme::get_theme_color("#000000");
+	const QColor disabled_border = theme::get_theme_adaptive_color("#BABDB6");
+	const QColor disabled_background = theme::get_theme_adaptive_color("#EFEFEF");
+	const QColor disabled_text = theme::get_theme_color("#BABDB6");
+	const QString stylesheet =
 		"QLabel {"\
 		"	background-color: %0;"\
 		"	border-width: 1px;"\
@@ -324,15 +318,15 @@ QString dlgStdPad::stylesheet_frame(const QColor &border, const QColor &backgrou
 		.arg(background.name()));
 }
 QString dlgStdPad::stylesheet_pixmapbutton(void) {
-	QColor border = theme::get_theme_adaptive_color("#8F8F91");
-	QColor gradient0 = theme::get_theme_color("#F6F7FA");
-	QColor gradient1 = theme::get_theme_color("#DADBDE");
-	QColor disabled_border = theme::get_theme_adaptive_color("#C2C2C2");
-	QColor disabled_background = theme::get_theme_adaptive_color("#EFEFEF");
-	QColor disabled_text = theme::get_theme_adaptive_color("#BABDB6");
-	QColor hover_gradient0 = theme::get_theme_adaptive_color("#DADBDE");
-	QColor hover_gradient1 = theme::get_theme_adaptive_color("#F6F7FA");
-	QString stylesheet =
+	const QColor border = theme::get_theme_adaptive_color("#8F8F91");
+	const QColor gradient0 = theme::get_theme_color("#F6F7FA");
+	const QColor gradient1 = theme::get_theme_color("#DADBDE");
+	const QColor disabled_border = theme::get_theme_adaptive_color("#C2C2C2");
+	const QColor disabled_background = theme::get_theme_adaptive_color("#EFEFEF");
+	const QColor disabled_text = theme::get_theme_adaptive_color("#BABDB6");
+	const QColor hover_gradient0 = theme::get_theme_adaptive_color("#DADBDE");
+	const QColor hover_gradient1 = theme::get_theme_adaptive_color("#F6F7FA");
+	const QString stylesheet =
 		"QPushButton {"\
 		"	border-width: 1px;"\
 		"	border-color: %0;"\
@@ -376,10 +370,10 @@ QString dlgStdPad::stylesheet_pixmapbutton(void) {
 		.arg(theme::get_focus_color().name()));
 }
 QString dlgStdPad::stylesheet_left_button(void) const {
-	QColor base_color = theme::get_theme_color(palette().light().color());
-	QColor lightGray = theme::is_dark_theme() ? base_color.lighter(125) : base_color.darker(145);
-	QColor darkGray = lightGray.darker(125);
-	QString stylesheet =
+	const QColor base_color = theme::get_theme_color(palette().light().color());
+	const QColor lightGray = theme::is_dark_theme() ? base_color.lighter(125) : base_color.darker(145);
+	const QColor darkGray = lightGray.darker(125);
+	const QString stylesheet =
 		"QPushButton {"\
 		"	margin-top: 1;"\
 		"	border-top: 1px;"\
@@ -456,9 +450,8 @@ bool dlgStdPad::keypress(QKeyEvent *event) {
 
 	return (true);
 }
-void dlgStdPad::update_dialog(void) {
+void dlgStdPad::update_dialog(void) const {
 	bool mode = false;
-	unsigned int joy_index;
 
 	if (data.seq.active) {
 		return;
@@ -485,7 +478,7 @@ void dlgStdPad::update_dialog(void) {
 	pushButton_kbd_Deadzone->setEnabled(false);
 
 	// joystick
-	joy_index = comboBox_joy_ID->itemData(comboBox_joy_ID->currentIndex()).toInt();
+	const unsigned int joy_index = comboBox_joy_ID->itemData(comboBox_joy_ID->currentIndex()).toInt();
 
 	if (comboBox_joy_ID->count() > 1) {
 		mode = true;
@@ -518,12 +511,11 @@ void dlgStdPad::update_dialog(void) {
 }
 void dlgStdPad::joy_combo_init(void) {
 	BYTE current_index = 0, current_line = JS_NO_JOYSTICK;
-	int i;
 
 	comboBox_joy_ID->blockSignals(true);
 	comboBox_joy_ID->clear();
 
-	for (i = 0; i < joy_list.count; i++) {
+	for (int i = 0; i < joy_list.count; i++) {
 		_cb_ports *cb = &joy_list.ele[i];
 
 		if (js_is_this(cb->index, &data.cfg.port.jguid)) {
@@ -547,9 +539,7 @@ void dlgStdPad::joy_combo_init(void) {
 	update_dialog();
 }
 void dlgStdPad::setEnable_tab_buttons(const int type, const bool mode) const {
-	int i;
-
-	for (i = BUT_A; i < MAX_STD_PAD_BUTTONS; i++) {
+	for (int i = BUT_A; i < MAX_STD_PAD_BUTTONS; i++) {
 		findChild<QLabel *>("label_" + SPT(type) + "_" + SPB(i))->setEnabled(mode);
 		findChild<QLabel *>("label_" + SPT(type) + "_" + SPB(i))->setStyleSheet(stylesheet_label(_color_label().normal));
 		findChild<pixmapPushButton *>("pushButton_" + SPT(type) + "_" + SPB(i))->setEnabled(mode);
@@ -582,9 +572,7 @@ void dlgStdPad::info_entry_print(const int type, const QString &txt) const {
 	findChild<QLabel *>("label_" + SPT(type) + "_info")->setText(txt);
 }
 void dlgStdPad::js_press_event(void) {
-	int type;
-
-	type = data.vbutton / MAX_STD_PAD_BUTTONS;
+	const int type = data.vbutton / MAX_STD_PAD_BUTTONS;
 
 	if (js_is_null(&data.cfg.port.jguid)) {
 		info_entry_print(type, tr("Select device first"));
@@ -622,7 +610,7 @@ int dlgStdPad::js_jdev_index(void) const {
 }
 
 void dlgStdPad::s_combobox_joy_activated(int index) {
-	int jdev_index = ((QComboBox *)sender())->itemData(index).toInt();
+	const int jdev_index = ((QComboBox *)sender())->itemData(index).toInt();
 
 	if (comboBox_joy_ID->count() == 1) {
 		return;
@@ -632,7 +620,6 @@ void dlgStdPad::s_combobox_joy_activated(int index) {
 }
 void dlgStdPad::s_combobox_joy_index_changed(UNUSED(int index)) {
 	const int jdev_index = js_jdev_index();
-	int a;
 
 	if (jdev_index != last_js_index) {
 		if (jdev_index < MAX_JOYSTICK) {
@@ -647,10 +634,8 @@ void dlgStdPad::s_combobox_joy_index_changed(UNUSED(int index)) {
 		last_js_index = jdev_index;
 	}
 
-	for (a = KEYBOARD; a < INPUT_TYPES; a++) {
-		int b;
-
-		for (b = BUT_A; b < MAX_STD_PAD_BUTTONS; b++) {
+	for (int a = KEYBOARD; a < INPUT_TYPES; a++) {
+		for (int b = BUT_A; b < MAX_STD_PAD_BUTTONS; b++) {
 			pixmapPushButton *bt = findChild<pixmapPushButton *>("pushButton_" + SPT(a) + "_" + SPB(b));
 
 			if (a == KEYBOARD) {
@@ -662,7 +647,8 @@ void dlgStdPad::s_combobox_joy_index_changed(UNUSED(int index)) {
 	}
 }
 void dlgStdPad::s_input_clicked(UNUSED(bool checked)) {
-	int type, vbutton = QVariant(((pixmapPushButton *)sender())->property("myVbutton")).toInt();
+	int vbutton = QVariant(((pixmapPushButton *)sender())->property("myVbutton")).toInt();
+	const int type = vbutton / MAX_STD_PAD_BUTTONS;
 
 	if (data.no_other_buttons) {
 		return;
@@ -671,7 +657,6 @@ void dlgStdPad::s_input_clicked(UNUSED(bool checked)) {
 	data.bp = ((pixmapPushButton *)sender());
 	data.vbutton = vbutton;
 
-	type = vbutton / MAX_STD_PAD_BUTTONS;
 	vbutton -= (type * MAX_STD_PAD_BUTTONS);
 
 	disable_tab_and_other(type, vbutton);
@@ -704,11 +689,11 @@ void dlgStdPad::s_input_clicked(UNUSED(bool checked)) {
 	}
 }
 void dlgStdPad::s_default_clicked(UNUSED(bool checked)) {
-	int index, type, vbutton = QVariant(((QPushButton *)sender())->property("myVbutton")).toInt();
+	int vbutton = QVariant(((QPushButton *)sender())->property("myVbutton")).toInt();
+	const int type = vbutton / MAX_STD_PAD_BUTTONS;
+	const int index = type == KEYBOARD ? data.cfg.id - 1 : js_jdev_index();
 
-	type = vbutton / MAX_STD_PAD_BUTTONS;
 	vbutton -= (type * MAX_STD_PAD_BUTTONS);
-	index = type == KEYBOARD ? data.cfg.id - 1 : js_jdev_index();
 
 	info_entry_print(type, "");
 
@@ -725,16 +710,15 @@ void dlgStdPad::s_default_clicked(UNUSED(bool checked)) {
 	}
 }
 void dlgStdPad::s_unset_clicked(UNUSED(bool checked)) {
-	int type, vbutton = QVariant(((QPushButton *)sender())->property("myVbutton")).toInt();
-	pixmapPushButton *bt;
+	int vbutton = QVariant(((QPushButton *)sender())->property("myVbutton")).toInt();
+	const int type = vbutton / MAX_STD_PAD_BUTTONS;
 
-	type = vbutton / MAX_STD_PAD_BUTTONS;
 	vbutton -= (type * MAX_STD_PAD_BUTTONS);
 	data.cfg.port.input[type][vbutton] = 0;
 
 	info_entry_print(type, "");
 
-	bt = findChild<pixmapPushButton *>("pushButton_" + SPT(type) + "_" + SPB(vbutton));
+	pixmapPushButton *bt = findChild<pixmapPushButton *>("pushButton_" + SPT(type) + "_" + SPB(vbutton));
 	bt->setPixmap(QPixmap(""));
 	bt->setText("NULL");
 }
@@ -746,25 +730,24 @@ void dlgStdPad::s_in_sequence_clicked(UNUSED(bool checked)) {
 	data.seq.counter = -1;
 	data.seq.timer->start(150);
 }
-void dlgStdPad::s_unset_all_clicked(UNUSED(bool checked)) {
-	int i, type = QVariant(((themePushButton *)sender())->property("myType")).toInt();
+void dlgStdPad::s_unset_all_clicked(UNUSED(bool checked)) const {
+	const int type = QVariant(((themePushButton *)sender())->property("myType")).toInt();
 
 	info_entry_print(type, "");
 
-	for (i = BUT_A; i < MAX_STD_PAD_BUTTONS; i++) {
+	for (int i = BUT_A; i < MAX_STD_PAD_BUTTONS; i++) {
 		findChild<QPushButton *>("pushButton_" + SPT(type) + "_unset_" + SPB(i))->click();
 	}
 }
 void dlgStdPad::s_defaults_clicked(UNUSED(bool checked)) {
-	int i, index, type = QVariant(((themePushButton *)sender())->property("myType")).toInt();
-
-	index = type == KEYBOARD ? data.cfg.id - 1 : js_jdev_index();
+	const int type = QVariant(((themePushButton *)sender())->property("myType")).toInt();
+	const int index = type == KEYBOARD ? data.cfg.id - 1 : js_jdev_index();
 
 	info_entry_print(type, "");
 
 	settings_inp_port_defaults(&data.cfg.port, index, type);
 
-	for (i = BUT_A; i < MAX_STD_PAD_BUTTONS; i++) {
+	for (int i = BUT_A; i < MAX_STD_PAD_BUTTONS; i++) {
 		pixmapPushButton *bt = findChild<pixmapPushButton *>("pushButton_" + SPT(type) + "_" + SPB(i));
 
 		if (type == KEYBOARD) {
@@ -778,37 +761,34 @@ void dlgStdPad::s_deadzone_slider_value_changed(int value) {
 	data.deadzone = value;
 	deadzone_update_label(value);
 }
-void dlgStdPad::s_deadzone_default_clicked(UNUSED(bool checked)) {
+void dlgStdPad::s_deadzone_default_clicked(UNUSED(bool checked)) const {
 	horizontalSlider_joy_Deadzone->setValue(settings_jsc_deadzone_default());
 }
 void dlgStdPad::s_combobox_controller_type_activated(int index) {
 	BYTE state = RELEASED;
-	int i;
 
 	data.cfg.port.type_pad = index;
 
 	if (((data.cfg.port.type_pad == CTRL_PAD_AUTO) && (machine.type != DENDY)) || (data.cfg.port.type_pad == CTRL_PAD_ORIGINAL)) {
 		state = PRESSED;
 	}
-	for (i = 8; i < INPUT_DECODE_COUNTS; i++) {
+	for (int i = 8; i < INPUT_DECODE_COUNTS; i++) {
 		input_data_set_standard_controller(i, state, &data.cfg.port);
 	}
 }
 void dlgStdPad::s_slider_td_value_changed(int value) {
-	int type = QVariant(((QSlider *)sender())->property("myTurbo")).toInt();
+	const int type = QVariant(((QSlider *)sender())->property("myTurbo")).toInt();
 
 	data.cfg.port.turbo[type].frequency = value;
 	data.cfg.port.turbo[type].counter = 0;
 	td_update_label(type, value);
 }
 void dlgStdPad::s_pad_joy_read_timer(void) {
-	DBWORD value = js_jdev_read_in_dialog(&data.cfg.port.jguid);
+	const DBWORD value = js_jdev_read_in_dialog(&data.cfg.port.jguid);
 
 	if (data.joy.value && (data.joy.value != value)) {
-		int type, vbutton;
-
-		type = data.vbutton / MAX_STD_PAD_BUTTONS;
-		vbutton = data.vbutton - (type * MAX_STD_PAD_BUTTONS);
+		const int type = data.vbutton / MAX_STD_PAD_BUTTONS;
+		const int vbutton = data.vbutton - (type * MAX_STD_PAD_BUTTONS);
 
 		info_entry_print(type, "");
 		data.cfg.port.input[type][vbutton] = data.joy.value;
@@ -829,7 +809,6 @@ void dlgStdPad::s_pad_in_sequence_timer(void) {
 		SELECT, START, BUT_A, BUT_B,
 		TRB_A,  TRB_B,
 	};
-	pixmapPushButton *bt;
 
 	if (data.no_other_buttons) {
 		return;
@@ -842,7 +821,8 @@ void dlgStdPad::s_pad_in_sequence_timer(void) {
 		return;
 	}
 
-	bt = findChild<pixmapPushButton *>("pushButton_" + SPT(data.seq.type) + "_" + SPB(order[data.seq.counter]));
+	pixmapPushButton *bt = findChild<pixmapPushButton *>(
+		"pushButton_" + SPT(data.seq.type) + "_" + SPB(order[data.seq.counter]));
 	bt->setEnabled(true);
 	bt->click();
 }

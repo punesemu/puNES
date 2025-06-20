@@ -119,13 +119,15 @@ void search_in_cfg(QFile &file) {
 					dp_read.in_game = tag_game();
 				}
 				continue;
-			} else if (dp_read.lower.startsWith("crc")) {
+			}
+			if (dp_read.lower.startsWith("crc")) {
 				if (!dp_read.in_game) {
 					continue;
 				}
 				tag_crc();
 				continue;
-			} else if (dp_read.lower.startsWith("setting mask")) {
+			}
+			if (dp_read.lower.startsWith("setting mask")) {
 				if (!dp_read.in_game) {
 					continue;
 				}
@@ -134,13 +136,12 @@ void search_in_cfg(QFile &file) {
 				}
 				dp_read.in_type = tag_setting();
 				continue;
-			} else if (dp_read.lower.startsWith("choice value")) {
+			}
+			if (dp_read.lower.startsWith("choice value")) {
 				if (!dp_read.in_game || !dp_read.in_type) {
 					continue;
 				}
 				tag_choiche();
-				continue;
-			} else {
 				continue;
 			}
 		}
@@ -187,24 +188,20 @@ BYTE tag_game(void) {
 	//game name "Vs. Super Mario Bros."
 	if (dp_read.splitted.count() < 3) {
 		return (FALSE);
-	} else {
-		dp.name = name_from_splitted(2);
 	}
+	dp.name = name_from_splitted(2);
 	return (TRUE);
 }
 void tag_crc(void) {
-	QString buf;
-
 	// crc 0xED588F00 ; DH3-E
 	if ((dp_read.splitted.count() < 2) || (dp_read.splitted.at(0).compare("crc") != 0)) {
 		return;
 	}
-	buf = dp_read.splitted.at(1);
+	QString buf = dp_read.splitted.at(1);
 	dp.crc32s.append(to_uint(buf.remove("0x"), buf.contains("0x") ? 16 : 10));
 }
 BYTE tag_setting(void) {
 	_dp_type type;
-	QString buf;
 
 	//setting mask 0x07 default 0x00 name "Coinage"
 	if ((dp_read.splitted.count() < 7) ||
@@ -213,7 +210,7 @@ BYTE tag_setting(void) {
 		(dp_read.splitted.at(5).compare("name") != 0)) {
 		return (FALSE);
 	}
-	buf = dp_read.splitted.at(2);
+	QString buf = dp_read.splitted.at(2);
 	type.mask = to_uint(buf.remove("0x"), buf.contains("0x") ? 16 : 10);
 	buf = dp_read.splitted.at(4);
 	type.def = to_uint(buf.remove("0x"), buf.contains("0x") ? 16 : 10);
@@ -223,7 +220,6 @@ BYTE tag_setting(void) {
 }
 void tag_choiche(void) {
 	_dp_value value;
-	QString buf;
 
 	// choice value 0x03 name "5 Coins 1 Credit"
 	if ((dp_read.splitted.count() < 5) ||
@@ -231,7 +227,7 @@ void tag_choiche(void) {
 		(dp_read.splitted.at(3).compare("name") != 0)) {
 		return;
 	}
-	buf = dp_read.splitted.at(2);
+	QString buf = dp_read.splitted.at(2);
 	value.value = to_uint(buf.remove("0x"), buf.contains("0x") ? 16 : 10);
 	value.name = name_from_splitted(4);
 	dp.types.last().values.append(value);
@@ -252,7 +248,7 @@ BYTE evaluate_crc32(void) {
 	}
 	return (dp_read.finded);
 }
-QString name_from_splitted(int index) {
+QString name_from_splitted(const int index) {
 	QString name = "";
 
 	for (int i = index; i < dp_read.splitted.length(); i++) {

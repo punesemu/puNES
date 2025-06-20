@@ -28,7 +28,7 @@
 #include "settings.h"
 #include "gui.h"
 
-void recentFiles::init(QString recent_file_name) {
+void recentFiles::init(const QString &recent_file_name) {
 	QFile file;
 
 	file_name = recent_file_name;
@@ -45,7 +45,6 @@ void recentFiles::init(QString recent_file_name) {
 void recentFiles::add(uTCHAR *file) {
 	int index, rr_index = 1, count = 0;
 	_recent_list tmp;
-	QString utf;
 	uTCHAR *rom;
 
 	if ((cfg->cheat_mode == GAMEGENIE_MODE) && (gamegenie.phase != GG_LOAD_ROM)) {
@@ -59,7 +58,7 @@ void recentFiles::add(uTCHAR *file) {
 		rom = file;
 	}
 
-	utf = uQString(rom);
+	QString utf = uQString(rom);
 
 	// normalizzo il path
 	utf.replace('\\', '/');
@@ -175,19 +174,19 @@ void recentFiles::save(void) {
 	recent.close();
 	list.count = index;
 }
-int recentFiles::count(void) {
+int recentFiles::count(void) const {
 	return (list.count);
 }
-const char *recentFiles::item(int index) {
+const char *recentFiles::item(const int index) const {
 	return ((const char *)list.item[index].constData());
 }
-int recentFiles::item_size(int index) {
+int recentFiles::item_size(const int index) const {
 	return (list.item[index].length());
 }
-const char *recentFiles::current(void) {
+const char *recentFiles::current(void) const {
 	return ((const char *)list.current.constData());
 }
-int recentFiles::current_size(void) {
+int recentFiles::current_size(void) const {
 	return (list.current.length());
 }
 

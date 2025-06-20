@@ -24,7 +24,7 @@
 #include "extra/singleapplication/singleapplication.h"
 #include "common.h"
 
-class mainApplication : public SingleApplication {
+class mainApplication final : public SingleApplication {
 	Q_OBJECT
 
 	public:
@@ -36,15 +36,15 @@ class mainApplication : public SingleApplication {
 		bool notify(QObject *receiver, QEvent *event) override;
 
 	public:
-		BYTE base_folder(QDir *new_folder, QDir *old_folder, const QString &base, const QString &message);
-		BYTE control_base_folders(void);
+		static BYTE base_folder(const QDir *new_folder, QDir *old_folder, const QString &base, const QString &message);
+		static BYTE control_base_folders(void);
 
 	private:
-		QKeySequence key_sequence_from_key_event(QKeyEvent *event);
-		bool is_set_inp_shortcut(QEvent *event, int set_inp);
-		bool dlgkeyb_event(QEvent *event);
-		bool shortcut_override_event(QEvent *event);
-		bool key_release_event(QEvent *event);
+		static QKeySequence key_sequence_from_key_event(const QKeyEvent *event);
+		static bool is_set_inp_shortcut(QEvent *event, int set_inp);
+		static bool dlgkeyb_event(QEvent *event);
+		static bool shortcut_override_event(QEvent *event);
+		static bool key_release_event(QEvent *event);
 };
 
 #endif /* MAINAPPLICATION_HPP_ */

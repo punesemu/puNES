@@ -33,7 +33,7 @@
 #define CHEATFILENAME uQString(gui_config_folder()) + QString(CHEAT_FOLDER) + "/" +\
 	QFileInfo(uQString(info.rom.file)).completeBaseName() + ".xml"
 
-static bool libretro_value(QSettings *set, const QString& key, QString &value);
+static bool libretro_value(const QSettings *set, const QString& key, QString &value);
 static bool libretro_rd_file(QIODevice &device, QSettings::SettingsMap &map);
 
 static const QChar gg_table[] = {
@@ -87,21 +87,16 @@ void objCheat::clear_list(void) {
 		cheats.clear();
 	}
 }
-void objCheat::apply_cheats(void) {
-	_cheat *actual;
-	chl_map cheat;
-	int i;
-
+void objCheat::apply_cheats(void) const {
 	cheatslist_blank();
 
 	if (cheats.count() == 0) {
 		return;
 	}
 
-	for (i = 0; i < cheats.count(); i++) {
-		cheat = cheats.at(i);
-
-		actual = &cheats_list.cheat[cheats_list.counter];
+	for (int i = 0; i < cheats.count(); i++) {
+		chl_map cheat = cheats.at(i);
+		_cheat *actual = &cheats_list.cheat[cheats_list.counter];
 
 		if (cheat["genie"].compare("-") != 0) {
 			if ((cheat["enabled"].toInt() == 1) && (cheats_list.counter <= CL_CHEATS)
@@ -127,7 +122,7 @@ void objCheat::apply_cheats(void) {
 		gui_overlay_info_append_msg_precompiled(18, &cheats_list.counter);
 	}
 }
-bool objCheat::is_equal(int index, chl_map *find, bool description) const {
+bool objCheat::is_equal(const int index, chl_map *find, const bool description) const {
 	if (index >= cheats.count()) {
 		return (false);
 	}
@@ -157,13 +152,12 @@ bool objCheat::is_equal(int index, chl_map *find, bool description) const {
 
 	return (false);
 }
-int objCheat::find_cheat(chl_map *find, bool description) const {
+int objCheat::find_cheat(chl_map *find, const bool description) const {
 	for (int i = 0; i < cheats.count(); i++) {
 		if (is_equal(i, find, description)) {
 			return (i);
 		}
 	}
-
 	return (-1);
 }
 
@@ -228,7 +222,7 @@ void objCheat::complete_ram(chl_map *cheat) {
 }
 
 bool objCheat::decode_gg(const QString &code, _cheat *cheat) {
-	QByteArray lat1 = code.toLower().toLatin1();
+	const QByteArray lat1 = code.toLower().toLatin1();
 	int len = lat1.length();
 	BYTE codes[8];
 
@@ -326,16 +320,14 @@ bool objCheat::decode_gg(const QString &code, _cheat *cheat) {
 
 	return (EXIT_OK);
 }
-QString objCheat::encode_gg(_cheat *cheat) {
+QString objCheat::encode_gg(const _cheat *cheat) {
 	QString gg;
-	int i;
 
 	if (cheat->address < 0x8000) {
 		return ("-");
 	}
-
-	i = (cheat->enabled_compare ? 8 : 6);
 	{
+		const int i = (cheat->enabled_compare ? 8 : 6);
 		const int codes[8] = {
 				(cheat->replace       & 0x07) | (cheat->replace >> 4 & 0x08),
 				(cheat->replace >> 4  & 0x07) | (cheat->address >> 4 & 0x08),
@@ -346,9 +338,8 @@ QString objCheat::encode_gg(_cheat *cheat) {
 				(cheat->enabled_compare ? ((cheat->compare & 0x07)      | (cheat->compare >> 4 & 0x08)) : 0),
 				(cheat->enabled_compare ? ((cheat->compare >> 4 & 0x07) | (cheat->replace      & 0x08)) : 0)
 		};
-		int a;
 
-		for (a = 0; a < i; a++) {
+		for (int a = 0; a < i; a++) {
 			gg.append(gg_table[codes[a]]);
 		}
 	}
@@ -369,8 +360,9 @@ void objCheat::complete_gg(chl_map *cheat) {
 
 bool objCheat::decode_rocky(const QString &code, _cheat *cheat) {
 	DBWORD input = 0, output = 0, key = rocky_key;
-	QByteArray lat1 = code.toUpper().toLatin1();
-	int i, len = lat1.length();
+	const QByteArray lat1 = code.toUpper().toLatin1();
+	const int len = lat1.length();
+	int i;
 
 	memset(cheat, 0x00, sizeof(_cheat));
 
@@ -407,8 +399,8 @@ bool objCheat::decode_rocky(const QString &code, _cheat *cheat) {
 
 	return (EXIT_OK);
 }
-QString objCheat::encode_rocky(_cheat *cheat) {
-	DBWORD input, output = 0, key = rocky_key;
+QString objCheat::encode_rocky(const _cheat *cheat) {
+	DBWORD output = 0, key = rocky_key;
 	QString rocky;
 	int i;
 
@@ -416,7 +408,7 @@ QString objCheat::encode_rocky(_cheat *cheat) {
 		return ("-");
 	}
 
-	input = (cheat->address & 0x7FFF) | (cheat->compare << 16) | (cheat->replace << 24);
+	const DBWORD input = (cheat->address & 0x7FFF) | (cheat->compare << 16) | (cheat->replace << 24);
 
 	for (i = 31; i--; key = key << 1 & 0xFFFFFFFF) {
 		const uint ctrl = input >> rocky_table[i] & 0x1;
@@ -500,9 +492,8 @@ void objCheat::import_MAME_xml(QWidget *parent, const QString &path) {
 				}
 				if (!xmlReader.name().toString().compare("cheat", Qt::CaseInsensitive)) {
 					QList<chl_map> list = parse_mame_cheat(xmlReader);
-					int i;
 
-					for (i = 0; i < list.count(); i++) {
+					for (int i = 0; i < list.count(); i++) {
 						if ((list[i].count() > 0) && (find_cheat(&list[i], true) == -1)) {
 							cheats.append(list[i]);
 						}
@@ -543,12 +534,11 @@ void objCheat::import_FCEUX_cht(const QString &path) {
 }
 void objCheat::import_libretro_cht(const QString &path) {
 	static const QSettings::Format cfg = QSettings::registerFormat("libretro", libretro_rd_file, nullptr);
-	QFileInfo file(path);
-	QSettings *set;
-	QString key, value;
-	uint totals = 0, i;
+	const QFileInfo file(path);
+	QString value;
+	uint totals = 0;
 
-	set = new QSettings(file.canonicalFilePath(), cfg);
+	const QSettings *set = new QSettings(file.canonicalFilePath(), cfg);
 
 	if (set->allKeys().contains("cheats", Qt::CaseInsensitive)) {
 		bool ok;
@@ -559,8 +549,9 @@ void objCheat::import_libretro_cht(const QString &path) {
 		}
 	}
 
-	for (i = 0; i < totals; i++) {
-		key = QString("cheat%1_code").arg(i);
+	for (uint i = 0; i < totals; i++) {
+		QString key = QString("cheat%1_code").arg(i);
+
 		if (!libretro_value(set, key, value)) {
 			QString description = "", enable = "0";
 			QList<chl_map> list;
@@ -578,19 +569,18 @@ void objCheat::import_libretro_cht(const QString &path) {
 
 				if (splitted.at(a).contains(":")) {
 					QStringList chsplitted = splitted.at(a).split(":");
-					uint adr, replace;
 					bool ok;
 
 					if (chsplitted.count() != 2) {
 						continue;
 					}
 
-					adr = chsplitted.at(0).toUInt(&ok, 16);
+					const uint adr = chsplitted.at(0).toUInt(&ok, 16);
 					if (!ok || (adr > 0xFFFF)) {
 						continue;
 					}
 
-					replace = chsplitted.at(1).toUInt(&ok, 16);
+					const uint replace = chsplitted.at(1).toUInt(&ok, 16);
 					if (!ok || (replace > 0xFF)) {
 						continue;
 					}
@@ -784,7 +774,7 @@ QList<chl_map> objCheat::parse_mame_cheat(QXmlStreamReader &xml) {
 
 				if (xml.tokenType() == QXmlStreamReader::Characters) {
 					QString text = xml.text().toString();
-					uint adr1 = 0, adr2 = 0, compare = 0, value = 0;
+					uint adr2 = 0, compare = 0, value = 0;
 					bool oka1 = false, oka2 = false, okc = false, okv = false;
 					int index = -1;
 
@@ -794,7 +784,8 @@ QList<chl_map> objCheat::parse_mame_cheat(QXmlStreamReader &xml) {
 						QStringList splitted = condition.mid(index + 1).split("==");
 
 						if (splitted.count() == 2) {
-							adr1 = splitted.at(0).toUInt(&oka1, 16);
+							const uint adr1 = splitted.at(0).toUInt(&oka1, 16);
+
 							if (oka1 && (adr1 > 0xFFFF)) {
 								oka1 = false;
 							}
@@ -808,7 +799,7 @@ QList<chl_map> objCheat::parse_mame_cheat(QXmlStreamReader &xml) {
 					// text
 					index = text.indexOf('@');
 					if (index >= 0) {
-						QStringList splitted = text.mid(index + 1).split("=");
+						const QStringList splitted = text.mid(index + 1).split("=");
 
 						if (splitted.count() == 2) {
 							adr2 = splitted.at(0).toUInt(&oka2, 16);
@@ -845,9 +836,7 @@ QList<chl_map> objCheat::parse_mame_cheat(QXmlStreamReader &xml) {
 	}
 
 	if (list.count() > 1) {
-		int i;
-
-		for (i = 0; i < list.count(); i++) {
+		for (int i = 0; i < list.count(); i++) {
 			list[i]["description"] = list[i]["description"] + QString(" (%0 of %1)").arg(i + 1).arg(list.count());
 		}
 	}
@@ -909,7 +898,7 @@ chl_map objCheat::parse_fceux_cheat(const QString &line) {
 	return (cheat);
 }
 
-void objCheat::complete_from_code(chl_map *cheat, _cheat *ch) {
+void objCheat::complete_from_code(chl_map *cheat, const _cheat *ch) {
 	cheat->insert("address", QString("0x" + QString("%1").arg(ch->address, 4, 16, QChar('0')).toUpper()));
 	cheat->insert("value", QString( "0x" + QString("%1").arg(ch->replace, 2, 16, QChar('0')).toUpper()));
 	cheat->insert("enabled_compare", QString("%1").arg(ch->enabled_compare));
@@ -926,7 +915,7 @@ void objCheat::ram_to_gg(chl_map *cheat) {
 	cheat->insert("genie", encode_gg(&ch));
 	cheat->insert("rocky", "-");
 }
-void objCheat::add_element_data_to_map(const QString &element_name, const QString &text, chl_map &map) const {
+void objCheat::add_element_data_to_map(const QString &element_name, const QString &text, chl_map &map) {
 	if (!element_name.compare("genie", Qt::CaseInsensitive) ||
 		!element_name.compare("rocky", Qt::CaseInsensitive) ||
 		!element_name.compare("compare", Qt::CaseInsensitive)) {
@@ -936,14 +925,12 @@ void objCheat::add_element_data_to_map(const QString &element_name, const QStrin
 	}
 	map.insert(element_name.toLower(), text);
 }
-void objCheat::add_element_data_to_map(QXmlStreamReader &xml, chl_map &map) const {
-	QString element_name;
-
+void objCheat::add_element_data_to_map(QXmlStreamReader &xml, chl_map &map) {
 	if (xml.tokenType() != QXmlStreamReader::StartElement) {
 		return;
 	}
 
-	element_name = xml.name().toString();
+	const QString element_name = xml.name().toString();
 
 	xml.readNext();
 
@@ -956,7 +943,7 @@ void objCheat::add_element_data_to_map(QXmlStreamReader &xml, chl_map &map) cons
 
 // ----------------------------------------- I/O -----------------------------------------
 
-static bool libretro_value(QSettings *set, const QString &key, QString &value) {
+static bool libretro_value(const QSettings *set, const QString &key, QString &value) {
 	value = "";
 
 	if (set->allKeys().contains(key, Qt::CaseInsensitive)) {
@@ -975,16 +962,17 @@ static bool libretro_rd_file(QIODevice &device, QSettings::SettingsMap &map) {
 #endif
 
 	while (!in.atEnd()) {
-		QString line = in.readLine();
+		const QString line = in.readLine();
 
 		if (line.isEmpty() || line.startsWith("#") || line.startsWith("*")) {
 			continue;
 		}
 
-		QStringList splitted = line.split("=");
-		QString key, value;
+		const QStringList splitted = line.split("=");
 
 		if (splitted.count() == 2) {
+			QString key, value;
+
 			key = QString(splitted.at(0)).replace(qtHelper::rx_any_numbers, "");
 			value = splitted.at(1).trimmed();
 			// rimuovo i commenti che possono esserci sulla riga

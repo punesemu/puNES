@@ -126,13 +126,12 @@ void dlgJsc::closeEvent(QCloseEvent *event) {
 
 void dlgJsc::joy_combo_init(void) {
 	BYTE current_index = 0, current_line = JS_NO_JOYSTICK;
-	int i;
 
 	comboBox_joy_ID->blockSignals(true);
 	comboBox_joy_ID->clear();
 
-	for (i = 0; i < joy_list.count; i++) {
-		_cb_ports *cb = &joy_list.ele[i];
+	for (int i = 0; i < joy_list.count; i++) {
+		const _cb_ports *cb = &joy_list.ele[i];
 
 		if (js_is_this(cb->index, &guid)) {
 			current_line = i;
@@ -157,7 +156,7 @@ void dlgJsc::joy_combo_init(void) {
 		emit comboBox_joy_ID->currentIndexChanged(current_index);
 	}
 }
-void dlgJsc::clear_all(void) {
+void dlgJsc::clear_all(void) const {
 	unsigned int i;
 
 #if !defined (_WIN32)
@@ -195,11 +194,11 @@ void dlgJsc::clear_all(void) {
 		}
 	}
 }
-void dlgJsc::update_info_lines(void) {
-	_js_device *jdev = &jstick.jdd.devices[js_jdev_index()];
-	int ad = axes_disabled();
-	int hd = hats_disabled();
-	int bd = buttons_disabled();
+void dlgJsc::update_info_lines(void) const {
+	const _js_device *jdev = &jstick.jdd.devices[js_jdev_index()];
+	const int ad = axes_disabled();
+	const int hd = hats_disabled();
+	const int bd = buttons_disabled();
 	QString tmp = "";
 
 	tmp = QString("%1 Axes").arg(jdev->info.axes);
@@ -217,7 +216,7 @@ void dlgJsc::update_info_lines(void) {
 	}
 	label_Buttons_line->setText(tmp);
 }
-int dlgJsc::js_jdev_index(void) {
+int dlgJsc::js_jdev_index(void) const {
 	int jdev_index = JS_NO_JOYSTICK;
 
 	if ((comboBox_joy_ID->count() > 1) && comboBox_joy_ID->currentData().isValid()) {
@@ -225,13 +224,12 @@ int dlgJsc::js_jdev_index(void) {
 	}
 	return (jdev_index);
 }
-int dlgJsc::axes_disabled(void) {
-	_js_device *jdev = &jstick.jdd.devices[js_jdev_index()];
+int dlgJsc::axes_disabled(void) const {
+	const _js_device *jdev = &jstick.jdd.devices[js_jdev_index()];
 	int disabled = 0;
-	unsigned int i;
 
-	for (i = 0; i < JS_MAX_AXES; i++) {
-		_js_axis *jsx = &jdev->data.axis[i];
+	for (unsigned int i = 0; i < JS_MAX_AXES; i++) {
+		const _js_axis *jsx = &jdev->data.axis[i];
 
 		disabled = jsx->used ?
 			jsx->enabled ? disabled : disabled + 1 :
@@ -239,13 +237,12 @@ int dlgJsc::axes_disabled(void) {
 	}
 	return (disabled);
 }
-int dlgJsc::hats_disabled(void) {
-	_js_device *jdev = &jstick.jdd.devices[js_jdev_index()];
+int dlgJsc::hats_disabled(void) const {
+	const _js_device *jdev = &jstick.jdd.devices[js_jdev_index()];
 	int disabled = 0;
-	unsigned int i;
 
-	for (i = 0; i < JS_MAX_HATS; i++) {
-		_js_axis *jsx = &jdev->data.hat[i];
+	for (unsigned int i = 0; i < JS_MAX_HATS; i++) {
+		const _js_axis *jsx = &jdev->data.hat[i];
 
 		disabled = jsx->used ?
 			jsx->enabled ? disabled : disabled + 1 :
@@ -253,13 +250,12 @@ int dlgJsc::hats_disabled(void) {
 	}
 	return (disabled);
 }
-int dlgJsc::buttons_disabled(void) {
-	_js_device *jdev = &jstick.jdd.devices[js_jdev_index()];
+int dlgJsc::buttons_disabled(void) const {
+	const _js_device *jdev = &jstick.jdd.devices[js_jdev_index()];
 	int disabled = 0;
-	unsigned int i;
 
-	for (i = 0; i < JS_MAX_BUTTONS; i++) {
-		_js_button *jsx = &jdev->data.button[i];
+	for (unsigned int i = 0; i < JS_MAX_BUTTONS; i++) {
+		const _js_button *jsx = &jdev->data.button[i];
 
 		disabled = jsx->used ?
 			jsx->enabled ? disabled : disabled + 1 :
@@ -269,26 +265,24 @@ int dlgJsc::buttons_disabled(void) {
 }
 
 void dlgJsc::s_joy_read_timer(void) {
-	QString styleSheet = "QCheckBox { background-color: %0; }";
-	QString scbg = styleSheet.arg(theme::get_theme_color("#ACFFAC").name());
-	QString scbr = styleSheet.arg(theme::get_theme_color("#FFCFCF").name());
-	int jdev_index = js_jdev_index();
+	const QString styleSheet = "QCheckBox { background-color: %0; }";
+	const QString scbg = styleSheet.arg(theme::get_theme_color("#ACFFAC").name());
+	const QString scbr = styleSheet.arg(theme::get_theme_color("#FFCFCF").name());
+	const int jdev_index = js_jdev_index();
 
 	mutex.lock();
 
 	if (jdev_index != JS_NO_JOYSTICK) {
 		if (jdev_index < MAX_JOYSTICK) {
-			_js_device *jdev = &jstick.jdd.devices[jdev_index];
+			const _js_device *jdev = &jstick.jdd.devices[jdev_index];
 			unsigned int i, a;
 
 			for (i = 0; i < LENGTH(js_axs_type); i++) {
 				for (a = 0; a < js_axs_type[i]; a++) {
-					_js_axis *jsx = !i ? &jdev->data.axis[a] : &jdev->data.hat[a];
+					const _js_axis *jsx = !i ? &jdev->data.axis[a] : &jdev->data.hat[a];
 
 					if (jsx->used) {
-						unsigned int b;
-
-						for (b = 1; b < LENGTH(js_axs_joyval); b++) {
+						for (unsigned int b = 1; b < LENGTH(js_axs_joyval); b++) {
 							if (jsx->offset == js_axs_joyval[b].offset) {
 								const uTCHAR *desc = js_axs_joyval[b].desc[2];
 								QCheckBox *cb = findChild<QCheckBox *>("checkBox_" + uQString(desc));
@@ -304,7 +298,7 @@ void dlgJsc::s_joy_read_timer(void) {
 				}
 			}
 			for (i = 0; i < JS_MAX_BUTTONS; i++) {
-				_js_button *jsx = &jdev->data.button[i];
+				const _js_button *jsx = &jdev->data.button[i];
 
 				if (jsx->used) {
 					for (a = 1; a < LENGTH(js_btn_joyval); a++) {
@@ -324,7 +318,7 @@ void dlgJsc::s_joy_read_timer(void) {
 	mutex.unlock();
 }
 void dlgJsc::s_combobox_joy_activated(int index) {
-	int jdev_index = ((QComboBox *)sender())->itemData(index).toInt();
+	const int jdev_index = ((QComboBox *)sender())->itemData(index).toInt();
 
 	if (comboBox_joy_ID->count() == 1) {
 		return;
@@ -332,18 +326,17 @@ void dlgJsc::s_combobox_joy_activated(int index) {
 	js_guid_set(jdev_index, &guid);
 }
 void dlgJsc::s_combobox_joy_index_changed(UNUSED(int index)) {
-	int jdev_index = js_jdev_index();
+	const int jdev_index = js_jdev_index();
 	static int old_jdev_index = -1;
 
 	if (jdev_index != old_jdev_index) {
-		unsigned int i, a;
-
 		mutex.lock();
 
 		clear_all();
 
 		if (jdev_index < MAX_JOYSTICK) {
 			_js_device *jdev = &jstick.jdd.devices[jdev_index];
+			unsigned int i, a;
 
 #if !defined (_WIN32)
 			label_Device->setText(QString(jdev->dev));
@@ -381,12 +374,10 @@ void dlgJsc::s_combobox_joy_index_changed(UNUSED(int index)) {
 			// abilito solo quello che serve
 			for (i = 0; i < LENGTH(js_axs_type); i++) {
 				for (a = 0; a < js_axs_type[i]; a++) {
-					_js_axis *jsx = !i ? &jdev->data.axis[a] : &jdev->data.hat[a];
+					const _js_axis *jsx = !i ? &jdev->data.axis[a] : &jdev->data.hat[a];
 
 					if (jsx->used) {
-						unsigned int b;
-
-						for (b = 1; b < LENGTH(js_axs_joyval); b++) {
+						for (unsigned int b = 1; b < LENGTH(js_axs_joyval); b++) {
 							if (jsx->offset == js_axs_joyval[b].offset) {
 								const uTCHAR *desc = js_axs_joyval[b].desc[2];
 								QCheckBox *cb = findChild<QCheckBox *>("checkBox_" + uQString(desc));
@@ -444,7 +435,7 @@ void dlgJsc::s_combobox_joy_index_changed(UNUSED(int index)) {
 				}
 			}
 			for (i = 0; i < JS_MAX_BUTTONS; i++) {
-				_js_button *jsx = &jdev->data.button[i];
+				const _js_button *jsx = &jdev->data.button[i];
 
 				if (jsx->used) {
 					for (a = 1; a < LENGTH(js_btn_joyval); a++) {
@@ -484,26 +475,26 @@ void dlgJsc::s_combobox_joy_index_changed(UNUSED(int index)) {
 		mutex.unlock();
 	}
 }
-void dlgJsc::s_axis_cb_clicked(UNUSED(bool checked)) {
-	int index = QVariant(((QCheckBox *)sender())->property("myIndex")).toInt();
+void dlgJsc::s_axis_cb_clicked(UNUSED(bool checked)) const {
+	const int index = QVariant(((QCheckBox *)sender())->property("myIndex")).toInt();
 	_js_device *jdev = &jstick.jdd.devices[js_jdev_index()];
 	_js_axis *jsx = index & 0x100 ? &jdev->data.hat[index & 0xFF] : &jdev->data.axis[index];
 
 	jsx->enabled = !jsx->enabled;
 	update_info_lines();
 }
-void dlgJsc::s_button_cb_clicked(UNUSED(bool checked)) {
-	int index = QVariant(((QCheckBox *)sender())->property("myIndex")).toInt();
+void dlgJsc::s_button_cb_clicked(UNUSED(bool checked)) const {
+	const int index = QVariant(((QCheckBox *)sender())->property("myIndex")).toInt();
 	_js_device *jdev = &jstick.jdd.devices[js_jdev_index()];
 	_js_button *jsx = &jdev->data.button[index];
 
 	jsx->enabled = !jsx->enabled;
 	update_info_lines();
 }
-void dlgJsc::s_save_clicked(UNUSED(bool checked)) {
+void dlgJsc::s_save_clicked(UNUSED(bool checked)) const {
 	if (js_jdev_index() != JS_NO_JOYSTICK) {
 		_js_device *jdev = &jstick.jdd.devices[js_jdev_index()];
-		unsigned int i, a;
+		unsigned int i;
 		_js_data data;
 
 		memcpy(&data, &jdev->data, sizeof(_js_data));
@@ -516,9 +507,9 @@ void dlgJsc::s_save_clicked(UNUSED(bool checked)) {
 			jsx1->enabled = jsx2->enabled;
 		}
 		for (i = 0; i < LENGTH(js_axs_type); i++) {
-			for (a = 0; a < js_axs_type[i]; a++) {
+			for (unsigned int a = 0; a < js_axs_type[i]; a++) {
 				_js_axis *jsx1 = !i ? &jdev->data.axis[a] : &jdev->data.hat[a];
-				_js_axis *jsx2 = !i ? &data.axis[a] : &data.hat[a];
+				const _js_axis *jsx2 = !i ? &data.axis[a] : &data.hat[a];
 
 				jsx1->enabled = jsx2->enabled;
 			}

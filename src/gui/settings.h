@@ -2052,9 +2052,9 @@ EXTERNC DBWORD settings_inp_wr_port(void *str, int index, int type);
 EXTERNC void settings_inp_all_defaults(_config_input *config_input, _array_pointers_port *array);
 EXTERNC void settings_inp_port_defaults(_port *port, int index, int mode);
 EXTERNC void settings_inp_port_button_default(int button, _port *port, int index, int mode);
-EXTERNC DBWORD settings_inp_nes_keyboard_nscode_default(uTCHAR *name);
-EXTERNC DBWORD settings_inp_nes_keyboard_nscode(uTCHAR *name);
-EXTERNC void settings_inp_nes_keyboard_set_nscode(uTCHAR *name, DBWORD nscode);
+EXTERNC DBWORD settings_inp_nes_keyboard_nscode_default(const uTCHAR *name);
+EXTERNC DBWORD settings_inp_nes_keyboard_nscode(const uTCHAR *name);
+EXTERNC void settings_inp_nes_keyboard_set_nscode(const uTCHAR *name, DBWORD nscode);
 EXTERNC void settings_inp_save(void);
 
 EXTERNC void settings_pgs_parse(void);

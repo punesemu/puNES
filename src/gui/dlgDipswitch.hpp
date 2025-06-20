@@ -42,7 +42,7 @@ typedef struct _dp_internal {
 
 // ----------------------------------------------------------------------------------------------
 
-class dlgDipswitch : public QWidget, public Ui::dlgDipswitch {
+class dlgDipswitch final : public QWidget, public Ui::dlgDipswitch {
 	Q_OBJECT
 
 	public:
@@ -50,13 +50,13 @@ class dlgDipswitch : public QWidget, public Ui::dlgDipswitch {
 		~dlgDipswitch() override;
 
 	private slots:
-		void s_dipswitch(int index);
-		void s_default(bool checked);
+		void s_dipswitch(int index) const;
+		void s_default(bool checked) const;
 };
 
 // ----------------------------------------------------------------------------------------------
 
-class wdgDlgDipswitch : public wdgTitleBarDialog {
+class wdgDlgDipswitch final : public wdgTitleBarDialog {
 	public:
 		dlgDipswitch *wd;
 

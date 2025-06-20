@@ -28,7 +28,7 @@
 #include "cgp.h"
 #include "shaders.h"
 
-static bool cgp_value(QSettings *set, const QString &key, QString &value);
+static bool cgp_value(const QSettings *set, const QString &key, QString &value);
 static bool cgp_rd_file(QIODevice &device, QSettings::SettingsMap &map);
 
 BYTE cgp_parse(const uTCHAR *file) {
@@ -182,7 +182,7 @@ BYTE cgp_parse(const uTCHAR *file) {
 						sc->type.x = SHADER_SCALE_ABSOLUTE;
 					} else {
 						log_warning(uL("cgp;invalid scale_type_x attribute"));
-						delete(set);
+						delete (set);
 						return (EXIT_ERROR);
 					}
 				}
@@ -196,7 +196,7 @@ BYTE cgp_parse(const uTCHAR *file) {
 						sc->type.y = SHADER_SCALE_ABSOLUTE;
 					} else {
 						log_warning(uL("cgp;invalid scale_type_y attribute"));
-						delete(set);
+						delete (set);
 						return (EXIT_ERROR);
 					}
 				}
@@ -394,12 +394,9 @@ BYTE cgp_pragma_param(const char *code, const uTCHAR *path) {
 		::memset(&param, 0x00, sizeof(_param_shd));
 
 		if (line.startsWith("#pragma parameter")) {
-			bool finded;
-			int count;
-
 			// sscanf non e' "locale indipendente" percio' lo utilizzo solo per
 			// ricavare nome e descrizione del parametro.
-			count = ::sscanf(line.toUtf8().constData(), "#pragma parameter %63s \"%63[^\"]\" ", param.name, param.desc);
+			int count = ::sscanf(line.toUtf8().constData(), "#pragma parameter %63s \"%63[^\"]\" ", param.name, param.desc);
 
 			if (count < 2) {
 				continue;
@@ -431,6 +428,8 @@ BYTE cgp_pragma_param(const char *code, const uTCHAR *path) {
 						case 5:
 							param.step = match.captured(0).toFloat();
 							break;
+						default:
+							break;
 					}
 				}
 			}
@@ -441,10 +440,9 @@ BYTE cgp_pragma_param(const char *code, const uTCHAR *path) {
 
 			param.value = param.initial;
 
-			finded = false;
-
+			bool finded = false;
 			for (i = 0; i < shader_effect.params; i++) {
-				_param_shd *ctrl = &shader_effect.param[i];
+				const _param_shd *ctrl = &shader_effect.param[i];
 
 				if (::strncmp(param.name, ctrl->name, sizeof(param.name)) == 0) {
 					finded = true;
@@ -477,7 +475,7 @@ BYTE cgp_pragma_param(const char *code, const uTCHAR *path) {
 	return (EXIT_OK);
 }
 
-static bool cgp_value(QSettings *set, const QString &key, QString &value) {
+static bool cgp_value(const QSettings *set, const QString &key, QString &value) {
 	value = "";
 
 	if (set->allKeys().contains(key, Qt::CaseInsensitive)) {
@@ -497,18 +495,18 @@ static bool cgp_rd_file(QIODevice &device, QSettings::SettingsMap &map) {
 #endif
 
 	while (!in.atEnd()) {
-		QString line = in.readLine();
+		const QString line = in.readLine();
 
 		if (line.isEmpty() || line.startsWith("#") || line.startsWith("*")) {
 			continue;
 		}
 
-		QStringList splitted = line.split("=");
-		QString key, value;
+		const QStringList splitted = line.split("=");
 
 		if (splitted.count() == 2) {
-			key = QString(splitted.at(0)).replace(qtHelper::rx_any_numbers, "");
-			value = splitted.at(1).trimmed();
+			QString key = QString(splitted.at(0)).replace(qtHelper::rx_any_numbers, "");
+			QString value = splitted.at(1).trimmed();
+
 			// rimuovo i commenti che possono esserci sulla riga
 			value = value.remove(qtHelper::rx_comment_0);
 			value = value.remove(qtHelper::rx_comment_1);

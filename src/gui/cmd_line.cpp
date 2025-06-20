@@ -31,7 +31,7 @@
 #define oarg uQStringCD(value)
 #define set_int(cfg, ind)\
 {\
-	int rc = settings_val_to_int(ind, oarg);\
+	const int rc = settings_val_to_int(ind, oarg);\
 	if (rc >= 0) cfg = rc;\
 }
 #define set_cpy_utchar_to_val(cfg, ind)\
@@ -42,7 +42,7 @@
 #define set_oscan(set, ind)\
 	settings_val_to_oscan(set, &overscan_borders[ind], oarg)
 
-static void usage(QString &name);
+static void usage(const QString &name);
 
 static struct _cl_option {
 	QString lopt;
@@ -106,15 +106,16 @@ static struct _cl_option {
 };
 
 BYTE cmd_line_parse(int argc, uTCHAR **argv) {
-	QStringList splitted;
 	QString arg, key, value, exe = QFileInfo(uQString(argv[0])).baseName();
+	QStringList splitted;
 	int opt = 0;
 
 	for (int a = 1; a < argc; a++) {
+		bool elaborate = false;
+
 		arg = uQString(argv[a]);
 		splitted = arg.split("=");
 		key = splitted.at(0);
-		bool elaborate = false;
 
 		if (key.startsWith("--")) {
 			key.replace(0, 2, "");
@@ -125,13 +126,11 @@ BYTE cmd_line_parse(int argc, uTCHAR **argv) {
 		}
 
 		if (elaborate) {
-			unsigned int b;
-			QString skey;
-
-			for (b = 0; b < LENGTH(opt_long); b++) {
+			for (unsigned int b = 0; b < LENGTH(opt_long); b++) {
 				if ((opt_long[b].lopt == key) || (opt_long[b].sopt == key) ||
 					(opt_long[b].lopt.endsWith(".") && key.startsWith(opt_long[b].lopt))) {
-					skey = opt_long[b].sopt;
+					const QString skey = opt_long[b].sopt;
+
 					if (opt_long[b].ra == req_arg) {
 						if (splitted.count() > 1) {
 							value = splitted.at(1);
@@ -141,9 +140,8 @@ BYTE cmd_line_parse(int argc, uTCHAR **argv) {
 									QString("%1: the option needs an arguments -- \"%2\"").arg(exe, key));
 								usage(exe);
 								return (EXIT_ERROR);
-							} else {
-								value = uQString(argv[++a]);
 							}
+							value = uQString(argv[++a]);
 						}
 					}
 					opt = (int)(*((unsigned char *)skey.toLatin1().constData()));
@@ -151,7 +149,7 @@ BYTE cmd_line_parse(int argc, uTCHAR **argv) {
 				}
 			}
 		} else {
-			QFileInfo finfo(key);
+			const QFileInfo finfo(key);
 
 			umemset(info.rom.file, 0x00, usizeof(info.rom.file));
 			if (finfo.exists()) {
@@ -226,15 +224,15 @@ BYTE cmd_line_parse(int argc, uTCHAR **argv) {
 				} else if (key == "hidden-gui") {
 					info.start_with_hidden_gui = TRUE;
 				} else if (key.startsWith("shortcut.")) {
-					QStringList list = key.toLower().split(".");
+					const QStringList list = key.toLower().split(".");
 
 					if (list.length() == 3) {
-						QString type = list.at(1);
+						const QString type = list.at(1);
 
 						key = list.at(2);
 						for (int i = SET_INP_SC_OPEN; i < SET_INP_SC_OPEN + SET_MAX_NUM_SC; i++) {
 							const _settings *s = &inp_cfg[i];
-							QString skey = uQString(s->key).toLower().replace(" ", "_");
+							const QString skey = uQString(s->key).toLower().replace(" ", "_");
 
 							if (key == skey) {
 								if (type == "k") {
@@ -246,7 +244,7 @@ BYTE cmd_line_parse(int argc, uTCHAR **argv) {
 						}
 					}
 				} else if (key.startsWith("input.")) {
-					QStringList list = key.toLower().split(".");
+					const QStringList list = key.toLower().split(".");
 					struct _range {
 						int port;
 						int start;
@@ -259,13 +257,13 @@ BYTE cmd_line_parse(int argc, uTCHAR **argv) {
 					};
 
 					if ((list.length() == 3) && (list.at(1).length() == 3)) {
-						QString type = list.at(1).mid(2, 1);
+						const QString type = list.at(1).mid(2, 1);
 
 						key = list.at(1).mid(0,2) + "k_" + list.at(2);
 						for (unsigned int r = 0; r < LENGTH(range); r++) {
 							for (int i = range[r].start; i <= range[r].end ; i++) {
 								const _settings *s = &inp_cfg[i];
-								QString skey = uQString(s->key).toLower().replace(" ", "_");
+								const QString skey = uQString(s->key).toLower().replace(" ", "_");
 
 								if (key == skey) {
 									if (type == "k") {
@@ -335,7 +333,7 @@ BYTE cmd_line_parse(int argc, uTCHAR **argv) {
 				break;
 			case 't':
 				{
-					int rc = settings_val_to_int(SET_STRETCH_FULLSCREEN, oarg);
+					const int rc = settings_val_to_int(SET_STRETCH_FULLSCREEN, oarg);
 
 					if (rc >= 0) {
 						cfg_from_file.scale = !rc;
@@ -360,13 +358,13 @@ BYTE cmd_line_parse(int argc, uTCHAR **argv) {
 	}
 	return (EXIT_OK);
 }
-BYTE cmd_line_check_portable(int argc, uTCHAR **argv) {
+BYTE cmd_line_check_portable(const int argc, uTCHAR **argv) {
 	if ((QFileInfo(uQString(argv[0])).completeBaseName().right(2) == "_p") ||
 		(QFile(uQString(gui_application_folder()) + QString(CFGFILENAME)).exists())) {
 		return (TRUE);
 	}
 	for (int opt = 0; opt < argc; opt++) {
-		QString arg = uQString(argv[opt]);
+		const QString arg = uQString(argv[opt]);
 
 		if (arg == "--portable") {
 			return (TRUE);
@@ -375,7 +373,7 @@ BYTE cmd_line_check_portable(int argc, uTCHAR **argv) {
 	return (FALSE);
 }
 
-static void usage(QString &name) {
+static void usage(const QString &name) {
 	wdgDlgCmdLineHelp *dlg = new wdgDlgCmdLineHelp(nullptr, name);
 
 	dlg->exec();

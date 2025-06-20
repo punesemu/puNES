@@ -41,10 +41,10 @@ void recent_roms_save(void) {
 int recent_roms_count(void) {
 	return (recent_roms.count());
 }
-const char *recent_roms_item(int index) {
+const char *recent_roms_item(const int index) {
 	return (recent_roms.item(index));
 }
-int recent_roms_item_size(int index) {
+int recent_roms_item_size(const int index) {
 	return (recent_roms.item_size(index));
 }
 const char *recent_roms_current(void) {
@@ -74,10 +74,10 @@ void recent_disks_save(void) {
 int recent_disks_count(void) {
 	return (recent_disks.count());
 }
-const char *recent_disks_item(int index) {
+const char *recent_disks_item(const int index) {
 	return (recent_disks.item(index));
 }
-int recent_disks_item_size(int index) {
+int recent_disks_item_size(const int index) {
 	return (recent_disks.item_size(index));
 }
 const char *recent_disks_current(void) {

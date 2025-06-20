@@ -88,7 +88,7 @@ dlgDipswitch::dlgDipswitch(QWidget *parent) : QWidget(parent) {
 }
 dlgDipswitch::~dlgDipswitch() = default;
 
-void dlgDipswitch::s_dipswitch(int index) {
+void dlgDipswitch::s_dipswitch(int index) const {
 	const int type = QVariant((dynamic_cast<QComboBox *>(sender()))->property("myIndex")).toInt();
 	const int value = QVariant(((QComboBox *)sender())->itemData(index)).toInt();
 	const int mask = dp.types.at(type).mask;
@@ -97,7 +97,7 @@ void dlgDipswitch::s_dipswitch(int index) {
 	cfg->dipswitch = dipswitch.value;
 	settings_pgs_save();
 }
-void dlgDipswitch::s_default(UNUSED(bool checked)) {
+void dlgDipswitch::s_default(UNUSED(bool checked)) const {
 	for (int i = 0; i < dp.types.length(); i++) {
 		QComboBox *cb = findChild<QComboBox *>(QString("comboBox_dipswitch_%0").arg(i));
 

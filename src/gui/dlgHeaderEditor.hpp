@@ -32,7 +32,7 @@ enum _header_misc {
 
 // ----------------------------------------------------------------------------------------------
 
-class dlgHeaderEditor : public QWidget, public Ui::dlgHeaderEditor {
+class dlgHeaderEditor final : public QWidget, public Ui::dlgHeaderEditor {
 	Q_OBJECT
 
 	private:
@@ -81,26 +81,26 @@ class dlgHeaderEditor : public QWidget, public Ui::dlgHeaderEditor {
 		void reset_dialog(void);
 
 	private:
-		bool header_to_struct(_header_info &hi, const std::array<BYTE, HEADER_SIZE> &header);
-		void struct_to_header(const _header_info &hi, std::array<BYTE, HEADER_SIZE> &header);
-		void dialog_to_struct(_header_info &hi);
+		bool header_to_struct(_header_info &hi, const std::array<BYTE, HEADER_SIZE> &header) const;
+		static void struct_to_header(const _header_info &hi, std::array<BYTE, HEADER_SIZE> &header);
+		void dialog_to_struct(_header_info &hi) const;
 		void struct_to_dialog(const _header_info &hi, bool save_enabled);
-		int find_multiplier(int size);
+		static int find_multiplier(int size);
 		void resize_request(void);
 
 	private slots:
 		void s_control_changed(void);
-		void s_open_folder(bool checked);
+		void s_open_folder(bool checked) const;
 		void s_grp_type(QAbstractButton *button);
-		void s_battery(bool checked);
-		void s_console_type(int index);
+		void s_battery(bool checked) const;
+		void s_console_type(int index) const;
 		void s_reset_clicked(bool checked);
 		void s_save_clicked(bool checked);
 };
 
 // ----------------------------------------------------------------------------------------------
 
-class wdgDlgHeaderEditor : public wdgTitleBarDialog {
+class wdgDlgHeaderEditor final : public wdgTitleBarDialog {
 	Q_OBJECT
 
 	public:

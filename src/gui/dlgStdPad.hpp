@@ -49,7 +49,7 @@ extern _joy_list joy_list;
 
 // ----------------------------------------------------------------------------------------------
 
-class dlgStdPad : public QWidget, public Ui::dlgStdPad {
+class dlgStdPad final : public QWidget, public Ui::dlgStdPad {
 	Q_OBJECT
 
 	private:
@@ -97,7 +97,7 @@ class dlgStdPad : public QWidget, public Ui::dlgStdPad {
 
 	private:
 		bool keypress(QKeyEvent *event);
-		void update_dialog(void);
+		void update_dialog(void) const;
 		void joy_combo_init(void);
 		void setEnable_tab_buttons(int type, bool mode) const;
 		void disable_tab_and_other(int type, int vbutton) const;
@@ -115,10 +115,10 @@ class dlgStdPad : public QWidget, public Ui::dlgStdPad {
 		void s_default_clicked(bool checked);
 		void s_unset_clicked(bool checked);
 		void s_in_sequence_clicked(bool checked);
-		void s_unset_all_clicked(bool checked);
+		void s_unset_all_clicked(bool checked) const;
 		void s_defaults_clicked(bool checked);
 		void s_deadzone_slider_value_changed(int value);
-		void s_deadzone_default_clicked(bool checked);
+		void s_deadzone_default_clicked(bool checked) const;
 		void s_combobox_controller_type_activated(int index);
 		void s_slider_td_value_changed(int value);
 		void s_pad_joy_read_timer(void);
@@ -131,7 +131,7 @@ class dlgStdPad : public QWidget, public Ui::dlgStdPad {
 
 // ----------------------------------------------------------------------------------------------
 
-class wdgDlgStdPad : public wdgTitleBarDialog {
+class wdgDlgStdPad final : public wdgTitleBarDialog {
 	public:
 		dlgStdPad *wd;
 

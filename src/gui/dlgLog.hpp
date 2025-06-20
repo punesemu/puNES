@@ -27,7 +27,7 @@
 
 // ----------------------------------------------------------------------------------------------
 
-class textEditThread : public QThread {
+class textEditThread final : public QThread {
 	Q_OBJECT
 
 	public:
@@ -38,12 +38,12 @@ class textEditThread : public QThread {
 		void run(void) override;
 
 	private slots:
-		void time_out(void);
+		void time_out(void) const;
 };
 
 // ----------------------------------------------------------------------------------------------
 
-class dlgLog : public QWidget, public Ui::dlgLog {
+class dlgLog final : public QWidget, public Ui::dlgLog {
 	Q_OBJECT
 
 	public:
@@ -109,13 +109,13 @@ class dlgLog : public QWidget, public Ui::dlgLog {
 		void print(types type, const uTCHAR *utxt, va_list ap);
 		void print_box(types type, const uTCHAR *utxt, va_list ap);
 		void extract(void);
-		void std_err(const QString &string);
-		QString ctrl_special_characters(const QString &input);
+		static void std_err(const QString &string);
+		static QString ctrl_special_characters(const QString &input);
 };
 
 // ----------------------------------------------------------------------------------------------
 
-class wdgDlgLog : public wdgTitleBarDialog {
+class wdgDlgLog final : public wdgTitleBarDialog {
 	public:
 		dlgLog *wd;
 

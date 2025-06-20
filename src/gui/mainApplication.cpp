@@ -63,8 +63,8 @@ bool mainApplication::notify(QObject *receiver, QEvent *event) {
 	return (QApplication::notify(receiver, event));
 }
 
-BYTE mainApplication::base_folder(QDir *new_folder, QDir *old_folder, const QString &base, const QString &message) {
-	QString folder = QString(base).remove("/");
+BYTE mainApplication::base_folder(const QDir *new_folder, QDir *old_folder, const QString &base, const QString &message) {
+	const QString folder = QString(base).remove("/");
 
 	if (old_folder && !info.portable && !new_folder->exists(folder) && old_folder->exists(folder)) {
 		old_folder->rename(old_folder->absolutePath() + base, new_folder->absolutePath() + base);
@@ -143,10 +143,9 @@ BYTE mainApplication::control_base_folders(void) {
 
 	if (!info.portable && old.exists()) {
 		QString list[] = { QString(CFGFILENAME), QString(INPFILENAME), QString(RECENTROMSFILENAME) };
-		int i;
 
-		for (i = 0; i < 3; i++) {
-			QString file = QString(list[i]).remove("/");
+		for (int i = 0; i < 3; i++) {
+			const QString file = QString(list[i]).remove("/");
 
 			if (!config_folder.exists(file) && old.exists(file)) {
 				old.rename(old.absolutePath() + list[i], config_folder.absolutePath() + list[i]);
@@ -157,7 +156,7 @@ BYTE mainApplication::control_base_folders(void) {
 	return (EXIT_OK);
 }
 
-QKeySequence mainApplication::key_sequence_from_key_event(QKeyEvent *event) {
+QKeySequence mainApplication::key_sequence_from_key_event(const QKeyEvent *event) {
 	unsigned int modifiers = (unsigned int)event->modifiers();
 	int key = event->key();
 	QKeySequence ks;
@@ -170,7 +169,7 @@ QKeySequence mainApplication::key_sequence_from_key_event(QKeyEvent *event) {
 	}
 	return (QKeySequence(modifiers ? (int)modifiers : key, modifiers ? key : 0).toString().remove(", "));
 }
-bool mainApplication::is_set_inp_shortcut(QEvent *event, int set_inp) {
+bool mainApplication::is_set_inp_shortcut(QEvent *event, const int set_inp) {
 	return (mainwin && !mainwin->wd->shortcut[set_inp]->key().isEmpty() &&
 		(key_sequence_from_key_event((QKeyEvent *)event) == mainwin->wd->shortcut[set_inp]->key()));
 }

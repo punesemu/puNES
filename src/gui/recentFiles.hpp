@@ -40,15 +40,15 @@ class recentFiles {
 		~recentFiles() = default;
 
 	public:
-		void init(QString recent_file_name);
+		void init(const QString &recent_file_name);
 		void add(uTCHAR *file);
 		void parse(void);
 		void save(void);
-		int count(void);
-		const char *item(int index);
-		int item_size(int index);
-		const char *current(void);
-		int current_size(void);
+		int count(void) const;
+		const char *item(int index) const;
+		int item_size(int index) const;
+		const char *current(void) const;
+		int current_size(void) const;
 
 	private:
 		void clear(void);

@@ -178,9 +178,7 @@ void dlgHeaderEditor::reset_dialog(void) {
 	struct_to_dialog(hi, false);
 }
 
-bool dlgHeaderEditor::header_to_struct(_header_info &hi, const std::array<BYTE, HEADER_SIZE> &header) {
-	size_t prg_size = 0, chr_size = 0;
-
+bool dlgHeaderEditor::header_to_struct(_header_info &hi, const std::array<BYTE, HEADER_SIZE> &header) const {
 	hi = {};
 
 	if ((header[0] != 'N') || (header[1] != 'E') || (header[2] != 'S') || (header[3] != '\32')) {
@@ -190,6 +188,8 @@ bool dlgHeaderEditor::header_to_struct(_header_info &hi, const std::array<BYTE, 
 	hi.format = (header[7] & 0x0C) == 0x08 ? NES_2_0 : iNES_1_0;
 
 	if (hi.format == NES_2_0) {
+		size_t prg_size = 0, chr_size = 0;
+
 		hi.console_type = (header[7] & 0x03) == 0x03 ? header[13] & 0x0F : header[7] & 0x03;
 
 		hi.mapper = ((header[8] & 0x0F) << 8) | (header[7] & 0xF0) | (header[6] >> 4);
@@ -341,7 +341,7 @@ void dlgHeaderEditor::struct_to_header(const _header_info &hi, std::array<BYTE, 
 		header[9] = (header[9] & 0xFE) | (hi.cpu_timing & 0x01);
 	}
 }
-void dlgHeaderEditor::dialog_to_struct(_header_info &hi) {
+void dlgHeaderEditor::dialog_to_struct(_header_info &hi) const {
 	hi.format = grp->checkedId();
 	hi.mapper = spinBox_Mapper->value();
 	hi.submapper = spinBox_Submapper->value();
@@ -361,7 +361,7 @@ void dlgHeaderEditor::dialog_to_struct(_header_info &hi) {
 	hi.battery = checkBox_Battery->isChecked();
 	hi.trainer = checkBox_Trainer->isChecked();
 }
-void dlgHeaderEditor::struct_to_dialog(const _header_info &hi, bool save_enabled) {
+void dlgHeaderEditor::struct_to_dialog(const _header_info &hi, const bool save_enabled) {
 	const bool is_ines_10 = hi.format == iNES_1_0;
 	const bool is_nes_20 = hi.format == NES_2_0;
 
@@ -441,7 +441,7 @@ void dlgHeaderEditor::s_control_changed(void) {
 	pushButton_Reset->setEnabled(!std::equal(horg.begin(), horg.end(), tmp.begin()));
 	pushButton_Save->setEnabled(pushButton_Reset->isEnabled());
 }
-void dlgHeaderEditor::s_open_folder(UNUSED(bool checked)) {
+void dlgHeaderEditor::s_open_folder(UNUSED(bool checked)) const {
 #if defined(_WIN32)
 	const QString explorer = "explorer";
 	QStringList param;
@@ -500,7 +500,7 @@ void dlgHeaderEditor::s_grp_type(UNUSED(QAbstractButton *button)) {
 
 	resize_request();
 }
-void dlgHeaderEditor::s_console_type(int index) {
+void dlgHeaderEditor::s_console_type(int index) const {
 	const bool is_nes_20 = radioButton_nes20->isChecked();
 	const bool is_vs_system = index == 1;
 
@@ -515,7 +515,7 @@ void dlgHeaderEditor::s_console_type(int index) {
 	comboBox_VS_PPU->setEnabled(is_vs_system);
 	comboBox_VS_PPU->setVisible(is_nes_20);
 }
-void dlgHeaderEditor::s_battery(bool checked) {
+void dlgHeaderEditor::s_battery(bool checked) const {
 	const bool is_nes_20 = radioButton_nes20->isChecked();
 	const bool is_battery = checked;
 

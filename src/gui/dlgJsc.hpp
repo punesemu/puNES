@@ -26,7 +26,7 @@
 
 // ----------------------------------------------------------------------------------------------
 
-class dlgJsc : public QWidget, public Ui::dlgJsc {
+class dlgJsc final : public QWidget, public Ui::dlgJsc {
 	Q_OBJECT
 
 	private:
@@ -50,20 +50,20 @@ class dlgJsc : public QWidget, public Ui::dlgJsc {
 
 	private:
 		void joy_combo_init(void);
-		void clear_all(void);
-		void update_info_lines(void);
-		int js_jdev_index(void);
-		int axes_disabled(void);
-		int hats_disabled(void);
-		int buttons_disabled(void);
+		void clear_all(void) const;
+		void update_info_lines(void) const;
+		int js_jdev_index(void) const;
+		int axes_disabled(void) const;
+		int hats_disabled(void) const;
+		int buttons_disabled(void) const;
 
 	private slots:
 		void s_joy_read_timer(void);
 		void s_combobox_joy_activated(int index);
 		void s_combobox_joy_index_changed(int index);
-		void s_axis_cb_clicked(bool checked);
-		void s_button_cb_clicked(bool checked);
-		void s_save_clicked(bool checked);
+		void s_axis_cb_clicked(bool checked) const;
+		void s_button_cb_clicked(bool checked) const;
+		void s_save_clicked(bool checked) const;
 
 	private slots:
 		void s_et_update_joy_combo(void);
@@ -71,7 +71,7 @@ class dlgJsc : public QWidget, public Ui::dlgJsc {
 
 // ----------------------------------------------------------------------------------------------
 
-class wdgDlgJsc : public wdgTitleBarDialog {
+class wdgDlgJsc final : public wdgTitleBarDialog {
 	public:
 		dlgJsc *wd;
 

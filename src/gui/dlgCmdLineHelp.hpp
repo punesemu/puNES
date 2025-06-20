@@ -25,19 +25,19 @@
 
 // ----------------------------------------------------------------------------------------------
 
-class dlgCmdLineHelp : public QWidget, public Ui::dlgCmdLineHelp {
+class dlgCmdLineHelp final : public QWidget, public Ui::dlgCmdLineHelp {
 	public:
-		explicit dlgCmdLineHelp(QWidget *parent, const QString title, const uTCHAR *usage_string);
-		explicit dlgCmdLineHelp(QWidget *parent = nullptr, const QString name = "");
+		explicit dlgCmdLineHelp(QWidget *parent, const QString &title, const uTCHAR *usage_string);
+		explicit dlgCmdLineHelp(QWidget *parent = nullptr, const QString &name = "");
 		~dlgCmdLineHelp() override;
 
 	private:
-		void init(const QString title, const uTCHAR *usage_string, bool use_html = true);
+		void init(const QString &title, const uTCHAR *usage_string, bool use_html = true);
 };
 
 // ----------------------------------------------------------------------------------------------
 
-class wdgDlgCmdLineHelp : public wdgTitleBarDialog {
+class wdgDlgCmdLineHelp final : public wdgTitleBarDialog {
 	Q_OBJECT
 
 	signals:
@@ -47,8 +47,8 @@ class wdgDlgCmdLineHelp : public wdgTitleBarDialog {
 		dlgCmdLineHelp *wd;
 
 	public:
-		explicit wdgDlgCmdLineHelp(QWidget *parent, const QString title, const uTCHAR *usage_string);
-		explicit wdgDlgCmdLineHelp(QWidget *parent = nullptr, const QString name = "");
+		explicit wdgDlgCmdLineHelp(QWidget *parent, const QString &title, const uTCHAR *usage_string);
+		explicit wdgDlgCmdLineHelp(QWidget *parent = nullptr, const QString &name = "");
 		~wdgDlgCmdLineHelp() override;
 
 	protected:

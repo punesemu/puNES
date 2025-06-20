@@ -62,7 +62,7 @@ void dlgWizard::showEvent(UNUSED(QShowEvent *event)) {
 	QWidget::showEvent(event);
 }
 
-void dlgWizard::s_grp_storage_type(UNUSED(QAbstractButton *button)) {
+void dlgWizard::s_grp_storage_type(UNUSED(QAbstractButton *button)) const {
 	QString folder;
 
 	switch (grp->checkedId()) {

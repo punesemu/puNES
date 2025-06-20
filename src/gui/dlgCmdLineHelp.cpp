@@ -24,11 +24,11 @@
 
 // ----------------------------------------------------------------------------------------------
 
-wdgDlgCmdLineHelp::wdgDlgCmdLineHelp(QWidget *parent, const QString title, const uTCHAR *usage_string) : wdgTitleBarDialog(parent) {
+wdgDlgCmdLineHelp::wdgDlgCmdLineHelp(QWidget *parent, const QString &title, const uTCHAR *usage_string) : wdgTitleBarDialog(parent) {
 	wd = new dlgCmdLineHelp(this, title, usage_string);
 	init();
 }
-wdgDlgCmdLineHelp::wdgDlgCmdLineHelp(QWidget *parent, const QString name) : wdgTitleBarDialog(parent) {
+wdgDlgCmdLineHelp::wdgDlgCmdLineHelp(QWidget *parent, const QString &name) : wdgTitleBarDialog(parent) {
 	wd = new dlgCmdLineHelp(this, name);
 	init();
 }
@@ -52,11 +52,10 @@ void wdgDlgCmdLineHelp::init(void) {
 
 // ----------------------------------------------------------------------------------------------
 
-dlgCmdLineHelp::dlgCmdLineHelp(QWidget *parent, const QString title, const uTCHAR *usage_string) : QWidget(parent) {
+dlgCmdLineHelp::dlgCmdLineHelp(QWidget *parent, const QString &title, const uTCHAR *usage_string) : QWidget(parent) {
 	init(title, usage_string, false);
 }
-dlgCmdLineHelp::dlgCmdLineHelp(QWidget *parent, const QString name) : QWidget(parent) {
-	uTCHAR *usage_string;
+dlgCmdLineHelp::dlgCmdLineHelp(QWidget *parent, const QString &name) : QWidget(parent) {
 	const uTCHAR *istructions = {
 			uL("Usage: %%1 [options] file...\n\n")
 			uL("Options:\n")
@@ -131,8 +130,8 @@ dlgCmdLineHelp::dlgCmdLineHelp(QWidget *parent, const QString name) : QWidget(pa
 			uL("                                                       --input.p1k.up=Up" NEWLINE)
 			uL("                                                       --input.p1j.turboa=BTN05")
 	};
+	uTCHAR *usage_string = (uTCHAR *)malloc(1024 * 9);
 
-	usage_string = (uTCHAR *)malloc(1024 * 9);
 	usnprintf(usage_string, 1024 * 9, istructions,
 			  main_cfg[SET_MODE].hlp,
 			  main_cfg[SET_SCALE].hlp,
@@ -190,7 +189,7 @@ dlgCmdLineHelp::dlgCmdLineHelp(QWidget *parent, const QString name) : QWidget(pa
 }
 dlgCmdLineHelp::~dlgCmdLineHelp() = default;
 
-void dlgCmdLineHelp::init(const QString title, const uTCHAR *usage_string, bool use_html) {
+void dlgCmdLineHelp::init(const QString &title, const uTCHAR *usage_string, const bool use_html) {
 	setupUi(this);
 
 	setWindowTitle(title);

@@ -34,7 +34,7 @@ typedef QMap<QString, QString> game_map;
 
 bool search_in_xml(QFile &file);
 game_map parse_game(QXmlStreamReader &xml);
-bool is_game_element(QXmlStreamReader &xml);
+bool is_game_element(const QXmlStreamReader &xml);
 void add_element_data_to_map(const QString &element_name, const QString &text, game_map &map);
 void add_element_data_to_map(QXmlStreamReader &xml, game_map &map);
 void populate_game_info(_nes20db &game_info, game_map &map);
@@ -318,7 +318,7 @@ game_map parse_game(QXmlStreamReader &xml) {
 
 	return (game);
 }
-bool is_game_element(QXmlStreamReader &xml) {
+bool is_game_element(const QXmlStreamReader &xml) {
 	return (!xml.name().toString().compare("game", Qt::CaseInsensitive));
 }
 void add_element_data_to_map(const QString &element_name, const QString &text, game_map &map) {
@@ -328,15 +328,12 @@ void add_element_data_to_map(const QString &element_name, const QString &text, g
 	map.insert(element_name.toLower(), text);
 }
 void add_element_data_to_map(QXmlStreamReader &xml, game_map &map) {
-	QString element_name;
-	QXmlStreamAttributes attribs;
-
 	if (xml.tokenType() != QXmlStreamReader::StartElement) {
 		return;
 	}
 
-	element_name = xml.name().toString();
-	attribs = xml.attributes();
+	QString element_name = xml.name().toString();
+	QXmlStreamAttributes attribs = xml.attributes();
 
 	xml.readNext();
 
@@ -374,7 +371,7 @@ void populate_game_info(_nes20db &game_info, game_map &map) {
 	game_info.vs.ppu = to_uint(map["vs_ppu"], 10);
 	game_info.expansion.type = to_uint(map["expansion_type"], 10);
 }
-uint32_t to_uint(const QString &svalue, int base, int def) {
+uint32_t to_uint(const QString &svalue, const int base, const int def) {
 	uint32_t value = 0;
 	bool ok = false;
 

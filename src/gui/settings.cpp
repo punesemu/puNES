@@ -61,19 +61,19 @@ void settings_save_GUI(void) {
 	s.list = LSET_SET;
 	s.set->wr("GUI");
 }
-void settings_set_overscan_default(_overscan_borders *ob, BYTE mode) {
+void settings_set_overscan_default(_overscan_borders *ob, const BYTE mode) {
 	s.set->oscan_default(ob, mode);
 }
-int settings_val_to_int(int index, const uTCHAR *buffer) {
+int settings_val_to_int(const int index, const uTCHAR *buffer) {
 	return (s.set->val_to_int(index, buffer));
 }
-double settings_val_to_double(WORD round, const uTCHAR *buffer) {
+double settings_val_to_double(const WORD round, const uTCHAR *buffer) {
 	return (s.set->val_to_double(round, buffer));
 }
-void settings_cpy_utchar_to_val(int index, uTCHAR *buffer) {
+void settings_cpy_utchar_to_val(const int index, uTCHAR *buffer) {
 	s.set->cpy_utchar_to_val(index, buffer);
 }
-void settings_val_to_oscan(int index, _overscan_borders *ob, const uTCHAR *buffer) {
+void settings_val_to_oscan(const int index, _overscan_borders *ob, const uTCHAR *buffer) {
 	s.set->oscan_val_to_int(index, ob, buffer);
 }
 #if defined (FULLSCREEN_RESFREQ)
@@ -82,49 +82,46 @@ void settings_resolution_val_to_int(int *w, int *h, const uTCHAR *buffer) {
 }
 #endif
 
-void *settings_inp_rd_sc(int index, int type) {
+void *settings_inp_rd_sc(const int index, const int type) {
 	return (s.inp->sc_val_to_qstring_pntr(index, type));
 }
-void settings_inp_wr_sc(void *str, int index, int type) {
+void settings_inp_wr_sc(void *str, const int index, const int type) {
 	s.inp->sc_qstring_pntr_to_val(str, index, type);
 }
-DBWORD settings_inp_wr_port(void *str, int index, int type) {
-	QString sstr = (*(QString *)str);
+DBWORD settings_inp_wr_port(void *str, const int index, const int type) {
+	const QString sstr = (*(QString *)str);
 
 	if (type == KEYBOARD) {
 		return (s.inp->kbd_keyval_from_name(index, sstr));
-	} else {
-		return (js_joyval_from_name(uQStringCD(sstr)));
 	}
+	return (js_joyval_from_name(uQStringCD(sstr)));
 }
 void settings_inp_all_defaults(_config_input *config_input, _array_pointers_port *array) {
 	s.inp->set_all_input_defaults(config_input, array);
 }
-void settings_inp_port_defaults(_port *prt, int index, int mode) {
+void settings_inp_port_defaults(_port *prt, const int index, const int mode) {
 	if (mode == KEYBOARD) {
 		s.inp->kbd_defaults(prt, index);
 	} else {
-		int i;
-
-		for (i = BUT_A; i < MAX_STD_PAD_BUTTONS; i++) {
+		for (int i = BUT_A; i < MAX_STD_PAD_BUTTONS; i++) {
 			prt->input[JOYSTICK][i] = js_joyval_default(index, i);
 		}
 	}
 }
-void settings_inp_port_button_default(int button, _port *prt, int index, int mode) {
+void settings_inp_port_button_default(const int button, _port *prt, const int index, const int mode) {
 	if (mode == KEYBOARD) {
 		s.inp->kbd_default(button, prt, index);
 	} else {
 		prt->input[JOYSTICK][button] = js_joyval_default(index, button);
 	}
 }
-DBWORD settings_inp_nes_keyboard_nscode_default(uTCHAR *name) {
+DBWORD settings_inp_nes_keyboard_nscode_default(const uTCHAR *name) {
 	return (s.inp->nes_keyboard_nscode_default(uQString(name)));
 }
-DBWORD settings_inp_nes_keyboard_nscode(uTCHAR *name) {
+DBWORD settings_inp_nes_keyboard_nscode(const uTCHAR *name) {
 	return (s.inp->nes_keyboard_nscode(uQString(name)));
 }
-void settings_inp_nes_keyboard_set_nscode(uTCHAR *name, DBWORD nscode) {
+void settings_inp_nes_keyboard_set_nscode(const uTCHAR *name, const DBWORD nscode) {
 	s.inp->nes_keyboard_set_nscode(uQString(name), nscode);
 }
 void settings_inp_save(void) {
@@ -177,6 +174,7 @@ void settings_shp_parse(void) {
 	}
 
 	switch (cfg->shader) {
+		default:
 		case NO_SHADER:
 			return;
 		case SHADER_CRTDOTMASK:
@@ -219,15 +217,13 @@ void settings_shp_save(void) {
 	}
 }
 
-void settings_jsc_parse(int index) {
-	QString file;
-
+void settings_jsc_parse(const int index) {
 	if (s.jsc) {
 		delete (s.jsc);
 		s.jsc = nullptr;
 	}
 
-	file = JSCFILENAME(index);
+	const QString file = JSCFILENAME(index);
 
 	s.list = LSET_JSC;
 	s.jsc = new objJsc(s.cfg, file, LSET_JSC, index);

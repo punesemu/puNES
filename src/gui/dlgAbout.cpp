@@ -43,8 +43,8 @@ wdgDlgAbout::~wdgDlgAbout() = default;
 // ----------------------------------------------------------------------------------------------
 
 dlgAbout::dlgAbout(QWidget *parent) : QWidget(parent) {
-	QDateTime compiled = QDateTime::fromString(COMPILED, "MMddyyyyhhmmss");
-	QString link_color = theme::is_dark_theme() ? "style=\"color: #A4AAE4\" " : "";
+	const QDateTime compiled = QDateTime::fromString(COMPILED, "MMddyyyyhhmmss");
+	const QString link_color = theme::is_dark_theme() ? "style=\"color: #A4AAE4\" " : "";
 	QString text;
 
 	setupUi(this);
