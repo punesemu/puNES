@@ -340,7 +340,7 @@ To see a list of available command-line options, start puNES with the `-h` argum
 | ENABLE_OPENGL             | Use OpenGL support instead of Direct3D 9 (only for Windows)                        | ON      |
 | ENABLE_OPENGL_CG          | Enable OpenGL nVidia Cg Toolkit support                                            | OFF     |
 | ENABLE_FULLSCREEN_RESFREQ | Enable Fullscreen resolution and auto frequency                                    | ON      |
-| ENABLE_QT5_LIBS           | Enable support for QT5 libraries                                                   | OFF     |
+| ENABLE_QT5_LIBS           | Force use of QT5 libraries                                                         | OFF     |
 | DISABLE_PORTABLE_MODE     | Disable portable mode handling (useful with sandbox<br/>environments like Flatpak) | OFF     |
 
 ## :penguin: Linux
@@ -395,12 +395,13 @@ make -j2
 
 where `[...]` are the other necessary options.
 
-#### Example on how to compile on Ubuntu 22.04
+#### Example on how to compile on Ubuntu 24.04
 
 ```bash
-sudo apt-get install git cmake ninja-build libtool build-essential pkg-config libudev-dev libasound2-dev
-sudo apt-get install qtbase5-dev qttools5-dev qttools5-dev-tools libqt5svg5-dev nvidia-cg-toolkit libx11-dev libxrandr-dev
-sudo apt-get install libavcodec-dev libavformat-dev libavutil-dev libswresample-dev libswscale-dev p7zip-full
+sudo apt-get install -y git cmake ninja-build libtool build-essential pkg-config mesa-common-dev freeglut3-dev
+sudo apt-get install -y nvidia-cg-toolkit libx11-dev libxrandr-dev libxcb-cursor-dev libasound2-dev libudev-dev
+sudo apt-get install -y libglvnd-dev libavformat-dev libavcodec-dev libswresample-dev libswscale-dev libavutil-dev libqt6svg6-dev
+sudo apt-get install -y qt6-base-dev qt6-base-dev-tools qt6-tools-dev qt6-tools-dev-tools qt6-l10n-tools qt6-image-formats-plugins
 git clone https://github.com/punesemu/puNES
 cd puNES
 cmake -B build -G Ninja
@@ -412,6 +413,8 @@ to start the emulator
 ```bash
 ./build/src/punes
 ```
+
+P.S. To work correctly under wayland you need to have QT6 updated to at least 6.8 while 24.04 uses 6.4. I recommend using the AppImage :link:[`x86_64`](https://nightly.link/punesemu/puNES/workflows/build/master/puNES-x86_64.AppImage.zip) which uses 6.9.1. If you are curious to know how I compile the AppImage consult the :link:[`.github/workflows/build.yml`](https://github.com/punesemu/puNES/blob/master/.github/workflows/build.yml).
 
 </details>
 
