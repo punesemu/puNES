@@ -40,10 +40,10 @@ static WORD *_dos_text_to_ppu_image(int rect_x,
 	int rect_y,
 	int rect_w,
 	int rect_h,
-	const WORD fg_def,
-	const WORD bg_def,
+	WORD fg_def,
+	WORD bg_def,
 	const uTCHAR *font_family,
-	const int font_size,
+	int font_size,
 	const uTCHAR *text);
 
 typedef struct _dos_tag_ele {
@@ -446,7 +446,7 @@ void dos_text_curtain_add_line(_dos_text_curtain *curtain, const WORD fg_def, co
 	}
 }
 
-void dos_text_pixels_size(int *w, int *h, const uTCHAR *font_family, int font_size, const uTCHAR *txt) {
+void dos_text_pixels_size(int *w, int *h, const uTCHAR *font_family, const int font_size, const uTCHAR *txt) {
 	QFont font(uQString(font_family));
 	QString subimage = "";
 	bool is_name_subimage = false;
@@ -556,7 +556,14 @@ void dos_hline(const BYTE nidx, int ppu_x, int ppu_y, const int w, const WORD co
 		nes[nidx].p.ppu_screen.wr->line[py][px] = color;
 	}
 }
-void dos_box(const BYTE nidx, int ppu_x, int ppu_y, const int w, const int h, const WORD color1, const WORD color2, const WORD bck) {
+void dos_box(const BYTE nidx,
+	int ppu_x,
+	int ppu_y,
+	const int w,
+	const int h,
+	const WORD color1,
+	const WORD color2,
+	const WORD bck) {
 	ppu_x = dos_ctr_x(ppu_x, w, SCR_COLUMNS);
 	ppu_y = dos_ctr_y(ppu_y, h, SCR_ROWS);
 
@@ -578,8 +585,16 @@ void dos_box(const BYTE nidx, int ppu_x, int ppu_y, const int w, const int h, co
 	}
 }
 
-void dos_image(const BYTE nidx, int ppu_x, int ppu_y, int rect_x, int rect_y, int rect_w, int rect_h,
-	const uTCHAR *resource, WORD *ppu_image, uint32_t ppu_image_pitch) {
+void dos_image(const BYTE nidx,
+	int ppu_x,
+	int ppu_y,
+	int rect_x,
+	int rect_y,
+	int rect_w,
+	int rect_h,
+	const uTCHAR *resource,
+	WORD *ppu_image,
+	const uint32_t ppu_image_pitch) {
 	const QImage src(uQString(resource));
 	const int max_w = rect_w;
 	const int max_h = rect_h;
@@ -627,8 +642,18 @@ void dos_image(const BYTE nidx, int ppu_x, int ppu_y, int rect_x, int rect_y, in
 	}
 }
 
-void dos_draw_ppu_image(const BYTE nidx, const int ppu_x, const int ppu_y, const int rect_x, const int rect_y, const int rect_w, const int rect_h,
-	const int img_w, const int img_h, const int scroll_x, const int scroll_y, const WORD *ppu_image) {
+void dos_draw_ppu_image(const BYTE nidx,
+	const int ppu_x,
+	const int ppu_y,
+	const int rect_x,
+	const int rect_y,
+	const int rect_w,
+	const int rect_h,
+	const int img_w,
+	const int img_h,
+	const int scroll_x,
+	const int scroll_y,
+	const WORD *ppu_image) {
 	if (ppu_image) {
 		const int ppux0 = (rect_x + ppu_x) < 0 ? 0 : rect_x + ppu_x;
 		const int ppuy0 = (rect_y + ppu_y) < 0 ? 0 : rect_y + ppu_y;

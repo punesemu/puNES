@@ -26,7 +26,7 @@
 
 class theme {
 	public:
-		static QString stylesheet_wdgtitlebarwindow(const bool native_wm_disabled, const QColor &border_color);
+		static QString stylesheet_wdgtitlebarwindow(bool native_wm_disabled, const QColor &border_color);
 		static QString stylesheet_wdgroupbox(void);
 		static QString stylesheet_wdgtoolgroupbox(void);
 		static QString stylesheet_wdgbutton(void);

@@ -501,7 +501,7 @@ void wdgTitleBarWindow::set_gui_visible(const bool mode) const {
 		}
 	}
 }
-void wdgTitleBarWindow::init_geom_variable(const _last_geometry lg) {
+void wdgTitleBarWindow::init_geom_variable(const _last_geometry &lg) {
 	geom.setRect(lg.x, lg.y, lg.w, lg.h);
 	set_geometry();
 }
@@ -623,7 +623,20 @@ void wdgTitleBarWindow::set_permit_resize(const bool mode) {
 void wdgTitleBarWindow::update_track_mouse(void) const {
 	// mi serve per la corretta gestione del redefine_cursor();
 	if (native_wm_disabled && private_widget) {
-		private_widget->setMouseTracking(hasMouseTracking() & !disabled_resize);
+		set_mouse_tracking_recursive(private_widget, hasMouseTracking() & !disabled_resize);
+	}
+}
+void wdgTitleBarWindow::set_mouse_tracking_recursive(QWidget* widget, const bool enable) {
+	if (widget) {
+		widget->setMouseTracking(enable);
+
+		for (QObject* child : widget->children()) {
+			QWidget* childWidget = qobject_cast<QWidget*>(child);
+
+			if (childWidget) {
+				set_mouse_tracking_recursive(childWidget, enable);
+			}
+		}
 	}
 }
 void wdgTitleBarWindow::update_size_grip_visibility(void) const {

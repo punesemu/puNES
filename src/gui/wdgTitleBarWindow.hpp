@@ -183,7 +183,7 @@ class wdgTitleBarWindow : public QWidget, public Ui::wdgTitleBarWindow {
 	public:
 		void init_fullscreen(bool mode) const;
 		void set_gui_visible(bool mode) const;
-		void init_geom_variable(_last_geometry lg);
+		void init_geom_variable(const _last_geometry &lg);
 		void set_geometry(void);
 		static void is_in_desktop(int *x, int *y);
 		dialogExitCode exec(void);
@@ -198,6 +198,7 @@ class wdgTitleBarWindow : public QWidget, public Ui::wdgTitleBarWindow {
 
 	private:
 		void update_track_mouse(void) const;
+		static void set_mouse_tracking_recursive(QWidget* widget, bool enable);
 		void update_size_grip_visibility(void) const;
 		static QPainterPath path_rounded(const QRectF &rect_src);
 		void apply_rounded_mask(void);

@@ -109,47 +109,54 @@ EXTERNC void dos_text(BYTE nidx,
 	int img_y,
 	int img_w,
 	int img_h,
-	const WORD fg_def,
-	const WORD bg_def,
+	WORD fg_def,
+	WORD bg_def,
 	const uTCHAR *font_family,
-	const int font_size,
+	int font_size,
 	const uTCHAR *fmt, ...);
 
 EXTERNC WORD *dos_text_to_ppu_image(int rect_x,
 	int rect_y,
 	int rect_w,
 	int rect_h,
-	const WORD fg_def,
-	const WORD bg_def,
+	WORD fg_def,
+	WORD bg_def,
 	const uTCHAR *font_family,
-	const int font_size,
+	int font_size,
 	const uTCHAR *fmt, ...);
 
 EXTERNC void dos_text_scroll_tick(BYTE nidx,
 	int ppu_x,
 	int ppu_y,
-	const WORD fg_def,
-	const WORD bg_def,
+	WORD fg_def,
+	WORD bg_def,
 	const uTCHAR *font_family,
-	const int font_size,
+	int font_size,
 	_dos_text_scroll *scroll,
 	const uTCHAR *fmt, ...);
 
 EXTERNC void dos_text_curtain(BYTE nidx, int ppu_x, int ppu_y, _dos_text_curtain *curtain, BYTE mode);
 EXTERNC void dos_text_curtain_add_line(_dos_text_curtain *curtain,
-	const WORD fg_def,
-	const WORD bg_def,
+	WORD fg_def,
+	WORD bg_def,
 	const uTCHAR *font_family,
-	const int font_size,
+	int font_size,
 	const uTCHAR *fmt, ...);
 
 EXTERNC void dos_text_pixels_size(int *w, int *h, const uTCHAR *font_family, int font_size, const uTCHAR *txt);
-EXTERNC int dos_text_pixels_w(const uTCHAR *font_family, const int font_size, const uTCHAR *txt);
-EXTERNC int dos_text_pixels_h(const uTCHAR *font_family, const int font_size, const uTCHAR *txt);
+EXTERNC int dos_text_pixels_w(const uTCHAR *font_family, int font_size, const uTCHAR *txt);
+EXTERNC int dos_text_pixels_h(const uTCHAR *font_family, int font_size, const uTCHAR *txt);
 
 EXTERNC void dos_vline(BYTE nidx, int ppu_x, int ppu_y, int h, WORD color);
 EXTERNC void dos_hline(BYTE nidx, int ppu_x, int ppu_y, int w, WORD color);
-EXTERNC void dos_box(BYTE nidx, int ppu_x, int ppu_y, int w, int h, WORD color1, WORD color2, WORD bck);
+EXTERNC void dos_box(BYTE nidx,
+	int ppu_x,
+	int ppu_y,
+	int w,
+	int h,
+	WORD color1,
+	WORD color2,
+	WORD bck);
 
 EXTERNC void dos_image(BYTE nidx,
 	int ppu_x,
@@ -179,9 +186,9 @@ EXTERNC int dos_resource_w(const uTCHAR *resource);
 EXTERNC int dos_resource_h(const uTCHAR *resource);
 EXTERNC void dos_resource_size(int *w, int *h, const uTCHAR *resource);
 
-EXTERNC uTCHAR *dos_tag_desc_from_value(const WORD value);
+EXTERNC uTCHAR *dos_tag_desc_from_value(WORD value);
 EXTERNC WORD dos_tag_value(const uTCHAR *desc);
-EXTERNC WORD dos_tag_value_from_opt(const signed long long opt);
+EXTERNC WORD dos_tag_value_from_opt(signed long long opt);
 
 #undef EXTERNC
 
