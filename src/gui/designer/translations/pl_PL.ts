@@ -1745,6 +1745,10 @@
       <source>Create Empt&amp;y Disk</source>
       <translation type="unfinished">Create Empt&amp;y Disk</translation>
     </message>
+    <message>
+      <source>Leave F&amp;ullscreen</source>
+      <translation type="unfinished">Leave F&amp;ullscreen</translation>
+    </message>
   </context>
   <context>
     <name>nesKeyboardStatusBar</name>
@@ -2679,8 +2683,8 @@
       <translation type="unfinished">Release input</translation>
     </message>
     <message>
-      <source>Capure Input</source>
-      <translation type="unfinished">Capure Input</translation>
+      <source>Capture Input</source>
+      <translation type="unfinished">Capture Input</translation>
     </message>
   </context>
   <context>
@@ -3169,6 +3173,10 @@
     <message>
       <source>Subor Keyboard</source>
       <translation>Klawiatura Subor</translation>
+    </message>
+    <message>
+      <source>Enter/Leave Fullscreen</source>
+      <translation type="unfinished">Enter/Leave Fullscreen</translation>
     </message>
   </context>
   <context>
@@ -4016,6 +4024,40 @@
     <message>
       <source>Load state</source>
       <translation>Wczytaj zapis gry</translation>
+    </message>
+  </context>
+  <context>
+    <name>wdgTitleBar</name>
+    <message>
+      <source>Leave Fullscreen</source>
+      <translation type="unfinished">Leave Fullscreen</translation>
+    </message>
+    <message>
+      <source>Fullscreen</source>
+      <translation type="unfinished">Fullscreen</translation>
+    </message>
+    <message>
+      <source>Restore Window</source>
+      <translation type="unfinished">Restore Window</translation>
+    </message>
+    <message>
+      <source>Maximize Window</source>
+      <translation type="unfinished">Maximize Window</translation>
+    </message>
+    <message>
+      <source>Minimize Window</source>
+      <translation type="unfinished">Minimize Window</translation>
+    </message>
+    <message>
+      <source>Close Window</source>
+      <translation type="unfinished">Close Window</translation>
+    </message>
+  </context>
+  <context>
+    <name>wdgTitleBarWindow</name>
+    <message>
+      <source>Drag to resize the Window</source>
+      <translation type="unfinished">Drag to resize the Window</translation>
     </message>
   </context>
 </TS>
