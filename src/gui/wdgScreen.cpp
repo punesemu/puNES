@@ -318,7 +318,7 @@ void wdgScreen::s_capture_input_event(void) {
 	mainwin->wd->qaction_shcut.toggle_capture_input->trigger();
 }
 void wdgScreen::s_context_menu(const QPoint &pos) {
-	QPoint global_pos = mapToGlobal(pos);
+	const QPoint global_pos = mapToGlobal(pos);
 	QMenu menu(this);
 
 	menu.addSection(tr("Files"));

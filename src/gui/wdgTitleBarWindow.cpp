@@ -630,10 +630,13 @@ void wdgTitleBarWindow::set_mouse_tracking_recursive(QWidget* widget, const bool
 	if (widget) {
 		widget->setMouseTracking(enable);
 
-		for (QObject* child : widget->children()) {
-			QWidget* childWidget = qobject_cast<QWidget*>(child);
+		for (QObject *child : widget->children()) {
+			QWidget *childWidget = qobject_cast<QWidget*>(child);
+			wdgScreen *s = qobject_cast<wdgScreen*>(childWidget);
+			wdgState *sb = qobject_cast<wdgState*>(childWidget);
 
-			if (childWidget) {
+			// il mouseTracking non deve essere disabilitato per il wdgScreen e il wdgStatus
+			if (!s && !sb && childWidget) {
 				set_mouse_tracking_recursive(childWidget, enable);
 			}
 		}
@@ -646,8 +649,8 @@ void wdgTitleBarWindow::update_size_grip_visibility(void) const {
 	if (status_bar) {
 		bool other_widgets = false;
 
-		for (QObject* child : status_bar->children()) {
-			QWidget* widget = qobject_cast<QWidget*>(child);
+		for (QObject *child : status_bar->children()) {
+			QWidget *widget = qobject_cast<QWidget*>(child);
 
 			if (widget && (widget != size_grip) && widget->isVisible()) {
 				other_widgets = true;
