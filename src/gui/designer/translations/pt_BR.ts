@@ -1679,75 +1679,75 @@
     </message>
     <message>
       <source>list of last used roms still empty</source>
-      <translation type="unfinished">list of last used roms still empty</translation>
+      <translation>lista das últimas roms usadas ainda vazia</translation>
     </message>
     <message>
       <source>list of last used disks still empty</source>
-      <translation type="unfinished">list of last used disks still empty</translation>
+      <translation>lista dos últimos discos usados ainda vazia</translation>
     </message>
     <message>
       <source>Single Side FDS Format Disk</source>
-      <translation type="unfinished">Single Side FDS Format Disk</translation>
+      <translation>Formato de disco FDS Lado Único</translation>
     </message>
     <message>
       <source>Single Side Quick Disk Format Disk</source>
-      <translation type="unfinished">Single Side Quick Disk Format Disk</translation>
+      <translation>Formato de Disco Rápido Lado Único</translation>
     </message>
     <message>
       <source>Double Sides FDS Format Disk</source>
-      <translation type="unfinished">Double Sides FDS Format Disk</translation>
+      <translation>Formato de Disco FDS Lado Duplo</translation>
     </message>
     <message>
       <source>Double Sides Quick Disk Format Disk</source>
-      <translation type="unfinished">Double Sides Quick Disk Format Disk</translation>
+      <translation>Formato de Disco Rápido Lado Duplo</translation>
     </message>
     <message>
       <source>Create an image of an empty disk</source>
-      <translation type="unfinished">Create an image of an empty disk</translation>
+      <translation>Criar uma imagem de um disco vazio</translation>
     </message>
     <message>
       <source>Error creating file</source>
-      <translation type="unfinished">Error creating file</translation>
+      <translation>Erro ao criar arquivo</translation>
     </message>
     <message>
       <source>Single Side &amp;FDS Format (with Header)</source>
-      <translation type="unfinished">Single Side &amp;FDS Format (with Header)</translation>
+      <translation>Formato Lado Único &amp;FDS (com Cabeçalho)</translation>
     </message>
     <message>
       <source>Single Side F&amp;DS Format (without Header)</source>
-      <translation type="unfinished">Single Side F&amp;DS Format (without Header)</translation>
+      <translation>Formato Lado Único F&amp;DS (sem Cabeçalho)</translation>
     </message>
     <message>
       <source>Single Side &amp;Quick Disk Format</source>
-      <translation type="unfinished">Single Side &amp;Quick Disk Format</translation>
+      <translation>Formato de &amp;Disco Rápido Lado Único</translation>
     </message>
     <message>
       <source>Double Sides &amp;FDS Format (with Header)</source>
-      <translation type="unfinished">Double Sides &amp;FDS Format (with Header)</translation>
+      <translation>Formato Lado Duplo &amp;FDS (com Cabeçalho)</translation>
     </message>
     <message>
       <source>Double Sides F&amp;DS Format (without Header)</source>
-      <translation type="unfinished">Double Sides F&amp;DS Format (without Header)</translation>
+      <translation>Formato Lado Duplo F&amp;DS (sem Cabeçalho)</translation>
     </message>
     <message>
       <source>Double Sides &amp;Quick Disk Format</source>
-      <translation type="unfinished">Double Sides &amp;Quick Disk Format</translation>
+      <translation>Formato de &amp;Disco Rápido Lado Duplo</translation>
     </message>
     <message>
       <source>&amp;Load from File</source>
-      <translation type="unfinished">&amp;Load from File</translation>
+      <translation>&amp;Carregar do Arquivo</translation>
     </message>
     <message>
       <source>Load from File</source>
-      <translation type="unfinished">Load from File</translation>
+      <translation>Carregar do Arquivo</translation>
     </message>
     <message>
       <source>Create Empt&amp;y Disk</source>
-      <translation type="unfinished">Create Empt&amp;y Disk</translation>
+      <translation>Criar D&amp;isco Vazio</translation>
     </message>
     <message>
       <source>Leave F&amp;ullscreen</source>
-      <translation type="unfinished">Leave F&amp;ullscreen</translation>
+      <translation>Sair da &amp;Tela Cheia</translation>
     </message>
   </context>
   <context>
@@ -2672,19 +2672,19 @@
     </message>
     <message>
       <source>Files</source>
-      <translation type="unfinished">Files</translation>
+      <translation>Arquivos</translation>
     </message>
     <message>
       <source>NES</source>
-      <translation type="unfinished">NES</translation>
+      <translation>NES</translation>
     </message>
     <message>
       <source>Release input</source>
-      <translation type="unfinished">Release input</translation>
+      <translation>Liberar Entrada</translation>
     </message>
     <message>
       <source>Capture Input</source>
-      <translation type="unfinished">Capture Input</translation>
+      <translation>Capturar Entrada</translation>
     </message>
   </context>
   <context>
@@ -3176,7 +3176,7 @@
     </message>
     <message>
       <source>Enter/Leave Fullscreen</source>
-      <translation type="unfinished">Enter/Leave Fullscreen</translation>
+      <translation>Entrar/Sair da Tela Cheia</translation>
     </message>
   </context>
   <context>
@@ -4030,34 +4030,34 @@
     <name>wdgTitleBar</name>
     <message>
       <source>Leave Fullscreen</source>
-      <translation type="unfinished">Leave Fullscreen</translation>
+      <translation>Sair da Tela Cheia</translation>
     </message>
     <message>
       <source>Fullscreen</source>
-      <translation type="unfinished">Fullscreen</translation>
+      <translation>Tela cheia</translation>
     </message>
     <message>
       <source>Restore Window</source>
-      <translation type="unfinished">Restore Window</translation>
+      <translation>Restaurar Janela</translation>
     </message>
     <message>
       <source>Maximize Window</source>
-      <translation type="unfinished">Maximize Window</translation>
+      <translation>Maximizar Janela</translation>
     </message>
     <message>
       <source>Minimize Window</source>
-      <translation type="unfinished">Minimize Window</translation>
+      <translation>Minimizar Janela</translation>
     </message>
     <message>
       <source>Close Window</source>
-      <translation type="unfinished">Close Window</translation>
+      <translation>Fechar Janela</translation>
     </message>
   </context>
   <context>
     <name>wdgTitleBarWindow</name>
     <message>
       <source>Drag to resize the Window</source>
-      <translation type="unfinished">Drag to resize the Window</translation>
+      <translation>Arraste para redimensionar a Janela</translation>
     </message>
   </context>
 </TS>
