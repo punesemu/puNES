@@ -341,8 +341,6 @@ BYTE nsf_load_rom(void) {
 			nsf.songs.starting = 1;
 		}
 
-		nsf.songs.total--;
-
 		{
 			uTCHAR **dst = NULL;
 			char buffer[33];
@@ -1329,7 +1327,7 @@ static void nsf_change_current_song(unsigned int mode) {
 		}
 		nsf.songs.current = nsf.playlist.data[nsf.playlist.index];
 
-		if (nsf.songs.current > nsf.songs.total) {
+		if (nsf.songs.current >= nsf.songs.total) {
 			goto nsf_change_current_song_next;
 		}
 	} else {
@@ -1345,11 +1343,11 @@ static void nsf_change_current_song(unsigned int mode) {
 				break;
 		}
 
-		if (nsf.songs.current > nsf.songs.total) {
+		if (nsf.songs.current >= nsf.songs.total) {
 			if (mode == NSF_NEXT) {
 				nsf.songs.current = 0;
 			} else {
-				nsf.songs.current = nsf.songs.total;
+				nsf.songs.current = nsf.songs.total - 1;
 			}
 		}
 		if (nsf.playlist.count > 0) {
@@ -1460,7 +1458,7 @@ static void nsf_draw_controls(void) {
 				umemset(buff, 0x00, usizeof(buff));
 				ustrncat(buff, usizeof(buff), uL("Song "));
 				ustrncat(buff, usizeof(buff), uL("" uPs("") "/"), nsf_print_number(nsf.songs.current + 1, 3, fg));
-				ustrncat(buff, usizeof(buff), uL("" uPs("") ""), nsf_print_number(nsf.songs.total + 1, 3, fg));
+				ustrncat(buff, usizeof(buff), uL("" uPs("") ""), nsf_print_number(nsf.songs.total, 3, fg));
 				dos_text(0, NSF_GUI_SONGS_PPUX, NSF_GUI_SONGS_PPUY,
 					DOS_ALIGNHCENTER, 0, NSF_GUI_SONGS_W, NSF_GUI_SONGS_H, fg, bg, uL("lemon_10"), 10, buff);
 				scurrent = nsf.songs.current;

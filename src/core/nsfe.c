@@ -224,8 +224,6 @@ BYTE nsfe_load_rom(void) {
 			nsf.songs.starting = 1;
 		}
 
-		nsf.songs.total--;
-
 		if (!nsf.sound_chips.fds && (nsf.adr.load < 0x8000)) {
 			free(rom.data);
 			return (EXIT_ERROR);
