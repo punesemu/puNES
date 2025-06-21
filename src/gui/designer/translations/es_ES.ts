@@ -680,14 +680,6 @@
       <translation>Teclado virtual</translation>
     </message>
     <message>
-      <source>Subor Keyboard</source>
-      <translation>Teclado Subor</translation>
-    </message>
-    <message>
-      <source>Options</source>
-      <translation>Opciones</translation>
-    </message>
-    <message>
       <source>Size</source>
       <translation>Tamaño</translation>
     </message>
@@ -1685,6 +1677,78 @@
       <source>&amp;Dip Switches</source>
       <translation type="unfinished">&amp;Dip Switches</translation>
     </message>
+    <message>
+      <source>list of last used roms still empty</source>
+      <translation type="unfinished">list of last used roms still empty</translation>
+    </message>
+    <message>
+      <source>list of last used disks still empty</source>
+      <translation type="unfinished">list of last used disks still empty</translation>
+    </message>
+    <message>
+      <source>Single Side FDS Format Disk</source>
+      <translation type="unfinished">Single Side FDS Format Disk</translation>
+    </message>
+    <message>
+      <source>Single Side Quick Disk Format Disk</source>
+      <translation type="unfinished">Single Side Quick Disk Format Disk</translation>
+    </message>
+    <message>
+      <source>Double Sides FDS Format Disk</source>
+      <translation type="unfinished">Double Sides FDS Format Disk</translation>
+    </message>
+    <message>
+      <source>Double Sides Quick Disk Format Disk</source>
+      <translation type="unfinished">Double Sides Quick Disk Format Disk</translation>
+    </message>
+    <message>
+      <source>Create an image of an empty disk</source>
+      <translation type="unfinished">Create an image of an empty disk</translation>
+    </message>
+    <message>
+      <source>Error creating file</source>
+      <translation type="unfinished">Error creating file</translation>
+    </message>
+    <message>
+      <source>Single Side &amp;FDS Format (with Header)</source>
+      <translation type="unfinished">Single Side &amp;FDS Format (with Header)</translation>
+    </message>
+    <message>
+      <source>Single Side F&amp;DS Format (without Header)</source>
+      <translation type="unfinished">Single Side F&amp;DS Format (without Header)</translation>
+    </message>
+    <message>
+      <source>Single Side &amp;Quick Disk Format</source>
+      <translation type="unfinished">Single Side &amp;Quick Disk Format</translation>
+    </message>
+    <message>
+      <source>Double Sides &amp;FDS Format (with Header)</source>
+      <translation type="unfinished">Double Sides &amp;FDS Format (with Header)</translation>
+    </message>
+    <message>
+      <source>Double Sides F&amp;DS Format (without Header)</source>
+      <translation type="unfinished">Double Sides F&amp;DS Format (without Header)</translation>
+    </message>
+    <message>
+      <source>Double Sides &amp;Quick Disk Format</source>
+      <translation type="unfinished">Double Sides &amp;Quick Disk Format</translation>
+    </message>
+    <message>
+      <source>&amp;Load from File</source>
+      <translation type="unfinished">&amp;Load from File</translation>
+    </message>
+    <message>
+      <source>Load from File</source>
+      <translation type="unfinished">Load from File</translation>
+    </message>
+    <message>
+      <source>Create Empt&amp;y Disk</source>
+      <translation type="unfinished">Create Empt&amp;y Disk</translation>
+    </message>
+    <message>
+      <source>Leave F&amp;ullscreen</source>
+      <translation type="unfinished">Leave F&amp;ullscreen</translation>
+    </message>
   </context>
   <context>
     <name>nesKeyboardStatusBar</name>
@@ -2607,20 +2671,20 @@
       <translation>Pegar</translation>
     </message>
     <message>
-      <source>Tape</source>
-      <translation type="unfinished">Tape</translation>
+      <source>Files</source>
+      <translation type="unfinished">Files</translation>
     </message>
     <message>
-      <source>Play</source>
-      <translation>Reproducir</translation>
+      <source>NES</source>
+      <translation type="unfinished">NES</translation>
     </message>
     <message>
-      <source>Record</source>
-      <translation>Grabar</translation>
+      <source>Release input</source>
+      <translation type="unfinished">Release input</translation>
     </message>
     <message>
-      <source>Stop</source>
-      <translation>Detener</translation>
+      <source>Capture Input</source>
+      <translation type="unfinished">Capture Input</translation>
     </message>
   </context>
   <context>
@@ -3109,6 +3173,10 @@
     <message>
       <source>Subor Keyboard</source>
       <translation>Teclado Subor</translation>
+    </message>
+    <message>
+      <source>Enter/Leave Fullscreen</source>
+      <translation type="unfinished">Enter/Leave Fullscreen</translation>
     </message>
   </context>
   <context>
@@ -3956,6 +4024,40 @@
     <message>
       <source>Load state</source>
       <translation>Cargar estado</translation>
+    </message>
+  </context>
+  <context>
+    <name>wdgTitleBar</name>
+    <message>
+      <source>Leave Fullscreen</source>
+      <translation type="unfinished">Leave Fullscreen</translation>
+    </message>
+    <message>
+      <source>Fullscreen</source>
+      <translation type="unfinished">Fullscreen</translation>
+    </message>
+    <message>
+      <source>Restore Window</source>
+      <translation type="unfinished">Restore Window</translation>
+    </message>
+    <message>
+      <source>Maximize Window</source>
+      <translation type="unfinished">Maximize Window</translation>
+    </message>
+    <message>
+      <source>Minimize Window</source>
+      <translation type="unfinished">Minimize Window</translation>
+    </message>
+    <message>
+      <source>Close Window</source>
+      <translation type="unfinished">Close Window</translation>
+    </message>
+  </context>
+  <context>
+    <name>wdgTitleBarWindow</name>
+    <message>
+      <source>Drag to resize the Window</source>
+      <translation type="unfinished">Drag to resize the Window</translation>
     </message>
   </context>
 </TS>

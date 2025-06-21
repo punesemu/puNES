@@ -680,14 +680,6 @@
       <translation>Teclado Virtual</translation>
     </message>
     <message>
-      <source>Subor Keyboard</source>
-      <translation>Teclado Subor</translation>
-    </message>
-    <message>
-      <source>Options</source>
-      <translation>Opções</translation>
-    </message>
-    <message>
       <source>Size</source>
       <translation>Tamanho</translation>
     </message>
@@ -1685,6 +1677,78 @@
       <source>&amp;Dip Switches</source>
       <translation>&amp;Interruptores Dip</translation>
     </message>
+    <message>
+      <source>list of last used roms still empty</source>
+      <translation>lista das últimas roms usadas ainda vazia</translation>
+    </message>
+    <message>
+      <source>list of last used disks still empty</source>
+      <translation>lista dos últimos discos usados ainda vazia</translation>
+    </message>
+    <message>
+      <source>Single Side FDS Format Disk</source>
+      <translation>Formato de disco FDS Lado Único</translation>
+    </message>
+    <message>
+      <source>Single Side Quick Disk Format Disk</source>
+      <translation>Formato de Disco Rápido Lado Único</translation>
+    </message>
+    <message>
+      <source>Double Sides FDS Format Disk</source>
+      <translation>Formato de Disco FDS Lado Duplo</translation>
+    </message>
+    <message>
+      <source>Double Sides Quick Disk Format Disk</source>
+      <translation>Formato de Disco Rápido Lado Duplo</translation>
+    </message>
+    <message>
+      <source>Create an image of an empty disk</source>
+      <translation>Criar uma imagem de um disco vazio</translation>
+    </message>
+    <message>
+      <source>Error creating file</source>
+      <translation>Erro ao criar arquivo</translation>
+    </message>
+    <message>
+      <source>Single Side &amp;FDS Format (with Header)</source>
+      <translation>Formato Lado Único &amp;FDS (com Cabeçalho)</translation>
+    </message>
+    <message>
+      <source>Single Side F&amp;DS Format (without Header)</source>
+      <translation>Formato Lado Único F&amp;DS (sem Cabeçalho)</translation>
+    </message>
+    <message>
+      <source>Single Side &amp;Quick Disk Format</source>
+      <translation>Formato de &amp;Disco Rápido Lado Único</translation>
+    </message>
+    <message>
+      <source>Double Sides &amp;FDS Format (with Header)</source>
+      <translation>Formato Lado Duplo &amp;FDS (com Cabeçalho)</translation>
+    </message>
+    <message>
+      <source>Double Sides F&amp;DS Format (without Header)</source>
+      <translation>Formato Lado Duplo F&amp;DS (sem Cabeçalho)</translation>
+    </message>
+    <message>
+      <source>Double Sides &amp;Quick Disk Format</source>
+      <translation>Formato de &amp;Disco Rápido Lado Duplo</translation>
+    </message>
+    <message>
+      <source>&amp;Load from File</source>
+      <translation>&amp;Carregar do Arquivo</translation>
+    </message>
+    <message>
+      <source>Load from File</source>
+      <translation>Carregar do Arquivo</translation>
+    </message>
+    <message>
+      <source>Create Empt&amp;y Disk</source>
+      <translation>Criar D&amp;isco Vazio</translation>
+    </message>
+    <message>
+      <source>Leave F&amp;ullscreen</source>
+      <translation>Sair da &amp;Tela Cheia</translation>
+    </message>
   </context>
   <context>
     <name>nesKeyboardStatusBar</name>
@@ -2607,20 +2671,20 @@
       <translation>Colar</translation>
     </message>
     <message>
-      <source>Tape</source>
-      <translation>Cassete</translation>
+      <source>Files</source>
+      <translation>Arquivos</translation>
     </message>
     <message>
-      <source>Play</source>
-      <translation>Reproduzir</translation>
+      <source>NES</source>
+      <translation>NES</translation>
     </message>
     <message>
-      <source>Record</source>
-      <translation>Gravar</translation>
+      <source>Release input</source>
+      <translation>Liberar Entrada</translation>
     </message>
     <message>
-      <source>Stop</source>
-      <translation>Parar</translation>
+      <source>Capture Input</source>
+      <translation>Capturar Entrada</translation>
     </message>
   </context>
   <context>
@@ -3109,6 +3173,10 @@
     <message>
       <source>Subor Keyboard</source>
       <translation>Teclado Subor</translation>
+    </message>
+    <message>
+      <source>Enter/Leave Fullscreen</source>
+      <translation>Entrar/Sair da Tela Cheia</translation>
     </message>
   </context>
   <context>
@@ -3956,6 +4024,40 @@
     <message>
       <source>Load state</source>
       <translation>Carregar estado</translation>
+    </message>
+  </context>
+  <context>
+    <name>wdgTitleBar</name>
+    <message>
+      <source>Leave Fullscreen</source>
+      <translation>Sair da Tela Cheia</translation>
+    </message>
+    <message>
+      <source>Fullscreen</source>
+      <translation>Tela cheia</translation>
+    </message>
+    <message>
+      <source>Restore Window</source>
+      <translation>Restaurar Janela</translation>
+    </message>
+    <message>
+      <source>Maximize Window</source>
+      <translation>Maximizar Janela</translation>
+    </message>
+    <message>
+      <source>Minimize Window</source>
+      <translation>Minimizar Janela</translation>
+    </message>
+    <message>
+      <source>Close Window</source>
+      <translation>Fechar Janela</translation>
+    </message>
+  </context>
+  <context>
+    <name>wdgTitleBarWindow</name>
+    <message>
+      <source>Drag to resize the Window</source>
+      <translation>Arraste para redimensionar a Janela</translation>
     </message>
   </context>
 </TS>
