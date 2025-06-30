@@ -21,6 +21,7 @@
 
 INLINE static void prg_fix_343(void);
 INLINE static void chr_fix_343(void);
+INLINE static void mirroring_fix_343(void);
 
 struct _m343 {
 	WORD reg;
@@ -39,9 +40,13 @@ void map_init_343(void) {
 void extcl_after_mapper_init_343(void) {
 	prg_fix_343();
 	chr_fix_343();
+	mirroring_fix_343();
 }
 void extcl_cpu_wr_mem_343(UNUSED(BYTE nidx), UNUSED(WORD address), BYTE value) {
-	m343.reg = value;
+	m343.reg = ~value;
+	prg_fix_343();
+	chr_fix_343();
+	mirroring_fix_343();
 }
 BYTE extcl_save_mapper_343(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m343.reg);
@@ -49,13 +54,18 @@ BYTE extcl_save_mapper_343(BYTE mode, BYTE slot, FILE *fp) {
 }
 
 INLINE static void prg_fix_343(void) {
-	if (info.mapper.submapper == 1) {
-		memmap_auto_32k(0, MMCPU(0x8000), m343.reg);
-	} else {
-		memmap_auto_16k(0, MMCPU(0x8000), m343.reg);
-		memmap_auto_16k(0, MMCPU(0xC000), m343.reg);
-	}
+	memmap_auto_32k(0, MMCPU(0x8000), m343.reg);
 }
 INLINE static void chr_fix_343(void) {
 	memmap_auto_8k(0, MMPPU(0x0000), m343.reg);
+}
+INLINE static void mirroring_fix_343(void) {
+	switch (m343.reg & 0x80) {
+		case 0x00:
+			mirroring_H(0);
+			return;
+		case 0x80:
+			mirroring_V(0);
+			return;
+	}
 }

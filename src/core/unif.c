@@ -1253,19 +1253,8 @@ void find_board(void) {
 		unif.finded = TRUE;
 		return;
 	}
-	if (!strncasecmp("KS106C", unif.stripped_board, strlen(unif.stripped_board))) {
-		if (info.crc32.prg == 0xEB2474F7) {
-			info.mapper.id = 352;
-		} else {
-			info.mapper.id = 343;
-			info.mapper.submapper = 1;
-		}
-		unif.finded = TRUE;
-		return;
-	}
 	if (!strncasecmp("RESETNROM-XIN1", unif.stripped_board, strlen(unif.stripped_board))) {
 		info.mapper.id = 343;
-		info.mapper.submapper = 0;
 		unif.finded = TRUE;
 		return;
 	}
@@ -1303,6 +1292,11 @@ void find_board(void) {
 	}
 	if (!strncasecmp("891227", unif.stripped_board, strlen(unif.stripped_board))) {
 		info.mapper.id = 350;
+		unif.finded = TRUE;
+		return;
+	}
+	if (!strncasecmp("KS106C", unif.stripped_board, strlen(unif.stripped_board))) {
+		info.mapper.id = 352;
 		unif.finded = TRUE;
 		return;
 	}
