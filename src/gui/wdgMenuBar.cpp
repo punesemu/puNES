@@ -28,7 +28,6 @@ void wdgMenuBar::mouseDoubleClickEvent(QMouseEvent *event) {
 	if (!event->spontaneous() || ((cfg->fullscreen == FULLSCR) && (gfx.type_of_fscreen_in_use != FULLSCR_IN_WINDOW))) {
 		return;
 	}
-
 	if (event->button() == Qt::LeftButton) {
 		mainwin->wd->toggle_toolbars();
 		cfg->toolbar.hidden = mainwin->wd->toolbar->isHidden();

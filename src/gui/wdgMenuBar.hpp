@@ -21,7 +21,9 @@
 
 #include <QtWidgets/QMenuBar>
 
-class wdgMenuBar : public QMenuBar {
+class wdgMenuBar final : public QMenuBar {
+	Q_OBJECT
+
 	public:
 		explicit wdgMenuBar(QWidget *parent = nullptr);
 		~wdgMenuBar() override;

@@ -629,14 +629,14 @@ void wdgTitleBarWindow::update_track_mouse(void) const {
 void wdgTitleBarWindow::set_mouse_tracking_recursive(QWidget* widget, const bool enable) {
 	if (widget) {
 		widget->setMouseTracking(enable);
-
 		for (QObject *child : widget->children()) {
 			QWidget *childWidget = qobject_cast<QWidget*>(child);
-			wdgScreen *s = qobject_cast<wdgScreen*>(childWidget);
-			wdgState *sb = qobject_cast<wdgState*>(childWidget);
+			const wdgMenuBar *mb = qobject_cast<wdgMenuBar*>(childWidget);
+			const wdgScreen *sc = qobject_cast<wdgScreen*>(childWidget);
+			const wdgState *st = qobject_cast<wdgState*>(childWidget);
 
-			// il mouseTracking non deve essere disabilitato per il wdgScreen e il wdgStatus
-			if (!s && !sb && childWidget) {
+			// il mouseTracking non deve essere disabilitato per wdgMenuBar, wdgScreen e wdgStatus
+			if (!mb && !sc && !st && childWidget) {
 				set_mouse_tracking_recursive(childWidget, enable);
 			}
 		}
