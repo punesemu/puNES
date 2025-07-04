@@ -259,35 +259,6 @@ void wdgScreen::cursor_set(void) {
 void wdgScreen::cursor_hide(const BYTE hide) {
 	emit et_cursor_hide(hide);
 }
-void wdgScreen::menu_copy(const QMenu *src, QMenu *dst, const bool src_as_root) {
-	QMenu *submenu, *root = dst;
-
-	if (src_as_root) {
-		submenu = new QMenu(src->title(), dst);
-		submenu->setIcon(src->icon());
-		submenu->setEnabled(src->isEnabled());
-		dst->addMenu(submenu);
-		root = submenu;
-	}
-	foreach(QAction *action, src->actions()) {
-		if (action->menu()) {
-			submenu = new QMenu(action->text(), dst);
-			submenu->setIcon(action->icon());
-			submenu->setEnabled(action->isEnabled());
-			root->addMenu(submenu);
-			menu_copy(action->menu(), submenu, src_as_root);
-		} else if (action->isSeparator()) {
-			root->addSeparator();
-		} else {
-			QAction *new_action = new QAction(action->text(), dst);
-
-			new_action->setIcon(action->icon());
-			new_action->setEnabled(action->isEnabled());
-			connect(new_action, &QAction::triggered, [action](UNUSED(bool checked)) { action->trigger(); });
-			root->addAction(new_action);
-		}
-	}
-}
 
 void wdgScreen::s_cursor_set(void) {
 	if (input_draw_target()) {
@@ -322,9 +293,9 @@ void wdgScreen::s_context_menu(const QPoint &pos) {
 	QMenu menu(this);
 
 	menu.addSection(tr("Files"));
-	menu_copy(mainwin->wd->menu_Recent_Roms, &menu, true);
+	menu.addMenu(mainwin->wd->menu_Recent_Roms);
 	menu.addSection(tr("NES"));
-	menu_copy(mainwin->wd->menu_NES, &menu, false);
+	menu.addActions(mainwin->wd->menu_NES->actions());
 	if (nes_keyboard.enabled) {
 		const QString *sc = (QString *)settings_inp_rd_sc(SET_INP_SC_TOGGLE_CAPTURE_INPUT, KEYBOARD);
 		const QClipboard *clipboard = QApplication::clipboard();
@@ -344,7 +315,7 @@ void wdgScreen::s_context_menu(const QPoint &pos) {
 		connect(action, SIGNAL(triggered()), this, SLOT(s_paste_event()));
 		menu.addAction(action);
 
-		//release/capture input
+		// release/capture input
 		action = new QAction(this);
 		action->setText(
 			(gui.capture_input ? tr("Release input") : tr("Capture Input")) +

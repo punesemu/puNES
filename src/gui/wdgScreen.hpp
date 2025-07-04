@@ -89,9 +89,6 @@ class wdgScreen final : public QWidget {
 		void cursor_set(void);
 		void cursor_hide(BYTE hide);
 
-	private:
-		static void menu_copy(const QMenu *src, QMenu *dst, bool src_as_root);
-
 	private slots:
 		void s_cursor_set(void);
 		void s_cursor_hide(int hide);
