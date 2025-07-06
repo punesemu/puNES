@@ -225,11 +225,13 @@ void nsf_info(void) {
 		log_close_box(uL(""));
 	}
 	if (nsf.info_song) {
+		log_info(uL("songs finded;%d%"), nsf.songs.total);
+		log_info_box(uL("song number;%-7s %-7s title"), "time", "fade");
 		for (int tmp = 0; tmp < nsf.songs.total; tmp++) {
-			_nsf_info_song *song = &nsf.info_song[tmp];
+			const _nsf_info_song *song = &nsf.info_song[tmp];
 
 			if (song->track_label) {
-				log_info_box(uL("%d;%-7d %-7d " uPs("") ""), tmp, song->time, song->fade, song->track_label);
+				log_info_box(uL("%d;%-7d %-7d " uPs("") ""), tmp + 1, song->time, song->fade, song->track_label);
 			}
 		}
 	}
@@ -682,7 +684,6 @@ void nsf_init_tune(void) {
 void extcl_audio_samples_mod_nsf(SWORD *samples, int count) {
 	double now = gui_get_ms();
 	BYTE silence = TRUE;
-	int i = 0;
 
 	nsf.timers.diff = (now - nsf.timers.last_tick);
 
@@ -690,6 +691,8 @@ void extcl_audio_samples_mod_nsf(SWORD *samples, int count) {
 	nsf.timers.effect += nsf.timers.diff;
 
 	if (!nsf.timers.update_only_diff) {
+		int i = 0;
+
 		// timer della canzone
 		nsf.timers.song += nsf.timers.diff;
 
@@ -1002,6 +1005,7 @@ void nsf_controls_mouse_in_gui(int x_mouse, int y_mouse) {
 
 void nsf_effect(void) {
 	switch (cfg->nsf_player_effect) {
+		default:
 		case NSF_EFFECT_BARS:
 		case NSF_EFFECT_BARS_MIXED:
 			nsf_effect_bars();
@@ -1367,8 +1371,8 @@ static void nsf_change_current_song(unsigned int mode) {
 	}
 }
 static void nsf_draw_controls(void) {
-	BYTE force_draw = nes[0].p.ppu.frames < 2;
-	_port *prt = &port[PORT1];
+	const BYTE force_draw = nes[0].p.ppu.frames < 2;
+	const _port *prt = &port[PORT1];
 	uTCHAR buff[300];
 	int y = 0;
 
@@ -1418,8 +1422,8 @@ static void nsf_draw_controls(void) {
 		// timers
 		if (nsf.state) {
 			double timer = nsf.timers.song;
-			WORD fg_ok = DOS_TL03;
-			WORD fg_no = DOS_TL01;
+			const WORD fg_ok = DOS_TL03;
+			const WORD fg_no = DOS_TL01;
 			WORD bg = DOS_TL02;
 			static double ttimer1 = -1, ttimer2 = -1;
 
@@ -1452,7 +1456,7 @@ static void nsf_draw_controls(void) {
 			WORD bg = condition ? DOS_TL01 : DOS_GR02;
 			WORD fg = condition ? DOS_TL02 : DOS_TL03;
 			static int scurrent = -1, spindex = -1, scfgplaylist = -1;
-			BYTE force = force_draw || (scfgplaylist != cfg->nsf_player_playlist);
+			const BYTE force = force_draw || (scfgplaylist != cfg->nsf_player_playlist);
 
 			if (force || (scurrent != nsf.songs.current)) {
 				umemset(buff, 0x00, usizeof(buff));
@@ -1697,9 +1701,9 @@ static uTCHAR *nsf_print_time(double timer, BYTE mode, WORD color) {
 	return (buff);
 }
 static void nsf_print_option(int ppu_x, int ppu_y, uTCHAR *desc, BYTE active, BYTE mode) {
-	int fg = active ? DOS_WHITE : DOS_GRAY;
-	int bg = DOS_BLACK;
-	int fg_box_int = active
+	const int fg = active ? DOS_WHITE : DOS_GRAY;
+	const int bg = DOS_BLACK;
+	const int fg_box_int = active
 		? mode ? DOS_GREEN : DOS_BLACK
 		: mode ? DOS_GRAY : DOS_BLACK;
 
