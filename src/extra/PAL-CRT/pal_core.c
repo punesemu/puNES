@@ -29,7 +29,7 @@ static int
 sintabil8(int n)
 {
     int f, i, a, b;
-    
+
     /* looks scary but if you don't change T14_2PI
      * it won't cause out of bounds memory reads
      */
@@ -45,10 +45,10 @@ extern void
 pal_sincos14(int *s, int *c, int n)
 {
     int h;
-    
+
     n &= T14_MASK;
     h = n & ((T14_2PI >> 1) - 1);
-    
+
     if (h > ((T14_2PI >> 2) - 1)) {
         *c = -sintabil8(h - (T14_2PI >> 2));
         *s = sintabil8((T14_2PI >> 1) - h);
@@ -66,8 +66,8 @@ extern int
 pal_bpp4fmt(int format)
 {
     switch (format) {
-        case PAL_PIX_FORMAT_RGB: 
-        case PAL_PIX_FORMAT_BGR: 
+        case PAL_PIX_FORMAT_RGB:
+        case PAL_PIX_FORMAT_BGR:
             return 3;
         case PAL_PIX_FORMAT_ARGB:
         case PAL_PIX_FORMAT_RGBA:
@@ -103,7 +103,7 @@ static void
 init_eq(struct EQF *f,
         int f_lo, int f_hi, int rate,
         int g_lo, int g_mid, int g_hi)
-{    
+{
     memset(f, 0, sizeof(struct EQF));
 }
 
@@ -170,13 +170,13 @@ init_eq(struct EQF *f,
         int g_lo, int g_mid, int g_hi)
 {
     int sn, cs;
-    
+
     memset(f, 0, sizeof(struct EQF));
-        
+
     f->g[0] = g_lo;
     f->g[1] = g_mid;
     f->g[2] = g_hi;
-    
+
     pal_sincos14(&sn, &cs, T14_PI * f_lo / rate);
 #if (EQ_P >= 15)
     f->lf = 2 * (sn << (EQ_P - 15));
@@ -201,17 +201,17 @@ reset_eq(struct EQF *f)
 
 static int
 eqf(struct EQF *f, int s)
-{    
+{
     int i, r[3];
 
     f->fL[0] += (f->lf * (s - f->fL[0]) + EQ_R) >> EQ_P;
     f->fH[0] += (f->hf * (s - f->fH[0]) + EQ_R) >> EQ_P;
-    
+
     for (i = 1; i < 4; i++) {
         f->fL[i] += (f->lf * (f->fL[i - 1] - f->fL[i]) + EQ_R) >> EQ_P;
         f->fH[i] += (f->hf * (f->fH[i - 1] - f->fH[i]) + EQ_R) >> EQ_P;
     }
-    
+
     r[0] = f->fL[3];
     r[1] = f->fH[3] - f->fL[3];
     r[2] = f->h[HISTOLD] - f->fH[3];
@@ -219,12 +219,12 @@ eqf(struct EQF *f, int s)
     for (i = 0; i < 3; i++) {
         r[i] = (r[i] * f->g[i]) >> EQ_P;
     }
-  
+
     for (i = HISTOLD; i > 0; i--) {
         f->h[i] = f->h[i - 1];
     }
     f->h[HISTNEW] = s;
-    
+
     return (r[0] + r[1] + r[2]);
 }
 
@@ -236,7 +236,7 @@ eqf(struct EQF *f, int s)
 
 extern void
 pal_resize(struct PAL_CRT *v, int w, int h, int f, unsigned char *out)
-{    
+{
     v->outw = w;
     v->outh = h;
     v->out_format = f;
@@ -262,10 +262,10 @@ pal_init(struct PAL_CRT *v, int w, int h, int f, unsigned char *out)
     pal_resize(v, w, h, f, out);
     pal_reset(v);
     v->rn = 194;
-    
+
     /* kilohertz to line sample conversion */
 #define kHz2L(kHz) (PAL_HRES * (kHz * 100) / L_FREQ)
-    
+
     /* band gains are pre-scaled as 16-bit fixed point
      * if you change the EQ_P define, you'll need to update these gains too
      */
@@ -297,13 +297,13 @@ pal_demodulate(struct PAL_CRT *c, int noise)
     int prev_e; /* filtered beam energy per scan line */
     int max_e; /* approx maximum energy in a scan line */
 #endif
-    
+
     bpp = pal_bpp4fmt(c->out_format);
     if (bpp == 0) {
         return;
     }
     pitch = c->outw * bpp;
-    
+
     rn = c->rn;
 #if !PAL_DO_VSYNC
     /* determine field before we add noise,
@@ -337,7 +337,7 @@ found_field:
     c->rn = rn;
 #if PAL_DO_VSYNC
     /* Look for vertical sync.
-     * 
+     *
      * This is done by integrating the signal and
      * seeing if it exceeds a threshold. The threshold of
      * the vertical sync pulse is much higher because the
@@ -372,7 +372,7 @@ vsync_found:
     /* ratio of output height to active video lines in the signal */
     ratio = (c->outh << 16) / PAL_LINES;
     ratio = (ratio + 32768) >> 16;
-    
+
     field = (field * (ratio / 2));
 
     for (line = PAL_TOP; line < PAL_BOT; line++) {
@@ -389,7 +389,7 @@ vsync_found:
 #if PAL_DO_BLOOM
         int line_w;
 #endif
-  
+
         beg = (line - PAL_TOP + 0) * (c->outh + c->v_fac) / PAL_LINES + field;
         end = (line - PAL_TOP + 1) * (c->outh + c->v_fac) / PAL_LINES + field;
 
@@ -414,11 +414,11 @@ vsync_found:
 #else
         c->hsync = 0;
 #endif
-        
+
         xpos = POSMOD(AV_BEG + c->hsync + xnudge, PAL_HRES);
         ypos = POSMOD(line + c->vsync + ynudge, PAL_VRES);
         pos = xpos + ypos * PAL_HRES;
-        
+
         sig = c->inp + ln + c->hsync;
         odd = 0; /* PAL switch, odd line has SYNC in breezeway, even is blank */
         s = 0;
@@ -437,7 +437,7 @@ vsync_found:
             n = sig[i];                 /* mixed with the new sample */
             ccr[i & 3] = p + n;
         }
- 
+
         phasealign = POSMOD(c->hsync, 4);
 
         if (!odd) {
@@ -448,7 +448,7 @@ vsync_found:
         pal_sincos14(&huesn, &huecs, 90 * 8192 / 180 - OFFSET_25Hz(line));
         huesn >>= 7; /* make 8-bit */
         huecs >>= 7;
-        
+
         /* amplitude of carrier = saturation, phase difference = hue */
         dcu = ccr[(phasealign + 1) & 3] - ccr[(phasealign + 3) & 3];
         dcv = ccr[(phasealign + 2) & 3] - ccr[(phasealign + 0) & 3];
@@ -457,7 +457,7 @@ vsync_found:
         wave[1] = ((dcv * huecs + dcu * huesn) >> 8) * c->saturation;
         wave[2] = -wave[0];
         wave[3] = -wave[1];
-       
+
         sig = c->inp + pos;
 #if PAL_DO_BLOOM
         s = 0;
@@ -471,7 +471,7 @@ vsync_found:
         dx = (line_w << 12) / c->outw;
         scanL = ((AV_LEN / 2) - (line_w >> 1) + 8) << 12;
         scanR = (AV_LEN - 1) << 12;
-        
+
         L = (scanL >> 12);
         R = (scanR >> 12);
 #else
@@ -484,7 +484,7 @@ vsync_found:
         reset_eq(&eqY);
         reset_eq(&eqU);
         reset_eq(&eqV);
-        
+
         for (i = L; i < R; i++) {
             int dmU, dmV;
             int ou, ov;
@@ -516,10 +516,10 @@ vsync_found:
             R = pos & 0xfff;
             L = 0xfff - R;
             s = pos >> 12;
-            
+
             yuvA = out + s;
             yuvB = out + s + 1;
-            
+
             /* interpolate between samples if needed */
             y = ((yuvA->y * L) >>  2) + ((yuvB->y * R) >>  2);
             u = ((yuvA->u * L) >> 14) + ((yuvB->u * R) >> 14);
@@ -545,7 +545,7 @@ vsync_found:
                     case PAL_PIX_FORMAT_RGBA:
                         bb = cL[0] << 16 | cL[1] << 8 | cL[2];
                         break;
-                    case PAL_PIX_FORMAT_BGR: 
+                    case PAL_PIX_FORMAT_BGR:
                     case PAL_PIX_FORMAT_BGRA:
                         bb = cL[2] << 16 | cL[1] << 8 | cL[0];
                         break;
@@ -568,34 +568,52 @@ vsync_found:
 
             switch (c->out_format) {
                 case PAL_PIX_FORMAT_RGB:
-                case PAL_PIX_FORMAT_RGBA:
                     cL[0] = bb >> 16 & 0xff;
                     cL[1] = bb >>  8 & 0xff;
                     cL[2] = bb >>  0 & 0xff;
                     break;
-                case PAL_PIX_FORMAT_BGR: 
-                case PAL_PIX_FORMAT_BGRA:
+
+                case PAL_PIX_FORMAT_RGBA:
+                    cL[0] = bb >> 16 & 0xff;
+                    cL[1] = bb >>  8 & 0xff;
+                    cL[2] = bb >>  0 & 0xff;
+                    cL[3] = 0xff;
+                    break;
+
+                case PAL_PIX_FORMAT_BGR:
                     cL[0] = bb >>  0 & 0xff;
                     cL[1] = bb >>  8 & 0xff;
                     cL[2] = bb >> 16 & 0xff;
                     break;
+
+                case PAL_PIX_FORMAT_BGRA:
+                    cL[0] = bb >>  0 & 0xff;
+                    cL[1] = bb >>  8 & 0xff;
+                    cL[2] = bb >> 16 & 0xff;
+                    cL[3] = 0xff;
+                    break;
+
                 case PAL_PIX_FORMAT_ARGB:
+                    cL[0] = 0xff;
                     cL[1] = bb >> 16 & 0xff;
                     cL[2] = bb >>  8 & 0xff;
                     cL[3] = bb >>  0 & 0xff;
                     break;
+
                 case PAL_PIX_FORMAT_ABGR:
+                    cL[0] = 0xff;
                     cL[1] = bb >>  0 & 0xff;
                     cL[2] = bb >>  8 & 0xff;
                     cL[3] = bb >> 16 & 0xff;
                     break;
+
                 default:
                     break;
             }
 
             cL += bpp;
         }
-        
+
         /* duplicate extra lines */
         for (s = beg + 1; s < (end - c->scanlines); s++) {
             memcpy(c->out + s * pitch, c->out + (s - 1) * pitch, pitch);

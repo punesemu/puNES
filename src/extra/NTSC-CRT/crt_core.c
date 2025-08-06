@@ -1,9 +1,9 @@
 /*****************************************************************************/
 /*
  * NTSC/CRT - integer-only NTSC video signal encoding / decoding emulation
- * 
+ *
  *   by EMMIR 2018-2023
- *   
+ *
  *   YouTube: https://www.youtube.com/@EMMIR_KC/videos
  *   Discord: https://discord.com/invite/hdYctSmyQJ
  */
@@ -27,7 +27,7 @@ static int
 sintabil8(int n)
 {
     int f, i, a, b;
-    
+
     /* looks scary but if you don't change T14_2PI
      * it won't cause out of bounds memory reads
      */
@@ -43,10 +43,10 @@ extern void
 crt_sincos14(int *s, int *c, int n)
 {
     int h;
-    
+
     n &= T14_MASK;
     h = n & ((T14_2PI >> 1) - 1);
-    
+
     if (h > ((T14_2PI >> 2) - 1)) {
         *c = -sintabil8(h - (T14_2PI >> 2));
         *s = sintabil8((T14_2PI >> 1) - h);
@@ -64,8 +64,8 @@ extern int
 crt_bpp4fmt(int format)
 {
     switch (format) {
-        case CRT_PIX_FORMAT_RGB: 
-        case CRT_PIX_FORMAT_BGR: 
+        case CRT_PIX_FORMAT_RGB:
+        case CRT_PIX_FORMAT_BGR:
             return 3;
         case CRT_PIX_FORMAT_ARGB:
         case CRT_PIX_FORMAT_RGBA:
@@ -107,7 +107,7 @@ static void
 init_eq(struct EQF *f,
         int f_lo, int f_hi, int rate,
         int g_lo, int g_mid, int g_hi)
-{    
+{
     memset(f, 0, sizeof(struct EQF));
 }
 
@@ -174,13 +174,13 @@ init_eq(struct EQF *f,
         int g_lo, int g_mid, int g_hi)
 {
     int sn, cs;
-    
+
     memset(f, 0, sizeof(struct EQF));
-        
+
     f->g[0] = g_lo;
     f->g[1] = g_mid;
     f->g[2] = g_hi;
-    
+
     crt_sincos14(&sn, &cs, T14_PI * f_lo / rate);
 #if (EQ_P >= 15)
     f->lf = 2 * (sn << (EQ_P - 15));
@@ -205,17 +205,17 @@ reset_eq(struct EQF *f)
 
 static int
 eqf(struct EQF *f, int s)
-{    
+{
     int i, r[3];
 
     f->fL[0] += (f->lf * (s - f->fL[0]) + EQ_R) >> EQ_P;
     f->fH[0] += (f->hf * (s - f->fH[0]) + EQ_R) >> EQ_P;
-    
+
     for (i = 1; i < 4; i++) {
         f->fL[i] += (f->lf * (f->fL[i - 1] - f->fL[i]) + EQ_R) >> EQ_P;
         f->fH[i] += (f->hf * (f->fH[i - 1] - f->fH[i]) + EQ_R) >> EQ_P;
     }
-    
+
     r[0] = f->fL[3];
     r[1] = f->fH[3] - f->fL[3];
     r[2] = f->h[HISTOLD] - f->fH[3];
@@ -223,12 +223,12 @@ eqf(struct EQF *f, int s)
     for (i = 0; i < 3; i++) {
         r[i] = (r[i] * f->g[i]) >> EQ_P;
     }
-  
+
     for (i = HISTOLD; i > 0; i--) {
         f->h[i] = f->h[i - 1];
     }
     f->h[HISTNEW] = s;
-    
+
     return (r[0] + r[1] + r[2]);
 }
 
@@ -240,7 +240,7 @@ eqf(struct EQF *f, int s)
 
 extern void
 crt_resize(struct CRT *v, int w, int h, int f, unsigned char *out)
-{    
+{
     v->outw = w;
     v->outh = h;
     v->out_format = f;
@@ -267,15 +267,15 @@ crt_init(struct CRT *v, int w, int h, int f, unsigned char *out)
     crt_resize(v, w, h, f, out);
     crt_reset(v);
     v->rn = 194;
-    
+
     /* kilohertz to line sample conversion */
 #define kHz2L(kHz) (CRT_HRES * (kHz * 100) / L_FREQ)
-    
+
     /* band gains are pre-scaled as 16-bit fixed point
      * if you change the EQ_P define, you'll need to update these gains too
      */
 #if (CRT_CC_SAMPLES == 4)
-    init_eq(&eqY, kHz2L(1500), kHz2L(3000), CRT_HRES, 65536, 8192, 9175);  
+    init_eq(&eqY, kHz2L(1500), kHz2L(3000), CRT_HRES, 65536, 8192, 9175);
     init_eq(&eqI, kHz2L(80),   kHz2L(1150), CRT_HRES, 65536, 65536, 1311);
     init_eq(&eqQ, kHz2L(80),   kHz2L(1000), CRT_HRES, 65536, 65536, 0);
 #elif (CRT_CC_SAMPLES == 5)
@@ -308,13 +308,13 @@ crt_demodulate(struct CRT *v, int noise)
     int prev_e; /* filtered beam energy per scan line */
     int max_e; /* approx maximum energy in a scan line */
 #endif
-    
+
     bpp = crt_bpp4fmt(v->out_format);
     if (bpp == 0) {
         return;
     }
     pitch = v->outw * bpp;
-    
+
     crt_sincos14(&huesn, &huecs, ((v->hue % 360) + 33) * 8192 / 180);
     huesn >>= 11; /* make 4-bit */
     huecs >>= 11;
@@ -350,7 +350,7 @@ found_field:
         if (i > (CRT_INPUT_SIZE - CRT_HRES * (16 + ((rand() % 20) - 10))) &&
             i < (CRT_INPUT_SIZE - CRT_HRES * (5 + ((rand() % 8) - 4)))) {
             int ln, sn, cs;
-            
+
             ln = (i * line) / CRT_HRES;
             crt_sincos14(&sn, &cs, ln * 8192 / 180);
             nn = cs >> 8;
@@ -368,7 +368,7 @@ found_field:
 
 #if CRT_DO_VSYNC
     /* Look for vertical sync.
-     * 
+     *
      * This is done by integrating the signal and
      * seeing if it exceeds a threshold. The threshold of
      * the vertical sync pulse is much higher because the
@@ -403,7 +403,7 @@ vsync_found:
     /* ratio of output height to active video lines in the signal */
     ratio = (v->outh << 16) / CRT_LINES;
     ratio = (ratio + 32768) >> 16;
-    
+
     field = (field * (ratio / 2));
 
     for (line = CRT_TOP; line < CRT_BOT; line++) {
@@ -424,7 +424,7 @@ vsync_found:
 #if CRT_DO_BLOOM
         int line_w;
 #endif
-  
+
         beg = (line - CRT_TOP + 0) * (v->outh + v->v_fac) / CRT_LINES + field;
         end = (line - CRT_TOP + 1) * (v->outh + v->v_fac) / CRT_LINES + field;
 
@@ -448,11 +448,11 @@ vsync_found:
 #else
         v->hsync = 0;
 #endif
-        
+
         xpos = POSMOD(AV_BEG + v->hsync + xnudge, CRT_HRES);
         ypos = POSMOD(line + v->vsync + ynudge, CRT_VRES);
         pos = xpos + ypos * CRT_HRES;
-        
+
         ccr = v->ccf[ypos % CRT_CC_VPER];
 #if (CRT_CC_SAMPLES == 4)
         sig = v->inp + ln + (v->hsync & ~3); /* faster */
@@ -467,7 +467,7 @@ vsync_found:
         }
 
         phasealign = POSMOD(v->hsync, CRT_CC_SAMPLES);
-        
+
 #if (CRT_CC_SAMPLES == 4)
         /* amplitude of carrier = saturation, phase difference = hue */
         dci = ccr[(phasealign + 1) & 3] - ccr[(phasealign + 3) & 3];
@@ -521,7 +521,7 @@ vsync_found:
         dx = (line_w << 12) / v->outw;
         scanL = ((AV_LEN / 2) - (line_w >> 1) + 8) << 12;
         scanR = (AV_LEN - 1) << 12;
-        
+
         L = (scanL >> 12);
         R = (scanR >> 12);
 #else
@@ -534,7 +534,7 @@ vsync_found:
         reset_eq(&eqY);
         reset_eq(&eqI);
         reset_eq(&eqQ);
-        
+
 #if (CRT_CC_SAMPLES == 4)
         for (i = L; i < R; i++) {
             out[i].y = eqf(&eqY, sig[i] + bright) << 4;
@@ -546,7 +546,7 @@ vsync_found:
             out[i].y = eqf(&eqY, sig[i] + bright) << 4;
             out[i].i = eqf(&eqI, sig[i] * waveI[i % CRT_CC_SAMPLES] >> 9) >> 3;
             out[i].q = eqf(&eqQ, sig[i] * waveQ[i % CRT_CC_SAMPLES] >> 9) >> 3;
-        } 
+        }
 #endif
 
         cL = v->out + (beg * pitch);
@@ -560,20 +560,20 @@ vsync_found:
             R = pos & 0xfff;
             L = 0xfff - R;
             s = pos >> 12;
-            
+
             yiqA = out + s;
             yiqB = out + s + 1;
-            
+
             /* interpolate between samples if needed */
             y = ((yiqA->y * L) >>  2) + ((yiqB->y * R) >>  2);
             i = ((yiqA->i * L) >> 14) + ((yiqB->i * R) >> 14);
             q = ((yiqA->q * L) >> 14) + ((yiqB->q * R) >> 14);
-            
+
             /* YIQ to RGB */
             r = (((y + 3879 * i + 2556 * q) >> 12) * v->contrast) >> 8;
             g = (((y - 1126 * i - 2605 * q) >> 12) * v->contrast) >> 8;
             b = (((y - 4530 * i + 7021 * q) >> 12) * v->contrast) >> 8;
-          
+
             if (r < 0) r = 0;
             if (g < 0) g = 0;
             if (b < 0) b = 0;
@@ -589,7 +589,7 @@ vsync_found:
                     case CRT_PIX_FORMAT_RGBA:
                         bb = cL[0] << 16 | cL[1] << 8 | cL[2];
                         break;
-                    case CRT_PIX_FORMAT_BGR: 
+                    case CRT_PIX_FORMAT_BGR:
                     case CRT_PIX_FORMAT_BGRA:
                         bb = cL[2] << 16 | cL[1] << 8 | cL[0];
                         break;
@@ -612,34 +612,52 @@ vsync_found:
 
             switch (v->out_format) {
                 case CRT_PIX_FORMAT_RGB:
-                case CRT_PIX_FORMAT_RGBA:
                     cL[0] = bb >> 16 & 0xff;
                     cL[1] = bb >>  8 & 0xff;
                     cL[2] = bb >>  0 & 0xff;
                     break;
-                case CRT_PIX_FORMAT_BGR: 
-                case CRT_PIX_FORMAT_BGRA:
+
+                case CRT_PIX_FORMAT_RGBA:
+                    cL[0] = bb >> 16 & 0xff;
+                    cL[1] = bb >>  8 & 0xff;
+                    cL[2] = bb >>  0 & 0xff;
+                    cL[3] = 0xff;
+                    break;
+
+                case CRT_PIX_FORMAT_BGR:
                     cL[0] = bb >>  0 & 0xff;
                     cL[1] = bb >>  8 & 0xff;
                     cL[2] = bb >> 16 & 0xff;
                     break;
+
+                case CRT_PIX_FORMAT_BGRA:
+                    cL[0] = bb >>  0 & 0xff;
+                    cL[1] = bb >>  8 & 0xff;
+                    cL[2] = bb >> 16 & 0xff;
+                    cL[3] = 0xff;
+                    break;
+
                 case CRT_PIX_FORMAT_ARGB:
+                    cL[0] = 0xff;
                     cL[1] = bb >> 16 & 0xff;
                     cL[2] = bb >>  8 & 0xff;
                     cL[3] = bb >>  0 & 0xff;
                     break;
+
                 case CRT_PIX_FORMAT_ABGR:
+                    cL[0] = 0xff;
                     cL[1] = bb >>  0 & 0xff;
                     cL[2] = bb >>  8 & 0xff;
                     cL[3] = bb >> 16 & 0xff;
                     break;
+
                 default:
                     break;
             }
 
             cL += bpp;
         }
-        
+
         /* duplicate extra lines */
         for (s = beg + 1; s < (end - v->scanlines); s++) {
             memcpy(v->out + s * pitch, v->out + (s - 1) * pitch, pitch);

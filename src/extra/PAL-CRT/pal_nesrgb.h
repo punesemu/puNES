@@ -24,6 +24,7 @@ extern "C" {
  * An interface to convert NES PPU output in RGB form to an analog PAL signal.
  * 
  */
+
 #define PAL_CC_LINE 28417
 
 /* NOTE, in general, increasing PAL_CB_FREQ reduces blur and bleed */
@@ -116,7 +117,7 @@ struct PAL_SETTINGS {
     /* make sure your PAL_SETTINGS struct is zeroed out before you do anything */
     int field_initialized; /* internal state */
     uint32_t *palette; /* FHorse */
-    
+
     /* internal data */
     int altline[6]; /* stores alternating line pattern */
 };
