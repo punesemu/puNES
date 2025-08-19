@@ -198,7 +198,7 @@ void tag_crc(void) {
 		return;
 	}
 	QString buf = dp_read.splitted.at(1);
-	dp.crc32s.append(to_uint(buf.remove("0x"), buf.contains("0x") ? 16 : 10));
+	dp.crc32s.append(to_uint(QString(buf).remove("0x"), buf.contains("0x") ? 16 : 10));
 }
 BYTE tag_setting(void) {
 	_dp_type type;
@@ -211,9 +211,9 @@ BYTE tag_setting(void) {
 		return (FALSE);
 	}
 	QString buf = dp_read.splitted.at(2);
-	type.mask = to_uint(buf.remove("0x"), buf.contains("0x") ? 16 : 10);
+	type.mask = to_uint(QString(buf).remove("0x"), buf.contains("0x") ? 16 : 10);
 	buf = dp_read.splitted.at(4);
-	type.def = to_uint(buf.remove("0x"), buf.contains("0x") ? 16 : 10);
+	type.def = to_uint(QString(buf).remove("0x"), buf.contains("0x") ? 16 : 10);
 	type.name = name_from_splitted(6);
 	dp.types.append(type);
 	return (TRUE);
@@ -228,7 +228,7 @@ void tag_choiche(void) {
 		return;
 	}
 	QString buf = dp_read.splitted.at(2);
-	value.value = to_uint(buf.remove("0x"), buf.contains("0x") ? 16 : 10);
+	value.value = to_uint(QString(buf).remove("0x"), buf.contains("0x") ? 16 : 10);
 	value.name = name_from_splitted(4);
 	dp.types.last().values.append(value);
 }
