@@ -1302,7 +1302,7 @@
     </message>
     <message>
       <source>Slot &amp;5</source>
-      <translation>Slot &amp;6</translation>
+      <translation>Slot &amp;5</translation>
     </message>
     <message>
       <source>&amp;About</source>

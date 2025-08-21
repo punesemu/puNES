@@ -1679,75 +1679,75 @@
     </message>
     <message>
       <source>list of last used roms still empty</source>
-      <translation type="unfinished">list of last used roms still empty</translation>
+      <translation>a nemrég használt ROM-ok listája még üres</translation>
     </message>
     <message>
       <source>list of last used disks still empty</source>
-      <translation type="unfinished">list of last used disks still empty</translation>
+      <translation>a nemrég használt lemezek listája még üres</translation>
     </message>
     <message>
       <source>Single Side FDS Format Disk</source>
-      <translation type="unfinished">Single Side FDS Format Disk</translation>
+      <translation>Egyoldalas FDS formátumú lemez</translation>
     </message>
     <message>
       <source>Single Side Quick Disk Format Disk</source>
-      <translation type="unfinished">Single Side Quick Disk Format Disk</translation>
+      <translation>Egyoldalas Quick Disk formátumú lemez</translation>
     </message>
     <message>
       <source>Double Sides FDS Format Disk</source>
-      <translation type="unfinished">Double Sides FDS Format Disk</translation>
+      <translation>Kétoldalas FDS formátumú lemez</translation>
     </message>
     <message>
       <source>Double Sides Quick Disk Format Disk</source>
-      <translation type="unfinished">Double Sides Quick Disk Format Disk</translation>
+      <translation>Kétoldalas Quick Disk formátumú lemez</translation>
     </message>
     <message>
       <source>Create an image of an empty disk</source>
-      <translation type="unfinished">Create an image of an empty disk</translation>
+      <translation>Üres lemezkép létrehozása</translation>
     </message>
     <message>
       <source>Error creating file</source>
-      <translation type="unfinished">Error creating file</translation>
+      <translation>Hiba a fájl létrehozásakor</translation>
     </message>
     <message>
       <source>Single Side &amp;FDS Format (with Header)</source>
-      <translation type="unfinished">Single Side &amp;FDS Format (with Header)</translation>
+      <translation>Egyoldalas &amp;FDS formátum (fejléccel)</translation>
     </message>
     <message>
       <source>Single Side F&amp;DS Format (without Header)</source>
-      <translation type="unfinished">Single Side F&amp;DS Format (without Header)</translation>
+      <translation>Egyoldalas F&amp;DS formátum (fejléc nélkül)</translation>
     </message>
     <message>
       <source>Single Side &amp;Quick Disk Format</source>
-      <translation type="unfinished">Single Side &amp;Quick Disk Format</translation>
+      <translation>Egyoldalas &amp;Quick Disk formátum</translation>
     </message>
     <message>
       <source>Double Sides &amp;FDS Format (with Header)</source>
-      <translation type="unfinished">Double Sides &amp;FDS Format (with Header)</translation>
+      <translation>Kétoldalas &amp;FDS formátum (fejléccel)</translation>
     </message>
     <message>
       <source>Double Sides F&amp;DS Format (without Header)</source>
-      <translation type="unfinished">Double Sides F&amp;DS Format (without Header)</translation>
+      <translation>Kétoldalas F&amp;DS formátum (fejléc nélkül)</translation>
     </message>
     <message>
       <source>Double Sides &amp;Quick Disk Format</source>
-      <translation type="unfinished">Double Sides &amp;Quick Disk Format</translation>
+      <translation>Kétoldalas &amp;Quick Disk formátum</translation>
     </message>
     <message>
       <source>&amp;Load from File</source>
-      <translation type="unfinished">&amp;Load from File</translation>
+      <translation>Betö&amp;ltés fájlból</translation>
     </message>
     <message>
       <source>Load from File</source>
-      <translation type="unfinished">Load from File</translation>
+      <translation>Betöltés fájlból</translation>
     </message>
     <message>
       <source>Create Empt&amp;y Disk</source>
-      <translation type="unfinished">Create Empt&amp;y Disk</translation>
+      <translation>Üres lemez létrehozása (&amp;y)</translation>
     </message>
     <message>
       <source>Leave F&amp;ullscreen</source>
-      <translation type="unfinished">Leave F&amp;ullscreen</translation>
+      <translation>Kilépés teljes képernyőből (&amp;u)</translation>
     </message>
   </context>
   <context>
@@ -2672,19 +2672,19 @@
     </message>
     <message>
       <source>Files</source>
-      <translation type="unfinished">Files</translation>
+      <translation>Fájlok</translation>
     </message>
     <message>
       <source>NES</source>
-      <translation type="unfinished">NES</translation>
+      <translation>NES</translation>
     </message>
     <message>
       <source>Release input</source>
-      <translation type="unfinished">Release input</translation>
+      <translation>Bemenet elengedése</translation>
     </message>
     <message>
       <source>Capture Input</source>
-      <translation type="unfinished">Capture Input</translation>
+      <translation>Bemenet rögzítése</translation>
     </message>
   </context>
   <context>
@@ -3176,7 +3176,7 @@
     </message>
     <message>
       <source>Enter/Leave Fullscreen</source>
-      <translation type="unfinished">Enter/Leave Fullscreen</translation>
+      <translation>Belépés/kilépés teljes a képernyőből</translation>
     </message>
   </context>
   <context>
@@ -4030,34 +4030,34 @@
     <name>wdgTitleBar</name>
     <message>
       <source>Leave Fullscreen</source>
-      <translation type="unfinished">Leave Fullscreen</translation>
+      <translation>Kilépés teljes képernyőből</translation>
     </message>
     <message>
       <source>Fullscreen</source>
-      <translation type="unfinished">Fullscreen</translation>
+      <translation>Teljes képernyő</translation>
     </message>
     <message>
       <source>Restore Window</source>
-      <translation type="unfinished">Restore Window</translation>
+      <translation>Ablak visszaállítása</translation>
     </message>
     <message>
       <source>Maximize Window</source>
-      <translation type="unfinished">Maximize Window</translation>
+      <translation>Ablak maximalizálása</translation>
     </message>
     <message>
       <source>Minimize Window</source>
-      <translation type="unfinished">Minimize Window</translation>
+      <translation>Ablak tálcára tétele</translation>
     </message>
     <message>
       <source>Close Window</source>
-      <translation type="unfinished">Close Window</translation>
+      <translation>Ablak bezárása</translation>
     </message>
   </context>
   <context>
     <name>wdgTitleBarWindow</name>
     <message>
       <source>Drag to resize the Window</source>
-      <translation type="unfinished">Drag to resize the Window</translation>
+      <translation>Húzd az ablak átméretezéséhez</translation>
     </message>
   </context>
 </TS>
