@@ -1703,11 +1703,11 @@
     </message>
     <message>
       <source>Create an image of an empty disk</source>
-      <translation type="unfinished">Create an image of an empty disk</translation>
+      <translation>Utwórz obraz pustego dysku</translation>
     </message>
     <message>
       <source>Error creating file</source>
-      <translation type="unfinished">Error creating file</translation>
+      <translation>Błąd podczas tworzenia pliku</translation>
     </message>
     <message>
       <source>Single Side &amp;FDS Format (with Header)</source>
@@ -1735,11 +1735,11 @@
     </message>
     <message>
       <source>&amp;Load from File</source>
-      <translation type="unfinished">&amp;Load from File</translation>
+      <translation>&amp;Wczytaj plik</translation>
     </message>
     <message>
       <source>Load from File</source>
-      <translation type="unfinished">Load from File</translation>
+      <translation>Wczytaj plik</translation>
     </message>
     <message>
       <source>Create Empt&amp;y Disk</source>
@@ -2672,11 +2672,11 @@
     </message>
     <message>
       <source>Files</source>
-      <translation type="unfinished">Files</translation>
+      <translation>Pliki</translation>
     </message>
     <message>
       <source>NES</source>
-      <translation type="unfinished">NES</translation>
+      <translation>NES</translation>
     </message>
     <message>
       <source>Release input</source>
@@ -4030,34 +4030,34 @@
     <name>wdgTitleBar</name>
     <message>
       <source>Leave Fullscreen</source>
-      <translation type="unfinished">Leave Fullscreen</translation>
+      <translation>Opuść pełny ekran</translation>
     </message>
     <message>
       <source>Fullscreen</source>
-      <translation type="unfinished">Fullscreen</translation>
+      <translation>Pełny ekran</translation>
     </message>
     <message>
       <source>Restore Window</source>
-      <translation type="unfinished">Restore Window</translation>
+      <translation>Przywróć okno</translation>
     </message>
     <message>
       <source>Maximize Window</source>
-      <translation type="unfinished">Maximize Window</translation>
+      <translation>Maksymalizuj okno</translation>
     </message>
     <message>
       <source>Minimize Window</source>
-      <translation type="unfinished">Minimize Window</translation>
+      <translation>Minimalizuj okno</translation>
     </message>
     <message>
       <source>Close Window</source>
-      <translation type="unfinished">Close Window</translation>
+      <translation>Zamknij okno</translation>
     </message>
   </context>
   <context>
     <name>wdgTitleBarWindow</name>
     <message>
       <source>Drag to resize the Window</source>
-      <translation type="unfinished">Drag to resize the Window</translation>
+      <translation>Przeciągnij, aby zmienić rozmiar okna</translation>
     </message>
   </context>
 </TS>
