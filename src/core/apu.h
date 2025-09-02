@@ -104,7 +104,7 @@ enum apu_mode { APU_60HZ, APU_48HZ };
 {\
 	WORD offset = channel.timer >> channel.sweep.shift;\
 	channel.sweep.silence = FALSE;\
-	if ((channel.timer <= 8) || (!channel.sweep.negate && ((channel.timer + offset) >= 0x800))) {\
+	if ((channel.timer < 8) || (!channel.sweep.negate && ((channel.timer + offset) >= 0x800))) {\
 		channel.sweep.silence = TRUE;\
 	}\
 }
