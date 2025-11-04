@@ -1058,7 +1058,11 @@ static BYTE ffmpeg_video_add_stream_format_h264(void) {
 		if (vbr < 4000) {
 			vbr = 4000;
 		}
+#if LIBAVCODEC_VERSION_INT >= AV_VERSION_INT(60, 31, 102)
+		video->avcc->profile = AV_PROFILE_H264_HIGH;
+#else
 		video->avcc->profile = FF_PROFILE_H264_HIGH;
+#endif
 		video->avcc->bit_rate = (int64_t)vbr;
 	}
 	video->avcc->thread_count = FFMIN(8, gui_hardware_concurrency());
