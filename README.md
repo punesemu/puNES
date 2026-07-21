@@ -640,7 +640,7 @@ cmake --build build -j2
 
 The executable `punes.exe` is in the `build/src` directory but in order to run it you need the following dlls:
 
-- 7z.dl
+- 7z.dll
 - avcodec-58.dll
 - avformat-58.dll
 - avutil-56.dll
