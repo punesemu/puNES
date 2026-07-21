@@ -2,9 +2,11 @@
 #include "config.h"
 #endif
 
+#if !defined(_WIN32)
 #define BUILD_LIB7ZIP
 #ifndef INITGUID
 #define INITGUID
+#endif
 #endif
 
 #if !defined(_WIN32) && !defined(_OS2)

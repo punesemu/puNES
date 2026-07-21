@@ -18,9 +18,9 @@ void C7ZipObjectPtrArray::clear()
 {
     if (m_bAutoRelease)
     {
-        for(C7ZipObjectPtrArray::iterator it = begin(); it != end(); it ++)
+        for(C7ZipObjectPtrArray::iterator it = begin(); it != end();)
         {
-            delete *it;
+            it = erase(it);
         }
     }
 

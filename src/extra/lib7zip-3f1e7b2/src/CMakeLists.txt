@@ -7,6 +7,11 @@ SET(lib7zip_src
 7ZipCodecInfo.h             7ZipFormatInfo.h            7zipLibrary.cpp             OSFunctions_OS2.h           compat.h
 )
 
+if ("${CMAKE_C_PLATFORM_ID}" STREQUAL "MinGW")
+    SET(lib7zip_src ${lib7zip_src} GUIDs.h GUIDs.cpp)
+endif()
+
+
 SET(lib7zip_NODIST_SOURCES ${SEVENZIP_SOURCE_DIR}/CPP/Common/MyWindows.cpp
 			   ${SEVENZIP_SOURCE_DIR}/CPP/Windows/PropVariant.cpp
 )
@@ -23,6 +28,9 @@ SET_TARGET_PROPERTIES(lib7zip PROPERTIES LINKER_LANGUAGE CXX)
 
 TARGET_INCLUDE_DIRECTORIES(lib7zip PRIVATE
   "${SEVENZIP_INCLUDE_PATH}"
+  INTERFACE
+  "${CMAKE_CURRENT_SOURCE_DIR}"
+  "${SEVENZIP_SOURCE_DIR}"
 )
 
 IF (BUILD_SHARED_LIB)
@@ -37,5 +45,8 @@ SET_TARGET_PROPERTIES(lib7zip_shared PROPERTIES LINKER_LANGUAGE CXX)
 
 TARGET_INCLUDE_DIRECTORIES(lib7zip_shared PRIVATE
   "${SEVENZIP_INCLUDE_PATH}"
+  INTERFACE
+  "${CMAKE_CURRENT_SOURCE_DIR}"
+  "${SEVENZIP_SOURCE_DIR}"
 )
 ENDIF()

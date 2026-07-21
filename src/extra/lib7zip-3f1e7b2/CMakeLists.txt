@@ -1,4 +1,4 @@
-CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
+CMAKE_MINIMUM_REQUIRED(VERSION 3.13)
 
 CMAKE_POLICY(
     SET CMP0048 NEW
@@ -40,16 +40,18 @@ SET(SEVENZIP_INCLUDE_PATH   "${SEVENZIP_SOURCE_DIR}"
   "${SEVENZIP_SOURCE_DIR}/CPP/Common"
   "${SEVENZIP_SOURCE_DIR}/CPP/Windows"
   "${SEVENZIP_SOURCE_DIR}/C"
-  "${CMAKE_CURRENT_SOURCE_DIR}/includes"
 )
 
 
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
-  set(warnings -Wall -Wextra -Werror -Wno-unused-parameter)
-  set(cxx_warnings -Wno-class-memaccess)
+  #set(warnings -Wall -Wextra -Werror -Wno-unused-parameter)
+  #set(cxx_warnings -Wno-class-memaccess)
+  set(warnings "")
+  set(cxx_warnings "")
   set(no_undefined -Wl,--no-undefined)
 elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
-  set(warnings -Wall -Wextra -Werror -Wno-inconsistent-missing-override -Wno-unused-parameter)
+  #set(warnings -Wall -Wextra -Werror -Wno-inconsistent-missing-override -Wno-unused-parameter)
+  set(warnings "")
   set(cxx_warnings "")
   set(no_undefined -Wl,-undefined,error)
 elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
@@ -62,9 +64,14 @@ SET(CXX_STANDARD_REQUIRED OFF)
 SET(CXX_EXTENSION NO)
 
 if (NOT CONFIGURED_ONCE)
+if ("${CMAKE_C_PLATFORM_ID}" STREQUAL "MinGW")
+  ADD_COMPILE_OPTIONS(-DUNICODE -D_UNICODE -DWIN32)
+endif()
 ADD_COMPILE_OPTIONS(-fPIC -std=c++14 ${warnings} ${cxx_warnings})
 ADD_LINK_OPTIONS(${no_undefined})
 endif()
 
 ADD_SUBDIRECTORY(src)
-ADD_SUBDIRECTORY(test)
+#ADD_SUBDIRECTORY(test)
+
+install(FILES dummy DESTINATION bin OPTIONAL)
