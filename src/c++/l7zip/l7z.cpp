@@ -22,7 +22,7 @@
 #include <stdlib.h>
 #include <strings.h>
 #include "l7z.h"
-#include "extra/lib7zip-53abfeb/src/lib7zip.h"
+#include "lib7zip.h"
 #include "info.h"
 #include "gui.h"
 
@@ -93,7 +93,7 @@ class in_stream: public C7ZipInStream {
 			return (EXIT_ERROR);
 		}
 
-		virtual int Seek(__int64 offset, unsigned int seekOrigin, unsigned __int64 *newPosition) {
+		virtual int Seek(__int64 offset, unsigned int seekOrigin, UInt64 *newPosition) {
 			int result = 0;
 
 			if (!m_pFile) {
@@ -113,7 +113,7 @@ class in_stream: public C7ZipInStream {
 			return (result);
 		}
 
-		virtual int GetSize(unsigned __int64 *size) {
+		virtual int GetSize(UInt64 * size) {
 			if (size) {
 				*size = m_nFileSize;
 			}
@@ -165,7 +165,7 @@ class out_stream: public C7ZipOutStream {
 			return (EXIT_ERROR);
 		}
 
-		virtual int Seek(__int64 offset, unsigned int seekOrigin, unsigned __int64 *newPosition) {
+		virtual int Seek(__int64 offset, unsigned int seekOrigin, UInt64 *newPosition) {
 			const int result = fseek(m_pFile, (long) offset, (int)seekOrigin);
 
 			if (!result) {
@@ -179,7 +179,7 @@ class out_stream: public C7ZipOutStream {
 			return (result);
 		}
 
-		virtual int SetSize(unsigned __int64 size) {
+		virtual int SetSize(UInt64 size) {
 			if (size) {
 				return (EXIT_OK);
 			}
