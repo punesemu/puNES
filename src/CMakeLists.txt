@@ -31,13 +31,9 @@ qt_add_translation(qm_files ${ts_files})
 add_custom_target(translations DEPENDS ${qm_files})
 
 include(FetchContent)
-if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
-	set(P7ZIP_SOURCE_DIR "${CMAKE_SOURCE_DIR}/src/extra/7z1900" CACHE INTERNAL "7ZIP source dir")
-else()
-	set(P7ZIP_SOURCE_DIR "${CMAKE_SOURCE_DIR}/src/extra/p7zip-17.04" CACHE INTERNAL "7ZIP source dir")
-endif()
+set(SEVENZIP_SOURCE_DIR "${CMAKE_SOURCE_DIR}/src/extra/7z2500" CACHE INTERNAL "7ZIP source dir")
 FetchContent_Declare(lib7zip
-	SOURCE_DIR ${CMAKE_SOURCE_DIR}/src/extra/lib7zip-53abfeb
+	SOURCE_DIR ${CMAKE_SOURCE_DIR}/src/extra/lib7zip-3f1e7b2
 	)
 FetchContent_MakeAvailable(lib7zip)
 
